@@ -1,0 +1,22 @@
+{
+  "guid": "b234282f-b414-4441-b7ed-a1c9e7567545",
+  "name": "Predictive Modeling Training",
+  "categories": ["Toolkit/oneAPI AI And Analytics/XGBoost"],
+  "description": "Predictive Modeling using Decision Trees, Bagging, and XGBoost using Intel AI Kit and Jupyter Notebooks",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": [ "CPU" ],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],  		
+  		"steps": [
+         "make all" 
+  		 ]
+  	}
+    ]
+},
+"expertise": "Concepts and Functionality"
+}

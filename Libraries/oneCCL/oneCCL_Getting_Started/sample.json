@@ -23,5 +23,6 @@
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
 		 ]
 	}]
- }
+ },
+ "expertise": "Getting Started"
 }

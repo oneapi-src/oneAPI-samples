@@ -2,18 +2,27 @@
   "guid": "C3B945F8-D3CC-47E8-A094-D8A0B0DBA22C",
   "name": "LSU Control",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating how to configure the load-store units (LSU) in Data Parallel C++ (DPC++) program using the LSU controls extension",
-  "toolchain": ["dpcpp"],
+  "description": "An Intel® FPGA tutorial demonstrating how to configure the load-store units (LSU) in a SYCL program using the LSU controls extension",
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/lsu_control",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -36,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -48,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -57,5 +66,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

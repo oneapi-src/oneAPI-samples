@@ -1,275 +1,237 @@
-﻿# `simple-add-dpc++` Sample
+# `Simple Add` Sample
 
-`simple-add-dpc++` provides the simplest example of DPC++ while providing an
-example of using both buffers and Unified Shared Memory.
+The `Simple Add` sample demonstrates the simplest programming methods for using SYCL*-compliant buffers and Unified Shared Memory (USM).
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming
+Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search
+based on relevant terms noted in the comments.
 
-
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, Windows 10
-| Hardware                          | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-
-
+| Property            | Description 
+|:---                 |:---
+| What you will learn | How to use SYCL*-compliant extensions to offload computations using both buffers and USM.
+| Time to complete    | 15 minutes
 
 ## Purpose
 
-The `simple-add-dpc++` is a simple program that adds two large vectors of
-integers and verifies the results. This program is implemented using C++ and
-Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
+The `Simple Add` sample is a simple program that adds two large vectors of
+integers and verifies the results. In this sample, you will see how to use 
+the most basic code in C++ language that offloads computations to a GPU, which includes using USM and buffers.
 
-In this sample, you can learn how to use the most basic code in C++ language
-that offloads computations to a GPU using the DPC++ language. This includes
-using Unified Shared Memory (USM) and buffers. USM requires an explicit wait
-for the asynchronous kernel's computation to complete. Buffers, at the time
-they go out of scope, bring main memory in sync with device memory implicitly;
-the explicit wait on the event is not required as a result. This sample
-provides examples of both implementations for simple side by side review.
+The basic SYCL* implementations explained in the sample includes device selector,
+USM, buffer, accessor, kernel, and command groups.
 
-The code will attempt to execute on an available GPU and fallback to the
-system's CPU if a compatible GPU is not detected. If successful, the name of
-the offload device and a success message is displayed. Confirming your
-development environment is set up correctly!
+## Prerequisites
+
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Ubuntu* 18.04 <br> Windows* 10
+| Hardware                          | Skylake with GEN9 or newer <br>Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+
+### Known Issues
+
+As of the oneAPI 2021.4 release, the argument for accessors was changed from `noinit` to
+`no_init`. The change was derived from a change between the SYCL 2020 provisional spec and that of the 2020 Rev3 spec.
+
+If you run the sample program and it fails, try one of the following actions:
+- Update the Intel® oneAPI Base Toolkit to the latest version.
+- Change the `no_init` argument  to `noinit`
 
 ## Key Implementation Details
 
-The basic DPC++ implementation explained in the code includes device selector,
-USM, buffer, accessor, kernel, and command groups.
+This sample provides examples of both buffers and USM implementations for simple side-by-side comparison.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+- USM requires an explicit wait for the asynchronous kernel's
+computation to complete.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+- Buffers, at the time they go out of scope, bring main
+memory in sync with device memory implicitly. The explicit wait on the event is
+not required as a result.
 
-## Known Issues
+The program attempts first to run on an available GPU, and it will fall back to the system CPU if it does not detect a compatible GPU. If the program runs successfully, the name of the offload device and a success message is displayed.
 
-With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to
-'no_init'. The change was derived from a change between the SYCL 2020
-provisional spec and that of the 2020Rev3 spec
-
-If running this sample and it fails, do one of the following
-- Update the Intel® oneAPI Base Toolkit to 2021.4
-- Change the 'no_init' argument  to 'noinit'
-
-
+> **Note**: Successfully building and running the sample proves your development environment is configured correctly.
 
 ## Setting Environment Variables
-
-
-For working at a Command-Line Interface (CLI), the tools in the oneAPI toolkits
-are configured using environment variables. Set up your CLI environment by
-sourcing the ``setvars`` script every time you open a new terminal window. This
-will ensure that your compiler, libraries, and tools are ready for development.
-
-
-### Linux
-Source the script from the installation location, which is typically in one of
-these folders:
-
-
-For root or sudo installations:
-
-
-  ``. /opt/intel/oneapi/setvars.sh``
-
-
-For normal user installations:
-
-  ``. ~/intel/oneapi/setvars.sh``
-
-**Note:** If you are using a non-POSIX shell, such as csh, use the following command:
-
-     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
-
-If environment variables are set correctly, you will see a confirmation
-message.
-
-If you receive an error message, troubleshoot the problem using the
-Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
-checks to find missing dependencies and permissions errors.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-
-**Note:** [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
-    can also be used to set up your development environment.
-    The modulefiles scripts work with all Linux shells.
-
-
-**Note:** If you wish to fine
-    tune the list of components and the version of those components, use
-    a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
-    to set up your development environment.
-
-### Windows
-
-Execute the  ``setvars.bat``  script from the root folder of your
-oneAPI installation, which is typically:
-
-
-  ``"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"``
-
-
-For Windows PowerShell* users, execute this command:
-
-  ``cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'``
-
-
-If environment variables are set correctly, you will see a confirmation
-message.
-
-If you receive an error message, troubleshoot the problem using the
-Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
-checks to find missing dependencies and permissions errors.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-## Building the `simple add DPC++` Program for CPU and GPU
+For working with the Command-Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by
+sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the commands similar to the following: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+## Include Files
+Many oneAPI code samples, like this one, share common include files. The include files are installed locally and are located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You will need the `dpc_common.hpp` from that location to build these samples.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode.
 
+For specific instructions, jump to [Run the sample in the DevCloud](#run-on-devcloud)
+
+For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+
+## Build the `Simple Add` Program
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 
 ### Using Visual Studio Code*  (Optional)
 
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment
+   Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions and how to configure the oneAPI environment,
+see the [Using Visual Studio Code with Intel&reg; oneAPI
+Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+#### Troubleshooting
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors and other issues. See the [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
-### On a Linux* System
-Perform the following steps:
-1. Build the `simple-add-dpc++` program using the following make commands (default uses USM):
+### Build the `Simple Add` Sample for CPU and GPU
+#### Linux*
+1. Build the program using `make` (by default USM).
     ```
     make all
     ```
-> Note! To build with buffers use: `make build_buffers`
+2. Build with buffers (optional).
+   ```
+   make build_buffers
+   ```
 
-2. Run the program using:
+#### On Windows* Using a Command Line Interface**
+1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt**
+   to launch a command window.
+2. Build the program using the following `nmake` commands (Windows supports USM
+   only):
+   ```
+   nmake -f Makefile.win
+   ```
+#### On Windows* Using Visual Studio*
+Build the program using VS2017 or later.
+1. Right-click on the solution file and open using the IDE.
+2. Right-click on the project in **Solution Explorer** and select **Rebuild**.
+3. From the top menu, select **Debug** > **Start without Debugging**.
+
+Optionally, build the program using MSBuild.
+1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019" or whatever is appropriate for your Visual Studio version.
+2. Run the following command: `MSBuild simple-add.sln /t:Rebuild /p:Configuration="Release"`
+
+## Build the `Simple Add` Sample for FPGA
+
+### On Linux*
+1. Based on your requirements, build for FPGA emulation using `make`.
+    ```
+    # For using the USM version
+    make fpga_emu -f Makefile.fpga
+    # For using the buffers version
+    make fpga_emu -f Makefile.fpga BUFFERS=1
+    ```
+2. If you have the hardware, build for FPGA hardware using 'make'. 
+   (The hardware compilation might take a long time.)
+    ```
+    # For using the USM version
+    make fpga -f Makefile.fpga
+    # For using the buffers version
+    make fpga -f Makefile.fpga BUFFERS=1
+    ````
+3. Generate static optimization reports for design analysis.
+    ```
+    # For using the USM version
+    make report -f Makefile.fpga
+    # For using the buffers version
+    make report -f Makefile.fpga BUFFERS=1
+    ```
+   The path to the generated report is similar to `simple-add_report.prj/reports/report.html`.
+
+### On Windows* Using a Command Line Interface
+>**Note**: On Windows, you can only compile and run on the FPGA emulator.
+Generating an HTML optimization report and compiling and running on the FPGA
+hardware is not currently supported.
+
+1. Open the **Intel oneAPI Command Prompt**.
+
+2. Build the program.
+   ```
+   # For using the USM version
+   nmake fpga_emu -f Makefile.win.fpga
+   # For using the buffers version
+   nmake fpga_emu -f Makefile.win.fpga BUFFERS=1
+   ```
+## Run the `Simple Add` Sample
+### Linux*
+1. Run the program using:
     ```
     make run
     ```
-> Note! To run with buffers use: `make run_buffers`
 
-3. Clean the program using:
+2. Optionally, run the program for buffers
+   ```
+   make run_buffers
+   ```
+### Linux* for FPGA
+1. Run the program for FPGA emulation using `make`.
     ```
-    make clean
-    ```
-
-### On a Windows* System Using a Command Line Interface
-1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
-2. Build the program using the following `nmake` commands (Windows supports USM only):
-
-    ```
-    nmake -f Makefile.win
-    ```
-
-3. Run the program using:
-    ```
-    nmake -f Makefile.win run
-    ```
-
-4. Clean the program using:
-    ```
-    nmake -f Makefile.win clean
-    ```
-
-
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-Perform the following steps:
-1. Launch the Visual Studio* 2017.
-2. Select the menu sequence **File** > **Open** > **Project/Solution**.
-3. Locate the `simple-add` folder.
-4. Select the `simple-add.sln` file.
-5. Select the configuration 'Debug' or 'Release'
-6. Select **Project** > **Build** menu option to build the selected configuration.
-7. Select **Debug** > **Start Without Debugging** menu option to run the program.
-
-
-## Building the `simple-add` Program for Intel&reg; FPGA
-
-### On a Linux* System
-
-Perform the following steps:
-
-1. Clean the `simple-add` program using:
-    ```
-    make clean -f Makefile.fpga
-    ```
-
-2. Based on your requirements, you can perform the following:
-   * Build and run for FPGA emulation using the following commands:
-    ```
-    make fpga_emu -f Makefile.fpga
+    # For using the USM version
     make run_emu -f Makefile.fpga
+    # For using the buffers version
+    make run_emu -f Makefile.fpga BUFFERS=1
     ```
-    * Build and run for FPGA hardware.
-      **NOTE:** The hardware compilation takes a long time to complete.
+2. If you have the appropriate hardware and you have built the program, run the program for FPGA hardware.
     ```
-    make hw -f Makefile.fpga
+    # For using the USM version
     make run_hw -f Makefile.fpga
-    ```
-    * Generate static optimization reports for design analysis. Path to the reports is `simple-add_report.prj/reports/report.html`
-    ```
-    make report -f Makefile.fpga
+    # For using the buffers version
+    make run_hw -f Makefile.fpga BUFFERS=1
     ```
 
-### On a Windows* System Using a Command Line Interface
-Perform the following steps:
-
-**NOTE:** On a Windows* system, you can only compile and run on the FPGA
-emulator. Generating an HTML optimization report and compiling and running on
-the FPGA hardware is not currently supported.
-
-1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
-2. Build the program using the following `nmake` commands:
+### Windows*
+3. Run the program using 'nmake`.
    ```
-   nmake -f Makefile.win.fpga clean
-   nmake -f Makefile.win.fpga
-   nmake -f Makefile.win.fpga run
+   # For using the USM version
+   nmake -f Makefile.win.fpga run_emu
+   # For using the buffers version
+   nmake -f Makefile.win.fpga run_emu BUFFERS=1
    ```
-
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-Perform the following steps:
-1. Launch the Visual Studio* 2017.
-2. Select the menu sequence **File** > **Open** > **Project/Solution**.
-3. Locate the `simple-add` folder.
-4. Select the `simple-add.sln` file.
-5. Select the configuration 'Debug-fpga'
-6. Select **Project** > **Build** menu option to build the selected configuration.
-7. Select **Debug** > **Start Without Debugging** menu option to run the program.
-
-## Running the Sample
 ### Application Parameters
-There are no editable parameters for this sample.
+The sample has no configurable parameters.
 
-### Example of Output
-<pre>simple-add output snippet changed to:
+### Run the `Simple Add` Sample in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, you must specify the compute node
+(CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more
+information, see the Intel&reg; oneAPI Base Toolkit [Get Started
+Guide](https://devcloud.intel.com/oneapi/get_started/).
+
+### Example Output
+```
+simple-add output snippet changed to:
 Running on device:        Intel(R) Gen9 HD Graphics NEO
 Array size: 10000
 [0]: 0 + 100000 = 100000
@@ -277,8 +239,55 @@ Array size: 10000
 [2]: 2 + 100000 = 100002
 ...
 [9999]: 9999 + 100000 = 109999
-Successfully completed on device.</pre>
+Successfully completed on device.
+```
 
-## Troubleshooting
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+### Running the sample in the DevCloud<a name="run-on-devcloud"></a>
+
+#### Build and run
+
+To launch build and run jobs on DevCloud submit scripts to PBS through the qsub utility.
+> Note that all parameters are already specified in the build and run scripts.
+1. Build the sample on a gpu node.
+
+    ```bash
+    qsub build.sh
+    ```
+
+2. When the build job completes, there will be a `build.sh.oXXXXXX` file in the directory. After the build job completes, run the sample on a gpu node:
+
+    ```bash
+    qsub run.sh
+    ```
+
+3. To build and run for FPGA emulator use accordingly the `build_fpga_emu.sh` and `run_fpga_emu.sh` scripts, for FPGA hardware use the `build_fpga.sh` and `run_fpga.sh` scripts.
+
+#### Additional information
+
+1. In order to inspect the job progress, use the qstat utility.
+
+    ```bash
+    watch -n 1 qstat -n -1
+    ```
+
+    > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second.
+2. When a job terminates, a couple of files are written to the disk:
+
+    <script_name>.sh.eXXXX, which is the job stderr
+
+    <script_name>.sh.oXXXX, which is the job stdout
+
+    > Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+3. To inspect the output of the sample use cat command.
+
+    ```bash
+    cat run.sh.oXXXX
+    ```
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

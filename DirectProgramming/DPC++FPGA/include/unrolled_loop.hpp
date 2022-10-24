@@ -87,7 +87,7 @@ constexpr void UnrolledLoop(F&& f) {
 }
 
 //
-// Convenience implementation (C)
+// Convenience implementation (D)
 // performs UnrolledLoop from start...end with an iterator of type size_t
 // NOTE:  start is INCLUSIVE, end is EXCLUSIVE
 // NOTE:  if start<=end, sequence is start,start+1,...,end-1

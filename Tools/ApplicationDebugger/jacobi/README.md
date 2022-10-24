@@ -1,11 +1,11 @@
 # `jacobi` Sample
 
-The 'jacobi' code sample is a small DPC++ code sample for exercising application
-debugging using Intel&reg; Distribution for GDB\*. It is highly recommended that
+The 'jacobi' code sample is a small SYCL*-compliant sample for exercising application
+debugging using Intel&reg; Distribution for GDB*. It is highly recommended that
 you go through this sample *after* you familiarize yourself with the
 [array-transform](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/ApplicationDebugger/array-transform)
 sample and the
-[Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html)
 for the debugger.
 
 This sample contains two versions of the same program: `jacobi-bugged` and
@@ -13,8 +13,8 @@ This sample contains two versions of the same program: `jacobi-bugged` and
 injected. You can try to find and fix them using the debugger.
 
 | Optimized for       | Description
-|---------------------|--------------
-| OS                  | Linux Ubuntu 18.04 to 20.04, CentOS* 8, Fedora* 30, SLES 15; Windows* 10
+|:---                 |:---
+| OS                  | Linux* Ubuntu* 18.04 to 20.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
 | Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
 | Software            | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn | Find existing bugs in a program using the debugger
@@ -22,7 +22,7 @@ injected. You can try to find and fix them using the debugger.
 
 ## Purpose
 
-The `jacobi` sample is a DPC++ application that solves a hardcoded linear system
+The `jacobi` sample is a SYCL application that solves a hardcoded linear system
 of equations `Ax=b` using the Jacobi iteration. The matrix `A` is an `n x n` sparse
 matrix with diagonals `[1 1 5 1 1]`. Vectors `b` and `x` are `n x 1` vectors.
 Vector `b` is set in the way that all components of the solution vector `x` are 1.
@@ -55,12 +55,9 @@ devices. For convenience, the `jacobi` code sample provides the ability to
 select the target device by using a command-line argument of `cpu`, `gpu`, or
 `accelerator`.
 
-For an overview of the Jacobi method please refer to
-[Jacobi method|https://en.wikipedia.org/wiki/Jacobi_method].
+For an overview of the Jacobi method, please refer to the Wikipedia article on the [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method).
 
-For an overview of the debugger, please refer to the
-[Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
-of the application debugger.
+For an overview of the debugger, please refer to [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html).
 
 ## Recommended commands
 
@@ -207,32 +204,29 @@ to compute L1 norms of `x_k - x_k1` and `x_k1` respectively.
 
 Second, we update `x_k` with the new value from `x_k1`.
 
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
-for details.
-
-Third-party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Building and Running the `jacobi` Project
-
-If you have not already done so, set up your CLI environment by sourcing
-the setvars script located in the root of your oneAPI installation.
-
-Linux Sudo: `. /opt/intel/oneapi/setvars.sh`
-
-Linux User: `. ~/intel/oneapi/setvars.sh`
-
-Windows: `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Setup
 
-Preliminary setup steps are needed for the debugger to function. Please see the
-setup instructions in the Get Started Guide based on your OS:
-[Linux](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux),
-[Windows](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
+Preliminary setup steps are needed for the debugger to function.
+Please see the setup instructions in the Get Started Guide based on
+your OS: 
+- [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
+- [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
 
 
 ### Include Files
@@ -241,9 +235,9 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 your development system.
 
 
-### Running Samples In DevCloud
+### Running Samples In Intel&reg; DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must specify the
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the
 compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
 We recommend running the `jacobi` sample on a node with GPU. In order to have an
 interactive debugging session, we recommend using the interactive mode. To get
@@ -267,10 +261,8 @@ The basic steps to build and run a sample using VS Code include:
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the Extension Pack for Intel® oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+To learn more about the extensions and how to configure the oneAPI environment, see the
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On a Linux* System
 
@@ -316,8 +308,8 @@ Perform the following steps:
     ```
 
 
-For instructions about starting and using the debugger, please see the
-[Get Started Guide (Linux)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux).
+For instructions about starting and using the debugger, please see 
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/).
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 
@@ -342,8 +334,8 @@ For instructions about starting and using the debugger, please see the
    Properties > Debugging" and set the "Command Arguments" field. Use `gpu` or
    `accelerator` to target the GPU or the FPGA emulator device, respectively.
 
-For detailed instructions about starting and using the debugger, please see the
-[Get Started Guide (Windows)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
+For detailed instructions about starting and using the debugger, please see 
+[Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
 
 ### Example Outputs
 
@@ -365,7 +357,7 @@ Usage: ./jacobi-fixed <host|cpu|gpu|accelerator>
 
 #### CPU
 
-When run the original `jacobi-bugged`, the program shows the first bug:
+When run, the original `jacobi-bugged` program shows the first bug:
 
 ```
 $ ./jacobi-bugged cpu
@@ -421,7 +413,7 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 
 #### GPU
 
-We advise to start debugging GPU only after first two bugs are fixed on CPU.
+Start debugging GPU only after first two bugs are fixed on CPU.
 
 Bug 3 is immediately hit while offloading to GPU:
 
@@ -587,7 +579,7 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 
 `maint jit dump <addr> <filename>`
 : Save the JIT'ed objfile that contains address `addr` into the file `filename`.
-  Useful for extracting the DPC++ kernel when running on the CPU device.
+  Useful for extracting the kernel when running on the CPU device.
 
 `cond [-force] <N> <exp>`
 : Define the expression `exp` as the condition for breakpoint `N`. Use the
@@ -600,3 +592,11 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 
 \* Intel is a trademark of Intel Corporation or its subsidiaries. Other names
 and brands may be claimed as the property of others.
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+Third-party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

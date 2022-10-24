@@ -1,12 +1,12 @@
 #ifndef __FORWARD_SUBSTITUTION_HPP__
 #define __FORWARD_SUBSTITUTION_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // utility classes
 #include "ParallelCopyArray.hpp"
-#include "UnrolledLoop.hpp"
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 
@@ -154,7 +154,7 @@ event SubmitForwardSubstitutionKernel(queue& q) {
           for (short i = 0; i < kNumCalcTypePerVector; i++) {
             CalcType y_elements;
 
-            UnrolledLoop<k_unroll_factor>([&](auto j) {
+            fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
               y_elements[j] = y_vectors[vector_num][i][j];
               y_vector_initial[i][j] = y_elements[j];
               if (i == 0 && j == 0) {
@@ -186,7 +186,7 @@ event SubmitForwardSubstitutionKernel(queue& q) {
               CalcType l_val, y_val, y_initial_val, y_current, y_new;
               short row[k_unroll_factor];
 
-              UnrolledLoop<k_unroll_factor>([&](auto j) {
+              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
                 // calculate current location within the vector
                 row[j] = j + (i * (short)k_unroll_factor);
 

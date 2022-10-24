@@ -1,9 +1,9 @@
 #ifndef __STREAMING_QRD_HPP__
 #define __STREAMING_QRD_HPP__
 
+#include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
-#include "constexpr_math.hpp"
 
 namespace fpga_linalg {
 
@@ -21,31 +21,37 @@ namespace fpga_linalg {
 
   Then input and output matrices are consumed/produced from/to pipes.
 */
-template <typename T,        // The datatype for the computation
-          bool is_complex,   // True if T is ac_complex<X>
-          int rows,          // Number of rows in the A matrices
-          int columns,       // Number of columns in the A matrices
-                             // , must be <= rows
-          int raw_latency,   // Read after write latency (in iterations) of
-                             // the triangular loop of this function.
-                             // This value depends on the FPGA target, the
-                             // datatype, the target frequency, etc.
-                             // This value will have to be tuned for optimal
-                             // performance. Refer to the Triangular Loop
-                             // design pattern tutorial.
-                             // In general, find a high value for which the
-                             // compiler is able to achieve an II of 1 and
-                             // go down from there.
-          int pipe_size,     // Number of elements read/write per pipe
-                             // operation
-          typename AIn,      // A matrix input pipe, receive pipe_size
-                             // elements from the pipe with each read
-          typename QOut,     // Q matrix output pipe, send pipe_size
-                             // elements to the pipe with each write
-          typename ROut      // R matrix output pipe, send pipe_size
-                             // elements to the pipe with each write.
-                             // Only upper-right elements of R are
-                             // sent in row order, starting with row 0.
+template <typename T,       // The datatype for the computation
+          bool is_complex,  // True if T is ac_complex<X>
+          int rows,         // Number of rows in the A matrices
+          int columns,      // Number of columns in the A matrices
+                            // , must be <= rows
+          int raw_latency,  // Read after write latency (in iterations) of
+                            // the triangular loop of this function.
+                            // This value depends on the FPGA target, the
+                            // datatype, the target frequency, etc.
+                            // This value will have to be tuned for optimal
+                            // performance. Refer to the Triangular Loop
+                            // design pattern tutorial.
+                            // In general, find a high value for which the
+                            // compiler is able to achieve an II of 1 and
+                            // go down from there.
+          int pipe_size,    // Number of elements read/write per pipe
+                            // operation
+          typename AIn,     // A matrix input pipe, receive pipe_size
+                            // elements from the pipe with each read
+          typename QOut,    // Q matrix output pipe, send pipe_size
+                            // elements to the pipe with each write
+          typename ROut,    // R matrix output pipe, send pipe_size
+                            // elements to the pipe with each write.
+                            // Only upper-right elements of R are
+                            // sent in row order, starting with row 0.
+          bool k_column_order =
+              true  // Default value is true for standard matrix input reads
+                    // (reads the matrix one column at a time). False if read
+                    // order by rows (sweeps the rows by pipe size). Each read
+                    // contains pipe_size samples from the same column, then the
+                    // next read contains samples from the next column.
           >
 struct StreamingQRD {
   void operator()() const {
@@ -97,8 +103,8 @@ struct StreamingQRD {
     // Number of signal replication required to cover all the rows compute cores
     // given a kFanoutReduction factor
     constexpr int kBanksForFanout = (rows % kFanoutReduction)
-                                    ? (rows / kFanoutReduction) + 1
-                                    : rows / kFanoutReduction;
+                                        ? (rows / kFanoutReduction) + 1
+                                        : rows / kFanoutReduction;
 
     // Number of iterations performed without any dummy work added for the
     // triangular loop optimization
@@ -130,11 +136,12 @@ struct StreamingQRD {
     // -> enough bits to encode the maximum number of negative iterations
     static constexpr int kJNegativeIterations =
         kVariableIterations < 0 ? -kVariableIterations : 1;
-    static constexpr int kJBitSize = fpga_tools::BitsForMaxValue<columns + 1>()
-                          + fpga_tools::BitsForMaxValue<kJNegativeIterations>();
+    static constexpr int kJBitSize =
+        fpga_tools::BitsForMaxValue<columns + 1>() +
+        fpga_tools::BitsForMaxValue<kJNegativeIterations>();
 
     // Compute QRDs as long as matrices are given as inputs
-    while(1) {
+    while (1) {
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
       // a_load is the initial matrix received from the pipe
@@ -148,17 +155,18 @@ struct StreamingQRD {
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
       constexpr short kNumBanksNextPow2 =
-                              fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanks));
+          fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanks));
 
       [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      column_tuple a_load[columns], a_compute[columns], q_result[columns];
+      column_tuple a_load[columns],
+          a_compute[columns], q_result[columns];
 
       // Contains the values of the upper-right part of R in a row by row
       // fashion, starting by row 0
-      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       TT r_result[kRMatrixSize];
 
       // Copy a matrix from the pipe to a local memory
@@ -169,27 +177,36 @@ struct StreamingQRD {
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize =
-                                  fpga_tools::BitsForMaxValue<kLoopIter + 1>();
+          fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
 
-        int write_idx = li % kLoopIterPerColumn;
+        int write_idx;
+        int a_col_index;
+        if constexpr (k_column_order) {
+          write_idx = li % kLoopIterPerColumn;
+          a_col_index = li / kLoopIterPerColumn;
+        } else {
+          write_idx = li / columns;
+          a_col_index = li % columns;
+        }
+        // int write_idx = li / columns;
 
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn].template get<k * pipe_size
-                                          + t>() = pipe_read.template get<t>();
+                a_load[a_col_index].template get<k * pipe_size + t>() =
+                    pipe_read.template get<t>();
               }
             }
 
             // Delay data signals to create a vine-based data distribution
             // to lower signal fanout.
-            pipe_read. template get<t>() =
-                      sycl::ext::intel::fpga_reg(pipe_read. template get<t>());
+            pipe_read.template get<t>() =
+                sycl::ext::intel::fpga_reg(pipe_read.template get<t>());
           });
 
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
@@ -210,8 +227,8 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]]
-      [[intel::private_copies(2)]] // NO-FORMAT: Attribute
+      [[intel::fpga_memory]]        // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       TT s_or_ir[columns];
 
       T pip1, ir;
@@ -220,8 +237,14 @@ struct StreamingQRD {
       ac_int<kIBitSize, true> i = -1;
       ac_int<kJBitSize, true> j = 0;
 
+      // We keep track of the value of the current column
+      // If it's a 0 vector, then we need to skip the iteration
+      // This will result in columns in Q being set to 0
+      // This occurs when the input matrix have linearly dependent columns
+      bool projection_is_zero = false;
+
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
+      [[intel::ivdep(raw_latency)]]      // NO-FORMAT: Attribute
       for (int s = 0; s < kIterations; s++) {
         // Pre-compute the next values of i and j
         ac_int<kIBitSize, true> next_i;
@@ -231,8 +254,8 @@ struct StreamingQRD {
           // enough time to write its result for the next i iteration,
           // some "dummy" iterations are introduced
           next_j = (kVariableIterations > i)
-                      ? ac_int<kJBitSize, true>{i + 1}
-                      : ac_int<kJBitSize, true>{kVariableIterations};
+                       ? ac_int<kJBitSize, true>{i + 1}
+                       : ac_int<kJBitSize, true>{kVariableIterations};
           next_i = i + 1;
         } else {
           next_j = j + 1;
@@ -304,8 +327,8 @@ struct StreamingQRD {
           //    but the i iteration is still required to fill ir and s
           //    for subsequent iterations
           auto prod_lhs = a_i[k];
-          auto prod_rhs = i_lt_0[fanout_bank_idx] ?
-                                          TT{0.0} : s_or_ir_j[fanout_bank_idx];
+          auto prod_rhs =
+              i_lt_0[fanout_bank_idx] ? TT{0.0} : s_or_ir_j[fanout_bank_idx];
           auto add = j_eq_i[fanout_bank_idx] ? TT{0.0} : col[k];
           if constexpr (is_complex) {
             col1[k] = prod_lhs * prod_rhs.conj() + add;
@@ -347,21 +370,39 @@ struct StreamingQRD {
 
         // Compute pip1 and ir based on the results of the dot product
         if (j == i + 1) {
+          // Check if the projection of the current columns is the 0 vector
+          projection_is_zero = (i >= 0) && (p_ij == 0);
+
           if constexpr (is_complex) {
             pip1 = p_ij.r();
-            ir = sycl::rsqrt(p_ij.r());
           } else {
             pip1 = p_ij;
-            ir = sycl::rsqrt(p_ij);
+          }
+
+          // If the projection is 0, we set ir to 1 to be a no-op in the next
+          // iteration when computing Q_i = a_i*ir
+          if (projection_is_zero) {
+            ir = 1;
+          } else {
+            if constexpr (is_complex) {
+              ir = sycl::rsqrt(p_ij.r());
+            } else {
+              ir = sycl::rsqrt(p_ij);
+            }
           }
         }
 
         // Compute the value of -s[j]
         TT s_j;
-        if constexpr (is_complex) {
-          s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
-        } else {
-          s_j = -p_ij / pip1;
+        if(projection_is_zero){
+          s_j = TT{0};
+        }
+        else{
+          if constexpr (is_complex) {
+            s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
+          } else {
+            s_j = -p_ij / pip1;
+          }
         }
 
         // j may be negative if the number of "dummy" iterations is
@@ -391,8 +432,17 @@ struct StreamingQRD {
         }
 
         // Update loop indexes
-        j = next_j;
-        i = next_i;
+        if (j == (columns - 1)) {
+          // If i reached an index at which the j inner loop doesn't have
+          // enough time to write its result for the next i iteration,
+          // some "dummy" iterations are introduced
+          j = (kVariableIterations > i)
+                  ? ac_int<kJBitSize, true>{i + 1}
+                  : ac_int<kJBitSize, true>{kVariableIterations};
+          i = i + 1;
+        } else {
+          j = j + 1;
+        }
 
       }  // end of s
 
@@ -420,7 +470,8 @@ struct StreamingQRD {
               pipe_write.template get<k>() =
                   get[t] ? q_result[li / kLoopIterPerColumn]
                                .template get<t * pipe_size + k>()
-                    : sycl::ext::intel::fpga_reg(pipe_write.template get<k>());
+                         : sycl::ext::intel::fpga_reg(
+                               pipe_write.template get<k>());
             }
           });
         });

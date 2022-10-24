@@ -1,6 +1,6 @@
 ﻿# Intel&reg; Modin* Get Started Sample
 
-This get started sample code shows how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This get started sample code shows how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Property                          | Description
 | :---                              | :---
@@ -19,7 +19,7 @@ In this sample, you will run Intel Distribution of Modin*-accelerated Pandas fun
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel® Atom® processors; Intel® Core™ processor family; Intel® Xeon® processor family; Intel® Xeon® Scalable Performance processor family
-| Software                          | Intel® Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® Distribution of Modin*, Intel® AI Analytics Toolkit
 
 
 ## Key Implementation Details
@@ -27,14 +27,15 @@ In this sample, you will run Intel Distribution of Modin*-accelerated Pandas fun
 This get started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment.
 
 
-## Environment Setup
+<h2 id="jump0"> Environment Setup </h2> 
 
 1. Install Intel Distribution of Modin in a new conda environment.
 
    <!-- As of right now, you can install Intel Distribution of Modin only via Anaconda. -->
+   **Note:** replace python=3.x with your own python version
 
    ``` bash
-   conda create -n aikit-modin
+   conda create -n aikit-modin python=3.x -y
    conda activate aikit-modin
    conda install modin-all -c intel -y
    ```
@@ -69,9 +70,7 @@ This get started sample code is implemented for CPU using the Python language. T
 ## Run the Sample<a name="running-the-sample"></a>
 
 You can run the Jupyter notebook with the sample code on your local
-server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud.
-
-**Note:** You can run this sample on the Intel DevCloud using the Dask and OmniSci engine backends for Modin. To learn how to set the engine backend for Intel Distribution of Modin, visit the [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html). The Ray backend cannot be used on Intel DevCloud at this time. Thank you for your patience.
+server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
 
 ### Run the Sample in Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
@@ -99,15 +98,31 @@ To open the Jupyter notebook on your local server:
 
 ### Run the Sample in the Intel® DevCloud for oneAPI JupyterLab
 
-1. Open the following link in your browser: https://jupyter.oneapi.devcloud.intel.com/
+1. If you do not already have an account, request an Intel® DevCloud account at [Create an Intel® DevCloud Account](https://www.intel.com/content/www/us/en/forms/idz/devcloud-registration.html).
+   
+2. Open the following link in your browser: https://devcloud.intel.com/oneapi/get_started/, locate the **Connect with Jupyter Lab\*** section (near the bottom). 
+   
+3. Click **Sign in to Connect** button. (If you are already signed in, the link should say **Launch JupyterLab\***.)
+   
+4. If the samples are not already present in your Intel® DevCloud account, download them.
+   - From JupyterLab, select **File > New > Terminal**.
+   - In the terminal, clone the samples from GitHub: 
+      ```
+      git clone https://github.com/oneapi-src/oneAPI-samples.git
+      ```
 
-2. In the Notebook Dashboard, navigate to the ``IntelModin_GettingStarted.ipynb`` file and open it.
+5. Setup environment in the terminal:
+   - source oneAPI conda environment
+      ```
+      source /opt/intel/oneapi/setvars.sh --force
+      ```
+   - Refer to [Environment Setup](#jump0) to setup environment 
+  
+6. In the JupyterLab, navigate to the ``IntelModin_GettingStarted.ipynb`` file and open it.
 
-   **Important:** You must edit the cell that imports modin to enable the Dask or OmniSci backend engine. The Ray backend cannot be used on Intel DevCloud at this time. For more information, visit the [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html).
+7. To change the kernel, click **Kernel** > **Change kernel** > **usr_modin**.
 
-3. To change the kernel, click **Kernel** > **Change kernel** > **usr_modin**.
-
-4. Run the sample code and read the explanations in the notebook.
+8. Run the sample code and read the explanations in the notebook.
 
 ### Run the Python Script Locally
 

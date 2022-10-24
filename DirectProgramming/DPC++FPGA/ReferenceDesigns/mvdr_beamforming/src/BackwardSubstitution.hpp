@@ -1,12 +1,12 @@
 #ifndef __BACKWARD_SUBSTITUTION_HPP__
 #define __BACKWARD_SUBSTITUTION_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // utility classes
 #include "ParallelCopyArray.hpp"
-#include "UnrolledLoop.hpp"
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 
@@ -135,7 +135,7 @@ event SubmitBackwardSubstitutionKernel(queue& q) {
               CalcType u_val, y_val, y_initial_val, y_current, y_new;
               short row[k_unroll_factor];
 
-              UnrolledLoop<k_unroll_factor>([&](auto j) {
+              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
                 // calculate current location within the vector
                 row[j] = j + (i * (short)k_unroll_factor);
 

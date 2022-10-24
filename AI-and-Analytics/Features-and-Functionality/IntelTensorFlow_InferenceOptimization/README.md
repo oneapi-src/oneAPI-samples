@@ -7,7 +7,7 @@ Both the Intel® Low Precision Optimization Tool (Intel® LPOT) and TensorFlow o
 |:---                               |:---
 | OS                                | Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html)
+| Software                          | [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html)
 | What you will learn               | Optimize a pre-trained model for a better inference performance
 | Time to complete                  | 30 minutes
 

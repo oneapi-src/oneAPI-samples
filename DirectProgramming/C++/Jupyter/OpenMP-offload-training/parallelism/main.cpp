@@ -13,7 +13,7 @@ constexpr int NUM_BLOCKS = 9;
 int main(int argc, char *argv[]) {
   int i, ib, is_cpu = 1, num_teams = 0;
   double tstart, tstop;
-  double x[ARRAY_SIZE], y[ARRAY_SIZE];
+  float x[ARRAY_SIZE], y[ARRAY_SIZE];
 
   float a = 1.0f;
   float tolerance = 0.01f;
@@ -39,7 +39,8 @@ int main(int argc, char *argv[]) {
     if (abs(y[i] - (a * i + i)) < tolerance)
       correct_count++;
     else {
-      printf("Incorrect Result at Element [%d] : %f\n", i, y[i]);
+      printf("Incorrect Result at Element y[%d] : %f\n", i, y[i]);
+      printf("Expected: %f\n", a*i+i);
       break;
     }
   printf("Test: %s\n", (correct_count == ARRAY_SIZE) ? "PASSED!" : "Failed");

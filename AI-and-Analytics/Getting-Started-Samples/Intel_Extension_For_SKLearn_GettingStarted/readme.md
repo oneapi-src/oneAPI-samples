@@ -1,6 +1,6 @@
 # `Intel® Python Scikit-learn Getting Started` Sample
 Intel(R) Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel(R) oneAPI Data Analytics Library (oneDAL).
-This Getting Started sample code shows how to use support vector machine classifier from Intel(R) Extension for Scikit-learn for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel(R) Extension for Scikit-learn is a seamless way to speed up scikit-learn application. The acceleration is achieved through the use of the Intel(R) oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) which comes with [Intel® oneAPI AI Analytics Toolkit(AI kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This Getting Started sample code shows how to use support vector machine classifier from Intel(R) Extension for Scikit-learn for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel(R) Extension for Scikit-learn is a seamless way to speed up scikit-learn application. The acceleration is achieved through the use of the Intel(R) oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) which comes with [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -17,7 +17,7 @@ Intel(R) Extension for Scikit-learn* depends on Intel(R) daal4py. daal4py is a s
 In this sample, you will run a support vector classifier model from sklearn with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel(R) Extension for Scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). Intel(R) Extension for Scikit-learn is available as a part of [Intel® oneAPI AI Analytics Toolkit(AI kit)]
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel(R) Extension for Scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel® AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). Intel(R) Extension for Scikit-learn is available as a part of [Intel® AI Analytics Toolkit (AI kit)]
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -30,7 +30,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ## Building Intel(R) Extension for Scikit-learn for CPU
 
-oneAPI Data Analytics Library is ready for use once you finish the Intel® oneAPI AI Analytics Toolkit installation and have run the post installation script.
+oneAPI Data Analytics Library is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -58,7 +58,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel® oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel® AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```

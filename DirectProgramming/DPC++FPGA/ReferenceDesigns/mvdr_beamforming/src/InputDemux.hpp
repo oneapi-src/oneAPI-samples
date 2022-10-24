@@ -1,13 +1,13 @@
 #ifndef __INPUT_DEMUX_HPP__
 #define __INPUT_DEMUX_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 
 // utility classes
-#include "Tuple.hpp"
-#include "UnrolledLoop.hpp"
+#include "tuple.hpp"          // DirectProgramming/DPC++FPGA/include
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 
@@ -53,7 +53,7 @@ event SubmitInputDemuxKernel(
   }
 
   // Use an NTuple of complex numbers for reading/writing pipes
-  using PipeType = NTuple<ComplexType, k_pipe_width>;
+  using PipeType = fpga_tools::NTuple<ComplexType, k_pipe_width>;
 
   auto e = q.submit([&](handler& h) {
     h.single_task<InputDemuxKernelName>([=] {
@@ -78,8 +78,8 @@ event SubmitInputDemuxKernel(
 
       // create a 'pipeline' for the almost full signal
       constexpr int kAlmostFullPipeDepth = 2;
-      NTuple<bool, kAlmostFullPipeDepth> almost_full_pipeline;
-      UnrolledLoop<kAlmostFullPipeDepth>([&](auto pipe_stage) {
+      fpga_tools::NTuple<bool, kAlmostFullPipeDepth> almost_full_pipeline;
+      fpga_tools::UnrolledLoop<kAlmostFullPipeDepth>([&](auto pipe_stage) {
         almost_full_pipeline.template get<pipe_stage>() = false;
       });
 
@@ -123,7 +123,7 @@ event SubmitInputDemuxKernel(
         // an 'almost' full signal, we don't need the result right away, we
         // can wait several loop iterations.  This allows us to break
         // dependencies between loop iterations and improve FMAX.
-        UnrolledLoop<kAlmostFullPipeDepth - 1>([&](auto pipe_stage) {
+        fpga_tools::UnrolledLoop<kAlmostFullPipeDepth - 1>([&](auto pipe_stage) {
           almost_full_pipeline.template get<pipe_stage>() =
               almost_full_pipeline.template get<pipe_stage + 1>();
         });

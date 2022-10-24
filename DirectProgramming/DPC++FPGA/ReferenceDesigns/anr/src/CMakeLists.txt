@@ -4,13 +4,13 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # These are Windows-specific flags:
@@ -41,11 +41,11 @@ endif()
 # e.g. cmake .. -DSEED=7
 if(NOT DEFINED SEED)
     # the default seed
-  if(FPGA_BOARD MATCHES ".*a10.*")
+  if(FPGA_DEVICE MATCHES ".*a10.*")
     set(SEED 1)
-  elseif(FPGA_BOARD MATCHES ".*s10.*")
+  elseif(FPGA_DEVICE MATCHES ".*s10.*")
     set(SEED 2)
-  elseif(FPGA_BOARD MATCHES ".*agilex.*")
+  elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     set(SEED 3)
   else()
     set(SEED 4)
@@ -74,11 +74,11 @@ if(PIXELS_PER_CYCLE)
     message(STATUS "PIXELS_PER_CYCLE explicitly set to ${PIXELS_PER_CYCLE}")
 else()
   # Default PIXELS_PER_CYCLE based on the board being used
-  if(FPGA_BOARD MATCHES ".*a10.*")
+  if(FPGA_DEVICE MATCHES ".*a10.*")
     set(PIXELS_PER_CYCLE 2)
-  elseif(FPGA_BOARD MATCHES ".*s10.*")
+  elseif(FPGA_DEVICE MATCHES ".*s10.*")
     set(PIXELS_PER_CYCLE 2)
-  elseif(FPGA_BOARD MATCHES ".*agilex.*")
+  elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     set(PIXELS_PER_CYCLE 1)
   else()
     message(WARNING "Unknown board: setting PIXELS_PER_CYCLE to 1")
@@ -115,14 +115,14 @@ if(PIXEL_BITS)
   message(STATUS "  PIXEL_BITS=${PIXEL_BITS}")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
+set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -139,7 +139,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
