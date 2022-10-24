@@ -84,7 +84,6 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_REG})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET_REG}")
 
@@ -104,6 +103,5 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_REG})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_REG}")

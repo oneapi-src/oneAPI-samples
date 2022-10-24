@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE loop_fusion.cpp)
 set(TARGET_NAME loop_fusion)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
