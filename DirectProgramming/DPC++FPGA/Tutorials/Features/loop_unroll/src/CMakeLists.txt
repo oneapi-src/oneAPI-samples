@@ -22,7 +22,7 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
@@ -52,10 +52,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_unroll.cpp -o loop_unroll.fpga_sim
+#    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_unroll.cpp -o loop_unroll.fpga_sim
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_unroll.cpp.o -c loop_unroll.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> loop_unroll.cpp.o -o loop_unroll.fpga_sim
+#    [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_unroll.cpp.o -c loop_unroll.cpp
+#    [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> loop_unroll.cpp.o -o loop_unroll.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
