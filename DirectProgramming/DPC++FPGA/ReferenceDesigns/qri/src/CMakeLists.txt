@@ -90,7 +90,7 @@ message(STATUS "FIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD}")
 message(STATUS "FIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI}")
 message(STATUS "SEED=${SEED}")
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
@@ -114,7 +114,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ###############################################################################
 ### Generate Report
 ###############################################################################
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} EXCLUDE_FROM_ALL ${HOST_SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
@@ -142,4 +142,3 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.

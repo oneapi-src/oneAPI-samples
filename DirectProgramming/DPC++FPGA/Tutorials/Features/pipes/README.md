@@ -5,7 +5,7 @@ This FPGA tutorial shows how to use pipes to transfer data between kernels.
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> ***Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI SYCL Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | The basics of using SYCL*-compliant pipes extension for FPGA<br> How to declare and use pipes
 | Time to complete                  | 15 minutes
 
@@ -65,7 +65,7 @@ SYCL*-compliant pipes are defined as a class with static members. To declare a p
 transfers integer data and has  `capacity=4`, use a type alias:
 
 ```c++
-using ProducerToConsumerPipe = pipe<  // Defined in the DPC++ headers.
+using ProducerToConsumerPipe = pipe<  // Defined in the SYCL headers.
   class ProducerConsumerPipe,         // An identifier for the pipe.
   int,                                // The type of data in the pipe.
   4>;                                 // The capacity of the pipe.
@@ -76,7 +76,7 @@ uniqueness of the pipe. This class need not be defined but must be distinct
 for each pipe. Consider another type alias with the exact same parameters:
 
 ```c++
-using ProducerToConsumerPipe2 = pipe<  // Defined in the DPC++ headers.
+using ProducerToConsumerPipe2 = pipe<  // Defined in the SYCL headers.
   class ProducerConsumerPipe,          // An identifier for the pipe.
   int,                                 // The type of data in the pipe.
   4>;                                  // The capacity of the pipe.
