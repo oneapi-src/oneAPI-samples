@@ -1,6 +1,7 @@
 {
   "guid": "f9d91098-095c-4ab6-a7ea-e1b454f04ccc",
   "name": "Introduction to Machine Learning",
+<<<<<<< HEAD
   "categories": [ "Toolkit/oneAPI AI And Analytics/AI Getting Started Samples" ],
   "description": "The Jupyter Notebooks in these samples are intended to give professors and students an accesible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms which are used daily to address machine learning challenges. It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the Intel AI Analytics Toolkit powered by oneAPI. This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.",
   "toolchain": [ "jupyter" ],
@@ -8,17 +9,30 @@
   "os": [ "linux" ],
   "builder": [ "ide", "make" ],
   "targetDevice": [ "CPU" ],
+=======
+  "categories": [ "Toolkit/oneAPI AI And Analytics/AI Getting Started Samples/Intel Extensions for Scikit-learn Jupyter Notebooks" ],
+  "description": "Introduction to Machine Learning and Introduction to Intel Extensions for Scikit-learn*",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+>>>>>>> 699ce3e23f01d689c78ef9b774df22e6befc3b41
   "ciTests": {
     "linux": [
       {
         "env": [ "source /opt/intel/oneapi/setvars.sh" ],
         "steps": [
+		  "pip install -r requirements.txt # Installing notebook's & Makefile dependencies on nbconvert",
           "make all",
           "make Run",
           "make clean"
         ]
       }
     ]
+<<<<<<< HEAD
   },
   "expertise": "Tutorial"
+=======
+  }
+>>>>>>> 699ce3e23f01d689c78ef9b774df22e6befc3b41
 }
