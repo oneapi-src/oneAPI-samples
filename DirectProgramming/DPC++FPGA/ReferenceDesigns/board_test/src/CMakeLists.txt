@@ -58,7 +58,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ###############################################################################
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -Xsno-interleaving=default -fsycl-link=early board_test.cpp -o board_test.a
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})

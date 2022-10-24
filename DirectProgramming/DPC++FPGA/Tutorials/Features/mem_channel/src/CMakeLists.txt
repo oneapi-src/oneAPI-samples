@@ -60,7 +60,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
 set(FPGA_EARLY_IMAGE_INTERLEAVING ${TARGET_NAME}_interleaving_report.a)
 set(FPGA_EARLY_IMAGE_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE_INTERLEAVING} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE_INTERLEAVING} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} ${SOURCE_FILE})

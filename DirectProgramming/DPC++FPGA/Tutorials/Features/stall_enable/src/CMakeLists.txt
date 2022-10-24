@@ -87,7 +87,7 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${STALL_FREE_SIMULATOR_TA
 # To compile manually (Stall Enable):
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_EARLY_IMAGE ${STALL_ENABLE_TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -97,7 +97,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # To compile manually (Stall Free):
 #   icpx -DSTALL_FREE -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_STALL_FREE_EARLY_IMAGE ${STALL_FREE_TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_STALL_FREE_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_STALL_FREE_EARLY_IMAGE} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE} ${FPGA_STALL_FREE_EARLY_IMAGE})

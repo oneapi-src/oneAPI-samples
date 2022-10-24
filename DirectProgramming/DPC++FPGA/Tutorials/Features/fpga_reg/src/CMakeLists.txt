@@ -58,7 +58,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early fpga_reg.cpp -o fpga_reg_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_REG ${TARGET_NAME_REG}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_REG} ${SOURCE_FILE})

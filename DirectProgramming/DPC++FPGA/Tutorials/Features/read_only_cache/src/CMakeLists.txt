@@ -53,7 +53,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early read_only_cache.cpp -o read_only_cache_report.a
 set(FPGA_EARLY_IMAGE_CACHE_DISABLED ${TARGET_NAME}_disabled_report.a)
 set(FPGA_EARLY_IMAGE_CACHE_ENABLED ${TARGET_NAME}_enabled_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE_CACHE_DISABLED} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE_CACHE_DISABLED} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_CACHE_ENABLED} ${SOURCE_FILE})

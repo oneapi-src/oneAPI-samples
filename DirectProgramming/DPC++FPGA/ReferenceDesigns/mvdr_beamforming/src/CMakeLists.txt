@@ -118,7 +118,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xstarget=<FPGA_DEVICE> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})

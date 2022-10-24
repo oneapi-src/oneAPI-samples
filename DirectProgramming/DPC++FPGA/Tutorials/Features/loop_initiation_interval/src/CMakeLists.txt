@@ -72,7 +72,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_ENABLE_II ${TARGET_NAME_ENABLE_II}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_ENABLE_II} ${SOURCE_FILE})
