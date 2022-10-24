@@ -29,7 +29,6 @@ double GetExecutionTime(const event &e) {
 
 void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
                 std::vector<int> &r_out) {
-
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
 #elif defined(FPGA_SIMULATOR)

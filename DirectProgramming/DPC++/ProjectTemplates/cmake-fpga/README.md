@@ -11,7 +11,7 @@ This code sample is minimal project template for FPGA using the `CMake` build sy
 
 This project is a template designed to help you quickly create your own SYCL*-compliant application for FPGA targets.
 
-The template assumes the use of `CMake` to build your application. The supplied `CMakeLists.txt` file contains the compiler options and libraries needed to compile an application for FPGA targets. 
+The template assumes the use of `CMake` to build your application. The supplied `CMakeLists.txt` file contains the compiler options and libraries needed to compile an application for FPGA targets.
 
 The `main.cpp` source file shows the header files- that you should include and the recommended "device selector" code for targeting the application runtime device.
 
@@ -60,7 +60,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
@@ -125,7 +125,7 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
   |FPGA Runtime (Stratix 10) |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
   |GPU	                     |`qsub -l nodes=1:gpu:ppn=2 -d .`
   |CPU	                     |`qsub -l nodes=1:xeon:ppn=2 -d .`
-  
+
 
 
 >**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.

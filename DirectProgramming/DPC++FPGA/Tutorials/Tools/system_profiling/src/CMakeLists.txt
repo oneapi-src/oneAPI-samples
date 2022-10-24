@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE double_buffering.cpp)
 set(TARGET_NAME double_buffering)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
@@ -17,14 +14,14 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -Xsprofile ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -Xsprofile ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fsycl -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation

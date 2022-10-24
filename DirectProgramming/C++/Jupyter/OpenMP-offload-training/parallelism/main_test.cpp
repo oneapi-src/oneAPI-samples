@@ -13,7 +13,7 @@ constexpr int NUM_BLOCKS = 9;
 int main(int argc, char *argv[]) {
   int i, ib, is_cpu = 1, num_teams = 0;
   double tstart, tstop;
-  double x[ARRAY_SIZE], y[ARRAY_SIZE];
+  float x[ARRAY_SIZE], y[ARRAY_SIZE];
 
   float a = 1.0f;
   float tolerance = 0.01f;

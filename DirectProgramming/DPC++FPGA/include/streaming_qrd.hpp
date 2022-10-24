@@ -227,7 +227,7 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]]
+      [[intel::fpga_memory]]        // NO-FORMAT: Attribute
       [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       TT s_or_ir[columns];
 
@@ -236,6 +236,12 @@ struct StreamingQRD {
       // Initialization of the i and j variables for the triangular loop
       ac_int<kIBitSize, true> i = -1;
       ac_int<kJBitSize, true> j = 0;
+
+      // We keep track of the value of the current column
+      // If it's a 0 vector, then we need to skip the iteration
+      // This will result in columns in Q being set to 0
+      // This occurs when the input matrix have linearly dependent columns
+      bool projection_is_zero = false;
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       [[intel::ivdep(raw_latency)]]      // NO-FORMAT: Attribute
@@ -364,21 +370,39 @@ struct StreamingQRD {
 
         // Compute pip1 and ir based on the results of the dot product
         if (j == i + 1) {
+          // Check if the projection of the current columns is the 0 vector
+          projection_is_zero = (i >= 0) && (p_ij == 0);
+
           if constexpr (is_complex) {
             pip1 = p_ij.r();
-            ir = sycl::rsqrt(p_ij.r());
           } else {
             pip1 = p_ij;
-            ir = sycl::rsqrt(p_ij);
+          }
+
+          // If the projection is 0, we set ir to 1 to be a no-op in the next
+          // iteration when computing Q_i = a_i*ir
+          if (projection_is_zero) {
+            ir = 1;
+          } else {
+            if constexpr (is_complex) {
+              ir = sycl::rsqrt(p_ij.r());
+            } else {
+              ir = sycl::rsqrt(p_ij);
+            }
           }
         }
 
         // Compute the value of -s[j]
         TT s_j;
-        if constexpr (is_complex) {
-          s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
-        } else {
-          s_j = -p_ij / pip1;
+        if(projection_is_zero){
+          s_j = TT{0};
+        }
+        else{
+          if constexpr (is_complex) {
+            s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
+          } else {
+            s_j = -p_ij / pip1;
+          }
         }
 
         // j may be negative if the number of "dummy" iterations is
@@ -413,8 +437,8 @@ struct StreamingQRD {
           // enough time to write its result for the next i iteration,
           // some "dummy" iterations are introduced
           j = (kVariableIterations > i)
-                      ? ac_int<kJBitSize, true>{i + 1}
-                      : ac_int<kJBitSize, true>{kVariableIterations};
+                  ? ac_int<kJBitSize, true>{i + 1}
+                  : ac_int<kJBitSize, true>{kVariableIterations};
           i = i + 1;
         } else {
           j = j + 1;

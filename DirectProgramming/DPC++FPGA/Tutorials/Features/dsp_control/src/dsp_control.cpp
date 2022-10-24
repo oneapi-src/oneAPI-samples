@@ -25,6 +25,8 @@ void KernelRun(const std::vector<float> &input_data,
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -83,7 +85,7 @@ void KernelRun(const std::vector<float> &input_data,
         // The local control library function overrides the global control.
         // Because the Propagate argument is Off, only the addition directly in
         // the lambda is affected by the local control and will be implemented
-        // in DSP. The subtration in the subtract() function call is only
+        // in DSP. The subtraction in the subtract() function call is only
         // affected by the global control so will be implemented in soft-logic.
         ext::intel::math_dsp_control<ext::intel::Preference::DSP,
                                      ext::intel::Propagate::Off>([&] {

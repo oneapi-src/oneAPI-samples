@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE stall_enable.cpp)
 set(STALL_ENABLE_TARGET_NAME stall_enable)
 set(EMULATOR_TARGET ${STALL_ENABLE_TARGET_NAME}.fpga_emu)
@@ -33,15 +30,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_SIMULATOR_FLAGS}")
-# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fsycl -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -88,7 +84,7 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${STALL_FREE_SIMULATOR_TA
 # To compile manually (Stall Enable):
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_EARLY_IMAGE ${STALL_ENABLE_TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -98,7 +94,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # To compile manually (Stall Free):
 #   icpx -DSTALL_FREE -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_STALL_FREE_EARLY_IMAGE ${STALL_FREE_TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_STALL_FREE_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_STALL_FREE_EARLY_IMAGE} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE} ${FPGA_STALL_FREE_EARLY_IMAGE})

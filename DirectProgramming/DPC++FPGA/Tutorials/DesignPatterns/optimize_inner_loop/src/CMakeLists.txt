@@ -1,9 +1,7 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE optimize_inner_loop.cpp)
 set(TARGET_NAME optimize_inner_loop)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
@@ -21,14 +19,17 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
+set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -44,6 +45,19 @@ target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    icpx -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_carried_dependency.cpp -o loop_carried_dependency.fpga_sim
+# CMake executes:
+#    [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_carried_dependency.cpp.o -c loop_carried_dependency.cpp
+#    [link]    icpx -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> loop_carried_dependency.cpp.o -o loop_carried_dependency.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report
@@ -51,7 +65,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimize_inner_loop.cpp -o optimize_inner_loop_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})

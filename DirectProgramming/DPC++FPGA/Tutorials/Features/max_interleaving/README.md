@@ -5,7 +5,7 @@ This FPGA tutorial explains how to use the `max_interleaving` attribute for loop
 |:---                                 |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI SYCL Compiler
 | What you will learn               | The basic usage of the `max_interleaving` attribute <br> How the `max_interleaving` attribute affects loop resource use <br> How to apply the `max_interleaving` attribute to loops in your program
 | Time to complete                  | 15 minutes
 
@@ -101,9 +101,13 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -141,6 +145,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -191,7 +199,12 @@ The area usage information can also be accessed on the main report page in the S
      ./max_interleaving.fpga_emu     (Linux)
      max_interleaving.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./max_interleaving.fpga_sim     (Linux)
+     max_interleaving.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./max_interleaving.fpga         (Linux)
      max_interleaving.fpga.exe       (Windows)

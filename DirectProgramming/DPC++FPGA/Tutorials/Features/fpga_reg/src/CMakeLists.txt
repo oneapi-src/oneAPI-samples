@@ -1,10 +1,9 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE fpga_reg.cpp)
 set(TARGET_NAME fpga_reg)
 set(TARGET_NAME_REG fpga_reg_registered)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
+set(SIMULATOR_TARGET_REG ${TARGET_NAME_REG}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_TARGET_REG ${TARGET_NAME_REG}.fpga)
 
@@ -23,13 +22,15 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -54,7 +55,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early fpga_reg.cpp -o fpga_reg_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_REG ${TARGET_NAME_REG}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_REG} ${SOURCE_FILE})
@@ -66,6 +67,25 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp -o fpga_reg.fpga
+# CMake executes:
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp.o -o fpga_reg.fpga
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+add_executable(${SIMULATOR_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET_REG} PRIVATE ../../../../include)
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_REG})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DUSE_FPGA_REG")
+set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET_REG}")
 
 ###############################################################################
 ### FPGA Hardware
@@ -83,7 +103,5 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_REG})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_REG}")
-

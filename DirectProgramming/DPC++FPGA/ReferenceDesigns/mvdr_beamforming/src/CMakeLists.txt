@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE mvdr_beamforming.cpp)
 set(TARGET_NAME mvdr_beamforming)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
@@ -85,16 +82,16 @@ if(STREAMING_PIPE_WIDTH)
 endif()
 
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM}")
-set(SIMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-Wall -fsycl -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
+set(SIMULATOR_COMPILE_FLAGS "${WIN_FLAG} -Wall -fsycl -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_SIMULATOR")
 set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fbracket-depth=512 -fsycl -fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(REPORT_LINK_FLAGS "-Wall -fsycl -fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG} -Xssimulation -Xsghdl")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -118,7 +115,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xstarget=<FPGA_DEVICE> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})

@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE loop_coalesce.cpp)
 set(TARGET_NAME loop_coalesce)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
@@ -22,15 +19,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga ${WIN_FLAG} -DFPGA_SIMULATOR ${DEVICE_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS}")
-# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga ${WIN_FLAG} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -55,7 +51,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early loop_coalesce.cpp -o loop_coalesce_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+# The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})

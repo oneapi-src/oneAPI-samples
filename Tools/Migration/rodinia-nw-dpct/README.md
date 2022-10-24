@@ -87,6 +87,12 @@ $ intercept-build make
 
 2. Use the Intel® DPC++ Compatibility Tool and compilation database to migrate
    the CUDA code. The new project will be created in the `migration` directory.
+   The dpct `--in-root` option is used to set the root location of the program
+   sources that are to be migrated. Only files and folders located within the
+   --in-root directory will be considered for migration by the tool. Files located
+   outside the`--in-root` directory are considered system files and will not be
+   migrated, even if they are included by a source file located within the
+   `--in-root`directory.
 
 ```sh
 $ dpct -p compile_commands.json --in-root=. --out-root=migration
