@@ -20,11 +20,11 @@ This reference design implements tests to check FPGA board interfaces and measur
 |:---                     |:---
 | OS                      | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                | Intel® oneAPI SYCL Compiler <br> Intel® FPGA Add-on for oneAPI Base Toolkit
+| Software                | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-on for oneAPI Base Toolkit
 
 ## Key Implementation Details
 
-A oneAPI Board Support Package (BSP) consists of software layers and an FPGA hardware scaffold design, making it possible to target an FPGA through the Intel® oneAPI SYCL Compiler.
+A oneAPI Board Support Package (BSP) consists of software layers and an FPGA hardware scaffold design, making it possible to target an FPGA through the Intel® oneAPI DPC++/C++ Compiler.
 
 The compiler stitches the generated FPGA design into the oneAPI BSP framework. Refer to the [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/programming-interface/fpga-flow/fpga-bsps-and-boards.html) for information about oneAPI BSPs.
 

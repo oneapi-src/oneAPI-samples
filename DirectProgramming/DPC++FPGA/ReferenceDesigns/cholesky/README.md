@@ -24,7 +24,7 @@ You can set the template parameters to decompose custom-sized real or complex sq
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware           |Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software           | Intel® oneAPI SYCL Compiler  <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software           | Intel® oneAPI DPC++/C++ Compiler  <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 
 
 ## Key Implementation Details
