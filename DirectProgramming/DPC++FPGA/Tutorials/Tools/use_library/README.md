@@ -15,7 +15,7 @@ _Notice: The FPGA library feature is not yet supported in Windows*_
 
 ## Purpose
 
-This FPGA tutorial demonstrates how to build DPC++ device libraries from RTL sources and use them in your DPC++ design. An RTL library is useful for embedding high performance FPGA code, handwritten in Verilog into your oneAPI program.
+This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design. An RTL library is useful for embedding high performance FPGA code, handwritten in Verilog into your oneAPI program.
 
 ### Generating a library
 
