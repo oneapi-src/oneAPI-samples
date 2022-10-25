@@ -50,10 +50,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR kernel_args_restrict.cpp -o kernel_args_restrict.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR kernel_args_restrict.cpp -o kernel_args_restrict.fpga_sim
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o kernel_args_restrict.cpp.o -c kernel_args_restrict.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation  kernel_args_restrict.cpp.o -o kernel_args_restrict.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o kernel_args_restrict.cpp.o -c kernel_args_restrict.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation  kernel_args_restrict.cpp.o -o kernel_args_restrict.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")

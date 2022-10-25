@@ -56,10 +56,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR lsu_control.cpp -o lsu_control.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR lsu_control.cpp -o lsu_control.fpga_sim
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o lsu_control.cpp.o -c lsu_control.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation  lsu_control.cpp.o -o lsu_control.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o lsu_control.cpp.o -c lsu_control.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation  lsu_control.cpp.o -o lsu_control.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
