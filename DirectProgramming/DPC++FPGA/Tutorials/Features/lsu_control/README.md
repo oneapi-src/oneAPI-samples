@@ -164,15 +164,15 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```bash
       make fpga_emu
       ```
-
    * Generate the optimization report:
-
      ```bash
      make report
      ```
-
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
-
      ```bash
      make fpga
      ```
@@ -209,19 +209,18 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-
      ```bash
      nmake fpga_emu
      ```
-
    * Generate the optimization report:
-
      ```bash
      nmake report
      ```
-
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
-
      ```bash
      nmake fpga
      ```
@@ -293,14 +292,16 @@ For more details on the descriptions of LSU controls, styles, and modifiers, ref
 ## Running the Sample
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-
      ```bash
      ./lsu_control.fpga_emu     (Linux)
      lsu_control.fpga_emu.exe   (Windows)
      ```
-
-2. Run the sample on the FPGA device:
-
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./lsu_control.fpga_sim     (Linux)
+     lsu_control.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```bash
      ./lsu_control.fpga         (Linux)
      lsu_control.fpga.exe       (Windows)
@@ -321,7 +322,7 @@ The throughput observed when running all three kernels, ```KernelPrefetch```, ``
 
 > **Note**: The numbers shown are from a compile and run on the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA.
 
-> **Note**: The performance difference will be apparent only when running on FPGA hardware. The emulator does not reflect the design's hardware performance.
+> **Note**: The performance difference will be apparent only when running on FPGA hardware. The emulator and simulator do not reflect the design's hardware memory system performance.
 
 ## License
 

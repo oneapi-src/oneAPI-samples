@@ -204,6 +204,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -249,6 +253,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -302,14 +310,20 @@ significantly lower than the case where burst-interleaving is enabled.
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the emulator which is why we only have a single executable for
     this flow.
-
-2. Run the sample on the FPGA device (two executables should be generated):
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
+     ```
+     ./mem_channel.fpga_sim         (Linux)
+     mem_channel.fpga_sim.exe    (Windows)
+     ```
+    Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
+    no impact on the simulator which is why we only have a single executable for
+    this flow.
+3. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./mem_channel_interleaving.fpga         (Linux)
      ./mem_channel_no_interleaving.fpga      (Linux)
      mem_channel_interleaving.fpga.exe       (Windows)
      mem_channel_no_interleaving.fpga.exe    (Windows)
-
      ```
 
 ### Example of Output

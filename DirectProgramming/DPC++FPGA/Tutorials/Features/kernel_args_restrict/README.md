@@ -289,7 +289,7 @@ The throughput observed when running the kernels with and without the `kernel_ar
 |No  | ~187 | 8
 |Yes  | ~1 | 767
 
-> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance of the memory system.
 
 ## License
 
