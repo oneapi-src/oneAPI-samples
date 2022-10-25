@@ -7,13 +7,13 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA device selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA device ${FPGA_BOARD} (Intel(R) PAC with Intel Stratix(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) PAC with Intel Stratix(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA device ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -35,7 +35,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsboard=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
