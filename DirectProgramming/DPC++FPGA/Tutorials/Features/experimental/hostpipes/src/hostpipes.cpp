@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 
   try {
     // create the device queue
-    sycl::queue q(selector, dpc_common::exception_handler,
+    sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
     // make sure the device supports USM device allocations
