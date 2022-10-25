@@ -34,7 +34,7 @@ using H2DPipe = sycl::ext::intel::prototype::pipe<
     kBitsPerSymbol,  // Symbol size on data bus
     true,            // Exposes a valid on the pipe interface
     false,           // First symbol in high order bits
-    cl::sycl::ext::intel::prototype::internal::protocol_name::
+    sycl::ext::intel::prototype::internal::protocol_name::
         AVALON_STREAMING  // Protocol
     >;
 
@@ -48,7 +48,7 @@ using D2HPipe = sycl::ext::intel::prototype::pipe<
     kBitsPerSymbol,  // Symbol size on data bus
     true,            // Exposes a valid on the pipe interface
     false,           // First symbol in high order bits
-    cl::sycl::ext::intel::prototype::internal::protocol_name::
+    sycl::ext::intel::prototype::internal::protocol_name::
         AVALON_STREAMING  // Protocol
     >;
 
