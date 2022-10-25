@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 |:---                               |:---
 | OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br>Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br>Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br>Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br>Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
 | Time to complete                  | 30 minutes
 
