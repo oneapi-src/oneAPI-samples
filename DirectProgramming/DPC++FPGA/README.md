@@ -4,7 +4,7 @@ The folders in this area of the oneAPI-sample GitHub repository include tutorial
 
 You will need the following toolkits and add-ons:
 
-- [Intel® oneAPI Base Toolkit (Base Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html), specifically the Intel® oneAPI SYCL Compiler.
+- [Intel® oneAPI Base Toolkit (Base Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html), specifically the Intel® oneAPI DPC++/C++ Compiler.
 - [Intel® FPGA Add-On for oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html).
 - Optionally, you might need access to [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/).
 

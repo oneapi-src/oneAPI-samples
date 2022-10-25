@@ -6,7 +6,7 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI SYCL Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to achieve low-latency host-device streaming while maintaining throughput
 | Time to complete                  | 45 minutes
 

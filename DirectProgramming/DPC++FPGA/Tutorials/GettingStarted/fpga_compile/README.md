@@ -5,7 +5,7 @@ This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGA throu
 |:---                                 |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI SYCL Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile options used to target FPGA
 | Time to complete                  | 15 minutes
 
@@ -19,7 +19,7 @@ FPGAs differ from CPUs and GPUs in many interesting ways. However, in this tutor
 
 For this reason, only ahead-of-time (or "offline") kernel compilation mode is supported for FPGA. The long compile time for FPGA hardware makes just-in-time (or "online") compilation impractical.
 
-Long compile times are detrimental to developer productivity. The Intel® oneAPI SYCL Compiler provides several mechanisms that enable developers targeting FPGA to iterate quickly on their designs. By circumventing the time-consuming process of full FPGA compilation wherever possible, SYCL for FPGA developers can enjoy the fast compile times familiar to CPU and GPU developers.
+Long compile times are detrimental to developer productivity. The Intel® oneAPI DPC++/C++ Compiler provides several mechanisms that enable developers targeting FPGA to iterate quickly on their designs. By circumventing the time-consuming process of full FPGA compilation wherever possible, SYCL for FPGA developers can enjoy the fast compile times familiar to CPU and GPU developers.
 
 
 ### Three types of SYCL for FPGA compilation
@@ -33,7 +33,7 @@ The three types of FPGA compilation are summarized in the table below.
 
 The typical FPGA development workflow is to iterate in each of these stages, refining the code using the feedback provided by that stage. Intel® recommends relying on emulation and the optimization report whenever possible.
 
-- Compiling for FPGA emulation or generating the FPGA optimization report requires only the Intel® oneAPI SYCL Compiler (part of the Intel® oneAPI Base Toolkit).
+- Compiling for FPGA emulation or generating the FPGA optimization report requires only the Intel® oneAPI DPC++/C++ Compiler (part of the Intel® oneAPI Base Toolkit).
 - An FPGA hardware compile requires the Intel® FPGA Add-On for oneAPI Base Toolkit.
 
 #### FPGA Emulator

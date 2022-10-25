@@ -5,7 +5,7 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br>Windows* 10
 | Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX)
-| Software                          | Intel&reg; oneAPI SYCL Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour
 

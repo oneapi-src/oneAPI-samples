@@ -5,7 +5,7 @@ This tutorial demonstrates how to create a high-performance full system CPU-FPGA
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> **Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI SYCL Compiler
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to optimally stream data between the host and device to maximize throughput
 | Time to complete                  | 45 minutes
 

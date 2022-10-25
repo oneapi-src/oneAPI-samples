@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to 
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI SYCL Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
 
@@ -308,7 +308,7 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA and the Intel&reg; oneAPI SYCL Compiler.
+The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA and the Intel&reg; oneAPI DPC++/C++ Compiler.
 
 |Safelen | Kernel Time (ms) | Throughput (KB/s)
 |:---  |:--- |:---

@@ -8,7 +8,7 @@ This FPGA tutorial demonstrates how to use the Intel&reg; FPGA Dynamic Profiler 
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI SYCL Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | About the Intel&reg; FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
 
@@ -67,7 +67,7 @@ There are two ways of obtaining data from a program containing performance count
     Instructions on installing, configure and opening the Intel&reg; VTune™ Profiler can be found in the [Intel&reg; VTune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel&reg; VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
-  The Profiler Runtime Wrapper comes as part of the Intel&reg; oneAPI SYCL Compiler and can be run as follows:
+  The Profiler Runtime Wrapper comes as part of the Intel&reg; oneAPI DPC++/C++ Compiler and can be run as follows:
    ```
    aocl profile <executable>
    ```
