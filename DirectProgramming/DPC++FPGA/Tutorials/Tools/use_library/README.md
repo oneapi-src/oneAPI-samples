@@ -1,6 +1,6 @@
 # Using FPGA Cross-Language Libraries
 
-This FPGA tutorial demonstrates how to build DPC++ device libraries from RTL sources and use them in your DPC++ design.
+This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design.
 
 
 | Optimized for                     | Description
