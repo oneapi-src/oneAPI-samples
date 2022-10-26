@@ -10,6 +10,14 @@
 
 #include "qrd.hpp"
 
+#ifdef FPGA_SIMULATOR
+#define ROWS_COMPONENT_V 32
+#define COLS_COMPONENT_V 32
+#else
+#define ROWS_COMPONENT_V ROWS_COMPONENT
+#define COLS_COMPONENT_V COLS_COMPONENT
+#endif
+
 /*
   COMPLEX, COLS_COMPONENT, ROWS_COMPONENT and FIXED_ITERATIONS are defined
   by the build system.
@@ -34,7 +42,7 @@ void QRDecomposition(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
                      int matrix_count,
                      int repetitions) {
   constexpr bool is_complex = false;
-  QRDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+  QRDecompositionImpl<COLS_COMPONENT_V, ROWS_COMPONENT_V, FIXED_ITERATIONS,
                        is_complex, float>(a_matrix, q_matrix, r_matrix, q,
                                           matrix_count, repetitions);
 }
@@ -46,7 +54,7 @@ void QRDecomposition(std::vector<ac_complex<float> > &a_matrix,
                      int matrix_count,
                      int repetitions) {
   constexpr bool is_complex = true;
-  QRDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+  QRDecompositionImpl<COLS_COMPONENT_V, ROWS_COMPONENT_V, FIXED_ITERATIONS,
                        is_complex, float>(a_matrix, q_matrix, r_matrix, q,
                                           matrix_count, repetitions);
 }
@@ -69,18 +77,24 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
-  constexpr size_t kRows = ROWS_COMPONENT;
-  constexpr size_t kColumns = COLS_COMPONENT;
+  constexpr size_t kRows = ROWS_COMPONENT_V;
+  constexpr size_t kColumns = COLS_COMPONENT_V;
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kQMatrixSize = kRows * kColumns;
   constexpr size_t kRMatrixSize = kColumns * (kColumns + 1) / 2;
   constexpr size_t kQRMatrixSize = kQMatrixSize + kRMatrixSize;
   constexpr bool kComplex = COMPLEX != 0;
 
+#if defined(FPGA_SIMULATOR)
+  std::cout << "Using 32x32 matrices for simulation to reduce runtime" << std::endl;
+#endif
+
   // Get the number of times we want to repeat the decomposition
   // from the command line.
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
+#elif defined(FPGA_SIMULATOR)
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
   int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
@@ -91,12 +105,18 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+#if defined(FPGA_SIMULATOR)
+  constexpr size_t kMatricesToDecompose = 1;
+#else
   constexpr size_t kMatricesToDecompose = 8;
+#endif
 
   try {
     // SYCL boilerplate
 #if defined(FPGA_EMULATOR)
     sycl::ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+    sycl::ext::intel::fpga_simulator_selector device_selector;
 #else
     sycl::ext::intel::fpga_selector device_selector;
 #endif

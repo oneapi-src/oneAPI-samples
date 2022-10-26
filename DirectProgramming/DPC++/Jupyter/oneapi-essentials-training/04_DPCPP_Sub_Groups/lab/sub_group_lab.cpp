@@ -38,7 +38,7 @@ int main() {
 
 
       
-    //# STEP 3 : save each sub-group sum to sg_sum array
+    //# STEP 3 : save each sub-group sum to sg_data array
     
     //# YOUR CODE GOES HERE 
       
@@ -46,7 +46,7 @@ int main() {
 
   }).wait();
 
-  //# print sg_sum array
+  //# print sg_data array
   for (int i = 0; i < N/S; i++) std::cout << sg_data[i] << " ";
   std::cout << "\n";
     
