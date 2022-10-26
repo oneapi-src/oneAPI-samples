@@ -1,6 +1,5 @@
 set(SOURCE_FILE use_library.cpp)
 set(HEADER_FILE lib.hpp)
-set(LIBRARY_ARCHIVE lib.a)
 set(TARGET_NAME use_library)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
@@ -28,8 +27,10 @@ set(RTL_SPEC lib_rtl_spec.xml)
 set(RTL_V lib_rtl.v)
 if (WIN32)
     set(RTL_SOURCE_OBJECT lib_rtl.obj)
+    set(LIBRARY_ARCHIVE lib.lib)
 else()
     set(RTL_SOURCE_OBJECT lib_rtl.o)
+    set(LIBRARY_ARCHIVE lib.a)
 endif()
 
 # Flags
