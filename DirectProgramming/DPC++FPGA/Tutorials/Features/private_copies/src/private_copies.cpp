@@ -15,8 +15,14 @@
 
 using namespace sycl;
 
-constexpr size_t kSize = 8192;
+#if defined(FPGA_SIMULATOR)
+// Smaller size to keep the runtime reasonable
+constexpr size_t kSize = 512; //2^9
+constexpr size_t kMaxIter = 100;
+#else
+constexpr size_t kSize = 8192; //2^13
 constexpr size_t kMaxIter = 50000;
+#endif
 constexpr size_t kTotalOps = 2 * kMaxIter * kSize;
 constexpr size_t kMaxValue = 128;
 
@@ -35,7 +41,7 @@ void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
 #elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector;
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
