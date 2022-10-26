@@ -8,8 +8,6 @@
 #include "lib.hpp"
 #include "exception_handler.hpp"
 
-using namespace sycl;
-
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
 class KernelCompute;
@@ -24,29 +22,28 @@ int main() {
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  sycl::ext::intel::fpga_emulator_selector device_selector;
 #elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector
+  sycl::ext::intel::fpga_simulator_selector device_selector
 #else
-  ext::intel::fpga_selector device_selector;
+  sycl::ext::intel::fpga_selector device_selector;
 #endif
 
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    sycl::queue q(device_selector, fpga_tools::exception_handler);
 
     // The scalar inputs are passed to the kernel using the lambda capture,
     // but a SYCL buffer must be used to return a scalar from the kernel.
-    buffer<unsigned, 1> buffer_c(&result, 1);
+    sycl::buffer<unsigned, 1> buffer_c(&result, 1);
 
     //  Values used as input to the kernel
     float kA = 2.0f;
     float kB = 3.0f;
 
 
-    q.submit([&](handler &h) {
-
+    q.submit([&](sycl::handler &h) {
       // Accessor to the scalar result
-      accessor accessor_c(buffer_c, h, write_only, no_init);
+      sycl::accessor accessor_c(buffer_c, h, sycl::write_only, sycl::no_init);
 
       // Kernel
       h.single_task<class KernelCompute>([=]() {
