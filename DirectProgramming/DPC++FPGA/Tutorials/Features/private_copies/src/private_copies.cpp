@@ -34,6 +34,8 @@ template <int num_copies>
 void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector selector;
 #endif

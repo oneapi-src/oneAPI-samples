@@ -122,6 +122,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make report
      ```
+  * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -159,6 +163,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake report
      ```
+  * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -194,7 +202,12 @@ On the main report page, scroll down to the section titled "Estimated Resource U
      ./private_copies.fpga_emu     (Linux)
      private_copies.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./private_copies.fpga         (Linux)
+     private_copies.fpga.exe       (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./private_copies.fpga         (Linux)
      private_copies.fpga.exe       (Windows)
