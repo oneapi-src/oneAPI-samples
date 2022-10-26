@@ -17,9 +17,7 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
-# These are Windows-specific flags:
-# 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
-# 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
+# /EHsc This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
