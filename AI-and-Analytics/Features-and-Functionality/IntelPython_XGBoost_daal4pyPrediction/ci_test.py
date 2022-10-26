@@ -1,10 +1,13 @@
+import os
+
+
 def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_env, fdpath='./'):
     import nbformat
     import os
     from nbconvert.preprocessors import ExecutePreprocessor
     from nbconvert.preprocessors import CellExecutionError
     if os.path.isfile(input_notebook_filename) is False:
-        print("No Jupyter notebook found : ",input_notebook_filename)
+        print("No Jupyter notebook found : ", input_notebook_filename)
     try:
         with open(input_notebook_filename) as f:
             nb = nbformat.read(f, as_version=4)
@@ -18,4 +21,6 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         return -1
 
 
-runJupyterNotebook('IntelPython_XGBoost_daal4pyPrediction.ipynb', 'IntelPython_XGBoost_daal4pyPrediction_result.ipynb', 'xgboost')
+runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                'IntelPython_XGBoost_daal4pyPrediction.ipynb'),
+                   'IntelPython_XGBoost_daal4pyPrediction_result.ipynb', 'xgboost')
