@@ -108,10 +108,10 @@ int main(int argc, char* argv[]) {
   if (argc > 1) vector_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
-  // DPC++ extension: FPGA emulator selector on systems without FPGA card.
+  // FPGA emulator selector on systems without FPGA card.
   ext::intel::fpga_emulator_selector d_selector;
 #elif FPGA
-  // DPC++ extension: FPGA selector on systems with FPGA card.
+  // FPGA selector on systems with FPGA card.
   ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.

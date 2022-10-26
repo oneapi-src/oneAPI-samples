@@ -1,5 +1,5 @@
 # 'Buffers and Accessors in Depth' sample
-DPCPP Buffers and Accessors in Depth: This is part 9 of the oneAPI essentials training series
+SYCL Buffers and Accessors in Depth: This is part 9 of the oneAPI essentials training series
 
   
 | Optimized for                       | Description
@@ -9,7 +9,7 @@ DPCPP Buffers and Accessors in Depth: This is part 9 of the oneAPI essentials tr
 | Software                          | Intel® oneAPI DPC++ Compiler, Jupyter Notebooks, Intel Devcloud
 
 ## Purpose
-The hands-on exercises in this notebook present 9  DPC++ programs that illustrate the properties of Buffers and accessors in depth. The hands-on exercises demonstrates various ways to create Buffers in DPC++. You will learn how to use sub-buffers, buffer properties and when to use_host_ptr, set_final_data and set_write_data. You will also learn accessors, host_accessors and its usecases.
+The hands-on exercises in this notebook present 9  SYCL programs that illustrate the properties of Buffers and accessors in depth. The hands-on exercises demonstrates various ways to create Buffers in SYCL. You will learn how to use sub-buffers, buffer properties and when to use_host_ptr, set_final_data and set_write_data. You will also learn accessors, host_accessors and its usecases.
 
 ## License
 Code samples are licensed under the MIT license. See License.txt for details.
