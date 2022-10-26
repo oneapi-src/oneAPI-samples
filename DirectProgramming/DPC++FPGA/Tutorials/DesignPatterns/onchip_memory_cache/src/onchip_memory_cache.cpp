@@ -13,8 +13,12 @@
 
 #include "exception_handler.hpp"
 
-
+#if defined(FPGA_SIMULATOR)
+// Smaller size to keep the runtime reasonable
+constexpr int kInitNumInputs = 16 * 1024;  // Default number of inputs
+#else
 constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs
+#endif
 constexpr int kNumOutputs = 64;           // Number of outputs
 constexpr int kInitSeed = 42;             // Seed for randomizing data inputs
 constexpr int kMaxCacheDepth = MAX_CACHE_DEPTH; // max cache depth to test
@@ -67,6 +71,12 @@ int main() {
 #if defined(FPGA_EMULATOR)
   sycl::ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
+               "performance. The design may need to run on actual hardware "
+               "to observe the performance benefit of the optimization "
+               "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  sycl::ext::intel::fpga_simulator_selector device_selector;
+  std::cout << "\nSimulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
