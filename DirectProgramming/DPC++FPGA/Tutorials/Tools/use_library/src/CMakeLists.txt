@@ -26,7 +26,11 @@ endif()
 set(RTL_C_MODEL lib_rtl_model.cpp)
 set(RTL_SPEC lib_rtl_spec.xml)
 set(RTL_V lib_rtl.v)
-set(RTL_SOURCE_OBJECT lib_rtl.o)
+if (WIN32)
+    set(RTL_SOURCE_OBJECT lib_rtl.obj)
+else()
+    set(RTL_SOURCE_OBJECT lib_rtl.o)
+endif()
 
 # Flags
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_EMULATOR ${WIN_FLAGS}")
