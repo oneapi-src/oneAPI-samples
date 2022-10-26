@@ -5,9 +5,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 // included from ../../../../include
 #include "cholesky_inversion.hpp"
 
@@ -334,12 +332,19 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kIMatrixSize = kColumns * (kColumns + 1) / 2;
   constexpr bool kComplex = COMPLEX != 0;
+
+#if defined(FPGA_SIMULATOR)
+  constexpr size_t kMatricesToInvert = 1;
+#else
   constexpr size_t kMatricesToInvert = 8;
+#endif
 
   // Get the number of times we want to repeat the inversion from the command
   // line.
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
+#elif defined(FPGA_SIMULATOR)
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
   int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
@@ -355,13 +360,15 @@ int main(int argc, char *argv[]) {
     // SYCL boilerplate
 #if defined(FPGA_EMULATOR)
     sycl::ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+    sycl::ext::intel::fpga_simulator_selector device_selector;
 #else
     sycl::ext::intel::fpga_selector device_selector;
 #endif
 
     // Enable the queue profiling to time the execution
     sycl::queue q = sycl::queue(
-        device_selector, dpc_common::exception_handler,
+        device_selector, fpga_tools::exception_handler,
         sycl::property_list{sycl::property::queue::enable_profiling()});
     sycl::device device = q.get_device();
     std::cout << "Device name: "

@@ -570,7 +570,7 @@ void mpi_native(float* results, int rank_num, int num_procs,
     // for (std::exception_ptr const& e : exceptionList) {
       // try {
         // std::rethrow_exception(e);
-      // } catch (cl::sycl::exception const& e) {
+      // } catch (sycl::exception const& e) {
         // std::cout << "Failure"
                   // << "\n";
         // std::terminate();

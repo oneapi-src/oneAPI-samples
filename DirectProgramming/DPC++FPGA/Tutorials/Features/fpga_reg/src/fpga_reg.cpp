@@ -10,9 +10,7 @@
 #include <string>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 using namespace std;
@@ -65,14 +63,22 @@ vector<int> GoldenResult(vector<int> vec) {
 // This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
-void RunKernel(const device_selector &selector,
-               const std::vector<int> &vec_a,
+void RunKernel(const std::vector<int> &vec_a,
                std::vector<int> &vec_r) {
+  // Run the kernel on either the FPGA emulator, or FPGA simulator, or FPGA
+  // hardware
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
 
   size_t input_size = vec_a.size();
 
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer device_a(vec_a);
@@ -101,7 +107,7 @@ void RunKernel(const device_selector &selector,
 
           // Fully unroll the accumulator loop.
           // All of the unrolled operations can be freely scheduled by the
-          // oneAPI DPC++ Compiler's FPGA backend as part of a common data pipeline.
+          // oneAPI DPC++/C++ Compiler's FPGA backend as part of a common data pipeline.
           #pragma unroll
           for (size_t j = 0; j < kSize; j++) {
 #ifdef USE_FPGA_REG
@@ -128,7 +134,7 @@ void RunKernel(const device_selector &selector,
 
           // Rotate the values of the coefficient array.
           // The loop is fully unrolled. This is a canonical code structure;
-          // the oneAPI DPC++ Compiler's FPGA backend infers a shift register here.
+          // the oneAPI DPC++/C++ Compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll
           for (size_t j = 0; j < kSize - 1; j++) {
@@ -195,13 +201,7 @@ int main(int argc, char *argv[]) {
   // Kernel result vector
   vector<int> vec_r(input_size);
 
-  // Run the kernel on either the FPGA emulator, or FPGA
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-  RunKernel(selector, vec_a, vec_r);
+  RunKernel(vec_a, vec_r);
 
   // Test the results.
   vector<int> golden_ref = GoldenResult(vec_a);

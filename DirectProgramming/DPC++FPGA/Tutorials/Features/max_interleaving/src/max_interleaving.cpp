@@ -9,9 +9,7 @@
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -36,12 +34,20 @@ class KernelCompute;
 // The kernel's functionality is designed to show the
 // performance impact of the max_interleaving attribute.
 template <int interleaving>
-void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
-               const FloatArray &array_b, FloatArray &array_r) {
+void Transform(const TwoDimFloatArray &array_a, const FloatArray &array_b, 
+               FloatArray &array_r) {
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
+
   double kernel_time = 0.0;
 
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer array_a_buffer(array_a);
@@ -114,7 +120,11 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
   std::cout << "Throughput for kernel with max_interleaving " << interleaving
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
+#if defined(FPGA_SIMULATOR)
+            << ((double)(kTotalOps) / kernel_time) << " KFlops\n";
+#else
             << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
+#endif
 }
 
 // Calculates the expected results. Used to verify that the kernel
@@ -147,12 +157,6 @@ int main() {
     outdata_R_golden[i] = 1.0;
   }
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
   // Run the kernel with two different values of the max_interleaving
   // attribute. In this case, unlimited interleaving (max_interleaving
   // set to 0) gives no improvement in runtime performance over
@@ -160,8 +164,8 @@ int main() {
   // requiring more hardware resources (see README.md for details
   // on confirming this difference in hardware resource usage in
   // the reports).
-  Transform<0>(selector, indata_A, indata_B, outdata_R_compute_0);
-  Transform<1>(selector, indata_A, indata_B, outdata_R_compute_1);
+  Transform<0>(indata_A, indata_B, outdata_R_compute_0);
+  Transform<1>(indata_A, indata_B, outdata_R_compute_1);
 
   // compute the actual result here
   GoldenResult(indata_A, indata_B, outdata_R_golden);

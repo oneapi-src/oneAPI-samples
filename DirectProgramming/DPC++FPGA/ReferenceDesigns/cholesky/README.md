@@ -115,10 +115,9 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
 ### Include Files
 
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. Additionally, the FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/include) folder.
+The FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/include) folder.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
