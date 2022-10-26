@@ -1,5 +1,5 @@
-# CMakeLists.txt for ISO3DFD_DPCPP project
-project (iso3dfd_dpcpp)
+# CMakeLists.txt for ISO3DFD_SYCL project
+project (iso3dfd_sycl)
 
 # required cmake version
 cmake_minimum_required(VERSION 3.5)

@@ -1,5 +1,5 @@
 ## Title
-DPC++ Program Structure: This is part 2 of the oneAPI essentials training series
+SYCL Program Structure: This is part 2 of the oneAPI essentials training series
   
 ## Requirements
 | Optimized for                       | Description
@@ -10,7 +10,7 @@ DPC++ Program Structure: This is part 2 of the oneAPI essentials training series
 
   
 ## Purpose
-The hands-on exercises in this notebook present six basic DPC++ programs that illustrate the elements of a DPC++ application. You can modify the source code in some of the exercises to become more familiar with DPC++ programming concepts. This workshop is designed to be used on the DevCloud and includes details on how to submit batch jobs on DevCloud environment.
+The hands-on exercises in this notebook present six basic SYCL programs that illustrate the elements of a SYCL application. You can modify the source code in some of the exercises to become more familiar with SYCL programming concepts. This workshop is designed to be used on the DevCloud and includes details on how to submit batch jobs on DevCloud environment.
 
 ## License  
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -26,4 +26,4 @@ Below are the steps to access these Jupyter notebooks on Intel Devcloud
 2. Go to the "Terminal" in the Intel Devcloud
 3. Type in the below command to download the oneAPI-essentials series notebooks into your Devcloud account
     /data/oneapi_workshop/get_jupyter_notebooks.sh
-4. Navigate to oneAPI_Essentials folder and open the Welcome.ipynb and click on "Module 2 - DPC++ Program Structure" notebook
+4. Navigate to oneAPI_Essentials folder and open the Welcome.ipynb and click on "Module 2 - SYCL Program Structure" notebook

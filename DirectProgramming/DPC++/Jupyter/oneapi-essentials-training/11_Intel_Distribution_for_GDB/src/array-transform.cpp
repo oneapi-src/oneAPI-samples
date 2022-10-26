@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// This is a simple DPC++ program that accompanies the Getting Started
+// This is a simple SYCL program that accompanies the Getting Started
 // Guide of the debugger.  The kernel does not compute anything
 // particularly interesting; it is designed to illustrate the most
 // essential features of the debugger when the target device is CPU or
