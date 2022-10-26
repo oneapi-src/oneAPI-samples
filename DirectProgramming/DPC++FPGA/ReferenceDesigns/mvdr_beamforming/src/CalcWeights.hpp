@@ -1,7 +1,7 @@
 #ifndef __CALC_WEIGHTS_HPP__
 #define __CALC_WEIGHTS_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"
@@ -53,32 +53,12 @@ event SubmitCalcWeightsKernel(queue& q) {
 
           // calculate Ct * y
 
-          float re = 0;
-          float im = 0;
-          
+          ComplexType ctranspose_times_y(0);
+
           [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
           for (short i = 0; i < (short)k_num_elements; i++) {
-            auto c = c_vector[i];
-            auto y = y_vector[i];
-
-            // floating point numbers use the msb to indicate sign, so flipping
-            // that bit is equivalent to multiplying by -1
-            // This bit-manipulation allows the compiler to infer a hardened
-            // accumulator, which allows an II of 1 for this loop
-            union {
-              float f;
-              uint i;
-            } c_imag_neg;
-            c_imag_neg.f = c.imag();
-            c_imag_neg.i ^= 0x80000000;
-
-            auto im_tmp = c.real() * y.imag() + c_imag_neg.f * y.real();
-            auto re_tmp = c.real() * y.real() + c.imag() * y.imag();
-
-            re += re_tmp;
-            im += im_tmp;
+            ctranspose_times_y += c_vector[i].conj() * y_vector[i];
           }
-          ComplexType ctranspose_times_y(re, im);
 
           // calculate 1 / norm(Ctranspose * y)
           // Ct * y is a complex number, but it's norm is a real number (float)

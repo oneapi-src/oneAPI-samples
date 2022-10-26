@@ -1,7 +1,7 @@
 #ifndef __AUTORUN_HPP__
 #define __AUTORUN_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <type_traits>
 
 /*

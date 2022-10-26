@@ -1,10 +1,7 @@
-all: prog1 prog2 prog3 prog4 prog5 prog6 prog7 prog8 prog9 prog10 prog11 prog12 prog13 prog14 prog15 prog16 prog17 prog18 prog19 prog20 prog21 prog22 prog23 prog24 prog25 prog26 prog27 prog28 prog29 prog30 prog31 prog32 prog33 prog34 prog35 prog36 prog37 prog38 prog39 prog40 prog41 prog42 prog43 prog44 prog45 prog46 prog47 prog48 prog49 prog50 prog51 prog52 prog53 prog54 prog55 prog56 prog57 prog58 prog59 prog60 prog61
+all: prog1 prog3 prog4 prog5 prog6 prog7 prog8 prog9 prog10 prog11 prog12 prog13 prog14 prog15 prog16 prog17 prog18 prog19 prog20 prog21 prog22 prog23 prog24 prog25 prog26 prog27 prog28 prog29 prog30 prog31 prog32 prog33 prog34 prog35 prog36 prog37 prog38 prog39 prog40 prog41 prog42 prog43 prog44 prog45 prog46 prog47 prog48 prog49 prog50 prog51 prog52 prog53 prog54 prog55 prog56 prog57 prog58 prog59 prog60 prog61 prog62 prog63 prog64 prog65 prog66
 
 prog1: 01_oneAPI_Intro/lab/simple.cpp
-	dpcpp -o 01_oneAPI_Intro/bin/prog1 01_oneAPI_Intro/lab/simple.cpp
-
-prog2: 01_oneAPI_Intro/lab/simple-vector-incr.cpp
-	dpcpp -o 01_oneAPI_Intro/bin/prog2 01_oneAPI_Intro/lab/simple-vector-incr.cpp
+	dpcpp -o 01_oneAPI_Intro/prog1 01_oneAPI_Intro/lab/simple.cpp
 
 prog3: 02_DPCPP_Program_Structure/lab/buffer_sample.cpp
 	dpcpp -o 02_DPCPP_Program_Structure/bin/prog3 02_DPCPP_Program_Structure/lab/buffer_sample.cpp 
@@ -183,9 +180,23 @@ prog60: 11_Intel_Distribution_for_GDB/src/array-transform.cpp
 prog61: 08_DPCPP_Reduction/lab/multiple_reductions_buffers.cpp
 	dpcpp -o 08_DPCPP_Reduction/prog61 08_DPCPP_Reduction/lab/multiple_reductions_buffers.cpp
 
+prog62: 12_DPCPP_Local_Memory_And_Atomics/lab/localmem_info.cpp
+	dpcpp -o 12_DPCPP_Local_Memory_And_Atomics/prog62 12_DPCPP_Local_Memory_And_Atomics/lab/localmem_info.cpp
+
+prog63: 12_DPCPP_Local_Memory_And_Atomics/lab/matrixmul_16x16.cpp
+	dpcpp -o 12_DPCPP_Local_Memory_And_Atomics/prog63 12_DPCPP_Local_Memory_And_Atomics/lab/matrixmul_16x16.cpp  
+
+prog64: 12_DPCPP_Local_Memory_And_Atomics/lab/matrixmul_16x16_localmem.cpp
+	dpcpp -o 12_DPCPP_Local_Memory_And_Atomics/prog64 12_DPCPP_Local_Memory_And_Atomics/lab/matrixmul_16x16_localmem.cpp  
+
+prog65: 12_DPCPP_Local_Memory_And_Atomics/lab/reduction_atomics_buffer.cpp
+	dpcpp -o 12_DPCPP_Local_Memory_And_Atomics/prog65 12_DPCPP_Local_Memory_And_Atomics/lab/reduction_atomics_buffer.cpp 
+
+prog66: 12_DPCPP_Local_Memory_And_Atomics/lab/reduction_atomics_usm.cpp
+	dpcpp -o 12_DPCPP_Local_Memory_And_Atomics/prog66 12_DPCPP_Local_Memory_And_Atomics/lab/reduction_atomics_usm.cpp 
+
 Run:
-	01_oneAPI_Intro/bin/prog1
-	01_oneAPI_Intro/bin/prog2
+	01_oneAPI_Intro/prog1
 	02_DPCPP_Program_Structure/bin/prog3
 	02_DPCPP_Program_Structure/bin/prog4
 	02_DPCPP_Program_Structure/bin/prog5
@@ -243,7 +254,12 @@ Run:
 	04_DPCPP_Sub_Groups/prog59
 	11_Intel_Distribution_for_GDB/prog60 host
 	08_DPCPP_Reduction/prog61
+	12_DPCPP_Local_Memory_And_Atomics/prog62
+	12_DPCPP_Local_Memory_And_Atomics/prog63
+	12_DPCPP_Local_Memory_And_Atomics/prog64
+	12_DPCPP_Local_Memory_And_Atomics/prog65
+	12_DPCPP_Local_Memory_And_Atomics/prog66
 
 clean:
-	rm -rf 01_oneAPI_Intro/bin/prog1 01_oneAPI_Intro/bin/prog2 02_DPCPP_Program_Structure/bin/prog3 02_DPCPP_Program_Structure/bin/prog4 02_DPCPP_Program_Structure/bin/prog5 02_DPCPP_Program_Structure/bin/prog6 03_DPCPP_Unified_Shared_Memory/prog7 03_DPCPP_Unified_Shared_Memory/prog8 03_DPCPP_Unified_Shared_Memory/prog9 03_DPCPP_Unified_Shared_Memory/prog10 04_DPCPP_Sub_Groups/prog11 04_DPCPP_Sub_Groups/prog12 04_DPCPP_Sub_Groups/prog13 07_DPCPP_Library/bin/prog14 07_DPCPP_Library/bin/prog15 07_DPCPP_Library/bin/prog16 07_DPCPP_Library/bin/prog17 07_DPCPP_Library/bin/prog18 07_DPCPP_Library/bin/prog19 07_DPCPP_Library/bin/prog20 07_DPCPP_Library/bin/prog21 07_DPCPP_Library/bin/prog22 07_DPCPP_Library/bin/prog23 07_DPCPP_Library/bin/prog24 07_DPCPP_Library/bin/prog25 07_DPCPP_Library/bin/prog26 07_DPCPP_Library/bin/prog27 07_DPCPP_Library/bin/prog28 07_DPCPP_Library/bin/prog29 07_DPCPP_Library/bin/prog30 07_DPCPP_Library/bin/prog31 07_DPCPP_Library/bin/prog32 08_DPCPP_Reduction/prog33 08_DPCPP_Reduction/prog34 08_DPCPP_Reduction/prog35 08_DPCPP_Reduction/prog36 08_DPCPP_Reduction/prog37 08_DPCPP_Reduction/prog38 08_DPCPP_Reduction/prog39 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog40 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog41 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog42 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog43 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog44 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog45 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog46 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog47 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog48 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog49 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog50 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog51 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog52 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog53 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog54 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog55 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog56 04_DPCPP_Sub_Groups/prog57 04_DPCPP_Sub_Groups/prog58 04_DPCPP_Sub_Groups/prog59 11_Intel_Distribution_for_GDB/prog60 08_DPCPP_Reduction/prog61
+	rm -rf 01_oneAPI_Intro/prog1 02_DPCPP_Program_Structure/bin/prog3 02_DPCPP_Program_Structure/bin/prog4 02_DPCPP_Program_Structure/bin/prog5 02_DPCPP_Program_Structure/bin/prog6 03_DPCPP_Unified_Shared_Memory/prog7 03_DPCPP_Unified_Shared_Memory/prog8 03_DPCPP_Unified_Shared_Memory/prog9 03_DPCPP_Unified_Shared_Memory/prog10 04_DPCPP_Sub_Groups/prog11 04_DPCPP_Sub_Groups/prog12 04_DPCPP_Sub_Groups/prog13 07_DPCPP_Library/bin/prog14 07_DPCPP_Library/bin/prog15 07_DPCPP_Library/bin/prog16 07_DPCPP_Library/bin/prog17 07_DPCPP_Library/bin/prog18 07_DPCPP_Library/bin/prog19 07_DPCPP_Library/bin/prog20 07_DPCPP_Library/bin/prog21 07_DPCPP_Library/bin/prog22 07_DPCPP_Library/bin/prog23 07_DPCPP_Library/bin/prog24 07_DPCPP_Library/bin/prog25 07_DPCPP_Library/bin/prog26 07_DPCPP_Library/bin/prog27 07_DPCPP_Library/bin/prog28 07_DPCPP_Library/bin/prog29 07_DPCPP_Library/bin/prog30 07_DPCPP_Library/bin/prog31 07_DPCPP_Library/bin/prog32 08_DPCPP_Reduction/prog33 08_DPCPP_Reduction/prog34 08_DPCPP_Reduction/prog35 08_DPCPP_Reduction/prog36 08_DPCPP_Reduction/prog37 08_DPCPP_Reduction/prog38 08_DPCPP_Reduction/prog39 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog40 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog41 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog42 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog43 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog44 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog45 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog46 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog47 09_DPCPP_Buffers_And_Accessors_Indepth/bin/prog48 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog49 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog50 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog51 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog52 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog53 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog54 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog55 10_DPCPP_Graphs_Scheduling_Data_management/bin/prog56 04_DPCPP_Sub_Groups/prog57 04_DPCPP_Sub_Groups/prog58 04_DPCPP_Sub_Groups/prog59 11_Intel_Distribution_for_GDB/prog60 08_DPCPP_Reduction/prog61 12_DPCPP_Local_Memory_And_Atomics/prog62 12_DPCPP_Local_Memory_And_Atomics/prog63 12_DPCPP_Local_Memory_And_Atomics/prog64 12_DPCPP_Local_Memory_And_Atomics/prog65 12_DPCPP_Local_Memory_And_Atomics/prog66
 

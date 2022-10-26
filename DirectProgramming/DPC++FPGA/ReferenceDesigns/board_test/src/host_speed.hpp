@@ -1,5 +1,5 @@
 // Header file to accompany hostspeed tests
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <iostream>
 

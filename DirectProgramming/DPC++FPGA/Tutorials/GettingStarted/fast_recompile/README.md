@@ -6,35 +6,37 @@ This FPGA tutorial demonstrates how to separate the compilation of a program's h
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link methods <br> Which method to choose for your project
 | Time to complete                  | 15 minutes
 
 
 
 ## Purpose
-Intel® oneAPI DPC++ Compiler only supports ahead-of-time (AoT) compilation for FPGA, which means that an FPGA device image is generated at compile time. The FPGA device image generation process can take hours to complete. Suppose you make a change that is exclusive to the host code. In that case, it is more efficient to recompile your host code only, re-using the existing FPGA device image and circumventing the time-consuming device compilation process.
+Intel® oneAPI DPC++/C++ Compiler only supports ahead-of-time (AoT) compilation for FPGA, which means that an FPGA device image is generated at compile time. The FPGA device image generation process can take hours to complete. Suppose you make a change that is exclusive to the host code. In that case, it is more efficient to recompile your host code only, re-using the existing FPGA device image and circumventing the time-consuming device compilation process.
+
+**NOTE:** In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
 
 The compiler provides two different mechanisms to separate device code and host code compilation.
-* Passing the `-reuse-exe=<exe_name>` flag to `dpcpp` instructs the compiler to attempt to reuse the existing FPGA device image.
+* Passing the `-reuse-exe=<exe_name>` flag to `icpx` instructs the compiler to attempt to reuse the existing FPGA device image.
 * The more explicit "device link" method requires you to separate the host and device code into separate files. When a code change only applies to host-only files, an FPGA device image is not regenerated.
 
 This tutorial explains both mechanisms and the pros and cons of each. The included code sample demonstrates the device link method but does **not** demonstrate the use of the `-reuse-exe` flag.
 
 ### Using the `-reuse-exe` flag
 
-If the device code and options affecting the device have not changed since the previous compilation, passing the `-reuse-exe=<exe_name>` flag to `dpcpp` instructs the compiler to extract the compiled FPGA binary from the existing executable and package it into the new executable, saving the device compilation time.
+If the device code and options affecting the device have not changed since the previous compilation, passing the `-reuse-exe=<exe_name>` flag to `icpx` instructs the compiler to extract the compiled FPGA binary from the existing executable and package it into the new executable, saving the device compilation time.
 
 **Sample usage:**
 
 ```
 # Initial compilation
-dpcpp <files.cpp> -o out.fpga -Xshardware -fintelfpga
+icpx <files.cpp> -o out.fpga -Xshardware -fintelfpga
 ```
 The initial compilation generates an FPGA device image, which takes several hours. Now, make some changes to the host code.
 ```
 # Subsequent recompilation
-dpcpp <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware -fintelfpga
+icpx <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware -fintelfpga
 ```
 If `out.fpga` does not exist, `-reuse-exe` is ignored and the FPGA device image is regenerated. This will always be the case the first time a project is compiled.
 
@@ -50,7 +52,7 @@ In the normal compilation process, FPGA device image generation happens at link 
 
 ```
 # normal compile command
-dpcpp -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
+icpx -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
 ```
 
 The following graph depicts this compilation process:
@@ -62,7 +64,7 @@ If you want to iterate on the host code and avoid long compile time for your FPG
 
 ```
 # device link command
-dpcpp -fintelfpga -fsycl-link=image <input files> [options]
+icpx -fintelfpga -fsycl-link=image <input files> [options]
 ```
 
 The compilation is a 3-step process:
@@ -70,7 +72,7 @@ The compilation is a 3-step process:
 1. Compile the device code:
 
    ```
-   dpcpp -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
+   icpx -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
    ```
    Input files should include all source files that contain device code. This step may take several hours.
 
@@ -78,7 +80,7 @@ The compilation is a 3-step process:
 2. Compile the host code:
 
    ```
-   dpcpp -fintelfpga host.cpp -c -o host.o
+   icpx -fintelfpga host.cpp -c -o host.o
    ```
    Input files should include all source files that only contain host code. This takes seconds.
 
@@ -86,7 +88,7 @@ The compilation is a 3-step process:
 3. Create the device link:
 
    ```
-   dpcpp -fintelfpga host.o dev_image.a -o fast_recompile.fpga
+   icpx -fintelfpga host.o dev_image.a -o fast_recompile.fpga
    ```
    The input should have N (N >= 0) host object files *(.o)* and one device image file *(.a)*. This takes seconds.
 
@@ -129,8 +131,6 @@ For larger and more complex projects, the device link method has the advantage o
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -170,11 +170,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
      **NOTE:** For the FPGA emulator target and the FPGA target, the device link method is used.
@@ -204,11 +204,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:

@@ -1,14 +1,12 @@
 #include <math.h>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <iomanip>
 #include <list>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "qri.hpp"
 
@@ -182,12 +180,19 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kInverseMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
+
+#if defined(FPGA_SIMULATOR)
   constexpr size_t kMatricesToInvert = 8;
+#else
+  constexpr size_t kMatricesToInvert = 1;
+#endif
 
   // Get the number of times we want to repeat the inversion
   // from the command line.
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
+#elif defined(FPGA_SIMULATOR)
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
   int repetitions = argc > 1 ? atoi(argv[1]) : 6553600;
 #endif
@@ -202,6 +207,8 @@ int main(int argc, char *argv[]) {
     // SYCL boilerplate
 #if defined(FPGA_EMULATOR)
     sycl::ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+    sycl::ext::intel::fpga_simulator_selector device_selector;
 #else
     sycl::ext::intel::fpga_selector device_selector;
 #endif
@@ -210,7 +217,7 @@ int main(int argc, char *argv[]) {
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
     sycl::queue q = sycl::queue(device_selector,
-                                dpc_common::exception_handler,
+                                fpga_tools::exception_handler,
                                 queue_properties);
 
     sycl::device device = q.get_device();

@@ -36,7 +36,7 @@
 
 #define MIN(a, b) (a) < (b) ? (a) : (b)
 
-// using namespace cl::sycl;
+// using namespace sycl;
 
 /*
  * Host-Code

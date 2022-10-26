@@ -14,7 +14,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <algorithm>
 #include <chrono>
@@ -32,9 +32,7 @@
 #include "db_utils/LikeRegex.hpp"
 #include "dbdata.hpp"
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -201,7 +199,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // create the device queue
-    queue q(selector, dpc_common::exception_handler, props);
+    queue q(selector, fpga_tools::exception_handler, props);
 
     // parse the database files located in the 'db_root_dir' directory
     bool success = dbinfo.Parse(db_root_dir);

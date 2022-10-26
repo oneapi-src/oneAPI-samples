@@ -1,11 +1,11 @@
 {
-  "guid": "",
+  "guid": "E3626FAB-DCD8-465F-A4E7-BF4A858D6583",
   "name": "Jacobi Iterative Solver",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
   "description": "Jacobi Iterative Solver provides step by step instructions for CPU, GPU and multiple GPU offload",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
-  "targetDevice": ["CPU, GPU, "],
+  "targetDevice": ["CPU", "GPU"],
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
   "ciTests": {
@@ -22,5 +22,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }

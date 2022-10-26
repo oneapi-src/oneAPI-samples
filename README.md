@@ -2,9 +2,24 @@
 
 The oneAPI-samples repository contains samples for the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html).
 
+The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
+
+## Get the oneAPI Samples
+
 The version of the repository you use should match the version of the Intel® oneAPI Toolkit you have installed, particularly for the compilers.
 
-The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
+Clone a stable version of the repository using Git by entering a command similar to the following:
+
+`git clone -b <tag> https://github.com/oneapi-src/oneAPI-samples.git`
+
+where \<tag\> is stable version number, like **2022.3.0**.
+
+Alternatively, you can download a zip file containing a stable version of the repository. 
+
+1. Select the appropriate tag.
+2. Click the **Code** button.
+3. Select **Download ZIP** from the menu options.
+4. After downloading the file, unzip the repository contents.
 
 ## Repository Structure
 
@@ -19,10 +34,11 @@ The oneAPI-sample repository is organized by high-level categories.
   * [C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2B)
   * [DPC++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B)
   * [DPC++FPGA](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
-  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
+  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/Fortran)
 * [Libraries](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries)
 * [Publications](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications)
   * [Data Parallel C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC%2B%2B)
+  * [GPU Optimization Guide Examples](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/GPU-Opt-Guide)
 * [RenderingToolkit](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit)
 * [Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/)
 

@@ -1,5 +1,5 @@
 // Header file to accompany board_test
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 constexpr size_t kKB = 1024;
 constexpr size_t kMB = 1024 * 1024;

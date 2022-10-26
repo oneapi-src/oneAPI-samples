@@ -5,7 +5,7 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br>Windows* 10
 | Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour
 
@@ -50,8 +50,6 @@ To optimize the different database queries, the design leverages concepts discus
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -283,7 +281,14 @@ You should see the following output in the console:
 ### Database files
 In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the true performance of the FPGA hardware**.
 
-To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports databases with scale factors of 0.01 or 1.
+To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found on the [TPC-H website](http://www.tpc.org/tpch/).
+At the time of writing (12th of September 2022), one can:
+- clone the [tpch-dbgen](https://github.com/electrum/tpch-dbgen) repository  
+- run `make`
+- generate the files using a scale factor of 1: `./dbgen -s 1`
+- copy all the generated `.tbl` files and the `answers` folder in a new `data/sf1` folder.
+ 
+Note that this reference design currently only supports databases with scale factors of 0.01 or 1.
 
 ### Query Implementation
 The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.

@@ -6,13 +6,13 @@
 #ifndef __PIPE_UTILS_HPP__
 #define __PIPE_UTILS_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <utility>
 
 /*
 
-This header defines the following utilities for use with pipes in DPC++ FPGA
+This header defines the following utilities for use with pipes in SYCL FPGA
 designs.
 
 1. PipeArray
@@ -150,7 +150,7 @@ struct PipeArray {
                   VerifierIdxLayer<idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
-        cl::sycl::ext::intel::pipe<StructId<idxs...>, BaseTy, min_depth>;
+        sycl::ext::intel::pipe<StructId<idxs...>, BaseTy, min_depth>;
   };
 
   // helpers for accessing the dimensions of the pipe array

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <algorithm>
 #include <chrono>
@@ -11,9 +11,7 @@
 #include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
 #include "unrolled_loop.hpp"            // DirectProgramming/DPC++FPGA/include
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 
 constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs
@@ -79,7 +77,7 @@ int main() {
     auto prop_list =
         sycl::property_list{sycl::property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     sycl::platform platform = q.get_context().get_platform();
     sycl::device device = q.get_device();
