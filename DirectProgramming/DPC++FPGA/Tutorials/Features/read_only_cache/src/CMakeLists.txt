@@ -81,11 +81,9 @@ add_executable(${SIMULATOR_TARGET_CACHE_ENABLED} EXCLUDE_FROM_ALL ${SOURCE_FILE}
 target_include_directories(${SIMULATOR_TARGET_CACHE_ENABLED} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET_CACHE_DISABLED} ${SIMULATOR_TARGET_CACHE_ENABLED})
 set_target_properties(${SIMULATOR_TARGET_CACHE_DISABLED} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET_CACHE_DISABLED}")
-# The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
+set_target_properties(${SIMULATOR_TARGET_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET_CACHE_ENABLED} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DCACHE_ENABLED")
-set_target_properties(${SIMULATOR_TARGET_CACHE_ENABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -Xsread-only-cache-size=2048 -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET_CACHE_ENABLED}")
+set_target_properties(${SIMULATOR_TARGET_CACHE_ENABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -Xsread-only-cache-size=2048")
 
 ###############################################################################
 ### FPGA Hardware
