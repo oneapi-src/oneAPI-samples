@@ -13,14 +13,14 @@
 		"linux": [{
 			"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
 			"conda env remove -n user_pytorch",
-			"conda create -n user_pytorch -c ${ONEAPI_ROOT}/conda_channel python=`python -V| awk '{print $2}'` -y",
+			"conda create --name user_pytorch --clone pytorch,
 			"conda activate user_pytorch",
-			"pip install -r requirements.txt"
+			"pip install -r requirements.txt",
+			"~/.conda/envs/user_pytorch/bin/python -m ipykernel install --user --name=user_pytorch"	
                         ],
 			"id": "ipex_inference_optimization",
 			"steps": [
 				"source activate user_pytorch",
-				"/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=user_pytorch",
 				"python scripts/ci_test.py"
 			]
 		}]
