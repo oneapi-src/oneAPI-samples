@@ -13,7 +13,7 @@
 		"linux": [{
 			"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
 			"conda env remove -n user_pytorch",
-			"conda create --name user_pytorch --clone pytorch,
+			"conda create --name user_pytorch --clone pytorch",
 			"conda activate user_pytorch",
 			"pip install -r requirements.txt",
 			"~/.conda/envs/user_pytorch/bin/python -m ipykernel install --user --name=user_pytorch"	
