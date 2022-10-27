@@ -14,10 +14,10 @@ set(LINK_FLAGS "")
 ### CPU/GPU RULES
 
 # To compile in a single command:
-#    dpcpp <file>.cpp -o <file>.fpga_emu
+#    icpx -fsycl <file>.cpp -o <file>.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -o <file>.cpp.o -c <file>.cpp
-#    [link]    dpcpp <file>.cpp.o -o <file>.fpga_emu
+#    [compile] icpx -fsycl -o <file>.cpp.o -c <file>.cpp
+#    [link]    icpx -fsycl <file>.cpp.o -o <file>.fpga_emu
 add_executable(${TARGET_NAME} ${SOURCE_FILE})
 set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS}")
 set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS}")
@@ -44,7 +44,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -52,10 +52,10 @@ set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR <file>.cpp -o <file>.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR <file>.cpp -o <file>.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o <file>.cpp.o -c <file>.cpp
-#    [link]    dpcpp -fintelfpga <file>.cpp.o -o <file>.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o <file>.cpp.o -c <file>.cpp
+#    [link]    icpx -fsycl -fintelfpga <file>.cpp.o -o <file>.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
@@ -65,7 +65,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early <file>.cpp -o <file>_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early <file>.cpp -o <file>_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -78,10 +78,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> <file>.cpp -o <file>.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> <file>.cpp -o <file>.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o <file>.cpp.o -c <file>.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> <file>.cpp.o -o <file>.fpga
+#   [compile] icpx -fsycl -fintelfpga -o <file>.cpp.o -c <file>.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> <file>.cpp.o -o <file>.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
