@@ -75,6 +75,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
     double nr_time = GetExecutionTime(e_nr);
     double r_time = GetExecutionTime(e_r);
 
+    std::cout << "Size of vector: " << size << " elements\n";
     std::cout << "Kernel throughput without attribute: " << (size_mb / nr_time)
               << " MB/s\n";
     std::cout << "Kernel throughput with attribute: " << (size_mb / r_time)
@@ -106,7 +107,11 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
 
 int main(int argc, char* argv[]) {
   // size of vectors to copy, allow user to change it from the command line
+#if defined(FPGA_SIMULATOR)
+  size_t size = 5000; // smaller size to keep the default runtime reasonable
+#else
   size_t size = 5000000;
+#endif
 
   if (argc > 1) size = atoi(argv[1]);
 

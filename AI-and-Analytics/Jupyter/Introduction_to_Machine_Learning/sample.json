@@ -14,7 +14,7 @@
         "env": [ "source /opt/intel/oneapi/setvars.sh" ],
         "steps": [
           "make all",
-          "make Run",
+          "make run",
           "make clean"
         ]
       }
