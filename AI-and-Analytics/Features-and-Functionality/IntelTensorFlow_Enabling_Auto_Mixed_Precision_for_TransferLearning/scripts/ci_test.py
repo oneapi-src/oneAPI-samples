@@ -18,4 +18,4 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         return -1
 
 
-runJupyterNotebook('enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb', 'enabling_automixed_precision_for_transfer_learning_with_tensorflow_result.ipynb', 'tensorflow')
+runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),'enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb'), 'enabling_automixed_precision_for_transfer_learning_with_tensorflow_result.ipynb', 'user_tensorflow')
