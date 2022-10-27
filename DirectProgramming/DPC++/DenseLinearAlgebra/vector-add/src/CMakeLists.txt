@@ -7,8 +7,12 @@ else()
     set(TARGET_NAME vector-add-buffers)
 endif()
 
+# This is a Windows-specific flag that enables exception handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
 
-set(COMPILE_FLAGS "-fsycl -Wall -O2 -g -std=c++17")
+set(COMPILE_FLAGS "-fsycl -Wall -O2 -g -std=c++17 ${WIN_FLAG}")
 set(LINK_FLAGS "-fsycl")
 
 ### CPU/GPU RULES
@@ -42,9 +46,9 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA_EMULATOR ${WIN_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA ${WIN_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
