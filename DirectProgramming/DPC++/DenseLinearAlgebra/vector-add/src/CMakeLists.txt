@@ -8,8 +8,8 @@ else()
 endif()
 
 
-set(COMPILE_FLAGS "-Wall -O2 -g -std=c++17")
-set(LINK_FLAGS "")
+set(COMPILE_FLAGS "-fsycl -Wall -O2 -g -std=c++17")
+set(LINK_FLAGS "-fsycl")
 
 ### CPU/GPU RULES
 
@@ -42,10 +42,10 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -DFPGA")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
