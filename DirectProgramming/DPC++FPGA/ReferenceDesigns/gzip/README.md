@@ -115,7 +115,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
       ```
       make fpga_emu
       ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
 
+      ```
+      make fpga_sim
+      ```
    * Generate the optimization report:
      ```
      make report
@@ -155,6 +159,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      nmake fpga_emu
      ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Generate the optimization report:
      ```
      nmake report
@@ -188,7 +196,13 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
-2. Run the sample on the FPGA device:
+ 2. Run the sample on the FPGA simulator:
+     ```
+     ./gzip.fpga_sim <input_file> [-o=<output_file>]    (Linux)
+     gzip.fpga_sim.exe <input_file> [-o=<output_file>]  (Windows)
+     ```
+
+ 3. Run the sample on the FPGA device.
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
