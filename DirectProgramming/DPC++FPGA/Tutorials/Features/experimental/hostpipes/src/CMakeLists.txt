@@ -16,6 +16,17 @@ else()
     message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
 endif()
 
+# this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
+# to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
+# to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
+if(NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+    message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
+endif()
+
+if (USM_HOST_ALLOCATIONS_ENABLED)
+    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
+endif()
+
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
