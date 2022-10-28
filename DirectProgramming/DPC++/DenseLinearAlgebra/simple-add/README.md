@@ -225,14 +225,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cd build
    cmake -G \"NMake Makefiles\" ..
    ```
-
-   1. Compile for Unified Shared Memory (USM).
-
-      ```
-      cmake -G \"NMake Makefiles\" .. -DUSM=1
-      ```
-
-	2. Compile for FPGA emulation.
+    1. Compile for FPGA emulation.
        ```
        nmake fpga_emu
        ```
@@ -241,6 +234,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
        nmake report
        ```
        The reports reside at `simple-add_report.prj/reports/report.html`.
+
+    3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+   time.)
+       ```
+       nmake fpga
+       ```
 
 3. Clean the program. (Optional)
    ```
