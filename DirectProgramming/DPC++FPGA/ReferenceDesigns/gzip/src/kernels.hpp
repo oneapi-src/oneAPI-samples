@@ -14,9 +14,10 @@
 // given system. The maximum batch size should be chosen to ensure the gzip
 // engine completes execution within the desired execution time (also considered
 // the latency to the receive the compile result).
-constexpr int BATCH_SIZE = 12;
 #ifdef FPGA_SIMULATOR
-  BATCH_SIZE = 1;
+  constexpr int BATCH_SIZE = 1;
+#else
+  constexpr int BATCH_SIZE = 12;
 #endif
 
 constexpr int kNumEngines = NUM_ENGINES;
