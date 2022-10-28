@@ -122,7 +122,7 @@ int GoldenResult(const IntArray &input_arr, int shift) {
     for (size_t j = 0; j < kSize; j++) {
       a[j] = input_arr[(i * 4 + j) % kSize] * shift;
     }
-    for (size_t j = 0; j < kSize; j++)
+    for (size_t j = 0; j < kSize/2; j++)
       gr += a[j];
   }
 
