@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER dpcpp)
+set(CMAKE_CXX_COMPILER icpx)
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
