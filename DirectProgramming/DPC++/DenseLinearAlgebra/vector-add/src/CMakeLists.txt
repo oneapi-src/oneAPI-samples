@@ -1,3 +1,8 @@
+# Select between the USM and buffer variant of the
+# code to compile, depending on the value of USM 
+# given to cmake
+# e.g. if cmake is called with -DUSM=1, the USM
+# source code will be compiled
 if(DEFINED USM AND (NOT(USM EQUAL 0)))
     message(STATUS "Using the USM variant.")
     set(SOURCE_FILE vector-add-usm.cpp)
@@ -12,10 +17,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+# 
+# SECTION 1
+# This section defines rules to create a cpu-gpu make target
+# This can safely be removed if your project is only targetting FPGAs
+#
+
 set(COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG}")
 set(LINK_FLAGS "-fsycl")
-
-### CPU/GPU RULES
 
 # To compile in a single command:
 #    icpx -fsycl <file>.cpp -o <file>.fpga_emu
@@ -27,7 +36,15 @@ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS}"
 set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS}")
 add_custom_target(cpu-gpu DEPENDS ${TARGET_NAME})
 
-### FPGA RULES
+# 
+# End of SECTION 1
+#
+
+#
+# SECTION 2 
+# This section defines rules to create the fpga_emu, report and fpga make targets
+# This can safely be removed if your project is only targetting CPUs/GPUs
+#
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
@@ -90,3 +107,8 @@ add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS}")
+
+# 
+# End of SECTION 2
+#
+

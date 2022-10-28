@@ -134,6 +134,7 @@ flowchart LR
 | [stall_enable](Tutorials/Features/stall_enable)                                   | [Tutorials/Features](Tutorials/Features)             | What the `use_stall_enable_clusters` attribute does <br> How `use_stall_enable_clusters` attribute affects resource usage and latency <br> How to apply the `use_stall_enable_clusters` attribute to kernels in your program
 | [system_profiling](Tutorials/Tools/system_profiling)                              | [Tutorials/Tools](Tutorials/Tools)                   | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | [triangular_loop](Tutorials/DesignPatterns/triangular_loop)                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to apply the triangular loop optimization technique
+| [use_library](Tutorials/Tools/use_librar)                                         | [Tutorials/Tools](Tutorials/Tools) | How to integrate Verilog RTL into your oneAPI design directly
 | [zero_copy_data_transfer](Tutorials/DesignPatterns/zero_copy_data_transfer)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to use SYCL USM host allocations for the FPGA
 
 #### Tier 4: Explore the Reference Designs
@@ -266,3 +267,4 @@ Neither compiling nor executing programs on FPGA hardware are supported on the l
 - The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
 - The [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
 - [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL by suggesting a series of samples.
+- The [Intel® oneAPI DPC++/C++ Compiler Release Notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).

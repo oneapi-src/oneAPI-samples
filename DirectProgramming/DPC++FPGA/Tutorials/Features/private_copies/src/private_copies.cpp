@@ -5,11 +5,11 @@
 // =============================================================
 #include <math.h>
 
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
@@ -25,15 +25,19 @@ using IntScalar = std::array<int, 1>;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template <int num_copies>
-class Kernel;
+template <int num_copies> class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
 // performance impact of the private_copies attribute.
 template <int num_copies>
-void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
-                         int shift, IntScalar &result) {
+void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
+
   double kernel_time = 0.0;
 
   try {
@@ -58,7 +62,8 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
           }
-          for (size_t j = 0; j < kSize; j++) r += a[j];
+          for (size_t j = 0; j < kSize; j++)
+            r += a[j];
         }
 
         accessor_result[0] = r;
@@ -107,7 +112,8 @@ int GoldenResult(const IntArray &input_arr, int shift) {
     for (size_t j = 0; j < kSize; j++) {
       a[j] = input_arr[(i * 4 + j) % kSize] * shift;
     }
-    for (size_t j = 0; j < kSize; j++) gr += a[j];
+    for (size_t j = 0; j < kSize; j++)
+      gr += a[j];
   }
 
   return gr;
@@ -122,21 +128,16 @@ int main() {
   int shift = rand() % kMaxValue;
 
   // initialize the input data
-  for (size_t i = 0; i < kSize; i++) a[i] = rand() % kMaxValue;
-
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
+  for (size_t i = 0; i < kSize; i++)
+    a[i] = rand() % kMaxValue;
 
   // Run the kernel with different values of the private_copies
   // attribute to determine the optimal private_copies number.
-  SimpleMathWithShift<0>(selector, a, shift, R0);
-  SimpleMathWithShift<1>(selector, a, shift, R1);
-  SimpleMathWithShift<2>(selector, a, shift, R2);
-  SimpleMathWithShift<3>(selector, a, shift, R3);
-  SimpleMathWithShift<4>(selector, a, shift, R4);
+  SimpleMathWithShift<0>(a, shift, R0);
+  SimpleMathWithShift<1>(a, shift, R1);
+  SimpleMathWithShift<2>(a, shift, R2);
+  SimpleMathWithShift<3>(a, shift, R3);
+  SimpleMathWithShift<4>(a, shift, R4);
 
   // compute the actual result here
   int gr = GoldenResult(a, shift);
