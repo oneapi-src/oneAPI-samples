@@ -15,6 +15,9 @@
 // engine completes execution within the desired execution time (also considered
 // the latency to the receive the compile result).
 constexpr int BATCH_SIZE = 12;
+#ifdef FPGA_SIMULATOR
+  BATCH_SIZE = 1;
+#endif
 
 constexpr int kNumEngines = NUM_ENGINES;
 
