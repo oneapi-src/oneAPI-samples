@@ -1,0 +1,54 @@
+{
+  "guid": "5B587FFC-FC3F-4A07-9B66-16211A94A073",
+  "name": "Introduction to Ray Tracing with Embree ",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "This sample serves as a walkthrough to understand generating an image with a ray tracer built with Intel Embree",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_Embree_triangle_geometry_oneapi_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./triangle_geometry_oneapi"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
+                "id": "Intel_Embree_triangle_geometry_oneapi_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\triangle_geometry_oneapi.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_Embree_triangle_geometry_oneapi_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./triangle_geometry_oneapi"
+                 ]
+                 }
+        ]
+
+
+  }
+}
