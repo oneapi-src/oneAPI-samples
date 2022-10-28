@@ -292,13 +292,13 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 2.  Run for FPGA emulation.
     ```
-    ./simple-add-buffers.fpga_emu.exe
-    ./simple-add-usm.fpga_emu.exe
+    simple-add-buffers.fpga_emu.exe
+    simple-add-usm.fpga_emu.exe
     ```
 3. Run on FPGA hardware.
     ```
-    ./simple-add-buffers.fpga.exe
-    ./simple-add-usm.fpga.exe
+    simple-add-buffers.fpga.exe
+    simple-add-usm.fpga.exe
     ```
 
 ### Application Parameters
