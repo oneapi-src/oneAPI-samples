@@ -233,13 +233,13 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
 
 2.  Run for FPGA emulation.
     ```
-    ./vector-add-buffers.fpga_emu.exe
-    ./vector-add-usm.fpga_emu.exe
+    vector-add-buffers.fpga_emu.exe
+    vector-add-usm.fpga_emu.exe
     ```
 3. Run on FPGA hardware.
     ```
-    ./vector-add-buffers.fpga.exe
-    ./vector-add-usm.fpga.exe
+    vector-add-buffers.fpga.exe
+    vector-add-usm.fpga.exe
     ```
 
 ### Build and Run the `Base: Vector Add` Sample in Intel® DevCloud (Optional)
