@@ -12,7 +12,7 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-set(COMPILE_FLAGS "-fsycl -Wall -O2 -g -std=c++17 ${WIN_FLAG}")
+set(COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG}")
 set(LINK_FLAGS "-fsycl")
 
 ### CPU/GPU RULES
