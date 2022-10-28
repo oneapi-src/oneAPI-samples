@@ -36,7 +36,7 @@ prog12: 04_SYCL_Sub_Groups/lab/sub_group_shuffle.cpp
 prog13: 04_SYCL_Sub_Groups/lab/sub_group_reqd_size.cpp
 	dpcpp -o 04_SYCL_Sub_Groups/prog13 04_SYCL_Sub_Groups/lab/sub_group_reqd_size.cpp
 
-prog14: 07_SYCL_Library/lab/binary_search.cpp
+prog14: 07_DPCPP_Library/lab/binary_search.cpp
 	dpcpp -o 07_DPCPP_Library/bin/prog14 07_DPCPP_Library/lab/binary_search.cpp
 
 prog15: 07_DPCPP_Library/lab/lower_bound.cpp
