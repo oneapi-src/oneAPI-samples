@@ -70,7 +70,7 @@ In this example, `FirstPipeT` and `SecondPipeT` are unique user-defined types th
 
 #### Additional template parameters
 
-Host pipes use additional template parameters beyond the three described above. The use of these parameters is beyond the scope of this tutorial; their definitions and usage can be found in the [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). Suitable values for these parameters consistent with non-specialized host pipe usage have been used in the accompanying tutorial code.
+Host pipes use additional template parameters beyond the three described above. The use of these parameters is beyond the scope of this tutorial; their definitions and usage can be found in the [oneAPI SYCL FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). Suitable values for these parameters consistent with non-specialized host pipe usage have been used in the accompanying tutorial code.
 Host pipes use additional template parameters beyond the three described earlier. The use of these parameters is beyond the scope of this tutorial. You can find their definitions and usage in the [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) Parameter values consistent with non-specialized host pipe usage have been used in the tutorial code.
 
 
