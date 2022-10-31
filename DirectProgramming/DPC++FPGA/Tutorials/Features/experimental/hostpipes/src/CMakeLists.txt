@@ -1,4 +1,4 @@
-# To see a Makefile equivalent of this build system:
+Please remove this 3-line comment 
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
 
 set(SOURCE_FILE hostpipes.cpp)
