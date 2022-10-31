@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 
 ***Documentation***:  The [SYCL FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of SYCL for FPGA. <br>
 The [oneAPI SYCL FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through SYCL. <br>
-The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) is a general resource for target-independent DPC++ programming.
+The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) is a general resource for target-independent SYCL programming.
 
 | Optimized for                     | Description
 ---                                 |---
