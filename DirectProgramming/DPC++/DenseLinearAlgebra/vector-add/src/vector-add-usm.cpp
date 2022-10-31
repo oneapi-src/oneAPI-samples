@@ -19,7 +19,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 #include <string>
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
   ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
-  default_selector d_selector;
+  auto d_selector{default_selector_v};
 #endif
 
   try {
