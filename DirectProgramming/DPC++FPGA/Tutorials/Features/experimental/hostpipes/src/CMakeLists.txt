@@ -1,6 +1,3 @@
-Please remove this 3-line comment 
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE hostpipes.cpp)
 set(TARGET_NAME hostpipes)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
