@@ -289,6 +289,11 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
         } else {
           kinfo[eng][i].poutput_buffer = (char *)malloc(outputSize);
         }
+
+        std::cout << "outputSize: " << outputSize << " Size of output buffer: "
+                << sizeof(*kinfo[eng][i].poutput_buffer)/sizeof(char) << "\n";
+        std::cout << "kMinBufferSize: " << kMinBufferSize << " isz: " << isz 
+                << " kInOutPadding: " << kInOutPadding << "\n";
         if (kinfo[eng][i].poutput_buffer == NULL) {
           std::cout << "Cannot allocate output buffer.\n";
           free(kinfo[eng]);
