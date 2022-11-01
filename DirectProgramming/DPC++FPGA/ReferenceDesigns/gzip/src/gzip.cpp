@@ -223,7 +223,11 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
   // only supported on the PAC-S10-USM BSP. It's not
   // needed on PAC-A10 to achieve peak performance.
   bool isS10 =  (device_string.find("s10") != std::string::npos);
+#ifdef FPGA_SIMULATOR
+  bool prepin = false;
+#else
   bool prepin = q.get_device().has(aspect::usm_host_allocations);
+#endif
 
   if (isS10 && !prepin) {
     std::cout << "Warning: Host allocations are not supported on this platform, which means that pre-pinning is not supported. DMA transfers may be slower than expected which may reduce application throughput.\n\n";
@@ -290,8 +294,8 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
           kinfo[eng][i].poutput_buffer = (char *)malloc(outputSize);
         }
 
-        std::cout << "outputSize: " << outputSize << " Size of output buffer: "
-                << sizeof(*kinfo[eng][i].poutput_buffer)/sizeof(char) << "\n";
+        std::cout << "outputSize: " << outputSize << " Prepin: "
+                << prepin << "\n";
         std::cout << "kMinBufferSize: " << kMinBufferSize << " isz: " << isz 
                 << " kInOutPadding: " << kInOutPadding << "\n";
         if (kinfo[eng][i].poutput_buffer == NULL) {
