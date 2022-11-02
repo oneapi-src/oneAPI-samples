@@ -33,7 +33,7 @@
 //   1d_HeatTransfer.cpp
 //
 //******************************************************************************
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
@@ -113,11 +113,9 @@ void CompareResults(string prefix, float *device_results, float *host_results,
 // Compute heat on the device using DPC++ buffer
 //
 void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
-  // Define device selector as 'default'
-  default_selector device_selector;
 
   // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  queue q(default_selector_v, dpc_common::exception_handler);
   cout << "Using buffers\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";
@@ -179,11 +177,9 @@ void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
 void ComputeHeatUSM(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
   // Timesteps depend on each other, so make the queue inorder
   property_list properties{property::queue::in_order()};
-  // Define device selector as 'default'
-  default_selector device_selector;
 
   // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler, properties);
+  queue q(default_selector_v, dpc_common::exception_handler, properties);
   cout << "Using USM\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";
