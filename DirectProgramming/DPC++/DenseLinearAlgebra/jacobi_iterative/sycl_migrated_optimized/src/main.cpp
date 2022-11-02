@@ -33,7 +33,7 @@
  */
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 
 #include "jacobi.h"
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   double *b = NULL;
   float *A = NULL;
 
-  queue q{default_selector(), property::queue::in_order()};
+  queue q{default_selector_v, property::queue::in_order()};
 
   b = (double *)malloc(N_ROWS * sizeof(double));
   memset(b, 0, N_ROWS * sizeof(double));
