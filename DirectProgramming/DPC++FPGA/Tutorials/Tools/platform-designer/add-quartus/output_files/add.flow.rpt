@@ -1,0 +1,164 @@
+Flow report for add
+Thu Oct 13 15:09:29 2022
+Quartus Prime Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Flow Summary
+  3. Flow Settings
+  4. Flow Non-Default Global Settings
+  5. Flow Elapsed Time
+  6. Flow OS Summary
+  7. Flow Log
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2022  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-------------------------------------------------------------------------+
+; Flow Summary                                                            ;
++-----------------------------+-------------------------------------------+
+; Flow Status                 ; Successful - Thu Oct 13 15:09:29 2022     ;
+; Quartus Prime Version       ; 22.2.0 Build 94 06/08/2022 SC Pro Edition ;
+; Revision Name               ; add                                       ;
+; Top-level Entity Name       ; add                                       ;
+; Family                      ; Arria 10                                  ;
+; Top-level Entity Name       ; add                                       ;
+; Device                      ; 10AS066N3F40E2SG                          ;
+; Timing Models               ; Final                                     ;
+; Power Models                ; Final                                     ;
+; Device Status               ; Final                                     ;
+; Logic utilization (in ALMs) ; 2,118 / 251,680 ( < 1 % )                 ;
+; Total registers             ; 5144                                      ;
+; Total pins                  ; 4 / 812 ( < 1 % )                         ;
+; Total virtual pins          ; 0                                         ;
+; Total block memory bits     ; 512 / 43,642,880 ( < 1 % )                ;
+; Total RAM Blocks            ; 1 / 2,131 ( < 1 % )                       ;
+; Total DSP Blocks            ; 0 / 1,687 ( 0 % )                         ;
+; Total HSSI RX channels      ; 0 / 48 ( 0 % )                            ;
+; Total HSSI TX channels      ; 0 / 48 ( 0 % )                            ;
+; Total PLLs                  ; 0 / 96 ( 0 % )                            ;
+; Top-level Entity Name       ; add                                       ;
++-----------------------------+-------------------------------------------+
+
+
++-----------------------------------------+
+; Flow Settings                           ;
++-------------------+---------------------+
+; Option            ; Setting             ;
++-------------------+---------------------+
+; Start date & time ; 10/13/2022 15:03:40 ;
+; Main task         ; Compilation         ;
+; Revision Name     ; add                 ;
++-------------------+---------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                                                                                                     ;
++-------------------------------+------------------------------------------------------------------------------------------------------------+---------------+----------------------------------------+----------------+
+; Assignment Name               ; Value                                                                                                      ; Default Value ; Entity Name                            ; Section Id     ;
++-------------------------------+------------------------------------------------------------------------------------------------------------+---------------+----------------------------------------+----------------+
+; COMPILER_SIGNATURE_ID         ; 256017921592837.166566622027088                                                                            ; --            ; --                                     ; --             ;
+; EDA_OUTPUT_DATA_FORMAT        ; Verilog Hdl                                                                                                ; --            ; --                                     ; eda_simulation ;
+; EDA_SIMULATION_TOOL           ; Questa Intel FPGA (Verilog)                                                                                ; <None>        ; --                                     ; --             ;
+; EDA_TIME_SCALE                ; 1 ps                                                                                                       ; --            ; --                                     ; eda_simulation ;
+; MAX_CORE_JUNCTION_TEMP        ; 100                                                                                                        ; --            ; --                                     ; --             ;
+; MIN_CORE_JUNCTION_TEMP        ; 0                                                                                                          ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; add_kernels/add_kernels.cmp                                                                                ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; add_kernels/../add_kernels.qsys                                                                            ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_example_fpga_ip_1_di_0/add_kernels_add_example_fpga_ip_1_di_0.cmp           ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_example_fpga_ip_1_di_0/../add_kernels_add_example_fpga_ip_1_di_0.ip         ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_example_fpga_ip_5_di_0/add_kernels_add_example_fpga_ip_5_di_0.cmp           ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_example_fpga_ip_5_di_0/../add_kernels_add_example_fpga_ip_5_di_0.ip         ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_fpga_ip_1_di_0/add_kernels_add_fpga_ip_1_di_0.cmp                           ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_fpga_ip_1_di_0/../add_kernels_add_fpga_ip_1_di_0.ip                         ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_fpga_ip_5_di_0/add_kernels_add_fpga_ip_5_di_0.cmp                           ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_add_fpga_ip_5_di_0/../add_kernels_add_fpga_ip_5_di_0.ip                         ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_clock_in/add_kernels_clock_in.cmp                                               ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_clock_in/../add_kernels_clock_in.ip                                             ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_master_0/add_kernels_master_0.cmp                                               ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_master_0/../add_kernels_master_0.ip                                             ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_reset_in/add_kernels_reset_in.cmp                                               ; --            ; --                                     ; --             ;
+; MISC_FILE                     ; ip/add_kernels/add_kernels_reset_in/../add_kernels_reset_in.ip                                             ; --            ; --                                     ; --             ;
+; POWER_APPLY_THERMAL_MARGIN    ; -- (Not supported for targeted family)                                                                     ; Off           ; --                                     ; --             ;
+; POWER_BOARD_THERMAL_MODEL     ; None (CONSERVATIVE)                                                                                        ; --            ; --                                     ; --             ;
+; POWER_PRESET_COOLING_SOLUTION ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW                                                                      ; --            ; --                                     ; --             ;
+; PROJECT_OUTPUT_DIRECTORY      ; output_files                                                                                               ; --            ; --                                     ; --             ;
+; SDC_ENTITY_FILE               ; ip/add_kernels/add_kernels_master_0/altera_jtag_dc_streaming_191/synth/altera_avalon_st_jtag_interface.sdc ; --            ; altera_avalon_st_jtag_interface        ; --             ;
+; SDC_ENTITY_FILE               ; add_kernels/altera_reset_controller_1921/synth/altera_reset_controller.sdc                                 ; --            ; altera_reset_controller                ; --             ;
+; SDC_ENTITY_FILE               ; ip/add_kernels/add_kernels_master_0/altera_reset_controller_1921/synth/altera_reset_controller.sdc         ; --            ; altera_reset_controller                ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels HAS_SOPCINFO 1 GENERATION_ID 0                                                       ; --            ; add_kernels                            ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_add_example_fpga_ip_1_di_0 HAS_SOPCINFO 1 GENERATION_ID 0                            ; --            ; add_kernels_add_example_fpga_ip_1_di_0 ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_add_example_fpga_ip_5_di_0 HAS_SOPCINFO 1 GENERATION_ID 0                            ; --            ; add_kernels_add_example_fpga_ip_5_di_0 ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_add_fpga_ip_1_di_0 HAS_SOPCINFO 1 GENERATION_ID 0                                    ; --            ; add_kernels_add_fpga_ip_1_di_0         ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_add_fpga_ip_5_di_0 HAS_SOPCINFO 1 GENERATION_ID 0                                    ; --            ; add_kernels_add_fpga_ip_5_di_0         ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_clock_in HAS_SOPCINFO 1 GENERATION_ID 0                                              ; --            ; add_kernels_clock_in                   ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_master_0 HAS_SOPCINFO 1 GENERATION_ID 0                                              ; --            ; add_kernels_master_0                   ; --             ;
+; SLD_INFO                      ; QSYS_NAME add_kernels_reset_in HAS_SOPCINFO 1 GENERATION_ID 0                                              ; --            ; add_kernels_reset_in                   ; --             ;
+; SOPCINFO_FILE                 ; add_kernels/add_kernels.sopcinfo                                                                           ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_add_example_fpga_ip_1_di_0/add_kernels_add_example_fpga_ip_1_di_0.sopcinfo      ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_add_example_fpga_ip_5_di_0/add_kernels_add_example_fpga_ip_5_di_0.sopcinfo      ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_add_fpga_ip_1_di_0/add_kernels_add_fpga_ip_1_di_0.sopcinfo                      ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_add_fpga_ip_5_di_0/add_kernels_add_fpga_ip_5_di_0.sopcinfo                      ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_clock_in/add_kernels_clock_in.sopcinfo                                          ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_master_0/add_kernels_master_0.sopcinfo                                          ; --            ; --                                     ; --             ;
+; SOPCINFO_FILE                 ; ip/add_kernels/add_kernels_reset_in/add_kernels_reset_in.sopcinfo                                          ; --            ; --                                     ; --             ;
++-------------------------------+------------------------------------------------------------------------------------------------------------+---------------+----------------------------------------+----------------+
+
+
++------------------------------------------------------+
+; Flow Elapsed Time                                    ;
++-----------------+--------------+---------------------+
+; Module Name     ; Elapsed Time ; Peak Virtual Memory ;
++-----------------+--------------+---------------------+
+; Synthesis       ; 00:01:22     ; 871 MB              ;
+; Fitter          ; 00:03:24     ; 5135 MB             ;
+; Timing Analyzer ; 00:00:08     ; 1421 MB             ;
+; Assembler       ; 00:00:51     ; 4470 MB             ;
+; Total           ; 00:05:45     ; --                  ;
++-----------------+--------------+---------------------+
+
+
++-------------------------------------------------------------------------------+
+; Flow OS Summary                                                               ;
++-----------------+------------------+------------+------------+----------------+
+; Module Name     ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
++-----------------+------------------+------------+------------+----------------+
+; Synthesis       ; whitepau-MOBL1   ; Windows 10 ; 10.0       ; x86_64         ;
+; Fitter          ; whitepau-MOBL1   ; Windows 10 ; 10.0       ; x86_64         ;
+; Timing Analyzer ; whitepau-MOBL1   ; Windows 10 ; 10.0       ; x86_64         ;
+; Assembler       ; whitepau-MOBL1   ; Windows 10 ; 10.0       ; x86_64         ;
++-----------------+------------------+------------+------------+----------------+
+
+
+------------
+; Flow Log ;
+------------
+quartus_syn --read_settings_files=on --write_settings_files=off AddCSRDemo -c add
+quartus_fit --read_settings_files=on --write_settings_files=off AddCSRDemo -c add
+quartus_sta AddCSRDemo -c add --mode=finalize
+quartus_asm --read_settings_files=on --write_settings_files=off AddCSRDemo -c add
+
+
+

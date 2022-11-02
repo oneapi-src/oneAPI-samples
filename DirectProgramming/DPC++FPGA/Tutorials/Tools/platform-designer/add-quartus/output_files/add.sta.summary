@@ -1,0 +1,55 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Setup 'i_clk'
+Slack : 6.102
+TNS   : 0.000
+Corner: Slow 900mV 100C Model
+
+Type  : Setup 'altera_reserved_tck'
+Slack : 6.760
+TNS   : 0.000
+Corner: Slow 900mV 0C Model
+
+Type  : Hold 'altera_reserved_tck'
+Slack : 0.019
+TNS   : 0.000
+Corner: Fast 900mV 0C Model
+
+Type  : Hold 'i_clk'
+Slack : 0.021
+TNS   : 0.000
+Corner: Fast 900mV 0C Model
+
+Type  : Recovery 'i_clk'
+Slack : 4.741
+TNS   : 0.000
+Corner: Slow 900mV 0C Model
+
+Type  : Recovery 'altera_reserved_tck'
+Slack : 38.873
+TNS   : 0.000
+Corner: Slow 900mV 100C Model
+
+Type  : Removal 'i_clk'
+Slack : 0.168
+TNS   : 0.000
+Corner: Fast 900mV 0C Model
+
+Type  : Removal 'altera_reserved_tck'
+Slack : 0.501
+TNS   : 0.000
+Corner: Fast 900mV 0C Model
+
+Type  : Minimum Pulse Width 'i_clk'
+Slack : 4.499
+TNS   : 0.000
+Corner: Slow 900mV 0C Model
+
+Type  : Minimum Pulse Width 'altera_reserved_tck'
+Slack : 20.636
+TNS   : 0.000
+Corner: Slow 900mV 0C Model
+
+------------------------------------------------------------

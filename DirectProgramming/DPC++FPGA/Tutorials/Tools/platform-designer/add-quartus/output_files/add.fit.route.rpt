@@ -1,0 +1,214 @@
+Fitter Route Stage Report for add
+Thu Oct 13 15:08:00 2022
+Quartus Prime Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Delay Chain Summary
+  3. Routing Usage Summary
+  4. Route Messages
+  5. Estimated Delay Added for Hold Timing Summary
+  6. Estimated Delay Added for Hold Timing Details
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2022  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Delay Chain Summary                                                                                                                                             ;
++----------------+----------+---------------------+--------------------+----------------+-----------------------------------+-------------------------------------+
+; Name           ; Pin Type ; Input Delay Chain 0 ; Output Delay Chain ; OE Delay Chain ; IO_12_LANE Input Data Delay Chain ; IO_12_LANE Input Strobe Delay Chain ;
++----------------+----------+---------------------+--------------------+----------------+-----------------------------------+-------------------------------------+
+; fpga_led       ; Output   ; --                  ; 0                  ; 0              ; --                                ; --                                  ;
+; i_clk          ; Input    ; 0                   ; --                 ; --             ; --                                ; --                                  ;
+; reset_button_n ; Input    ; 0                   ; --                 ; --             ; --                                ; --                                  ;
+; i_clk(n)       ; Input    ; 0                   ; --                 ; --             ; --                                ; --                                  ;
++----------------+----------+---------------------+--------------------+----------------+-----------------------------------+-------------------------------------+
+
+
++------------------------------------------------------------+
+; Routing Usage Summary                                      ;
++------------------------------+-----------------------------+
+; Routing Resource Type        ; Usage                       ;
++------------------------------+-----------------------------+
+; Block interconnects          ; 8,448 / 2,248,138 ( < 1 % ) ;
+; C27 interconnects            ; 1 / 35,203 ( < 1 % )        ;
+; C4 interconnects             ; 3,623 / 1,597,544 ( < 1 % ) ;
+; Direct links                 ; 2,652 / 2,248,138 ( < 1 % ) ;
+; Global clocks                ; 2 / 32 ( 6 % )              ;
+; Periphery clocks             ; 0 / 739 ( 0 % )             ;
+; R3 interconnects             ; 2,269 / 758,112 ( < 1 % )   ;
+; R32 interconnects            ; 0 / 66,605 ( 0 % )          ;
+; R32/C27 interconnect drivers ; 1 / 239,816 ( < 1 % )       ;
+; R6 interconnects             ; 3,447 / 1,488,576 ( < 1 % ) ;
+; Regional clock lefts         ; 0 / 16 ( 0 % )              ;
+; Regional clock out bottoms   ; 0 / 16 ( 0 % )              ;
+; Regional clock out tops      ; 0 / 16 ( 0 % )              ;
+; Regional clock rights        ; 0 / 16 ( 0 % )              ;
+; Regional clocks              ; 0 / 16 ( 0 % )              ;
+; Spine buffers                ; 5 / 660 ( < 1 % )           ;
+; Spine clocks                 ; 9 / 990 ( < 1 % )           ;
+; Spine feedthroughs           ; 0 / 736 ( 0 % )             ;
++------------------------------+-----------------------------+
+
+
++----------------+
+; Route Messages ;
++----------------+
+Info (20030): Parallel compilation is enabled and will use 6 of the 6 processors detected
+Info: *******************************************************************
+Info: Running Quartus Prime Fitter
+    Info: Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+    Info: Processing started: Thu Oct 13 15:05:02 2022
+    Info: System process ID: 30260
+Info: Command: quartus_fit --read_settings_files=on --write_settings_files=off AddCSRDemo -c add
+Info: qfit2_default_script.tcl version: #1
+Info: Project  = AddCSRDemo
+Info: Revision = add
+Info (170193): Fitter routing operations beginning
+Info (11888): Total time spent on timing analysis during Routing is 1.54 seconds.
+Info (16607): Fitter routing operations ending: elapsed time is 00:00:43
+
+
++----------------------------------------------------------------+
+; Estimated Delay Added for Hold Timing Summary                  ;
++---------------------+----------------------+-------------------+
+; Source Clock(s)     ; Destination Clock(s) ; Delay Added in ns ;
++---------------------+----------------------+-------------------+
+; altera_reserved_tck ; altera_reserved_tck  ; 603.8             ;
+; i_clk               ; i_clk                ; 532.0             ;
++---------------------+----------------------+-------------------+
+Note: For more information on problematic transfers, consider running the Fitter again with the Optimize hold timing option (Settings Menu) turned off.
+This will disable optimization of problematic paths and expose them for further analysis using the Timing Analyzer.
+
+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Estimated Delay Added for Hold Timing Details                                                                                                                                                                                                                                                        ;
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+-------------------+
+; Source Register                                                                                                                         ; Destination Register                                                                                                                   ; Delay Added in ns ;
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+-------------------+
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[1]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[4]                      ; 1.196             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|reset_to_sample_synchronizer|dreg[1]      ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[0]                              ; 1.190             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|reset_ena_reg                                           ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_mode_reg[2]                                        ; 1.161             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_sensor_synchronizer|dreg[1]         ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[2]                              ; 1.147             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[2]                            ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[1]                           ; 1.110             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[6]                            ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[5]                           ; 1.085             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[3]                            ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[2]                           ; 1.065             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[2]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[2]                           ; 1.065             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[3]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[3]                           ; 1.064             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[1]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[1]                      ; 1.052             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|header_in[4]                              ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|scan_length[0]                           ; 1.043             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[7]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[7]                      ; 1.038             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[5]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[4]                      ; 1.037             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[6]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[6]                           ; 1.019             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[4]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[4]                      ; 1.017             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[6]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[6]                      ; 1.014             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[2]                              ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[4]                             ; 0.976             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[5]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[5]                      ; 0.974             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data0[2]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[2]                      ; 0.969             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[1]                            ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[0]                           ; 0.965             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[6]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[5]                               ; 0.959             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[3]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[2]                            ; 0.958             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|identity_contrib_shift_reg[0]                           ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[0]                                       ; 0.958             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[0]                 ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[0]                ; 0.956             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[7]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[6]                               ; 0.956             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|reset_to_sample_synchronizer|dreg[0]      ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|reset_to_sample_synchronizer|dreg[1]     ; 0.955             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[2]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[1]                               ; 0.955             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[1]                                      ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[0]                                     ; 0.955             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[3]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[2]                                         ; 0.955             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[3]                                    ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[2]                                   ; 0.955             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[4]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[3]                               ; 0.955             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_all_valid                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[7]                           ; 0.952             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[6]                                     ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[7]                                    ; 0.951             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[2]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[1]                            ; 0.951             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[1]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[0]                               ; 0.951             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[1]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|idle_remover_sink_data[0]                ; 0.948             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[1]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[0]                                         ; 0.948             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|identity_contrib_shift_reg[1]                           ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[1]                                       ; 0.947             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[2]                                        ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[2]                                     ; 0.947             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[6]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[5]                                         ; 0.944             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|out_data_buffer[2]                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[2]                      ; 0.943             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[1]                                        ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[1]                                     ; 0.943             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[8]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[7]                                         ; 0.940             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[7]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[6]                                         ; 0.940             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[3]                                      ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[2]                                     ; 0.938             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[6]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[5]                            ; 0.938             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[8]                                ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_info[8]                               ; 0.938             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|out_data_buffer[5]                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[5]                      ; 0.937             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|decode_header_1                           ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|decode_header_1                          ; 0.936             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|synchronizer|dreg[0]                                     ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|synchronizer|dreg[1]                                    ; 0.936             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[0]                                        ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[0]                                     ; 0.936             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_valid                           ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[7]                           ; 0.936             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[5]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[4]                                         ; 0.936             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[4]                              ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[4]                             ; 0.934             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[2]                                      ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[1]                                     ; 0.934             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_bit_counter[1]                  ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_bit_counter[2]                 ; 0.933             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[0]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[0]                           ; 0.932             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_sensor_synchronizer|din_s1          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_sensor_synchronizer|dreg[0]        ; 0.932             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[1]                                    ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[0]                                   ; 0.927             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[3]                              ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mixer_addr_reg_internal[4]                             ; 0.927             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[2]                               ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[2]                              ; 0.927             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|WORD_SR[3]                                 ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|WORD_SR[2]                                ; 0.922             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_bit_counter[0]                  ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_bit_counter[2]                 ; 0.922             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|identity_contrib_shift_reg[2]                           ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|identity_contrib_shift_reg[1]                          ; 0.922             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_valid                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|valid_write_data_length_byte_counter[15] ; 0.919             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[13]                                    ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[13]                                   ; 0.918             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[2]                                    ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_minor_ver_reg[1]                                   ; 0.918             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|mix_writedata[3]                                        ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|design_hash_reg[3]                                     ; 0.918             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[2]                 ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[2]                ; 0.918             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|synchronizer|din_s1                                      ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|synchronizer|dreg[0]                                    ; 0.916             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[1]                 ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|write_data_bit_counter[1]                ; 0.916             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_to_sample_div2_synchronizer|dreg[1] ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[1]                              ; 0.916             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_loopback                               ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_loopback                              ; 0.916             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[4]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[3]                                         ; 0.914             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[10]                                    ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|shadow_jsm|state[11]                                   ; 0.914             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_control[0]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|offset[0]                                ; 0.905             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[4]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[3]                            ; 0.900             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|out_data_buffer[3]                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[3]                      ; 0.900             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|out_data_buffer[1]                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[1]                      ; 0.897             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_control[1]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|offset[1]                                ; 0.897             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|header_in[8]                              ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|header_in[7]                             ; 0.897             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[4]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[4]                      ; 0.893             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|out_data_buffer[6]                          ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|output_stage|data1[6]                      ; 0.893             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|WORD_SR[1]                                 ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|WORD_SR[0]                                ; 0.891             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[2]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[1]                                         ; 0.890             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[0]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|virtual_ir_scan_reg                                    ; 0.883             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[1]                               ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_debug[0]                              ; 0.883             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|reset_to_sample_synchronizer|din_s1       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|reset_to_sample_synchronizer|dreg[0]     ; 0.879             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|word_counter[0]                            ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|hub_info_reg|word_counter[1]                           ; 0.879             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_length[0]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_all_valid                      ; 0.878             ;
+; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[9]                                          ; auto_fab_0|alt_sld_fab_0|alt_sld_fab_0|sldfabric|jtag_hub_gen.real_sld_jtag_hub|jtag_ir_reg[8]                                         ; 0.878             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_length[1]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_all_valid                      ; 0.872             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_length[2]                       ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|read_data_all_valid                      ; 0.871             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|in_to_out_synchronizer|dreg[0]              ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|in_to_out_synchronizer|dreg[1]             ; 0.871             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_sensor_synchronizer|dreg[0]         ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|clock_sensor_synchronizer|dreg[1]        ; 0.865             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[5]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|idle_remover_sink_data[4]                ; 0.865             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_in[7]                             ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|idle_remover_sink_data[6]                ; 0.858             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|in_to_out_synchronizer|din_s1               ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|sink_crosser|in_to_out_synchronizer|dreg[0]             ; 0.851             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|header_in[6]                              ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|scan_length[2]                           ; 0.850             ;
+; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[7]                            ; u0|master_0|master_0|jtag_phy_embedded_in_jtag_master|normal.jtag_dc_streaming|jtag_streaming|dr_data_out[6]                           ; 0.850             ;
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+-------------------+
+Note: This table only shows the top 100 path(s) that have the largest delay added for hold.
+
+
