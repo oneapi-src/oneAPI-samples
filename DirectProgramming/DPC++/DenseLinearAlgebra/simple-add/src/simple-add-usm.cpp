@@ -19,7 +19,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 
@@ -63,19 +63,19 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  ext::intel::fpga_emulator_selector d_selector;
+  const auto& selector = ext::intel::fpga_emulator_selector_v;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  ext::intel::fpga_selector d_selector;
+  const auto& selector = ext::intel::fpga_selector_v;
 #else
   // The default device selector will select the most performant device.
-  default_selector d_selector;
+  const auto& selector = default_selector_v;
 #endif
 
   constexpr int value = 100000;
 
   try {
-    queue q(d_selector, dpc_common::exception_handler);
+    queue q(selector, dpc_common::exception_handler);
 
     // Print out the device information used for the kernel code.
     cout << "Running on device: "

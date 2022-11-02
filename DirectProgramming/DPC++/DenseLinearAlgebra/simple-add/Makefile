@@ -1,5 +1,5 @@
-CXX = dpcpp
-CXXFLAGS = -O2 -g -std=c++17
+CXX = icpx
+CXXFLAGS = -O2 -g -std=c++17 -fsycl
 
 USM_EXE_NAME = simple-add-usm
 USM_SOURCES = src/simple-add-usm.cpp
