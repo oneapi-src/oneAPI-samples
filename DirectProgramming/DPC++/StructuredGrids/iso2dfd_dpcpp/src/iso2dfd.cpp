@@ -31,7 +31,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cmath>
 #include <cstring>
 #include <stdio.h>
@@ -267,11 +267,8 @@ int main(int argc, char* argv[]) {
   cout << "Grid Sizes: " << n_rows << " " << n_cols << "\n";
   cout << "Iterations: " << n_iterations << "\n\n";
 
-  // Define device selector as 'default'
-  default_selector device_selector;
-
   // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  queue q(default_selector_v, dpc_common::exception_handler);
 
   cout << "Computing wavefield in device ..\n";
   // Display info about device
