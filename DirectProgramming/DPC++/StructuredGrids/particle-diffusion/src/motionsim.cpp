@@ -305,10 +305,8 @@ int main(int argc, char* argv[]) {
   // Cell radius = 0.5*(grid spacing)
   const float radius = 0.5f;
 
-  // Create a device queue using default or host/device selectors
-  default_selector device_selector;
   // Create a device queue using SYCL class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  queue q(default_selector_v, dpc_common::exception_handler);
 
   // Start timers
   dpc_common::TimeInterval t_offload;
