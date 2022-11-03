@@ -9,9 +9,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "buffer_kernel.hpp"
 #include "zero_copy_kernel.hpp"
@@ -28,6 +26,9 @@ int main(int argc, char* argv[]) {
   // parse command line arguments
 #if defined(FPGA_EMULATOR)
   size_t size = 10000;
+  size_t iterations = 1;
+#elif FPGA_SIMULATOR
+  size_t size = 700;
   size_t iterations = 1;
 #else
   size_t size = 100000000;
@@ -49,12 +50,14 @@ int main(int argc, char* argv[]) {
     // device selector
 #if defined(FPGA_EMULATOR)
     ext::intel::fpga_emulator_selector selector;
+#elif FPGA_SIMULATOR
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
 
     // create the device queue
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 
     // make sure the device supports USM host allocations
     device d = q.get_device();
@@ -136,9 +139,11 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    // The FPGA emulator does not accurately represent the hardware performance
-    // so we don't print performance results when running with the emulator
-#ifndef FPGA_EMULATOR
+    // The FPGA emulator or simulator do not accurately represent the hardware performance
+    // so we don't print performance results when running with the emulator or simulator
+#ifdef FPGA_EMULATOR
+#elif FPGA_SIMULATOR
+#else
     // Compute the average latency across all iterations.
     // We use the first iteration as a 'warmup' for the FPGA,
     // so we ignore its results.

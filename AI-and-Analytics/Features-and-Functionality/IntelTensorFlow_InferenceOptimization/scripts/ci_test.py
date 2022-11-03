@@ -1,3 +1,6 @@
+import os
+
+
 def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_env, fdpath='./'):
     import nbformat
     import os
@@ -18,4 +21,6 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         return -1
 
 
-runJupyterNotebook('tutorial_optimize_TensorFlow_pretrained_model.ipynb', 'tutorial_optimize_TensorFlow_pretrained_model_result.ipynb', 'tensorflow')
+runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                'tutorial_optimize_TensorFlow_pretrained_model.ipynb'),
+                   'tutorial_optimize_TensorFlow_pretrained_model_result.ipynb', 'tensorflow')

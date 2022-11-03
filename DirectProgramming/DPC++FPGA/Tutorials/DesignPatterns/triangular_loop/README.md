@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates an advanced technique to improve the performance
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
 
@@ -178,8 +178,6 @@ Summing the number of real and dummy iterations gives the total iterations of th
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -227,12 +225,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
    * Generate the optimization report:
      ```
      make report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+     ```
+     make fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -248,8 +250,8 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cd build
    ```
    To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
+   ```
+   cmake -G "NMake Makefiles" ..
    ```
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
@@ -270,6 +272,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -307,7 +313,12 @@ Consult the "Loop Analysis" report to compare the optimized and unoptimized vers
      ./triangular_loop.fpga_emu     (Linux)
      triangular_loop.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./triangular_loop.fpga_sim     (Linux)
+     triangular_loop.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./triangular_loop.fpga         (Linux)
      triangular_loop.fpga.exe       (Windows)

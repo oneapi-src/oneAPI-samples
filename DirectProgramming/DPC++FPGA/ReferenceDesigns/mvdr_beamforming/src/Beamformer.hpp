@@ -6,8 +6,8 @@
 
 // utility classes
 #include "ParallelCopyArray.hpp"
-#include "Tuple.hpp"
-#include "UnrolledLoop.hpp"
+#include "tuple.hpp"          // DirectProgramming/DPC++FPGA/include
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 
@@ -67,7 +67,7 @@ event SubmitBeamformerKernel(
       "k_unroll_factor must be evenly divisible by k_num_complex_per_xrx_read");
 
   // data coming from the Xrx pipe
-  using XrxPipeType = NTuple<ComplexType, k_num_complex_per_xrx_read>;
+  using XrxPipeType = fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>;
 
   // this type represents the number of samples to be processed in parallel
   using CalcType = ParallelCopyArray<ComplexType, k_unroll_factor>;
@@ -105,7 +105,7 @@ event SubmitBeamformerKernel(
                i++) {
             segment = XrxVectorsInPipe::read();
             short index = i / kReadsPerCalcType;
-            UnrolledLoop<k_num_complex_per_xrx_read>([&](auto k) {
+            fpga_tools::UnrolledLoop<k_num_complex_per_xrx_read>([&](auto k) {
               short subindex =
                   (i % kReadsPerCalcType) * (short)k_num_complex_per_xrx_read +
                   k;
@@ -125,19 +125,19 @@ event SubmitBeamformerKernel(
           for (unsigned char vector_num = 0;
                vector_num < (unsigned char)k_num_weight_vectors; vector_num++) {
             // zero the accumulators
-            UnrolledLoop<k_unroll_factor>([&](auto i) { accum_vector[i] = 0; });
+            fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto i) { accum_vector[i] = 0; });
 
             // calculate the sum of products of the weight and xrx vectors
             // unroll by a factor of k_unroll_factor (so perform k_unroll_factor
             // operations in parallel)
             for (short i = 0; i < (kNumCalcTypePerVector); i++) {
-              UnrolledLoop<k_unroll_factor>([&](auto j) {
+              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
                 accum_vector[j] +=
                     xrx_vector[i][j] * weight_vectors[vector_num][i][j].conj();
               });
             }
             ComplexType accum_vector_sum = 0;
-            UnrolledLoop<k_unroll_factor>(
+            fpga_tools::UnrolledLoop<k_unroll_factor>(
                 [&](auto i) { accum_vector_sum += accum_vector[i]; });
 
             result[vector_num] = accum_vector_sum;

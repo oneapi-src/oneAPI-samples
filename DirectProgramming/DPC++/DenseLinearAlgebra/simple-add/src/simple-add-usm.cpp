@@ -19,19 +19,31 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
-#include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
   #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
 using namespace std;
+
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
+#if _DEBUG
+      std::cout << "Failure" << std::endl;
+#endif
+      std::terminate();
+    }
+  }
+};
 
 // Array size for this example.
 constexpr size_t array_size = 10000;
@@ -69,13 +81,13 @@ int main() {
   ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
-  default_selector d_selector;
+  auto d_selector{default_selector_v};
 #endif
 
   constexpr int value = 100000;
 
   try {
-    queue q(d_selector, dpc_common::exception_handler);
+    queue q(d_selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     cout << "Running on device: "

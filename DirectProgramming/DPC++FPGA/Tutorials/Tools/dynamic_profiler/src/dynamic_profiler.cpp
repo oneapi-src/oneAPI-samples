@@ -11,9 +11,7 @@
 #include <cmath>
 #include <numeric>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -37,6 +35,8 @@ class ConsumerAfterKernel;
 // kSize = # of floats to process on each kernel execution.
 #if defined(FPGA_EMULATOR)
 constexpr int kSize = 4096;
+#elif defined(FPGA_SIMULATOR)
+constexpr int kSize = 1024;
 #else
 constexpr int kSize = 262144;
 #endif
@@ -187,14 +187,16 @@ int main() {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
-               "flow. Please compile to FPGA hardware to collect "
-               "dynamic profiling data. \n\n";
+               "flow. Please compile to FPGA hardware or simulator flow "
+               "to collect dynamic profiling data. \n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
 
   try {
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     std::vector<float> producer_input(kSize, -1);
     std::vector<float> consumer_output_before(kSize, -1);

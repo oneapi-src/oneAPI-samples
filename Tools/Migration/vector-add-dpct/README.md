@@ -72,6 +72,12 @@ to a SYCL*-compliant project.
 ### Command Line On a Linux* System
 1. Use dpct to migrate the CUDA code. The  migrated source code will be
    created in a new directory, by default named `dpct_output`.
+   The dpct `--in-root` option is used to set the root location of the program
+   sources that are to be migrated. Only files and folders located within the
+   --in-root directory will be considered for migration by the tool. Files located
+   outside the`--in-root` directory are considered system files and will not be
+   migrated, even if they are included by a source file located within the
+   `--in-root`directory.
 
 ```sh
 # From the repo root directory:

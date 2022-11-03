@@ -8,9 +8,7 @@
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -31,15 +29,21 @@ template <int N> class KernelCompute;
 // This is not meant to be a high performance implementation on FPGA!
 // It's just a simple kernel with nested loops to illustrate loop coalescing.
 template <int coalesce_factor>
-void MatrixMultiply(const device_selector &selector,
-                    const std::vector<float> &matrix_a,
+void MatrixMultiply(const std::vector<float> &matrix_a,
                     const std::vector<float> &matrix_b,
                     std::vector<float> &res) {
   double kernel_time = 0.0;
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
-    queue q(selector, dpc_common::exception_handler, prop_list);
+    queue q(selector, fpga_tools::exception_handler, prop_list);
 
     buffer buffer_in_a(matrix_a);
     buffer buffer_in_b(matrix_b);
@@ -142,17 +146,11 @@ int main() {
     }
   }
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
   // Two versions of the simple matrix multiply kernel will be enqueued:
   //  - with coalesce_factor=1 (i.e. no loop coalescing)
   //  - with coalesce_factor=2 (coalesce two nested levels)
-  MatrixMultiply<1>(selector, matrix_a, matrix_b, matrix_output_no_col);
-  MatrixMultiply<2>(selector, matrix_a, matrix_b, matrix_output);
+  MatrixMultiply<1>(matrix_a, matrix_b, matrix_output_no_col);
+  MatrixMultiply<2>(matrix_a, matrix_b, matrix_output);
 
   // Correctness check
   bool passed = true;

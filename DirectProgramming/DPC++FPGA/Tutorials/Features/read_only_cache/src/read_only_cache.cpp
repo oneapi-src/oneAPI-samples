@@ -8,9 +8,7 @@
 
 #include <chrono>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 namespace ext_oneapi = sycl::ext::oneapi;
@@ -86,6 +84,8 @@ int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -93,7 +93,7 @@ int main() {
     auto prop_list =
         sycl::property_list{sycl::property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     std::cout << "\nSQRT LUT size: " << kLUTSize << "\n";
     std::cout << "Number of outputs: " << kNumOutputs << "\n";

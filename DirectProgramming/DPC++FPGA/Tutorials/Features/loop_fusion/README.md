@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
 | Time to complete                  | 20 minutes
 
@@ -86,8 +86,6 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -140,6 +138,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -177,6 +179,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -211,12 +217,17 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./loop_fusion.fpga_emu     (Linux)
      loop_fusion.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./loop_fusion.fpga_sim     (Linux)
+     loop_fusion.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./loop_fusion.fpga         (Linux)
      loop_fusion.fpga.exe       (Windows)
@@ -236,7 +247,7 @@ PASSED: The results are correct
 
 Loop fusion increases the throughput by ~100% in both the cases with equally-sized and unequally-sized loops.
 
-> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance.
 
 ## License
 Code samples are licensed under the MIT license. See

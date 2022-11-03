@@ -9,9 +9,9 @@ Mandelbrot is an infinitely complex fractal patterning that is derived from a si
 
 ## Purpose
 
-The `Mandelbrot OMP` code sample demonstrates how to optimize a serial implementation of the Mandelbrot image calculation using OpenMP pragmas for SIMD and parallelization.
+The `Mandelbrot OMP` C++ code sample demonstrates how to optimize a serial implementation of the Mandelbrot image calculation using OpenMP pragmas for SIMD and parallelization,which generates an ASCII Portable Pixel Map (PPM) image of the Mandelbrot set, using OpenMP for parallel execution
 
-This sample is a C++ application that generates a fractal image by tracking how many iterations of the function $z_n+1 = z_n^2 + c$ remain bounded (where c is a coordinate on the complex plane and $z_0 = 0$). When performing the calculation, complex numbers belonging to the Mandelbrot set will take infinite iterations as they will always remain bounded, so a maximum depth of iterations is set so that the program may execute in finite time.
+This sample is a C++ application that generates a fractal image by tracking how many iterations of the function z(n+1) = z(n)^2 + c remain bounded (where c is a coordinate on the complex plane and $z_0 = 0$). When performing the calculation, complex numbers belonging to the Mandelbrot set will take infinite iterations as they will always remain bounded, so a maximum depth of iterations is set so that the program may execute in finite time.
 
 Each point on the complex plane can be calculated independently, which make the Mandelbrot image calculation suitable for parallelism. Since the calculation of each point is identical, the program can take advantage of SIMD directives to get better performance.
 
