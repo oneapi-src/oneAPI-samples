@@ -30,5 +30,5 @@ set_global_assignment -name SDC_FILE add.sdc
 set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_clock_in.ip
 set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_master_0.ip
 set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_reset_in.ip
-set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_add_fpga_ip_1_di_0.ip
-set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_add_fpga_ip_5_di_0.ip
+set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_add_fpga_ip_export_1_di_0.ip
+set_global_assignment -name IP_FILE ip/add_kernels/add_kernels_add_fpga_ip_export_5_di_0.ip

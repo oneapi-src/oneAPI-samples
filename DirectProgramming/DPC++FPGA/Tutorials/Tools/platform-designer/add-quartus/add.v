@@ -33,17 +33,13 @@ module add (
   
   assign sort_done = irq_members | irq_hostpipes;
   
-		add_kernels u0 (
-		.exception_add_hostpipes_1_data (),               //  output,  width = 64, exception_add_hostpipes_1.data
-		.irq_add_hostpipes_1_irq        (irq_hostpipes),  //  output,   width = 1,       irq_add_hostpipes_1.irq
-		.exception_add_members_1_data   (),               //  output,  width = 64,   exception_add_members_1.data
-		.irq_add_members_1_irq          (irq_members),    //  output,   width = 1,         irq_add_members_1.irq
-		.clk_clk                        (i_clk),          //   input,   width = 1,                       clk.clk
-		.reset_reset                    (reset)           //   input,   width = 1,                     reset.reset
-	);
-
-
-
-
+  add_kernels u0 (
+    .exception_add_hostpipes_data (),               //  output,  width = 64, exception_add_hostpipes_1.data
+    .irq_add_hostpipes_irq        (irq_hostpipes),  //  output,   width = 1,       irq_add_hostpipes_1.irq
+    .exception_add_members_data   (),               //  output,  width = 64,   exception_add_members_1.data
+    .irq_add_members_irq          (irq_members),    //  output,   width = 1,         irq_add_members_1.irq
+    .clk_clk                      (i_clk),          //   input,   width = 1,                       clk.clk
+    .reset_reset                  (reset)           //   input,   width = 1,                     reset.reset
+  );
 
 endmodule

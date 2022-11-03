@@ -35,7 +35,7 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 # set(REPORT_TARGET ${TARGET_NAME}.report)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
-# set(SPLIT_TARGET ${TARGET_NAME}.fpga_split)
+# set(IP_EXPORT_TARGET ${TARGET_NAME}.fpga_ip_export)
 
 # FPGA device selection
 if(DEFINED FPGA_DEVICE)
@@ -63,8 +63,8 @@ endif()
 set(EXPERIMENTAL_INCLUDE "-I\"$ENV{INTELFPGAOCLSDKROOT}/include\"")
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
 set(EMULATOR_LINK_FLAGS    "-fsycl -fintelfpga ${QACTYPES_LINK}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
-set(BOARD_LINK_FLAGS       "-fsycl -fintelfpga -Xstarget=${FPGA_DEVICE}   ${USER_HARDWARE_FLAGS} ${QACTYPES_LINK}")
+set(FPGA_COMPILE_FLAGS     "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
+set(FPGA_LINK_FLAGS        "-fsycl -fintelfpga -Xstarget=${FPGA_DEVICE}   ${USER_HARDWARE_FLAGS} ${QACTYPES_LINK}")
 
 ###############################################################################
 ### FPGA Emulator
@@ -88,8 +88,8 @@ set(REPORT_TARGET ${TARGET_NAME}.report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${REPORT_TARGET} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${REPORT_TARGET})
-set_target_properties(${REPORT_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
-set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${BOARD_LINK_FLAGS} ${USER_FLAGS} -Xshardware -fsycl-link=early")
+set_target_properties(${REPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} ${USER_FLAGS} -Xshardware -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
@@ -102,8 +102,8 @@ set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${BOARD_LINK_FLAGS
 #   [link]    icpx -fsycl -fintelfpga -Xstarget=<FPGA_DEVICE> -Xssimulation -Xsghdl=1 fpga_compile.cpp.o -o fpga_compile.fpga_sim
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DFPGA_SIMULATOR ${USER_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${BOARD_LINK_FLAGS} -Xssimulation -Xsghdl=1 ${USER_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_SIMULATOR ${USER_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xssimulation -Xsghdl=1 ${USER_FLAGS}")
 
 ###############################################################################
 ### FPGA Board
@@ -115,21 +115,21 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${BOARD_LINK_FL
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${BOARD_LINK_FLAGS} -Xshardware ${USER_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xshardware ${USER_FLAGS}")
 
 ###############################################################################
-### FPGA Split (apparently only necessary until 'correct' implementation of host pipes)
+### FPGA IP Export (apparently only necessary until 'correct' implementation of host pipes)
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early -fsycl-device-code-split=per_kernel fpga_compile.cpp -o fpga_compile.fpga_split
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early -fsycl-device-code-split=per_kernel fpga_compile.cpp -o fpga_compile.fpga_ip_export
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -o fpga_compile.cpp.o -c fpga_compile.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga_split
-set(SPLIT_TARGET ${TARGET_NAME}.fpga_split.a)
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga_ip_export
+set(IP_EXPORT_TARGET ${TARGET_NAME}.fpga_ip_export.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
-add_executable(${SPLIT_TARGET} ${SOURCE_FILE})
-add_custom_target(fpga_split DEPENDS ${SPLIT_TARGET})
-set_target_properties(${SPLIT_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
-set_target_properties(${SPLIT_TARGET} PROPERTIES LINK_FLAGS "${IP_LINK_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel ${USER_FLAGS}")
+add_executable(${IP_EXPORT_TARGET} ${SOURCE_FILE})
+add_custom_target(fpga_ip_export DEPENDS ${IP_EXPORT_TARGET})
+set_target_properties(${IP_EXPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${IP_EXPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel ${USER_FLAGS}")
 

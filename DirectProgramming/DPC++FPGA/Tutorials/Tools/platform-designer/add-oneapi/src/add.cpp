@@ -5,86 +5,66 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/host_pipes.hpp>
 
-using namespace sycl;
-
-// Forward declare the kernel name in the global scope. This is an FPGA best
-// practice that reduces name mangling in the optimization reports.
-class Add;
-
-// Forward declare pipe names to reduce name mangling (maybe get rid of; pipes already have bad names)
-class ID_PipeOut;
-
 // use host pipes to write into addresses in the CSR
-using OutputPipe = sycl::ext::intel::prototype::pipe<ID_PipeOut, int, 1,
-                                                         // these 3 shouldn't matter
-                                                         0, 1, true, false,
-                                                         // store the most recently processed index
-                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+using OutputPipe = sycl::ext::intel::prototype::pipe<
+    class ID_PipeOut, int, 1,
+    // choose defaults for these 4:
+    0, 1, true, false,
+    // store the most recently processed index
+    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
-class Add_Kernel
-{
-public:
-    int a;
-    int b;
+class Add_Kernel {
+ public:
+  int a;
+  int b;
 
-    void operator()() const
-    {
-        int sum = a + b;
+  void operator()() const {
+    int sum = a + b;
 
-        OutputPipe::write(sum);
-    }
+    OutputPipe::write(sum);
+  }
 };
-
-// Forward declare pipe names to reduce name mangling (maybe get rid of; pipes already have bad names)
-class ID_A;
-class ID_B;
-class ID_C;
 
 // use host pipes to read from addresses in the CSR
-using InputPipeA = sycl::ext::intel::prototype::pipe<ID_A, int, 1,
-                                                         // choose defaults for these so we can set the 
-                                                         0, 1, true, false,
-                                                         // store the most recently processed index
-                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
-using InputPipeB = sycl::ext::intel::prototype::pipe<ID_B, int, 1,
-                                                         // these 3 shouldn't matter
-                                                         0, 1, true, false,
-                                                         // store the most recently processed index
-                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+using InputPipeA = sycl::ext::intel::prototype::pipe<
+    class ID_A, int, 1,
+    // choose defaults for these 4:
+    0, 1, true, false,
+    // store the most recently processed index
+    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+using InputPipeB = sycl::ext::intel::prototype::pipe<
+    class ID_B, int, 1,
+    // choose defaults for these 4:
+    0, 1, true, false,
+    // store the most recently processed index
+    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
 // use host pipes to write into addresses in the CSR
-using OutputPipeC = sycl::ext::intel::prototype::pipe<ID_C, int, 1,
-                                                          // these 3 shouldn't matter
-                                                          0, 1, true, false,
-                                                          // store the most recently processed index
-                                                          sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+using OutputPipeC = sycl::ext::intel::prototype::pipe<
+    class ID_C, int, 1,
+    // choose defaults for these 4:
+    0, 1, true, false,
+    // store the most recently processed index
+    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
-// Forward declare the kernel name in the global scope. This is an FPGA best
-// practice that reduces name mangling in the optimization reports.
-class AddCSRPipes;
+class AddCSRPipes_Kernel {
+ public:
+  void operator()() const {
+    int a = InputPipeA::read();
+    int b = InputPipeB::read();
 
-class AddCSRPipes_Kernel
-{
-public:
-    void operator()() const
-    {
-        int a = InputPipeA::read();
-        int b = InputPipeB::read();
+    int sum = a + b;
 
-        int sum = a + b;
-
-        OutputPipeC::write(sum);
-    }
+    OutputPipeC::write(sum);
+  }
 };
 
-int main()
-{
-    bool passed = false;
+int main() {
+  bool passed = false;
 
-    try{
-
-    // choose a selector that was selected by the default FPGA build system.
-    #if FPGA_SIMULATOR
+  try {
+// choose a selector that was selected by the default FPGA build system.
+#if FPGA_SIMULATOR
     std::cout << "using FPGA Simulator." << std::endl;
     sycl::queue q(sycl::ext::intel::fpga_simulator_selector{});
 #elif FPGA_HARDWARE
@@ -102,18 +82,18 @@ int main()
 
     std::cout << "add two integers using CSR for input." << std::endl;
 
-    q.single_task<Add>(Add_Kernel{a, b}).wait();
+    q.single_task<class Add>(Add_Kernel{a, b}).wait();
 
     // verify that outputs are correct
-    bool passed = true;
+    passed = true;
 
     std::cout << "collect results." << std::endl;
     int calc_add = OutputPipe::read(q);
 
-    std::cout << "Add sum: " << calc_add << ", expected (" << expectedSum << ")" << std::endl;
-    if (calc_add != expectedSum)
-    {
-        passed = false;
+    std::cout << "Add sum: " << calc_add << ", expected (" << expectedSum << ")"
+              << std::endl;
+    if (calc_add != expectedSum) {
+      passed = false;
     }
 
     std::cout << "add two integers using CSR->pipes for inputs." << std::endl;
@@ -122,17 +102,17 @@ int main()
     InputPipeA::write(q, a);
     InputPipeB::write(q, b);
 
-    q.single_task<AddCSRPipes>(AddCSRPipes_Kernel{}).wait();
+    q.single_task<class AddCSRPipes>(AddCSRPipes_Kernel{}).wait();
 
     std::cout << "collect results." << std::endl;
     int calc_addCSRPipes = OutputPipeC::read(q);
 
-    std::cout << "AddCSR sum =" << calc_addCSRPipes << ", expected (" << expectedSum << ")" << std::endl;
-    if (calc_addCSRPipes != expectedSum)
-    {
-        passed = false;
+    std::cout << "AddCSR sum =" << calc_addCSRPipes << ", expected ("
+              << expectedSum << ")" << std::endl;
+    if (calc_addCSRPipes != expectedSum) {
+      passed = false;
     }
-    }  catch (sycl::exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code.
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
@@ -147,7 +127,7 @@ int main()
     std::terminate();
   }
 
-    std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
+  std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
-    return passed ? EXIT_SUCCESS : EXIT_FAILURE;
+  return passed ? EXIT_SUCCESS : EXIT_FAILURE;
 }

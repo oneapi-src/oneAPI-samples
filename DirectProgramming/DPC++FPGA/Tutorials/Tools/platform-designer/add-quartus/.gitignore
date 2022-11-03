@@ -1,6 +1,5 @@
 *
 !.gitignore
-!README.pdf
 #######################################
 # Quartus project files, design files
 #######################################
@@ -8,19 +7,28 @@
 !*.qpf
 !*.qsf
 !*.v
-!*.qsys
+!*.qsys 
+
+# omit qsys file since user should generate it themselves
+!add_kernels.tcl
+add_kernels.qsys
+
 #######################################
 # IPs used by the design
 #######################################
 !ip/
 !ip/*/
+ip/add_kernels
 !ip/*/*.ip
 
 #######################################
 # outputs
 #######################################
 !output_files/
-!output_files/*
+!output_files/*.sof
+!output_files/*.fit.summary
+!output_files/*.sta.summary
+!output_files/*.sta.rpt
 
 #######################################
 # scripts for testing hardware

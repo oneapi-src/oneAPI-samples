@@ -76,7 +76,7 @@
  -- Pin directions (input, output or bidir) are based on device operating in user mode.
  ---------------------------------------------------------------------------------
 
-Quartus Prime Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+Quartus Prime Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
 CHIP  "add"  ASSIGNED TO AN: 10AS066N3F40E2SG
 
 Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment

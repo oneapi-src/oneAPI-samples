@@ -1,6 +1,6 @@
 Assembler report for add
-Thu Oct 13 15:09:29 2022
-Quartus Prime Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+Thu Nov  3 05:20:18 2022
+Quartus Prime Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
 
 
 ---------------------
@@ -13,7 +13,7 @@ Quartus Prime Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
   5. Assembler Messages
   6. Assembler Encrypted IP Cores Summary
   7. Assembler Generated Files
-  8. Assembler Device Options: C:/oneAPI_Examples/whitepau.oneapi-csr-add/add-quartus/output_files/add.sof
+  8. Assembler Device Options: add.sof
 
 
 
@@ -40,7 +40,7 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Thu Oct 13 15:09:29 2022 ;
+; Assembler Status      ; Successful - Thu Nov  3 05:20:18 2022 ;
 ; Revision Name         ; add                                   ;
 ; Top-level Entity Name ; add                                   ;
 ; Family                ; Arria 10                              ;
@@ -61,8 +61,6 @@ https://fpgasoftware.intel.com/eula.
 ; Design Assistant include IP blocks                               ; Off            ; Off            ;
 ; High fanout net threshold for RAM inference                      ; 15             ; 15             ;
 ; Design Assistant limit on reported violations per rule           ; 5000           ; 5000           ;
-; Allow RAM Retiming                                               ; Off            ; Off            ;
-; Allow DSP Retiming                                               ; Off            ; Off            ;
 ; Use Checkered Pattern as Uninitialized RAM Content               ; Off            ; Off            ;
 ; Generate compressed bitstreams                                   ; On             ; On             ;
 ; Auto user code                                                   ; On             ; On             ;
@@ -95,19 +93,19 @@ https://fpgasoftware.intel.com/eula.
 +--------------------+
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
-    Info: Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
-    Info: Processing started: Thu Oct 13 15:08:38 2022
-    Info: System process ID: 14916
+    Info: Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
+    Info: Processing started: Thu Nov  3 05:19:34 2022
+    Info: System process ID: 21847
 Info: Command: quartus_asm --read_settings_files=on --write_settings_files=off AddCSRDemo -c add
 Info (16677): Loading final database.
 Info (16734): Loading "final" snapshot for partition "root_partition".
 Info (16734): Loading "final" snapshot for partition "auto_fab_0".
-Info (16678): Successfully loaded final database: elapsed time is 00:00:04.
+Info (16678): Successfully loaded final database: elapsed time is 00:00:02.
 Info: Quartus Prime Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 4470 megabytes
-    Info: Processing ended: Thu Oct 13 15:09:31 2022
-    Info: Elapsed time: 00:00:53
-    Info: System process ID: 14916
+    Info: Peak virtual memory: 5040 megabytes
+    Info: Processing ended: Thu Nov  3 05:20:18 2022
+    Info: Elapsed time: 00:00:44
+    Info: System process ID: 21847
 
 
 +----------------------------------------------------+
@@ -120,23 +118,23 @@ Info: Quartus Prime Assembler was successful. 0 errors, 0 warnings
 +------------+------------------------+--------------+
 
 
-+-----------------------------------------------------------------------------+
-; Assembler Generated Files                                                   ;
-+-----------------------------------------------------------------------------+
-; File Name                                                                   ;
-+-----------------------------------------------------------------------------+
-; C:/oneAPI_Examples/whitepau.oneapi-csr-add/add-quartus/output_files/add.sof ;
-+-----------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Generated Files                                                                                                                                                                ;
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; File Name                                                                                                                                                                                ;
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; /nfs/site/disks/swuser_work_whitepau/oneAPI_Examples/oneAPI-samples.platform-designer-ipa/DirectProgramming/DPC++FPGA/Tutorials/Tools/platform-designer/add-quartus/output_files/add.sof ;
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
-+-------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: C:/oneAPI_Examples/whitepau.oneapi-csr-add/add-quartus/output_files/add.sof ;
-+----------------+--------------------------------------------------------------------------------------+
-; Option         ; Setting                                                                              ;
-+----------------+--------------------------------------------------------------------------------------+
-; JTAG usercode  ; 0xFFFFFFFF                                                                           ;
-; Checksum       ; 0x1D0C8538                                                                           ;
-; Design hash    ; 68469506B1B76A80D71B130C485FD9A5                                                     ;
-+----------------+--------------------------------------------------------------------------------------+
++----------------------------------------------------+
+; Assembler Device Options: add.sof                  ;
++----------------+-----------------------------------+
+; Option         ; Setting                           ;
++----------------+-----------------------------------+
+; JTAG usercode  ; 0xFFFFFFFF                        ;
+; Checksum       ; 0x1D0540AE                        ;
+; Design hash    ; 071FE2EAE36A073727607A7711A823B0  ;
++----------------+-----------------------------------+
 
 
