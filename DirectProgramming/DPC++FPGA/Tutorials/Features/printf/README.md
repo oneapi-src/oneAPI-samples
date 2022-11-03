@@ -116,6 +116,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
       ```
       make fpga_emu
       ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+      ```
+      make fpga_sim
+      ```
    * Generate the optimization report:
      ```
      make report
@@ -152,6 +156,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake fpga_emu
      ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Generate the optimization report:
      ```
      nmake report
@@ -186,12 +194,17 @@ From the report, you can find the compilation information of the design and the 
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./printf.fpga_emu     (Linux)
      printf.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator:
+     ```
+     ./printf.fpga_sim     (Linux)
+     printf.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./printf.fpga         (Linux)
      printf.fpga.exe       (Windows)
@@ -214,12 +227,13 @@ Result11: ABCD
 
 ## Known issues and limitations
 
-There are some known issues with the `experimental::printf()` and that's why the function is in the experimental namespace. The following limitations exist when using `experimental::printf()` on FPGA hardware:
+There are some known issues with the `experimental::printf()` and that's why the function is in the experimental namespace. The following limitations exist when using `experimental::printf()` on FPGA simulation and hardware:
 
 * Printing string literals %s is not supported yet. You can put the string directly in the format as a workaround. For example: `PRINTF("Hello, World!\n")`.
 * Printing pointer address %p is not supported yet.
 * If you have multiple PRINTF statements in the kernel, the order of printed data in the stdout might not obey the sequential order of those statements in the code.
 * Buffer is only flushed to stdout after the kernel finishes in hardware.
+* Printing `long` integers in Windows results is not supported yet. Printing `long` integers in Linux works as intended.
 
 ## License
 Code samples are licensed under the MIT license. See

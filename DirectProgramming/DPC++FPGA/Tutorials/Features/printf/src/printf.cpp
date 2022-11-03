@@ -24,8 +24,10 @@ using namespace sycl;
 class BasicKernel;
 
 int main(int argc, char* argv[]) {
-#if defined(FPGA_EMULATOR)
+#ifdef FPGA_EMULATOR
   ext::intel::fpga_emulator_selector device_selector;
+#elif FPGA_SIMULATOR
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
