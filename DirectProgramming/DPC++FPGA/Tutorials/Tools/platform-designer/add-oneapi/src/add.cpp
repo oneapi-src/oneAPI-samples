@@ -1,8 +1,7 @@
 #include <iostream>
 
 // oneAPI headers
-#include "fpga_sim_device_selector.hpp"
-#include <CL/sycl.hpp>
+#include <sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/host_pipes.hpp>
 
@@ -16,11 +15,11 @@ class Add;
 class ID_PipeOut;
 
 // use host pipes to write into addresses in the CSR
-using OutputPipe = cl::sycl::ext::intel::prototype::pipe<ID_PipeOut, int, 1,
+using OutputPipe = sycl::ext::intel::prototype::pipe<ID_PipeOut, int, 1,
                                                          // these 3 shouldn't matter
                                                          0, 1, true, false,
                                                          // store the most recently processed index
-                                                         cl::sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
 class Add_Kernel
 {
@@ -42,23 +41,23 @@ class ID_B;
 class ID_C;
 
 // use host pipes to read from addresses in the CSR
-using InputPipeA = cl::sycl::ext::intel::prototype::pipe<ID_A, int, 1,
+using InputPipeA = sycl::ext::intel::prototype::pipe<ID_A, int, 1,
+                                                         // choose defaults for these so we can set the 
+                                                         0, 1, true, false,
+                                                         // store the most recently processed index
+                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+using InputPipeB = sycl::ext::intel::prototype::pipe<ID_B, int, 1,
                                                          // these 3 shouldn't matter
                                                          0, 1, true, false,
                                                          // store the most recently processed index
-                                                         cl::sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
-using InputPipeB = cl::sycl::ext::intel::prototype::pipe<ID_B, int, 1,
-                                                         // these 3 shouldn't matter
-                                                         0, 1, true, false,
-                                                         // store the most recently processed index
-                                                         cl::sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+                                                         sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
 // use host pipes to write into addresses in the CSR
-using OutputPipeC = cl::sycl::ext::intel::prototype::pipe<ID_C, int, 1,
+using OutputPipeC = sycl::ext::intel::prototype::pipe<ID_C, int, 1,
                                                           // these 3 shouldn't matter
                                                           0, 1, true, false,
                                                           // store the most recently processed index
-                                                          cl::sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+                                                          sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
@@ -80,9 +79,21 @@ public:
 
 int main()
 {
+    bool passed = false;
+
+    try{
+
     // choose a selector that was selected by the default FPGA build system.
-    queue q(chooseSelector());
-    // queue q(sycl::host_selector);
+    #if FPGA_SIMULATOR
+    std::cout << "using FPGA Simulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_simulator_selector{});
+#elif FPGA_HARDWARE
+    std::cout << "using FPGA Hardware." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_selector{});
+#else  // #if FPGA_EMULATOR
+    std::cout << "using FPGA Emulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_emulator_selector{});
+#endif
 
     int a = 3;
     int b = 76;
@@ -121,6 +132,20 @@ int main()
     {
         passed = false;
     }
+    }  catch (sycl::exception const &e) {
+    // Catches exceptions in the host code.
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
+
+    // Most likely the runtime couldn't find FPGA hardware!
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
+                   "system has a correctly configured FPGA board.\n";
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
+                   "-DFPGA_EMULATOR.\n";
+    }
+    std::terminate();
+  }
 
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 

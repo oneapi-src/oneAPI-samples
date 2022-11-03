@@ -70,15 +70,15 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```
-   cp -r add-oneapi\build\add_example.fpga.prj_1\ add-quartus\add_example.fpga.prj_1
-   cp -r add-oneapi\build\add_example.fpga.prj_5\ add-quartus\add_example.fpga.prj_5
+   cp -r add-oneapi\build\add_example.fpga_split.prj_1\add-quartus\add_example.fpga_split.prj_1
+   cp -r add-oneapi\build\add_example.fpga_split.prj_5\add-quartus\add_example.fpga_split.prj_5
    ```
 
    Windows:
 
    ```
-   xcopy add-oneapi\build\add_example.fpga.prj_1\ add-quartus\add_example.fpga.prj_1 /e /s /i
-   xcopy add-oneapi\build\add_example.fpga.prj_5\ add-quartus\add_example.fpga.prj_5 /e /s /i
+   xcopy add-oneapi\build\add_example.fpga_split.prj_1\add-quartus\add_example.fpga_split.prj_1 /e /s /i
+   xcopy add-oneapi\build\add_example.fpga_split.prj_5\add-quartus\add_example.fpga_split.prj_5 /e /s /i
    ```
 
 3. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the generated .prj directory.
@@ -93,7 +93,7 @@ Follow these steps to compile and test the design:
    ```
 
 4. From a shell with oneAPI environment, launch the Quartus GUI. It's easiest to use the same shell you used to compile the `add_example` oneAPI design.
-   > **NOTE**: You may have to add a path to Quartus to your system's `PATH` environment variable. Directions for this are available in the Quartus documentation.
+   > **NOTE**: You may have to add a path to Quartus to your system's `PATH` environment variable. Directions for this are available in the Quartus documentation [Section 4.5: Setting Quartus Prime Environment Variables](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/setting-environment-variables.html).
 
    Linux:
    
@@ -111,7 +111,11 @@ Follow these steps to compile and test the design:
    quartus.exe
    ```
 
-5. Open platform designer
+5. Open platform designer from the Quartus GUI:
+
+   ![](Readme.md.assets/open-platform-designer-button.png)
+
+   
 
 6. Check that the kernels are there, then generate
 
