@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <vector>
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -17,10 +17,10 @@ using namespace std;
 // Number of complex numbers passing to the DPC++ code
 static const int num_elements = 10000;
 
-class CustomDeviceSelector : public device_selector {
+class CustomDeviceSelector {
  public:
   CustomDeviceSelector(std::string vendorName) : vendorName_(vendorName){};
-  int operator()(const device &dev) const override {
+  int operator()(const device &dev) const {
     int device_rating = 0;
     //We are querying for the custom device specific to a Vendor and if it is a GPU device we
     //are giving the highest rating as 3 . The second preference is given to any GPU device and the third preference is given to
