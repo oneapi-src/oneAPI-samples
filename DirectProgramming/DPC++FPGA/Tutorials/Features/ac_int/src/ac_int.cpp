@@ -115,6 +115,8 @@ MyInt14 TestBitAccess(queue &q, const MyInt14 &a) {
 int main() {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif

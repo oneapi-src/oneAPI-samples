@@ -8,7 +8,7 @@ This FPGA tutorial demonstrates how to use the Intel&reg; FPGA Dynamic Profiler 
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | About the Intel&reg; FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
 
@@ -19,7 +19,7 @@ This FPGA tutorial demonstrates how to use the Intel&reg; FPGA Dynamic Profiler 
 
 ###  Profiling Tools
 
-Intel&reg; oneAPI provides two runtime profiling tools to help you analyze your DPC++ design for FPGA:
+Intel&reg; oneAPI provides two runtime profiling tools to help you analyze your SYCL design for FPGA:
 
 1. The **Intel&reg; FPGA Dynamic Profiler for DPC++** is a profiling tool used to collect fine-grained device side data during SYCL* kernel execution. When used within the Intel&reg; VTune™ Profiler, some host side performance data is also collected. However, note that the VTune Profiler is not designed to collect detailed system level host-side data.
 
@@ -67,7 +67,7 @@ There are two ways of obtaining data from a program containing performance count
     Instructions on installing, configure and opening the Intel&reg; VTune™ Profiler can be found in the [Intel&reg; VTune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel&reg; VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
-  The Profiler Runtime Wrapper comes as part of the Intel&reg; oneAPI DPC++ Compiler and can be run as follows:
+  The Profiler Runtime Wrapper comes as part of the Intel&reg; oneAPI DPC++/C++ Compiler and can be run as follows:
    ```
    aocl profile <executable>
    ```
@@ -193,11 +193,17 @@ To learn more about the extensions, see the
    cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
-2. Compile the design through the generated `Makefile`. The following build target is provided to compile for FPGA hardware:
+2. Compile the design through the generated `Makefile`. The following build targets are provided:
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
 
-     ```
-     make fpga
-     ```
+    ```bash
+    make fpga_sim
+    ```
+   *  Compile for FPGA hardware (longer compile time, targets an FPGA device) using:
+
+    ```bash
+    make fpga
+    ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler.fpga.tar.gz).
 Alternatively, if you wish to view the dynamic profiler data in the VTune Profiler, you can download a sample `dynamic_profiler_tutorial.json` file [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json).
 
@@ -235,11 +241,16 @@ To collect dynamic profiling data, choose one of the following methods:
 ![](profiler_pipe_tutorial_configure_vtune.png)
 
 **At the Command Line**
-1. Run the design using the following build target in the makefile generated in "[On a Linux* System](#on-a-linux-system)":
-     ```
-     make run
-     ```
-    This target runs the executable with the Profiler Runtime Wrapper, creating a `profile.json` data file in the current directory.
+1. Run the design using the makefile targets generated in "[On a Linux* System](#on-a-linux-system)":
+    * Run the design using the simulator:
+      ```
+      make run_sim
+      ```
+    * Run the design on hardware:
+      ```
+      make run
+      ```
+    These targets run the executable with the Profiler Runtime Wrapper, creating a `profile.json` data file in the current directory.
 
 2. Open the Intel&reg; VTune™ Profiler.
 

@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use the `use_stall_enable_clusters` attri
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  What the `use_stall_enable_clusters` attribute does <br> How `use_stall_enable_clusters` attribute affects resource usage and latency <br> How to apply the `use_stall_enable_clusters` attribute to kernels in your program
 | Time to complete                  | 15 minutes (emulator and report) <br> several hours (fpga bitstream generation)
 
@@ -15,7 +15,7 @@ Computations in an FPGA kernel are normally grouped into *Stall Free Clusters*. 
 
 > **Note**: If you specify `[[intel::use_stall_enable_clusters]]` on one or more kernels, this may reduce the FMax of the generated FPGA bitstream, which may reduce performance on all kernels.
 
-> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target the Stratix&reg; 10 architecture unless the `-Xshyper-optimized-handshaking=off` argument is passed to `dpcpp`
+> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target the Stratix&reg; 10 architecture unless the `-Xshyper-optimized-handshaking=off` argument is passed to `icpx`
 ### Example: Using the `use_stall_enable_clusters` attribute
 ```
 h.single_task<class KernelComputeStallFree>( [=]() [[intel::use_stall_enable_clusters]] {
@@ -96,9 +96,13 @@ To learn more about the extensions, see the
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization reports:
      ```
      make report
@@ -136,6 +140,10 @@ To learn more about the extensions, see the
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -171,7 +179,14 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
      ./stall_enable.fpga_emu     (Linux)
      stall_enable.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./stall_enable.fpga_sim     (Linux)
+     ./stall_free.fpga_sim       (Linux)
+     stall_enable.fpga_sim.exe   (Windows)
+     stall_free.fpga_sim.exe     (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./stall_enable.fpga         (Linux)
      ./stall_free.fpga           (Linux)

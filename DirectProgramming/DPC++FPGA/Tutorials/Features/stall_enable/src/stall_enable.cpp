@@ -48,8 +48,15 @@ static void Work(const ReadAccessor &vec_a, const ReadAccessor &vec_b,
   }
 }
 
-void DoSomeWork(const device_selector &selector, const WorkVec &vec_a,
-                const WorkVec &vec_b, WorkVec &res) {
+void DoSomeWork(const WorkVec &vec_a, const WorkVec &vec_b, WorkVec &res) {
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
+
   double kernel_time = 0.0;
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
@@ -128,13 +135,7 @@ int main() {
     vec_expected[i+1] = RealWork(vec_b[i], vec_a[i]);
   }
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
-  DoSomeWork(selector, vec_a, vec_b, vec_output);
+  DoSomeWork(vec_a, vec_b, vec_output);
 
   // Correctness check
   bool passed = true;

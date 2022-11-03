@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates how a user can use the `intel::initiation_interv
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | The f<sub>MAX</sub>-II tradeoff <br>Default behavior of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
 | Time to complete                  | 20 minutes
 
@@ -195,6 +195,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make report
      ```
 
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
+     ```
+
    * Compile for FPGA hardware (longer compile time, targets an FPGA device) using:
 
      ```bash
@@ -234,6 +240,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data  size):
+     ```
+     nmake fpga_sim
+     ``
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -279,19 +289,28 @@ Compare the results to the report for the version of the design using the `intel
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./loop_ii.fpga_emu    (Linux)
-   loop_ii.fpga_emu.exe  (Windows)
+   ./loop_ii.fpga_emu               (Linux)
+   loop_ii.fpga_emu.exe             (Windows)
    ```
 
-2. Run the sample on the FPGA device
+2. Run the sample on the FPGA simulator device:
+   ```bash
+   # Sample without intel::initiation_interval attribute
+   ./loop_ii.fpga_sim               (Linux)
+   loop_ii.fpga_sim.exe             (Windows)
+   # Sample with intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga_sim     (Linux)
+   loop_ii_enable_ii.fpga_sim.exe   (Windows)
+
+3. Run the sample on the FPGA device
 
    ```bash
    # Sample without intel::initiation_interval attribute
-   ./loop_ii.fpga               (Linux)
-   loop_ii.fpga.exe             (Windows)
+   ./loop_ii.fpga                   (Linux)
+   loop_ii.fpga.exe                 (Windows)
    # Sample with intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga     (Linux)
-   loop_ii_enable_ii.fpga.exe   (Windows)
+   ./loop_ii_enable_ii.fpga         (Linux)
+   loop_ii_enable_ii.fpga.exe       (Windows)
    ```
 
 ### Example of Output

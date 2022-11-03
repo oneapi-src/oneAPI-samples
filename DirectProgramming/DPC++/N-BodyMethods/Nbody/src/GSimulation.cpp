@@ -111,10 +111,10 @@ void GSimulation::Start() {
   auto ndrange = nd_range<1>(r, lr);
   // Create a queue to the selected device and enabled asynchronous exception
   // handling for that queue
-  queue q(default_selector{}, dpc_common::exception_handler);
+  queue q(default_selector_v, dpc_common::exception_handler);
   // Create SYCL buffer for the Particle array of size "n"
   buffer pbuf(particles_.data(), r,
-              {cl::sycl::property::buffer::use_host_ptr()});
+              {sycl::property::buffer::use_host_ptr()});
   // Allocate energy using USM allocator shared
   RealType *energy = malloc_shared<RealType>(1,q);
   *energy = 0.f;

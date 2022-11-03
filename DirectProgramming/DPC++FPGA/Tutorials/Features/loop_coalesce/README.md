@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates applying the `loop_coalesce` attribute to a nest
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  What the `loop_coalesce` attribute does <br> How `loop_coalesce` attribute affects resource usage and loop throughput <br> How to apply the `loop_coalesce` attribute to loops in your program <br> Which loops make good candidates for coalescing
 | Time to complete                  | 15 minutes
 
@@ -126,6 +126,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -163,6 +167,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -195,12 +203,17 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
+     ```bash
      ./loop_coalesce.fpga_emu     (Linux)
      loop_coalesce.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+ 2. Run the sample on the FPGA simulator device:
+     ```bash
+     ./loop_coalesce.fpga_sim     (Linux)
+     loop_coalesce.fpga_sim.exe   (Windows)
      ```
+ 3. Run the sample on the FPGA device:
+     ```bash
      ./loop_coalesce.fpga         (Linux)
      loop_coalesce.fpga.exe       (Windows)
      ```

@@ -12,7 +12,7 @@
 
 /*
 
-This header defines the following utilities for use with pipes in DPC++ FPGA
+This header defines the following utilities for use with pipes in SYCL FPGA
 designs.
 
 1. PipeArray

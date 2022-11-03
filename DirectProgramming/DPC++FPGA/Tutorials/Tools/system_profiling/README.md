@@ -10,7 +10,7 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
 
@@ -255,6 +255,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
       ```
       make fpga_emu
       ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -282,16 +287,20 @@ You can compile and run this tutorial in the Eclipse* IDE. For instructions, ref
      ```
      ./double_buffering.fpga_emu     (Linux)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./double_buffering.fpga_sim     (Linux)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./double_buffering.fpga         (Linux)
      ```
-3. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
-4. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
+4. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
+5. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
      ```
      cliloader ./double_buffering.fpga   (Linux)
      ```
-5. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
+6. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
 
 ### Example of Output
 __Intercept Layer for OpenCL™ Applications results:__
@@ -320,7 +329,6 @@ Total kernel-only execution time with double buffering = 534 ms
 Throughput = 50.684795 MB/s
 
 Verification PASSED
-```
 
 ## License
 Code samples are licensed under the MIT license. See

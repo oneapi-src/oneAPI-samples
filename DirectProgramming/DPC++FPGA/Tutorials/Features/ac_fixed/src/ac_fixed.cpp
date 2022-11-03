@@ -110,14 +110,16 @@ void TestCalculateWithACFixed(queue &q, const fixed_10_3_t &x,
 
 int main() {
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
-  ext::intel::fpga_selector selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
     // Create the SYCL device queue
-    queue q(selector, fpga_tools::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     // I. Constructing `ac_fixed` Numbers
     std::cout << "1. Testing Constructing ac_fixed from float or ac_fixed:\n";
