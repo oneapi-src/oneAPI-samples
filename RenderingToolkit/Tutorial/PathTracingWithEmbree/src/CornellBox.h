@@ -342,70 +342,68 @@ const std::vector<Vec3fa> CornellBoxGeometry::m_cornellBoxColors = {
     {0.725f, 0.710f, 0.68f},
     /* 0.8f intensity of reflectance gives a decent proxy for a great real life
    mirror */
-    /*
-     // TallBox Top Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     // TallBox Left Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     // TallBox Front Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     // TallBox Right Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     // TallBox Back Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     // TallBox Bottom Face
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f},
-     {0.8f, 0.8f, 0.8f}
+    // TallBox Top Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Left Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Front Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Right Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Back Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Bottom Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f}
 
-     */
     /* Original colors of TallBox */
     // TallBox Top Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Left Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Front Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Right Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Back Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Bottom Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f}
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //// TallBox Left Face
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //// TallBox Front Face
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //// TallBox Right Face
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //// TallBox Back Face
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //// TallBox Bottom Face
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f},
+    //{0.725f, 0.710f, 0.68f}
 
 };
 
@@ -463,21 +461,20 @@ const std::vector<MaterialType>
            the mirror tall box (below) as desired*/
 
         // TallBox Top Face
-        MaterialType::MATERIAL_MATTE,
-        // TallBox Left Face
-        MaterialType::MATERIAL_MATTE,
-        // TallBox Front Face
-        MaterialType::MATERIAL_MATTE,
-        // TallBox Right Face
-        MaterialType::MATERIAL_MATTE,
-        // TallBox Back Face
-        MaterialType::MATERIAL_MATTE,
-        // TallBox Bottom Face
-        MaterialType::MATERIAL_MATTE
+        //MaterialType::MATERIAL_MATTE,
+        //// TallBox Left Face
+        //MaterialType::MATERIAL_MATTE,
+        //// TallBox Front Face
+        //MaterialType::MATERIAL_MATTE,
+        //// TallBox Right Face
+        //MaterialType::MATERIAL_MATTE,
+        //// TallBox Back Face
+        //MaterialType::MATERIAL_MATTE,
+        //// TallBox Bottom Face
+        //MaterialType::MATERIAL_MATTE
 
         /* Tall box configuration for a mirror material. Swap this section in to
            see behind the short cube */
-        /*
         // TallBox Top Face
         MaterialType::MATERIAL_MIRROR,
         // TallBox Left Face
@@ -490,7 +487,7 @@ const std::vector<MaterialType>
         MaterialType::MATERIAL_MIRROR,
         // TallBox Bottom Face
         MaterialType::MATERIAL_MIRROR
-        */
+
 };
 
 #endif /* !FILE_CORNELLBOX_SEEN */
