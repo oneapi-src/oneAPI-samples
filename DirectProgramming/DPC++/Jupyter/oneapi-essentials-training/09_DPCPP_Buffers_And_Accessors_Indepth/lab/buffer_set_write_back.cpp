@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 using namespace sycl;
 constexpr int N = 42;
@@ -15,7 +15,7 @@ int main() {
         my_data[i] = i;
     
   {
-    queue q(gpu_selector{});
+    queue q(gpu_selector_v);
     buffer my_buffer(my_data);
       
     //Call the set_write_back method to control the data to be written back to the host from the device. e
