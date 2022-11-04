@@ -1,0 +1,19 @@
+Fitter Status : Successful - Fri Nov  4 04:25:37 2022
+Quartus Prime Version : 22.3.0 Build 104 09/14/2022 SC Pro Edition
+Revision Name : add
+Top-level Entity Name : add
+Family : Arria 10
+Device : 10AS066N3F40E2SG
+Timing Models : Final
+Power Models : Final
+Device Status : Final
+Logic utilization (in ALMs) : 2,134 / 251,680 ( < 1 % )
+Total registers : 5149
+Total pins : 4 / 812 ( < 1 % )
+Total virtual pins : 0
+Total block memory bits : 512 / 43,642,880 ( < 1 % )
+Total RAM Blocks : 1 / 2,131 ( < 1 % )
+Total DSP Blocks : 0 / 1,687 ( 0 % )
+Total HSSI RX channels : 0 / 48 ( 0 % )
+Total HSSI TX channels : 0 / 48 ( 0 % )
+Total PLLs : 0 / 96 ( 0 % )
