@@ -53,7 +53,7 @@ This sample tutorial contains one Jupyter Notebook and one Python script.
 
 |Script                                    |Description
 |:---                                      |:---
-|`faster_rcnn.py`                          |The script optimizes a Faster R-CNN model to be used with IPEX Launch Script.
+|`resnet50.py`                          |The script optimizes a Faster R-CNN model to be used with IPEX Launch Script.
 
 
 ## Run the Sample on Linux*
@@ -112,7 +112,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 4. Follow the instructions to open the URL with the token in your browser.
 3. Locate and select the Notebook.
    ```
-   enabling_automixed_precision_transfer_learning_tensorflow.ipynb
+   optimize_pytorch_models_with_ipex.ipynb.ipynb
    ```
 4. Change the kernel to **PyTorch (AI Kit)**.
 7. Run every cell in the Notebook in sequence.
