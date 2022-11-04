@@ -116,7 +116,7 @@ Follow these steps to compile and test the design:
    The original file is in: add_fpga_ip_export_1_di_hw.tcl_original
    $> cd ..
    $> cd add.fpga_ip_export.prj_5
-   add.fpga_ip_export.prj_5 $> python add_fpga_ip_export_5_di_hw_tcl_adjustment_script.py 
+   $> python add_fpga_ip_export_5_di_hw_tcl_adjustment_script.py 
    Success! Adjusted add_fpga_ip_export_5_di_hw.tcl file!
    The adjustment log is in: adjustments_di_hw_tcl.log
    The original file is in: add_fpga_ip_export_5_di_hw.tcl_original
@@ -142,6 +142,13 @@ Follow these steps to compile and test the design:
    cd add-quartus
    quartus.exe AddCSRDemo.qpf
    ```
+
+> **NOTE**: You can skip steps 5-9 by running the following commands:
+> ```
+> qsys-script --script=add_kernels.tcl --quartus-project=AddCSRDemo.qpf
+> qsys-generate add_kernels.qsys --synthesis --quartus-project=AddCSRDemo.qpf --rev=add
+> quartus_sh --flow compile AddCSRDemo.qpf -c add
+> ```
 
 5. Open platform designer from the Quartus GUI:
 
