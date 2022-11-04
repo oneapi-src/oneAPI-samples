@@ -163,8 +163,7 @@ int main(int argc, char *argv[]) {
 #ifdef FPGA_EMULATOR
     CompressFile(q, infilename, outfilenames, 10, true);
 #elif FPGA_SIMULATOR
-    CompressFile(q, infilename, outfilenames, 1, false);
-    CompressFile(q, infilename, outfilenames, 1, true);
+    CompressFile(q, infilename, outfilenames, 2, true);
 #else
     // warmup run - use this run to warmup accelerator. There are some steps in
     // the runtime that are only executed on the first kernel invocation but not
