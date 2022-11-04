@@ -116,10 +116,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
       ```
       make fpga_emu
       ```
-   * Compile for simulation (medium compile time, targets simulated FPGA device):
-      ```
-      make fpga_sim
-      ```
    * Generate the optimization report:
      ```
      make report
@@ -155,10 +151,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
-     ```
-   * Compile for simulation (medium compile time, targets simulated FPGA device):
-     ```
-     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -199,12 +191,7 @@ From the report, you can find the compilation information of the design and the 
      ./printf.fpga_emu     (Linux)
      printf.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA simulator:
-     ```
-     ./printf.fpga_sim     (Linux)
-     printf.fpga_sim.exe   (Windows)
-     ```
-3. Run the sample on the FPGA device:
+2. Run the sample on the FPGA device:
      ```
      ./printf.fpga         (Linux)
      printf.fpga.exe       (Windows)
@@ -227,7 +214,7 @@ Result11: ABCD
 
 ## Known issues and limitations
 
-There are some known issues with the `experimental::printf()` and that's why the function is in the experimental namespace. The following limitations exist when using `experimental::printf()` on FPGA simulation and hardware:
+There are some known issues with the `experimental::printf()` and that's why the function is in the experimental namespace. The following limitations exist when using `experimental::printf()` on FPGA hardware:
 
 * Printing string literals %s is not supported yet. You can put the string directly in the format as a workaround. For example: `PRINTF("Hello, World!\n")`.
 * Printing pointer address %p is not supported yet.
