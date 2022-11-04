@@ -2,7 +2,7 @@
 
 This sample program illustrates path tracing using Intel Embree from the Intel&reg; oneAPI Rendering Toolkit (Render Kit).
 
-![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+[![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
 
 | Area                   | Description
 |:---                    |:---
@@ -116,7 +116,7 @@ Now that you have built and run the sample program successfully, you are ready t
 
 In the '[Introduction to Ray Tracing with Intel Embree](../IntroToRayTracingWithEmbree)' sample, the source code demonstrates how to find basic albedo (surface color) and trivial lighting for a cube and a plane. Recap Image:
 
-![rkPathTracer.png](example-images/rkRayTracer.png)
+[![rkPathTracer.png](example-images/rkRayTracer.png)](example-images/rkRayTracer.png)
 
 1. The output image is generated via rays cast from each pixel of our camera to corresponding scene geometry intersection. These initial rays from the camera are the primary rays in our scene. The color at the ray intersection is determined.
 2. Then, if and only if the intersected surface is not occluded from the light position, the albedo would be increased to full strength. The difference in albedo intensity gies the impression of a shadow on the plane underneath the cube. 
@@ -155,19 +155,19 @@ Global illumination is difficult to demonstrate without paths that interact with
 
     The Cornell Box is a familiar dataset that can show capability of computing global illumination and shadows. The tall box is a mirror. Code is added to place an extra refractive sphere into the scene. All other surfaces are diffuse. 
 
-![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+[![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
 
 2. The `triangle_geometry` scene from `rkRayTracer` and the Embree repository tutorials.<br>
 
     The intent with this scene is to observe a familiar introductory scene in a pathtracing environment.
 
-![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
+[![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
 
 3. A 'pool' scene<br>
 
     This scene is focused on observing the behavior of a fresnel surface.
 
-![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
+[![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
 
 Each geometry specified allows the user to try different materials and colors. You are encouraged to modify and rebuild the scenes to examine and understand behavior!
 
@@ -241,22 +241,24 @@ Once path samples are computed, the accumulation buffer assists in getting the s
 
 - A rendered image is a _converged_ image if an infinite number of pixel samples with infinite path length are taken. All paths under all sampled pixels can logically account for all light in the scene.
 - Practically, because compute resources are finite, software sets restrictions: the number of samples per pixel, an accumulation limit, and maximum path length to the discretion of the application.
-- This tutorials sets these values to 1, 500, and 8 by default respectively. Change these values to see the effects of noise from a limited number of samples or path segments has on an image.
+- This tutorials sets these values to 1, 500, and 8 by default respectively. Change these values to introduce or reduce the effects of noise.
 
 
 ### Example Images:
 
+> **Note**: Click on a noisy image below to see the full size original noise pattern.
+
 | Description                                                         | Example Image
 |:---                                                                 | :---
-| 1spp x 1 accumulation, 1 total sample per pixel (no mirror)         | ![pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png)
-| 1spp x 1000 accumulations, 1000 total samples per pixel (no mirror) | ![pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png)
-| 1spp x 4000 accumulations, 4000 total samples per pixel (no mirror) | ![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png)
-| 1spp x 1 accumulation, 1 total sample per pixel (mirror)            | ![pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png)
-| 1spp x 4000 accumulations, 4000 total samples per pixel (mirror)    | ![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
-| 1spp x 1 accumulation, 1 total sample per pixel                     | ![pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png)
-| 1spp x 4000 accumulations, 4000 total samples per pixel             | ![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
-| 1spp x 1 accumulation, 1 total sample per pixel                     | ![pathtracer-single-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-pool-spp1-accu4000-plength8-512x512.png)
-| 1spp x 4000 accumulations, 4000 total samples per pixel             | ![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
+| 1spp x 1 accumulation, 1 total sample per pixel (no mirror)         | [![pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png)](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png) 
+| 1spp x 1000 accumulations, 1000 total samples per pixel (no mirror) | [![pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png)](example-images/pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png)
+| 1spp x 4000 accumulations, 4000 total samples per pixel (no mirror) | [![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png)](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png)
+| 1spp x 1 accumulation, 1 total sample per pixel (mirror)            | [![pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png)
+| 1spp x 4000 accumulations, 4000 total samples per pixel (mirror)    | [![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+| 1spp x 1 accumulation, 1 total sample per pixel                     | [![pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png)
+| 1spp x 4000 accumulations, 4000 total samples per pixel             | [![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
+| 1spp x 1 accumulation, 1 total sample per pixel                     | [![pathtracer-single-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-pool-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-single-pool-spp1-accu4000-plength8-512x512.png)
+| 1spp x 4000 accumulations, 4000 total samples per pixel             | [![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
 
 ### Embree functions
 
@@ -947,8 +949,8 @@ In instances where convergence is taking longer, a developer may consider a deno
 
 | Description                                                                           | Example
 |:---                                                                                   |:---
-| Cornell Box at 256 spp                                                                | ![pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png)
-| Cornell Box at 256 spp filtered by the Intel Open Image Denoise `oidnDenoise` program | ![256spp-denoised.png](example-images/256spp-denoised.png)
+| Cornell Box at 256 spp                                                                | [![pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png)](example-images/pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png)
+| Cornell Box at 256 spp filtered by the Intel Open Image Denoise `oidnDenoise` program | [![256spp-denoised.png](example-images/256spp-denoised.png)](example-images/256spp-denoised.png)
 
 ### Intel&reg; Implicit Single Program Multiple Data (SPMD) Program Compiler (Intel ISPC)
 
