@@ -146,13 +146,18 @@ To learn more about the extensions and how to configure the oneAPI environment, 
        ```
        make fpga_emu
        ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (medium compile time, targets simulated FPGA device):
+
+      ```
+      make fpga_sim
+      ```
+   3. Generate the HTML performance report.
        ```
        make report
        ```
        The report resides at `gzip_report.prj/reports/report/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
        make fpga
        ```
@@ -184,13 +189,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       nmake fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (medium compile time, targets simulated FPGA device).
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       nmake report
       ```
       The report resides at `gzip_report.a.prj/reports/report/report.html`.
-
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -221,7 +230,13 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
     ```
     ./gzip.fpga_emu <input_file> -o=<output_file>
     ```
-2. Run the sample on the FPGA device.
+    
+ 2. Run the sample on the FPGA simulator.
+    ```
+    ./gzip.fpga_sim <input_file> -o=<output_file>
+    ```
+
+ 3. Run the sample on the FPGA device.
    ```
    aocl initialize acl0 pac_s10_usm
    ./gzip.fpga <input_file> -o=<output_file>
@@ -232,11 +247,15 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
     ```
     gzip.fpga_emu.exe <input_file> -o=<output_file>
     ```
-2. Run the sample on the FPGA device.
-   ```
-   aocl initialize acl0 pac_s10_usm
-   gzip.fpga.exe <input_file> -o=<output_file>
-   ```
+ 2. Run the sample on the FPGA simulator.
+    ```
+    gzip.fpga_sim.exe <input_file> -o=<output_file>
+    ```
+ 3. Run the sample on the FPGA device.
+    ```
+    aocl initialize acl0 pac_s10_usm
+    gzip.fpga.exe <input_file> -o=<output_file>
+    ```
 
 ### Build and Run the Samples on Intel® DevCloud (Optional)
 
