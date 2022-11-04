@@ -19,6 +19,9 @@ using namespace sycl;
 #if defined(FPGA_EMULATOR)
 constexpr int kTimes = 20;
 constexpr int kSize = 4096;
+#elif defined(FPGA_SIMULATOR)
+constexpr int kTimes = 20;
+constexpr int kSize = 4096;
 #else
 constexpr int kTimes = 100;
 constexpr int kSize = 2621440;
@@ -203,6 +206,12 @@ int main() {
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
+  std::cout << "\nSimulator output does not demonstrate true hardware "
+               "performance. The design may need to run on actual hardware "
+               "to observe the performance benefit of the optimization "
+               "exemplified in this tutorial.\n\n";
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -352,6 +361,8 @@ int main() {
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cerr << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }
