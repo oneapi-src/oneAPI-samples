@@ -14,12 +14,25 @@ Clone a stable version of the repository using Git by entering a command similar
 
 where \<tag\> is stable version number, like **2022.3.0**.
 
-Alternatively, you can download a zip file containing a stable version of the repository. 
+Alternatively, you can download a zip file containing a stable version of the repository.
 
 1. Select the appropriate tag.
 2. Click the **Code** button.
 3. Select **Download ZIP** from the menu options.
 4. After downloading the file, unzip the repository contents.
+
+### Getting Started with oneAPI Samples
+
+The best oneAPI sample to start with depends on what you are trying to learn or types of problems you are trying to solve.
+
+| If you want to learn about...                           | Start with...
+|:---                                                     |:---
+| the basics of writing, compiling, and building programs for CPUs, GPUs, or FPGAs <br> |[Simple Add](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/simple-add) or  [Vector Add](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/vector-add) samples <br> (You can use these samples as starter projects by removing unwanted elements and adding your code and build requirements.)
+| the basics of using artificial intelligence             | [Getting Started Samples for Intel® AI Analytics Toolkit (AI Kit)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples)
+| the basics of image rendering workloads and ray tracing                                                   | [Getting Started Samples for Intel® oneAPI Rendering Toolkit (Render Kit)](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit/GettingStarted)
+| how to modify or create build files for SYCL-compliant projects   | [Vector Add](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/vector-add) sample
+
+If you prefer to use an Integrated Development Environment (IDE) with these samples, you can download [Visual Studio Code](https://code.visualstudio.com/download) for use on Windows*, Linux*, and macOS*.
 
 ## Repository Structure
 
@@ -51,12 +64,12 @@ The oneAPI-sample repository is organized by high-level categories.
 - Windows support for the FPGA code samples is limited to the **FPGA emulator** and **optimization reports**. Only Linux supports **FPGA hardware** compilation. See any FPGA code sample README.md for more details.
 - If you encounter `Error MSB6003 The specified task executable ... could not be run...` when building a sample program, it might be due to the length of the directory path. Move the sample to a temp directory with a shorter path and recompile.
 
-## Contribute
-
-See [CONTRIBUTING.md](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) and the [*Contributing a New Sample*](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) wiki page for more information.
-
-## License
+## Licenses
 
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+## Notices and Disclaimers
+
+© Intel Corporation. Intel, the Intel logo, and other Intel marks are trademarks of Intel Corporation or its subsidiaries. Other names and brands may be claimed as the property of others.
