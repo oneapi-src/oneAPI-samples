@@ -377,7 +377,7 @@ int main() {
   float *carry_value;
 
   try {
-    queue q{default_selector_v, dpc_common::exception_handler};
+    queue q{default_selector_v};
     auto device = q.get_device();
 
     cout << "Device: " << device.get_info<info::device::name>() << "\n";

@@ -124,7 +124,7 @@ int main() {
     // std::string vendor_name = "Nvidia";
     // queue constructor passed exception handler
     CustomDeviceSelector selector(vendor_name);
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector);
     // Call the DpcppParallel with the required inputs and outputs
     DpcppParallel(q, input_vect1, input_vect2, out_vect_parallel);
   } catch (...) {

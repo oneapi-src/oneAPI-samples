@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   try {
     CustomSelector selector(GetDeviceType(argc, argv));
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector);
     cout << "[SYCL] Using device: ["
          << q.get_device().get_info<info::device::name>()
          << "] from ["

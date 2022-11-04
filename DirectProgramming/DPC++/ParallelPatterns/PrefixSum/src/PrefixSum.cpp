@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
   cout << "\nNum iteration: " << num_iter << "\n";
 
   // Create a device queue using SYCL class queue
-  queue q(default_selector_v, dpc_common::exception_handler);
+  queue q(default_selector_v);
 
   cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 

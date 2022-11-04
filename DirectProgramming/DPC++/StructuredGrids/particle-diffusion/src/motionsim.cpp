@@ -306,7 +306,7 @@ int main(int argc, char* argv[]) {
   const float radius = 0.5f;
 
   // Create a device queue using SYCL class queue
-  queue q(default_selector_v, dpc_common::exception_handler);
+  queue q(default_selector_v);
 
   // Start timers
   dpc_common::TimeInterval t_offload;

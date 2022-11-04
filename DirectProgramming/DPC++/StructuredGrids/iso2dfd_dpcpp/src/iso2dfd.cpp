@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
   cout << "Iterations: " << n_iterations << "\n\n";
 
   // Create a device queue using SYCL class queue
-  queue q(default_selector_v, dpc_common::exception_handler);
+  queue q(default_selector_v);
 
   cout << "Computing wavefield in device ..\n";
   // Display info about device

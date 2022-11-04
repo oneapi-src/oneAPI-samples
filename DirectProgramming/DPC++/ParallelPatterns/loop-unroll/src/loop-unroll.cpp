@@ -94,7 +94,7 @@ int main() {
   vector<float> sum(n);
 
   try {
-    queue q(default_selector_v, dpc_common::exception_handler,
+    queue q(default_selector_v,
             property::queue::enable_profiling{});
 
     cout << "Running on device: "

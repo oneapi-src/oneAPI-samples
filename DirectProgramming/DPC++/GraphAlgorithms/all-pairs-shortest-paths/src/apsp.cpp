@@ -276,7 +276,7 @@ void BlockedFloydWarshall(queue &q, int *graph) {
 
 int main() {
   try {
-    queue q{default_selector_v, dpc_common::exception_handler};
+    queue q{default_selector_v};
     auto device = q.get_device();
     auto work_group_size = device.get_info<info::device::max_work_group_size>();
     auto block_size = block_length * block_length;

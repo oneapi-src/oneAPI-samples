@@ -292,7 +292,7 @@ int main(int argc, char* argv[]) {
 
     // Create a device queue using SYCL class queue with a custom
     // device selector
-    queue q(device_sel, dpc_common::exception_handler);
+    queue q(device_sel);
 
     // Validate if the block sizes selected are
     // within range for the selected SYCL device

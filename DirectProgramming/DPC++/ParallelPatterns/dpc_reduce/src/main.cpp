@@ -637,7 +637,7 @@ int main(int argc, char** argv) {
   float pi=0.0;
   queue myQueue{property::queue::in_order()};
   auto policy = oneapi::dpl::execution::make_device_policy(
-      queue(default_selector_v, dpc_common::exception_handler));
+      queue(default_selector_v));
 
   // Start MPI.
   if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {

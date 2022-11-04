@@ -115,7 +115,7 @@ void CompareResults(string prefix, float *device_results, float *host_results,
 void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
 
   // Create a device queue using SYCL class queue
-  queue q(default_selector_v, dpc_common::exception_handler);
+  queue q(default_selector_v);
   cout << "Using buffers\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";
@@ -178,8 +178,8 @@ void ComputeHeatUSM(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
   // Timesteps depend on each other, so make the queue inorder
   property_list properties{property::queue::in_order()};
 
-  // Create a device queue using SYCL class queue
-  queue q(default_selector_v, dpc_common::exception_handler, properties);
+  // Create a device queue using DPC++ class queue
+  queue q(default_selector_v, properties);
   cout << "Using USM\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";
