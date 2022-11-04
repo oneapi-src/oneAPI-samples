@@ -30,7 +30,7 @@ The best oneAPI sample to start with depends on what you are trying to learn or 
 | the basics of writing, compiling, and building programs for CPUs, GPUs, or FPGAs <br> |[Simple Add](DirectProgramming/DPC++/DenseLinearAlgebra/simple-add) or  [Vector Add](/DirectProgramming/DPC++/DenseLinearAlgebra/vector-add) samples <br> (You can use these samples as starter projects by removing unwanted elements and adding your code and build requirements.)
 | the basics of using artificial intelligence             | [Getting Started Samples for Intel® AI Analytics Toolkit (AI Kit)](/AI-and-Analytics/Getting-Started-Samples)
 | the basics of image rendering workloads and ray tracing                                                   | [Getting Started Samples for Intel® oneAPI Rendering Toolkit (Render Kit)](/RenderingToolkit/GettingStarted)
-| how to modify or create build files for SYCL-compliant projects   | [Vector Add](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/vector-add) sample
+| how to modify or create build files for SYCL-compliant projects   | [Vector Add](/DirectProgramming/DPC++/DenseLinearAlgebra/vector-add) sample
 
 If you prefer to use an Integrated Development Environment (IDE) with these samples, you can download [Visual Studio Code](https://code.visualstudio.com/download) for use on Windows*, Linux*, and macOS*.
 
