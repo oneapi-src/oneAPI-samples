@@ -20,12 +20,16 @@ constexpr int kLocalN = 5;
 // # times to execute the kernel. kTimes must be >= kLocalN
 #if defined(FPGA_EMULATOR)
 constexpr int kTimes = 20;
+#elif defined(FPGA_SIMULATOR)
+constexpr int kTimes = 20;
 #else
 constexpr int kTimes = 100;
 #endif
 
 // # of floats to process on each kernel execution.
 #if defined(FPGA_EMULATOR)
+constexpr int kSize = 4096;
+#elif defined(FPGA_SIMULATOR)
 constexpr int kSize = 4096;
 #else
 constexpr int kSize = 2621440;  // ~10MB
@@ -205,6 +209,12 @@ int main() {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
+               "performance. The design may need to run on actual hardware "
+               "to observe the performance benefit of the optimization "
+               "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
+  std::cout << "\nSimulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
@@ -438,6 +448,8 @@ int main() {
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cerr << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }

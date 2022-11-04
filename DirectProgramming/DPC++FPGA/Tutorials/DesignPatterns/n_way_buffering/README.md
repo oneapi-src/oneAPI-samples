@@ -173,6 +173,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       make fpga_emu
       ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+      ```
+      make fpga_sim
+      ```
    * Generate the optimization report:
      ```
      make report
@@ -209,6 +213,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device).
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -251,7 +259,12 @@ Note that because the optimization described in this tutorial occurs at the *run
      ./n_way_buffering.fpga_emu     (Linux)
      n_way_buffering.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+     ```
+     ./n_way_buffering.fpga_sim     (Linux)
+     n_way_buffering.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./n_way_buffering.fpga         (Linux)
      n_way_buffering.fpga.exe       (Windows)
