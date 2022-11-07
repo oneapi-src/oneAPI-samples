@@ -1,8 +1,7 @@
 set(SOURCE_FILE read_only_cache.cpp)
 set(TARGET_NAME read_only_cache)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(SIMULATOR_TARGET_CACHE_DISABLED ${TARGET_NAME}_disabled.fpga_sim)
-set(SIMULATOR_TARGET_CACHE_ENABLED ${TARGET_NAME}_enabled.fpga_sim)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET_CACHE_DISABLED ${TARGET_NAME}_disabled.fpga)
 set(FPGA_TARGET_CACHE_ENABLED ${TARGET_NAME}_enabled.fpga)
 
@@ -75,15 +74,11 @@ set_target_properties(${FPGA_EARLY_IMAGE_CACHE_ENABLED} PROPERTIES LINK_FLAGS "$
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o read_only_cache.cpp.o -c read_only_cache.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> read_only_cache.cpp.o -o read_only_cache.fpga
-add_executable(${SIMULATOR_TARGET_CACHE_DISABLED} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET_CACHE_DISABLED} PRIVATE ../../../../include)
-add_executable(${SIMULATOR_TARGET_CACHE_ENABLED} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET_CACHE_ENABLED} PRIVATE ../../../../include)
-add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET_CACHE_DISABLED} ${SIMULATOR_TARGET_CACHE_ENABLED})
-set_target_properties(${SIMULATOR_TARGET_CACHE_DISABLED} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET_CACHE_ENABLED} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DCACHE_ENABLED")
-set_target_properties(${SIMULATOR_TARGET_CACHE_ENABLED} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -Xsread-only-cache-size=2048")
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
 ###############################################################################
 ### FPGA Hardware
