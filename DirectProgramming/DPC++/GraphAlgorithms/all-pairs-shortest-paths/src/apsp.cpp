@@ -1,6 +1,6 @@
 //==============================================================
 // This sample provides a parallel implementation of blocked Floyd Warshall
-// algorithm to compute all pairs shortest paths using DPC++.
+// algorithm to compute all pairs shortest paths using SYCL.
 //==============================================================
 // Copyright © Intel Corporation
 //

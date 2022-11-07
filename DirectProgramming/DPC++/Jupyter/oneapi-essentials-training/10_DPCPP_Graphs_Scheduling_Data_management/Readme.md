@@ -1,5 +1,5 @@
 ## Title
-DPCPP Graphs Scheduling and Data management: This is part 10 of the oneAPI essentials training series
+SYCL Graphs Scheduling and Data management: This is part 10 of the oneAPI essentials training series
 
   
 | Optimized for                       | Description

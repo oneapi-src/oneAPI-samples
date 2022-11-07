@@ -15,7 +15,7 @@
 using namespace sycl;
 using namespace std;
 
-// Number of complex numbers passing to the DPC++ code
+// Number of complex numbers passing to the SYCL code
 static const int num_elements = 10000;
 
 class CustomDeviceSelector : public device_selector {

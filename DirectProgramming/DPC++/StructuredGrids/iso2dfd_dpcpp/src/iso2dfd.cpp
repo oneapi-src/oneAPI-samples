@@ -16,16 +16,16 @@
 // A complete online tutorial for this code sample can be found at :
 // https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide 
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// Basic structures of DPC++:
-//   DPC++ Queues (including device selectors and exception handlers)
-//   DPC++ Buffers and accessors (communicate data between the host and the device)
-//   DPC++ Kernels (including parallel_for function and range<2> objects)
+// Basic structures of SYCL:
+//   SYCL Queues (including device selectors and exception handlers)
+//   SYCL Buffers and accessors (communicate data between the host and the device)
+//   SYCL Kernels (including parallel_for function and range<2> objects)
 //
 
 #include <fstream>
@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
   // Define device selector as 'default'
   default_selector device_selector;
 
-  // Create a device queue using DPC++ class queue
+  // Create a device queue using SYCL class queue
   queue q(device_selector, dpc_common::exception_handler);
 
   cout << "Computing wavefield in device ..\n";
@@ -281,7 +281,7 @@ int main(int argc, char* argv[]) {
   dpc_common::TimeInterval t_offload;
 
   {  // Begin buffer scope
-    // Create buffers using DPC++ class buffer
+    // Create buffers using SYCL class buffer
     buffer next_buf(next_base, range(n_size));
     buffer prev_buf(prev_base, range(n_size));
     buffer vel_buf(vel_base, range(n_size));
@@ -298,7 +298,7 @@ int main(int argc, char* argv[]) {
         // Define local and global range
         auto global_range = range<2>(n_rows, n_cols);
 
-        // Send a DPC++ kernel (lambda) for parallel execution
+        // Send a SYCL kernel (lambda) for parallel execution
         // The function that executes a single iteration is called
         // "iso_2dfd_iteration_global"
         //    alternating the 'next' and 'prev' parameters which effectively
