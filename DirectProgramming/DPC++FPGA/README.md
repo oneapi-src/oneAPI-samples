@@ -245,8 +245,8 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
   |:---               |:---
   |FPGA Compile Time  |`qsub -I -l nodes=1:fpga_compile:ppn=2 -d .`
   |FPGA Runtime       |`qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .`
-  |GPU	             |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	             |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
+  |GPU                |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
+  |CPU                |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
 
 >**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
 
