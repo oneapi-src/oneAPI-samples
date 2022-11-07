@@ -1,6 +1,6 @@
 //==============================================================
 // This sample provides a parallel implementation of a merge based sparse matrix
-// and vector multiplication algorithm using DPC++. The input matrix is in
+// and vector multiplication algorithm using SYCL. The input matrix is in
 // compressed sparse row format.
 //==============================================================
 // Copyright © Intel Corporation
