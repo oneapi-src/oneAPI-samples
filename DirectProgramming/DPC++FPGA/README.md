@@ -195,10 +195,6 @@ When working with the command-line interface (CLI), you should configure the one
 
 >**Note**: For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-
-All the FPGA code samples include the `dpc_common.hpp` header. The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample.
-
 >**Note**: You can get the common resources from the [oneAPI-samples](/common) GitHub repository.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
@@ -249,12 +245,12 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
   |:---               |:---
   |FPGA Compile Time  |`qsub -I -l nodes=1:fpga_compile:ppn=2 -d .`
   |FPGA Runtime       |`qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .`
-  |GPU	              |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	              |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
+  |GPU	             |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
+  |CPU	             |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
 
 >**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
 
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 12 hours.
+Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
 
 Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
 
@@ -262,7 +258,7 @@ Neither compiling nor executing programs on FPGA hardware are supported on the l
 
 >**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.
 
-## Documentation:
+## Documentation
 
 - The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of SYCL for FPGA.
 - The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
