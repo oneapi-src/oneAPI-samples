@@ -1,6 +1,6 @@
 {
     "name": "Monte Carlo Pi",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Map Reduce"],
+    "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Map Reduce"],
     "description": "Monte Carlo procedure for estimating Pi",
     "os": ["linux", "windows"],
     "builder": ["ide", "cmake"],

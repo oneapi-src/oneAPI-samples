@@ -1,6 +1,6 @@
 {
     "name": "Discrete Cosine Transform",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Spectral Methods"],
+    "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Spectral Methods"],
     "description": "An image processing algorithm as seen in the JPEG compression standard",
     "os": ["linux", "windows"],
     "builder": ["ide", "cmake"],
