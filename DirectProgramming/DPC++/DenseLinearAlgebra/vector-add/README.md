@@ -18,6 +18,8 @@ The `Base: Vector Add` is a relatively simple program that adds two large vector
 
 This sample provides example implementations of both Unified Shared Memory (USM) and buffers for side-by-side comparison.
 
+>**Note**: See the `Simple Add` sample to examine another getting started sample you can use to learn more about using the Intel® oneAPI Toolkits to develop SYCL-compliant applications for CPU, GPU, and FPGA devices.
+
 ## Prerequisites
 
 | Optimized for                     | Description
