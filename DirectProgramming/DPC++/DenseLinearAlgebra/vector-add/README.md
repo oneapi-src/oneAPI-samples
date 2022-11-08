@@ -132,7 +132,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    mkdir build
    cd build
-   cmake -G \"NMake Makefiles\" .. -DUSM=1
+   cmake -G "NMake Makefiles" .. -DUSM=1
    nmake cpu-gpu
    ```
 3. Clean the program. (Optional)
@@ -151,7 +151,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    mkdir build
    cd build
-   cmake -G \"NMake Makefiles\" ..
+   cmake -G "NMake Makefiles" ..
    ```
     1. Compile for FPGA emulation.
        ```
