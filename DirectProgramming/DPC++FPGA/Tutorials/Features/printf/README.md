@@ -186,7 +186,7 @@ From the report, you can find the compilation information of the design and the 
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./printf.fpga_emu     (Linux)
      printf.fpga_emu.exe   (Windows)
@@ -220,6 +220,7 @@ There are some known issues with the `experimental::printf()` and that's why the
 * Printing pointer address %p is not supported yet.
 * If you have multiple PRINTF statements in the kernel, the order of printed data in the stdout might not obey the sequential order of those statements in the code.
 * Buffer is only flushed to stdout after the kernel finishes in hardware.
+* Printing `long` integers in Windows results is not supported yet. Printing `long` integers in Linux works as intended.
 
 ## License
 Code samples are licensed under the MIT license. See

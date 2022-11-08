@@ -22,7 +22,7 @@ The algorithm can be composed using SYCL, oneMKL, and/or oneDPL. SYCL provides t
 
 The following articles provide more detailed explanations of the implementations:
 
- - [Efficiently Implementing Fourier Correlation Using oneAPI Math Kernel Library](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/libraries-fcorr.html)
+ - [Efficiently Implementing Fourier Correlation Using oneAPI Math Kernel Library](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/libraries/libraries-fcorr.html)
  - [Accelerating the 2D Fourier Correlation Algorithm with ArrayFire and oneAPI](https://www.intel.com/content/www/us/en/developer/articles/technical/accelerate-2d-fourier-correlation-algorithm.html#gs.1duy87)
 
 ## Key Implementation Details

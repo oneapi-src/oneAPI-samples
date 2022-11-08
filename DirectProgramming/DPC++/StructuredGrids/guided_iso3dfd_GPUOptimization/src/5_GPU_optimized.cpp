@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <string>
 
@@ -44,8 +44,7 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
                            (n3_workGroupSize + 2 * kHalfLength));
       // Create an accessor for SLM buffer which will contains data used
       // multiple times by work group
-      accessor<float, 1, access::mode::read_write, access::target::local> tab(
-          local_range, h);
+      local_accessor<float, 1> tab(local_range, h);
 
       // Send a SYCL kernel(lambda) to the device for parallel execution
       // Each kernel runs single row slice over first dimension
@@ -113,7 +112,7 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
               // Copy current data to SLM
               tab[l_idx] = front[0];
 
-              // DPC++ Basic synchronization (barrier function)
+              // SYCL Basic synchronization (barrier function)
               // Force synchronization within a work-group
               // using barrier function to ensure
               // all the work-items have completed reading into the SLM buffer
@@ -145,7 +144,7 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
               }
               front[kHalfLength] = prev_acc[idx + kHalfLength * n2n3];
 
-              // DPC++ Basic synchronization (barrier function)
+              // SYCL Basic synchronization (barrier function)
               // Force synchronization within a work-group
               // using barrier function to ensure that SLM buffers
               // are not overwritten by next set of work-items
@@ -208,7 +207,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Create queue with default selector and in order property
-  queue q(default_selector{}, {property::queue::in_order()});
+  queue q(default_selector_v, {property::queue::in_order()});
 
   if (CheckWorkGroupSize(q, n2_workGroupSize, n3_workGroupSize)) {
     Usage(argv[0], true);

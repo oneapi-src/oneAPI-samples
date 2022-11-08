@@ -16,11 +16,15 @@ endif()
 # These are Windows-specific flags:
 # 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
 # 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
+# 3. Increase the allowable constexpr steps for the front end. This allows the
+#    front-end compiler to do more compile-time computation.
 if(WIN32)
     set(WIN_FLAG "/EHsc")
     set(AC_TYPES_FLAG "/Qactypes")
+    set(CONSTEXPR_STEPS "/constexpr:steps5084968")
 else()
     set(AC_TYPES_FLAG "-qactypes")
+    set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 endif()
 
 # Allow the user to enable hardware profiling
@@ -100,10 +104,6 @@ if(PIXEL_BITS)
     set(PIXEL_BITS_FLAG "-DPIXEL_BITS=${PIXEL_BITS}")
     message(STATUS "PIXEL_BITS explicitly set to ${PIXEL_BITS}")
 endif()
-
-# Increase the allowable constexpr steps for the front end. This allows the
-# front-end compiler to do more compile-time computation.
-set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 
 # Print out configured variables
 message(STATUS "  SEED=${SEED_FLAG}")

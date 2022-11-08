@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -68,7 +68,7 @@ double MonteCarloPi(rgb image_plot[]) {
   }
 
   // Set up sycl queue
-  queue q(default_selector{}, dpc_common::exception_handler);
+  queue q(default_selector_v);
   std::cout << "\nRunning on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
@@ -84,10 +84,11 @@ double MonteCarloPi(rgb image_plot[]) {
       auto imgplot_acc = imgplot_buf.get_access(h);
       auto coords_acc = coords_buf.get_access(h);
       auto total_acc = total_buf.get_access(h);
+      auto reduc = reduction(total_buf, h, std::plus<int>());
 
       // Monte Carlo Procedure + Reduction
       h.parallel_for(nd_range<1>(num_wg * size_wg, size_wg),
-                     reduction(total_acc, 0, std::plus<int>()),
+                     reduc,
                      [=](nd_item<1> it, auto& total_acc) {
                        // Index for accessing buffers
                        int i = it.get_global_id();

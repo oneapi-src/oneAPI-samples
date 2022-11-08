@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <vector>
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -15,13 +15,13 @@
 using namespace sycl;
 using namespace std;
 
-// Number of complex numbers passing to the DPC++ code
+// Number of complex numbers passing to the SYCL code
 static const int num_elements = 10000;
 
-class CustomDeviceSelector : public device_selector {
+class CustomDeviceSelector {
  public:
   CustomDeviceSelector(std::string vendorName) : vendorName_(vendorName){};
-  int operator()(const device &dev) const override {
+  int operator()(const device &dev) const {
     int device_rating = 0;
     // In the below code we are querying for the custom device specific to a
     // Vendor and if it is a GPU device we are giving the highest rating. The
@@ -124,7 +124,7 @@ int main() {
     // std::string vendor_name = "Nvidia";
     // queue constructor passed exception handler
     CustomDeviceSelector selector(vendor_name);
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector);
     // Call the DpcppParallel with the required inputs and outputs
     DpcppParallel(q, input_vect1, input_vect2, out_vect_parallel);
   } catch (...) {
