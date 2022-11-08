@@ -75,101 +75,110 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 ### On Linux*
 
-#### Build for CPU and GPU
+#### Configure the build system
 
 1. Change to the sample directory.
+2. 
+   - Configure the project to use the buffer-based implementation.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+   or
+   - Configure the project to use the Unified Shared Memory (USM) based implementation.
+   ```
+   mkdir build
+   cd build
+   cmake .. -DUSM=1
+   ```
 
-2. Build the program for Unified Shared Memory (USM).
-    ```
-    mkdir build
-    cd build
-    cmake .. -DUSM=1
-    make cpu-gpu
-    ```
-3. Clean the program. (Optional)
+#### Build for CPU and GPU
+    
+1. Build the program.
+   ```
+   make cpu-gpu
+   ```   
+2. Clean the program. (Optional)
    ```
    make clean
    ```
 
 #### Build for FPGA
 
-1.  Change to the sample directory.
+1. Compile for FPGA emulation.
+   ```
+   make fpga_emu
+   ```
+2. Generate HTML performance reports.
+   ```
+   make report
+   ```
+   The reports reside at `simple-add_report.prj/reports/report.html`.
 
-2.  Build the program. (The provided targets match the recommended development flow.)
-    ```
-    mkdir build
-    cd build
-    cmake ..
-    ```
-    1. Compile for FPGA emulation.
-       ```
-       make fpga_emu
-       ```
-    2. Generate HTML performance reports.
-       ```
-       make report
-       ```
-       The reports reside at `vector-add_report.prj/reports/report.html`.
+3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+time.)
+   ```
+   make fpga
+   ```
 
-    3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
-   time.)
-       ```
-       make fpga
-       ```
-
-3. Clean the program. (Optional)
+4. Clean the program. (Optional)
    ```
    make clean
    ```
 
 ### On Windows*
 
-#### Build for CPU and GPU on the Command Line
+#### Configure the build system
 
 1. Change to the sample directory.
-
-2. Build the program for Unified Shared Memory (USM).
-   ```
-   mkdir build
-   cd build
-   cmake -G "NMake Makefiles" .. -DUSM=1
-   nmake cpu-gpu
-   ```
-3. Clean the program. (Optional)
-   ```
-   nmake clean
-   ```
-
-#### Build for FPGA on the Command Line
-
->**Note**: Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
-1. Change to the sample directory.
-
-2. Build the program.
-
+2. 
+   - Configure the project to use the buffer-based implementation.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-    1. Compile for FPGA emulation.
-       ```
-       nmake fpga_emu
-       ```
-    2. Generate HTML performance reports.
-       ```
-       nmake report
-       ```
-       The reports reside at `vector-add_report.prj/reports/report.html`.
+   or
+   - Configure the project to use the Unified Shared Memory (USM) based implementation.
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" .. -DUSM=1
+   ```
 
-    3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
-   time.)
-       ```
-       nmake fpga
-       ```
+#### Build for CPU and GPU
 
-3. Clean the program. (Optional)
+1. Build the program.
+   ```
+   nmake cpu-gpu
+   ```
+2. Clean the program. (Optional)
+   ```
+   nmake clean
+   ```
+
+#### Build for FPGA
+
+>**Note**: Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+1. Compile for FPGA emulation.
+   ```
+   nmake fpga_emu
+   ```
+2. Generate HTML performance reports.
+   ```
+   nmake report
+   ```
+The reports reside at `simple-add_report.prj/reports/report.html`.
+
+3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+time.)
+   ```
+   nmake fpga
+   ```
+
+4. Clean the program. (Optional)
    ```
    nmake clean
    ```
