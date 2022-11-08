@@ -83,7 +83,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" .. -DUSM=1",
           "nmake cpu-gpu",
-          "vector-add-usm.exe",
+          "simple-add-usm.exe",
           "nmake clean"
         ]
       },
@@ -94,7 +94,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake cpu-gpu",
-          "vector-add-buffers.exe",
+          "simple-add-buffers.exe",
           "nmake clean"
         ]
       },
@@ -105,7 +105,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fpga_emu",
-          "vector-add-buffers.fpga_emu.exe",
+          "simple-add-buffers.fpga_emu.exe",
           "nmake clean"
         ]
       },
@@ -116,7 +116,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fpga_emu",
-          "vector-add-usm.fpga_emu.exe",
+          "simple-add-usm.fpga_emu.exe",
           "nmake clean"
         ]
       }
