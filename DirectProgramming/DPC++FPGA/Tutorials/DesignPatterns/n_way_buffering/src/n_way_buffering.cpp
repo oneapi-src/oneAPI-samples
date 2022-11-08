@@ -30,7 +30,7 @@ constexpr int kTimes = 100;
 #if defined(FPGA_EMULATOR)
 constexpr int kSize = 4096;
 #elif defined(FPGA_SIMULATOR)
-constexpr int kSize = 4096;
+constexpr int kSize = 1024;
 #else
 constexpr int kSize = 2621440;  // ~10MB
 #endif
