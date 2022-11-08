@@ -140,10 +140,6 @@ to 12h.
      ```
      make report
      ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -189,10 +185,6 @@ to 12h.
    * Generate the optimization report:
      ```
      nmake report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -244,14 +236,7 @@ cache has been created.
     Note that the read-only cache is not implemented in emulation. The
     `-Xsread-only-cache-size<N>` flag does not impact the emulator in any way
     which is why we only have a single executable for this flow.
-2. Run the sample on the FPGA simulation device (two executables should be generated):
-     ```
-     ./read_only_cache_disabled.fpga_sim         (Linux)
-     ./read_only_cache_enabled.fpga_sim          (Linux)
-     read_only_cache_disabled.fpga_sim.exe       (Windows)
-     read_only_cache_enabled.fpga_sim.exe        (Windows)
-     ```
-3. Run the sample on the FPGA device (two executables should be generated):
+2. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./read_only_cache_disabled.fpga         (Linux)
      ./read_only_cache_enabled.fpga          (Linux)
