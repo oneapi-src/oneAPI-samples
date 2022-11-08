@@ -79,14 +79,14 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 1. Change to the sample directory.
 2. 
-   - Configure the project to use the buffer-based implementation.
+   Configure the project to use the buffer-based implementation.
    ```
    mkdir build
    cd build
    cmake ..
    ```
    or
-   - Configure the project to use the Unified Shared Memory (USM) based implementation.
+   Configure the project to use the Unified Shared Memory (USM) based implementation.
    ```
    mkdir build
    cd build
@@ -133,14 +133,14 @@ time.)
 
 1. Change to the sample directory.
 2. 
-   - Configure the project to use the buffer-based implementation.
+   Configure the project to use the buffer-based implementation.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
    or
-   - Configure the project to use the Unified Shared Memory (USM) based implementation.
+   Configure the project to use the Unified Shared Memory (USM) based implementation.
    ```
    mkdir build
    cd build
