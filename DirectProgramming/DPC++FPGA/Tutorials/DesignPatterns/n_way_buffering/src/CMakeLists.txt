@@ -57,7 +57,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile in a single command:
 #    icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation n_way_buffering.cpp -o n_way_buffering.fpga_sim
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_EMULATOR -o n_way_buffering.cpp.o -c n_way_buffering.cpp
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o n_way_buffering.cpp.o -c n_way_buffering.cpp
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} n_way_buffering.cpp.o -o n_way_buffering.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)

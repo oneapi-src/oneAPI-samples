@@ -51,7 +51,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile in a single command:
 #    icpx -fsycl -fintelfpga -DFPGA_SIMULATOR printf.cpp -o printf.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_EMULATOR -o printf.cpp.o -c printf.cpp
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o printf.cpp.o -c printf.cpp
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} printf.cpp.o -o printf.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
