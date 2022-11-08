@@ -126,10 +126,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -166,10 +162,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Generate the optimization report:
      ```
      nmake report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -211,12 +203,7 @@ Open the Kernel Memory viewer and compare the Load Latency on the loads from ker
      ./onchip_memory_cache.fpga_emu     (Linux)
      onchip_memory_cache.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA simulator device:
-     ```
-     ./onchip_memory_cache.fpga_sim         (Linux)
-     onchip_memory_cache.fpga_sim.exe       (Windows)
-     ```
-3. Run the sample on the FPGA device:
+2. Run the sample on the FPGA device:
      ```
      ./onchip_memory_cache.fpga         (Linux)
      onchip_memory_cache.fpga.exe       (Windows)
@@ -287,7 +274,7 @@ As the sample results above demonstrate, adding the cache to achieve an II of 1 
 
 Because the f<sub>MAX</sub> of a design is determined by the slowest kernel, we are not able to see the f<sub>MAX</sub> improvement of increasing the load latency from 1 to 4. To see that, you would have to compile the design with a single kernel at a time.
 
-When caching is used, performance noticeably increases. As previously mentioned, this technique should result in an II reduction, which should lead to a throughput improvement. The technique can also improve f<sub>MAX</sub> if the compiler had previously implemented a latency=1 load operation, in which case the f<sub>MAX</sub> increase should result in a further throughput improvement.
+When caching is used, performance noticably increases. As previously mentioned, this technique should result in an II reduction, which should lead to a throughput improvement. The technique can also improve f<sub>MAX</sub> if the compiler had previously implemented a latency=1 load operation, in which case the f<sub>MAX</sub> increase should result in a further throughput improvement.
 
 ## License
 Code samples are licensed under the MIT license. See

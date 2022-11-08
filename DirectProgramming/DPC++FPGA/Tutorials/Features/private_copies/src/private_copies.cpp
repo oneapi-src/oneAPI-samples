@@ -15,14 +15,8 @@
 
 using namespace sycl;
 
-#if defined(FPGA_SIMULATOR)
-// Smaller size to keep the runtime reasonable
-constexpr size_t kSize = 512; //2^9
-constexpr size_t kMaxIter = 100;
-#else
-constexpr size_t kSize = 8192; //2^13
+constexpr size_t kSize = 8192;
 constexpr size_t kMaxIter = 50000;
-#endif
 constexpr size_t kTotalOps = 2 * kMaxIter * kSize;
 constexpr size_t kMaxValue = 128;
 
@@ -40,8 +34,6 @@ template <int num_copies>
 void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
@@ -70,9 +62,7 @@ void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
           }
-          // The trip count of this loop is different from the loop above to
-          // prevent the compiler optimizing array `a` out.
-          for (size_t j = 0; j < kSize/2; j++)
+          for (size_t j = 0; j < kSize; j++)
             r += a[j];
         }
 
@@ -122,7 +112,7 @@ int GoldenResult(const IntArray &input_arr, int shift) {
     for (size_t j = 0; j < kSize; j++) {
       a[j] = input_arr[(i * 4 + j) % kSize] * shift;
     }
-    for (size_t j = 0; j < kSize/2; j++)
+    for (size_t j = 0; j < kSize; j++)
       gr += a[j];
   }
 
