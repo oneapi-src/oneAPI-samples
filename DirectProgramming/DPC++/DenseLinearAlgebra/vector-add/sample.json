@@ -3,7 +3,7 @@
   "name": "Base: Vector Add",
   "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra", "Toolkit/oneAPI Tools/Advisor"],
   "description": "This simple sample adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple C++ with SYCL",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
   "os": ["linux", "windows"],
