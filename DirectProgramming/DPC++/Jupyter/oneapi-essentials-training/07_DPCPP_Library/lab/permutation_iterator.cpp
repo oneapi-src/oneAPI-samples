@@ -12,7 +12,7 @@ using namespace std;
 
 struct multiply_index_by_two {
     template <typename Index>
-    Index operator[](const Index& i) const
+    Index operator()(const Index& i) const
     {
         return i * 2;
     }

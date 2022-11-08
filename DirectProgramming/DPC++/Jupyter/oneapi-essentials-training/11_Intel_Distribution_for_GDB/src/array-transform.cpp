@@ -10,7 +10,7 @@
 // essential features of the debugger when the target device is CPU or
 // GPU.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 // Location of file: <oneapi-root>/dev-utilities/<version>/include
 #include "dpc_common.hpp"
