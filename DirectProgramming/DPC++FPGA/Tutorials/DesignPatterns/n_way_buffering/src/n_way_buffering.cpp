@@ -21,7 +21,7 @@ constexpr int kLocalN = 5;
 #if defined(FPGA_EMULATOR)
 constexpr int kTimes = 20;
 #elif defined(FPGA_SIMULATOR)
-constexpr int kTimes = 20;
+constexpr int kTimes = 10;
 #else
 constexpr int kTimes = 100;
 #endif
