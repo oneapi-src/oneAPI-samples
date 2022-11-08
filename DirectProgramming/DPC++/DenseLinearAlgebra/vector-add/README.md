@@ -86,6 +86,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake ..
    ```
    or
+
    Configure the project to use the Unified Shared Memory (USM) based implementation.
    ```
    mkdir build
@@ -140,6 +141,7 @@ time.)
    cmake -G "NMake Makefiles" ..
    ```
    or
+
    Configure the project to use the Unified Shared Memory (USM) based implementation.
    ```
    mkdir build
