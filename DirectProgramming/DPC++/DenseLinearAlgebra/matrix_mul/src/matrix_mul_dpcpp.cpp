@@ -14,7 +14,7 @@
  * relevant terms noted in the comments.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 
@@ -52,7 +52,7 @@ int main() {
   // Initialize the device queue with the default selector. The device queue is
   // used to enqueue kernels. It encapsulates all states needed for execution.
   try {
-    queue q(default_selector{}, dpc_common::exception_handler);
+    queue q(default_selector_v);
 
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 

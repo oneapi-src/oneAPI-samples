@@ -75,19 +75,19 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // Intel extension: FPGA emulator selector on systems without FPGA card.
-  ext::intel::fpga_emulator_selector d_selector;
+  const auto& selector = ext::intel::fpga_emulator_selector_v;
 #elif FPGA
   // Intel extension: FPGA selector on systems with FPGA card.
-  ext::intel::fpga_selector d_selector;
+  const auto& selector = ext::intel::fpga_selector_v;
 #else
   // The default device selector will select the most performant device.
-  auto d_selector{default_selector_v};
+  const auto& selector = default_selector_v;
 #endif
 
   constexpr int value = 100000;
 
   try {
-    queue q(d_selector, exception_handler);
+    queue q(selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     cout << "Running on device: "

@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -36,7 +36,7 @@ void VectorAdd(queue &q, const vector<float> &a, const vector<float> &b,
   event e = q.submit([&](handler &h) {
     accessor acc_a(buffer_a, h, read_only);
     accessor acc_b(buffer_b, h, read_only);
-    accessor acc_sum(buffer_sum, h, write_only, noinit);
+    accessor acc_sum(buffer_sum, h, write_only, no_init);
 
     h.single_task<VAdd<unroll_factor>>([=]()[[intel::kernel_args_restrict]] {
 // Unroll loop as specified by the unroll factor.
@@ -94,7 +94,7 @@ int main() {
   vector<float> sum(n);
 
   try {
-    queue q(default_selector{}, dpc_common::exception_handler,
+    queue q(default_selector_v,
             property::queue::enable_profiling{});
 
     cout << "Running on device: "
