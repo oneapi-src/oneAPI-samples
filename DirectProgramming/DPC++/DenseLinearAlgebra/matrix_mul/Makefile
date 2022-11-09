@@ -14,7 +14,7 @@ OMP_SOURCES = src/matrix_mul_omp.cpp
 all:
 	$(CXX) $(SYCL_CXXFLAGS) $(SYCL_EXE_NAME) $(SYCL_SOURCES) $(SYCL_LDFLAGS)
 
-build_dpcpp:
+build_sycl:
 	$(CXX) $(SYCL_CXXFLAGS) $(SYCL_EXE_NAME) $(SYCL_SOURCES) $(SYCL_LDFLAGS)
 
 build_omp:
@@ -24,7 +24,7 @@ build_omp:
 run:
 	./$(SYCL_EXE_NAME)
 
-run_dpcpp:
+run_sycl:
 	./$(SYCL_EXE_NAME)
 
 run_omp:
