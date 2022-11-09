@@ -30,7 +30,7 @@ constexpr int kTimes = 100;
 #if defined(FPGA_EMULATOR)
 constexpr int kSize = 4096;
 #elif defined(FPGA_SIMULATOR)
-constexpr int kSize = 1024;
+constexpr int kSize = 256;
 #else
 constexpr int kSize = 2621440;  // ~10MB
 #endif
@@ -38,10 +38,18 @@ constexpr int kSize = 2621440;  // ~10MB
 // Kernel executes a power function (base^kPow). Must be
 // >= 2. Can increase this to increase kernel execution
 // time, but ProcessOutput() time will also increase.
+#if defined(FPGA_SIMULATOR)
+constexpr int kPow = 5;
+#else
 constexpr int kPow = 20;
+#endif
 
 // Number of iterations through the main loop
+#if defined(FPGA_SIMULATOR)
+constexpr int kNumRuns = 2;
+#else
 constexpr int kNumRuns = 4;
+#endif
 
 bool pass = true;
 

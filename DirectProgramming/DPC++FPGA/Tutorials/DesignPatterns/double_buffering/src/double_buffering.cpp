@@ -20,8 +20,8 @@ using namespace sycl;
 constexpr int kTimes = 20;
 constexpr int kSize = 4096;
 #elif defined(FPGA_SIMULATOR)
-constexpr int kTimes = 20;
-constexpr int kSize = 4096;
+constexpr int kTimes = 10;
+constexpr int kSize = 1024;
 #else
 constexpr int kTimes = 100;
 constexpr int kSize = 2621440;
