@@ -9,31 +9,11 @@
 
 // Custom device selector to select a device of the specified type.
 // The platform of the device has to contain the phrase "Intel".  If
-// the platform or the type are not as expected, the queried device is
-// not selected, as indicated by a negative score.
+// the platform or the type are not as expected, print an error
+// and exit.
 
 using namespace std;
 using namespace sycl;
-
-class CustomSelector : public device_selector {
- public:
-  CustomSelector(info::device_type type) : type{type} {}
-
-  int operator()(const device& dev) const override {
-    if (type != dev.get_info<info::device::device_type>()) return -1;
-
-    string platform_name =
-        dev.get_platform().get_info<info::platform::name>();
-
-    if (platform_name.find("Intel") != string::npos)
-      return 10;
-    else
-      return (type == info::device_type::host) ? 10 : -1;
-  }
-
- private:
-  info::device_type type;
-};
 
 // Return the device type based on the program arguments.
 
@@ -61,4 +41,22 @@ static info::device_type GetDeviceType(int argc, char* argv[]) {
   }
 
   return type;
+}
+
+// Return the device based on the program arguments.
+
+static device GetDevice(int argc, char* argv[]) {
+  info::device_type type = GetDeviceType(argc, argv);
+  vector<device> devices = device::get_devices(type);
+  if (type == info::device_type::host)
+    return devices[0];
+
+  for (const device &dev : devices) {
+    string platform_name = dev.get_platform().get_info<info::platform::name>();
+
+    if (platform_name.find("Intel") != string::npos)
+      return dev;
+  }
+  cerr << "Device not found: " << argv[1] << "\n";
+  exit(1);
 }

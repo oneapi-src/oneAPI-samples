@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.4)
-set (CMAKE_CXX_COMPILER "dpcpp")
+set (CMAKE_CXX_COMPILER "icpx")
 project (jacobi LANGUAGES CXX)
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -12,6 +12,8 @@ if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
   message (STATUS "Build Type is changed to 'Debug'.")
 endif ()
 
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl")
+
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 message (STATUS "Optimization level is set to -O0.")
 
@@ -21,9 +23,9 @@ if (NOT GDB)
   message (FATAL_ERROR "'gdb-oneapi' not found!")
 endif ()
 
-find_program(GDBSERVER gdbserver-gt)
+find_program(GDBSERVER gdbserver-ze)
 if (NOT GDBSERVER)
-  message (FATAL_ERROR "'gdbserver-gt' not found!")
+  message (FATAL_ERROR "'gdbserver-ze' not found!")
 endif ()
 
 set (PROJECT_NAME_BUGGED "${PROJECT_NAME}-bugged")
