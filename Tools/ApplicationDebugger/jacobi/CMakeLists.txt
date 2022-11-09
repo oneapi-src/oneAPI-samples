@@ -31,8 +31,9 @@ endif ()
 set (PROJECT_NAME_BUGGED "${PROJECT_NAME}-bugged")
 set (PROJECT_NAME_FIXED "${PROJECT_NAME}-fixed")
 
-add_executable (${PROJECT_NAME_BUGGED} src/jacobi-bugged.cpp)
-add_executable (${PROJECT_NAME_FIXED} src/jacobi-fixed.cpp)
+add_executable (${PROJECT_NAME_BUGGED} src/jacobi.cpp)
+add_executable (${PROJECT_NAME_FIXED} src/jacobi.cpp)
+target_compile_definitions (${PROJECT_NAME_FIXED} PRIVATE FIXED)
 
 # Add custom target for starting a debug session
 add_custom_target (debug-session
