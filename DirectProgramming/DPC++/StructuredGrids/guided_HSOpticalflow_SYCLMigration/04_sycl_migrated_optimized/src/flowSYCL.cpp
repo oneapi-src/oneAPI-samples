@@ -30,7 +30,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 
 #include "common.h"
@@ -73,7 +73,7 @@ void ComputeFlowSYCL(const float *I0, const float *I1, int width, int height,
     }
   };
 
-  queue q{default_selector(), exception_handler, property::queue::in_order()};
+  queue q{default_selector_v, exception_handler, property::queue::in_order()};
   printf("Computing optical flow on GPU...\n");
   std::cout << "\nRunning on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
