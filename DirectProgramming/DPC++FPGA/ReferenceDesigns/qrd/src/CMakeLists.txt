@@ -17,11 +17,17 @@ endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall")
-    set(PLATFORM_SPECIFIC_LINK_FLAGS "/Qactypes /F 12582912")
+    set(AC_TYPES_COMPILE_FLAG "/Qactypes")
+    set(AC_TYPES_LINK_FLAG "/Qactypes")
+    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Wall /fp:precise -Xsfp-relaxed")
+    set(PLATFORM_SPECIFIC_LINK_FLAGS "/fp:precise -Xsfp-relaxed")
+    set(STACK_FLAG "/F 12582912")
 else()
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-qactypes -Wall -fno-finite-math-only")
+    set(AC_TYPES_COMPILE_FLAG "-qactypes")
+    set(AC_TYPES_LINK_FLAG "")
+    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-Wall -fno-finite-math-only")
     set(PLATFORM_SPECIFIC_LINK_FLAGS "")
+    set(STACK_FLAG "")
 endif()
 
 
@@ -87,12 +93,13 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fsycl -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} ${USER_HARDWARE_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fsycl -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -fsycl -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} ${AC_TYPES_LINK_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${AC_TYPES_LINK_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fsycl -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${AC_TYPES_LINK_FLAG}")
+set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${STACK_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -112,7 +119,7 @@ add_executable(${FPGA_EARLY_IMAGE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
