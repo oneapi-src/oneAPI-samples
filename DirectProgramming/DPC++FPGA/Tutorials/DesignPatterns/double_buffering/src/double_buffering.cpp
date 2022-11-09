@@ -30,7 +30,11 @@ constexpr int kSize = 2621440;
 // Kernel executes a power function (base^kPow). Must be
 // >= 2. Can increase this to increase kernel execution
 // time, but ProcessOutput() time will also increase.
+#if defined(FPGA_SIMULATOR)
+constexpr int kPow = 5;
+#else
 constexpr int kPow = 20;
+#endif
 
 // Number of iterations through the main loop
 constexpr int kNumRuns = 2;
