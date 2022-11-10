@@ -6,8 +6,8 @@
 
 #include <CL/opencl.h>
 #include <stdio.h>
-#include <CL/sycl.hpp>
-#include <CL/sycl/backend/opencl.hpp>
+#include <sycl/sycl.hpp>
+#include <sycl/backend/opencl.hpp>
 using namespace sycl;
 
 constexpr int MAX_SOURCE_SIZE = 0x100000;
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   ret = clGetPlatformIDs(ret_num_platforms, ocl_platforms, NULL);
   // Set Platform to Use
   int platform_index = 0;
-  platform sycl_platform = opencl::make<platform>(ocl_platforms[platform_index]);
+  platform sycl_platform = make_platform<backend::opencl>(ocl_platforms[platform_index]);
   std::cout << "Using Platform: "
             << sycl_platform.get_info<info::platform::name>() << std::endl;
 
@@ -80,10 +80,10 @@ int main(int argc, char **argv) {
   clEnqueueWriteBuffer(ocl_queue, ocl_buf_b, CL_TRUE, 0, bytes, host_b, 0, NULL,
                        NULL);
 
-  {  // DPC++ Application Scope
+  {  // SYCL Application Scope
     // Construct SYCL versions of the context, queue, kernel, and buffers
-    context sycl_context = opencl::make<context>(ocl_context);
-    queue sycl_queue = opencl::make<queue>(sycl_context, ocl_queue);
+    context sycl_context = make_context<backend::opencl>(ocl_context);
+    queue sycl_queue = make_queue<backend::opencl>(ocl_queue, sycl_context);
     std::cout << "Device: "
               << sycl_queue.get_device().get_info<info::device::name>()
               << std::endl;

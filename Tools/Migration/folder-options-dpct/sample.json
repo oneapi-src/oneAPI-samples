@@ -7,5 +7,6 @@
   "os": [ "linux", "windows" ],
   "builder": [ "cli" ],
   "targetDevice": [ "CPU" ],
-  "ciTests": { "linux": [], "windows": [] }
+  "ciTests": { "linux": [], "windows": [] },
+  "expertise": "Concepts and Functionality"
 }

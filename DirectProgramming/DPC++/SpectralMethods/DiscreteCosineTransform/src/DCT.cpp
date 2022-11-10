@@ -206,7 +206,7 @@ SYCL_EXTERNAL void ProcessBlock(rgb* indataset, rgb* outdataset,
 
 // Breaks the image into 8x8 blocks to process DCT
 void ProcessImage(rgb* indataset, rgb* outdataset, int width, int height) {
-  sycl::queue q(default_selector{}, exception_handler);
+  sycl::queue q(default_selector_v, exception_handler);
   std::cout << "Running on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
 

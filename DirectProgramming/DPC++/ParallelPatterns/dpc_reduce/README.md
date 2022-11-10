@@ -65,7 +65,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 1. Change to the sample directory.
 2. Specify the correct compiler for the Intel® MPI Library.
    ```
-   export I_MPI_CXX=dpcpp
+   export I_MPI_CXX=icpx
    ```
 2. Build the program.
    ```

@@ -1,7 +1,7 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // According to the OpenCL C spec, the format string must be in the constant
 // address space. To simplify code when invoking printf, the following macros
@@ -24,8 +24,10 @@ using namespace sycl;
 class BasicKernel;
 
 int main(int argc, char* argv[]) {
-#if defined(FPGA_EMULATOR)
+#ifdef FPGA_EMULATOR
   ext::intel::fpga_emulator_selector device_selector;
+#elif FPGA_SIMULATOR
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif

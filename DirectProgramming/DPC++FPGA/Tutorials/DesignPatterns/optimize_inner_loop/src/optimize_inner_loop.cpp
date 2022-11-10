@@ -11,12 +11,10 @@
 #include <random>
 #include <type_traits>
 
-#include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -33,13 +31,16 @@ constexpr double kProbSuccess = 1.0 / kRandRangeMax;
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 // Templating allows us to instantiate multiple versions of the kernel.
-template <int version> class Producer;
-template <int version> class Consumer;
+template <int version>
+class Producer;
+template <int version>
+class Consumer;
 
 // Declare the pipe class name globally to reduce name mangling.
-// Templating allows us to instantiate multiple versions of pipes for each 
+// Templating allows us to instantiate multiple versions of pipes for each
 // version of the kernel.
-template <int version> class PipeClass;
+template <int version>
+class PipeClass;
 
 //
 // Submits the kernel, which is templated on the variables:
@@ -53,11 +54,19 @@ template <int version> class PipeClass;
 //                          inner loop
 //
 template <int version, int in_element_upper_bound, int spec_iters>
-void SubmitKernels(const device_selector &selector, std::vector<int> &in,
-                   int &res, double &kernel_time_ms) {
+void SubmitKernels(std::vector<int> &in, int &res, double &kernel_time_ms) {
   // static asserts: these cause the compiler to fail if the conditions fail
   static_assert(version >= 0, "Invalid kernel version");
   static_assert(spec_iters >= 0, "spec_iters must be positive");
+
+  // the device selector
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
 
   // the pipe
   using Pipe = pipe<PipeClass<version>, bool>;
@@ -67,8 +76,8 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
 
   try {
     // create the device queue with profiling enabled
-    auto prop_list = property_list{ property::queue::enable_profiling() };
-    queue q(selector, dpc_common::exception_handler, prop_list);
+    auto prop_list = property_list{property::queue::enable_profiling()};
+    queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // The input data buffer
     buffer in_buf(in);
@@ -89,22 +98,23 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
           int val = in_a[i];
 
           // 'in_element_upper_bound' is a constant (a template variable).
-          // Therefore, the condition 'in_element_upper_bound < 0', and therefore
-          // the taken branch of this if-else statement, can be determined at
-          // compile time. This results in the branch that is NOT taken being
-          // optimized away. Both versions of the inner loop apply the
-          // speculated_iterations attribute, where the number of speculated
+          // Therefore, the condition 'in_element_upper_bound < 0', and
+          // therefore the taken branch of this if-else statement, can be
+          // determined at compile time. This results in the branch that is NOT
+          // taken being optimized away. Both versions of the inner loop apply
+          // the speculated_iterations attribute, where the number of speculated
           // iterations is determined by the template variable 'spec_iters'.
           if (in_element_upper_bound < 0) {
             // In this version of the inner loop, we do NOT provide an
             // upperbound on the loop index variable 'j'. While it may be easy
-            // for you to read the code and reason that 'j<in_element_upper_bound'
-            // is always true by looking at the rest of the program, it is much
-            // more difficult for the compiler. As a result, the compiler will
-            // be conservative and assume this inner loop may have a large trip
-            // count and decide to make (or not make) optimizations accordingly.
-            [[intel::speculated_iterations(spec_iters)]]
-            for (int j = 0; j < val; j++) {
+            // for you to read the code and reason that
+            // 'j<in_element_upper_bound' is always true by looking at the rest
+            // of the program, it is much more difficult for the compiler. As a
+            // result, the compiler will be conservative and assume this inner
+            // loop may have a large trip count and decide to make (or not make)
+            // optimizations accordingly.
+            [[intel::speculated_iterations(spec_iters)]] for (int j = 0;
+                                                              j < val; j++) {
               Pipe::write(true);
             }
           } else {
@@ -113,8 +123,10 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
             // 'j<in_element_upper_bound' loop exit condition. This provides the
             // compiler with a constant upperbound on the trip count and allows
             // it to make optimizations accordingly.
-            [[intel::speculated_iterations(spec_iters)]]
-            for (int j = 0; j < val && j <= in_element_upper_bound; j++) {
+            [[intel::speculated_iterations(
+                spec_iters)]] for (int j = 0;
+                                   j < val && j <= in_element_upper_bound;
+                                   j++) {
               Pipe::write(true);
             }
           }
@@ -171,15 +183,9 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
 // main function
 //
 int main(int argc, char *argv[]) {
-  // the device selector
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
 
   // set the input size based on whether we are in emulation or FPGA hardware
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
   int size = 5000;
 #else
   int size = 5000000;
@@ -230,7 +236,7 @@ int main(int argc, char *argv[]) {
   // disabled (-1 for in_element_upper_bound disables inner loop bounding)
   // and sets 2 speculated iterations.
   std::cout << "Running kernel 0\n";
-  SubmitKernels<0, -1, 2>(selector, in, result[0], ktime[0]);
+  SubmitKernels<0, -1, 2>(in, result[0], ktime[0]);
 
   // version 1
   //
@@ -238,14 +244,14 @@ int main(int argc, char *argv[]) {
   // disabled (-1 for in_element_upper_bound disables inner loop bounding)
   // and sets 0 speculated iterations.
   std::cout << "Running kernel 1\n";
-  SubmitKernels<1, -1, 0>(selector, in, result[1], ktime[1]);
+  SubmitKernels<1, -1, 0>(in, result[1], ktime[1]);
 
   // version 2
   //
   // For the inner loop, this version bounds the inner loop (the max value
   // generated by our RNG above, kRandRangeMax) and has 0 speculated iterations.
   std::cout << "Running kernel 2\n";
-  SubmitKernels<2, kRandRangeMax, 0>(selector, in, result[2], ktime[2]);
+  SubmitKernels<2, kRandRangeMax, 0>(in, result[2], ktime[2]);
 
   // validate the results
   bool success = true;
@@ -260,7 +266,7 @@ int main(int argc, char *argv[]) {
   if (success) {
     // the emulator does not accurately represent real hardware performance.
     // Therefore, we don't show performance results when running in emulation.
-#if !defined(FPGA_EMULATOR)
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
     double input_size_bytes = size * sizeof(int);
 
     // only display two decimal points

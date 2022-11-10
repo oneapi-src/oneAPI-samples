@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 
 // Custom device selector to select a device of the specified type.
@@ -15,11 +15,11 @@
 using namespace std;
 using namespace sycl;
 
-class CustomSelector : public device_selector {
+class CustomSelector {
  public:
   CustomSelector(info::device_type type) : type{type} {}
 
-  int operator()(const device& dev) const override {
+  int operator()(const device& dev) const {
     if (type != dev.get_info<info::device::device_type>()) return -1;
 
     string platform_name =

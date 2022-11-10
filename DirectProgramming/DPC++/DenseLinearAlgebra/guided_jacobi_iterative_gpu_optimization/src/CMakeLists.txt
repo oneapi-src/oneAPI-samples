@@ -1,7 +1,7 @@
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsycl -std=c++17")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
-add_executable(1_guided_jacobi_iterative_solver_cpu 1_guided_jacobi_iterative_solver_cpu)
+add_executable(1_guided_jacobi_iterative_solver_cpu 1_guided_jacobi_iterative_solver_cpu.cpp)
 add_executable(2_guided_jacobi_iterative_solver_gpu 2_guided_jacobi_iterative_solver_gpu.cpp)
 add_executable(3_guided_jacobi_iterative_solver_multi_gpu 3_guided_jacobi_iterative_solver_multi_gpu.cpp)
 

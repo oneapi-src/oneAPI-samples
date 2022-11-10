@@ -1,5 +1,5 @@
-CXX = dpcpp
-CXXFLAGS = -std=c++17 -g -o
+CXX = icpx
+CXXFLAGS = -std=c++17 -g  -fsycl -o 
 LDFLAGS =
 EXE_NAME = complex_mult.exe
 SOURCES = src/complex_mult.cpp

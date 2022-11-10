@@ -1,8 +1,8 @@
 {
   "guid": "E3DE34BF-E5B6-44AF-8722-B2A5A6BE8D57",
-  "name": "DPC++ OpenCL Interoperability Samples",
+  "name": "SYCL OpenCL Interoperability Samples",
   "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/OpenCL Interoperability" ],
-  "description": "Samples showing DPC++ and OpenCL Interoperability",
+  "description": "Samples showing SYCL and OpenCL Interoperability",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "os": [ "linux" ],
@@ -22,5 +22,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

@@ -8,7 +8,7 @@ SYCL*-compliant FPGA design.
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
 
@@ -49,7 +49,7 @@ Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
 To disable burst-interleaving, you need to pass the
-`-Xsno-interleaving=<global_memory_type>` flag to your `dpcpp` command. The
+`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. The
 global memory type is indicated in the board specification XML file for the
 Board Support Package (BSP) that you're using. The board specification XML
 file, called `board_spec.xml`, can be found in the root directory of your BSP.
@@ -100,7 +100,7 @@ interleaving to avoid the area overhead imposed by the interleaving logic.
 This tutorial requires compiling the source code twice: once with the
 `-Xsno-interleaving` flag and once without it. In the `CMakeLists.txt` file,
 the macro `NO_INTERLEAVING` is defined when the `-Xsno-interleaving` flag is
-passed to the `dpcpp` command. The macro controls whether the buffers are
+passed to the `icpx` command. The macro controls whether the buffers are
 created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
@@ -138,11 +138,6 @@ own) that clearly matches the number of channels available.
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-
-### Include Files
-The included header `dpc_common.hpp` is located at
-`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the
@@ -189,13 +184,13 @@ To learn more about the extensions, see the
    10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board
    support package is installed on your system. Then run `cmake` using the
    command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build
@@ -208,6 +203,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      make report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -235,13 +234,13 @@ To learn more about the extensions, see the
    10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board
    support package is installed on your system. Then run `cmake` using the
    command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build
@@ -254,6 +253,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -307,14 +310,20 @@ significantly lower than the case where burst-interleaving is enabled.
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the emulator which is why we only have a single executable for
     this flow.
-
-2. Run the sample on the FPGA device (two executables should be generated):
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
+     ```
+     ./mem_channel.fpga_sim         (Linux)
+     mem_channel.fpga_sim.exe    (Windows)
+     ```
+    Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
+    no impact on the simulator which is why we only have a single executable for
+    this flow.
+3. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./mem_channel_interleaving.fpga         (Linux)
      ./mem_channel_no_interleaving.fpga      (Linux)
      mem_channel_interleaving.fpga.exe       (Windows)
      mem_channel_no_interleaving.fpga.exe    (Windows)
-
      ```
 
 ### Example of Output

@@ -12,7 +12,7 @@
 #include <oneapi/dpl/iterator>
 
 #include <mpi.h>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>  // setprecision library
 #include <iostream>
 #include <numeric> 
@@ -62,7 +62,7 @@ float calc_pi_cpu_tbb(int num_steps) {
 // a buffer with all the slice calculations and
 // then uses a single_task to combine all the results
 // This is not the highest performing example but shows
-// how to do calculations directly in dpc++ with
+// how to do calculations directly in SYCL with
 // mininmal complexity.
 template <typename Policy>
 float calc_pi_onedpl_native(size_t num_steps, Policy&& policy) {
@@ -174,6 +174,12 @@ struct slice_area {
 template <typename Unknown>
 struct accessor_traits_impl
 {
+};
+
+template <typename T, int Dim>
+struct accessor_traits_impl<sycl::local_accessor<T, Dim>>
+{
+    using value_type = typename sycl::local_accessor<T, Dim>::value_type;
 };
 
 template <typename T, int Dim, sycl::access::mode AccMode, sycl::access::target AccTarget,
@@ -346,7 +352,7 @@ float calc_pi_onedpl_native3(size_t num_steps, int groups, Policy&& policy) {
         accessor access_buf(buf,h);
         accessor temp_acc(temp_buf,h,write_only);
         // Create temporary local buffer
-        accessor<float, 1, access::mode::read_write, access::target::local>
+        local_accessor<float, 1>
             temp_buf_local(range<1>(workgroup_size), h);
         h.parallel_for(nd_range<1>(range<1>(n_groups * workgroup_size),
                                    range<1>(workgroup_size)),
@@ -449,7 +455,7 @@ float calc_pi_onedpl_native4(size_t num_steps, int groups, Policy&& policy) {
         accessor access_buf(buf2,h);
         accessor temp_acc(temp_buf,h,write_only);
         // Create temporary local buffer
-        accessor<float, 1, access::mode::read_write, access::target::local>
+        local_accessor<float, 1>
             temp_buf_local(range<1>(workgroup_size), h);
         h.parallel_for(nd_range<1>(range<1>(n_groups * workgroup_size),
                                    range<1>(workgroup_size)),
@@ -547,7 +553,7 @@ float calc_pi_onedpl_onestep(int num_steps, Policy& policy) {
 
 ////////////////////////////////////////////////////////////////////////
 //
-// Each MPI ranks compute the number Pi partially on target device using DPC++.
+// Each MPI ranks compute the number Pi partially on target device using SYCL.
 // The partial result of number Pi is returned in "results".
 //
 ////////////////////////////////////////////////////////////////////////
@@ -557,8 +563,6 @@ void mpi_native(float* results, int rank_num, int num_procs,
 
   dx = 1.0f / (float)total_num_steps;
   dx2 = dx / 2.0f;
-
-  default_selector device_selector;
 
   // exception handler
   //
@@ -570,7 +574,7 @@ void mpi_native(float* results, int rank_num, int num_procs,
     // for (std::exception_ptr const& e : exceptionList) {
       // try {
         // std::rethrow_exception(e);
-      // } catch (cl::sycl::exception const& e) {
+      // } catch (sycl::exception const& e) {
         // std::cout << "Failure"
                   // << "\n";
         // std::terminate();
@@ -633,7 +637,7 @@ int main(int argc, char** argv) {
   float pi=0.0;
   queue myQueue{property::queue::in_order()};
   auto policy = oneapi::dpl::execution::make_device_policy(
-      queue(default_selector{}, dpc_common::exception_handler));
+      queue(default_selector_v));
 
   // Start MPI.
   if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {

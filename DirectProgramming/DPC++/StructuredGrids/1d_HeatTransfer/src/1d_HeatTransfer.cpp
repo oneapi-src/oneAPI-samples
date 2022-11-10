@@ -16,24 +16,24 @@
 //
 // where constant C = k * dt / (dx * dx)
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// Basic structures of DPC++:
-//   DPC++ Queues (including device selectors and exception handlers)
-//   DPC++ Buffers and accessors (communicate data between the host and the
+// Basic structures of SYCL:
+//   SYCL Queues (including device selectors and exception handlers)
+//   SYCL Buffers and accessors (communicate data between the host and the
 //   device)
-//   DPC++ Kernels (including parallel_for function and range<1> objects)
+//   SYCL Kernels (including parallel_for function and range<1> objects)
 //
 //******************************************************************************
 // Content: (version 1.1)
 //   1d_HeatTransfer.cpp
 //
 //******************************************************************************
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
@@ -110,14 +110,12 @@ void CompareResults(string prefix, float *device_results, float *host_results,
 }
 
 //
-// Compute heat on the device using DPC++ buffer
+// Compute heat on the device using SYCL buffer
 //
 void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
-  // Define device selector as 'default'
-  default_selector device_selector;
 
-  // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  // Create a device queue using SYCL class queue
+  queue q(default_selector_v);
   cout << "Using buffers\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";
@@ -179,11 +177,9 @@ void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
 void ComputeHeatUSM(float C, size_t num_p, size_t num_iter, float *arr_CPU) {
   // Timesteps depend on each other, so make the queue inorder
   property_list properties{property::queue::in_order()};
-  // Define device selector as 'default'
-  default_selector device_selector;
 
   // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler, properties);
+  queue q(default_selector_v, properties);
   cout << "Using USM\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>()
        << "\n";

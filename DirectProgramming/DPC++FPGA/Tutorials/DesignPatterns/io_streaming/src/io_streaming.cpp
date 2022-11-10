@@ -5,12 +5,10 @@
 #include <chrono>
 #include <thread>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // The type that will stream through the IO pipe. When using real IO pipes,
 // make sure the width of this datatype matches the width of the IO pipe, which
@@ -50,7 +48,7 @@ int main() {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
     // create the device queue
-    queue q(selector, dpc_common::exception_handler, prop_list);
+    queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // run the loopback example system
     // see 'LoopbackTest.hpp'

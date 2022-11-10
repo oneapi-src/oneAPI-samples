@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
@@ -10,9 +10,7 @@
 #include "gzipkernel_ll.hpp"
 #include "kernels.hpp"
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 
 using namespace sycl;
@@ -129,11 +127,13 @@ int main(int argc, char *argv[]) {
   try {
 #ifdef FPGA_EMULATOR
     ext::intel::fpga_emulator_selector device_selector;
+#elif FPGA_SIMULATOR
+    ext::intel::fpga_simulator_selector device_selector;
 #else
     ext::intel::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
-    queue q(device_selector, dpc_common::exception_handler, prop_list);
+    queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     std::cout << "Running on device:  "
               << q.get_device().get_info<info::device::name>().c_str() << "\n";
@@ -162,6 +162,8 @@ int main(int argc, char *argv[]) {
 
 #ifdef FPGA_EMULATOR
     CompressFile(q, infilename, outfilenames, 10, true);
+#elif FPGA_SIMULATOR
+    CompressFile(q, infilename, outfilenames, 2, true);
 #else
     // warmup run - use this run to warmup accelerator. There are some steps in
     // the runtime that are only executed on the first kernel invocation but not
@@ -182,6 +184,8 @@ int main(int argc, char *argv[]) {
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cerr << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }
@@ -388,8 +392,10 @@ int CompressFile(queue &q, std::string &input_file,
     }
   }
 
-#ifndef FPGA_EMULATOR
-  dpc_common::TimeInterval perf_timer;
+#ifdef FPGA_EMULATOR
+#elif FPGA_SIMULATOR
+#else
+  auto start = std::chrono::steady_clock::now();
 #endif
 
   // Launch initial set of kernels
@@ -443,8 +449,11 @@ int CompressFile(queue &q, std::string &input_file,
   }
 
 // Stop the timer.
-#ifndef FPGA_EMULATOR
-  double diff_total = perf_timer.Elapsed();
+#ifdef FPGA_EMULATOR
+#elif FPGA_SIMULATOR
+#else
+  auto end = std::chrono::steady_clock::now();
+  double diff_total = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
   if (report) {
     std::cout << "Total execution time: " << (double)diff_total * 1000000
               << "us \n";
@@ -528,7 +537,9 @@ int CompressFile(queue &q, std::string &input_file,
   if (report) {
     double compression_ratio = (double)((double)compressed_sz[0] / (double)isz /
                                         BATCH_SIZE / iterations);
-#ifndef FPGA_EMULATOR
+#ifdef FPGA_EMULATOR
+#elif FPGA_SIMULATOR
+#else
     std::cout << "Throughput: " << kNumEngines * gbps << " GB/s\n\n";
     for (int eng = 0; eng < kNumEngines; eng++) {
       std::cout << "TP breakdown for engine #" << eng << " (GB/s)\n";

@@ -15,7 +15,7 @@
          {
            "id": "dpc_reduce",
            "steps": [
-	       "export I_MPI_CXX=dpcpp",
+	       "export I_MPI_CXX=icpx",
  	       "mkdir build",
  			   "cd build",
  			   "cmake ..",
@@ -24,7 +24,8 @@
               ]
             }
       ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }
 
 
