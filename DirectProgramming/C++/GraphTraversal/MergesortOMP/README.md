@@ -2,8 +2,6 @@
 
 The `MergeSort OMP` sample uses merge sort, which is a comparison-based sorting algorithm. In this sample, we use a top-down implementation, which recursively splits the list into two halves (called sublists) until each sublist is size 1.
 
-The function of mergesort(X+(n/2), n-(n/2), tmp);. //Wait for both paralel tasks to complete execution. #pragma omp taskwait. /* merge sorted halves into sorted list */.
-
 >**Note**: For more details, see the [Merge sort](http://en.wikipedia.org/wiki/Merge_sort) article on the algorithm and top-down implementation.
 
 | Area                  | Description
