@@ -1,5 +1,9 @@
 # Introduction to Ray Tracing with Intel&reg; Embree
 
+Intel® Embree is a collection of high performance ray tracing kernels that helps graphics application engineers to improve the performance of their photorealistic rendering application.
+
+Embree is released as open source under the Apache2.0  https://www.apache.org/licenses/LICENSE-2.0
+
 ## Purpose
 This sample demonstrates building and running a basic geometric ray tracing
 application with Intel&reg; Embree.
