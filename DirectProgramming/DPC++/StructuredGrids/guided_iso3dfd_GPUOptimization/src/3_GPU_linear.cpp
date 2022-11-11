@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <string>
 
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 
   // Create queue and print target info with default selector and in order
   // property
-  queue q(default_selector{}, {property::queue::in_order()});
+  queue q(default_selector_v, {property::queue::in_order()});
   std::cout << " Running linear indexed GPU version\n";
   printTargetInfo(q);
 

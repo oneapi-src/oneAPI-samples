@@ -28,7 +28,7 @@ This sample is an Artificial Intelligence (AI) algorithm that uses LIDAR point c
 |:---                               |:---
 | OS                                | Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 (or newer) <br>  Intel® Iris® X<sup>e</sup> graphics
-| Software                          | Intel® oneAPI Base Toolkit (2021.2 or newer) <br> Intel® Distribution of OpenVINO™ toolkit (2021.1 or newer)
+| Software                          | Intel® oneAPI Base Toolkit (2021.2 or newer) <br> Intel® Distribution of OpenVINO™ toolkit (2022.1 or newer)
 
 Additionally, you must install the following:
 
@@ -80,12 +80,19 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 ### On Linux
 
-1. Change to the sample directory.
-2. Build the program.
+1. Build the OpenCL dependencies
+```
+cd /tmp
+git clone --recursive https://github.com/KhronosGroup/OpenCL-SDK.git
+cd OpenCL-SDK && mkdir build && cd build
+cmake .. -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DOPENCL_SDK_BUILD_OPENGL_SAMPLES=OFF -DOPENCL_SDK_TEST_SAMPLES=OFF -DOPENCL_SDK_BUILD_SAMPLES=OFF -DCMAKE_INSTALL_PREFIX=$HOME/local
+make install
+```
+2. Change to the sample directory.
+3. Build the program.
    ```
-   mkdir build
-   cd build
-   cmake ..
+   mkdir build && cd build
+   cmake .. -DCMAKE_PREFIX_PATH=$HOME/local
    make
    ```
 > **Note***: cmake will download the **ONNX models** required for the two inference steps executed with the Intel® Distribution of OpenVINO™ toolkit.

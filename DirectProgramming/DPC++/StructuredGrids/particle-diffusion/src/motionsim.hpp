@@ -22,7 +22,7 @@ constexpr float sigma = 0.03f;  // Standard Deviation
 #include <unistd.h>
 #endif  // !WINDOWS
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cmath>
 #include <iomanip>
 #include <iostream>

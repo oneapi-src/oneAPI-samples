@@ -1,6 +1,6 @@
 //==============================================================
 // This sample provides a parallel implementation of a merge based sparse matrix
-// and vector multiplication algorithm using DPC++. The input matrix is in
+// and vector multiplication algorithm using SYCL. The input matrix is in
 // compressed sparse row format.
 //==============================================================
 // Copyright © Intel Corporation
@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <map>
 #include <set>
@@ -377,7 +377,7 @@ int main() {
   float *carry_value;
 
   try {
-    queue q{default_selector{}, dpc_common::exception_handler};
+    queue q{default_selector_v};
     auto device = q.get_device();
 
     cout << "Device: " << device.get_info<info::device::name>() << "\n";

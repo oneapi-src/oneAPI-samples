@@ -13,23 +13,23 @@
 // conditions.. Using Data Parallel C++, the sample can explicitly run on the
 // GPU and/or CPU to propagate a seismic wave which is a compute intensive task.
 // If successful, the output will print the device name
-// where the DPC++ code ran along with the grid computation metrics - flops
+// where the SYCL code ran along with the grid computation metrics - flops
 // and effective throughput.
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// DPC++ Queues (including device selectors and exception handlers)
-// DPC++ Custom device selector
-// DPC++ Buffers and accessors (communicate data between the host and the
+// SYCL Queues (including device selectors and exception handlers)
+// SYCL Custom device selector
+// SYCL Buffers and accessors (communicate data between the host and the
 // device)
-// DPC++ Kernels (including parallel_for function and nd-range<3>
+// SYCL Kernels (including parallel_for function and nd-range<3>
 // objects)
-// Shared Local Memory (SLM) optimizations (DPC++)
-// DPC++ Basic synchronization (barrier function)
+// Shared Local Memory (SLM) optimizations (SYCL)
+// SYCL Basic synchronization (barrier function)
 //
 #include "iso3dfd.h"
 
@@ -95,7 +95,7 @@ void Iso3dfdIterationSLM(sycl::nd_item<3> it, float *next, float *prev,
     c[iter] = coeff[iter];
   }
 
-  // Shared Local Memory (SLM) optimizations (DPC++)
+  // Shared Local Memory (SLM) optimizations (SYCL)
   // Set some flags to indicate if the current work-item
   // should read from global memory to shared local memory buffer
   // or not
@@ -107,7 +107,7 @@ void Iso3dfdIterationSLM(sycl::nd_item<3> it, float *next, float *prev,
   if (id0 < kHalfLength) copy_halo_x = true;
 
   for (auto i = begin_z; i < end_z; i++) {
-    // Shared Local Memory (SLM) optimizations (DPC++)
+    // Shared Local Memory (SLM) optimizations (SYCL)
     // If work-item is flagged to read into SLM buffer
     if (copy_halo_y) {
       tab[identifiant - kHalfLength * stride] = prev[gid - kHalfLength * nx];
@@ -119,7 +119,7 @@ void Iso3dfdIterationSLM(sycl::nd_item<3> it, float *next, float *prev,
     }
     tab[identifiant] = front[0];
 
-    // DPC++ Basic synchronization (barrier function)
+    // SYCL Basic synchronization (barrier function)
     // Force synchronization within a work-group
     // using barrier function to ensure
     // all the work-items have completed reading into the SLM buffer
@@ -163,7 +163,7 @@ void Iso3dfdIterationSLM(sycl::nd_item<3> it, float *next, float *prev,
       front[iter] = front[iter + 1];
     }
 
-    // DPC++ Basic synchronization (barrier function)
+    // SYCL Basic synchronization (barrier function)
     // Force synchronization within a work-group
     // using barrier function to ensure that SLM buffers
     // are not overwritten by next set of work-items
@@ -301,7 +301,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
   auto grid_size = nxy * n3;
 
   {  // Begin buffer scope
-    // Create buffers using DPC++ class buffer
+    // Create buffers using SYCL class buffer
     buffer b_ptr_next(ptr_next, range(grid_size));
     buffer b_ptr_prev(ptr_prev, range(grid_size));
     buffer b_ptr_vel(ptr_vel, range(grid_size));
@@ -320,7 +320,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
         // Define local and global range
 
         // Define local ND range of work-items
-        // Size of each DPC++ work-group selected here is a product of
+        // Size of each SYCL work-group selected here is a product of
         // n2_block and n1_block which can be controlled by the input
         // command line arguments
         auto local_nd_range = range(1, n2_block, n1_block);
@@ -344,10 +344,10 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
 
 #ifdef USE_SHARED
         // Using 3D-stencil kernel with Shared Local Memory (SLM)
-        // optimizations (DPC++) to improve effective FLOPS to BYTES
+        // optimizations (SYCL) to improve effective FLOPS to BYTES
         // ratio. By default, SLM code path is disabled in this
         // code sample.
-        // SLM code path can be enabled by recompiling the DPC++ source
+        // SLM code path can be enabled by recompiling the SYCL source
         // as follows:
         // cmake -DSHARED_KERNEL=1 ..
         // make -j`nproc`
@@ -362,7 +362,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
         accessor<float, 1, access::mode::read_write, access::target::local> tab(
             local_range, h);
 
-        // Send a DPC++ kernel (lambda) for parallel execution
+        // Send a SYCL kernel (lambda) for parallel execution
         // The function that executes a single iteration is called
         // "Iso3dfdIterationSLM"
         // alternating the 'next' and 'prev' parameters which effectively
@@ -389,7 +389,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
         // Use Global Memory version of the 3D-Stencil kernel.
         // This code path is enabled by default
 
-        // Send a DPC++ kernel (lambda) for parallel execution
+        // Send a SYCL kernel (lambda) for parallel execution
         // The function that executes a single iteration is called
         // "Iso3dfdIterationGlobal"
         // alternating the 'next' and 'prev' parameters which effectively

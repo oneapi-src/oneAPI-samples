@@ -2,16 +2,16 @@
 // Vector Add is the equivalent of a Hello, World! sample for data parallel
 // programs. Building and running the sample verifies that your development
 // environment is setup correctly and demonstrates the use of the core features
-// of DPC++. This sample runs on both CPU and GPU (or FPGA). When run, it
+// of SYCL. This sample runs on both CPU and GPU (or FPGA). When run, it
 // computes on both the CPU and offload device, then compares results. If the
 // code executes on both CPU and offload device, the device name and a success
 // message are displayed. And, your development environment is setup correctly!
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide and search based on
 // relevant terms noted in the comments.
 //
-// DPC++ material used in the code sample:
+// SYCL material used in the code sample:
 // •	A one dimensional array of data shared between CPU and offload device.
 // •	A device queue and kernel.
 //==============================================================
@@ -48,7 +48,7 @@ static auto exception_handler = [](sycl::exception_list e_list) {
 };
 
 //************************************
-// Vector add in DPC++ on device: returns sum in 4th parameter "sum".
+// Vector add in SYCL on device: returns sum in 4th parameter "sum".
 //************************************
 void VectorAdd(queue &q, const int *a, const int *b, int *sum, size_t size) {
   // Create the range object for the arrays.
@@ -59,10 +59,10 @@ void VectorAdd(queue &q, const int *a, const int *b, int *sum, size_t size) {
   //    1st parameter is the number of work items.
   //    2nd parameter is the kernel, a lambda that specifies what to do per
   //    work item. the parameter of the lambda is the work item id.
-  // DPC++ supports unnamed lambda kernel by default.
+  // SYCL supports unnamed lambda kernel by default.
   auto e = q.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
 
-  // q.parallel_for() is an asynchronous call. DPC++ runtime enqueues and runs
+  // q.parallel_for() is an asynchronous call. SYCL runtime enqueues and runs
   // the kernel asynchronously. Wait for the asynchronous call to complete.
   e.wait();
 }
@@ -82,10 +82,10 @@ int main(int argc, char* argv[]) {
   if (argc > 1) array_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
-  // DPC++ extension: FPGA emulator selector on systems without FPGA card.
+  // Intel extension: FPGA emulator selector on systems without FPGA card.
   ext::intel::fpga_emulator_selector d_selector;
 #elif FPGA
-  // DPC++ extension: FPGA selector on systems with FPGA card.
+  // Intel extension: FPGA selector on systems with FPGA card.
   ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
     // Compute the sum of two arrays in sequential for validation.
     for (size_t i = 0; i < array_size; i++) sum_sequential[i] = a[i] + b[i];
 
-    // Vector addition in DPC++.
+    // Vector addition in SYCL.
     VectorAdd(q, a, b, sum_parallel, array_size);
 
     // Verify that the two arrays are equal.
