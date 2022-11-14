@@ -46,35 +46,35 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The adaptive noise reduction (ANR) algorithm uses an input image that is in a Bayer format. (See the [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter) Wikipedia article for more information.)  Unlike image formats you may be used to, like PNG or JPG, where each pixel has a red, green, and blue value (RGB), each pixel in a Bayer format image is either red, green, or blue. (See the image below.) To convert to an RGB image, one must operate on a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green as the human eye is more sensitive to green.
 
-![Bayer format](bayer.png)
+![Bayer format](assets/bayer.png)
 
 The ANR algorithm uses a bilateral filter. Unilateral filters (for example, a Box blur or Gaussian blur) replace the intensity of a given pixel with a weighted average of the neighboring pixels; the weight of each neighboring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighboring pixel depends on both the spatial distance and the difference in pixel intensity. This difference makes bilateral filters better at preserving sharp edges. (See the [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter), [Box blur](https://en.wikipedia.org/wiki/Box_blur), and [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) Wikipedia articles for more information.)
 
 Bilateral filters are non-linear and therefore non-separable. In the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation. This difference is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and combine the entire window of the given pixel color (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed.
 
-![converted](conv.png)
+![converted](assets/conv.png)
 
 This produces a long chain of adders to sum the results of the multiplications. The design approximates a bilateral filter by making it separable. The first step is to apply a 1D vertical filter to the middle pixel and then a 1D horizontal filter, as shown in the image below. This approach reduces the number of multiplications needing to be summed together to 3. The code in the design applies vertical filter to *all* pixels first and then applies the horizontal filter, which results in the *corner* pixels indirectly applying some weight to the middle pixel.
 
-![Bilateral Estimate](bilateral_estimate.png)
+![Bilateral Estimate](assets/bilateral_estimate.png)
 
 ### ANR FPGA Design
 The ANR algorithm is designed as a streaming kernel system with input pixels streaming through the input pipe, and the denoised output pixels streaming out the output pipe, as shown in the figure below. The design consists of two kernels, `Vertical Kernel` and `Horizontal Kernel`, that are connected by an internal SYCL pipe, as shown in the figure below. The `Vertical Kernel` computes an intensity sigma value based on the current pixel, computes the bilateral filter, and applies it to the current window to produce an intermediate pixel value. The `Vertical Kernel` kernel sends three values through the internal pipe: the original pixel value, the current pixel value (the intermediate pixel that was just computed), and the intensity sigma value. The `Horizontal Kernel` streams in these tuples and performs a similar computation on a horizontal window. The algorithm uses the forwarded intensity sigma value to compute the bilateral filer, the new pixel values to perform the bilateral filter computation, and the original pixel to perform *alpha blending*, where the output pixel is a weighted percentage of the original pixel value and the denoised pixel value.
 
-![ANR design](anr_ip.png)
+![ANR design](assets/anr_ip.png)
 
 To compute a given pixel, the `Vertical Kernel` must store previous rows (lines) of the input image. (The image shows the technique.) The pixels are streamed in from the pipe and used with pixels from previous rows to perform the 1D vertical window operation.
 
-![Vertical kernel](vertical_kernel.png)
+![Vertical kernel](assets/vertical_kernel.png)
 
 
 The logic for the `Horizontal Kernel`, shown below, is simpler since it operates on a single row at a time.
 
-![Horizontal kernel](horizontal_kernel.png)
+![Horizontal kernel](assets/horizontal_kernel.png)
 
 To produce the input data and consume the output, the design sets up a full system as shown in the figure below. The `Input Kernel` reads input data from device memory and provides it to the ANR design via the input pipe. The `Output Kernel` reads the output from the ANR design from the output pipe and writes it to device memory. The oneAPI host code then uses the output data to validate the accuracy of the ANR algorithm against a golden result using Peak signal-to-noise ratio (PSNR). (See the [Peak signal-to-noise ratio (PSNR)](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio) Wikipedia article for more information.)
 
-![ANR system](anr_system.png)
+![ANR system](assets/anr_system.png)
 
 ### Quantized Floating-Point (QFP)
 Floating-point values consist of a sign bit, an exponent, and a mantissa. In this design, we take 32-bit single-precision floating values and convert them to quantized floating-point (QFP) values, which use fewer bits. (See the [32-bit single-precision](https://en.wikipedia.org/wiki/Single-precision_floating-point_format) Wikipedia article for more information.)
@@ -140,7 +140,7 @@ The design uses the following generic header files.
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
 
    ```
    mkdir build
@@ -175,7 +175,7 @@ The design uses the following generic header files.
 >**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
    ```
    mkdir build
    cd build
