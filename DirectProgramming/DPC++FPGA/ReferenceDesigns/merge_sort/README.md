@@ -68,11 +68,11 @@ The merge unit looks at the two inputs of size `k` coming from the `ProduceA` an
 
 >**Note**: You can find more information about this design in the paper *[A High Performance FPGA-Based Sorting Accelerator with a Data Compression Mechanism](https://www.researchgate.net/publication/316604001_A_High_Performance_FPGA-Based_Sorting_Accelerator_with_a_Data_Compression_Mechanism)* by Ryohei Kobayashi and Kenji Kise.
 
-![way_merge_unit](k-assets/way_merge_unit.png)
+![way_merge_unit](assets/k-way_merge_unit.png)
 
 To achieve thread-level parallelism, the merge sort design accepts a template parameter, `units`, which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Before the merge units start processing data, the incoming data coming from the input pipe is sent through a bitonic sorting network and written to the temporary buffer partitions in device memory. This sorting network sorts `k` elements per cycle in the steady state. Choosing the number of merge units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). Each merge unit sorts an `N/units`-sized partition of the input data in parallel.
 
-![parallel_tree_bitonic_k-way](parallel_tree_bitonic_k-assets/way.png)
+![parallel_tree_bitonic_k-way](assets/parallel_tree_bitonic_k-way.png)
 
 After the merge units sort their `N/units`-sized partition, the partitions of each unit must be reduced into a single sorted list. There are two options to do this: (1) reuse the merge units to perform `lg(units)` more iterations to sort the partitions, or (2) create a merge tree to reduce the partitions into a single sorted list. Option (1) saves area at the expense of performance, since it has to perform additional sorting iterations. Option (2), which we choose for this design, improves performance by creating a merge tree to reduce the final partitions into a single sorted list. The `Merge` kernels in the merge tree (shown in the figure above) use the same kernel code that is used in the `Merge` kernel of the merge unit, which means they too can merge `k` elements per cycle. Once the merge units perform their last iteration, they output to a pipe (instead of writing to device memory) that feeds the merge tree.
 
