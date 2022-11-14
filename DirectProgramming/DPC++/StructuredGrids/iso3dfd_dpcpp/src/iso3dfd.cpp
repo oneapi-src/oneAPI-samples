@@ -12,23 +12,23 @@
 // in space, 2nd order in time scheme without boundary conditions. Using Data
 // Parallel C++, the sample can explicitly run on the GPU and/or CPU to
 // calculate a result.  If successful, the output will print the device name
-// where the DPC++ code ran along with the grid computation metrics - flops
+// where the SYCL code ran along with the grid computation metrics - flops
 // and effective throughput
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// DPC++ Queues (including device selectors and exception handlers)
-// DPC++ Custom device selector
-// DPC++ Buffers and accessors (communicate data between the host and the
+// SYCL Queues (including device selectors and exception handlers)
+// SYCL Custom device selector
+// SYCL Buffers and accessors (communicate data between the host and the
 // device)
-// DPC++ Kernels (including parallel_for function and nd-range<3>
+// SYCL Kernels (including parallel_for function and nd-range<3>
 // objects)
-// Shared Local Memory (SLM) optimizations (DPC++)
-// DPC++ Basic synchronization (barrier function)
+// Shared Local Memory (SLM) optimizations (SYCL)
+// SYCL Basic synchronization (barrier function)
 //
 #include "iso3dfd.h"
 #include <iostream>
@@ -76,7 +76,7 @@ void Initialize(float* ptr_prev, float* ptr_next, float* ptr_vel, size_t n1,
  * Host-Code
  * OpenMP implementation for single iteration of iso3dfd kernel.
  * This function is used as reference implementation for verification and
- * also to compare performance of OpenMP and DPC++ on CPU
+ * also to compare performance of OpenMP and SYCL on CPU
  * Additional Details:
  * https://software.intel.com/en-us/articles/eight-optimizations-for-3-dimensional-finite-difference-3dfd-code-with-an-isotropic-iso
  */
@@ -259,7 +259,7 @@ int main(int argc, char* argv[]) {
     PrintStats(t_ser.Elapsed() * 1e3, n1, n2, n3, num_iterations);
   }
 
-  // Check if running both OpenMP/Serial and DPC++ version
+  // Check if running both OpenMP/Serial and SYCL version
   // Keeping a copy of output buffer from OpenMP version
   // for comparison
   if (omp && sycl) {
@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
       memcpy(temp, prev_base, nsize * sizeof(float));
   }
 
-  // Check if running DPC++/SYCL version
+  // Check if running SYCL version
   if (sycl) {
     std::cout << " ***** Running SYCL variant *****\n";
     // Initialize arrays and introduce initial conditions (source)
@@ -287,12 +287,12 @@ int main(int argc, char* argv[]) {
       pattern.replace(0, 3, pattern_gpu);
     }
 
-    // Create a custom device selector using DPC++ device selector class
+    // Create a custom device selector using SYCL device selector class
     MyDeviceSelector device_sel(pattern);
 
-    // Create a device queue using DPC++ class queue with a custom
+    // Create a device queue using SYCL class queue with a custom
     // device selector
-    queue q(device_sel, dpc_common::exception_handler);
+    queue q(device_sel);
 
     // Validate if the block sizes selected are
     // within range for the selected SYCL device
@@ -305,7 +305,7 @@ int main(int argc, char* argv[]) {
     dpc_common::TimeInterval t_dpc;
 
     // Invoke the driver function to perform 3D wave propogation
-    // using DPC++ version on the selected SYCL device
+    // using SYCL version on the selected device
     Iso3dfdDevice(q, next_base, prev_base, vel_base, coeff, n1, n2, n3,
                   n1_block, n2_block, n3_block, n3 - kHalfLength,
                   num_iterations);
@@ -317,7 +317,7 @@ int main(int argc, char* argv[]) {
     PrintStats(t_dpc.Elapsed() * 1e3, n1, n2, n3, num_iterations);
   }
 
-  // If running both OpenMP/Serial and DPC++ version
+  // If running both OpenMP/Serial and SYCL version
   // Comparing results
   if (omp && sycl) {
     if (num_iterations % 2) {

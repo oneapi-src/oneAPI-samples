@@ -9,12 +9,12 @@
  * then compares results. If the code executes on both CPU and the offload
  * device, the name of the offload device and a success message are displayed.
  *
- * For comprehensive instructions regarding DPC++ Programming, go to
+ * For comprehensive instructions regarding SYCL Programming, go to
  * https://software.intel.com/en-us/oneapi-programming-guide and search based on
  * relevant terms noted in the comments.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 
@@ -52,7 +52,7 @@ int main() {
   // Initialize the device queue with the default selector. The device queue is
   // used to enqueue kernels. It encapsulates all states needed for execution.
   try {
-    queue q(default_selector{}, dpc_common::exception_handler);
+    queue q(default_selector_v);
 
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
@@ -126,7 +126,7 @@ int main() {
   }
 
   int result;
-  cout << "Result of matrix multiplication using DPC++: ";
+  cout << "Result of matrix multiplication using SYCL: ";
   result = VerifyResult(c_back);
   delete[] c_back;
 

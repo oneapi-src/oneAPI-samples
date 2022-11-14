@@ -246,11 +246,14 @@ cache has been created.
     which is why we only have a single executable for this flow.
 2. Run the sample on the FPGA simulation device (two executables should be generated):
      ```
-     ./read_only_cache_disabled.fpga_sim         (Linux)
-     ./read_only_cache_enabled.fpga_sim          (Linux)
-     read_only_cache_disabled.fpga_sim.exe       (Windows)
-     read_only_cache_enabled.fpga_sim.exe        (Windows)
+     ./read_only_cache.fpga_sim         (Linux)
+     read_only_cache.fpga_sim.exe       (Windows)
      ```
+    Note although the circuit for the read-only cache is implemented in 
+    simulation, one cannot see consistent performance increase with the cache 
+    enabled as each clock cycle in the simulator doesn't have a consistent 
+    latency, as it does in the hardware. For this reason there is just a single
+    executable for this flow.
 3. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./read_only_cache_disabled.fpga         (Linux)

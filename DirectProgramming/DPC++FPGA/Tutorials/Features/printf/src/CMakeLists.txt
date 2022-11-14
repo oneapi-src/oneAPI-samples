@@ -26,10 +26,10 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-# use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
+# use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA simulator and backend compilation
 
 ###############################################################################
 ### FPGA Emulator
@@ -51,7 +51,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile in a single command:
 #    icpx -fsycl -fintelfpga -DFPGA_SIMULATOR printf.cpp -o printf.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_EMULATOR -o printf.cpp.o -c printf.cpp
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o printf.cpp.o -c printf.cpp
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} printf.cpp.o -o printf.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)

@@ -9,7 +9,7 @@
 #include<oneapi/dpl/ranges>
 #include<iostream>
 #include<vector>
-#include<CL/sycl.hpp>
+#include<sycl/sycl.hpp>
 
 using namespace sycl;
 using namespace oneapi::dpl::experimental::ranges;
