@@ -197,6 +197,10 @@ When working with the command-line interface (CLI), you should configure the one
 
 >**Note**: You can get the common resources from the [oneAPI-samples](/common) GitHub repository.
 
+### Include Files
+
+The FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](/DirectProgramming/DPC++FPGA/include) folder.
+
 ### Use Visual Studio Code* (VS Code) (Optional)
 
 You can use Visual Studio Code* (VS Code) extensions to set your environment,
