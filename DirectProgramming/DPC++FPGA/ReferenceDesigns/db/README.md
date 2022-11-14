@@ -14,6 +14,27 @@ The database query acceleration sample includes 8 tables and a set of 21 busines
 
 ## Prerequisites
 
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 4 sample that demonstrates a reference design.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
@@ -21,6 +42,12 @@ The database query acceleration sample includes 8 tables and a set of 21 busines
 | Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 
 > **Note**: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX).
+
+### Performance
+
+In this design, we accelerate four database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
+
+> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/DPC++FPGA/README.md#performance-disclaimers) section for important performance information.
 
 ## Key Implementation Details
 
@@ -30,17 +57,13 @@ The key optimization techniques used in this design include:
 2. Improving code reuse, readability, and extendability using C++ templates for FPGA device code.
 3. Showcasing the usage of advanced FPGA optimizations listed above to improve the performance of a large design.
 
-This design leverages concepts discussed in FPGA tutorials located in the [https://github.com/oneapi-src/oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples) GitHub repository to optimize the different database queries,.
+This design leverages concepts discussed in the [FPGA tutorials](/DirectProgramming/DPC++FPGA/Tutorials) to optimize the different database queries,.
 
 * *Shannonization to improve Fmax/II* (shannonization)
 * *Optimizing Inner Loop Throughput* (optimize_inner_loop)
 * *Caching On-Chip Memory to Improve Loop Performance* (onchip_memory_cache)
 * *Unrolling Loops* (loop_unroll)
 * *Loop `ivdep` Attribute* (loop_ivdep)
-
-### Performance
-
-In this design, we accelerate four database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
 
 ### Query Implementations
 
@@ -54,19 +77,19 @@ Query 1 is the simplest of the four queries and only uses the `Accumulator` data
 
 Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin`, and `FifoSort`). The block diagram of the design is shown below.
 
-![](q9.png)
+![](assets/q9.png)
 
 #### Query 11
 
 Query 11 showcases the `MapJoin` and `FifoSort` database operators. The block diagram of the design is shown below.
 
-![](q11.png)
+![](assets/q11.png)
 
 #### Query 12
 
 Query 12 showcases the `MergeJoin` database operator. The block diagram of the design is shown below.
 
-![](q12.png)
+![](assets/q12.png)
 
 ### Source Code Breakdown
 | File                                  | Description
@@ -93,20 +116,11 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 |`db_utils/Tuple.hpp`                   | A templated tuple that behaves better on the FPGA than the std::tuple
 |`db_utils/Unroller.hpp`                | A templated-based loop unroller that unrolls loops in the front end
 
-### Additional Documentation
-
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
-- [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
-
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
 ## Build the `DB` Reference Design
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -114,29 +128,14 @@ When working with the command-line interface (CLI), you should configure the one
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
-### Use Visual Studio Code* (VS Code) (Optional)
-
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- 3. Open a terminal in VS Code (**Terminal > New Terminal**).
- 4. Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see the 
-[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
 ### On Linux*
 1. Change to the sample directory.
-2. Build the program for query number 1.
+2. Configure the build system for query number 1.
    ```
    mkdir build
    cd build
@@ -172,7 +171,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 >**Note**: The FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 1. Change to the sample directory.
-2. Build the program for query number 1.
+2. Configure the build system for query number 1.
    ```
    mkdir build
    cd build
@@ -200,16 +199,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
        nmake fpga
        ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
-#### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
 
 ## Run the `DB` Reference Design
 
@@ -249,38 +238,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    db.fpga.exe --dbroot=../data/sf1 --test
    ```
-### Build and Run the Samples on Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify an FPGA runtime node using a single line script similar to the following example.
-
-```
-qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes           |Command Options
-  |:---                      |:---
-  |FPGA Compile Time         |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime (Stratix 10) |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
-  |GPU	                    |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	                    |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to **24 hours**.
-
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:stratix10`.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
 
 ## Example Output
 
@@ -355,7 +312,6 @@ As of September 12, 2022, you should be able to perform the following steps:
 
 ## License
 
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).
