@@ -47,6 +47,16 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Hardware           |Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software           | Intel® oneAPI DPC++/C++ Compiler  <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 
+### Performance
+
+Performance results are based on testing as of February 25, 2022.
+
+> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/DPC++FPGA/README.md#performance-disclaimers) section for important performance information.
+
+| Device                                            | Throughput
+|:---                                               |:---
+| Intel® PAC with Intel Arria® 10 GX FPGA           | 221k matrices/s for real matrices of size 32x32
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 214k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
@@ -66,15 +76,6 @@ The following list shows the key optimization techniques included in the referen
 6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
 7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
-### Performance
-
-> **Note**: Please refer to the [Performance Disclaimers](#performance-disclaimers) section below for important information.
-
-| Device                                            | Throughput
-|:---                                               |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA           | 221k matrices/s for real matrices of size 32x32
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 214k matrices/s for real matrices of size 32x32
-
 ### Matrix Dimensions and FPGA Resources
 
 In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the _n_ elements in the row. The loop is fully unrolled to maximize throughput, so *n* real multiplication operations are performed in parallel on the FPGA and followed by sequential additions to compute the dot product result.
@@ -83,7 +84,7 @@ The sample uses the `-fp-relaxed` compiler option, which permits the compiler to
 
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
-### Compiler Options Used in the Design
+### Compiler Flags Used
 
 | Flag                        | Description
 |:---                         |:---
@@ -92,11 +93,16 @@ With this optimization, our FPGA implementation requires _n_ DSPs to compute the
 |`-Xsfp-relaxed`              | Allows the FPGA backend to re-order floating point arithmetic operations (for example, permit assuming $(a + b + c) == (c + a + b)$ )
 |`-Xsparallel=2`              | Use 2 cores when compiling the bitstream through Quartus
 |`-Xsseed`                    | Specifies the Quartus compile seed, to potentially yield slightly higher fmax
-|`-DMATRIX_DIMENSION`         | Specifies the number of rows/columns of the matrix
-|`-DFIXED_ITERATIONS`         | Used to set the ivdep safelen attribute for the performance critical triangular loop
-|`-DCOMPLEX`                  | Used to select between the complex and real QR decomposition (real is the default)
 
-> **Note**: The values for `-Xsseed`, `-DFIXED_ITERATIONS`, `-DMATRIX_DIMENSION`, and `-DCOMPLEX` change depending on the target board.
+Additionaly, the cmake build system can be configured using the following parameters:
+
+| cmake option                | Description
+|:---                         |:---
+|`-DSET_MATRIX_DIMENSION`     | Specifies the number of rows/columns of the matrix
+|`-DSET_FIXED_ITERATIONS`     | Used to set the ivdep safelen attribute for the performance critical triangular loop
+|`-DSET_COMPLEX`              | Used to select between the complex and real QR decomposition (real is the default)
+
+> **Note**: The values for `-Xsseed`, `-DSET_MATRIX_DIMENSION`, `-DSET_FIXED_ITERATIONS`, and `-DSET_COMPLEX` depend on the board being targeted.
 
 ### Source Code
 
@@ -190,7 +196,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
 
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Run the `Cholesky Decomposition` Reference Design
+## Run the `Cholesky Decomposition` Executable
 
 ### Configurable Parameters
 
@@ -255,21 +261,8 @@ Verifying results...
 PASSED
 ```
 
-## Performance Disclaimers
-
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
-
-Performance results are based on testing as of February 25, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
-
-Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software, or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
-
-Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
-
-© Intel Corporation.
-
 ## License
 
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).

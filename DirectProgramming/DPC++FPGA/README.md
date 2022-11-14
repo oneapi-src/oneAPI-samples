@@ -229,7 +229,20 @@ If an error occurs when compiling a sample, you can get more details by running 
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
+## Performance Disclaimers
 
+Tests document performance of components on a particular test, in specific systems and may not reflect all publicly available security updates. 
+Differences in hardware, software, or configuration will affect actual performance. 
+Consult other sources of information to evaluate performance as you consider your purchase. 
+For complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
+See configuration disclosure for details.
+No product or component can be absolutely secure.
+
+Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software, or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](https://www.intel.com).
+
+Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
+
+© Intel Corporation.
 
 ## Build and Run the Samples on Intel® DevCloud (Optional)
 

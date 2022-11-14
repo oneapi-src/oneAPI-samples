@@ -85,7 +85,9 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 
 ### Performance
 
-> **Note**: Please refer to the [Performance Disclaimers](#performance-disclaimers) section below for important information.
+Performance results are based on testing as of Jan 31, 2022.
+
+> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/DPC++FPGA/README.md#performance-disclaimers) section for important performance information.
 
 ## Build the `Board Test` Program
 
@@ -178,7 +180,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
       ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Run the `Board Test` Program
+## Run the `Board Test` Executable
 
 The `Board Test` program checks following interfaces in a platform:
 
@@ -399,21 +401,8 @@ BOARD TEST PASSED
 
 ```
 
-## Performance Disclaimers
-
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
-
-Performance results are based on testing as of Jan 31, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
-
-Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software, or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](https://www.intel.com).
-
-Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
-
-© Intel Corporation.
-
 ## License
 
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).

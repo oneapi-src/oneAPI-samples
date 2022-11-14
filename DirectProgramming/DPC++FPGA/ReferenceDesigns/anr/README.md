@@ -204,7 +204,7 @@ The design uses the following generic header files.
       ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Run the `Adaptive Noise Reduction` Reference Design
+## Run the `Adaptive Noise Reduction` Executable
 
 ### On Linux
 
