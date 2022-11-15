@@ -147,6 +147,10 @@ this readme for instructions on how to build and run a sample.
       ```
       make fpga_emu
       ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -183,6 +187,10 @@ this readme for instructions on how to build and run a sample.
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -222,7 +230,12 @@ Note that because the optimization described in this tutorial occurs at the *run
      ./double_buffering.fpga_emu     (Linux)
      double_buffering.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./double_buffering.fpga_sim     (Linux)
+     double_buffering.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./double_buffering.fpga         (Linux)
      double_buffering.fpga.exe       (Windows)
