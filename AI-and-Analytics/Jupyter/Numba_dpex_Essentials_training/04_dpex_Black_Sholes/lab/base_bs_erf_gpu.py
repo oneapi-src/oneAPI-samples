@@ -8,6 +8,7 @@ import numpy as np
 import sys, json, os
 import dpctl, dpctl.tensor as dpt  # , dpctl.memory as dpmem
 from bs_python import black_scholes_python
+from device_selector import get_device_selector
 
 try:
     from numpy import erf
