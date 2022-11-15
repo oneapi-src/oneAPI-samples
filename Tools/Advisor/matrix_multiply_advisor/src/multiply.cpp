@@ -5,7 +5,7 @@
 // =============================================================
 
 #include <array>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 // matrix multiply routines
 #include "multiply.hpp"
 
