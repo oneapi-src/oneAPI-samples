@@ -46,7 +46,7 @@
  */
 
 // CUDA Runtime
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 // Utilities and system includes

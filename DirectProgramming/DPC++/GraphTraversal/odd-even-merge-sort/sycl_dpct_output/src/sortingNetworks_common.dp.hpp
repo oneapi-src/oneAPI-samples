@@ -35,7 +35,7 @@
 #ifndef SORTINGNETWORKS_COMMON_CUH
 #define SORTINGNETWORKS_COMMON_CUH
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include "sortingNetworks_common.h"
 
