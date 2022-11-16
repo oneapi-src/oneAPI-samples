@@ -25,7 +25,7 @@ for (size_t i = 0; i < kMaxIter; i++) {
   for (size_t j = 0; j < kSize; j++) {
     a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
   }
-  for (size_t j = 0; j < kSize; j++)
+  for (size_t j = 0; j < kSize / 2; j++)
     r += a[j];
 }
 ```
