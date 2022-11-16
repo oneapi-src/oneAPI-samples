@@ -6,6 +6,7 @@ import dpctl
 import base_bs_erf_gpu
 import numba as nb
 from math import log, sqrt, exp, erf
+from device_selector import get_device_selector
 
 # blackscholes implemented as a parallel loop using numba.prange
 @nb.njit(parallel=True, fastmath=True)
@@ -40,7 +41,7 @@ def black_scholes_kernel(nopt, price, strike, t, rate, vol, call, put):
 
 def black_scholes(nopt, price, strike, t, rate, vol, call, put):
     # offload blackscholes computation to GPU (toggle level0 or opencl driver).
-    with dpctl.device_context(base_bs_erf_gpu.get_device_selector()):
+    with dpctl.device_context(get_device_selector(is_gpu=True)):
         black_scholes_kernel(nopt, price, strike, t, rate, vol, call, put)
 
 

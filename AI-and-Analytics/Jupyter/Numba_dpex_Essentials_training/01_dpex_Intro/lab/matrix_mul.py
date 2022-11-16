@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# Copyright 2021 Intel Corporation
+# Copyright Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
 
 from timeit import default_timer as time
 import numpy as np
-import numba_dppy as dppy
+import numba_dpex as dpex
 import dpctl
 
-#***Step1: Uncomment the following lines to enable the dppy.kernel decorator***
-@dppy.kernel
-def dppy_gemm(a, b, c):
+#***Step1: Uncomment the following lines to enable the dpex.kernel decorator***
+@dpex.kernel
+def dpex_gemm(a, b, c):
     """
     A basic DGEMM implemented as a ``kernel`` function.
     """    
-    i = dppy.get_global_id(0)
-    j = dppy.get_global_id(1)
+    i = dpex.get_global_id(0)
+    j = dpex.get_global_id(1)
     if i >= c.shape[0] or j >= c.shape[1]:
         return
     c[i, j] = 0
@@ -44,7 +44,7 @@ blockdim = Y, Y
 
 def driver(a, b, c):
     # Invoke the kernel
-    dppy_gemm[griddim, blockdim](a, b, c)
+    dpex_gemm[griddim, blockdim](a, b, c)
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
     Cans = Amat * Bmat
 
     # Check result
-    #assert np.allclose(c, Cans)
+    assert np.allclose(c, Cans)
 
     print("Done...",c)
 
