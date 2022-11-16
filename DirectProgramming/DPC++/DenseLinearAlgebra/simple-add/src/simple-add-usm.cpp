@@ -75,13 +75,13 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // Intel extension: FPGA emulator selector on systems without FPGA card.
-  const auto& selector = ext::intel::fpga_emulator_selector_v;
+  ext::intel::fpga_emulator_selector selector;
 #elif FPGA
   // Intel extension: FPGA selector on systems with FPGA card.
-  const auto& selector = ext::intel::fpga_selector_v;
+  ext::intel::fpga_selector selector;
 #else
   // The default device selector will select the most performant device.
-  const auto& selector = default_selector_v;
+  auto selector{default_selector_v};
 #endif
 
   constexpr int value = 100000;
