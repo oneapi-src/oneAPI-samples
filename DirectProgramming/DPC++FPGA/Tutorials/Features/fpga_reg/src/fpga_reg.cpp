@@ -16,6 +16,11 @@ using namespace sycl;
 using namespace std;
 
 // Artificial coefficient and offset data for our math function
+#if defined(FPGA_SIMULATOR)
+constexpr size_t kSize = 8;
+constexpr int kCoeff[kSize] = {1,  2,  3,  4,  5,  6,  7,  8};
+constexpr int kOffset[kSize] = {8,  7,  6,  5,  4,  3,  2,  1};
+#else
 constexpr size_t kSize = 64;
 constexpr int kCoeff[kSize] = {
             1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
@@ -27,6 +32,7 @@ constexpr int kOffset[kSize] = {
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1};
+#endif
 
 // The function our kernel will compute
 // The "golden result" will be computed on the host to check the kernel result.
@@ -179,7 +185,11 @@ void RunKernel(const std::vector<int> &vec_a,
 }
 
 int main(int argc, char *argv[]) {
+#if defined(FPGA_SIMULATOR)
+  size_t input_size = 10;
+#else
   size_t input_size = 1e6;
+#endif
 
   // Optional command line override of default input size
   if (argc > 1) {
