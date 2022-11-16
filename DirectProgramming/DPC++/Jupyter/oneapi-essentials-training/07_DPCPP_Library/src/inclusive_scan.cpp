@@ -8,7 +8,6 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 #include <iostream>
-#include <sycl/sycl.hpp>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
