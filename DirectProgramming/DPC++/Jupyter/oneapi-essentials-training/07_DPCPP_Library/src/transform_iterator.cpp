@@ -18,7 +18,7 @@ int main() {
     auto func = [](const auto &x){ return x * 2; };
     auto transform_first = dpl::make_transform_iterator(first, func);
     auto transform_last = transform_first + (last - first);
-    auto sum = std::reduce(dpl::execution::dpcpp_default,
+    auto sum = dpl::reduce(dpl::execution::dpcpp_default,
          transform_first, transform_last); // sum is (0 + -1 + ... + -9) = -45   
     std::cout <<"Reduce output using Transform Iterator: "<<sum << "\n";
     return 0;

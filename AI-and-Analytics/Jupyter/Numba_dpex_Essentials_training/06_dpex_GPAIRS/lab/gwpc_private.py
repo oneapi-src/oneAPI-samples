@@ -143,7 +143,7 @@ def count_weighted_pairs_3d_intel_orig_ker(
 
 @numba_dppy.kernel
 def count_weighted_pairs_3d_intel_agg_ker(result, result_tmp):
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpy.get_global_id(0)
     for j in range(i + 1):
         result[i] += result_tmp[j]
 
