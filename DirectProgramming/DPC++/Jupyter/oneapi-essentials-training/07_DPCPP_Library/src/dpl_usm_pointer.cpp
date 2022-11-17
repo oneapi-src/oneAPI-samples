@@ -17,7 +17,7 @@ int main() {
   int* data = malloc_shared<int>(N, q);
     
   //# Parallel STL algorithm using USM pointer
-  std::fill(make_device_policy(q), data, data + N, 20);
+  oneapi::dpl::fill(make_device_policy(q), data, data + N, 20);
   q.wait();
     
   for (int i = 0; i < N; i++) std::cout << data[i] << "\n";

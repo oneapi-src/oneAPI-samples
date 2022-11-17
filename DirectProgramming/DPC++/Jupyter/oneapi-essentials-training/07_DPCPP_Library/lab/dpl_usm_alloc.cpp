@@ -20,7 +20,7 @@ int main() {
   std::vector<int, decltype(alloc)> v(N, alloc);
     
   //# Parallel STL algorithm with USM allocator
-  std::fill(make_device_policy(q), v.begin(), v.end(), 20);
+  oneapi::dpl::fill(make_device_policy(q), v.begin(), v.end(), 20);
   q.wait();
     
   for (int i = 0; i < v.size(); i++) std::cout << v[i] << "\n";
