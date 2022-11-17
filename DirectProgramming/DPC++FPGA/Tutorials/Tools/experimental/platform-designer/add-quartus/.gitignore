@@ -14,15 +14,6 @@
 add_kernels.qsys
 
 #######################################
-# outputs
-#######################################
-!output_files/
-!output_files/*.sof
-!output_files/*.fit.summary
-!output_files/*.sta.summary
-!output_files/*.sta.rpt
-
-#######################################
 # scripts for testing hardware
 #######################################
 !system_console/

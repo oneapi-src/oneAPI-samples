@@ -1,7 +1,7 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/host_pipes.hpp>
 
@@ -82,7 +82,7 @@ int main() {
 
     std::cout << "add two integers using CSR for input." << std::endl;
 
-    q.single_task<class Add>(Add_Kernel{a, b}).wait();
+    q.single_task<class Add>(Add_Kernel{a, b});
 
     // verify that outputs are correct
     passed = true;
@@ -102,7 +102,7 @@ int main() {
     InputPipeA::write(q, a);
     InputPipeB::write(q, b);
 
-    q.single_task<class AddCSRPipes>(AddCSRPipes_Kernel{}).wait();
+    q.single_task<class AddCSRPipes>(AddCSRPipes_Kernel{});
 
     std::cout << "collect results." << std::endl;
     int calc_addCSRPipes = OutputPipeC::read(q);
