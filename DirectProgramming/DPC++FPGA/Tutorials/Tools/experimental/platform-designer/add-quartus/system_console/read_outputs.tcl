@@ -1,7 +1,7 @@
 #  Copyright (c) 2022 Intel Corporation                                  
 #  SPDX-License-Identifier: MIT                                          
 
-# addresses from hls/tutorial-fpga.prj/componnet/sort_bus/sort_bus_csr.h
+# addresses from 
 
 # clear interrupt flag
 # master_write_32 $master_service_path 0x98 1

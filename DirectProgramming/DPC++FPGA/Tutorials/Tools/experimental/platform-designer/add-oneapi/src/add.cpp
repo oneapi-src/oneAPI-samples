@@ -1,4 +1,5 @@
-#include <iostream>
+#include <iostream> 
+#include <stdlib.h>
 
 // oneAPI headers
 #include <sycl/sycl.hpp>
@@ -10,7 +11,7 @@ using OutputPipe = sycl::ext::intel::prototype::pipe<
     class ID_PipeOut, int, 1,
     // choose defaults for these 4:
     0, 1, true, false,
-    // store the most recently processed index
+    // store the most recently processed index to the CSR
     sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
 class Add_Kernel {
@@ -22,40 +23,6 @@ class Add_Kernel {
     int sum = a + b;
 
     OutputPipe::write(sum);
-  }
-};
-
-// use host pipes to read from addresses in the CSR
-using InputPipeA = sycl::ext::intel::prototype::pipe<
-    class ID_A, int, 1,
-    // choose defaults for these 4:
-    0, 1, true, false,
-    // store the most recently processed index
-    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
-using InputPipeB = sycl::ext::intel::prototype::pipe<
-    class ID_B, int, 1,
-    // choose defaults for these 4:
-    0, 1, true, false,
-    // store the most recently processed index
-    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
-
-// use host pipes to write into addresses in the CSR
-using OutputPipeC = sycl::ext::intel::prototype::pipe<
-    class ID_C, int, 1,
-    // choose defaults for these 4:
-    0, 1, true, false,
-    // store the most recently processed index
-    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
-
-class AddCSRPipes_Kernel {
- public:
-  void operator()() const {
-    int a = InputPipeA::read();
-    int b = InputPipeB::read();
-
-    int sum = a + b;
-
-    OutputPipeC::write(sum);
   }
 };
 
@@ -96,22 +63,6 @@ int main() {
       passed = false;
     }
 
-    std::cout << "add two integers using CSR->pipes for inputs." << std::endl;
-
-    // push data into pipes
-    InputPipeA::write(q, a);
-    InputPipeB::write(q, b);
-
-    q.single_task<class AddCSRPipes>(AddCSRPipes_Kernel{});
-
-    std::cout << "collect results." << std::endl;
-    int calc_addCSRPipes = OutputPipeC::read(q);
-
-    std::cout << "AddCSR sum =" << calc_addCSRPipes << ", expected ("
-              << expectedSum << ")" << std::endl;
-    if (calc_addCSRPipes != expectedSum) {
-      passed = false;
-    }
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code.
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";

@@ -64,7 +64,7 @@ Follow these steps to compile and test the design:
 
 2. Copy the oneAPI-generated IP to the IntelQuartus® project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels will have their own reports and associated RTL. You will therefore need to hunt for the `.prj_X` directory that contains the IP you want to use in your design.
 
-   You can identify the correct `.prj_X` folder by looking for the one that contains a `*_di_inst.v` whose interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` and `add_xample.fpga_ip.prj_5` are the correct `.prj_x` directories, because `add_example_fpga_ip_1_di_inst.v` and `add_example_fpga_ip_5_di_inst.v` both contain only a CSR Agent interface in addition to the clock/reset signals:
+   You can identify the correct `.prj_X` folder by looking for the one that contains a `*_di_inst.v` whose interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` is the correct `.prj_x` directory, because `add_example_fpga_ip_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
    
    ```
    add_example_fpga_ip_1_di add_example_fpga_ip_1_di_inst (
@@ -94,14 +94,12 @@ Follow these steps to compile and test the design:
 
    ```
    cp -r add-oneapi/build/add.fpga_ip_export.prj_1/ add-quartus/
-   cp -r add-oneapi/build/add.fpga_ip_export.prj_5/ add-quartus/
    ```
 
    Windows:
 
    ```
    xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
-   xcopy add-oneapi\build\add.fpga_ip_export.prj_5\ add-quartus\add.fpga_ip_export.prj_5 /e /s /i
    ```
 
 3. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the generated .prj directory.
@@ -114,12 +112,6 @@ Follow these steps to compile and test the design:
    Success! Adjusted add_fpga_ip_export_1_di_hw.tcl file!
    The adjustment log is in: adjustments_di_hw_tcl.log
    The original file is in: add_fpga_ip_export_1_di_hw.tcl_original
-   $> cd ..
-   $> cd add.fpga_ip_export.prj_5
-   $> python add_fpga_ip_export_5_di_hw_tcl_adjustment_script.py 
-   Success! Adjusted add_fpga_ip_export_5_di_hw.tcl file!
-   The adjustment log is in: adjustments_di_hw_tcl.log
-   The original file is in: add_fpga_ip_export_5_di_hw.tcl_original
    ```
 
 4. **From a shell with oneAPI environment**, launch the Intel® Quartus® Prime GUI with the included Quartus® project file. It's easiest to use the same shell you used to compile the `add_example` oneAPI design.
@@ -148,7 +140,7 @@ Follow these steps to compile and test the design:
    * Basic Functions > Bridges and Adaptors > Reset > Reset Bridge Intel® FPGA IP
    * Basic Functions > Bridges and Adaptors > Memory Mapped > JTAG to Avalon Master Bridge Intel® FPGA IP
 
-7. Add the oneAPI IPs to your system and connect them as shown:
+7. Add the oneAPI IP to your system and connect it as shown:
 
    ![](Readme.md.assets/add-ip-platform-designer.png)
 
