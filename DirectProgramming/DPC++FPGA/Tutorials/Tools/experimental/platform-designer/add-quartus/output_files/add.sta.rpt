@@ -1,5 +1,5 @@
 Timing Analyzer report for add
-Tue Nov 15 06:35:46 2022
+Tue Nov 15 07:06:01 2022
 Quartus Prime Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
 
 
@@ -197,8 +197,8 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------+--------+
 ; Processors                 ; Number ;
 +----------------------------+--------+
-; Number detected on machine ; 48     ;
-; Maximum allowed            ; 24     ;
+; Number detected on machine ; 4      ;
+; Maximum allowed            ; 4      ;
 +----------------------------+--------+
 
 
@@ -207,12 +207,12 @@ https://fpgasoftware.intel.com/eula.
 +------------------------------------------------------------------------------------------------------------+----------+----------+--------+--------------------------+-----------------+
 ; SDC File Path                                                                                              ; Instance ; Promoted ; Status ; Read at                  ; Processing Time ;
 +------------------------------------------------------------------------------------------------------------+----------+----------+--------+--------------------------+-----------------+
-; add_kernels/altera_reset_controller_1921/synth/altera_reset_controller.sdc                                 ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
-; jtag.sdc                                                                                                   ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
-; add.sdc                                                                                                    ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
-; ip/add_kernels/add_kernels_master_0/altera_jtag_dc_streaming_191/synth/altera_avalon_st_jtag_interface.sdc ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
-; ip/add_kernels/add_kernels_master_0/altera_reset_controller_1921/synth/altera_reset_controller.sdc         ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
-; /p/psg/swip/releases5/acds/22.3/104/linux64/ip/altera/sld/jtag/altera_jtag_wys_atom/default_jtag.sdc       ;          ; No       ; OK     ; Tue Nov 15 06:35:44 2022 ; 00:00:00        ;
+; add_kernels/altera_reset_controller_1921/synth/altera_reset_controller.sdc                                 ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:01        ;
+; jtag.sdc                                                                                                   ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:00        ;
+; add.sdc                                                                                                    ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:00        ;
+; ip/add_kernels/add_kernels_master_0/altera_jtag_dc_streaming_191/synth/altera_avalon_st_jtag_interface.sdc ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:00        ;
+; ip/add_kernels/add_kernels_master_0/altera_reset_controller_1921/synth/altera_reset_controller.sdc         ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:00        ;
+; /p/psg/swip/releases5/acds/22.3/104/linux64/ip/altera/sld/jtag/altera_jtag_wys_atom/default_jtag.sdc       ;          ; No       ; OK     ; Tue Nov 15 07:06:00 2022 ; 00:00:00        ;
 +------------------------------------------------------------------------------------------------------------+----------+----------+--------+--------------------------+-----------------+
 Note: All paths for non-entity SDC files are reported relative to the project directory (/nfs/site/disks/swuser_work_whitepau/oneAPI_Examples/oneAPI-samples.platform-designer-ipa/DirectProgramming/DPC++FPGA/Tutorials/Tools/experimental/platform-designer/add-quartus/).
 
@@ -8472,18 +8472,18 @@ Note: Negative delays are omitted from totals when calculating percentages
 +--------------------------+
 ; Timing Analyzer Messages ;
 +--------------------------+
-Info (20030): Parallel compilation is enabled and will use 24 of the 48 processors detected
+Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info: *******************************************************************
 Info: Running Quartus Prime Timing Analyzer
     Info: Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
-    Info: Processing started: Tue Nov 15 06:35:30 2022
-    Info: System process ID: 20377
+    Info: Processing started: Tue Nov 15 07:05:49 2022
+    Info: System process ID: 15324
 Info: Command: quartus_sta AddCSRDemo -c add --mode=finalize
 Info: qsta_default_script.tcl version: #1
 Info (16677): Loading final database.
 Info (16734): Loading "final" snapshot for partition "root_partition".
 Info (16734): Loading "final" snapshot for partition "auto_fab_0".
-Info (16678): Successfully loaded final database: elapsed time is 00:00:05.
+Info (16678): Successfully loaded final database: elapsed time is 00:00:03.
 Info (21076): Core supply voltage operating condition is not set. Assuming a default value of '0.9V'.
 Info (21077): Low junction temperature is 0 degrees C
 Info (21077): High junction temperature is 100 degrees C
@@ -8498,7 +8498,7 @@ Info (332104): Reading SDC File: 'add.sdc'
 Info (332104): Reading SDC File: 'ip/add_kernels/add_kernels_master_0/altera_jtag_dc_streaming_191/synth/altera_avalon_st_jtag_interface.sdc'
 Info (332104): Reading SDC File: 'ip/add_kernels/add_kernels_master_0/altera_reset_controller_1921/synth/altera_reset_controller.sdc'
 Info (332104): Reading SDC File: '/p/psg/swip/releases5/acds/22.3/104/linux64/ip/altera/sld/jtag/altera_jtag_wys_atom/default_jtag.sdc'
-Info (19449): Reading SDC files elapsed 00:00:00.
+Info (19449): Reading SDC files elapsed 00:00:01.
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Info: Found TIMING_ANALYZER_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS = ON
 Info (332146): Worst-case setup slack is 5.422
@@ -8591,10 +8591,11 @@ Worst Case Available Settling Time: 17.690 ns
 Info (332101): Design is fully constrained for setup requirements
 Info (332101): Design is fully constrained for hold requirements
 Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 2352 megabytes
-    Info: Processing ended: Tue Nov 15 06:35:46 2022
-    Info: Elapsed time: 00:00:16
-    Info: System process ID: 20377
+    Info: Peak virtual memory: 2232 megabytes
+    Info: Processing ended: Tue Nov 15 07:06:01 2022
+    Info: Elapsed time: 00:00:12
+    Info: System process ID: 15324
+Info (19538): Reading SDC files took 00:00:01 cumulatively in this process.
 
 
 +------------------------------------------------------------------+
