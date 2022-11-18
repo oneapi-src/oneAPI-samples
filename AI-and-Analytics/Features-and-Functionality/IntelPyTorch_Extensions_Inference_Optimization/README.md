@@ -112,7 +112,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 4. Follow the instructions to open the URL with the token in your browser.
 3. Locate and select the Notebook.
    ```
-   optimize_pytorch_models_with_ipex.ipynb.ipynb
+   optimize_pytorch_models_with_ipex.ipynb
    ```
 4. Change the kernel to **PyTorch (AI Kit)**.
 7. Run every cell in the Notebook in sequence.
