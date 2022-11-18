@@ -45,7 +45,7 @@
 // of all ones.
 // The dimension N_ROWS is included in jacobi.h
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <helper_cuda.h>
 #include <helper_timer.h>

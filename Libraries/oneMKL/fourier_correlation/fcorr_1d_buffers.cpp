@@ -14,7 +14,7 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>
