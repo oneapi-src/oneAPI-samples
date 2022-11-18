@@ -28,18 +28,11 @@ module add (
 
   assign reset = reset_button_d2;
   
-  wire irq_members;
-  wire irq_hostpipes;
-  
-  assign sort_done = irq_members | irq_hostpipes;
-  
-  add_kernels u0 (
-    .exception_add_hostpipes_data (),               //  output,  width = 64, exception_add_hostpipes_1.data
-    .irq_add_hostpipes_irq        (irq_hostpipes),  //  output,   width = 1,       irq_add_hostpipes_1.irq
-    .exception_add_members_data   (),               //  output,  width = 64,   exception_add_members_1.data
-    .irq_add_members_irq          (irq_members),    //  output,   width = 1,         irq_add_members_1.irq
-    .clk_clk                      (i_clk),          //   input,   width = 1,                       clk.clk
-    .reset_reset                  (reset)           //   input,   width = 1,                     reset.reset
+  add_kernel_wrapper u0 (
+    .exception_add_data (),           //  output,  width = 64, exception_add_1.data
+    .irq_add_irq        (sort_done),  //  output,   width = 1,       irq_add_1.irq
+    .clk_clk            (i_clk),      //   input,   width = 1,             clk.clk
+    .reset_reset        (reset)       //   input,   width = 1,           reset.reset
   );
 
 endmodule

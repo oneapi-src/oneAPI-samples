@@ -5,7 +5,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the Intel® Arria 10 SoC Development Kit 
+| Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the Intel® Arria 10 SX SoC Development Kit 
 | Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition <br> Intel® Platform Designer Prime Pro Edition <br> Siemens*  Questa*-Intel® FPGA Starter Edition (or Siemens* Questa*-Intel® FPGA Edition)
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel to an Intel® Quartus® Prime Pro Edition project
 | Time to complete                  | 1 hour
@@ -18,10 +18,10 @@ This example is intended for users interested in creating standalone modules tha
 
 ### Board-specific Considerations
 
-This design is intended to work with the [Arria 10 SoC Development Kit](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD). The board specific configurations are:
+This design is intended to work with the [Intel® Arria® 10 SX SoC Development Kit](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD). The board specific configurations are:
 1. Choose `10AS066N3F40E2SG` device to match the devkit
 2. Choose pin `AP20 - CLKUSR` to drive the `i_clk` signal
-3. Use `jtag.sdc` from the Arria 10 SoC Golden Hardware Reference Design (GHRD) [source code](https://github.com/altera-opensource/ghrd-socfpga).
+3. Use `jtag.sdc` from the Intel® Arria® 10 SoC Golden Hardware Reference Design (GHRD) [source code](https://github.com/altera-opensource/ghrd-socfpga).
 
 ## Building the `platform_designer` Tutorial
 
@@ -62,7 +62,31 @@ Follow these steps to compile and test the design:
 
    For more details, see the Readme in the `add-oneapi` directory.
 
-2. Copy the oneAPI-generated IP to the IntelQuartus® project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels will have their own reports and associated RTL. You will therefore need to hunt for the `.prj_X` directory that contains the IP you want to use in your design.
+2. **From the same terminal**, launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard. 
+
+   Linux:
+   
+   ```
+   cd add-quartus
+   quartus
+   ```
+
+   Windows:
+   
+   ```
+   cd add-quartus
+   quartus.exe
+   ```
+
+   1. Set the project directory to be the `add-quartus` directory of this code sample.
+
+   2. Set the top-level entity to be `add` to make project management easier.
+
+   3. Add the source file `add.v` to the design when the wizard prompts you.
+
+   4. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
+
+3. Copy the oneAPI-generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels will have their own reports and associated RTL. You will therefore need to hunt for the `.prj_X` directory that contains the IP you want to use in your design.
 
    You can identify the correct `.prj_X` folder by looking for the one that contains a `*_di_inst.v` whose interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` is the correct `.prj_x` directory, because `add_example_fpga_ip_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
    
@@ -102,7 +126,7 @@ Follow these steps to compile and test the design:
    xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
    ```
 
-3. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the generated .prj directory.
+4. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the .prj directory.
 
    Linux/Windows:
 
@@ -114,43 +138,68 @@ Follow these steps to compile and test the design:
    The original file is in: add_fpga_ip_export_1_di_hw.tcl_original
    ```
 
-4. **From a shell with oneAPI environment**, launch the Intel® Quartus® Prime GUI with the included Quartus® project file. It's easiest to use the same shell you used to compile the `add_example` oneAPI design.
-   > **NOTE**: You may have to add a path to Quartus® to your system's `PATH` environment variable. Directions for this are available in the Intel® Quartus® Prime documentation [Section 4.5: Setting Quartus® Prime Environment Variables](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/setting-environment-variables.html).
+5. Create the Platform Designer system.
 
-   Linux:
+   1. Open Platform Designer from the Intel® Quartus® Prime GUI:
+
+      ![](Readme.md.assets/open-platform-designer-button.png)
+
+      Create a new system and name it `add_kernel_wrapper.qsys`.
+
+   2. Add the following JTAG to Avalon Master Bridge Intel® FPGA IP to your system:
+
+      * Basic Functions > Bridges and Adaptors > Memory Mapped > JTAG to Avalon Master Bridge Intel® FPGA IP
+
+   3. Add the oneAPI IP to your system and connect it as shown:
+
+      ![](Readme.md.assets/add-ip-platform-designer.png)
+
+      ![](Readme.md.assets/complete-system_platform-designer.png)
+
+      Don't forget to export the `irq_add` and `exception_add` signals. We provided a top-level RTL file (`add.v`) that uses the generated IP. Following these naming conventions allows you to connect the oneAPI kernel to this handwritten RTL.
+
+   4. Save the system by clicking `File` > `Save`, then close Platform Designer. 
    
-   ```
-   cd add-quartus
-   Quartus® AddCSRDemo.qpf
-   ```
+6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start analysis and Elaboration'.
 
-   Windows:
+   ![](Readme.md.assets/start-analysis.png)
+
+7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to
+Avalon Agent IP will handle the connection between your design and the JTAG pins on your board
+automatically.
+
+   1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. Consult the data sheet for your board to choose an appropriate clock input. In this project, the `PIN_AM10` was chosen because it is used for supplying a 100MHz clock signal in the the GHRD source code (see link in **Board-specifc Considerations**).
+
+   2. Assign pins for the `fpga_led` and `reset_button_n` signals using the same methodology:
    
-   ```
-   cd add-quartus
-   quartus.exe AddCSRDemo.qpf
-   ```
+      Pin planner from GHRD:
+      ![](Readme.md.assets/pins-from-ghrd.png)
 
-5. Open Platform Designer from the Intel® Quartus® Prime GUI:
+      Final pin planner configuration:
+      ![](Readme.md.assets/pins-from-design.png)
 
-   ![](Readme.md.assets/open-platform-designer-button.png)
+8. Now we will add the timing constraints. 
 
-6. Add the following IPs to your system:
-   * Basic Functions > Bridges and Adaptors > Clock > Clock Bridge Intel® FPGA IP
-   * Basic Functions > Bridges and Adaptors > Reset > Reset Bridge Intel® FPGA IP
-   * Basic Functions > Bridges and Adaptors > Memory Mapped > JTAG to Avalon Master Bridge Intel® FPGA IP
+   1. If you are using the Intel® Arria® 10 SX SoC Dev Kit, you can find a timing constraints file for the JTAG interface (jtag.sdc) in the GHRD.
 
-7. Add the oneAPI IP to your system and connect it as shown:
+   2. Create a new Synopsis Design Constraints (SDC) file named `add.sdc` and insert a new clock called `i_clk` to match the clock you defined in `sort.v`. Set the period to be 10ns:
 
-   ![](Readme.md.assets/add-ip-platform-designer.png)
+      ```
+      set_time_format -unit ns -decimal_places 3
+      create_clock -name i_clk -period 10 [get_ports {i_clk}]
+      ```
 
-   ![](Readme.md.assets/complete-system_platform-designer.png)
+   3. Cut the clock paths for asynchronous I/O:
+      
+      ```
+      set_false_path -from [get_ports {reset_button_n}] -to * 
+      set_false_path -from [get_ports {fpga_led}] -to *
+      set_false_path -from * -to [get_ports {fpga_led}]
+      ```
 
-   Don't forget to export the `IRQ` and `Exception Data Bus` signals, and update the base address to prevent overlap errors. We provided a top-level RTL file (`add.v`) that uses the generated IP. These steps allow you to connect the oneAPI kernel to this handwritten RTL.
+9. Compile the full design by clicking the 'Start Compilation' button in the Intel® Quartus® Prime GUI.
 
-8. Save the system by clicking `File` > `Save`, then close Platform Designer. In the Intel® Quartus® Prime window, click the 'Start Compilation' button to compile the design.
-
-   ![](Readme.md.assets/start-compilation-quartus.png)
+      ![](Readme.md.assets/start-compilation-quartus.png)
 
 ### Additional Documentation
 - [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
@@ -169,57 +218,35 @@ If you need to move the design to a different computer, make sure you copy the `
 
 See output:
 
-```bash
+```
+> test.bat
+<output from Intel® Quartus® Prime programmer>
+---------------------------------------
+---------------------------------------
+ Welcome to Intel's FPGA System Console
+
+<etc.>
+---------------------------------------
 % source jtag_avmm.tcl
-% source load_vals_functor.tcl
-Store with functor...
-% source read_outputs_functor.tcl
-functor members input:
-  Data: 0x00000015 0x00000000
-  Valid: 0x00000000 0x00000000
-  status: 0x00040002
-  finish0 0x00000001
-  finish1 0x00000000
-% source read_outputs_host-pipes.tcl
-host-pipes input:
-  Data: 0x00000000 0x00000000
-  Valid: 0x00000000 0x00000000
-  status: 0x00040000
-  finish0 0x00000000
-  finish1 0x00000000
-% source load_vals_host-pipes.tcl
-Store to host pipes...
-% source read_outputs_functor.tcl
-functor members input:
-  Data: 0x00000015 0x00000000
-  Valid: 0x00000000 0x00000000
-  status: 0x00040000
-  finish0 0x00000000
-  finish1 0x00000000
-% source load_vals_functor.tcl
-Store with functor...
-% source read_outputs_host-pipes.tcl
-host-pipes input:
-  Data: 0x0000006f 0x00000000
-  Valid: 0x00000000 0x00000000
-  status: 0x00040002
-  finish0 0x00000001
-  finish1 0x00000000
-% source read_outputs_functor.tcl
-functor members input:
-  Data: 0x00000015 0x00000000
-  Valid: 0x00000000 0x00000000
-  status: 0x00040002
-  finish0 0x00000001
-  finish1 0x00000000
-% source read_inputs.tcl
-host-pipes input
-  a = 0x00000000 0x00000000
-  b = 0x00000000 0x00000000
-functor members input
-  a = 0x00000000
-  b = 0x00000000
-%
+% source read_outputs.tcl
+Outputs:
+  Data (0x78): 0x00000000 0x00000000
+  Status (0x00): 0x00040000
+  finish (0x28): 0x00000000 0x00000000
+% source load_inputs.tcl
+Store 5 to address 0x88
+Store 3 to address 0x8c
+Set 'Start' bit to 1
+% source read_outputs.tcl
+Outputs:
+  Data (0x78): 0x00000008 0x00000000
+  Status (0x00): 0x00040002
+  finish (0x28): 0x00000001 0x00000000
+% source read_outputs.tcl
+Outputs:
+  Data (0x78): 0x00000008 0x00000000
+  Status (0x00): 0x00040000
+  finish (0x28): 0x00000000 0x00000000
 ```
 
 ## License
