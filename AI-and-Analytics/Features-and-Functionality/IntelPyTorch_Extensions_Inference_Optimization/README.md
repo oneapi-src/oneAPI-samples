@@ -34,10 +34,14 @@ You will need to download and install the following toolkits, tools, and compone
 
   Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
 
+- **Transformers - Hugging Face**
+
+  Install using PIP: `$pip install transformers`
+
 ### For Intel® DevCloud
 
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
-
+Most of necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
+You would need to install the Hugging Face Transformers library using pip as shown above.
 
 ## Key Implementation Details
 
