@@ -398,14 +398,6 @@ int main() {
     cout << "Compute units: " << compute_units << "\n";
     cout << "Work group size: " << work_group_size << "\n";
 
-    // Find max number of compute/execution units and max number of threads per
-    // compute unit.
-    auto compute_units = device.get_info<info::device::max_compute_units>();
-    auto work_group_size = device.get_info<info::device::max_work_group_size>();
-
-    cout << "Compute units: " << compute_units << "\n";
-    cout << "Work group size: " << work_group_size << "\n";
-
     // Allocate memory.
     if (!AllocateMemory(q, compute_units * work_group_size, &matrix, &x,
                         &y_sequential, &y_parallel, &carry_row, &carry_value)) {
