@@ -82,12 +82,14 @@ endif()
 
 # Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
 # looking at the name of the BSP, or manually by the user when running CMake.
-# E.g., cmake .. -DUSER_ENABLE_USM=1
-if(FPGA_DEVICE MATCHES ".*usm.*" OR USER_ENABLE_USM)
-    set(USM_ENABLED 1)
-elseif(LOW_LATENCY)
+# E.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1
+if(LOW_LATENCY AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     # Low latency design requires USM, so error out
     message(FATAL_ERROR "Error: The Low Latency variant of the design requires USM host allocations")
+endif()
+
+if(USM_HOST_ALLOCATIONS_ENABLED)
+    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
 endif()
 
 message(STATUS "NUM_ENGINES=${NUM_ENGINES}")
