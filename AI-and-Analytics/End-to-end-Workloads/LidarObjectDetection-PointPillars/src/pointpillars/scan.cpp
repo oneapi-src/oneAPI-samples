@@ -16,7 +16,7 @@
  */
 
 #include "pointpillars/scan.hpp"
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "devicemanager/devicemanager.hpp"
 
 namespace pointpillars {

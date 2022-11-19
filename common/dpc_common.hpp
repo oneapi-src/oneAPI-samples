@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <exception>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 namespace dpc_common {
 // This exception handler will catch async exceptions

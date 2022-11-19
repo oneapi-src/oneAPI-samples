@@ -7,7 +7,7 @@
 // Copyright (C) 2020 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <cassert>
 #include <cfloat>

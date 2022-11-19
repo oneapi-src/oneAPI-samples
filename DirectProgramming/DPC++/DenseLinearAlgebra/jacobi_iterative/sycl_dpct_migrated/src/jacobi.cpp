@@ -35,7 +35,7 @@
 
 #include <helper_cuda.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 #include "jacobi.h"

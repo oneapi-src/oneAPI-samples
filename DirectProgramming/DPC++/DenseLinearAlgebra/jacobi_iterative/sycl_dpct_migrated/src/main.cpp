@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 #include "jacobi.h"

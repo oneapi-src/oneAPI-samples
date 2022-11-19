@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 constexpr size_t N = 16;
 typedef unsigned int uint;

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <oneapi/dpl/random>
 #include <oneapi/mkl/rng.hpp>
