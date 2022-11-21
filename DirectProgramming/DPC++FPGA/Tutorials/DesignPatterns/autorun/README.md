@@ -88,7 +88,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
 
