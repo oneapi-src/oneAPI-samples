@@ -37,9 +37,9 @@ This sample demonstrates the following concepts:
 
 Typically, these kernels are meant to run forever, and data is streamed to and from them using SYCL pipes. This technique is illustrated in the figures below where the middle light-blue kernels (`ARKernel` and `ARForeverKernel`) are autorun kernels, and the dark-blue kernels on the left and right are regular SYCL kernels. The images below correspond to the `Autorun` and `AutorunForever` kernels used in this tutorial. See the comments and code in `autorun.cpp` for more details on the differences.
 
-![autorun](images/autorun.png)
+![autorun](assets/autorun.png)
 
-![autorun forever](images/autorun_forever.png)
+![autorun forever](assets/autorun_forever.png)
 
 
 ## Set Environment Variables
@@ -131,7 +131,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
    ```
