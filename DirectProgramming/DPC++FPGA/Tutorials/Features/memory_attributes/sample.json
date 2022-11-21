@@ -2,8 +2,8 @@
   "guid": "31BCA673-F514-4E2E-A8B3-A0B42D63884C",
   "name": "Memory Attributes",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a Data Parallel C++ (DPC++) program",
-  "toolchain": ["dpcpp"],
+  "description": "An Intel® FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a SYCL program",
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
@@ -22,7 +22,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -33,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -45,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -57,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",

@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER dpcpp)
+set(CMAKE_CXX_COMPILER icpx)
 
 project (merge-spmv)
 
@@ -12,7 +12,7 @@ if (NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fsycl -std=c++17")
 
 add_executable(spmv src/spmv.cpp)
 

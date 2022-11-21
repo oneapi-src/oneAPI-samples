@@ -10,11 +10,10 @@
 
 using namespace sycl;
 
-using ProducerToConsumerPipe =
-    ext::intel::pipe<                 // Defined in the SYCL headers.
-      class ProducerConsumerPipeId,   // An identifier for the pipe.
-      int,                            // The type of data in the pipe.
-      4>;                             // The capacity of the pipe.
+using ProducerToConsumerPipe = ext::intel::pipe< // Defined in the SYCL headers.
+    class ProducerConsumerPipeId,                // An identifier for the pipe.
+    int,                                         // The type of data in the pipe.
+    4>;                                          // The capacity of the pipe.
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -40,7 +39,6 @@ event Producer(queue &q, buffer<int, 1> &input_buffer) {
 
   return e;
 }
-
 
 // An example of some simple work, to be done by the Consumer kernel
 // on the input data
@@ -80,7 +78,7 @@ int main(int argc, char *argv[]) {
 #else
   size_t array_size = 1 << 20;
 #endif
-  
+
   // allow the user to change the buffer size at the command line
   if (argc > 1) {
     std::string option(argv[1]);
@@ -98,7 +96,7 @@ int main(int argc, char *argv[]) {
   std::vector<int> consumer_output(array_size, -1);
 
   // Initialize the input data with random numbers smaller than 46340.
-  // Any number larger than this will have integer overflow when squared. 
+  // Any number larger than this will have integer overflow when squared.
   constexpr int max_val = 46340;
   for (size_t i = 0; i < array_size; i++) {
     producer_input[i] = rand() % max_val;
@@ -119,7 +117,7 @@ int main(int argc, char *argv[]) {
     // create the device queue with SYCL profiling enabled
     queue q(device_selector, fpga_tools::exception_handler, props);
 
-    // create the 
+    // create the producer and consumer buffers
     buffer producer_buffer(producer_input);
     buffer consumer_buffer(consumer_output);
 
@@ -143,23 +141,27 @@ int main(int argc, char *argv[]) {
     std::terminate();
   }
 
-  // At this point, the producer_buffer and consumer_buffer have gone out 
-  // of scope. This will cause their destructors to be called, which will in 
+  // At this point, the producer_buffer and consumer_buffer have gone out
+  // of scope. This will cause their destructors to be called, which will in
   // turn block until the Producer and Consumer kernels are finished and the
   // output data is copied back to the host. Therefore, at this point it is
   // safe and correct to access the contents of the consumer_output vector.
 
-  // print profiling information
-  // alias the 'info::event_profiling' namespace to save column space
-  using syclprof = info::event_profiling;
-
   // start and end time of the Producer kernel
-  double p_start = producer_event.get_profiling_info<syclprof::command_start>();
-  double p_end = producer_event.get_profiling_info<syclprof::command_end>();
+  double p_start =
+      producer_event
+          .get_profiling_info<sycl::info::event_profiling::command_start>();
+  double p_end =
+      producer_event
+          .get_profiling_info<sycl::info::event_profiling::command_end>();
 
   // start and end time of the Consumer kernel
-  double c_start = consumer_event.get_profiling_info<syclprof::command_start>();
-  double c_end = consumer_event.get_profiling_info<syclprof::command_end>();
+  double c_start =
+      consumer_event
+          .get_profiling_info<sycl::info::event_profiling::command_start>();
+  double c_end =
+      consumer_event
+          .get_profiling_info<sycl::info::event_profiling::command_end>();
 
   // the total application time
   double total_time_ms = (c_end - p_start) * 1e-6;
@@ -178,12 +180,12 @@ int main(int argc, char *argv[]) {
   std::cout << "Profiling Info\n";
   std::cout << "\tProducer:\n";
   std::cout << "\t\tStart time: " << 0 << " ms\n";
-  std::cout << "\t\tEnd time: +" << (p_end-p_start)*1e-6 << " ms\n";
-  std::cout << "\t\tKernel Duration: " << (p_end-p_start)*1e-6 << " ms\n";
+  std::cout << "\t\tEnd time: +" << (p_end - p_start) * 1e-6 << " ms\n";
+  std::cout << "\t\tKernel Duration: " << (p_end - p_start) * 1e-6 << " ms\n";
   std::cout << "\tConsumer:\n";
-  std::cout << "\t\tStart time: +" << (c_start-p_start)*1e-6 << " ms\n";
-  std::cout << "\t\tEnd time: +" << (c_end-p_start)*1e-6 << " ms\n";
-  std::cout << "\t\tKernel Duration: " << (c_end-c_start)*1e-6 << " ms\n";
+  std::cout << "\t\tStart time: +" << (c_start - p_start) * 1e-6 << " ms\n";
+  std::cout << "\t\tEnd time: +" << (c_end - p_start) * 1e-6 << " ms\n";
+  std::cout << "\t\tKernel Duration: " << (c_end - c_start) * 1e-6 << " ms\n";
   std::cout << "\tDesign Duration: " << total_time_ms << " ms\n";
   std::cout << "\tDesign Throughput: " << throughput_mbs << " MB/s\n";
   std::cout << "\n";

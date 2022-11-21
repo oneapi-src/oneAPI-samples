@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
 using dinfo = info::device;
 constexpr int N = 42;

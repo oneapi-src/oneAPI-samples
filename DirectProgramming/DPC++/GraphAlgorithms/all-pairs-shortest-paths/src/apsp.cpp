@@ -1,13 +1,13 @@
 //==============================================================
 // This sample provides a parallel implementation of blocked Floyd Warshall
-// algorithm to compute all pairs shortest paths using DPC++.
+// algorithm to compute all pairs shortest paths using SYCL.
 //==============================================================
 // Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -90,7 +90,7 @@ void FloydWarshall(int *graph) {
   }
 }
 
-typedef accessor<int, 2, access::mode::read_write, access::target::local>
+typedef local_accessor<int, 2>
     LocalBlock;
 
 // Inner loop of the blocked Floyd Warshall algorithm. A thread handles one cell
@@ -276,7 +276,7 @@ void BlockedFloydWarshall(queue &q, int *graph) {
 
 int main() {
   try {
-    queue q{default_selector{}, dpc_common::exception_handler};
+    queue q{default_selector_v};
     auto device = q.get_device();
     auto work_group_size = device.get_info<info::device::max_work_group_size>();
     auto block_size = block_length * block_length;

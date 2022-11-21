@@ -31,7 +31,7 @@ using BurstCoalescedLSU = ext::intel::lsu<ext::intel::burst_coalesce<true>,
 
 // Input data and output data size constants
 constexpr size_t kMaxVal = 128;
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
 constexpr size_t kBaseVal = 1024;
 #else
 constexpr size_t kBaseVal = 1048576;
@@ -53,9 +53,12 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
+
   try {
     // create the SYCL device queue
     queue q(device_selector, fpga_tools::exception_handler,

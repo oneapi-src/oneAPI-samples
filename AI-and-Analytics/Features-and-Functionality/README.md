@@ -23,8 +23,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | TensorFlow & Model Zoo | [IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8](IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8)               | Run ResNet50 inference on Intel's pretrained FP32 and Int8 model.
 | TensorFlow & Model Zoo | [IntelTensorFlow_PerformanceAnalysis](IntelTensorFlow_PerformanceAnalysis) | Analyze the performance difference between Stock Tensorflow and Intel Tensorflow.
 | TensorFlow | [IntelTensorFlow_InferenceOptimization](IntelTensorFlow_InferenceOptimization) |  Optimize a pre-trained model for a better inference performance.
+| TensorFlow | [IntelTensorFlow_Enabling_Auto_Mixed_Precision_for_TransferLearning](IntelTensorFlow_Enabling_Auto_Mixed_Precision_for_TransferLearning) |  Enable Auto-Mixed Precision for Transfer Learning with TensorFlow.
 | XGBoost | [IntelPython_XGBoost_Performance](IntelPython_XGBoost_Performance) |  Analyze the performance benefit from using Intel optimized XGBoost compared to un-optimized XGBoost 0.81.
 | XGBoost | [IntelPython_XGBoost_daal4pyPrediction](IntelPython_XGBoost_daal4pyPrediction) |  Analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction..
+
 
 # Using Samples in Intel® DevCloud for oneAPI
 To get started using samples in the DevCloud, refer to [Using AI samples in Intel® DevCloud for oneAPI](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).

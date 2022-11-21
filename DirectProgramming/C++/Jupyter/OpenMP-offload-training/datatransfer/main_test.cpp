@@ -12,7 +12,7 @@ constexpr int ARRAY_SIZE = 256;
 int main(int argc, char *argv[]) {
   int i, j, is_cpu = true;
   double tstart, tstop;
-  double x[ARRAY_SIZE], y[ARRAY_SIZE];
+  float x[ARRAY_SIZE], y[ARRAY_SIZE];
   float a = 1.5f;
   float tolerance = 0.01f;
   int correct_count = 0;

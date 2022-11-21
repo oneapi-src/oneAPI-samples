@@ -128,9 +128,7 @@ int main(int argc, char* argv[]) {
 #if defined(FPGA_EMULATOR)
   sycl::ext::intel::fpga_emulator_selector selector;
 #elif defined(FPGA_SIMULATOR)
-  std::string simulator_device_string =
-      "SimulatorDevice : Multi-process Simulator (aclmsim0)";
-  select_by_string selector = select_by_string{simulator_device_string};
+  sycl::ext::intel::fpga_simulator_selector selector;
 #else
   sycl::ext::intel::fpga_selector selector;
 #endif

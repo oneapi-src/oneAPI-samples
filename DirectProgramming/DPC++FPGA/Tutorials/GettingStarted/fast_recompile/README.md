@@ -6,35 +6,37 @@ This FPGA tutorial demonstrates how to separate the compilation of a program's h
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link methods <br> Which method to choose for your project
 | Time to complete                  | 15 minutes
 
 
 
 ## Purpose
-Intel® oneAPI DPC++ Compiler only supports ahead-of-time (AoT) compilation for FPGA, which means that an FPGA device image is generated at compile time. The FPGA device image generation process can take hours to complete. Suppose you make a change that is exclusive to the host code. In that case, it is more efficient to recompile your host code only, re-using the existing FPGA device image and circumventing the time-consuming device compilation process.
+Intel® oneAPI DPC++/C++ Compiler only supports ahead-of-time (AoT) compilation for FPGA, which means that an FPGA device image is generated at compile time. The FPGA device image generation process can take hours to complete. Suppose you make a change that is exclusive to the host code. In that case, it is more efficient to recompile your host code only, re-using the existing FPGA device image and circumventing the time-consuming device compilation process.
+
+**NOTE:** In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
 
 The compiler provides two different mechanisms to separate device code and host code compilation.
-* Passing the `-reuse-exe=<exe_name>` flag to `dpcpp` instructs the compiler to attempt to reuse the existing FPGA device image.
+* Passing the `-reuse-exe=<exe_name>` flag to `icpx` instructs the compiler to attempt to reuse the existing FPGA device image.
 * The more explicit "device link" method requires you to separate the host and device code into separate files. When a code change only applies to host-only files, an FPGA device image is not regenerated.
 
 This tutorial explains both mechanisms and the pros and cons of each. The included code sample demonstrates the device link method but does **not** demonstrate the use of the `-reuse-exe` flag.
 
 ### Using the `-reuse-exe` flag
 
-If the device code and options affecting the device have not changed since the previous compilation, passing the `-reuse-exe=<exe_name>` flag to `dpcpp` instructs the compiler to extract the compiled FPGA binary from the existing executable and package it into the new executable, saving the device compilation time.
+If the device code and options affecting the device have not changed since the previous compilation, passing the `-reuse-exe=<exe_name>` flag to `icpx` instructs the compiler to extract the compiled FPGA binary from the existing executable and package it into the new executable, saving the device compilation time.
 
 **Sample usage:**
 
 ```
 # Initial compilation
-dpcpp <files.cpp> -o out.fpga -Xshardware -fintelfpga
+icpx <files.cpp> -o out.fpga -Xshardware -fintelfpga
 ```
 The initial compilation generates an FPGA device image, which takes several hours. Now, make some changes to the host code.
 ```
 # Subsequent recompilation
-dpcpp <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware -fintelfpga
+icpx <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware -fintelfpga
 ```
 If `out.fpga` does not exist, `-reuse-exe` is ignored and the FPGA device image is regenerated. This will always be the case the first time a project is compiled.
 
@@ -50,7 +52,7 @@ In the normal compilation process, FPGA device image generation happens at link 
 
 ```
 # normal compile command
-dpcpp -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
+icpx -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
 ```
 
 The following graph depicts this compilation process:
@@ -62,7 +64,7 @@ If you want to iterate on the host code and avoid long compile time for your FPG
 
 ```
 # device link command
-dpcpp -fintelfpga -fsycl-link=image <input files> [options]
+icpx -fintelfpga -fsycl-link=image <input files> [options]
 ```
 
 The compilation is a 3-step process:
@@ -70,7 +72,7 @@ The compilation is a 3-step process:
 1. Compile the device code:
 
    ```
-   dpcpp -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
+   icpx -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
    ```
    Input files should include all source files that contain device code. This step may take several hours.
 
@@ -78,7 +80,7 @@ The compilation is a 3-step process:
 2. Compile the host code:
 
    ```
-   dpcpp -fintelfpga host.cpp -c -o host.o
+   icpx -fintelfpga host.cpp -c -o host.o
    ```
    Input files should include all source files that only contain host code. This takes seconds.
 
@@ -86,7 +88,7 @@ The compilation is a 3-step process:
 3. Create the device link:
 
    ```
-   dpcpp -fintelfpga host.o dev_image.a -o fast_recompile.fpga
+   icpx -fintelfpga host.o dev_image.a -o fast_recompile.fpga
    ```
    The input should have N (N >= 0) host object files *(.o)* and one device image file *(.a)*. This takes seconds.
 

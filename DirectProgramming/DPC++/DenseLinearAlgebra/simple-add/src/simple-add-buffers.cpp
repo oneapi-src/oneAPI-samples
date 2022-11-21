@@ -1,17 +1,17 @@
 //==============================================================
 // Iota is the equivalent of a Hello, World! sample for data parallel programs.
 // Building and running the sample verifies that your development environment
-// is setup correctly and demonstrates the use of the core features of DPC++.
+// is setup correctly and demonstrates the use of the core features of SYCL.
 // This sample runs on both CPU and GPU (or FPGA). When run, it computes on both
 // the CPU and offload device, then compares results. If the code executes on
 // both CPU and the offload device, the name of the offload device and a success
 // message are displayed. And, your development environment is setup correctly!
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide and search based on
 // relevant terms noted in the comments.
 //
-// DPC++ material used in the code sample:
+// SYCL material used in the code sample:
 // •	A one dimensional array of data.
 // •	A device queue, buffer, accessor, and kernel.
 //==============================================================
@@ -19,13 +19,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
-#include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
   #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
@@ -33,12 +30,27 @@
 using namespace sycl;
 using namespace std;
 
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
+#if _DEBUG
+      std::cout << "Failure" << std::endl;
+#endif
+      std::terminate();
+    }
+  }
+};
+
 // Array type and data size for this example.
 constexpr size_t array_size = 10000;
 typedef array<int, array_size> IntArray;
 
 //************************************
-// Iota in DPC++ on device.
+// Iota in SYCL on device.
 //************************************
 void IotaParallel(queue &q, IntArray &a_array, int value) {
   // Create the range object for the array managed by the buffer.
@@ -60,7 +72,7 @@ void IotaParallel(queue &q, IntArray &a_array, int value) {
     //    1st parameter is the number of work items to use.
     //    2nd parameter is the kernel, a lambda that specifies what to do per
     //    work item. The parameter of the lambda is the work item id.
-    // DPC++ supports unnamed lambda kernel by default.
+    // SYCL supports unnamed lambda kernel by default.
     h.parallel_for(num_items, [=](auto i) { a[i] = value + i; });
   });
 }
@@ -71,14 +83,14 @@ void IotaParallel(queue &q, IntArray &a_array, int value) {
 int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
-  // DPC++ extension: FPGA emulator selector on systems without FPGA card.
+  // Intel extension: FPGA emulator selector on systems without FPGA card.
   ext::intel::fpga_emulator_selector d_selector;
 #elif FPGA
-  // DPC++ extension: FPGA selector on systems with FPGA card.
+  // Intel extension: FPGA selector on systems with FPGA card.
   ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
-  default_selector d_selector;
+  auto d_selector{default_selector_v};
 #endif
 
   // Create array objects with "array_size" to store data.
@@ -89,14 +101,14 @@ int main() {
   for (size_t i = 0; i < sequential.size(); i++) sequential[i] = value + i;
 
   try {
-    queue q(d_selector, dpc_common::exception_handler);
+    queue q(d_selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     cout << "Running on device: "
          << q.get_device().get_info<info::device::name>() << "\n";
     cout << "Array size: " << parallel.size() << "\n";
 
-    // Parallel iota in DPC++.
+    // Parallel iota in SYCL.
     IotaParallel(q, parallel, value);
   } catch (std::exception const &e) {
     cout << "An exception is caught while computing on device.\n";

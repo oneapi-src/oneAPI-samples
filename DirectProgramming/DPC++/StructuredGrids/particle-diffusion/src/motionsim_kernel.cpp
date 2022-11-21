@@ -44,7 +44,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                                                                    sigma);
   // Begin buffer scope
   {
-    // Create buffers using DPC++ buffer class
+    // Create buffers using SYCL buffer class
     buffer random_X_buf(random_X, range(n_moves));
     buffer random_Y_buf(random_Y, range(n_moves));
     buffer particle_X_buf(particle_X, range(n_particles));
@@ -63,10 +63,10 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
       accessor particle_Y_a(particle_Y_buf, h);
       accessor random_X_a(random_X_buf, h, read_only);
       accessor random_Y_a(random_Y_buf, h, read_only);
-      // Use DPC++ atomic access mode to create atomic accessors
+      // Use SYCL atomic access mode to create atomic accessors
       accessor grid_a = grid_buf.get_access<access::mode::atomic>(h);
 
-      // Send a DPC++ kernel (lambda) for parallel execution
+      // Send a SYCL kernel (lambda) for parallel execution
       h.parallel_for(range(n_particles), [=](auto item) {
         // Particle number (used for indexing)
         size_t p = item.get_id(0);

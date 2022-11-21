@@ -7,7 +7,7 @@ memory in a non-contiguous manner.
 |:---                                |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to use the read-only cache feature
 | Time to complete                  | 30 minutes
 
@@ -20,7 +20,7 @@ buffers that are guaranteed to be constant throughout the execution of a
 kernel. The read-only cache is optimized for high cache hit performance.
 
 To enable the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
-passed to the `dpcpp` command. Each kernel will get its own *private* version
+passed to the `icpx` command. Each kernel will get its own *private* version
 of the cache that serves all reads in the kernel from read-only no-alias
 accessors. Read-only no-alias accessors are accessors that have both the
 `read_only` and the `no_alias` properties:
@@ -50,7 +50,7 @@ This tutorial requires compiling the source code twice: once with the
 `-Xsread-only-cache-size=<N>` flag and once without it. Because the look-up
 table contains 512 integers as indicated by the `kLUTSize` constant, the chosen
 size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
-`-Xsread-only-cache-size=2048` is passed to `dpcpp`.
+`-Xsread-only-cache-size=2048` is passed to `icpx`.
 
 ### Additional Documentation
 - [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
@@ -140,6 +140,10 @@ to 12h.
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -185,6 +189,10 @@ to 12h.
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -236,7 +244,17 @@ cache has been created.
     Note that the read-only cache is not implemented in emulation. The
     `-Xsread-only-cache-size<N>` flag does not impact the emulator in any way
     which is why we only have a single executable for this flow.
-2. Run the sample on the FPGA device (two executables should be generated):
+2. Run the sample on the FPGA simulation device (two executables should be generated):
+     ```
+     ./read_only_cache.fpga_sim         (Linux)
+     read_only_cache.fpga_sim.exe       (Windows)
+     ```
+    Note although the circuit for the read-only cache is implemented in 
+    simulation, one cannot see consistent performance increase with the cache 
+    enabled as each clock cycle in the simulator doesn't have a consistent 
+    latency, as it does in the hardware. For this reason there is just a single
+    executable for this flow.
+3. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./read_only_cache_disabled.fpga         (Linux)
      ./read_only_cache_enabled.fpga          (Linux)

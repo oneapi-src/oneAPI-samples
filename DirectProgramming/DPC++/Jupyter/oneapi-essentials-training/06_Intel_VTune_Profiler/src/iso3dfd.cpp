@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// ISO3DFD: Intel oneAPI DPC++ Language Basics Using 3D-Finite-Difference-Wave
+// ISO3DFD: Intel oneAPI SYCL Language Basics Using 3D-Finite-Difference-Wave
 // Propagation
 //
 // ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic
@@ -12,23 +12,23 @@
 // in space, 2nd order in time scheme without boundary conditions. Using Data
 // Parallel C++, the sample can explicitly run on the GPU and/or CPU to
 // calculate a result.  If successful, the output will print the device name
-// where the DPC++ code ran along with the grid computation metrics - flops
+// where the SYCL code ran along with the grid computation metrics - flops
 // and effective throughput
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// DPC++ Queues (including device selectors and exception handlers)
-// DPC++ Custom device selector
-// DPC++ Buffers and accessors (communicate data between the host and the
+// SYCL Queues (including device selectors and exception handlers)
+// SYCL Custom device selector
+// SYCL Buffers and accessors (communicate data between the host and the
 // device)
-// DPC++ Kernels (including parallel_for function and nd-range<3>
+// SYCL Kernels (including parallel_for function and nd-range<3>
 // objects) 
-// Shared Local Memory (SLM) optimizations (DPC++)
-// DPC++ Basic synchronization (barrier function)
+// Shared Local Memory (SLM) optimizations (SYCL)
+// SYCL Basic synchronization (barrier function)
 //
 #include "../include/iso3dfd.h"
 #include <iostream>
@@ -36,7 +36,7 @@
 
 #define MIN(a, b) (a) < (b) ? (a) : (b)
 
-// using namespace cl::sycl;
+// using namespace sycl;
 
 /*
  * Host-Code
@@ -78,7 +78,7 @@ void initialize(float* ptr_prev, float* ptr_next, float* ptr_vel, size_t n1,
  * Host-Code
  * OpenMP implementation for single iteration of iso3dfd kernel.
  * This function is used as reference implementation for verification and
- * also to compare performance of OpenMP and DPC++ on CPU
+ * also to compare performance of OpenMP and SYCL on CPU
  * Additional Details:
  * https://software.intel.com/en-us/articles/eight-optimizations-for-3-dimensional-finite-difference-3dfd-code-with-an-isotropic-iso
  */
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
     printStats(time, n1, n2, n3, nIterations);
   }
 
-  // Check if running both OpenMP/Serial and DPC++ version
+  // Check if running both OpenMP/Serial and SYCL version
   // Keeping a copy of output buffer from OpenMP version
   // for comparison
   if (omp && sycl) {
@@ -279,7 +279,7 @@ int main(int argc, char* argv[]) {
       memcpy(temp, prev_base, nsize * sizeof(float));
   }
 
-  // Check if running DPC++/SYCL version
+  // Check if running SYCL version
   if (sycl) {
     std::cout << " ***** Running SYCL variant *****" << "\n";
     // exception handler
@@ -313,10 +313,10 @@ int main(int argc, char* argv[]) {
       pattern.replace(0, 3, patterngpu);
     }
 
-    // Create a custom device selector using DPC++ device selector class
+    // Create a custom device selector using SYCL device selector class
     MyDeviceSelector device_sel(pattern);
 
-    // Create a device queue using DPC++ class queue with a custom
+    // Create a device queue using SYCL class queue with a custom
     // device selector
     queue q(device_sel, exception_handler);
 
@@ -331,7 +331,7 @@ int main(int argc, char* argv[]) {
     auto start = std::chrono::steady_clock::now();
 
     // Invoke the driver function to perform 3D wave propogation
-    // using DPC++ version on the selected SYCL device
+    // using SYCL version on the selected SYCL device
     iso_3dfd_device(q, next_base, prev_base, vel_base, coeff, n1, n2, n3,
                     n1_Tblock, n2_Tblock, n3_Tblock, n3 - HALF_LENGTH,
                     nIterations);
@@ -349,7 +349,7 @@ int main(int argc, char* argv[]) {
     printStats(time, n1, n2, n3, nIterations);
   }
 
-  // If running both OpenMP/Serial and DPC++ version
+  // If running both OpenMP/Serial and SYCL version
   // Comparing results
   if (omp && sycl) {
     if (nIterations % 2) {

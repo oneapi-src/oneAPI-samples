@@ -95,7 +95,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 1. Build using nmake.
    ```
-   nmake -f Makefile.win build_dpcpp
+   nmake -f Makefile.win build_sycl
    ```
 ### On Windows* Using Visual Studio*
 - Build the program using VS2017 or later.
@@ -121,11 +121,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ### On Windows
 1. Run the SYCL version.
    ```
-   nmake -f Makefile.win run_dpcpp
+   nmake -f Makefile.win run_sycl
    ```
 2. Alternatively, change directory to the output folder and run the .exe file. (Depending on the build method you selected, the .exe name could be different from what is shown.)
    ```
-   matrix_mul_dpcpp.exe
+   matrix_mul_sycl.exe
    ```
 
 ### Application Parameters
@@ -147,7 +147,7 @@ When running a sample in the Intel&reg; DevCloud, you must specify the compute n
 ```
 Running on device: Intel(R) Gen9 HD Graphics NEO
 Problem size: c(150,600) = a(150,300) * b(300,600)
-Result of matrix multiplication using DPC++: Success - The results are correct!
+Result of matrix multiplication using SYCL: Success - The results are correct!
 ```
 
 ### OpenMP

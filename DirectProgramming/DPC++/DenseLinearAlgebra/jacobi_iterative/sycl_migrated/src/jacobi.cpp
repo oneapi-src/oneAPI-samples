@@ -33,7 +33,7 @@
  */
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include "jacobi.h"
 
@@ -194,9 +194,9 @@ double JacobiMethodGpu(const float *A, const double *b,
 
     if ((k & 1) == 0) {
       q.submit([&](handler &cgh) {
-        accessor<double, 1, access_mode::read_write, access::target::local>
+        local_accessor<double, 1>
             x_shared_acc_ct1(range<1>(N_ROWS), cgh);
-        accessor<double, 1, access_mode::read_write, access::target::local>
+        local_accessor<double, 1>
             b_shared_acc_ct1(range<1>(ROWS_PER_CTA + 1), cgh);
 
         cgh.parallel_for(nd_range<3>(nblocks * nthreads, nthreads),
@@ -210,9 +210,9 @@ double JacobiMethodGpu(const float *A, const double *b,
       });
     } else {
       q.submit([&](handler &cgh) {
-        accessor<double, 1, access_mode::read_write, access::target::local>
+        local_accessor<double, 1>
             x_shared_acc_ct1(range<1>(N_ROWS), cgh);
-        accessor<double, 1, access_mode::read_write, access::target::local>
+        local_accessor<double, 1>
             b_shared_acc_ct1(range<1>(ROWS_PER_CTA + 1), cgh);
 
         cgh.parallel_for(nd_range<3>(nblocks * nthreads, nthreads),
@@ -237,7 +237,7 @@ double JacobiMethodGpu(const float *A, const double *b,
 
       if ((k & 1) == 0) {
         q.submit([&](handler &cgh) {
-          accessor<uint8_t, 1, access_mode::read_write, access::target::local>
+          local_accessor<uint8_t, 1>
               sycl_local_acc_ct1(range<1>(sharedMemSize), cgh);
 
           cgh.parallel_for(nd_range<3>(nblocks * nthreads, nthreads),
@@ -249,7 +249,7 @@ double JacobiMethodGpu(const float *A, const double *b,
         });
       } else {
         q.submit([&](handler &cgh) {
-          accessor<uint8_t, 1, access_mode::read_write, access::target::local>
+          local_accessor<uint8_t, 1>
               sycl_local_acc_ct1(range<1>(sharedMemSize), cgh);
 
           cgh.parallel_for(nd_range<3>(nblocks * nthreads, nthreads),

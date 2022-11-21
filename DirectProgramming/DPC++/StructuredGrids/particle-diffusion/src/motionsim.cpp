@@ -10,18 +10,18 @@
 // This code sample will implement a simple example of a Monte Carlo
 // simulation of the diffusion of water molecules in tissue.
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide
 // and search based on relevant terms noted in the comments.
 //
-// DPC++ material used in this code sample:
+// SYCL material used in this code sample:
 //
-// Basic structures of DPC++:
-//   DPC++ Queues (including device selectors and exception handlers)
-//   DPC++ Buffers and accessors (communicate data between the host and the
-//   device) DPC++ Kernels (including parallel_for function and range<2>
+// Basic structures of SYCL:
+//   SYCL Queues (including device selectors and exception handlers)
+//   SYCL Buffers and accessors (communicate data between the host and the
+//   device) SYCL Kernels (including parallel_for function and range<2>
 //   objects) API-based programming: Use oneMKL to generate random numbers
-//   (DPC++) DPC++ atomic operations for synchronization
+//   SYCL atomic operations for synchronization
 //
 
 #include "motionsim.hpp"
@@ -305,10 +305,8 @@ int main(int argc, char* argv[]) {
   // Cell radius = 0.5*(grid spacing)
   const float radius = 0.5f;
 
-  // Create a device queue using default or host/device selectors
-  default_selector device_selector;
-  // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  // Create a device queue using SYCL class queue
+  queue q(default_selector_v);
 
   // Start timers
   dpc_common::TimeInterval t_offload;

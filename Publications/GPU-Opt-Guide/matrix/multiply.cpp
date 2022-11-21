@@ -6,7 +6,7 @@
 // matrix multiply routines
 #include "multiply.hpp"
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 
 using namespace std;

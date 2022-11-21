@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
 
 #include <assert.h>
@@ -170,9 +170,9 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     assert(SHARED_SIZE_LIMIT % arrayLength == 0);
 
     q.submit([&](handler &h) {
-      accessor<uint, 1, access_mode::read_write, access::target::local>
+      local_accessor<uint, 1>
           s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
-      accessor<uint, 1, access_mode::read_write, access::target::local>
+      local_accessor<uint, 1>
           s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
       h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
@@ -187,9 +187,9 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     });
   } else {
     q.submit([&](handler &h) {
-      accessor<uint, 1, access_mode::read_write, access::target::local>
+      local_accessor<uint, 1>
           s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
-      accessor<uint, 1, access_mode::read_write, access::target::local>
+      local_accessor<uint, 1>
           s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
       h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *

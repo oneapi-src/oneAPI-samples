@@ -34,7 +34,7 @@
 
 //Based on http://www.iti.fh-flensburg.de/lang/algorithmen/sortieren/networks/oemen.htm
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <assert.h>
 

@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include <tuple>
-#include <CL/sycl.hpp>
+
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -46,7 +46,7 @@ int main() {
 
     auto zipped_first = oneapi::dpl::make_zip_iterator(keys_begin, vals_begin);
 
-    auto iter_res = std::copy_if(dpl::execution::dpcpp_default,zipped_first, zipped_first + num_elements,
+    auto iter_res = oneapi::dpl::copy_if(dpl::execution::dpcpp_default,zipped_first, zipped_first + num_elements,
                  dpl::make_zip_iterator(result_begin, dpl::discard_iterator()),
                  [](auto t){return get<1>(t) == 1;});    
     

@@ -6,7 +6,7 @@
 #include <chrono>
 #include <cmath>
 #include <iostream>
-#include "CL/sycl.hpp"
+#include <sycl/sycl.hpp>
 #include "device_selector.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -26,7 +26,7 @@ using namespace sycl;
 // Few useful acronyms.
 constexpr auto sycl_read = access::mode::read;
 constexpr auto sycl_write = access::mode::write;
-constexpr auto sycl_global_buffer = access::target::global_buffer;
+constexpr auto sycl_device = access::target::device;
 
 static void ReportTime(const string &msg, event e) {
   cl_ulong time_start =
@@ -72,8 +72,8 @@ class SepiaFunctor {
  public:
   // Constructor captures needed data into fields
   SepiaFunctor(
-      accessor<uint8_t, 1, sycl_read, sycl_global_buffer> &image_acc_,
-      accessor<uint8_t, 1, sycl_write, sycl_global_buffer> &image_exp_acc_)
+      accessor<uint8_t, 1, sycl_read, sycl_device> &image_acc_,
+      accessor<uint8_t, 1, sycl_write, sycl_device> &image_exp_acc_)
       : image_acc(image_acc_), image_exp_acc(image_exp_acc_) {}
 
   // The '()' operator is the actual kernel
@@ -83,8 +83,8 @@ class SepiaFunctor {
 
  private:
   // Captured values:
-  accessor<uint8_t, 1, sycl_read, sycl_global_buffer> image_acc;
-  accessor<uint8_t, 1, sycl_write, sycl_global_buffer> image_exp_acc;
+  accessor<uint8_t, 1, sycl_read, sycl_device> image_acc;
+  accessor<uint8_t, 1, sycl_write, sycl_device> image_exp_acc;
 };
 
 int main(int argc, char **argv) {
@@ -166,10 +166,10 @@ int main(int argc, char **argv) {
       accessor image_acc(image_buf, h, read_only);
       accessor image_exp_acc(image_buf_exp1, h, write_only);
 
-      // This is the simplest form cl::sycl::handler::parallel_for -
+      // This is the simplest form sycl::handler::parallel_for -
       // - it specifies "flat" 1D ND range(num_pixels), runtime will select
       //   local size
-      // - kernel lambda accepts single cl::sycl::id argument, which has very
+      // - kernel lambda accepts single sycl::id argument, which has very
       //   limited API; see the spec for more complex forms
       // the lambda parameter of the parallel_for is the kernel, which
       // actually executes on device

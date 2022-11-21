@@ -33,7 +33,7 @@
  */
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <helper_cuda.h>
 #include <vector>

@@ -6,7 +6,7 @@ This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::pri
 |:---                                 |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to declare and use printf in program
 | Time to complete                  | 10 minutes
 
@@ -186,7 +186,7 @@ From the report, you can find the compilation information of the design and the 
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./printf.fpga_emu     (Linux)
      printf.fpga_emu.exe   (Windows)
@@ -220,6 +220,7 @@ There are some known issues with the `experimental::printf()` and that's why the
 * Printing pointer address %p is not supported yet.
 * If you have multiple PRINTF statements in the kernel, the order of printed data in the stdout might not obey the sequential order of those statements in the code.
 * Buffer is only flushed to stdout after the kernel finishes in hardware.
+* Printing `long` integers in Windows results is not supported yet. Printing `long` integers in Linux works as intended.
 
 ## License
 Code samples are licensed under the MIT license. See

@@ -185,4 +185,4 @@ def run_gpairs(
     )
 
 
-base_gpairs_gpu.run("Gpairs Dppy kernel", run_gpairs)
+base_gpairs_gpu.run("Gpairs Dpex kernel", run_gpairs)

@@ -6,7 +6,7 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to achieve low-latency host-device streaming while maintaining throughput
 | Time to complete                  | 45 minutes
 
@@ -145,6 +145,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make fpga_emu
      ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -175,6 +179,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -212,7 +220,12 @@ Locate `report.html` in the `simple_host_streaming_report.prj/reports/` director
      ./simple_host_streaming.fpga_emu     (Linux)
      simple_host_streaming.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator:
+     ```
+     ./simple_host_streaming.fpga_sim     (Linux)
+     simple_host_streaming.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./simple_host_streaming.fpga         (Linux)
      simple_host_streaming.fpga.exe       (Windows)

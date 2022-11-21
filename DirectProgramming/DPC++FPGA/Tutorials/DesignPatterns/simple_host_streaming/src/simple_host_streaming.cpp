@@ -57,6 +57,10 @@ int main(int argc, char* argv[]) {
   size_t chunks = 1 << 4;         // 16
   size_t chunk_count = 1 << 8;    // 256
   size_t iterations = 2;
+#elif defined(FPGA_SIMULATOR)
+  size_t chunks = 1 << 5;         // 64
+  size_t chunk_count = 1 << 9;    // 1024
+  size_t iterations = 2;
 #else
   size_t chunks = 1 << 9;         // 512
   size_t chunk_count = 1 << 15;   // 32768
@@ -138,6 +142,8 @@ int main(int argc, char* argv[]) {
     // device selector
 #if defined(FPGA_EMULATOR)
     ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
@@ -245,6 +251,8 @@ int main(int argc, char* argv[]) {
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cerr << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }
