@@ -52,7 +52,7 @@ int main(int argc, char** argv)
         const std::size_t global_size = (num_options * local_size) / ITEMS_PER_WORK_ITEM; // It requires num_options be divisible by ITEMS_PER_WORK_ITEM
         const int block_n = path_length / (local_size * VEC_SIZE);
 
-        timer<timer_enabled> tt{};
+        timer tt{};
         double total_time = 0.0;
 
         namespace mkl_rng = oneapi::mkl::rng;

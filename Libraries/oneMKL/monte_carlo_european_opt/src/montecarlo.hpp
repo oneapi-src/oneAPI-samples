@@ -4,8 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#ifndef _MONTECARLO_HPP
-#define _MONTECARLO_HPP
+#pragma once
 
 #define _USE_MATH_DEFINES
 
@@ -96,5 +95,3 @@ const MonteCarlo_vector& h_StockPrice, const MonteCarlo_vector& h_OptionStrike, 
     std::cout << "Max Error        = "<< max_delta << std::endl;
     std::cout << (sum_reserve > 1.0f ? "TEST PASSED!" : "TEST FAILED!") << std::endl;
 }
-
-#endif // _MONTECARLO_HPP
