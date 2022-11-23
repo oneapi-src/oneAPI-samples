@@ -52,9 +52,6 @@ int main(int argc, char** argv)
         const std::size_t global_size = (num_options * local_size) / ITEMS_PER_WORK_ITEM; // It requires num_options be divisible by ITEMS_PER_WORK_ITEM
         const int block_n = path_length / (local_size * VEC_SIZE);
 
-        std::cout << "Running on " << my_queue.get_device().get_info<sycl::info::device::name>() << std::endl;
-        std::cout << "Driver:    " << my_queue.get_device().get_info<sycl::info::device::driver_version>() << std::endl;
-
         timer<timer_enabled> tt{};
         double total_time = 0.0;
 

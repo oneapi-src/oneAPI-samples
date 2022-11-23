@@ -84,13 +84,12 @@ If everything is working correctly, the program will run the Monte Carlo simulat
 After the simulation, results will be checked against the known true values
 given by the Black-Scholes formula, and the absolute error is output.
 
+Example of output:
 ```
 $ ./montecarlo
 
 MonteCarlo European Option Pricing in Double precision
 Pricing 384000 Options with Path Length = 262144, sycl::vec size = 8, Options Per Work Item = 4 and Iterations = 5
-Running on Intel(R) Xeon(R) Gold 6354 CPU @ 3.00GHz
-Driver:    <your driver version>
 Completed in 67.6374 seconds. Options per second = 22709.3
 Running quality test...
 L1_Norm          = 0.000480579
