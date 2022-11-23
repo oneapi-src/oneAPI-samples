@@ -109,7 +109,6 @@ int main(int argc, char** argv)
                     {
                         const std::size_t i_options = item.get_group_linear_id() * ITEMS_PER_WORK_ITEM + i;
                         const DataType VBySqrtT = VLog2E * sycl::sqrt(h_OptionYears_ptr[i_options]);
-                        const DataType sqrt_2_sigma = M_SQRT2 * VBySqrtT;
                         const DataType MuByT = MuLog2E * h_OptionYears_ptr[i_options];
                         const DataType Y = h_StockPrice_ptr[i_options];
                         const DataType Z = h_OptionStrike_ptr[i_options];
