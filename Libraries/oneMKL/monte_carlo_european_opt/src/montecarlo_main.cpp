@@ -31,16 +31,16 @@ int main(int argc, char** argv)
 
         sycl::queue my_queue;
         sycl::usm_allocator<DataType, sycl::usm::alloc::shared> alloc(my_queue);
-        std::vector<DataType, decltype(alloc)> h_CallResult(num_options, alloc);
-        std::vector<DataType, decltype(alloc)> h_CallConfidence(num_options, alloc);
-        std::vector<DataType, decltype(alloc)> h_StockPrice(num_options, alloc);
-        std::vector<DataType, decltype(alloc)> h_OptionStrike(num_options, alloc);
-        std::vector<DataType, decltype(alloc)> h_OptionYears(num_options, alloc);
-        DataType* h_CallResult_ptr = h_CallResult.data();
-        DataType* h_CallConfidence_ptr = h_CallConfidence.data();
-        DataType* h_StockPrice_ptr = h_StockPrice.data();
-        DataType* h_OptionStrike_ptr = h_OptionStrike.data();
-        DataType* h_OptionYears_ptr = h_OptionYears.data();
+        std::vector<DataType, decltype(alloc)> h_call_result(num_options, alloc);
+        std::vector<DataType, decltype(alloc)> h_call_confidence(num_options, alloc);
+        std::vector<DataType, decltype(alloc)> h_stock_price(num_options, alloc);
+        std::vector<DataType, decltype(alloc)> h_option_strike(num_options, alloc);
+        std::vector<DataType, decltype(alloc)> h_option_years(num_options, alloc);
+        DataType* h_call_result_ptr = h_call_result.data();
+        DataType* h_call_confidence_ptr = h_call_confidence.data();
+        DataType* h_stock_price_ptr = h_stock_price.data();
+        DataType* h_option_strike_ptr = h_option_strike.data();
+        DataType* h_option_years_ptr = h_option_years.data();
 
         // calculate the number of blocks
         constexpr DataType fpath_lengthN = static_cast<DataType>(path_length);
@@ -58,9 +58,9 @@ int main(int argc, char** argv)
         namespace mkl_rng = oneapi::mkl::rng;
 
         mkl_rng::philox4x32x10 engine(my_queue, rand_seed); // random number generator object
-        auto rng_event_1 = mkl_rng::generate(mkl_rng::uniform<DataType>(5.0, 50.0), engine, num_options, h_StockPrice_ptr);
-        auto rng_event_2 = mkl_rng::generate(mkl_rng::uniform<DataType>(10.0, 25.0), engine, num_options, h_OptionStrike_ptr);
-        auto rng_event_3 = mkl_rng::generate(mkl_rng::uniform<DataType>(1.0, 5.0), engine, num_options, h_OptionYears_ptr);
+        auto rng_event_1 = mkl_rng::generate(mkl_rng::uniform<DataType>(5.0, 50.0), engine, num_options, h_stock_price_ptr);
+        auto rng_event_2 = mkl_rng::generate(mkl_rng::uniform<DataType>(10.0, 25.0), engine, num_options, h_option_strike_ptr);
+        auto rng_event_3 = mkl_rng::generate(mkl_rng::uniform<DataType>(1.0, 5.0), engine, num_options, h_option_years_ptr);
 
         std::size_t n_states = global_size;
         using EngineType =
@@ -105,10 +105,11 @@ int main(int argc, char** argv)
                     for(std::size_t i = 0; i < ITEMS_PER_WORK_ITEM; ++i)
                     {
                         const std::size_t i_options = item.get_group_linear_id() * ITEMS_PER_WORK_ITEM + i;
-                        const DataType VBySqrtT = VLog2E * sycl::sqrt(h_OptionYears_ptr[i_options]);
-                        const DataType MuByT = MuLog2E * h_OptionYears_ptr[i_options];
-                        const DataType Y = h_StockPrice_ptr[i_options];
-                        const DataType Z = h_OptionStrike_ptr[i_options];
+                        DataType option_years = h_option_years_ptr[i_options];
+                        const DataType VBySqrtT = VLog2E * sycl::sqrt(option_years);
+                        const DataType MuByT = MuLog2E * option_years;
+                        const DataType Y = h_stock_price_ptr[i_options];
+                        const DataType Z = h_option_strike_ptr[i_options];
                         DataType v0 = 0, v1 = 0;
 
                         mkl_rng::device::gaussian<DataType> distr(MuByT, VBySqrtT);
@@ -116,27 +117,31 @@ int main(int argc, char** argv)
                         for (int block = 0; block < block_n; ++block)
                         {
                             auto rng_val_vec = mkl_rng::device::generate(distr, local_state);
+                            auto rng_val = Y * sycl::exp2(rng_val_vec) - Z;
                             for (int lane = 0; lane < VEC_SIZE; ++lane)
                             {
-                                DataType rng_val = Y * sycl::exp2(rng_val_vec[lane]) - Z;
-                                if (rng_val > DataType{})
-                                {
-                                    v0 += rng_val;
-                                    v1 += rng_val * rng_val;
-                                }
+                                DataType rng_element = sycl::max(rng_val[lane], DataType{});
+
+                                // reduce within the work-item
+                                v0 += rng_element;
+                                v1 += rng_element * rng_element;
                             }
                         }
 
+                        // reduce within the work-group
                         v0 = sycl::reduce_over_group(item.get_group(), v0, std::plus<>());
                         v1 = sycl::reduce_over_group(item.get_group(), v1, std::plus<>());
 
+                        const DataType exprt = sycl::exp2(RLog2E * option_years);
+                        DataType call_result = exprt * v0 * (DataType(1) / fpath_lengthN);
+
+                        const DataType std_dev = sycl::sqrt((fpath_lengthN * v1 - v0 * v0) * stddev_denom);
+                        DataType call_confidence = static_cast<DataType>(exprt * std_dev * confidence_denom);
+
                         if(item.get_local_id() == 0)
                         {
-                            const DataType exprt = sycl::exp2(RLog2E * h_OptionYears_ptr[i_options]);
-                            h_CallResult_ptr[i_options] = exprt * v0 * (DataType(1) / fpath_lengthN);
-
-                            const DataType std_dev = sycl::sqrt((fpath_lengthN * v1 - v0 * v0) * stddev_denom);
-                            h_CallConfidence_ptr[i_options] = static_cast<DataType>(exprt * std_dev * confidence_denom);
+                            h_call_result_ptr[i_options] = call_result;
+                            h_call_confidence_ptr[i_options] = call_confidence;
                         }
                     }
             }).wait_and_throw();
@@ -148,7 +153,7 @@ int main(int argc, char** argv)
         std::cout << "Completed in " << total_time << " seconds. Options per second = " << static_cast<double>(num_options * (num_iterations - 1)) / total_time << std::endl;
 
         // check results
-        check(h_CallResult, h_CallConfidence, h_StockPrice, h_OptionStrike, h_OptionYears);
+        check(h_call_result, h_call_confidence, h_stock_price, h_option_strike, h_option_years);
     }
     catch (sycl::exception e) {
         std::cout << e.what();
