@@ -267,17 +267,17 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 ### FPGA Device
 ```
     Parsing database files in: ../data/sf1
-    Parsing LINEITEM table from: ../data/sf1
+    Parsing LINEITEM table from: ../data/sf1/lineitem.tbl
     Finished parsing LINEITEM table with 6001215 rows
-    Parsing ORDERS table from: ../data/sf1
+    Parsing ORDERS table from: ../data/sf1/orders.tbl
     Finished parsing ORDERS table with 1500000 rows
-    Parsing PARTS table from: ../data/sf1
+    Parsing PARTS table from: ../data/sf1/part.tbl
     Finished parsing PARTS table with 200000 rows
-    Parsing SUPPLIER table from: ../data/sf1
+    Parsing SUPPLIER table from: ../data/sf1/supplier.tbl
     Finished parsing SUPPLIER table with 10000 rows
-    Parsing PARTSUPPLIER table from: ../data/sf1
+    Parsing PARTSUPPLIER table from: ../data/sf1/partsupp.tbl
     Finished parsing PARTSUPPLIER table with 800000 rows
-    Parsing NATION table from: ../data/sf1
+    Parsing NATION table from: ../data/sf1/nation.tbl
     Finished parsing NATION table with 25 rows
     Database SF = 1
     Running Q1 within 90 days of 1998-12-1
@@ -290,9 +290,9 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
     Validating query 1 test results
     Running Q1 within 90 days of 1998-12-1
     Validating query 1 test results
-    Total processing time: 34.389 ms
-    Kernel processing time: 3.16621 ms
-    Throughput: 315.835 queries/s
+    Processing time: 44.7673 ms
+    Kernel time: 4.4103 ms
+    Throughput: 226.742 queries/s
     PASSED
 ```
 
