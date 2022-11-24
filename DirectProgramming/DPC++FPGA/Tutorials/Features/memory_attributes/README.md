@@ -200,6 +200,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -236,6 +240,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -311,7 +319,12 @@ There are often many ways to generate a stall-free memory system. As a programme
      ./memory_attributes.fpga_emu     (Linux)
      memory_attributes.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./memory_attributes.fpga_sim     (Linux)
+     memory_attributes.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./memory_attributes.fpga         (Linux)
      memory_attributes.fpga.exe       (Windows)
