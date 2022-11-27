@@ -71,9 +71,11 @@ event Consumer(queue &q, buffer<int, 1> &out_buf) {
 }
 
 int main(int argc, char *argv[]) {
-  // Default values for the buffer size is based on whether the target is the
-  // FPGA emulator or actual FPGA hardware
-#if defined(FPGA_EMULATOR)
+  // Default values for the buffer size is based on a reasonable runtime for 
+  // different targets
+#if defined(FPGA_SIMULATOR)
+  size_t array_size = 1 << 7;
+#elif defined(FPGA_EMULATOR)
   size_t array_size = 1 << 12;
 #else
   size_t array_size = 1 << 20;
@@ -102,7 +104,9 @@ int main(int argc, char *argv[]) {
     producer_input[i] = rand() % max_val;
   }
 
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
+#elif defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
