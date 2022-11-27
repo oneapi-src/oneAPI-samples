@@ -217,7 +217,6 @@ double JacobiMethodGpu(const float *A, const double *b,
          local_accessor<double, 1>
             b_shared_acc_ct1(range<1>(ROWS_PER_CTA + 1), cgh);	     
 	
-	
          cgh.parallel_for(sycl::nd_range<3>(nblocks * nthreads, nthreads),
                           [=](sycl::nd_item<3> item_ct1)
                               [[intel::reqd_sub_group_size(ROWS_PER_CTA)]] {
