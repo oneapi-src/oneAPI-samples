@@ -11,16 +11,16 @@ run_all: maxloc_operator maxloc_implicit maxloc_buffered maxloc_usm
 	./maxloc_usm
 
 maxloc_operator: maxloc_operator.cpp
-	dpcpp $< -o $@
+	icpx $< -fsycl -o $@
 
 maxloc_implicit: maxloc_implicit.cpp
-	dpcpp $< -o $@
+	icpx $< -fsycl -o $@
 
 maxloc_buffered: maxloc_buffered.cpp
-	dpcpp $< -o $@
+	icpx $< -fsycl -o $@
 
 maxloc_usm: maxloc_usm.cpp
-	dpcpp $< -o $@
+	icpx $< -fsycl -o $@
 
 clean:
 	-rm -f maxloc_operator maxloc_implicit maxloc_buffered maxloc_usm
