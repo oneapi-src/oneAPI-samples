@@ -16,7 +16,7 @@
 #include <numeric>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl/rng/device.hpp"
 
 using namespace oneapi;

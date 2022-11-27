@@ -1,7 +1,7 @@
 #ifndef __DIAG_RECIPROCAL__
 #define __DIAG_RECIPROCAL__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"

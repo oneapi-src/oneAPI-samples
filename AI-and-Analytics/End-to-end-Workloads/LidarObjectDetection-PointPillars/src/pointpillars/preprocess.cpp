@@ -16,7 +16,7 @@
  */
 
 #include "pointpillars/preprocess.hpp"
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <iostream>
 #include "devicemanager/devicemanager.hpp"

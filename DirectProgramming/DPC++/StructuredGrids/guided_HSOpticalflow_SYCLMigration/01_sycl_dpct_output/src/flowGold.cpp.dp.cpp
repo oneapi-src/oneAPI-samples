@@ -33,7 +33,7 @@
 
 #include "flowGold.h"
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cmath>
 #include <dpct/dpct.hpp>
 

@@ -38,7 +38,7 @@ const float THRESHOLD = 0.05f;
 
 #include <helper_functions.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cmath>
 #include <dpct/dpct.hpp>
 
