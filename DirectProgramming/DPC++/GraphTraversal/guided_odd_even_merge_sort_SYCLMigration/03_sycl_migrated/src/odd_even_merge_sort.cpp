@@ -31,54 +31,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <CL/sycl.hpp>
+using namespace sycl;
+
 #include <assert.h>
 
-#include <sycl/sycl.hpp>
-#include <dpct/dpct.hpp>
-
-#include "sortingNetworks_common.h"
-#include "sortingNetworks_common.hpp"
+#include "sorting_networks_common.h"
+#include "sorting_networks_common.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Monolithic Bacther's sort kernel for short arrays fitting into shared memory
 ////////////////////////////////////////////////////////////////////////////////
 void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                             uint *d_SrcVal, uint arrayLength, uint dir,
-                            sycl::nd_item<3> item_ct1, uint *s_key,
-                            uint *s_val) {
+                            nd_item<3> item, uint *s_key, uint *s_val) {
+  
   // Offset to the beginning of subbatch and load data
-  d_SrcKey +=
-      item_ct1.get_group(2) * SHARED_SIZE_LIMIT + item_ct1.get_local_id(2);
-  d_SrcVal +=
-      item_ct1.get_group(2) * SHARED_SIZE_LIMIT + item_ct1.get_local_id(2);
-  d_DstKey +=
-      item_ct1.get_group(2) * SHARED_SIZE_LIMIT + item_ct1.get_local_id(2);
-  d_DstVal +=
-      item_ct1.get_group(2) * SHARED_SIZE_LIMIT + item_ct1.get_local_id(2);
-  s_key[item_ct1.get_local_id(2) + 0] = d_SrcKey[0];
-  s_val[item_ct1.get_local_id(2) + 0] = d_SrcVal[0];
-  s_key[item_ct1.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)] =
+  d_SrcKey += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
+  d_SrcVal += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
+  d_DstKey += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
+  d_DstVal += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
+  s_key[item.get_local_id(2) + 0] = d_SrcKey[0];
+  s_val[item.get_local_id(2) + 0] = d_SrcVal[0];
+  s_key[item.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)] =
       d_SrcKey[(SHARED_SIZE_LIMIT / 2)];
-  s_val[item_ct1.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)] =
+  s_val[item.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)] =
       d_SrcVal[(SHARED_SIZE_LIMIT / 2)];
 
   for (uint size = 2; size <= arrayLength; size <<= 1) {
     uint stride = size / 2;
-    uint offset = item_ct1.get_local_id(2) & (stride - 1);
+    uint offset = item.get_local_id(2) & (stride - 1);
 
     {
-      item_ct1.barrier();
-      uint pos = 2 * item_ct1.get_local_id(2) -
-                 (item_ct1.get_local_id(2) & (stride - 1));
+      item.barrier();
+      uint pos =
+          2 * item.get_local_id(2) - (item.get_local_id(2) & (stride - 1));
       Comparator(s_key[pos + 0], s_val[pos + 0], s_key[pos + stride],
                  s_val[pos + stride], dir);
       stride >>= 1;
     }
 
     for (; stride > 0; stride >>= 1) {
-      item_ct1.barrier();
-      uint pos = 2 * item_ct1.get_local_id(2) -
-                 (item_ct1.get_local_id(2) & (stride - 1));
+      item.barrier();
+      uint pos =
+          2 * item.get_local_id(2) - (item.get_local_id(2) & (stride - 1));
 
       if (offset >= stride)
         Comparator(s_key[pos - stride], s_val[pos - stride], s_key[pos + 0],
@@ -86,13 +82,13 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     }
   }
 
-  item_ct1.barrier();
-  d_DstKey[0] = s_key[item_ct1.get_local_id(2) + 0];
-  d_DstVal[0] = s_val[item_ct1.get_local_id(2) + 0];
+  item.barrier();
+  d_DstKey[0] = s_key[item.get_local_id(2) + 0];
+  d_DstVal[0] = s_val[item.get_local_id(2) + 0];
   d_DstKey[(SHARED_SIZE_LIMIT / 2)] =
-      s_key[item_ct1.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)];
+      s_key[item.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)];
   d_DstVal[(SHARED_SIZE_LIMIT / 2)] =
-      s_val[item_ct1.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)];
+      s_val[item.get_local_id(2) + (SHARED_SIZE_LIMIT / 2)];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,10 +97,9 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
 ////////////////////////////////////////////////////////////////////////////////
 void oddEvenMergeGlobal(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                         uint *d_SrcVal, uint arrayLength, uint size,
-                        uint stride, uint dir, sycl::nd_item<3> item_ct1) {
+                        uint stride, uint dir, nd_item<3> item) {
   uint global_comparatorI =
-      item_ct1.get_group(2) * item_ct1.get_local_range().get(2) +
-      item_ct1.get_local_id(2);
+      item.get_group(2) * item.get_local_range().get(2) + item.get_local_id(2);
 
   // Odd-even merge
   uint pos = 2 * global_comparatorI - (global_comparatorI & (stride - 1));
@@ -151,16 +146,13 @@ uint factorRadix2(uint *log2L, uint L) {
   } else {
     for (*log2L = 0; (L & 1) == 0; L >>= 1, log2L++)
       ;
-
     return L;
   }
 }
 
 extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                                  uint *d_SrcVal, uint batchSize,
-                                 uint arrayLength, uint dir) {
-  dpct::device_ext &dev_ct1 = dpct::get_current_device();
-  sycl::queue &q_ct1 = dev_ct1.default_queue();
+                                 uint arrayLength, uint dir, queue &q) {
   // Nothing to sort
   if (arrayLength < 2) return 0;
 
@@ -171,65 +163,59 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
 
   dir = (dir != 0);
 
-  uint blockCount = (batchSize * arrayLength) / SHARED_SIZE_LIMIT;
-  uint threadCount = SHARED_SIZE_LIMIT / 2;
+  uint num_workgroups = (batchSize * arrayLength) / SHARED_SIZE_LIMIT;
+  uint workgroup_size = SHARED_SIZE_LIMIT / 2;
 
   if (arrayLength <= SHARED_SIZE_LIMIT) {
     assert(SHARED_SIZE_LIMIT % arrayLength == 0);
 
-    q_ct1.submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_key_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_val_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
+    q.submit([&](handler &h) {
+      local_accessor<uint, 1>
+          s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
+      local_accessor<uint, 1>
+          s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
+      h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
+                                       range<3>(1, 1, workgroup_size),
+                                   range<3>(1, 1, workgroup_size)),
+                       [=](nd_item<3> item) {
                          oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey,
                                                 d_SrcVal, arrayLength, dir,
-                                                item_ct1,
-                                                s_key_acc_ct1.get_pointer(),
-                                                s_val_acc_ct1.get_pointer());
+                                                item, s_key_acc.get_pointer(),
+                                                s_val_acc.get_pointer());
                        });
     });
   } else {
-    q_ct1.submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_key_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_val_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
+    q.submit([&](handler &h) {
+      local_accessor<uint, 1>
+          s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
+      local_accessor<uint, 1>
+          s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
-                         oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey,
-                                                d_SrcVal, SHARED_SIZE_LIMIT,
-                                                dir, item_ct1,
-                                                s_key_acc_ct1.get_pointer(),
-                                                s_val_acc_ct1.get_pointer());
+      h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
+                                       range<3>(1, 1, workgroup_size),
+                                   range<3>(1, 1, workgroup_size)),
+                       [=](nd_item<3> item) {
+                         oddEvenMergeSortShared(
+                             d_DstKey, d_DstVal, d_SrcKey, d_SrcVal,
+                             SHARED_SIZE_LIMIT, dir, item,
+                             s_key_acc.get_pointer(), s_val_acc.get_pointer());
                        });
     });
 
     for (uint size = 2 * SHARED_SIZE_LIMIT; size <= arrayLength; size <<= 1)
       for (unsigned stride = size / 2; stride > 0; stride >>= 1) {
-        q_ct1.parallel_for(
-            sycl::nd_range<3>(
-                sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) *
-                    sycl::range<3>(1, 1, 256),
-                sycl::range<3>(1, 1, 256)),
-            [=](sycl::nd_item<3> item_ct1) {
+        q.parallel_for(
+            nd_range<3>(range<3>(1, 1, (batchSize * arrayLength) / 512) *
+                            range<3>(1, 1, 256),
+                        range<3>(1, 1, 256)),
+            [=](nd_item<3> item) {
               oddEvenMergeGlobal(d_DstKey, d_DstVal, d_DstKey, d_DstVal,
-                                 arrayLength, size, stride, dir, item_ct1);
+                                 arrayLength, size, stride, dir, item);
             });
         break;
       }
   }
-  return threadCount;
+
+  return workgroup_size;
 }

@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.4.0)
 
 set(CMAKE_CXX_COMPILER "icpx")
 
-project (odd-even-merge-sort)
+project (guided_odd_even_merge_sort_SYCLMigration)
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
 	message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")
@@ -18,9 +18,9 @@ option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject sycl_migra
 option (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject sycl_dpct_migrated" ON)
 
 if (BUILD_SYCL_MIGRATED_SUBPROJECT)
-	add_subdirectory (sycl_migrated)
+	add_subdirectory (03_sycl_migrated)
 endif ()
 if (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT)
-	add_subdirectory (sycl_dpct_migrated)
+	add_subdirectory (02_sycl_dpct_migrated)
 endif ()
 
