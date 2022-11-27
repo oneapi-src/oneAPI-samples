@@ -178,7 +178,7 @@ For example, to do AoT compilation for a specific GPU device ID:
 ```
 $ cmake .. -DSYCL_COMPILE_TARGET=<device id>
 ```
-where the `<device id` must be replaced with the actual device ID in the hex format.
+where the `<device id>` must be replaced with the actual device ID in the hex format.
 Use `sycl-ls` command to list available devices on your target machine:
 
 ```
