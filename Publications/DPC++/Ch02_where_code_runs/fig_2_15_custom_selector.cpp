@@ -8,9 +8,9 @@ using namespace sycl;
 
 // START CODE SNIP
 
-class my_selector : public device_selector {
+class my_selector {
   public:
-    int operator()(const device &dev) const override {
+    int operator()(const device &dev) const {
       if (
           dev.get_info<info::device::name>().find("Arria")
             != std::string::npos &&

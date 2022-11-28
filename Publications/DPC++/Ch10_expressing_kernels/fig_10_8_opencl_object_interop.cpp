@@ -21,7 +21,7 @@ int main() {
 // BEGIN CODE SNIP
     // Note: This must select a device that supports interop with OpenCL kernel
     // objects!
-    queue Q{ cpu_selector{} };
+    queue Q{ cpu_selector_v };
     context sc = Q.get_context();
 
     const char* kernelSource =

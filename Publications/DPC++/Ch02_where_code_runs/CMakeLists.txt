@@ -15,11 +15,6 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_2_9_host_selector
-    SOURCES fig_2_9_host_selector.cpp)
-
-add_book_sample(
-    TEST
     TARGET fig_2_10_cpu_selector
     SOURCES fig_2_10_cpu_selector.cpp)
 
