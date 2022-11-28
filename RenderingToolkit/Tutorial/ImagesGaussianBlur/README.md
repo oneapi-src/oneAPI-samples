@@ -1,7 +1,7 @@
 # Image Gaussian Blur example program
 
 ## Purpose
-This advanced SYCL code example implements a Gaussian blur filter, blurring
+This SYCL code example implements a Gaussian blur filter, blurring
 either a JPG or PNG image from the command line. The original file is not modified.
 The output file is in a PNG format.
 
@@ -18,7 +18,7 @@ __Output Image:__
 | Hardware                          | Intel&reg; 11th Gen Intel Core i7-1185G7 + Mesa Intel Xe Graphics
 | Compiler Toolchain                | Visual Studio Code IDE, Intel oneAPI Base Toolkit (inc its prerequisite)
 | Libraries                         | Install Intel oneAPI Base Toolkit 
-| Tools                             | Visual Studio Code 1.73.1, a .png capable image viewer
+| Tools                             | Visual Studio Code 1.73.1, VSCode Microsoft C/C++ extns, a .png capable image viewer
 
 ## Build and Run using Visual Code Studio
 
@@ -35,8 +35,9 @@ code .
 Visual Studio Code will open this project displaying its files in the Explorer 
 pane. 
 The project is already set up with build configurations to build either a
-debug build or a release build of the program. When a program is built it is
-placed in the bin directory of this project's top folder.
+debug build or a release build of the program. When a program is built, it is
+placed in the bin directory of this project's top folder. Note: The
+configurations expect a bin directory to be present to work. 
 
 To build the program hit Ctrl+Shift+b and choose the type of program to build.
 The debug executable will have a '_d' appended to its name.
