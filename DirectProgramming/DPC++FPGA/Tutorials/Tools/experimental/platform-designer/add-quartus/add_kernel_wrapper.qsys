@@ -14,8 +14,8 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:design xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>Altera Corporation</ipxact:vendor>
-  <ipxact:library>add_kernel_wrapper</ipxact:library>
-  <ipxact:name>add_kernel_wrapper</ipxact:name>
+  <ipxact:library>$${FILENAME}</ipxact:library>
+  <ipxact:name>$${FILENAME}</ipxact:name>
   <ipxact:version>1.0</ipxact:version>
   <ipxact:componentInstances></ipxact:componentInstances>
   <ipxact:vendorExtensions>
@@ -1154,31 +1154,31 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;hdlLibraryName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;QUARTUS_SYNTH&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VERILOG&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
@@ -1449,31 +1449,31 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;hdlLibraryName&gt;add_kernel_wrapper_clock_in&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;QUARTUS_SYNTH&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VERILOG&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
@@ -2261,31 +2261,31 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;hdlLibraryName&gt;add_kernel_wrapper_master_0&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;QUARTUS_SYNTH&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VERILOG&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
@@ -2467,21 +2467,7 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/descriptors&gt;
     &lt;/systemInfoParameterDescriptors&gt;
     &lt;systemInfos&gt;
-        &lt;connPtSystemInfos&gt;
-            &lt;entry&gt;
-                &lt;key&gt;clk&lt;/key&gt;
-                &lt;value&gt;
-                    &lt;connectionPointName&gt;clk&lt;/connectionPointName&gt;
-                    &lt;suppliedSystemInfos/&gt;
-                    &lt;consumedSystemInfos&gt;
-                        &lt;entry&gt;
-                            &lt;key&gt;CLOCK_RATE&lt;/key&gt;
-                            &lt;value&gt;50000000&lt;/value&gt;
-                        &lt;/entry&gt;
-                    &lt;/consumedSystemInfos&gt;
-                &lt;/value&gt;
-            &lt;/entry&gt;
-        &lt;/connPtSystemInfos&gt;
+        &lt;connPtSystemInfos/&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
             </ipxact:parameter>
@@ -2604,31 +2590,31 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;hdlLibraryName&gt;add_kernel_wrapper_reset_in&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;QUARTUS_SYNTH&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VERILOG&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;SIM_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
+            &lt;fileSetName&gt;CDC_VHDL&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
@@ -2689,8 +2675,8 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="master_0.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="add_fpga_ip_export_1_di_0.clock"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="add_fpga_ip_export_1_di_0.clock2x"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="22.3" altera:start="master_0.master_reset" altera:end="add_fpga_ip_export_1_di_0.resetn"></altera:connection>

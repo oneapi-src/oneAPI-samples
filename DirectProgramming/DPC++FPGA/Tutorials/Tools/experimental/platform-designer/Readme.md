@@ -1,12 +1,12 @@
-# Platform Designer
+# Platform Designer Pro
 
 This example design shows how to use an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with the rest of the Intel® FPGA software suite.
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the Intel® Arria 10 SX SoC Development Kit 
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition <br> Intel® Platform Designer Prime Pro Edition <br> Siemens*  Questa*-Intel® FPGA Starter Edition (or Siemens* Questa*-Intel® FPGA Edition)
+| Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition <br> Intel® Platform Designer Pro Edition <br> Supported simulator software: <ul><li>Siemens*  Questa*-Intel® FPGA Starter Edition</li> <li>Siemens* Questa*-Intel® FPGA Edition</li></ul>
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel to an Intel® Quartus® Prime Pro Edition project
 | Time to complete                  | 1 hour
 
@@ -14,14 +14,18 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 
 This sample demonstrates how to add a oneAPI kernel to an Intel® Platform Designer system, and how to run it on a hardware board. It uses a JTAG to Avalon MM Agent IP to expose a oneAPI IP Authoring kernel to the JTAG control interface. This lets the user control and observe the behavior of the kernel using the System Console application.
 
+![](Readme.md.assets/csr-output-example-simple.svg)
+
 This example is intended for users interested in creating standalone modules that can be included in Intel® Quartus® Prime projects. It serves as a minimal example, and while it targets a very specific board, a user familiar with the Intel® Quartus® Prime suite should be able to easily port this design to other hardware.
 
 ### Board-specific Considerations
 
-This design is intended to work with the [Intel® Arria® 10 SX SoC Development Kit](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD). The board specific configurations are:
+This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. The board specific configurations are:
 1. Choose `10AS066N3F40E2SG` device to match the devkit
-2. Choose pin `AP20 - CLKUSR` to drive the `i_clk` signal
-3. Use `jtag.sdc` from the Intel® Arria® 10 SoC Golden Hardware Reference Design (GHRD) [source code](https://github.com/altera-opensource/ghrd-socfpga).
+2. Choose pin `PIN_AM10` to drive the `i_clk` signal
+3. Choose pin `PIN_AR23` to drive the `fpga_led` signal
+4. Choose pin `PIN_AV21` to drive the `reset_button_n` signal
+5. Use `jtag.sdc` from the Intel® Arria® 10 SoC Golden Hardware Reference Design (GHRD) [source code](https://github.com/altera-opensource/ghrd-socfpga).
 
 ## Building the `platform_designer` Tutorial
 
@@ -45,19 +49,21 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make fpga_ip_export
+   $> cd add-oneapi
+   $> mkdir build
+   $> cd build
+   $> cmake ..
+   $> make fpga_ip_export
    ```
 
    Windows:
 
    ```bash
-   mkdir build
-   cd build
-   cmake -G "NMake Makefiles" ..
-   nmake fpga_ip_export
+   > cd add-oneapi
+   > mkdir build
+   > cd build
+   > cmake -G "NMake Makefiles" ..
+   > nmake fpga_ip_export
    ```
 
    For more details, see the Readme in the `add-oneapi` directory.
@@ -67,15 +73,15 @@ Follow these steps to compile and test the design:
    Linux:
    
    ```
-   cd add-quartus
-   quartus
+   $> cd ../../add-quartus
+   $> quartus
    ```
 
    Windows:
    
    ```
-   cd add-quartus
-   quartus.exe
+   > cd ../../add-quartus
+   > quartus.exe
    ```
 
    1. Set the project directory to be the `add-quartus` directory of this code sample.
@@ -117,13 +123,15 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```
-   cp -r add-oneapi/build/add.fpga_ip_export.prj_1/ add-quartus/
+   $> cd .. # navigate to project root if not there already
+   $> cp -r add-oneapi/build/add.fpga_ip_export.prj_1/ add-quartus/
    ```
 
    Windows:
 
    ```
-   xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
+   > cd .. # navigate to project root if not there already
+   > xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
    ```
 
 4. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the .prj directory.
@@ -172,17 +180,19 @@ automatically.
 
    2. Assign pins for the `fpga_led` and `reset_button_n` signals using the same methodology:
    
-      Pin planner from GHRD:
+      *Pin planner from GHRD:*
+
       ![](Readme.md.assets/pins-from-ghrd.png)
 
-      Final pin planner configuration:
+      *Final pin planner configuration:*
+
       ![](Readme.md.assets/pins-from-design.png)
 
 8. Now we will add the timing constraints. 
 
    1. If you are using the Intel® Arria® 10 SX SoC Dev Kit, you can find a timing constraints file for the JTAG interface (jtag.sdc) in the GHRD.
 
-   2. Create a new Synopsis Design Constraints (SDC) file named `add.sdc` and insert a new clock called `i_clk` to match the clock you defined in `sort.v`. Set the period to be 10ns:
+   2. Create a new Synopsis Design Constraints (SDC) file named `add.sdc` and insert a new clock called `i_clk` to match the clock you defined in `add.v`. Set the period to be 10ns:
 
       ```
       set_time_format -unit ns -decimal_places 3
@@ -204,9 +214,11 @@ automatically.
 ### Additional Documentation
 - [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
 - [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
+- [Intel® Arria® 10 SoC Golden System Reference Design](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD) describes a reference design you can use with your Intel® Arria® 10 SX SoC Developer kit.
+- [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html) describes the Intel® Arria® 10 SX SoC Development kit in greater detail.
+- [Intel® FPGA Software Installation and Licensing](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/faq.html) describes how to license Intel® Quartus® Prime Pro software.
 - [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
 - [Intel® Quartus® Prime Pro Edition User Guide: Getting Started](https://www.intel.com/content/www/us/en/docs/programmable/683463/current/faq.html) introduces you to the Intel® Quartus® Prime Pro software.
-- [Intel® FPGA Software Installation and Licensing](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/faq.html) describes how to license Intel® Quartus® Prime Pro software.
 - [Intel® Quartus® Prime Pro Edition User Guide: Platform Designer](https://www.intel.com/content/www/us/en/docs/programmable/683609/current/faq.html) describes the Intel® Platform Designer software.
 - [Intel® Quartus® Prime Pro Edition User Guide: Programmer](https://www.intel.com/content/www/us/en/docs/programmable/683039/current/programmer-user-guide.html) describes the Intel® Quartus® Prime Pro Programmer software.
 
