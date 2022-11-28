@@ -376,7 +376,7 @@ at array-transform.cpp:56
 : List the loaded shared libraries.  While debugging the kernel offloaded
   to GPU, use this command to find out the memory range of the kernel binary.
 
-`dump memory <filename> <start_addr> <end_addr>
+`dump binary memory <filename> <start_addr> <end_addr>`
 : Dump the memory range from `start_addr` to `end_addr` into the file
  `filename`.
 
