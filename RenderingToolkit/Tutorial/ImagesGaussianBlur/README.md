@@ -52,6 +52,24 @@ A new image file will appear in the bin directory 'sample_image-blurred.png'.
 To view the image, select it in the directory folder app and hit return.
 Ubuntu will display the image using the preview app.
 
+## Build and Run using CMake
+### Linux*
+```
+mkdir build
+cd build
+cmake ..
+make
+```
+
+To blur an image, copy the images/sample_image.jpg to the directory of the new
+executable. Type in the terminal window:
+
+```
+cd src
+./gaussian_blur_d sample_image.jpg
+```
+Open the resulting file: `sample_image-blurred.png` with an image viewer.
+
 ## Debug the program
 
 ### Linux*
