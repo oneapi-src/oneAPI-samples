@@ -4,7 +4,7 @@
 
 #define SYCL_SIMPLE_SWIZZLES
 #include <array>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
 
 int main() {

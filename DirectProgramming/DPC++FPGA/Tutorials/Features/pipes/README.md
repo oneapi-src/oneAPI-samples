@@ -217,6 +217,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -254,6 +258,10 @@ To learn more about the extensions, see the
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -288,16 +296,21 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
      ./pipes.fpga_emu     (Linux)
      pipes.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./pipes.fpga_sim     (Linux)
+     pipes.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./pipes.fpga         (Linux)
      pipes.fpga.exe       (Windows)
      ```
 
 ### Example of Output
-You should see the following output in the console:
+You should see similar output in the console:
 
-1. When running on the FPGA emulator
+1. When running on the FPGA emulator or simulator
     ```
     Input Array Size: 8192
     Enqueuing producer...
@@ -317,7 +330,7 @@ You should see the following output in the console:
 
     PASSED: The results are correct
     ```
-   > **Note**: The FPGA emulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
+   > **Note**: The FPGA emulator or simulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
 
 2. When running on the FPGA device
     ```

@@ -145,6 +145,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make fpga_emu
      ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -175,6 +179,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (medium compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -212,7 +220,12 @@ Locate `report.html` in the `simple_host_streaming_report.prj/reports/` director
      ./simple_host_streaming.fpga_emu     (Linux)
      simple_host_streaming.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator:
+     ```
+     ./simple_host_streaming.fpga_sim     (Linux)
+     simple_host_streaming.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./simple_host_streaming.fpga         (Linux)
      simple_host_streaming.fpga.exe       (Windows)

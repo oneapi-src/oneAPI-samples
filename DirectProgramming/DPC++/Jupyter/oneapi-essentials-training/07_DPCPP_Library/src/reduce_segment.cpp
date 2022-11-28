@@ -9,8 +9,6 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
-#include <sycl/sycl.hpp>
-
 using namespace sycl;
 using namespace oneapi::dpl::execution;
 
@@ -51,7 +49,7 @@ int main() {
 
     //Calling the oneDPL reduce by search algorithm. We pass in the policy, the buffer iterators for the input vectors and the output. 
     // Default comparator is the operator < used here.
-    // dpl::reduce_by_segment returns a pair of iterators to the result_key_begin and result_vals_begin respectively
+    // onedpl::reduce_by_segment returns a pair of iterators to the result_key_begin and result_vals_begin respectively
     int count_keys,count_vals = 0;    
     
     auto pair_iters = oneapi::dpl::reduce_by_segment(make_device_policy(q), keys_begin, keys_end, vals_begin, result_key_begin, result_vals_begin);

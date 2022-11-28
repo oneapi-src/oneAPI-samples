@@ -62,7 +62,9 @@ void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
           }
-          for (size_t j = 0; j < kSize; j++)
+          // The trip count of this loop is different from the loop above to
+          // prevent the compiler optimizing array `a` out.
+          for (size_t j = 0; j < kSize / 2; j++)
             r += a[j];
         }
 
@@ -112,7 +114,7 @@ int GoldenResult(const IntArray &input_arr, int shift) {
     for (size_t j = 0; j < kSize; j++) {
       a[j] = input_arr[(i * 4 + j) % kSize] * shift;
     }
-    for (size_t j = 0; j < kSize; j++)
+    for (size_t j = 0; j < kSize / 2; j++)
       gr += a[j];
   }
 

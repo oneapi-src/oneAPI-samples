@@ -17,7 +17,7 @@ int main() {
     oneapi::dpl::counting_iterator<int> count_b = count_a + 100;
     int init = count_a[0]; // OK: init == 0
     //*count_b = 7; // ERROR: counting_iterator doesn't provide write operations
-    auto sum = std::reduce(dpl::execution::dpcpp_default,
+    auto sum = oneapi::dpl::reduce(dpl::execution::dpcpp_default,
      count_a, count_b, init); // sum is (0 + 0 + 1 + ... + 99) = 4950
     std::cout << "The Sum is: " <<sum<<"\n";
     

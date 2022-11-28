@@ -18,11 +18,11 @@ import dpctl
 import dpctl.tensor as dpt
 import numpy as np
 
-import numba_dppy
+import numba_dpex
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def sum_kernel(a, b, c):
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpex.get_global_id(0)
     c[i] = a[i] + b[i]
 
 
@@ -61,12 +61,12 @@ def select_device_ndarray(N):
     got = np.ones_like(a)
 
     # This context manager is specifying to use the Opencl GPU.
-    with numba_dppy.offload_to_sycl_device("gpu"):
+    with numba_dpex.offload_to_sycl_device("gpu"):
         sum_kernel[N, 1](a, b, got)
 
     expected = a + b
 
-    #assert np.array_equal(got, expected)
+    assert np.array_equal(got, expected)
     print("Correct result when numpy.ndarray is passed!")
 
 

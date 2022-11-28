@@ -17,7 +17,7 @@ using namespace std;
 // Number of complex numbers passing to the SYCL code
 static const int num_elements = 10000;
 
-class CustomDeviceSelector : public device_selector {
+class CustomDeviceSelector {
  public:
   CustomDeviceSelector(std::string vendorName) : vendorName_(vendorName){};
   int operator()(const device &dev) const override {

@@ -9,7 +9,7 @@
 
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 int main(){
   sycl::queue Q;
