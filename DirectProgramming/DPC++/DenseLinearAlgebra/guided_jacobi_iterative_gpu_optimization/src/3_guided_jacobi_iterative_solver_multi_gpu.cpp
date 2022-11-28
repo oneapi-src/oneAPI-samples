@@ -16,7 +16,7 @@
 
 using namespace sycl;
 
-typedef double Real;
+typedef float Real;
 
 // Program variables, feel free to change anything .
 static const int kSize = 30000;
@@ -29,9 +29,7 @@ static const std::uint32_t kSeed = 666;
 std::ofstream outfile;
 
 // Function responsible for generating a float type
-// diagonally dominant matrix. Float had to be used
-// as using double would result in segmentation faults
-// for extreamlly large matrixes. This is also an example
+// diagonally dominant matrix. This is also an example
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.

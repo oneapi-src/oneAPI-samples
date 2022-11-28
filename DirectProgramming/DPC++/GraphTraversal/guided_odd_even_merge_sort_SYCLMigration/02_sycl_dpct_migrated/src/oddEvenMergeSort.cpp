@@ -39,6 +39,8 @@
 #include "sortingNetworks_common.h"
 #include "sortingNetworks_common.hpp"
 
+using namespace sycl;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Monolithic Bacther's sort kernel for short arrays fitting into shared memory
 ////////////////////////////////////////////////////////////////////////////////
@@ -178,13 +180,11 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     assert(SHARED_SIZE_LIMIT % arrayLength == 0);
 
     q_ct1.submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_key_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_val_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
-
+      local_accessor<uint, 1>
+          s_key_acc_ct1(range<1>(SHARED_SIZE_LIMIT), cgh);
+      local_accessor<uint, 1>
+          s_val_acc_ct1(range<1>(SHARED_SIZE_LIMIT), cgh); 
+	      
       cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
                                              sycl::range<3>(1, 1, threadCount),
                                          sycl::range<3>(1, 1, threadCount)),
@@ -198,12 +198,10 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     });
   } else {
     q_ct1.submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_key_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
-      sycl::accessor<uint, 1, sycl::access_mode::read_write,
-                     sycl::access::target::local>
-          s_val_acc_ct1(sycl::range<1>(SHARED_SIZE_LIMIT), cgh);
+      local_accessor<uint, 1>
+          s_key_acc_ct1(range<1>(SHARED_SIZE_LIMIT), cgh);
+      local_accessor<uint, 1>
+          s_val_acc_ct1(range<1>(SHARED_SIZE_LIMIT), cgh);
 
       cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
                                              sycl::range<3>(1, 1, threadCount),

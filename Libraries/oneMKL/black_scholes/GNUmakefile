@@ -14,9 +14,9 @@ mkl_path   := $(MKL)
 acc        := $(strip $(ACC))
 headers    := $(wildcard *.hpp)
 
-cxx_flags  := -O3 -DMKL_ILP64 -I$(MKLROOT)/include -fno-sycl-early-optimizations
+cxx_flags  := -O3 -fsycl -DMKL_ILP64 -I$(MKLROOT)/include -fno-sycl-early-optimizations
 ldxx_flags := -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl -fsycl-device-code-split=per_kernel
-cxx        := dpcpp
+cxx        := icpx
 
 ifneq ($(acc),)
 cxx_flags += -DACC_$(acc)

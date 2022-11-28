@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 3.4)
-set (CMAKE_CXX_COMPILER "dpcpp")
+set (CMAKE_CXX_COMPILER "icpx")
+set(CMAKE_CXX_FLAGS "-fsycl")
 project (jacobi LANGUAGES CXX)
 
 if (NOT CMAKE_CXX_STANDARD)
