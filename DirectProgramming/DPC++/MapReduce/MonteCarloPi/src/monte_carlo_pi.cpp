@@ -20,31 +20,31 @@ constexpr int size_n = 10000;  // Must be greater than size_wg
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-const int num_wg = (int)ceil((double)size_n / (double)size_wg);
+const int num_wg = (int)ceil((float)size_n / (float)size_wg);
 
 // Output image dimensions
 constexpr int img_dimensions = 1024;
 // Consts for drawing the image plot
-constexpr double circle_outline = 0.025;
+constexpr float circle_outline = 0.025;
 // Radius of the circle in the image plot
 constexpr int radius = img_dimensions / 2;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-SYCL_EXTERNAL int GetPixelIndex(double x, double y) {
+SYCL_EXTERNAL int GetPixelIndex(float x, float y) {
   int img_x = x * radius + radius;
   int img_y = y * radius + radius;
   return img_y * img_dimensions + img_x;
 }
 
-// Returns a random double between -1.0 and 1.0
-double GetRandCoordinate() { return (double)rand() / (RAND_MAX / 2.0) - 1.0; }
+// Returns a random float between -1.0 and 1.0
+float GetRandCoordinate() { return (float)rand() / (RAND_MAX / 2.0) - 1.0; }
 
 // Creates an array representing the image data and inscribes a circle
 void DrawPlot(rgb image_plot[]) {
   for (int i = 0; i < img_dimensions * img_dimensions; ++i) {
     // calculate unit coordinates relative to the center of the image
-    double x = (double)(i % img_dimensions - radius) / radius;
-    double y = (double)(i / img_dimensions - radius) / radius;
+    float x = (float)(i % img_dimensions - radius) / radius;
+    float y = (float)(i / img_dimensions - radius) / radius;
     // draw the circumference of the circle
     if ((x * x + y * y) > 1 - circle_outline && (x * x + y * y) < 1) {
       image_plot[i].red = 255;
@@ -56,7 +56,7 @@ void DrawPlot(rgb image_plot[]) {
 
 // Performs the Monte Carlo simulation procedure for calculating pi, with size_n
 // number of samples.
-double MonteCarloPi(rgb image_plot[]) {
+float MonteCarloPi(rgb image_plot[]) {
   int total = 0;  // Stores the total number of simulated points falling within
                   // the circle
   coordinate coords[size_n];  // Array for storing the RNG coordinates
@@ -96,12 +96,12 @@ double MonteCarloPi(rgb image_plot[]) {
                        if (i < size_n) {  // Only runs if a work item's ID has a
                                           // corresponding sample coordinate
                          // Get random coords
-                         double x = coords_acc[i].x;
-                         double y = coords_acc[i].y;
+                         float x = coords_acc[i].x;
+                         float y = coords_acc[i].y;
 
                          // Check if coordinates are bounded by a circle of
                          // radius 1
-                         double hypotenuse_sqr = x * x + y * y;
+                         float hypotenuse_sqr = x * x + y * y;
                          if (hypotenuse_sqr <= 1.0) {  // If bounded
                            // increment total
                            total_acc += 1;
@@ -126,7 +126,7 @@ double MonteCarloPi(rgb image_plot[]) {
   }
 
   // return calculated value of pi
-  return 4.0 * (double)total / size_n;
+  return 4.0 * (float)total / size_n;
 }
 
 int main() {
@@ -148,8 +148,8 @@ int main() {
   // Perform Monte Carlo simulation to estimate pi (with timing)
   std::cout << "Calculating estimated value of pi...\n";
   dpc_common::TimeInterval t;
-  double pi = MonteCarloPi(image_plot.data());
-  double proc_time = t.Elapsed();
+  float pi = MonteCarloPi(image_plot.data());
+  float proc_time = t.Elapsed();
   std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi
             << "\n";
   std::cout << "\nComputation complete. The processing time was " << proc_time
