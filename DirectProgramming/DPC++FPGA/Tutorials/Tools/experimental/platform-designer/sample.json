@@ -1,0 +1,85 @@
+{
+  "guid": "293B78FB-40A3-4F81-A3CB-D2C3ED344AE1",
+  "name": "Platform Designer - Intel® Arria® 10 SX SoC Developer Kit",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Tools/experimental"],
+  "description": "An Intel® FPGA tutorial demonstrating how to export a reusable IP component to Intel® Quartus® Prime Pro and Platform Designer.",
+  "toolchain": ["icpx"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_sim",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_sim",
+          "./add.fpga_sim"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
+          "nmake fpga_emu",
+          "add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_sim",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
+          "nmake fpga_sim",
+          "add.fpga_sim.exe"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}
