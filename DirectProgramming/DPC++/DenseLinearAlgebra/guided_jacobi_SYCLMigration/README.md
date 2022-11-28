@@ -20,10 +20,10 @@ This sample contains four versions:
 
 |Folder Name   |Description
 |:---          |:---
-|`sycl_dpct_output`	| Contains output of Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code, this SYCL code has some unmigrated code which has to be manually fixed to get full functionality, the code does not functionally work.
-|`sycl_dpct_migrated`	| Contains Intel® DPC++ Compatibility Tool migrated SYCL code from CUDA code with manual changes done to fix the unmigrated code to work functionally.
-|`sycl_migrated`	| Contains manually migrated SYCL code from CUDA code (without using Intel® DPC++ Compatibility Tool).
-|`sycl_migrated_optimized`	| Contains manually migrated SYCL code from CUDA code with performance optimizations applied.
+|`01_sycl_dpct_output`	| Contains output of Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code, this SYCL code has some unmigrated code which has to be manually fixed to get full functionality, the code does not functionally work.
+|`02_sycl_dpct_migrated`	| Contains Intel® DPC++ Compatibility Tool migrated SYCL code from CUDA code with manual changes done to fix the unmigrated code to work functionally.
+|`03_sycl_migrated`	| Contains manually migrated SYCL code from CUDA code (without using Intel® DPC++ Compatibility Tool).
+|`04_sycl_migrated_optimized`	| Contains manually migrated SYCL code from CUDA code with performance optimizations applied.
 
 ## Prerequisites
 | Optimized for                     | Description
