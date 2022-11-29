@@ -13,7 +13,7 @@ MKL_LIBS = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequentia
 DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
 
 computed_tomography: computed_tomography.cpp
-	dpcpp $< -o $@ $(DPCPP_OPTS)
+	icpx $< -fsycl -o $@ $(DPCPP_OPTS)
 
 clean:
 	-rm -f computed_tomography radon.bmp restored.bmp

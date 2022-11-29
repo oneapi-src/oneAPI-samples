@@ -12,6 +12,27 @@ This FPGA reference design demonstrates an efficient GZIP and Snappy decompressi
 
 ## Prerequisites
 
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 4 sample that demonstrates a reference design.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
@@ -26,11 +47,11 @@ This reference design contains code to implement both GZIP and Snappy decompress
 
 ##### GZIP Decompression Engine
 
-![](gzip_decompression_engine_full.png)
+![](assets/gzip_decompression_engine_full.png)
 
 ##### Snappy Decompression Engine
 
-![](snappy_decompressor.png)
+![](assets/snappy_decompressor.png)
 
 The following sections will first describe the GZIP design, followed by the Snappy design, since the Snappy design is essentially a subset of the GZIP design.
 
@@ -40,7 +61,7 @@ GZIP is an implementation of the DEFLATE protocol. The structure of a GZIP file 
 
 #### GZIP File Structure
 
-![](gzip_file_format.png)
+![](assets/gzip_file_format.png)
 
 The DEFLATE compression algorithm performs LZ77 Encoding followed by Huffman encoding. Therefore, decompression decodes in the opposite order. For more information on the DEFLATE format and LZ77 and Huffman encoding/decoding, start with the [DEFLATE](https://en.wikipedia.org/wiki/Deflate) Wikipedia article.
 
@@ -60,13 +81,13 @@ The GZIP decompression engine in this reference design supports all three block 
 
 #### Dynamically Compressed Block
 
-![](deflate_dynamic_block_format.png)
+![](assets/deflate_dynamic_block_format.png)
 
 ### GZIP Decompression FPGA Design
 
 The figure below illustrates the GZIP decompression engine in isolation. It delineates the streaming GZIP decompressor from the streaming DEFLATE decompressor. The `GZIPMetaDataReader` kernel parses and strips away the GZIP header and footer data and forwards the consecutive DEFLATE blocks to the DEFLATE decompression engine.
 
-![](gzip_decompression_engine_ip.png)
+![](assets/gzip_decompression_engine_ip.png)
 
 The following subsections will briefly discuss the high-level details of each of the kernels in the GZIP decompression engine.
 
@@ -86,7 +107,7 @@ Once the shortest match length is found, the bit stream is shifted by that many 
 
 #### Huffman Decoder Structure
 
-![](huffman_decoder.png)
+![](assets/huffman_decoder.png)
 
 The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table that the next symbol must be a distance. 
 
@@ -120,7 +141,7 @@ The image that follows illustrates the multi-element LZ77 decoder. To read multi
 
 #### Multi-element LZ77 Decoder Structure
 
-![](lz77_decoder.png)
+![](assets/lz77_decoder.png)
 
 When reading out of the history buffers, the `Current History Buffer Index` is used again to shuffle the output of the `N` buffers so that they are streamed out in the correct order. The following example illustrates reading the history buffer for `N=4`.
 
@@ -179,7 +200,7 @@ Each element starts with a tag byte, as illustrated in the following figure.
 
 #### Compress Data Stream Element Byte Structure
 
-![](tag_format.png)
+![](assets/tag_format.png)
 
 The lower 2 bits of the tag byte indicate which element follows:
 
@@ -196,7 +217,7 @@ For literal strings up to and including 60 characters, the upper 6 bits in the t
 
 #### Literal String Byte Format
 
-![](literal_tag_format.png)
+![](assets/literal_tag_format.png)
 
 #### Copies
 
@@ -206,7 +227,7 @@ As discussed earlier, there are 3 options for copies depending on the value of t
 
 #### Copy Byte Format
 
-![](copy_tag_format.png)
+![](assets/copy_tag_format.png)
 
 **1-byte copies** can encode lengths in the range [4, 11], and offsets in the range [0, 2047]. Bits [4:2] of the tag byte stored the `length - 4`. The offset is 11 bits, where the high 3 bits are stored in the bits [7:5] of the tag byte, and the lower 8 bits are stored in the byte following the tag byte.
 
@@ -220,7 +241,7 @@ The image that follows summarizes the full streaming Snappy decompression design
 
 #### Full Streaming Snappy Decompression FPGA Design
 
-![](snappy_decompressor.png)
+![](assets/snappy_decompressor.png)
 
 The Snappy Reader kernel reads the input stream and decodes it to stream out either literal strings or {length, distance} pairs to the LZ77 Decoder kernel. It can decode a tag byte and the subsequent extra bytes (at most 4 extra) in a single cycle. Thus, it can provide the downstream LZ77 Decoder kernel with either a literal or a {length, distance} pair every cycle.
 
@@ -252,21 +273,11 @@ The following source files can be found in the `src/` sub-directory. The `src/co
 
 For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tuple.hpp`, and `unrolled_loop.hpp` see the README file in the `DirectProgramming/DPC++FPGA/include/` directory.
 
-
-#### Additional Documentation
-
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
-- [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
-
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
 ## Build the `Decompression` Design
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -274,30 +285,15 @@ When working with the command-line interface (CLI), you should configure the one
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
-### Use Visual Studio Code* (VS Code) (Optional)
-
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- 3. Open a terminal in VS Code (**Terminal > New Terminal**).
- 4. Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see the 
-[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
    ```
    mkdir build
    cd build
@@ -337,7 +333,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 > **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
    ```
    mkdir build
    cd build
@@ -370,16 +366,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-#### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
-
 ## Run the `Decompression` Program
 
 ### On Linux
@@ -403,41 +389,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    decompress.fpga.exe
    ```
-
-### Build and Run the Samples on Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify an FPGA runtime node using a single line script similar to the following example.
-
-```
-qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes           |Command Options
-  |:---                      |:---
-  |FPGA Compile Time         |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime (Arria 10)   |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
-  |FPGA Runtime (Stratix 10) |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
-  |GPU	                    |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	                    |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to **24 hours**.
-
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
 
 ## Example Output
 
@@ -534,6 +485,6 @@ PASSED
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).

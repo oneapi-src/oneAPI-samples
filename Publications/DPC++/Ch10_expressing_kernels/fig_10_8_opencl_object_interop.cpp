@@ -2,8 +2,8 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
-#include <CL/sycl/backend/opencl.hpp>
+#include <sycl/sycl.hpp>
+#include <sycl/backend/opencl.hpp>
 #include <iostream>
 using namespace sycl;
 

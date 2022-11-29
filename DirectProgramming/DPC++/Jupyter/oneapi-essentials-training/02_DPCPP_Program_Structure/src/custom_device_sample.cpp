@@ -6,10 +6,10 @@
 #include <sycl/sycl.hpp>
 #include <iostream>
 using namespace sycl;
-class my_device_selector : public device_selector {
+class my_device_selector {
 public:
     my_device_selector(std::string vendorName) : vendorName_(vendorName){};
-    int operator()(const device& dev) const override {
+    int operator()(const device& dev) const {
     int rating = 0;
     //We are querying for the custom device specific to a Vendor and if it is a GPU device we
     //are giving the highest rating as 3 . The second preference is given to any GPU device and the third preference is given to

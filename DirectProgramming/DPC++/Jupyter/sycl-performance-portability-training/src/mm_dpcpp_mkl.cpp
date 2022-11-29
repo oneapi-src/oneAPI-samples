@@ -7,7 +7,7 @@
 // =============================================================
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl/blas.hpp"  //# oneMKL DPC++ interface for BLAS functions
 
 using namespace sycl;

@@ -8,7 +8,6 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 #include <iostream>
-#include <sycl/sycl.hpp>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -37,8 +36,11 @@ int main() {
     auto result_begin = oneapi::dpl::begin(buf_out);
 
     // use policy for algorithms execution
-    auto policy = make_device_policy(queue(default_selector_v));
-    std::cout << "Run on " << policy.queue().get_device().get_info<info::device::name>() << "\n";
+    //Create queue with default selector  
+    queue q;
+    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
+    auto policy = make_device_policy(q);
+    
 
     auto iter_res = oneapi::dpl::inclusive_scan_by_segment(policy, keys_begin, keys_end, vals_begin, result_begin);
     auto count_res = std::distance(result_begin,iter_res);
