@@ -125,9 +125,10 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
     ```
     cd ~/oneAPI-samples/DirectProgramming/DPC++/MapReduce/MonteCarloMultiGPU
     ```
-5. Configure the sample for a GPU node using `qsub`.
+5. Configure the sample for a GPU node using `qsub`and choose the backend needed either OpenCL or Level Zero.
     ```
     qsub  -I  -l nodes=1:gpu:ppn=2 -d .
+    export SYCL_DEVICE_FILTER=level_zero
     ```
     - `-I` (upper case I) requests an interactive session.
     - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
