@@ -70,7 +70,7 @@ cd src
 ```
 Open the resulting file: `sample_image-blurred.png` with an image viewer.
 
-## Debug the program
+## Debug the program using Visual Studio Code
 
 ### Linux*
 
