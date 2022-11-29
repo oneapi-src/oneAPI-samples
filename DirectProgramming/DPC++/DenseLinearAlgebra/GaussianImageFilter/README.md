@@ -74,6 +74,11 @@ Open the resulting file: `sample_image-blurred.png` with an image viewer.
 
 ### Linux*
 
+Due to an issue with the image load library function stbi_load, make the 
+directory bin (if it does not exist already) and copy the sample_image.jpg
+file into it. This will allow the program to find the file and continue the
+debug session.
+
 To debug the gaussian blur program, either choose from the IDE's run menu 
 start debugging or hit F5 on the keyboard.
 The debug launch.json configuration file has been set to halt the program
