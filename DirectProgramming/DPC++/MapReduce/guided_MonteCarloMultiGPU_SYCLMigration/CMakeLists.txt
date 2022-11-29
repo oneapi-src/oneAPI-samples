@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.4.0)
 
-set(CMAKE_CXX_COMPILER "dpcpp")
+set(CMAKE_CXX_COMPILER "icpx")
 
-project (Montecarlo-MultiGPU)
+project (guided_MonteCarloMultiGPU_SYCLMigration)
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
 	message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")
