@@ -5,7 +5,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/bin/${config:programName}_d",
-        "args": ["/home/illya/Dev/Codepay2IntelExamples/Gaussian_Blur/bin/sample_image.jpg"],
+        "args": ["${workspaceFolder}/bin/sample_image.jpg"],
         "stopAtEntry": true,
         "cwd": "${fileDirname}",
         "environment": [],
@@ -28,22 +28,8 @@
                 "ignoreFailures": true
             }
         ],
-        "preLaunchTask": "gaussian_blur Debug C/C++: dpcpp build active file",
+        "preLaunchTask": "gaussian_blur Debug C/C++: Intel icpx build active file",
         "miDebuggerPath": "/opt/intel/oneapi/debugger/latest/gdb/intel64/bin/gdb-oneapi"
     }
-    ],
-    "inputs" : [
-        {
-            "id": "args",
-            "type": "pickString",
-            "description": "Program args",
-            "default": "cpu",
-            "options": [
-                "host",
-                "cpu",
-                "gpu",
-                "accelerator"
-            ]
-        }
     ]
 }
