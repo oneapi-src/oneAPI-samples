@@ -121,9 +121,9 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
     ```
     git clone https://github.com/oneapi-src/oneAPI-samples.git
     ```
-4. Change to the `MontecarloMultiGPU` directory.
+4. Change to the `guided_MonteCarloMultiGPU_SYCLMigration` directory.
     ```
-    cd ~/oneAPI-samples/DirectProgramming/DPC++/MapReduce/MonteCarloMultiGPU
+    cd ~/oneAPI-samples/DirectProgramming/DPC++/MapReduce/guided_MonteCarloMultiGPU_SYCLMigration
     ```
 5. Configure the sample for a GPU node using `qsub`and choose the backend needed either OpenCL or Level Zero.
     ```
