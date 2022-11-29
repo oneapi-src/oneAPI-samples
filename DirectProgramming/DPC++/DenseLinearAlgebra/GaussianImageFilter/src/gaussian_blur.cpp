@@ -23,10 +23,11 @@
 #include <cmath>
 #include <iostream>
 // These public domain headers implement useful image reading and writing
-// functions.
-#include "stb/stb_image.h"
+// functions. Find in ${oneAPI}/dev-utilities/include
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_image_write.h"
+#include <stb/stb_image_write.h>
 
 // Forward declaration of this example's SYCL kernels
 class KernelFillGaussian;
