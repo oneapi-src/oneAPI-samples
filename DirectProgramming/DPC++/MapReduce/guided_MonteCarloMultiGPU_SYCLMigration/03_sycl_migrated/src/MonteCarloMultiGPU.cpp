@@ -71,11 +71,11 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
     sycl::queue q_ct1 = sycl::queue(gpu_selector{});
     auto device = q_ct1.get_device();
 
-    int cudaCores =
+    int Cores =
         device.get_info<cl::sycl::info::device::max_compute_units>();
 
-    if (cudaCores <= 32) {
-      nOptions = (nOptions < cudaCores / 2 ? nOptions : cudaCores / 2);
+    if (Cores <= 32) {
+      nOptions = (nOptions < Cores / 2 ? nOptions : Cores / 2);
     }
   }
 
