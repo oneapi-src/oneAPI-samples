@@ -108,7 +108,7 @@ Performance results are based on testing as of October 27, 2020.
 | Device                                          | Throughput
 |:---                                             |:---
 | Intel® PAC with Intel® Arria® 10 GX FPGA        | 1 engine @ 3.4 GB/s
-| Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 5.5 GB/s each = 11.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
+| Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 4.5 GB/s each = 9.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
 
 ## Build the `GZIP` Design
 
