@@ -8,7 +8,7 @@
 using namespace sycl;
 
 int main() {
-  queue my_gpu_queue( gpu_selector{} );
+  queue my_gpu_queue( gpu_selector_v );
   queue my_fpga_queue( ext::intel::fpga_selector{} );
 
   std::cout << "Selected device 1: " <<

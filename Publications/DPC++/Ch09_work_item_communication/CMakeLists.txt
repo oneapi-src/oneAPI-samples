@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap9)
+project(Chap9 CXX)
 add_book_sample(
     TEST
     TARGET fig_9_4_naive_matmul

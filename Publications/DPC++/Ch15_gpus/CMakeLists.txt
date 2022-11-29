@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap15)
+project(Chap15 CXX)
 add_book_sample(
     TEST
     TARGET fig_15_3_single_task_matrix_multiplication

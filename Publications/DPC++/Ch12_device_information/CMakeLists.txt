@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap12)
+project(Chap12 CXX)
 add_book_sample(
     TEST
     TARGET fig_12_1_assigned_device

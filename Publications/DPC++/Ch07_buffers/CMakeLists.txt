@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap7)
+project(Chap7 CXX)
 add_book_sample(
     TEST
     TARGET fig_7_2_3_4_creating_buffers
