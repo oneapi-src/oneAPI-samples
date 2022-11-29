@@ -35,12 +35,12 @@ class KernelGaussian;
 using namespace cl::sycl;
 using namespace std;
 
-// Attempts to determine a good local size. The OpenCL implementation can
-// do the same, but the best way to *control* performance is to choose the
-// sizes. The method here is to choose the largest number, leq 64, which is
-// a power-of-two, and divides the global work size evenly. In this code,
-// it might prove most optimal to pad the image along one dimension so that
-// the local size could be 64, but this introduces other complexities.
+// Attempts to determine a good local size. The best way to *control* 
+// performance is to choose the sizes. The method here is to choose the 
+// largest number, leq 64, which is a power-of-two, and divides the global
+// work size evenly. In this code, it might prove most optimal to pad the
+// image along one dimension so that the local size could be 64, but this 
+// introduces other complexities.
 range< 2 > GetOptimalLocalRange( range< 2 > globalSize, device hw ) 
 {
   range< 2 > optimalLocalSize{ 0, 0 };
@@ -93,6 +93,7 @@ auto exception_handler = []( sycl::exception_list exceptions )
     }
 };
 
+// The Gaussian program
 int main( int argc, char* argv[] ) 
 {
   bool bProgramError = false;
@@ -105,6 +106,9 @@ int main( int argc, char* argv[] )
         << std::endl;
   }
 
+  // ********************
+  // Input image handling
+  // ********************
   // The image dimensions will be set by the library, as will the number of
   // channels. However, passing a number of channels will force the image
   // data to be returned in that format, regardless of what the original image
@@ -136,6 +140,9 @@ int main( int argc, char* argv[] )
     sycl::device hw = device( sycl::cpu_selector() );
     queue myQueue( hw, exception_handler );
     
+    // *******************************************
+    // Create gaussian convolution matrix and fill
+    // *******************************************
     const float pi = std::atan( 1 ) * 4;
     constexpr auto guasStdDev = 2;     
     constexpr auto guasDelta = 6; 
@@ -177,6 +184,10 @@ int main( int argc, char* argv[] )
       });
     });
 
+    // ********************************************************
+    // Using gaussian convolution matrix, blur the input image.
+    // ********************************************************
+    
     // Images need a void * pointing to the data, and enums describing the
     // type of the image (since a void * carries no type information). It
     // also needs a range which describes the image's dimensions.
@@ -284,6 +295,10 @@ int main( int argc, char* argv[] )
     return -1;
   }
 
+  // ****************************
+  // Output the new blurred image
+  // ****************************
+  
   // Attempt to change the name from x.png or x.jpg to x-blurred.png. 
   // If the code cannot find a '.', it simply appends "-blurred" to the name.
   std::string outputFilePath;
