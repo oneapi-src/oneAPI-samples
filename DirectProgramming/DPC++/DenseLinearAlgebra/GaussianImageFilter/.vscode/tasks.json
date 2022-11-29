@@ -3,9 +3,10 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "gaussian_blur Debug C/C++: dpcpp build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp",
+			"label": "gaussian_blur Debug C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
 			"args": [
+				"-fsycl",
 				"-fdiagnostics-color=always",
 				"-fsycl-device-code-split=per_kernel",
 				"-g",
@@ -21,13 +22,14 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp"
+			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx"
 		},
 		{
 			"type": "cppbuild",
-			"label": "gaussian_blur Release C/C++: dpcpp build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp",
+			"label": "gaussian_blur Release C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
 			"args": [
+				"-fsycl",
 				"-DNDEBUG",
                 "${workspaceFolder}/src/${config:programName}.cpp",
 				"-o",
@@ -40,7 +42,7 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp"
+			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx"
 		}
 	]
 }
