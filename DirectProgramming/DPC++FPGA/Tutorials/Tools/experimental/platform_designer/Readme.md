@@ -6,7 +6,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition <br> Intel® Platform Designer Pro Edition <br> Supported simulator software: <ul><li>Siemens*  Questa*-Intel® FPGA Starter Edition</li> <li>Siemens* Questa*-Intel® FPGA Edition</li></ul>
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition 19.2 or later
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel to an Intel® Quartus® Prime Pro Edition project
 | Time to complete                  | 1 hour
 
