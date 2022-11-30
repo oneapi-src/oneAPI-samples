@@ -153,7 +153,7 @@ cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_Get
 > the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
 
 ## Running on Intel GPU
-The sample code is cpu based, but you can run it using Intel(R) Extension for TensorFlow* with Intel(R) Data Center GPU Flex Series freely. 
+The sample code is CPU based, but you can run it using Intel(R) Extension for TensorFlow* with Intel(R) Data Center GPU Flex Series freely. 
 
 If you are using the Intel GPU, please refer to [Intel GPU Software Installation](https://intel.github.io/intel-extension-for-tensorflow/latest/docs/install/install_for_gpu.html)
 
