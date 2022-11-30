@@ -4,9 +4,9 @@ TensorFlow* is a widely-used machine learning framework in the deep learning are
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.0.x and later, Windows* 10 
-| Hardware                          | Intel® Xeon® Scalable processor family or newer
+| Hardware                          | Intel® Xeon® Scalable processor family or newer and Intel GPU
 | Software                          | Intel® AI Analytics Toolkit
-| What you will learn               | How to get started to use Intel® Optimization for TensorFlow*
+| What you will learn               | How to get started to use Intel® Optimization for TensorFlow* and Intel(R) Extension for TensorFlow*
 | Time to complete                  | 10 minutes
 
 ## Purpose
@@ -152,6 +152,15 @@ cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_Get
 ```
 > the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
 
+## Running on Intel GPU
+The sample code is cpu based, but you can run it using Intel(R) Extension for TensorFlow* with Intel(R) Data Center GPU Flex Series freely. 
+
+If you are using the Intel GPU, please refer to [Intel GPU Software Installation](https://intel.github.io/intel-extension-for-tensorflow/latest/docs/install/install_for_gpu.html)
+
+It should be able to run on Intel GPU seamlessly and without any code change. 
+
+For details, please refer to the Get Start Example Ready:  [Examples — Intel® Extension for TensorFlow*]
+(https://intel.github.io/intel-extension-for-tensorflow/latest/examples/quick_example.html)
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
