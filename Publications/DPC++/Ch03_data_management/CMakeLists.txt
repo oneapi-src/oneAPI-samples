@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap3)
+project(Chap3 CXX)
 add_book_sample(
     TEST
     TARGET fig_3_4_usm_explicit_data_movement

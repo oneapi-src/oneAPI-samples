@@ -12,13 +12,22 @@ This sample contains two versions of the same program: `jacobi-bugged` and
 `jacobi-fixed`. The latter works correctly, but in the former several bugs are
 injected. You can try to find and fix them using the debugger.
 
-| Optimized for       | Description
+| Area                | Description
 |:---                 |:---
-| OS                  | Linux* Ubuntu* 18.04 to 20.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
-| Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
-| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn | Find existing bugs in a program using the debugger
 | Time to complete    | 1 hour for CPU or FPGA emulator; 2 hours for GPU
+
+## Prerequisites
+
+| Optimized for       | Description
+|:---                 |:---
+| OS                  | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15
+| Hardware            | discrete GPU: Intel® Arc(tm), Intel® Data Center GPU Flex Series
+| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
+
+> *Note**: although the sample can be built and run on Windows* 10 too, 
+> we focus on demonstrating how the GDB* interface can be used
+> to examine the program on Linux* OS.
 
 ## Purpose
 
@@ -214,26 +223,13 @@ Second, we update `x_k` with the new value from `x_k1`.
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
->
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)
 
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
-Please see the setup instructions in the Get Started Guide based on
-your OS: 
-- [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
-- [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
-
-
-### Include Files
-
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
-your development system.
-
+Please see the setup instructions in the Get Started Guide
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 
 ### Running Samples In Intel&reg; DevCloud
 
@@ -310,32 +306,6 @@ Perform the following steps:
 
 For instructions about starting and using the debugger, please see 
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/).
-
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-
-#### Command line using MSBuild
-
-* `set CL_CONFIG_USE_NATIVE_DEBUGGER=1`
-* `MSBuild lacobi.sln /t:Rebuild /p:Configuration="debug"`
-
-#### Visual Studio IDE
-
-1. Right-click on the solution files and open via either Visual Studio 2017 or
-   in 2019.
-
-2. Select Menu "Build > Build Solution" to build the selected configuration.
-
-3. Select Menu "Debug > Start Debugging" to run the program, the default startup
-   project is `jacobi-bugged`.
-
-4. The solution file is configured to pass `cpu` as the argument to the program
-   while using "Local Windows Debugger", and `gpu` while using "Remote Windows
-   Debugger". To select a different device, go to the project's "Configuration
-   Properties > Debugging" and set the "Command Arguments" field. Use `gpu` or
-   `accelerator` to target the GPU or the FPGA emulator device, respectively.
-
-For detailed instructions about starting and using the debugger, please see 
-[Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
 
 ### Example Outputs
 

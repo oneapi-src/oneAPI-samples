@@ -1,6 +1,5 @@
 cmake_minimum_required (VERSION 3.4)
 set (CMAKE_CXX_COMPILER "icpx")
-set(CMAKE_CXX_FLAGS "-fsycl")
 project (array-transform LANGUAGES CXX)
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -13,6 +12,8 @@ if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
   message (STATUS "Build Type is changed to 'Debug'.")
 endif ()
 
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl")
+
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 message (STATUS "Optimization level is set to -O0.")
 
@@ -22,23 +23,23 @@ if (NOT GDB)
   message (FATAL_ERROR "'gdb-oneapi' not found!")
 endif ()
 
-find_program(GDBSERVER gdbserver-gt)
+find_program(GDBSERVER gdbserver-ze)
 if (NOT GDBSERVER)
-  message (FATAL_ERROR "'gdbserver-gt' not found!")
+  message (FATAL_ERROR "'gdbserver-ze' not found!")
 endif ()
 
-set(DPCPP_COMPILE_TARGET "jit" CACHE STRING "Kernel compilation mode: {jit, cpu, fpga-emu, kbl, gen9, gen12LP, ...}")
-if (DPCPP_COMPILE_TARGET MATCHES jit)
+set(SYCL_COMPILE_TARGET "jit" CACHE STRING "Kernel compilation mode: {jit, cpu, fpga-emu, xe, ...}")
+if (SYCL_COMPILE_TARGET MATCHES jit)
   # Do nothing.  We are already set.
-elseif (DPCPP_COMPILE_TARGET MATCHES cpu)
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_x86_64-unknown-linux-sycldevice")
-elseif (DPCPP_COMPILE_TARGET MATCHES fpga-emu)
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_fpga-unknown-linux-sycldevice")
+elseif (SYCL_COMPILE_TARGET MATCHES cpu)
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_x86_64")
+elseif (SYCL_COMPILE_TARGET MATCHES fpga-emu)
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_fpga")
 else ()
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_gen-unknown-linux-sycldevice")
-  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xs \"-device ${DPCPP_COMPILE_TARGET} -internal_options -cl-kernel-debug-enable -options -cl-opt-disable\"")
+  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_gen")
+  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xs \"-device ${SYCL_COMPILE_TARGET} -internal_options -cl-kernel-debug-enable -options -cl-opt-disable\"")
 endif ()
-message (STATUS "DPCPP_COMPILE_TARGET is '${DPCPP_COMPILE_TARGET}'")
+message (STATUS "SYCL_COMPILE_TARGET is '${SYCL_COMPILE_TARGET}'")
 
 add_executable (${PROJECT_NAME} src/array-transform.cpp)
 

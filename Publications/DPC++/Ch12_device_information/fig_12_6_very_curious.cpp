@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace sycl;
 
-template <auto query, typename T>
+template <typename query, typename T>
 void do_query( const T& obj_to_query, const std::string& name, int indent=4) {
   std::cout << std::string(indent, ' ') << name << " is '"
     << obj_to_query.template get_info<query>() << "'\n";
@@ -17,6 +17,7 @@ int main() {
   // Loop through the available platforms
   for (auto const& this_platform : platform::get_platforms() ) {
     std::cout << "Found Platform:\n";
+    std::cout<< this_platform.get_info<info::platform::name>() << "\n";
     do_query<info::platform::name>(this_platform, "info::platform::name");
     do_query<info::platform::vendor>(this_platform, "info::platform::vendor");
     do_query<info::platform::version>(this_platform, "info::platform::version");
@@ -25,7 +26,6 @@ int main() {
     // Loop through the devices available in this plaform
     for (auto &dev : this_platform.get_devices() ) {
       std::cout << "  Device: " << dev.get_info<info::device::name>() << "\n";
-      std::cout << "    is_host(): " << (dev.is_host() ? "Yes" : "No") << "\n";
       std::cout << "    is_cpu(): " << (dev.is_cpu() ? "Yes" : "No") << "\n";
       std::cout << "    is_gpu(): " << (dev.is_gpu() ? "Yes" : "No") << "\n";
       std::cout << "    is_accelerator(): "
