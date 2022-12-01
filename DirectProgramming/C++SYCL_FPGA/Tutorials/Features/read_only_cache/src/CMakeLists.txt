@@ -96,6 +96,6 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET_CACHE_DISABLED} ${FPGA_TARGET_CACHE
 set_target_properties(${FPGA_TARGET_CACHE_DISABLED} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_CACHE_DISABLED}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
+# See C++SYCL_FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${FPGA_TARGET_CACHE_ENABLED} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DCACHE_ENABLED")
 set_target_properties(${FPGA_TARGET_CACHE_ENABLED} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsread-only-cache-size=2048 -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_CACHE_ENABLED}")

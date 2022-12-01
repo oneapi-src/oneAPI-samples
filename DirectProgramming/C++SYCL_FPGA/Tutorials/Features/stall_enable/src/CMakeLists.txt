@@ -114,7 +114,7 @@ target_include_directories(${FPGA_TARGET_STALL_ENABLE} PRIVATE ../../../../inclu
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_STALL_ENABLE}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
+# See C++SYCL_FPGA/GettingStarted/fast_recompile for details.
 
 # To compile in a single command (Stall Enable):
 #   icpx -fsycl -fintelfpga -DSTALL_FREE -Xshardware -Xstarget=<FPGA_DEVICE> stall_enable.cpp -o stall_free.fpga
