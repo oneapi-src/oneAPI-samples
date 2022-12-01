@@ -47,7 +47,7 @@
 
 #include "gzipkernel_ll.hpp"
 #include "kernels.hpp"
-#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
+#include "pipe_utils.hpp" // Included from DirectProgramming/C++SYCL_FPGA/include/
 
 
 using namespace sycl;

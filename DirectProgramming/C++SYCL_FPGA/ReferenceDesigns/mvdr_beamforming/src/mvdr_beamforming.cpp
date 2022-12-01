@@ -10,7 +10,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-#include "tuple.hpp"  // DirectProgramming/DPC++FPGA/include
+#include "tuple.hpp"  // DirectProgramming/C++SYCL_FPGA/include
 #include "mvdr_complex.hpp"
 
 #if not defined(REAL_IO_PIPES)

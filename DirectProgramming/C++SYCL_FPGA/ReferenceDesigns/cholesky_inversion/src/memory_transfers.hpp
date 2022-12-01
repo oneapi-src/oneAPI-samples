@@ -1,7 +1,7 @@
 #ifndef __MEMORY_TRANSFERS_HPP__
 #define __MEMORY_TRANSFERS_HPP__
 
-// Included from DirectProgramming/DPC++FPGA/include/
+// Included from DirectProgramming/C++SYCL_FPGA/include/
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"

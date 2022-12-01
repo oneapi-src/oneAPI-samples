@@ -3,7 +3,7 @@
 
 #include "data_bundle.hpp"
 
-// Included from DirectProgramming/DPC++FPGA/include/
+// Included from DirectProgramming/C++SYCL_FPGA/include/
 #include "unrolled_loop.hpp"
 
 namespace fpga_tools {

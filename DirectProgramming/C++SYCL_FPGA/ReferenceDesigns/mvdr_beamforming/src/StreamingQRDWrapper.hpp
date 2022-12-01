@@ -6,7 +6,7 @@
 
 #include "mvdr_complex.hpp"
 
-// utility classes found in DirectProgramming/DPC++FPGA/include
+// utility classes found in DirectProgramming/C++SYCL_FPGA/include
 #include "streaming_qrd.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"

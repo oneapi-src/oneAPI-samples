@@ -26,7 +26,7 @@
 #include "row_stencil.hpp"
 #include "shift_reg.hpp"
 
-// Included from DirectProgramming/DPC++FPGA/include/
+// Included from DirectProgramming/C++SYCL_FPGA/include/
 #include "constexpr_math.hpp"
 #include "unrolled_loop.hpp"
 

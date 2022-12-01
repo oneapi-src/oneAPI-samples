@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <chrono>
 
-#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
-#include "unrolled_loop.hpp"            // DirectProgramming/DPC++FPGA/include
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/C++SYCL_FPGA/include
+#include "unrolled_loop.hpp"            // DirectProgramming/C++SYCL_FPGA/include
 
 #include "exception_handler.hpp"
 

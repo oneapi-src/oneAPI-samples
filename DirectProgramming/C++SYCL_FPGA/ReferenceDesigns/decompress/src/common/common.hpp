@@ -292,7 +292,7 @@ class DecompressorBase {
 //
 // The Producer kernel reads 'literals_per_cycle' elements at a time from
 // memory (in_ptr) and writes them into InPipe. We use the utilities from
-// DirectProgramming/DPC++FPGA/include/memory_utils.hpp to do this.
+// DirectProgramming/C++SYCL_FPGA/include/memory_utils.hpp to do this.
 //
 //  Template parameters:
 //    Id: the type to use for the kernel ID

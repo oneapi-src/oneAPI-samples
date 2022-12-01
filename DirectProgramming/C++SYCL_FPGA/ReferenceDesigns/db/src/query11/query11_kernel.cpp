@@ -11,7 +11,7 @@
 #include "../db_utils/Unroller.hpp"
 #include "../db_utils/fifo_sort.hpp"
 
-#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/C++SYCL_FPGA/include
 
 using namespace std::chrono;
 

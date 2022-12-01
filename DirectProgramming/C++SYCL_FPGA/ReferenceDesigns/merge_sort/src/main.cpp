@@ -14,7 +14,7 @@
 
 #include "merge_sort.hpp"
 
-// Included from DirectProgramming/DPC++FPGA/include/
+// Included from DirectProgramming/C++SYCL_FPGA/include/
 #include "constexpr_math.hpp"
 
 using namespace sycl;

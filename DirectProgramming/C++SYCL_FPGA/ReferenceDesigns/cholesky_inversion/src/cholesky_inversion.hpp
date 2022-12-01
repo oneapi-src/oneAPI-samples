@@ -10,7 +10,7 @@
 
 #include "memory_transfers.hpp"
 
-// Included from DirectProgramming/DPC++FPGA/include/
+// Included from DirectProgramming/C++SYCL_FPGA/include/
 #include "streaming_cholesky.hpp"
 #include "streaming_cholesky_inversion.hpp"
 #include "tuple.hpp"
