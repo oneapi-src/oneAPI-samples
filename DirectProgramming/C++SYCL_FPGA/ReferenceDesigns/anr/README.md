@@ -108,7 +108,7 @@ For `constexpr_math.hpp`, `unrolled_loop.hpp`, and `rom_base.hpp` see the README
 
 The design uses the following generic header files.
 
->**Note**: Some of these headers files are in the `..DPC++FPGA\include` folder. You might need to copy some of them to the reference design sample `src` directory to compile the program correctly.
+>**Note**: Some of these headers files are in the `/DirectProgramming/C++SYCL_FPGA/include` folder. You might need to copy some of them to the reference design sample `src` directory to compile the program correctly.
 
 | File                                    | Description
 |:---                                     |:---

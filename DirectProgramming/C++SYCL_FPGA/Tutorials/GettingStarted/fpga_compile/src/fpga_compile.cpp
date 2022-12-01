@@ -74,7 +74,7 @@ int main() {
         //
         // The "kernel_args_restrict" tells the compiler that a, b, and r
         // do not alias. For a full explanation, see:
-        //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
+        //    C++SYCL_FPGA/Tutorials/Features/kernel_args_restrict
         h.single_task<VectorAdd>([=]() [[intel::kernel_args_restrict]] {
           for (int i = 0; i < kSize; ++i) {
             r[i] = a[i] + b[i];
