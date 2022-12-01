@@ -30,8 +30,8 @@ flowchart LR
    style tier4 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for        | Description
 |:---                  |:---
@@ -271,7 +271,7 @@ The following source files can be found in the `src/` sub-directory. The `src/co
 |`snappy/snappy_decompressor.hpp` | The top-level file for the Snappy decompressor. This file launches all of the Snappy kernels.
 |`snappy/snappy_reader.hpp`       | A kernel that reads the snappy format stream and produces either literals or {length, distance} pairs to be consumed by the LZ77 kernel.
 
-For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tuple.hpp`, and `unrolled_loop.hpp` see the README file in the `DirectProgramming/DPC++FPGA/include/` directory.
+For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tuple.hpp`, and `unrolled_loop.hpp` see the README file in the `DirectProgramming/C++SYCL_FPGA/include/` directory.
 
 ## Build the `Decompression` Design
 

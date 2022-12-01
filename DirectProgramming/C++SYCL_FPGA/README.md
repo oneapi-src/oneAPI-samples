@@ -199,7 +199,7 @@ This practice ensures that your compiler, libraries, and tools are ready for dev
 
 ### Include Files
 
-The FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](/DirectProgramming/DPC++FPGA/include) folder.
+The FPGA samples use many of the headers in the [`DirectProgramming/C++SYCL_FPGA/include`](/DirectProgramming/C++SYCL_FPGA/include) folder.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
