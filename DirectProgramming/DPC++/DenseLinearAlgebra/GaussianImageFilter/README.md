@@ -36,8 +36,7 @@ Visual Studio Code will open this project displaying its files in the Explorer
 pane. 
 The project is already set up with build configurations to build either a
 debug build or a release build of the program. When a program is built, it is
-placed in the bin directory of this project's top folder. Note: The
-configurations expect a bin directory to be present to work. 
+placed in the bin directory of this project's top folder. 
 
 To build the program hit Ctrl+Shift+b and choose the type of program to build.
 The debug executable will have a '_d' appended to its name.
@@ -65,8 +64,8 @@ To blur an image, copy the images/sample_image.jpg to the directory of the new
 executable. Type in the terminal window:
 
 ```
-cd src
-./gaussian_blur_d sample_image.jpg
+cd build/src
+./gaussian_blur sample_image.jpg
 ```
 Open the resulting file: `sample_image-blurred.png` with an image viewer.
 
@@ -79,10 +78,10 @@ directory bin (if it does not exist already) and copy the sample_image.jpg
 file into it. This will allow the program to find the file and continue the
 debug session.
 
-To debug the gaussian blur program, either choose from the IDE's run menu 
-start debugging or hit F5 on the keyboard.
-The debug launch.json configuration file has been set to halt the program
-at the first line of code after main().
+To debug the program, either choose from the IDE's run menu 
+'Start debugging' or hit F5 on the keyboard.
+The debug launch.json configuration file defines the debug session to:
+* To halt the program at the first line of code after main().
 Use the GUI debug panel's buttons to step over code (key F10) lines to see the 
 program advance. 
 Breakpoints can be set either in the main code or the kernel code.
