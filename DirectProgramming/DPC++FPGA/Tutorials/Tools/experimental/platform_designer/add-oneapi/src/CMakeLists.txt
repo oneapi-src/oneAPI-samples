@@ -51,7 +51,7 @@ if(WIN32)
 else()
     # add qactypes for Linux
     set(QACTYPES_COMPILE "-qactypes")
-    set(QACTYPES_LINK "")
+    set(QACTYPES_LINK "-qactypes")
 endif()
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
@@ -60,7 +60,6 @@ endif()
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
 
-set(EXPERIMENTAL_INCLUDE "-I\"$ENV{INTELFPGAOCLSDKROOT}/include\"")
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
 set(EMULATOR_LINK_FLAGS    "-fsycl -fintelfpga ${QACTYPES_LINK}")
 set(FPGA_COMPILE_FLAGS     "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
@@ -132,4 +131,3 @@ add_executable(${IP_EXPORT_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_ip_export DEPENDS ${IP_EXPORT_TARGET})
 set_target_properties(${IP_EXPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
 set_target_properties(${IP_EXPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel ${USER_FLAGS}")
-
