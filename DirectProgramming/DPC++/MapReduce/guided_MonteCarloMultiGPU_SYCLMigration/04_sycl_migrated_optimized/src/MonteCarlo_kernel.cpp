@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <oneapi/mkl.hpp>
 #include <oneapi/mkl/rng/device.hpp>
 
@@ -249,11 +249,9 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
                  plan->optionCount * sizeof(__TOptionData));
 
   stream->submit([&](sycl::handler &cgh) {
-    sycl::accessor<real, 1, sycl::access_mode::read_write,
-                   sycl::access::target::local>
+    sycl::local_accessor<real, 1>
         s_SumCall_acc_ct1(sycl::range<1>(256 /*SUM_N*/), cgh);
-    sycl::accessor<real, 1, sycl::access_mode::read_write,
-                   sycl::access::target::local>
+    sycl::local_accessor<real, 1>
         s_Sum2Call_acc_ct1(sycl::range<1>(256 /*SUM_N*/), cgh);
 
     auto plan_rngStates_ct0 = plan->rngStates;

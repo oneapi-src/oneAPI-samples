@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <oneapi/mkl.hpp>
 #include <oneapi/mkl/rng/device.hpp>
 
@@ -105,7 +105,7 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
   std::shared_ptr<oneapi::mkl::rng::philox4x32x10> gen;
 
   gen = std::make_shared<oneapi::mkl::rng::philox4x32x10>(
-      sycl::queue(cpu_selector()), seed);
+      sycl::queue(cpu_selector_v), seed);
   // unsigned long long seed = 1234ULL;
 
   // checkCudaErrors(0);
