@@ -63,7 +63,8 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
 set(EMULATOR_LINK_FLAGS    "-fsycl -fintelfpga ${QACTYPES_LINK}")
 set(FPGA_COMPILE_FLAGS     "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
-set(FPGA_LINK_FLAGS        "-fsycl -fintelfpga -Xstarget=${FPGA_DEVICE}   ${USER_HARDWARE_FLAGS} ${QACTYPES_LINK}")
+set(FPGA_REPORT_FLAGS      "-fsycl -fintelfpga -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(FPGA_LINK_FLAGS        "${FPGA_REPORT_FLAGS} ${QACTYPES_LINK}")
 
 ###############################################################################
 ### FPGA Emulator
@@ -88,7 +89,7 @@ set(REPORT_TARGET ${TARGET_NAME}.report.a)
 add_executable(${REPORT_TARGET} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${REPORT_TARGET})
 set_target_properties(${REPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
-set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} ${USER_FLAGS} -Xshardware -fsycl-link=early")
+set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_REPORT_FLAGS} ${USER_FLAGS} -Xshardware -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
