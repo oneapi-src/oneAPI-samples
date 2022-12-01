@@ -1,7 +1,7 @@
 {
   "guid": "77006CE8-2935-41C7-BA30-DF6EA07CD73A",
   "name": "DSP Control",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the DSP control feature",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

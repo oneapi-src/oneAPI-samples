@@ -1,7 +1,7 @@
 {
   "guid": "11A61AF6-727E-4241-B5A0-CCCD0EF160B9",
   "name": "Pipe Array",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
   "description": "An Intel® FPGA tutorial showcasing a design pattern to enables the creation of arrays of pipes",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

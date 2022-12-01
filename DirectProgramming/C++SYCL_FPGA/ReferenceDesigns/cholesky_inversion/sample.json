@@ -1,7 +1,7 @@
 {
   "guid": "59E50996-975A-4A19-BD54-35496F5FA6AD",
   "name": "Cholesky-based matrix inversion",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance Cholesky-based inversion of real and complex matrices on an Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

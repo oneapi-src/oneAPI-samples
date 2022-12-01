@@ -1,7 +1,7 @@
 {
   "guid": "1D1E56E0-9ED1-4948-B7D7-169E54B8283F",
   "name": "Stall Enable",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the use_stall_enable_clusters attribute",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

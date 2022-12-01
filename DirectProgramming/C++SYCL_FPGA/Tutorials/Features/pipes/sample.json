@@ -1,7 +1,7 @@
 {
   "guid": "58CF1ABA-5D08-40B7-ACC2-5CB904261413",
   "name": "Pipes",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "How to use Pipes to transfer data between kernels on an Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

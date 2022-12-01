@@ -1,7 +1,7 @@
 {
   "guid": "5C68CD75-C11E-47A4-B6AA-B5B42CD0941C",
   "name": "IO streaming with SYCL IO pipes",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
   "description": "An FPGA tutorial describing how to stream data to and from SYCL IO pipes.",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

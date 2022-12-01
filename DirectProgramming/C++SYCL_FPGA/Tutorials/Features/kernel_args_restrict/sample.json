@@ -1,7 +1,7 @@
 {
   "guid": "86066897-498B-41C5-BFA3-A03D3CAE2503",
   "name": "Kernel Args Restrict",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "Explain the kernel_args_restrict attribute and its effect on the performance of Intel® FPGA kernels",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

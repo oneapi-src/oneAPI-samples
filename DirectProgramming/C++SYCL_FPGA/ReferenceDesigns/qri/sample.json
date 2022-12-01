@@ -1,7 +1,7 @@
 {
   "guid": "A42A1772-2448-4f67-AB28-4080FE47F9C1",
   "name": "QRI",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance QR-based matrix inversion (QRI) of real and complex matrices on a Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

@@ -1,7 +1,7 @@
 {
   "guid": "A211FDE2-B037-4069-BD84-C45E354798B7",
   "name": "FPGA Compile",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
   "description": "Intel® FPGA tutorial introducing how to SYCL for Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

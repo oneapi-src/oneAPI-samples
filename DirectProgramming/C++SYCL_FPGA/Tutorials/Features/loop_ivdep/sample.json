@@ -1,7 +1,7 @@
 {
   "guid": "CD8FE0A5-B31A-4906-8386-27416361FE24",
   "name": "Loop IVDEP",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of the loop_ivdep attribute",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

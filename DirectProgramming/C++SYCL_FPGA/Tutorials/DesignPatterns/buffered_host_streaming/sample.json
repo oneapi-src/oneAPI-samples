@@ -1,7 +1,7 @@
 {
   "guid": "8401B5F5-6F09-4727-A080-684C57104CAF",
   "name": "Buffered Host-Device Streaming",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
   "description": "An FPGA tutorial demonstrating how to stream data between the host and device with multiple buffers",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

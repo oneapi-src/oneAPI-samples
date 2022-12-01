@@ -1,7 +1,7 @@
 {
   "guid": "31BCA673-F514-4E2E-A8B3-A0B42D63884C",
   "name": "Memory Attributes",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a SYCL program",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

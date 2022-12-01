@@ -1,7 +1,7 @@
 {
   "guid": "D661A5C2-5FE0-40F2-BFE7-70E3BA60F088",
   "name": "FPGA Reg",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA advanced tutorial demonstrating how to apply the SYCL extension ext::intel::fpga_reg",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

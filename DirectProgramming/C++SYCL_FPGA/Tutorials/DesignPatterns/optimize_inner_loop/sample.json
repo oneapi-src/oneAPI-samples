@@ -1,7 +1,7 @@
 {
   "guid": "207061A0-CBDD-449C-A3AF-0BACB4A63D57",
   "name": "Optimize Inner Loop",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
   "description": "An Intel® FPGA tutorial design demonstrating how to optimize the throughput of inner loops with low trip counts",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

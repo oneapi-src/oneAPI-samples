@@ -1,7 +1,7 @@
 {
   "guid": "496CBF47-FB9B-41CF-9786-4CAB0F43AEEE",
   "name": "Board Test",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "An Intel® FPGA test to check board interfaces and some of the oneAPI shim/BSP metrics like memory bandwidth, kernel clock frequency and kernel latency",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

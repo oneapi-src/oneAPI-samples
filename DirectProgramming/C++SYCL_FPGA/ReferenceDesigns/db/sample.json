@@ -1,7 +1,7 @@
 {
   "guid": "EC4A8B82-A2A4-4B03-9F26-1D1E7170D492",
   "name": "DB",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "An FPGA reference design that demonstrates high-performance Database Query Acceleration on Intel® FPGAs",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

@@ -1,7 +1,7 @@
 {
   "guid": "79A181D7-D5AD-4D28-8508-3A04465265FB",
   "name": "Loop Fusion",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of the loop_fusion attribute",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

@@ -1,7 +1,7 @@
 {
   "guid": "AF215180-ECB8-4414-8049-D89E4882576D",
   "name": "Merge Sort",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "A Reference design demonstrating merge sort on an Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

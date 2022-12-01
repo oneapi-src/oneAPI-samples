@@ -1,7 +1,7 @@
 {
   "guid": "B210B44F-FB86-4F42-BA4A-9980805350FF",
   "name": "Double Buffering",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

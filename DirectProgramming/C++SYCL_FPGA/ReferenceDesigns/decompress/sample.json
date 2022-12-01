@@ -1,7 +1,7 @@
 {
   "guid": "1A67F451-860B-4C5F-9ED0-C4E834CE4D48",
   "name": "Decompression",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "Optimized implementations of GZIP and SNAPPY decompression on an FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

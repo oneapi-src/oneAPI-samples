@@ -1,7 +1,7 @@
 {
   "guid": "2760C1B6-25E5-4280-9F8F-34CA8DDEDA7C",
   "name": "Loop Unroll",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial design demonstrating the loop_unroll attribute",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

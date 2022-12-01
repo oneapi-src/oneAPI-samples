@@ -1,7 +1,7 @@
 {
   "guid": "370A5B2B-EBB3-4E7F-89F3-73D333522215",
   "name": "Loop Coalesce",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the loop_coalesce attribute",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
