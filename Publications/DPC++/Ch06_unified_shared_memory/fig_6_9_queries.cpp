@@ -12,8 +12,8 @@ int main() {
   queue Q;
   auto dev = Q.get_device();
   auto ctxt = Q.get_context();
-  bool usm_shared = dev.get_info<info::device::usm_shared_allocations>();
-  bool usm_device = dev.get_info<info::device::usm_device_allocations>();
+  bool usm_shared = dev.has(aspect::usm_shared_allocations);
+  bool usm_device = dev.has(aspect::usm_device_allocations);
   bool use_USM = usm_shared || usm_device;
 
   if (use_USM) {

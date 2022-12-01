@@ -18,7 +18,7 @@ int main() {
   {
     buffer data_buf{data};
 
-    queue Q{ host_selector{} };
+    queue Q{};
     std::cout << "Running on device: "
               << Q.get_device().get_info<info::device::name>() << "\n";
 

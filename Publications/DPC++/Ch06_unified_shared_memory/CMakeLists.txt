@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap6)
+project(Chap6 CXX)
 add_book_sample(
     TEST
     TARGET fig_6_5_allocation_styles
