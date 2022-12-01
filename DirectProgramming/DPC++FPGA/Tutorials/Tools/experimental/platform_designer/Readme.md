@@ -6,7 +6,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition 19.2 or later
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition 21.4 or later <br> Python 3.8.10 or later **OR** <br> Python 2.7.13 or later
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel to an Intel® Quartus® Prime Pro Edition project
 | Time to complete                  | 1 hour
 
@@ -88,7 +88,13 @@ Follow these steps to compile and test the design:
 
    2. Set the top-level entity to be `add` to make project management easier.
 
-   3. Add the source file `add.v` to the design when the wizard prompts you.
+      ![](Readme.md.assets/quartus_new_project.png)
+
+   4. Choose **Empty Project** when prompted to select a project type.
+
+   5. Add the source file `add.v` and `jtag.sdc` to the design when the wizard prompts you.
+
+      ![](Readme.md.assets/add-files.png)
 
    4. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
 
@@ -152,15 +158,17 @@ Follow these steps to compile and test the design:
 
       ![](Readme.md.assets/open-platform-designer-button.png)
 
-      Create a new system and name it `add_kernel_wrapper.qsys`.
+      Create a new system by clicking the 'New Platform Designer System' button (![](Readme.md.assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
 
    2. Add the following JTAG to Avalon Master Bridge Intel® FPGA IP to your system:
 
       * Basic Functions > Bridges and Adaptors > Memory Mapped > JTAG to Avalon Master Bridge Intel® FPGA IP
 
-   3. Add the oneAPI IP to your system and connect it as shown:
+      * oneAPI > add_fpga_ip_expor_1_di
 
       ![](Readme.md.assets/add-ip-platform-designer.png)
+
+   3. Connect the modules as shown:
 
       ![](Readme.md.assets/complete-system_platform-designer.png)
 
@@ -172,9 +180,7 @@ Follow these steps to compile and test the design:
 
    ![](Readme.md.assets/start-analysis.png)
 
-7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to
-Avalon Agent IP will handle the connection between your design and the JTAG pins on your board
-automatically.
+7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to Avalon Agent IP will handle the connection between your design and the JTAG pins on your board automatically.
 
    1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. Consult the data sheet for your board to choose an appropriate clock input. In this project, the `PIN_AM10` was chosen because it is used for supplying a 100MHz clock signal in the the GHRD source code (see link in **Board-specifc Considerations**).
 
@@ -190,7 +196,7 @@ automatically.
 
 8. Now we will add the timing constraints. 
 
-   1. If you are using the Intel® Arria® 10 SX SoC Dev Kit, you can find a timing constraints file for the JTAG interface (jtag.sdc) in the GHRD.
+   1. If you are using the Intel® Arria® 10 SX SoC Dev Kit, you can find a timing constraints file for the JTAG interface (jtag.sdc) in the GHRD. This was added in step 2.5.
 
    2. Create a new Synopsis Design Constraints (SDC) file named `add.sdc` and insert a new clock called `i_clk` to match the clock you defined in `add.v`. Set the period to be 10ns:
 
