@@ -67,17 +67,11 @@ This design leverages concepts discussed in the [FPGA tutorials](/DirectProgramm
 
 ### Query Implementations
 
-The following sections describe at a high level how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The following sections describe at a high level how queries 1, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
 
 Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
-
-#### Query 9
-
-Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin`, and `FifoSort`). The block diagram of the design is shown below.
-
-![](assets/q9.png)
 
 #### Query 11
 
@@ -98,8 +92,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 |`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
 |`dbdata.hpp`                           | Definitions of database related data structures and parsing functions
 |`query1/query1_kernel.cpp`             | Contains the kernel for Query 1
-|`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
-|`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
 |`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
 |`query11/pipe_types.cpp`               | All data types and instantiations for pipes used in query 11
 |`query12/query12_kernel.cpp`           | Contains the kernel for Query 12
@@ -141,7 +133,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    cd build
    cmake .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -155,14 +147,12 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
        ```
        The report resides at `db_report.prj/reports/report.html`.
 
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time. You can download pre-generated reports from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
-
     3. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
        ```
        make fpga
        ```
-       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=9 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
 
    (Optional) The hardware compile may take several hours to complete. You can download a pre-compiled binary (compatible with Linux* Ubuntu* 18.04) for an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
 
@@ -177,7 +167,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    cd build
    cmake -G "NMake Makefiles" -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -191,8 +181,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
        nmake report
        ```
        The report resides at `db_report.prj/reports/report.html` directory.
-
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
     3. Compile for FPGA hardware (longer compile time, targets FPGA device):
        ```
@@ -219,7 +207,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
     ```
     ./db.fpga_emu --dbroot=../data/sf0.01 --test
     ```
-    (Optional) Run the design for queries `9`, `11` and `12`.
+    (Optional) Run the design for queries `11` and `12`.
 
 2. Run the design on an FPGA device.
    ```
@@ -232,7 +220,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
      ```
      db.fpga_emu.exe --dbroot=../data/sf0.01 --test
      ```
-    (Optional) Run the design for queries `9`, `11` and `12`.
+    (Optional) Run the design for queries `11` and `12`.
 
 2. Run the sample on an FPGA device.
    ```
