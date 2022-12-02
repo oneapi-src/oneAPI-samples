@@ -47,6 +47,15 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 ## Key Implementation Details
 
 The QR-based matrix inversion algorithm factors a complex *n* × *n* matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's *n* elements. The loop is fully unrolled to maximize throughput. As a result, *n* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over *n* elements. Finally, the final matrix multiplication also requires a dot product in a loop over *n* elements.
