@@ -34,7 +34,7 @@ The concepts explained in these tutorials will be used in this tutorial to creat
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware           | FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
-| Software           | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software           | Intel® oneAPI DPC++/C++ Compiler
 
 >**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
 

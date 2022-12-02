@@ -21,7 +21,7 @@ This tutorial provides a header file that defines an abstraction for making mult
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware           | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> FPGA third-party/custom platforms with oneAPI support
-| Software           | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software           | Intel® oneAPI DPC++/C++ Compiler
 
 >**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
 
