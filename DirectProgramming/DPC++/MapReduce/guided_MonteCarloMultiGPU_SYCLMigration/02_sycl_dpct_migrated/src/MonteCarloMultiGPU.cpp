@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 // includes, project
