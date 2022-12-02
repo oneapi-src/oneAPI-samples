@@ -10,6 +10,15 @@ This tutorial explains the  `kernel_args_restrict` attribute and its effect on t
 | What you will learn               |  The problem of *pointer aliasing* and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel. <br> The effect this attribute can have on your kernel's performance on FPGA.
 | Time to complete                  | 20 minutes
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 ## Purpose
 
 Due to pointer aliasing, the compiler must be conservative about optimizations that reorder, parallelize or overlap operations that could alias. This tutorial demonstrates the use of the SYCL*-compliant `[[intel::kernel_args_restrict]]` kernel attribute, which should be applied any time you can guarantee that kernel arguments do not alias. This attribute enables more aggressive compiler optimizations and often improves kernel performance on FPGA.

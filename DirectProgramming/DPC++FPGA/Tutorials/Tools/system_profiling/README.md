@@ -14,6 +14,15 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 | What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 
 ## Purpose
 This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL™ Applications, an open-source tool, to perform system-level profiling on a design and reveal areas for improvement.

@@ -36,6 +36,15 @@ The concepts explained in these tutorials will be used in this tutorial to creat
 | Hardware           | FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 >**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
 
 >**Note**: SYCL* USM host allocations (and the code in this sample) are only supported for the **FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)** with USM support (for example, intel_s10sx_pac:pac_s10_usm).

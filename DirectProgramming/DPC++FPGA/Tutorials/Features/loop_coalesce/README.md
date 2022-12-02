@@ -10,6 +10,15 @@ This FPGA tutorial demonstrates applying the `loop_coalesce` attribute to a nest
 | What you will learn               |  What the `loop_coalesce` attribute does <br> How `loop_coalesce` attribute affects resource usage and loop throughput <br> How to apply the `loop_coalesce` attribute to loops in your program <br> Which loops make good candidates for coalescing
 | Time to complete                  | 15 minutes
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 
 
 ## Purpose

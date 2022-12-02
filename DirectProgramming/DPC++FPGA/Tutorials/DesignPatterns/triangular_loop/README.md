@@ -11,6 +11,15 @@ This FPGA tutorial demonstrates an advanced technique to improve the performance
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
 
+> Note: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> Questa*-Intel® FPGA Edition
+> Questa*-Intel® FPGA Starter Edition
+> ModelSim® SE
+>
+> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+
 ## Purpose
 
 This FPGA tutorial introduces an advanced optimization technique to improve the performance of nested triangular loops with loop-carried dependencies. Such structures are challenging to optimize because of the time-varying loop trip count.
