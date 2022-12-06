@@ -10,14 +10,14 @@ This FPGA tutorial showcases a design pattern that makes it possible to create a
 | What you will learn               | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
 | Time to complete                  | 15 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 
 

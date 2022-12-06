@@ -10,14 +10,14 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 | What you will learn               | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA
 | Time to complete                  | 30 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 

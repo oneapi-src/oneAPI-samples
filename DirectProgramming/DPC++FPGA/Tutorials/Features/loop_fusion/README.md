@@ -9,14 +9,14 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 | What you will learn               |  Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
 | Time to complete                  | 20 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion.

@@ -10,14 +10,14 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 | What you will learn               | How to achieve low-latency host-device streaming while maintaining throughput
 | Time to complete                  | 45 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 > **Notice**: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)* 
 

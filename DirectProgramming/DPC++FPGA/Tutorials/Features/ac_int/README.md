@@ -10,14 +10,14 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 | What you will learn               | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
 | Time to complete                  | 20 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 

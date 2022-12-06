@@ -9,14 +9,14 @@ An FPGA code sample describing how to use SYCL* IO pipes to stream data through 
 | What you will learn               | How to stream data through the FPGA's IO using IO pipes.
 | Time to complete                  | 30 minutes
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software required for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
 > Questa*-Intel® FPGA Edition
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 The purpose of this code sample is to demonstrate how to do trivial Input/Output (IO) streaming with SYCL IO pipes. The following sections will describe IO streaming and IO pipes in more detail and will conclude with a description of the trivial design used to demonstrate these concepts and features.
