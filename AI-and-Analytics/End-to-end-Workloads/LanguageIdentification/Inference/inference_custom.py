@@ -221,7 +221,10 @@ def main(argv):
                     use_entire_audio_file = True
                     sample_list = [0 for _ in range(sample_size)]
                 else:
-                    sample_list = [random.randint(sample_dur, int(data.waveduration)) - sample_dur for _ in range(sample_size)]
+                    start_time_list = list(range(sample_size - int(data.waveduration) + 1))
+                    sample_list = []
+                    for i in range(sample_size):
+                        sample_list.append(random.sample(start_time_list, 1)[0])
                 for start in sample_list:
                     if use_entire_audio_file:
                         newWavPath = data.wavepath
