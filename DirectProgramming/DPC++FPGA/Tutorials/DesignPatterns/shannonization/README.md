@@ -16,7 +16,7 @@ This tutorial describes the process of _Shannonization_ (named after [Claude Sha
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 Demonstrate a loop optimization to improve the f<sub>MAX</sub>/II of an FPGA design.

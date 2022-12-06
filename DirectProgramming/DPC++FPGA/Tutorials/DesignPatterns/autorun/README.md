@@ -27,7 +27,7 @@ The purpose of this tutorial is to demonstrate how to create autorun kernels in 
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 >**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
 

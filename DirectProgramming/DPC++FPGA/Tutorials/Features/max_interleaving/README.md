@@ -16,7 +16,7 @@ This FPGA tutorial explains how to use the `max_interleaving` attribute for loop
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 This tutorial demonstrates a method to reduce the area usage of inner loops that cannot realize throughput increases through interleaved execution. By default, the compiler will generate loop datapaths that enable multiple invocations of the same loop to execute simultaneously, called interleaving, in order to maximize throughput when II is greater than 1. In cases where interleaving is dynamically prohibited, e.g., due to data dependency preservation, the hardware resources used to enable interleaving are wasted. The `max_interleaving` attribute can instruct the compiler to limit allocation of these hardware resources in these cases.

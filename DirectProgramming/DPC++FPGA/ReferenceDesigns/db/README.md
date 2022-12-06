@@ -48,7 +48,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 > **Note**: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX).
 

@@ -16,7 +16,7 @@ This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to 
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!

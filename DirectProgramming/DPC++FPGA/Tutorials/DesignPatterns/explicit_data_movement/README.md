@@ -16,7 +16,7 @@ An FPGA tutorial demonstrating an alternative coding style, SYCL* Unified Shared
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 The purpose of this tutorial is to demonstrate an alternative coding style that allows you to explicitly control the movement of data in your SYCL program by using SYCL USM device allocations.

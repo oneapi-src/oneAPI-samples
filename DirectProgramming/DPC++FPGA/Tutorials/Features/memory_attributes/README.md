@@ -16,7 +16,7 @@ This FPGA tutorial demonstrates how to use on-chip memory attributes to control 
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 For each private or local array in your FPGA device code, the compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of SYCL*-compliant extensions for FPGA that enable you to override the internal compiler heuristics and control kernel memory architecture.

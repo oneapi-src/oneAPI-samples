@@ -16,7 +16,7 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 > Questa*-Intel® FPGA Starter Edition
 > ModelSim® SE
 >
-> For using the hardware compile flow, Intel Quartus Prime Pro Edition must be installed and accessible through your PATH.
+> For using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion.
