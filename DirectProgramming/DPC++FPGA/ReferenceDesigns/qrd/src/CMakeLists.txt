@@ -49,7 +49,7 @@ elseif(FPGA_DEVICE MATCHES ".*s10.*")
     set(COMPLEX 1)
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 480MHz)
-    set(SEED "-Xsseed=22")
+    set(SEED "-Xsseed=9")
 elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     # Agilex™ parameters
     set(ROWS_COMPONENT 256)
