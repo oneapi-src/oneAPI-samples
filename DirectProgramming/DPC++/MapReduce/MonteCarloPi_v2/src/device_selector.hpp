@@ -1,0 +1,73 @@
+//==============================================================
+// Copyright (C) Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+// =============================================================
+
+// SYCL includes:
+#include <CL/sycl.hpp>
+
+// Third party includes:
+#include <iostream>
+
+using namespace std;
+using namespace sycl;
+
+// Custom device selector to select a device of the specified type.
+// The platform of the device has to contain the phrase "Intel".  If
+// the platform or the type are not as expected, the queried device is
+// not selected, as indicated by a negative score.
+class CCustomSelector 
+: public device_selector 
+{
+ public:
+  CCustomSelector( info::device_type type ) 
+  : m_type{ type } 
+  {}
+
+  int operator()( const device& dev) const override 
+  {
+    if( m_type != dev.get_info< info::device::device_type >()) return -1;
+
+    string platform_name =
+        dev.get_platform().get_info< info::platform::name >();
+
+    if( platform_name.find( "Intel" ) != string::npos )
+      return 10;
+    else
+      return ( m_type == info::device_type::host) ? 10 : -1;
+  }
+
+ private:
+  info::device_type m_type;
+};
+
+// Return the device type based on the program arguments.
+static info::device_type GetDeviceType( int argc, char* argv[] ) 
+{
+  if( argc < 2 ) 
+  {
+    cerr << "Usage: " << argv[0] << " "
+         << "<host|cpu|gpu|accelerator>\n";
+    exit( 1 );
+  }
+
+  string type_arg{ argv[ 1 ] };
+  info::device_type type;
+
+  if( type_arg.compare( "host" ) == 0 )
+    type = info::device_type::host;
+  else if( type_arg.compare( "cpu" ) == 0 )
+    type = info::device_type::cpu;
+  else if( type_arg.compare( "gpu" ) == 0 )
+    type = info::device_type::gpu;
+  else if( type_arg.compare( "accelerator" ) == 0 )
+    type = info::device_type::accelerator;
+  else 
+  {
+    cerr << "fail; unrecognized device type '" << type_arg << "'\n";
+    exit( -1 );
+  }
+
+  return type;
+}
