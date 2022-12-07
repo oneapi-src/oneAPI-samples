@@ -5,9 +5,18 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL Unified
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to use SYCL USM host allocations for the FPGA
 | Time to complete                  | 15 minutes
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 *Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)*
 

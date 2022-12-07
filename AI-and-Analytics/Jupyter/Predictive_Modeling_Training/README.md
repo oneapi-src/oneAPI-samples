@@ -2,7 +2,9 @@
 
 The purpose of this repo is to be the central aggregation, curation, and
 distribution point for Juypter notebooks that are developed in support of
-the Intel AI Kit. These initial hands-on exercises introduce you to predictive modeling using decision trees, bagging and XGBoost.  
+the Intel AI Kit. These initial hands-on exercises introduce you to predictive modeling using decision trees, bagging and XGBoost.
+The notebooks for the exercises are stored under AI_Kit_XGBoost_Predictive_Modeling and the answers to these exercises are stored
+under AI_Kit_XGBoost_Predictive_Modeling.complete.
 
 The Jupyter notebooks are tested and can be run on the Intel Devcloud. Below
 are the steps to access these Jupyter notebooks on the Intel Devcloud:
