@@ -2,7 +2,7 @@
 from importlib import util
 tensorflow_found = util.find_spec("tensorflow") is not None
 pytorch_found = util.find_spec("torch") is not None
-pytorch_ext_found = util.find_spec("intel_pytorch_extension") is not None
+pytorch_ext_found = util.find_spec("intel_extension_for_pytorch") is not None
 tensorflow_ext_found = util.find_spec("intel_extension_for_tensorflow") is not None
 xgboost_found = util.find_spec("xgboost") is not None
 sklearn_found = util.find_spec("sklearn") is not None
@@ -49,7 +49,7 @@ if pytorch_found == True:
     print(torch.__config__.show())
     
     if pytorch_ext_found == True:
-        import intel_pytorch_extension as ipex
+        import intel_extension_for_pytorch as ipex
         print("ipex_verion : ",ipex.__version__)
 
 if xgboost_found == True:
