@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <sycl/sycl.hpp>
-#include <CL/sycl/backend/opencl.hpp>
+#include <sycl/backend/opencl.hpp>
 #include <iostream>
 using namespace sycl;
 
@@ -21,7 +21,7 @@ int main() {
 // BEGIN CODE SNIP
     // Note: This must select a device that supports interop with OpenCL kernel
     // objects!
-    queue Q{ cpu_selector{} };
+    queue Q{ cpu_selector_v };
     context sc = Q.get_context();
 
     const char* kernelSource =

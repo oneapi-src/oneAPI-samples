@@ -13,17 +13,41 @@ See [Key Implementation Details](#key-implementation-details) below for more inf
 
 ## Prerequisites
 
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 4 sample that demonstrates a reference design.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 
-### Additional Documentation
-
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
-- [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Key Implementation Details
 
@@ -31,35 +55,35 @@ See [Key Implementation Details](#key-implementation-details) below for more inf
 
 The adaptive noise reduction (ANR) algorithm uses an input image that is in a Bayer format. (See the [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter) Wikipedia article for more information.)  Unlike image formats you may be used to, like PNG or JPG, where each pixel has a red, green, and blue value (RGB), each pixel in a Bayer format image is either red, green, or blue. (See the image below.) To convert to an RGB image, one must operate on a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green as the human eye is more sensitive to green.
 
-![Bayer format](bayer.png)
+![Bayer format](assets/bayer.png)
 
 The ANR algorithm uses a bilateral filter. Unilateral filters (for example, a Box blur or Gaussian blur) replace the intensity of a given pixel with a weighted average of the neighboring pixels; the weight of each neighboring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighboring pixel depends on both the spatial distance and the difference in pixel intensity. This difference makes bilateral filters better at preserving sharp edges. (See the [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter), [Box blur](https://en.wikipedia.org/wiki/Box_blur), and [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) Wikipedia articles for more information.)
 
 Bilateral filters are non-linear and therefore non-separable. In the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation. This difference is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and combine the entire window of the given pixel color (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed.
 
-![converted](conv.png)
+![converted](assets/conv.png)
 
 This produces a long chain of adders to sum the results of the multiplications. The design approximates a bilateral filter by making it separable. The first step is to apply a 1D vertical filter to the middle pixel and then a 1D horizontal filter, as shown in the image below. This approach reduces the number of multiplications needing to be summed together to 3. The code in the design applies vertical filter to *all* pixels first and then applies the horizontal filter, which results in the *corner* pixels indirectly applying some weight to the middle pixel.
 
-![Bilateral Estimate](bilateral_estimate.png)
+![Bilateral Estimate](assets/bilateral_estimate.png)
 
 ### ANR FPGA Design
 The ANR algorithm is designed as a streaming kernel system with input pixels streaming through the input pipe, and the denoised output pixels streaming out the output pipe, as shown in the figure below. The design consists of two kernels, `Vertical Kernel` and `Horizontal Kernel`, that are connected by an internal SYCL pipe, as shown in the figure below. The `Vertical Kernel` computes an intensity sigma value based on the current pixel, computes the bilateral filter, and applies it to the current window to produce an intermediate pixel value. The `Vertical Kernel` kernel sends three values through the internal pipe: the original pixel value, the current pixel value (the intermediate pixel that was just computed), and the intensity sigma value. The `Horizontal Kernel` streams in these tuples and performs a similar computation on a horizontal window. The algorithm uses the forwarded intensity sigma value to compute the bilateral filer, the new pixel values to perform the bilateral filter computation, and the original pixel to perform *alpha blending*, where the output pixel is a weighted percentage of the original pixel value and the denoised pixel value.
 
-![ANR design](anr_ip.png)
+![ANR design](assets/anr_ip.png)
 
 To compute a given pixel, the `Vertical Kernel` must store previous rows (lines) of the input image. (The image shows the technique.) The pixels are streamed in from the pipe and used with pixels from previous rows to perform the 1D vertical window operation.
 
-![Vertical kernel](vertical_kernel.png)
+![Vertical kernel](assets/vertical_kernel.png)
 
 
 The logic for the `Horizontal Kernel`, shown below, is simpler since it operates on a single row at a time.
 
-![Horizontal kernel](horizontal_kernel.png)
+![Horizontal kernel](assets/horizontal_kernel.png)
 
 To produce the input data and consume the output, the design sets up a full system as shown in the figure below. The `Input Kernel` reads input data from device memory and provides it to the ANR design via the input pipe. The `Output Kernel` reads the output from the ANR design from the output pipe and writes it to device memory. The oneAPI host code then uses the output data to validate the accuracy of the ANR algorithm against a golden result using Peak signal-to-noise ratio (PSNR). (See the [Peak signal-to-noise ratio (PSNR)](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio) Wikipedia article for more information.)
 
-![ANR system](anr_system.png)
+![ANR system](assets/anr_system.png)
 
 ### Quantized Floating-Point (QFP)
 Floating-point values consist of a sign bit, an exponent, and a mantissa. In this design, we take 32-bit single-precision floating values and convert them to quantized floating-point (QFP) values, which use fewer bits. (See the [32-bit single-precision](https://en.wikipedia.org/wiki/Single-precision_floating-point_format) Wikipedia article for more information.)
@@ -105,14 +129,11 @@ The design uses the following generic header files.
 
 >**Note**: For more information on the usage and implementation of these header libraries, view the comments in the source code in the `.hpp` files.
 
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
 ## Build the `Adaptive Noise Reduction` Reference Design
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -125,12 +146,10 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
->**Note**: You can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
-
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
 
    ```
    mkdir build
@@ -165,7 +184,7 @@ When working with the command-line interface (CLI), you should configure the one
 >**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
    ```
    mkdir build
    cd build
@@ -194,17 +213,7 @@ When working with the command-line interface (CLI), you should configure the one
       ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-#### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
-
-## Run the `Adaptive Noise Reduction` Reference Design
+## Run the `Adaptive Noise Reduction` Executable
 
 ### On Linux
 
@@ -227,40 +236,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    anr.fpga.exe
    ```
-
-### Build and Run the Samples on Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a FPGA runtime node using a single line script similar to the following example.
-
-```
-qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |FPGA Compile Time  |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime (Arria 10)       |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
-  |FPGA Runtime (Stratix 10)       |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
-  |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
-
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
 
 ## Example Output
 

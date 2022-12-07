@@ -5,9 +5,18 @@ This FPGA tutorial shows how to use pipes to transfer data between kernels.
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> ***Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basics of using SYCL*-compliant pipes extension for FPGA<br> How to declare and use pipes
 | Time to complete                  | 15 minutes
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Purpose
 This tutorial demonstrates how a kernel in a SYCL*-compliant FPGA program transfers
@@ -217,6 +226,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -254,6 +267,10 @@ To learn more about the extensions, see the
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -288,16 +305,21 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
      ./pipes.fpga_emu     (Linux)
      pipes.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./pipes.fpga_sim     (Linux)
+     pipes.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./pipes.fpga         (Linux)
      pipes.fpga.exe       (Windows)
      ```
 
 ### Example of Output
-You should see the following output in the console:
+You should see similar output in the console:
 
-1. When running on the FPGA emulator
+1. When running on the FPGA emulator or simulator
     ```
     Input Array Size: 8192
     Enqueuing producer...
@@ -317,7 +339,7 @@ You should see the following output in the console:
 
     PASSED: The results are correct
     ```
-   > **Note**: The FPGA emulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
+   > **Note**: The FPGA emulator or simulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
 
 2. When running on the FPGA device
     ```
