@@ -57,9 +57,9 @@ int main() {
 #endif
 #else
     assert(false) && "this design requires oneAPI 2023.0 or 2023.1!"
-#else
-    assert(false) && "this design requires oneAPI 2023.0 or 2023.1!" std::cout
-                         << "using FPGA Emulator." << std::endl;
+#endif
+
+    int count = VECT_SIZE;  // pass array size by value
 
     // declare arrays and fill them
     // allocate in shared memory so the kernel can see them
