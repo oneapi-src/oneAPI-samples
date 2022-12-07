@@ -31,6 +31,20 @@ int main() {
   bool passed = false;
 
   try {
+// This design is tested with 2023.0, but also accounts for a syntax change in
+// 2023.1
+#if __INTEL_CLANG_COMPILER >= 20230100
+#if FPGA_SIMULATOR
+    std::cout << "using FPGA Simulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_simulator_selector_v);
+#elif FPGA_HARDWARE
+    std::cout << "using FPGA Hardware." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_selector_v);
+#else  // #if FPGA_EMULATOR
+    std::cout << "using FPGA Emulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_emulator_selector_v);
+#endif
+#elif __INTEL_CLANG_COMPILER >= 20230000
 #if FPGA_SIMULATOR
     std::cout << "using FPGA Simulator." << std::endl;
     sycl::queue q(sycl::ext::intel::fpga_simulator_selector{});
@@ -41,8 +55,11 @@ int main() {
     std::cout << "using FPGA Emulator." << std::endl;
     sycl::queue q(sycl::ext::intel::fpga_emulator_selector{});
 #endif
-
-    int count = VECT_SIZE;  // pass array size by value
+#else
+    assert(false) && "this design requires oneAPI 2023.0 or 2023.1!"
+#else
+    assert(false) && "this design requires oneAPI 2023.0 or 2023.1!" std::cout
+                         << "using FPGA Emulator." << std::endl;
 
     // declare arrays and fill them
     // allocate in shared memory so the kernel can see them
