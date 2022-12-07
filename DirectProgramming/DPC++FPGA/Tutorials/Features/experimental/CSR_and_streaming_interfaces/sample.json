@@ -8,6 +8,14 @@
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "Tutorials/Features/experimental/CSR_and_streaming_interfaces",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {

@@ -1,7 +1,7 @@
 
 
-# CSR and Streaming interfaces
-This FPGA tutorial demonstrates how to specify the kernel control interfaces and kernel argument interfaces. The kernel control interfaces can be implemented as Control and Status Register (CSR) Agent interfaces, or Streaming interfaces. Similarly, the kernel argument interfaces can be implemented as Control and Status Register (CSR) Agent interfaces, or Streaming interfaces as well, independent of which interface that the kernel control is using. The Control and Status Register (CSR) Agent interface is referring to a interface registered in the kernel agent memory map, where the Streaming interface is referring to simple conduit interfaces.
+# Register Map and streaming interfaces
+This FPGA tutorial demonstrates how to specify the kernel control interfaces and kernel argument interfaces. The kernel control interfaces can be implemented as register map interfaces or streaming interfaces. Similarly, the kernel argument interfaces can be implemented as register map interfaces or streaming interfaces as well, independent of which interface that the kernel control is using. The register map interface is referring to an interface registered in the kernel agent memory map, where the streaming interface is referring to a interface that signals are implemented in simple conduits.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -10,7 +10,6 @@ The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/d
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Basics of specifying kernel control interfaces and kernel argument interfaces
 | Time to complete                  | 30 minutes
@@ -19,9 +18,9 @@ The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/d
 
 ## Purpose
 
-Use CSR and streaming interface controls to specify how the kernel control handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
+Use register map and streaming interface controls to specify how the kernel control handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
 
-### Declaring a CSR Agent kernel interface
+### Declaring a register map kernel interface
 
 #### Example Functor
 
@@ -75,7 +74,7 @@ struct MyIP {
 };
 ```
 
-*__Note__:* CSR agent kernel arguments are not currently supported in kernels with streaming control.
+*__Note__:* Register map kernel arguments are not currently supported in kernels with streaming control.
 
 ### Declaring a streaming kernel argument interface
 
@@ -90,10 +89,10 @@ struct MyIP {
 ```
 
 ### Default Interfaces
-If no annotation is specified for the kernel control, then a CSR agent kernel ontrol interface will be inferred by the compiler. If no annotation is specified for the a kernel argument, then that kernel argument will have the same interface as the kernel control interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel control interface.
+If no annotation is specified for the kernel control, then a register map kernel control interface will be inferred by the compiler. If no annotation is specified for the a kernel argument, then that kernel argument will have the same interface as the kernel control interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel control interface.
 
 ### Testing the Tutorial
-In `CSR_and_streaming_interfaces.cpp`, two kernels are decalred using the functor programming model, one with CSR Agent kernel control interface, and one with streaming kernel control interface.
+In `register_map_and_streaming_interfaces.cpp`, two kernels are decalred using the functor programming model, one with register map kernel control interface, and one with streaming kernel control interface.
 
 ```c++
 struct CSRAgentControlIP {

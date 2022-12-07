@@ -1,36 +1,10 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
-
-//
-// Selects a SYCL device using a string. This is typically used to select
-// the FPGA simulator device
-//
-class select_by_string : public sycl::default_selector {
-public:
-  select_by_string(std::string s) : target_name(s) {}
-  virtual int operator()(const sycl::device &device) const {
-    std::string name = device.get_info<sycl::info::device::name>();
-    if (name.find(target_name) != std::string::npos) {
-      // The returned value represents a priority, this number is chosen to be
-      // large to ensure high priority
-      return 10000;
-    }
-    return -1;
-  }
-
-private:
-  std::string target_name;
-};
+#include "exception_handler.hpp"
 
 using ValueT = int;
-// forward declare the test functions
-template <typename KernelType>
-void KernelTest(sycl::queue &, ValueT *, ValueT *, size_t);
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
@@ -57,18 +31,18 @@ struct StreamingControlIP {
   }
 };
 
-struct CSRAgentControlIP {
+struct RegisterMapControlIP {
   // Use the 'register_map' annotation on a kernel argument to specify it to be
-  // a CSR Agent kernel argument.
+  // a register map kernel argument.
   register_map ValueT *input;
-  // Without the annotations, kernel arguments will be inferred to be CSR Agent
-  // kernel arguments if the kernel control interface is CSR Agent, and
+  // Without the annotations, kernel arguments will be inferred to be register map
+  // kernel arguments if the kernel control interface is register map, and
   // vise-versa.
   ValueT *output;
-  // A kernel with CSR Agent control can also independently have streaming
+  // A kernel with register map control can also independently have streaming
   // kernel arguments, when annotated by 'conduit'.
   conduit size_t n;
-  CSRAgentControlIP(ValueT *in_, ValueT *out_, size_t N_)
+  RegisterMapControlIP(ValueT *in_, ValueT *out_, size_t N_)
       : input(in_), output(out_), n(N_) {}
   register_map_interface void operator()() const {
     for (int i = 0; i < n; i++) {
@@ -77,15 +51,22 @@ struct CSRAgentControlIP {
   }
 };
 
+// void TestLambdaRegisterMapKernel()
+
+template <typename KernelType>
+void TestFunctorKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
+  q.single_task(KernelType{in, out, count}).wait();
+
+  std::cout << "\t Done" << std::endl;
+}
+
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector selector;
+  sycl::ext::intel::fpga_emulator_selector device_selector;
 #elif defined(FPGA_SIMULATOR)
-  std::string simulator_device_string =
-      "SimulatorDevice : Multi-process Simulator (aclmsim0)";
-  select_by_string selector = select_by_string{simulator_device_string};
+  sycl::ext::intel::fpga_simulator_selector device_selector;
 #else
-  sycl::ext::intel::fpga_selector selector;
+  sycl::ext::intel::fpga_selector device_selector;
 #endif
 
   bool passed = true;
@@ -101,7 +82,7 @@ int main(int argc, char *argv[]) {
 
   try {
     // create the device queue
-    sycl::queue q(selector, dpc_common::exception_handler);
+    sycl::queue q(device_selector, fpga_tools::exception_handler);
 
     // make sure the device supports USM device allocations
     sycl::device d = q.get_device();
@@ -138,13 +119,13 @@ int main(int argc, char *argv[]) {
 
     // Launch the kernel with streaming control
     std::cout << "Running kernel with streaming control" << std::endl;
-    KernelTest<StreamingControlIP>(q, in, streamingOut, count);
+    TestFunctorKernel<StreamingControlIP>(q, in, streamingOut, count);
     passed &= validate(golden, streamingOut, count);
     std::cout << std::endl;
 
-    // Launch the kernel with CSR Agnet control
-    std::cout << "Running kernel with CSR Agnet control" << std::endl;
-    KernelTest<CSRAgentControlIP>(q, in, CSRAgentOut, count);
+    // Launch the kernel with register map control
+    std::cout << "Running kernel with register map control" << std::endl;
+    TestFunctorKernel<RegisterMapControlIP>(q, in, CSRAgentOut, count);
     passed &= validate(golden, CSRAgentOut, count);
     std::cout << std::endl;
 
@@ -165,11 +146,4 @@ int main(int argc, char *argv[]) {
     std::cout << "FAILED\n";
     return 1;
   }
-}
-
-template <typename KernelType>
-void KernelTest(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task(KernelType{in, out, count}).wait();
-
-  std::cout << "\t Done" << std::endl;
 }
