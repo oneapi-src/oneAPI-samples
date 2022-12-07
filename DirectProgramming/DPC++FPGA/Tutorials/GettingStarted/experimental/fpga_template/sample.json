@@ -1,0 +1,94 @@
+{
+  "guid": "418AA4D8-0A61-4FDB-845A-CDA4DA0655E7",
+  "name": "FPGA Template",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
+  "description": "This project serves as a template for Intel® oneAPI FPGA designs. ",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/GettingStarted/experimental/fpga_template",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./fpga_template.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_sim",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_sim",
+          "./fpga_template.fpga_sim"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/experimental/fpga_template",
+          "nmake fpga_emu",
+          "fpga_template.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/experimental/fpga_template",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_sim",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/experimental/fpga_template",
+          "nmake fpga_sim",
+          "fpga_template.fpga_sim.exe"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}
