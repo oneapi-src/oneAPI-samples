@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../../..",
     "include": [
+      "README.md",
       "Tutorials/Features/experimental/register_map_and_streaming_interfaces",
       "include"
     ],
