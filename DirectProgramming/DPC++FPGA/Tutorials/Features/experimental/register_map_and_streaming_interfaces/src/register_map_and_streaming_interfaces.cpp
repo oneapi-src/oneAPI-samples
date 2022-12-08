@@ -5,13 +5,17 @@
 #include "exception_handler.hpp"
 
 using ValueT = int;
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class LambdaRegisterMapControlIP;
+class LambdaStreamingControlIP;
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
 /////////////////////////////////////////
 
-struct StreamingControlIP {
+struct FunctorStreamingControlIP {
   // Use the 'conduit' annotation on a kernel argument to specify it to be
   // a streaming kernel argument.
   conduit ValueT *input;
@@ -20,7 +24,7 @@ struct StreamingControlIP {
   // kernel arguments if the kernel control interface is streaming, and
   // vise-versa.
   size_t n;
-  StreamingControlIP(ValueT *in_, ValueT *out_, size_t N_)
+  FunctorStreamingControlIP(ValueT *in_, ValueT *out_, size_t N_)
       : input(in_), output(out_), n(N_) {}
   // Use the 'streaming_interface' annotation on a kernel to specify it to be
   // a kernel with streaming kernel control signals.
@@ -31,7 +35,7 @@ struct StreamingControlIP {
   }
 };
 
-struct RegisterMapControlIP {
+struct FunctorRegisterMapControlIP {
   // Use the 'register_map' annotation on a kernel argument to specify it to be
   // a register map kernel argument.
   register_map ValueT *input;
@@ -42,7 +46,7 @@ struct RegisterMapControlIP {
   // A kernel with register map control can also independently have streaming
   // kernel arguments, when annotated by 'conduit'.
   conduit size_t n;
-  RegisterMapControlIP(ValueT *in_, ValueT *out_, size_t N_)
+  FunctorRegisterMapControlIP(ValueT *in_, ValueT *out_, size_t N_)
       : input(in_), output(out_), n(N_) {}
   register_map_interface void operator()() const {
     for (int i = 0; i < n; i++) {
@@ -51,7 +55,29 @@ struct RegisterMapControlIP {
   }
 };
 
-// void TestLambdaRegisterMapKernel()
+void TestLambdaRegisterMapControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
+  // In the Lambda programming model, all kernel arguments will have the same interface as the 
+  // kernel control interface.
+  q.single_task<LambdaRegisterMapControlIP>([=] register_map_interface  {
+    for (int i = 0; i < count; i++) {
+      out[i] = SomethingComplicated(in[i]);
+    }
+  }).wait();
+
+  std::cout << "\t Done" << std::endl;
+}
+
+void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
+  // In the Lambda programming model, all kernel arguments will have the same interface as the 
+  // kernel control interface.
+  q.single_task<LambdaStreamingControlIP>([=] streaming_interface  {
+    for (int i = 0; i < count; i++) {
+      out[i] = SomethingComplicated(in[i]);
+    }
+  }).wait();
+
+  std::cout << "\t Done" << std::endl;
+}
 
 template <typename KernelType>
 void TestFunctorKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
@@ -93,16 +119,20 @@ int main(int argc, char *argv[]) {
     }
 
     ValueT *in = sycl::malloc_host<ValueT>(count, q);
-    ValueT *streamingOut = sycl::malloc_host<ValueT>(count, q);
-    ValueT *CSRAgentOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *functorStreamingOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *functorRegisterMapOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *LambdaStreamingOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *LambdaRegisterMapOut = sycl::malloc_host<ValueT>(count, q);
     ValueT *golden = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       in[i] = rand() % 77;
       golden[i] = SomethingComplicated(in[i]);
-      streamingOut[i] = 0;
-      CSRAgentOut[i] = 0;
+      functorStreamingOut[i] = 0;
+      functorRegisterMapOut[i] = 0;
+      LambdaStreamingOut[i] = 0;
+      LambdaRegisterMapOut[i] = 0;
     }
 
     // validation lambda
@@ -117,21 +147,35 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with streaming control
-    std::cout << "Running kernel with streaming control" << std::endl;
-    TestFunctorKernel<StreamingControlIP>(q, in, streamingOut, count);
-    passed &= validate(golden, streamingOut, count);
+    // Launch the kernel with streaming control implemented in the functor programming model
+    std::cout << "Running the kernel with streaming control implemented in the functor programming model" << std::endl;
+    TestFunctorKernel<FunctorStreamingControlIP>(q, in, functorStreamingOut, count);
+    passed &= validate(golden, functorStreamingOut, count);
     std::cout << std::endl;
 
-    // Launch the kernel with register map control
-    std::cout << "Running kernel with register map control" << std::endl;
-    TestFunctorKernel<RegisterMapControlIP>(q, in, CSRAgentOut, count);
-    passed &= validate(golden, CSRAgentOut, count);
+    // Launch the kernel with register map control implemented in the functor programming model
+    std::cout << "Running the kernel with register map control implemented in the functor programming model" << std::endl;
+    TestFunctorKernel<FunctorRegisterMapControlIP>(q, in, functorRegisterMapOut, count);
+    passed &= validate(golden, functorRegisterMapOut, count);
+    std::cout << std::endl;
+
+    // Launch the kernel with streaming control implemented in the lambda programming model
+    std::cout << "Running kernel with streaming control implemented in the lambda programming model" << std::endl;
+    TestLambdaStreamingControlKernel(q, in, LambdaStreamingOut, count);
+    passed &= validate(golden, LambdaStreamingOut, count);
+    std::cout << std::endl;
+
+    // Launch the kernel with register map control implemented in the lambda programming model
+    std::cout << "Running kernel with register map control implemented in the lambda programming model" << std::endl;
+    TestLambdaRegisterMapControlKernel(q, in, LambdaRegisterMapOut, count);
+    passed &= validate(golden, LambdaRegisterMapOut, count);
     std::cout << std::endl;
 
     sycl::free(in, q);
-    sycl::free(streamingOut, q);
-    sycl::free(CSRAgentOut, q);
+    sycl::free(functorStreamingOut, q);
+    sycl::free(functorRegisterMapOut, q);
+    sycl::free(LambdaStreamingOut, q);
+    sycl::free(LambdaRegisterMapOut, q);
     sycl::free(golden, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
