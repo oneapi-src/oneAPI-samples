@@ -196,9 +196,12 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
    ```
 
 2. Run the sample on the FPGA simulator device:
+
+   > **NOTE**: you need to define the `CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 environment variable in oneAPI 2023.1
+
    ```
-   ./fpga_template.fpga_sim     (Linux)
-   fpga_template.fpga_sim.exe   (Windows)
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_template.fpga_sim                       (Linux)
+   cmd /V /C "set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1&& fpga_template.fpga_sim.exe"   (Windows)
    ```
 
 3. Run the sample on the FPGA device:
