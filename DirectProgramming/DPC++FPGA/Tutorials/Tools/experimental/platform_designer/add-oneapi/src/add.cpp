@@ -30,7 +30,20 @@ int main() {
   bool passed = false;
 
   try {
-// choose a selector that was selected by the default FPGA build system.
+// This design is tested with 2023.0, but also accounts for a syntax change in
+// 2023.1
+#if __INTEL_CLANG_COMPILER >= 20230100
+#if FPGA_SIMULATOR
+    std::cout << "using FPGA Simulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_simulator_selector_v);
+#elif FPGA_HARDWARE
+    std::cout << "using FPGA Hardware." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_selector_v);
+#else  // #if FPGA_EMULATOR
+    std::cout << "using FPGA Emulator." << std::endl;
+    sycl::queue q(sycl::ext::intel::fpga_emulator_selector_v);
+#endif
+#elif __INTEL_CLANG_COMPILER >= 20230000
 #if FPGA_SIMULATOR
     std::cout << "using FPGA Simulator." << std::endl;
     sycl::queue q(sycl::ext::intel::fpga_simulator_selector{});
@@ -40,6 +53,9 @@ int main() {
 #else  // #if FPGA_EMULATOR
     std::cout << "using FPGA Emulator." << std::endl;
     sycl::queue q(sycl::ext::intel::fpga_emulator_selector{});
+#endif
+#else
+    assert(false) && "this design requires oneAPI 2023.0 or 2023.1!"
 #endif
 
     int a = 3;
