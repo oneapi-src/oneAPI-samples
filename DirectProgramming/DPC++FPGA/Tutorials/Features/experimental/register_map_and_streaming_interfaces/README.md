@@ -1,7 +1,7 @@
 
 
 # Register Map and streaming interfaces
-This FPGA tutorial demonstrates how to specify the kernel control interfaces and kernel argument interfaces. The kernel control interfaces can be implemented as register map interfaces or streaming interfaces. Similarly, the kernel argument interfaces can be implemented as register map interfaces or streaming interfaces as well, independent of which interface that the kernel control is using. The register map interface is referring to an interface registered in the kernel agent memory map, where the streaming interface is referring to a interface that signals are implemented in simple conduits.
+This FPGA tutorial demonstrates how to specify the kernel control interfaces and kernel argument interfaces. The kernel control interfaces can be implemented as register map interfaces or streaming interfaces. Similarly, the kernel argument interfaces can be implemented as register map interfaces or streaming interfaces as well, independent of which interface that the kernel control is using. The register map interface is referring to an interface registered in the kernel agent memory map, where the streaming interface is referring to an interface that signals are implemented in simple conduits.
 
 > **Note**: The register map and streaming interface control feature is only supported in the IP Component Authoring design flow. The IP Component Authoring design flow compiles SYCL source code to sandalone IPs that can be deployed into user's systems. The generated IP is not meant to be ran on FPGA devices directly, therefore there will be no FPGA executables generated in this tutorial.
 
