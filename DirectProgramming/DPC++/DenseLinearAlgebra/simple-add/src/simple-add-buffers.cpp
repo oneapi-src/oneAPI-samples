@@ -84,16 +84,16 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // Intel extension: FPGA emulator selector on systems without FPGA card.
-  ext::intel::fpga_emulator_selector d_selector;
+  ext::intel::fpga_emulator_selector selector;
 #elif FPGA_SIMULATOR
   // Intel extension: FPGA simulator selector on systems without FPGA card.
   ext::intel::fpga_simulator_selector selector;
 #elif FPGA
   // Intel extension: FPGA selector on systems with FPGA card.
-  ext::intel::fpga_selector d_selector;
+  ext::intel::fpga_selector selector;
 #else
   // The default device selector will select the most performant device.
-  auto d_selector{default_selector_v};
+  auto selector{default_selector_v};
 #endif
 
   // Create array objects with "array_size" to store data.
@@ -104,7 +104,7 @@ int main() {
   for (size_t i = 0; i < sequential.size(); i++) sequential[i] = value + i;
 
   try {
-    queue q(d_selector, exception_handler);
+    queue q(selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     cout << "Running on device: "
