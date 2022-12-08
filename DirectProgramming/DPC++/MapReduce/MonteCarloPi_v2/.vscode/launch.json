@@ -1,7 +1,7 @@
 {
     "configurations": [
     {
-        "name": "C/C++: dpc++ build and debug MonteCarloPi",
+        "name": "C/C++: Intel icpx build and debug MonteCarloPi",
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/bin/${config:programName}_d",
@@ -28,7 +28,7 @@
                 "ignoreFailures": true
             }
         ],
-        "preLaunchTask": "MonteCarloPi Debug C/C++: dpcpp build active file",
+        "preLaunchTask": "MonteCarloPi Debug C/C++: Intel icpx build active file",
         "miDebuggerPath": "/opt/intel/oneapi/debugger/latest/gdb/intel64/bin/gdb-oneapi"
     }
     ],

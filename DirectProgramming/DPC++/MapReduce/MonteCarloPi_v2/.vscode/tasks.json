@@ -3,8 +3,8 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "MonteCarloPi Debug C/C++: dpcpp build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp",
+			"label": "MonteCarloPi Debug C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
 			"args": [
 				"-fdiagnostics-color=always",
 				"-g",
@@ -20,12 +20,12 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp"
+			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx"
 		},
 		{
 			"type": "cppbuild",
-			"label": "MonteCarloPi Release C/C++: dpcpp build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp",
+			"label": "MonteCarloPi Release C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
 			"args": [
 				"-DNDEBUG",
                 "${workspaceFolder}/src/${config:programName}.cpp",
@@ -39,7 +39,7 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp"
+			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx"
 		}
 	]
 }
