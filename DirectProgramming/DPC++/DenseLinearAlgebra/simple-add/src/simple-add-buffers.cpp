@@ -23,7 +23,7 @@
 #include <array>
 #include <iostream>
 
-#if FPGA || FPGA_EMULATOR
+#if FPGA || FPGA_EMULATOR || FPGA_SIMULATOR
   #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
@@ -85,6 +85,9 @@ int main() {
 #if FPGA_EMULATOR
   // Intel extension: FPGA emulator selector on systems without FPGA card.
   ext::intel::fpga_emulator_selector d_selector;
+#elif FPGA_SIMULATOR
+  // Intel extension: FPGA simulator selector on systems without FPGA card.
+  ext::intel::fpga_simulator_selector selector;
 #elif FPGA
   // Intel extension: FPGA selector on systems with FPGA card.
   ext::intel::fpga_selector d_selector;

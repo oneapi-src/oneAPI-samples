@@ -28,6 +28,15 @@ This sample provides example implementations of both Unified Shared Memory (USM)
 | Hardware                          | GEN9 or newer <br> Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA)
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for CPU, GPU, FPGA emulation, generating FPGA reports and generating RTL for FPGAs, there are extra software requirements for the FPGA simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+
 ## Key Implementation Details
 
 The basic SYCL implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
@@ -111,19 +120,23 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    make fpga_emu
    ```
-2. Generate HTML performance reports.
+2. Compile for simulation (fast compile time, targets simulator FPGA device):
+   ```
+   make fpga_sim
+   ```
+3. Generate HTML performance reports.
    ```
    make report
    ```
    The reports reside at `simple-add_report.prj/reports/report.html`.
 
-3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
 time.)
    ```
    make fpga
    ```
 
-4. Clean the program. (Optional)
+5. Clean the program. (Optional)
    ```
    make clean
    ```
@@ -168,19 +181,23 @@ time.)
    ```
    nmake fpga_emu
    ```
-2. Generate HTML performance reports.
+2. Compile for simulation (fast compile time, targets simulator FPGA device):
+   ```
+   nmake fpga_sim
+   ```
+3. Generate HTML performance reports.
    ```
    nmake report
    ```
 The reports reside at `simple-add_report.prj/reports/report.html`.
 
-3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
 time.)
    ```
    nmake fpga
    ```
 
-4. Clean the program. (Optional)
+5. Clean the program. (Optional)
    ```
    nmake clean
    ```
@@ -221,7 +238,12 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
     ./vector-add-buffers.fpga_emu
     ./vector-add-usm.fpga_emu
     ```
-3. Run on FPGA hardware.
+3. Run on FPGA simulator.
+   ```
+   ./vector-add-buffers.fpga_sim
+   ./vector-add-usm.fpga_sim
+   ```
+4. Run on FPGA hardware.
     ```
     ./vector-add-buffers.fpga
     ./vector-add-usm.fpga
@@ -248,7 +270,12 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
     vector-add-buffers.fpga_emu.exe
     vector-add-usm.fpga_emu.exe
     ```
-3. Run on FPGA hardware.
+3. Run on FPGA simulator.
+   ```
+   vector-add-buffers.fpga_sim
+   vector-add-usm.fpga_sim
+   ```
+4. Run on FPGA hardware.
     ```
     vector-add-buffers.fpga.exe
     vector-add-usm.fpga.exe
