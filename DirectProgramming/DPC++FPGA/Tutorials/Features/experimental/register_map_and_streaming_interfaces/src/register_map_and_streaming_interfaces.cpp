@@ -1,6 +1,6 @@
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
@@ -39,8 +39,8 @@ struct FunctorRegisterMapControlIP {
   // Use the 'register_map' annotation on a kernel argument to specify it to be
   // a register map kernel argument.
   register_map ValueT *input;
-  // Without the annotations, kernel arguments will be inferred to be register map
-  // kernel arguments if the kernel control interface is register map, and
+  // Without the annotations, kernel arguments will be inferred to be register
+  // map kernel arguments if the kernel control interface is register map, and
   // vise-versa.
   ValueT *output;
   // A kernel with register map control can also independently have streaming
@@ -55,26 +55,28 @@ struct FunctorRegisterMapControlIP {
   }
 };
 
-void TestLambdaRegisterMapControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  // In the Lambda programming model, all kernel arguments will have the same interface as the 
-  // kernel control interface.
-  q.single_task<LambdaRegisterMapControlIP>([=] register_map_interface  {
-    for (int i = 0; i < count; i++) {
-      out[i] = SomethingComplicated(in[i]);
-    }
-  }).wait();
+void TestLambdaRegisterMapControlKernel(sycl::queue &q, ValueT *in, ValueT *out,
+                                        size_t count) {
+  // In the Lambda programming model, all kernel arguments will have the same
+  // interface as the kernel control interface.
+  q.single_task<LambdaRegisterMapControlIP>([=] register_map_interface {
+     for (int i = 0; i < count; i++) {
+       out[i] = SomethingComplicated(in[i]);
+     }
+   }).wait();
 
   std::cout << "\t Done" << std::endl;
 }
 
-void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  // In the Lambda programming model, all kernel arguments will have the same interface as the 
-  // kernel control interface.
-  q.single_task<LambdaStreamingControlIP>([=] streaming_interface  {
-    for (int i = 0; i < count; i++) {
-      out[i] = SomethingComplicated(in[i]);
-    }
-  }).wait();
+void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out,
+                                      size_t count) {
+  // In the Lambda programming model, all kernel arguments will have the same
+  // interface as the kernel control interface.
+  q.single_task<LambdaStreamingControlIP>([=] streaming_interface {
+     for (int i = 0; i < count; i++) {
+       out[i] = SomethingComplicated(in[i]);
+     }
+   }).wait();
 
   std::cout << "\t Done" << std::endl;
 }
@@ -147,26 +149,40 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with streaming control implemented in the functor programming model
-    std::cout << "Running the kernel with streaming control implemented in the functor programming model" << std::endl;
-    TestFunctorKernel<FunctorStreamingControlIP>(q, in, functorStreamingOut, count);
+    // Launch the kernel with streaming control implemented in the functor
+    // programming model
+    std::cout << "Running the kernel with streaming control implemented in the "
+                 "functor programming model"
+              << std::endl;
+    TestFunctorKernel<FunctorStreamingControlIP>(q, in, functorStreamingOut,
+                                                 count);
     passed &= validate(golden, functorStreamingOut, count);
     std::cout << std::endl;
 
-    // Launch the kernel with register map control implemented in the functor programming model
-    std::cout << "Running the kernel with register map control implemented in the functor programming model" << std::endl;
-    TestFunctorKernel<FunctorRegisterMapControlIP>(q, in, functorRegisterMapOut, count);
+    // Launch the kernel with register map control implemented in the functor
+    // programming model
+    std::cout << "Running the kernel with register map control implemented in "
+                 "the functor programming model"
+              << std::endl;
+    TestFunctorKernel<FunctorRegisterMapControlIP>(q, in, functorRegisterMapOut,
+                                                   count);
     passed &= validate(golden, functorRegisterMapOut, count);
     std::cout << std::endl;
 
-    // Launch the kernel with streaming control implemented in the lambda programming model
-    std::cout << "Running kernel with streaming control implemented in the lambda programming model" << std::endl;
+    // Launch the kernel with streaming control implemented in the lambda
+    // programming model
+    std::cout << "Running kernel with streaming control implemented in the "
+                 "lambda programming model"
+              << std::endl;
     TestLambdaStreamingControlKernel(q, in, LambdaStreamingOut, count);
     passed &= validate(golden, LambdaStreamingOut, count);
     std::cout << std::endl;
 
-    // Launch the kernel with register map control implemented in the lambda programming model
-    std::cout << "Running kernel with register map control implemented in the lambda programming model" << std::endl;
+    // Launch the kernel with register map control implemented in the lambda
+    // programming model
+    std::cout << "Running kernel with register map control implemented in the "
+                 "lambda programming model"
+              << std::endl;
     TestLambdaRegisterMapControlKernel(q, in, LambdaRegisterMapOut, count);
     passed &= validate(golden, LambdaRegisterMapOut, count);
     std::cout << std::endl;
