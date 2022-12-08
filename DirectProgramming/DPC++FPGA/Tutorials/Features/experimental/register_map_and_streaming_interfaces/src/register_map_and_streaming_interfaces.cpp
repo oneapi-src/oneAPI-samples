@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     // create the device queue
     sycl::queue q(device_selector, fpga_tools::exception_handler);
 
-    // make sure the device supports USM device allocations
+    // make sure the device supports USM host allocations
     sycl::device d = q.get_device();
     if (!d.has(sycl::aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
