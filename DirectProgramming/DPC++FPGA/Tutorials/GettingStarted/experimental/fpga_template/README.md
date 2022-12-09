@@ -46,9 +46,9 @@ if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
 endif()
 
-# Use cmake -DUSER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend
+# Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_HARDWARE_FLAGS "${USER_HARDWARE_FLAGS}")
+set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS "${USER_FLAGS}")
