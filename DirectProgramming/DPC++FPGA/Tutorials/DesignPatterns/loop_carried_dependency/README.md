@@ -173,7 +173,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 >**Note**: The Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 1. Change to the sample directory.
-2. Build the program for **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**.
+2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**.
    ```
    mkdir build
    cd build
