@@ -69,15 +69,15 @@ endif()
 set(EMULATOR_COMPILE_FLAGS    "-fsycl -fintelfpga -DFPGA_EMULATOR  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
 set(EMULATOR_LINK_FLAGS       "-fsycl -fintelfpga -DFPGA_EMULATOR  ${QACTYPES_LINK}    ${USER_FLAGS}                                    ")
 set(REPORT_COMPILE_FLAGS      "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(REPORT_LINK_FLAGS         "-fsycl -fintelfpga -DFPGA_HARDWARE                      ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware -fsycl-link=early")
+set(REPORT_LINK_FLAGS         "-fsycl -fintelfpga -DFPGA_HARDWARE                      ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xstarget=${FPGA_DEVICE} -Xshardware -fsycl-link=early")
 set(SIMULATOR_COMPILE_FLAGS   "-fsycl -fintelfpga -DFPGA_SIMULATOR ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(SIMULATOR_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_SIMULATOR ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xssimulation -Xsghdl=1")
+set(SIMULATOR_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_SIMULATOR ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xstarget=${FPGA_DEVICE} -Xssimulation -Xsghdl=1")
 set(FULL_SYSTEM_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(FULL_SYSTEM_LINK_FLAGS    "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware")
+set(FULL_SYSTEM_LINK_FLAGS    "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xstarget=${FPGA_DEVICE} -Xshardware")
 
 # get rid of this once host pipes work properly
 set(IP_EXPORT_COMPILE_FLAGS   "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(IP_EXPORT_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_HARDWARE                      ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel")
+set(IP_EXPORT_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_HARDWARE                      ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xstarget=${FPGA_DEVICE} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel")
 
 # remove extra spaces
 string(REGEX REPLACE "( +)" " " EMULATOR_COMPILE_FLAGS     ${EMULATOR_COMPILE_FLAGS})
