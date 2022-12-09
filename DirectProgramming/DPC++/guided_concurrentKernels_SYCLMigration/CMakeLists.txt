@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.4.0)
 
 set(CMAKE_CXX_COMPILER "icpx")
 
-project (guided_MonteCarloMultiGPU_SYCLMigration)
+project (guided_concurrentKernels_SYCLMigration)
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
 	message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")
