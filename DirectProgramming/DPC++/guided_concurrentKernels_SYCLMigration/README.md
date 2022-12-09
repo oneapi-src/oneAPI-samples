@@ -113,9 +113,10 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
     git clone https://github.com/oneapi-src/oneAPI-samples.git
     ```
 4. Change to the sample directory.
-5. Configure the sample for a GPU node.
+5. Configure the sample for a GPU node and choose the backend as OpenCL.
    ```
    qsub  -I  -l nodes=1:gpu:ppn=2 -d .
+   export SYCL_DEVICE_FILTER=opencl:gpu
    ```
    - `-I` (upper case I) requests an interactive session.
    - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
@@ -139,7 +140,7 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 
 ### Example Output
 
-The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** for OpenCL Backend.
+The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** with OpenCL Backend.
 ```
 [./a.out] - Starting...
 Device: Intel(R) UHD Graphics [0x9a60]
