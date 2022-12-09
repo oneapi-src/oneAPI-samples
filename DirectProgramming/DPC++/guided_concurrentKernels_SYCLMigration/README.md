@@ -42,7 +42,7 @@ The choice to create an in-order or out-of-order queue is made at queue construc
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Build the `concurrentKernel` Sample for CPU and GPU
+## Build the `concurrentKernels` Sample for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
