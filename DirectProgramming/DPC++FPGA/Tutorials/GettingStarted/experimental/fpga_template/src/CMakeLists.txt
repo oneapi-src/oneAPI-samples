@@ -20,9 +20,9 @@ if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
 endif()
 
-# Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
+# Use cmake -DUSER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
+set(USER_HARDWARE_FLAGS "${USER_HARDWARE_FLAGS}")
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS "${USER_FLAGS}")
@@ -30,18 +30,12 @@ set(USER_FLAGS "${USER_FLAGS}")
 ### no changes after here
 ###############################################################################
 
-set(EMULATOR_EXTENSION fpga_emu)
-set(REPORT_EXTENSION report)
-set(SIMULATOR_EXTENSION fpga_sim)
-set(FPGA_EXTENSION fpga)
-set(IP_EXPORT_EXTENSION fpga_ip_export)
-
 # define the different build targets the generated build script will support.
-set(EMULATOR_TARGET ${TARGET_NAME}.${EMULATOR_EXTENSION})
-set(REPORT_TARGET ${TARGET_NAME}.${REPORT_EXTENSION})
-set(SIMULATOR_TARGET ${TARGET_NAME}.${SIMULATOR_EXTENSION})
-set(FPGA_TARGET ${TARGET_NAME}.${FPGA_EXTENSION})
-set(IP_EXPORT_TARGET ${TARGET_NAME}.${IP_EXPORT_EXTENSION})
+set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+# set(REPORT_TARGET ${TARGET_NAME}.report)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
+set(FPGA_TARGET ${TARGET_NAME}.fpga)
+# set(IP_EXPORT_TARGET ${TARGET_NAME}.fpga_ip_export)
 
 # FPGA device selection
 if(DEFINED FPGA_DEVICE)
@@ -57,7 +51,7 @@ if(WIN32)
 else()
     # add qactypes for Linux
     set(QACTYPES_COMPILE "-qactypes")
-    set(QACTYPES_LINK "")
+    set(QACTYPES_LINK "-qactypes")
 endif()
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
@@ -66,107 +60,75 @@ endif()
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
 
-set(EMULATOR_COMPILE_FLAGS    "-fsycl -fintelfpga -DFPGA_EMULATOR  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(EMULATOR_LINK_FLAGS       "-fsycl -fintelfpga -DFPGA_EMULATOR  ${QACTYPES_LINK}    ${USER_FLAGS}                                    ")
-set(REPORT_COMPILE_FLAGS      "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(REPORT_LINK_FLAGS         "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware -fsycl-link=early")
-set(SIMULATOR_COMPILE_FLAGS   "-fsycl -fintelfpga -DFPGA_SIMULATOR ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(SIMULATOR_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_SIMULATOR ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xssimulation -Xsghdl=1")
-set(FULL_SYSTEM_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(FULL_SYSTEM_LINK_FLAGS    "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware")
-
-# get rid of this once host pipes work properly
-set(IP_EXPORT_COMPILE_FLAGS   "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_COMPILE} ${USER_FLAGS} ${EXPERIMENTAL_INCLUDE} ${WIN_FLAG}")
-set(IP_EXPORT_LINK_FLAGS      "-fsycl -fintelfpga -DFPGA_HARDWARE  ${QACTYPES_LINK}    ${USER_FLAGS}                                     ${USER_FPGA_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel")
-
-# remove extra spaces
-string(REGEX REPLACE "( +)" " " EMULATOR_COMPILE_FLAGS     ${EMULATOR_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " EMULATOR_LINK_FLAGS        ${EMULATOR_LINK_FLAGS})
-string(REGEX REPLACE "( +)" " " REPORT_COMPILE_FLAGS       ${REPORT_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " REPORT_LINK_FLAGS          ${REPORT_LINK_FLAGS})
-string(REGEX REPLACE "( +)" " " SIMULATOR_COMPILE_FLAGS    ${SIMULATOR_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " SIMULATOR_LINK_FLAGS       ${SIMULATOR_LINK_FLAGS})
-string(REGEX REPLACE "( +)" " " FULL_SYSTEM_COMPILE_FLAGS  ${FULL_SYSTEM_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " FULL_SYSTEM_COMPILE_FLAGS  ${FULL_SYSTEM_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " IP_EXPORT_COMPILE_FLAGS    ${IP_EXPORT_COMPILE_FLAGS})
-string(REGEX REPLACE "( +)" " " IP_EXPORT_LINK_FLAGS       ${IP_EXPORT_LINK_FLAGS})
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
+set(EMULATOR_LINK_FLAGS    "-fsycl -fintelfpga ${QACTYPES_LINK}")
+set(FPGA_COMPILE_FLAGS     "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES_COMPILE} ${EXPERIMENTAL_INCLUDE}")
+set(FPGA_REPORT_FLAGS      "-fsycl -fintelfpga -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(FPGA_LINK_FLAGS        "${FPGA_REPORT_FLAGS} ${QACTYPES_LINK}")
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
+# To compile in a single command:
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
+# CMake executes:
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o fpga_compile.cpp.o -c fpga_compile.cpp
+#    [link]    icpx -fsycl -fintelfpga fpga_compile.cpp.o -o fpga_compile.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
-
-add_custom_target( displayEmulationCompileCommand ALL
-    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-    COMMENT "${CMAKE_CXX_COMPILER} ${EMULATOR_COMPILE_FLAGS} -o ${OBJ_FILE} -c ${SOURCE_FILE}")
-
-add_dependencies(${EMULATOR_TARGET} displayEmulationCompileCommand)
-set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-add_custom_command(TARGET ${EMULATOR_TARGET} POST_BUILD COMMENT "${CMAKE_CXX_COMPILER} ${EMULATOR_LINK_FLAGS} ${OBJ_FILE} -o ${EMULATOR_TARGET}")
-
-set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
-add_custom_target(${EMULATOR_EXTENSION} DEPENDS ${EMULATOR_TARGET})
+add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS} -DFPGA_EMULATOR ${USER_FLAGS}")
+set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS} -DFPGA_EMULATOR ${USER_FLAGS}")
 
 ###############################################################################
 ### Report
 ###############################################################################
+# To compile manually:
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early fpga_compile.cpp -o fpga_compile.report.a
+set(REPORT_TARGET ${TARGET_NAME}.report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${REPORT_TARGET} ${SOURCE_FILE})
-
-add_custom_target( displayReportCompileCommand ALL
-    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-    COMMENT "${CMAKE_CXX_COMPILER} ${REPORT_COMPILE_FLAGS} -o ${OBJ_FILE} -c ${SOURCE_FILE}")
-
-add_dependencies(${REPORT_TARGET} displayReportCompileCommand)
-set_target_properties(${REPORT_TARGET} PROPERTIES COMPILE_FLAGS "${REPORT_COMPILE_FLAGS}")
-add_custom_command(TARGET ${REPORT_TARGET} POST_BUILD COMMENT "${CMAKE_CXX_COMPILER} ${REPORT_LINK_FLAGS} ${OBJ_FILE} -o ${REPORT_TARGET}")
-
-set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS}")
-add_custom_target(${REPORT_EXTENSION} DEPENDS ${REPORT_TARGET})
+add_custom_target(report DEPENDS ${REPORT_TARGET})
+set_target_properties(${REPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${REPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_REPORT_FLAGS} ${USER_FLAGS} -Xshardware -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Simulation
 ###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-
-add_custom_target( displaySimulatorCompileCommand ALL
-    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-    COMMENT "${CMAKE_CXX_COMPILER} ${SIMULATOR_COMPILE_FLAGS} -o ${OBJ_FILE} -c ${SOURCE_FILE}")
-
-add_dependencies(${SIMULATOR_TARGET} displaySimulatorCompileCommand)
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-add_custom_command(TARGET ${SIMULATOR_TARGET} POST_BUILD COMMENT "${CMAKE_CXX_COMPILER} ${SIMULATOR_LINK_FLAGS} ${OBJ_FILE} -o ${SIMULATOR_TARGET}")
-
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
-add_custom_target(${SIMULATOR_EXTENSION} DEPENDS ${SIMULATOR_TARGET})
+# To compile in a single command:
+#   icpx -fsycl -fintelfpga -Xstarget=<FPGA_DEVICE> -Xssimulation -Xsghdl=1 fpga_compile.cpp -o fpga_compile.fpga_sim
+# CMake executes:
+#   [compile] icpx -fsycl -fintelfpga -o fpga_compile.cpp.o -c fpga_compile.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xstarget=<FPGA_DEVICE> -Xssimulation -Xsghdl=1 fpga_compile.cpp.o -o fpga_compile.fpga_sim
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_SIMULATOR ${USER_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xssimulation -Xsghdl=1 ${USER_FLAGS}")
 
 ###############################################################################
 ### FPGA Board
 ###############################################################################
-add_executable(${FPGA_TARGET} ${SOURCE_FILE})
-
-add_custom_target( displayFpgaCompileCommand ALL
-    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-    COMMENT "${CMAKE_CXX_COMPILER} ${FULL_SYSTEM_COMPILE_FLAGS} -o ${OBJ_FILE} -c ${SOURCE_FILE}")
-
-add_dependencies(${FPGA_TARGET} displayFpgaCompileCommand)
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${FULL_SYSTEM_COMPILE_FLAGS}")
-add_custom_command(TARGET ${FPGA_TARGET} POST_BUILD COMMENT "${CMAKE_CXX_COMPILER} ${FULL_SYSTEM_LINK_FLAGS} ${OBJ_FILE} -o ${FPGA_TARGET}")
-
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${FULL_SYSTEM_LINK_FLAGS}")
-add_custom_target(${FPGA_EXTENSION} DEPENDS ${FPGA_TARGET})
+# To compile in a single command:
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp -o fpga_compile.fpga
+# CMake executes:
+#   [compile] icpx -fsycl -fintelfpga -o fpga_compile.cpp.o -c fpga_compile.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${FPGA_LINK_FLAGS} -Xshardware ${USER_FLAGS}")
 
 ###############################################################################
-### FPGA IP Export (only necessary until native host pipes)
+### FPGA IP Export (apparently only necessary until 'correct' implementation of host pipes)
 ###############################################################################
+# To compile in a single command:
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early -fsycl-device-code-split=per_kernel fpga_compile.cpp -o fpga_compile.fpga_ip_export
+# CMake executes:
+#   [compile] icpx -fsycl -fintelfpga -o fpga_compile.cpp.o -c fpga_compile.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga_ip_export
+set(IP_EXPORT_TARGET ${TARGET_NAME}.fpga_ip_export.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${IP_EXPORT_TARGET} ${SOURCE_FILE})
-
-add_custom_target( displayExportCompileCommand ALL
-    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-    COMMENT "${CMAKE_CXX_COMPILER} ${IP_EXPORT_COMPILE_FLAGS} -o ${OBJ_FILE} -c ${SOURCE_FILE}")
-
-add_dependencies(${IP_EXPORT_TARGET} displayExportCompileCommand)
-set_target_properties(${IP_EXPORT_TARGET} PROPERTIES COMPILE_FLAGS "${IP_EXPORT_COMPILE_FLAGS}")
-add_custom_command(TARGET ${IP_EXPORT_TARGET} POST_BUILD COMMENT "${CMAKE_CXX_COMPILER} ${IP_EXPORT_LINK_FLAGS} ${OBJ_FILE} -o ${IP_EXPORT_TARGET}")
-
-set_target_properties(${IP_EXPORT_TARGET} PROPERTIES LINK_FLAGS "${IP_EXPORT_LINK_FLAGS}")
-add_custom_target(${IP_EXPORT_EXTENSION} DEPENDS ${IP_EXPORT_TARGET})
+add_custom_target(fpga_ip_export DEPENDS ${IP_EXPORT_TARGET})
+set_target_properties(${IP_EXPORT_TARGET} PROPERTIES COMPILE_FLAGS "${FPGA_COMPILE_FLAGS} -DFPGA_HARDWARE ${USER_FLAGS}")
+set_target_properties(${IP_EXPORT_TARGET} PROPERTIES LINK_FLAGS "${FPGA_REPORT_FLAGS} -Xshardware -fsycl-link=early -fsycl-device-code-split=per_kernel ${USER_FLAGS}")
