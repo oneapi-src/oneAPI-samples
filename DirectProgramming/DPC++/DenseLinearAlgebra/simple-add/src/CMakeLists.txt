@@ -48,10 +48,16 @@ add_custom_target(cpu-gpu DEPENDS ${TARGET_NAME})
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    if(DEFINED USM AND (NOT(USM EQUAL 0)))
+        set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
+        set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX with USM support")
+    else()
+        set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+        set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
+    endif()
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on device selection.")
+                \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with ${DEFAULT_BOARD_STR} FPGA). \
+                \nPlease refer to the README for information on board selection.")
 else()
     message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
 endif()
