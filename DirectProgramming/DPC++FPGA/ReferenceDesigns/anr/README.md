@@ -166,13 +166,17 @@ The design uses the following generic header files.
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `anr_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
@@ -201,13 +205,17 @@ The design uses the following generic header files.
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       nmake report
       ```
       The report resides at `anr_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -218,10 +226,14 @@ The design uses the following generic header files.
 ### On Linux
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./anr.fpga_emu
-    ```
-2. Alternatively, run the sample on the FPGA device.
+   ```
+   ./anr.fpga_emu
+   ```
+2. Run the sample on the FPGA simulator device:
+   ```
+   ./anr.fpga_sim
+   ```
+3. Alternatively, run the sample on the FPGA device.
    ```
    ./anr.fpga
    ```
@@ -229,10 +241,14 @@ The design uses the following generic header files.
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    anr.fpga_emu.exe
-    ```
-2. Alternatively, run the sample on the FPGA device.
+   ```
+   anr.fpga_emu.exe
+   ```
+2. Run the sample on the FPGA simulator device:
+   ```
+   anr.fpga_sim.exe
+   ```
+3. Alternatively, run the sample on the FPGA device.
    ```
    anr.fpga.exe
    ```

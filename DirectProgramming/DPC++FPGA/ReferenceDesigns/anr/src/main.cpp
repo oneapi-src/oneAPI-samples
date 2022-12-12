@@ -42,9 +42,12 @@ int main(int argc, char* argv[]) {
   // reading and validating the command line arguments
   std::string data_dir = "../test_data";
   bool passed = true;
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   int runs = 2;
   int frames = 2;
+#elif defined(FPGA_SIMULATOR)
+  int runs = 2;
+  int frames = 1;
 #else
   int runs = 2;
   int frames = 8;
@@ -78,9 +81,12 @@ int main(int argc, char* argv[]) {
   }
   /////////////////////////////////////////////////////////////
 
+#if defined(FPGA_EMULATOR)
   // the device selector
-#ifdef FPGA_EMULATOR
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  // the device simulator
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
