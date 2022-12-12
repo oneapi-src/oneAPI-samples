@@ -112,13 +112,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `buffered_host_streaming_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
@@ -148,7 +152,11 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       nmake report
       ```
@@ -179,7 +187,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    ./buffered_host_streaming.fpga_emu
    ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+   ```
+   ./buffered_host_streaming.fpga_sim
+   ```
+3. Run the sample on the FPGA device:
    ```
    ./buffered_host_streaming.fpga
    ```
@@ -190,7 +202,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    buffered_host_streaming.fpga_emu.exe
    ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+   ```
+   buffered_host_streaming.fpga_sim.exe
+   ```
+3. Run the sample on the FPGA device:
    ```
    buffered_host_streaming.fpga.exe
    ```
