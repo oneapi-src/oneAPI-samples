@@ -16,13 +16,18 @@
 #if defined(FPGA_SIMULATOR)
 // Smaller size to keep the runtime reasonable
 constexpr int kInitNumInputs = 16 * 1024;  // Default number of inputs
+// Only test a single cache depth in simulation mode
+constexpr int kMaxCacheDepth = 5; // max cache depth to test
+constexpr int kMinCacheDepth = 5; // min cache depth to test
 #else
 constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs
-#endif
-constexpr int kNumOutputs = 64;           // Number of outputs
-constexpr int kInitSeed = 42;             // Seed for randomizing data inputs
 constexpr int kMaxCacheDepth = MAX_CACHE_DEPTH; // max cache depth to test
 constexpr int kMinCacheDepth = MIN_CACHE_DEPTH; // min cache depth to test
+#endif
+
+constexpr int kNumOutputs = 64;           // Number of outputs
+constexpr int kInitSeed = 42;             // Seed for randomizing data inputs
+
 constexpr double kNs = 1000000000.0;      // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
