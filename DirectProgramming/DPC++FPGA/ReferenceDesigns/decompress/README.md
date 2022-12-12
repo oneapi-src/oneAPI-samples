@@ -324,16 +324,16 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
         ```
         make fpga_emu
         ```
-    2. Generate the HTML performance report.
+    2. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        make fpga_sim
+        ```
+    3. Generate the HTML performance report.
         ```
         make report
         ```
         The report resides at `decompression type>_report.prj/reports/report/report.html`.
 
-    3. Compile for simulation (fast compile time, targets simulator FPGA device):
-        ```
-        make fpga_sim
-        ```
     4. Compile for FPGA hardware (longer compile time, targets FPGA device).
         ```
         make fpga
@@ -367,16 +367,16 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
         ```
         nmake fpga_emu
         ```
-    2. Generate the HTML performance report.
+    2. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        nmake fpga_sim
+        ```
+    3. Generate the HTML performance report.
         ```
         nmake report
         ```
         The report resides at `<decompression type>_report.a.prj/reports/report/report.html`.
 
-    3. Compile for simulation (fast compile time, targets simulator FPGA device):
-        ```
-        nmake fpga_sim
-        ```
     4. Compile for FPGA hardware (longer compile time, targets FPGA device).
         ```
         nmake fpga
