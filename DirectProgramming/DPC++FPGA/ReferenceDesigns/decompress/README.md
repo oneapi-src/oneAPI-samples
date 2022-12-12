@@ -320,20 +320,24 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-   2. Generate the HTML performance report.
-       ```
-       make report
-       ```
-      The report resides at `decompression type>_report.prj/reports/report/report.html`.
+    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+        ```
+        make fpga_emu
+        ```
+    2. Generate the HTML performance report.
+        ```
+        make report
+        ```
+        The report resides at `decompression type>_report.prj/reports/report/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-       ```
-       make fpga
-       ```
+    3. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        make fpga_sim
+        ```
+    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+        ```
+        make fpga
+        ```
 
    (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz).
 
@@ -359,20 +363,24 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
-      ```
-      nmake fpga_emu
-      ```
-   2. Generate the HTML performance report.
-      ```
-      nmake report
-      ```
-      The report resides at `<decompression type>_report.a.prj/reports/report/report.html`.
+    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+        ```
+        nmake fpga_emu
+        ```
+    2. Generate the HTML performance report.
+        ```
+        nmake report
+        ```
+        The report resides at `<decompression type>_report.a.prj/reports/report/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-      ```
-      nmake fpga
-      ```
+    3. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        nmake fpga_sim
+        ```
+    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+        ```
+        nmake fpga
+        ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `Decompression` Program
@@ -380,24 +388,32 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 ### On Linux
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   ./decompress.fpga_emu
-   ```
-2. Run the sample on the FPGA device.
-   ```
-   ./decompress.fpga
-   ```
+    ```
+    ./decompress.fpga_emu
+    ```
+2. Run the sample on the FPGA simulator device:
+    ```
+    ./decompress.fpga_sim
+    ```
+3. Run the sample on the FPGA device.
+    ```
+    ./decompress.fpga
+    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   decompress.fpga_emu.exe
-   ```
-2. Run the sample on the FPGA device.
-   ```
-   decompress.fpga.exe
-   ```
+    ```
+    decompress.fpga_emu.exe
+    ```
+2. Run the sample on the FPGA simulator device:
+    ```
+    decompress.fpga_sim.exe
+    ```
+3. Run the sample on the FPGA device.
+    ```
+    decompress.fpga.exe
+    ```
 
 ## Example Output
 

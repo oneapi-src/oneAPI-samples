@@ -146,22 +146,25 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       make report
-       ```
-       The report resides at `db_report.prj/reports/report.html`.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `db_report.prj/reports/report.html`.
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-
-       ```
-       make fpga
-       ```
-       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+      ```
+      make fpga
+      ```
+      When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
 
    (Optional) The hardware compile may take several hours to complete. You can download a pre-compiled binary (compatible with Linux* Ubuntu* 18.04) for an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
 
@@ -180,21 +183,24 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `db_report.prj/reports/report.html` directory.
 
-       ```
-       nmake fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       nmake report
-       ```
-       The report resides at `db_report.prj/reports/report.html` directory.
-
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device):
-       ```
-       nmake fpga
-       ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `DB` Reference Design
@@ -212,26 +218,32 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux
 
- 1. Run the design on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./db.fpga_emu --dbroot=../data/sf0.01 --test
-    ```
-    (Optional) Run the design for queries `11` and `12`.
-
-2. Run the design on an FPGA device.
+1. Run the design on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./db.fpga_emu --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `11` and `12`.
+2. Run the sample on the FPGA simulator device:
+   ```
+   ./db.fpga_sim --dbroot=../data/sf0.01 --test
+   ```
+3. Run the design on an FPGA device.
    ```
    ./db.fpga --dbroot=../data/sf1 --test
    ```
 
 ### On Windows
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-     ```
-     db.fpga_emu.exe --dbroot=../data/sf0.01 --test
-     ```
-    (Optional) Run the design for queries `11` and `12`.
-
-2. Run the sample on an FPGA device.
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   db.fpga_emu.exe --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `11` and `12`.
+2. Run the sample on the FPGA simulator device:
+   ```
+   db.fpga_sim.exe --dbroot=../data/sf0.01 --test
+   ```
+3. Run the sample on an FPGA device.
    ```
    db.fpga.exe --dbroot=../data/sf1 --test
    ```

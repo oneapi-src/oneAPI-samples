@@ -119,10 +119,12 @@ int main(int argc, char* argv[]) {
   std::string args = "";
   unsigned int query = QUERY;
   bool test_query = false;
-#ifndef FPGA_EMULATOR
-  unsigned int runs = 5;
-#else
+#if defined(FPGA_EMULATOR)
   unsigned int runs = 1;
+#elif defined(FPGA_SIMULATOR)
+  unsigned int runs = 1;
+#else
+  unsigned int runs = 5;
 #endif
   bool print_result = false;
   bool need_help = false;
@@ -152,7 +154,8 @@ int main(int argc, char* argv[]) {
         // a 'warmup' iteration
         runs = std::max(2, atoi(str_after_equals.c_str()) + 1);
 #else
-        // for emulation, allow a single iteration and don't add a 'warmup' run
+        // for emulation and simulation, allow a single iteration and 
+        // don't add a 'warmup' run
         runs = std::max(1, atoi(str_after_equals.c_str()));
 #endif
       } else {
@@ -186,9 +189,12 @@ int main(int argc, char* argv[]) {
     // queue properties to enable profiling
     auto props = property_list{property::queue::enable_profiling()};
 
+#if defined(FPGA_EMULATOR)
     // the device selector
-#ifdef FPGA_EMULATOR
     ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+    // the device simulator
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
@@ -280,6 +286,8 @@ int main(int argc, char* argv[]) {
                    "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cout << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }
