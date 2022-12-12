@@ -132,13 +132,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `explicit_data_movement.prj/reports/report.html`. Note that because the optimization occurs at the *runtime* level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
@@ -172,13 +176,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       nmake report
       ```
       The report resides at `explicit_data_movement.prj.a/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -202,7 +210,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    ./explicit_data_movement.fpga_emu
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator device:
+   ```
+   ./explicit_data_movement.fpga_sim
+   ```
+3. Run the sample on the FPGA device.
    ```
    ./explicit_data_movement.fpga
    ```
@@ -213,7 +225,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    explicit_data_movement.fpga_emu.exe
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator device:
+   ```
+   explicit_data_movement.fpga_sim.exe
+   ```
+3. Run the sample on the FPGA device.
    ```
    explicit_data_movement.fpga.exe
    ```

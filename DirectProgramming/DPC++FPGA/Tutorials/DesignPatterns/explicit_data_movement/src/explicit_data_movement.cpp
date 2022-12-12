@@ -142,6 +142,9 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   size_t size = 10000;
   size_t iters = 1;
+#elif defined(FPGA_SIMULATOR)
+  size_t size = 100;
+  size_t iters = 1;
 #else
   size_t size = 100000000;
   size_t iters = 5;
@@ -159,9 +162,12 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    // device selector
 #if defined(FPGA_EMULATOR)
+    // the device selector
     ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+    // the device simulator
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
@@ -236,7 +242,7 @@ int main(int argc, char *argv[]) {
     if (passed) {
       // The emulator does not accurately represent real hardware performance.
       // Therefore, we don't show performance results when running in emulation.
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
       double implicit_avg_lat = 
           std::accumulate(implicit_kernel_latency.begin() + 1,
                           implicit_kernel_latency.end(), 0.0)
