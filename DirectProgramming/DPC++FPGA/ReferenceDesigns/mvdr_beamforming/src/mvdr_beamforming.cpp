@@ -154,7 +154,11 @@ void PrintUsage();
 // the main function
 int main(int argc, char *argv[]) {
   UDPArgs udp_args;
+#if defined(FPGA_SIMULATOR)
+  int num_matrix_copies = 2;
+#else
   int num_matrix_copies = 1024;
+#endif
   std::string in_dir = "../data";
   std::string out_dir = ".";
 
@@ -222,6 +226,8 @@ int main(int argc, char *argv[]) {
     // device selector
 #if defined(FPGA_EMULATOR)
     ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
