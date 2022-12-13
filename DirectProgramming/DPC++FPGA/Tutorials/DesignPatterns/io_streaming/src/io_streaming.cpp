@@ -32,6 +32,8 @@ int main() {
 
 #if defined(FPGA_EMULATOR)
   size_t count = 1 << 12;
+#elif defined(FPGA_SIMULATOR)
+  size_t count = 1 << 5;
 #else
   size_t count = 1 << 24;
 #endif
@@ -40,6 +42,8 @@ int main() {
     // device selector
 #if defined(FPGA_EMULATOR)
     ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+    ext::intel::fpga_simulator_selector selector;
 #else
     ext::intel::fpga_selector selector;
 #endif
