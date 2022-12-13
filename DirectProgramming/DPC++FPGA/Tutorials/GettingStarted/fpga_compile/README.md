@@ -49,7 +49,11 @@ The typical FPGA development workflow is to iterate in each of these stages, ref
 
 The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes the SYCL* device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device, the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg`.
 
-There are two important caveats to remember when using the FPGA emulator.
+#### FPGA Simulator
+
+The FPGA simulator is the fastest method to verify the correctness of the gerenated RTL. The FPGA simulator executes the SYCL* device code in an RTL simulator (e.g. Questa*). The host code still runs on the CPU as it would when targetting an FPGA. When using this flow, the generated exectuable will launch the simulator and inject the obtained results in the host execution.
+
+There are two important caveats to remember when using the FPGA emulator and the FPGA simulator.
 *  **Performance is not representative.** _Never_ draw inferences about FPGA performance from the FPGA emulator. The FPGA emulator's timing behavior is uncorrelated to that of the physical FPGA hardware. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance. It may show an unrelated increase or even a decrease.
 * **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code most likely exercises undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
 
@@ -177,75 +181,83 @@ To learn more about the extensions, see the
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+  ```
+  cmake ..
+  ```
+  Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+  ```
+  You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+  ```
+  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Generate the [optimization report](#optimization-report):
-     ```
-     make report
-     ```
-   * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
-     ```
-     make fpga
-     ```
+  * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
+    ```
+    make fpga_emu
+    ```
+  * Compile for [simulation](#fpga-simulator) (fast compile time, targets simulator FPGA device):
+    ```
+    make fpga_sim
+    ```
+  * Generate the [optimization report](#optimization-report):
+    ```
+    make report
+    ```
+  * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
+    ```
+    make fpga
+    ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fpga_compile.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+  ```
+  You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (compiles quickly, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
+  * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
+    ```
+    nmake fpga_emu
+    ```
+  * Compile for [simulation](#fpga-simulator) (fast compile time, targets simulator FPGA device):
+    ```
+    nmake fpga_sim
+    ```
+  * Generate the [optimization report](#optimization-report):
+    ```
+    nmake report
+    ```
+  * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
+    ```
+    nmake fpga
+    ```
 
 > **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
@@ -273,16 +285,21 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./fpga_compile.fpga_emu     (Linux)
-     fpga_compile.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA device:
-     ```
-     ./fpga_compile.fpga         (Linux)
-     fpga_compile.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```
+  ./fpga_compile.fpga_emu     (Linux)
+  fpga_compile.fpga_emu.exe   (Windows)
+  ```
+2. Run the sample on the FPGA simulator device (the kernel executes in the simulator):
+  ```
+  ./fpga_compile.fpga_sim         (Linux)
+  fpga_compile.fpga_sim.exe       (Windows)
+  ```
+3. Run the sample on the FPGA device:
+  ```
+  ./fpga_compile.fpga         (Linux)
+  fpga_compile.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 ```
