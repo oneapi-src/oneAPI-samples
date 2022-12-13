@@ -44,15 +44,19 @@ void SinkKernel(queue &q, float &out_data) {
 int main() {
 
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  // the device selector
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  // the device simulator
+  ext::intel::fpga_simulator_selector selector;
 #else
-  ext::intel::fpga_selector device_selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   float out_data = 0;
 
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 
     // Enqueue the Source kernel
     SourceKernel(q, kTestData);
