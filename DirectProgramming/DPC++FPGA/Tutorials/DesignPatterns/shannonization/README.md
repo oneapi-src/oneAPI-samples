@@ -188,6 +188,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make fpga_emu
      ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -224,6 +228,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -330,12 +338,17 @@ As a consequence of the fabric architecture of the Intel Stratix&reg; 10 SX FPGA
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./shannonization.fpga_emu          (Linux)
      shannonization.fpga_emu.exe        (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./shannonization.fpga_sim          (Linux)
+     shannonization.fpga_sim.exe        (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./shannonization.fpga              (Linux)
      shannonization.fpga.exe            (Windows)
