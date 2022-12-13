@@ -40,18 +40,22 @@ int main() {
     vec_b[i] = rand() / (float)RAND_MAX;
   }
 
-  // Select either the FPGA emulator or FPGA device
+  // Select either the FPGA emulator, FPGA simulator or FPGA device
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  // the device selector
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  // the device simulator
+  ext::intel::fpga_simulator_selector selector;
 #else
-  ext::intel::fpga_selector device_selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   try {
 
     // Create a queue bound to the chosen device.
     // If the device is unavailable, a SYCL runtime exception is thrown.
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 
     // create the device buffers
     buffer device_a(vec_a);

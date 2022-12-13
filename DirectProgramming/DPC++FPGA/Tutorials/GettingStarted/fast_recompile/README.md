@@ -189,14 +189,18 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      **NOTE:** For the FPGA emulator target and the FPGA target, the device link method is used.
 2. Compile the design through the generated `Makefile`. The following build targets are provided:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
+    * Compile for emulation (fast compile time, targets emulated FPGA device):
+        ```
+        make fpga_emu
+        ```
+    * Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        make fpga_sim
+        ```
+    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+        ```
+        make fpga
+        ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fast_recompile.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -222,14 +226,18 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
+    * Compile for emulation (fast compile time, targets emulated FPGA device):
+        ```
+        nmake fpga_emu
+        ```
+    * Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        nmake fpga_sim
+        ```
+    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+        ```
+        nmake fpga
+        ```
 
 > **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
@@ -252,16 +260,21 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./fast_recompile.fpga_emu     (Linux)
-     fast_recompile.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA device:
-     ```
-     ./fast_recompile.fpga         (Linux)
-     fast_recompile.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+    ```
+    ./fast_recompile.fpga_emu     (Linux)
+    fast_recompile.fpga_emu.exe   (Windows)
+    ```
+2. Run the sample on the FPGA simulator device:
+   ```
+   ./fast_recompile.fpga_sim      (Linux)
+   fast_recompile.fpga_sim.exe    (Windows)
+   ```
+3. Run the sample on the FPGA device:
+    ```
+    ./fast_recompile.fpga         (Linux)
+    fast_recompile.fpga.exe       (Windows)
+    ```
 
 ### Example of Output
 ```
