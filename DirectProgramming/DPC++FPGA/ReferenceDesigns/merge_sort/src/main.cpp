@@ -34,7 +34,11 @@ constexpr bool kUseUSMHostAllocation = false;
 // This can be set by defining the preprocessor macro 'MERGE_UNITS'
 // otherwise the default value below is used.
 #ifndef MERGE_UNITS
+#if defined(FPGA_SIMULATOR)
+#define MERGE_UNITS 2
+#else
 #define MERGE_UNITS 8
+#endif
 #endif
 constexpr size_t kMergeUnits = MERGE_UNITS;
 static_assert(kMergeUnits > 0);
@@ -73,8 +77,11 @@ int main(int argc, char *argv[]) {
   // reading and validating the command line arguments
   // defaults
   bool passed = true;
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   IndexT count = 128;
+  int runs = 2;
+#elif defined(FPGA_SIMULATOR)
+  IndexT count = 16;
   int runs = 2;
 #else
   IndexT count = 1 << 24;
@@ -120,6 +127,8 @@ int main(int argc, char *argv[]) {
   // the device selector
 #ifdef FPGA_EMULATOR
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
