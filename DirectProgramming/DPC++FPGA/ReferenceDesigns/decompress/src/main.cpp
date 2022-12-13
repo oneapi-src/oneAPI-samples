@@ -185,6 +185,7 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
   std::string dynamic_compress_filename = test_dir + "/dynamic_compressed.gz";
   std::string tp_test_filename = test_dir + "/tp_test.gz";
 
+#ifndef FPGA_SIMULATOR
   std::cout << ">>>>> Uncompressed File Test <<<<<" << std::endl;
   bool uncompressed_test_pass = decompressor.DecompressFile(
       q, uncompressed_filename, "", 1, false, false);
@@ -196,6 +197,12 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
       q, static_compress_filename, "", 1, false, false);
   PrintTestResults("Statically Compressed File Test", static_test_pass);
   std::cout << std::endl;
+#else
+  std::cout << "Only running the Dynamically Compressed File Test when using "
+               "the simulator flow to reduce execution time." << std::endl;
+  bool uncompressed_test_pass = true;         
+  bool static_test_pass = true;         
+#endif  
 
   std::cout << ">>>>> Dynamically Compressed File Test <<<<<" << std::endl;
   bool dynamic_test_pass = decompressor.DecompressFile(
@@ -203,12 +210,17 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
   PrintTestResults("Dynamically Compressed File Test", dynamic_test_pass);
   std::cout << std::endl;
 
+
+#ifndef FPGA_SIMULATOR
   std::cout << ">>>>> Throughput Test <<<<<" << std::endl;
   constexpr int kTPTestRuns = 5;
   bool tp_test_pass = decompressor.DecompressFile(q, tp_test_filename, "",
                                                   kTPTestRuns, true, false);
   PrintTestResults("Throughput Test", tp_test_pass);
   std::cout << std::endl;
+#else
+  bool tp_test_pass = true;
+#endif
 
   return uncompressed_test_pass && static_test_pass && dynamic_test_pass &&
          tp_test_pass;
@@ -231,6 +243,7 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
   PrintTestResults("Alice In Wonderland Test", alice_test_pass);
   std::cout << std::endl;
 
+#ifndef FPGA_SIMULATOR
   std::cout << ">>>>> Only Literal Strings Test <<<<<" << std::endl;
   auto test1_bytes = GenerateSnappyCompressedData(333, 3, 0, 0, 3);
   auto test1_ret = decompressor.DecompressBytes(q, test1_bytes, 1, false);
@@ -265,6 +278,11 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
   PrintTestResults("Throughput Test", test_tp_pass);
   std::cout << std::endl;
 
-  return test1_pass && test2_pass && test3_pass && test_tp_pass;
+  return alice_test_pass && test1_pass && test2_pass && test3_pass &&
+         test_tp_pass;
+#else
+  return alice_test_pass;
+#endif
+
 }
 #endif
