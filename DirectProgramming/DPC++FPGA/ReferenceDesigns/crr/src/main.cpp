@@ -732,20 +732,22 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector device_selector;
-#else
-    ext::intel::fpga_selector device_selector;
+
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
-    queue q(device_selector, fpga_tools::exception_handler);
-
-    std::cout << "Running on device:  "
-              << q.get_device().get_info<info::device::name>().c_str() << "\n";
+    queue q(selector, fpga_tools::exception_handler);
 
     device device = q.get_device();
-    std::cout << "Device name: "
-              << device.get_info<info::device::name>().c_str() << "\n \n \n";
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     vector<InputData> inp;
 
@@ -788,9 +790,9 @@ int main(int argc, char *argv[]) {
     ReadInputFromFile(inputFile, inp);
 
 // Get the number of data from the input file
-// Emulator mode only goes through one input (or through OUTER_UNROLL inputs) to
+// Emulator and simulator modes only goes through one input (or through OUTER_UNROLL inputs) to
 // ensure fast runtime
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
     int temp_crrs = 1;
 #else
     int temp_crrs = inp.size();
@@ -860,6 +862,8 @@ int main(int argc, char *argv[]) {
                  "set up correctly\n";
     std::cerr << "   If you are targeting the FPGA emulator, compile with "
                  "-DFPGA_EMULATOR\n";
+    std::cerr << "   If you are targeting the FPGA simulator, compile with "
+                 "-DFPGA_SIMULATOR\n";
     return 1;
   }
   return 0;

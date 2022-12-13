@@ -224,12 +224,12 @@ int main(int argc, char *argv[]) {
 
   try {
     // device selector
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-    ext::intel::fpga_simulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // create the device queue
@@ -238,6 +238,12 @@ int main(int argc, char *argv[]) {
 #else
     queue q(selector, fpga_tools::exception_handler);
 #endif
+
+    device device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     // initialize the producers and consumers
 #if not defined(REAL_IO_PIPES)

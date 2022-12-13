@@ -87,23 +87,24 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    // SYCL boilerplate
-#if defined(FPGA_EMULATOR)
-    sycl::ext::intel::fpga_emulator_selector device_selector;
-#elif defined(FPGA_SIMULATOR)
-    sycl::ext::intel::fpga_simulator_selector device_selector;
-#else
-    sycl::ext::intel::fpga_selector device_selector;
+
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // Enable the queue profiling to time the execution
     sycl::queue q = sycl::queue(
-        device_selector, fpga_tools::exception_handler,
+        selector, fpga_tools::exception_handler,
         sycl::property_list{sycl::property::queue::enable_profiling()});
     sycl::device device = q.get_device();
-    std::cout << "Device name: "
-              << device.get_info<sycl::info::device::name>().c_str()
-              << std::endl;
+
+    std::cout << "Running on device: "
+        << device.get_info<sycl::info::device::name>().c_str() 
+        << std::endl;
 
     // Select a type for this compile depending on the value of COMPLEX
     using T = std::conditional_t<kComplex, ac_complex<float>, float>;
