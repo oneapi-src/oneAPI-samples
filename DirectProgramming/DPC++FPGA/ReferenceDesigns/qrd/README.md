@@ -152,13 +152,17 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `qrd_report/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
@@ -187,13 +191,17 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       nmake report
       ```
       The report resides at `qrd_report.a.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -222,6 +230,14 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    ./qrd.fpga_emu
    ```
+
+#### Run on FPGA Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   ./qrd.fpga_sim
+   ```
+
 #### Run on FPGA
 
 1. Run the sample on the FPGA device.
@@ -239,6 +255,14 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    qrd.fpga_emu.exe
    ```
+   
+#### Run on FPGA Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   qrd.fpga_sim.exe
+   ```
+
 #### Run on FPGA
 
 1. Run the sample on the FPGA device.
