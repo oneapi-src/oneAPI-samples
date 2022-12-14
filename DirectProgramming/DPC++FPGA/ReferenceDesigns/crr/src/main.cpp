@@ -716,7 +716,11 @@ int main(int argc, char *argv[]) {
   string infilename = "";
   string outfilename = "";
 
+#ifdef FPGA_HARDWARE
   const string default_ifile = "src/data/ordered_inputs.csv";
+#else
+  const string default_ifile = "src/data/small_ordered_inputs.csv";
+#endif
   const string default_ofile = "src/data/ordered_outputs.csv";
 
   char str_buffer[kMaxStringLen] = {0};
@@ -822,17 +826,19 @@ int main(int argc, char *argv[]) {
     vector<CRRMeta> in_buff_params(n_crrs * 3);
     vector<CRRPerStepMeta> in_buff2_params(n_crrs * 3);
 
-    vector<CRRResParams> res_params(n_crrs * 3);
-    vector<CRRResParams> res_params_dummy(n_crrs * 3);
-
     // Prepare metadata as input to kernel
     PrepareKernelData(in_params, array_params, in_buff_params, in_buff2_params,
                       n_crrs);
 
+#ifdef FPGA_HARDWARE
     // warmup run - use this run to warmup accelerator
+    vector<CRRResParams> res_params_dummy(n_crrs * 3);
     CrrSolver(n_crrs, in_buff_params, res_params_dummy, in_buff2_params,
                q);
+#endif
+
     // Timed run - profile performance
+    vector<CRRResParams> res_params(n_crrs * 3);
     double time = CrrSolver(n_crrs, in_buff_params, res_params,
                              in_buff2_params, q);
     bool pass = true;
