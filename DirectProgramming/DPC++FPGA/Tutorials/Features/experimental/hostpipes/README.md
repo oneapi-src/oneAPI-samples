@@ -316,18 +316,22 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Generate the optimization report:
-     ```
-     make report
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
+  * Compile for emulation (fast compile time, targets emulated FPGA device):
+    ```
+    make fpga_emu
+    ```
+  * Compile for simulation (fast compile time, targets simulator FPGA device):
+    ```
+    make fpga_sim
+    ```
+  * Generate the optimization report:
+    ```
+    make report
+    ```
+  * Compile for FPGA hardware (longer compile time, targets FPGA device):
+    ```
+    make fpga
+    ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/hostpipes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -349,18 +353,22 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
+  * Compile for emulation (fast compile time, targets emulated FPGA device):
+    ```
+    nmake fpga_emu
+    ```
+  * Compile for simulation (fast compile time, targets simulator FPGA device):
+    ```
+    nmake fpga_sim
+    ```
+  * Generate the optimization report:
+    ```
+    nmake report
+    ```
+  * Compile for FPGA hardware (longer compile time, targets FPGA device):
+    ```
+    nmake fpga
+    ```
 
 >*Note:* The Intel® FPGA PAC D5005 with Intel Stratix® 10 SX does not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 
@@ -413,15 +421,21 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./hostpipes.fpga_emu     (Linux)
-     hostpipes.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA device:
-     ```
-     ./hostpipes.fpga         (Linux)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```
+  ./hostpipes.fpga_emu     (Linux)
+  hostpipes.fpga_emu.exe   (Windows)
+  ```
+2. Run the sample on the FPGA simulator.
+  ```
+  ./hostpipes.fpga_sim <input_file> [-o=<output_file>]    (Linux)
+  hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]  (Windows)
+  ```
+3. Run the sample on the FPGA device:
+  ```
+  ./hostpipes.fpga         (Linux)
+  hostpipes.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 

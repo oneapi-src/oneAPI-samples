@@ -164,18 +164,29 @@ event submitKernel<2>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
   return e;
 }
 
-template<int AttrType>
-unsigned RunKernel(unsigned init, const unsigned dict_offset_init[]) {
+template <int AttrType>
+unsigned RunKernel(unsigned init, const unsigned dict_offset_init[],
+                   bool first_run = false) {
   unsigned result = 0;
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
+
+    if (first_run){
+      auto device = q.get_device();
+
+      std::cout << "Running on device: "
+                << device.get_info<sycl::info::device::name>().c_str()
+                << std::endl;
+    }
 
     // Flatten the 2D array to a 1D buffer, because the
     // buffer constructor requires a pointer to input data
@@ -236,7 +247,8 @@ int main() {
     unsigned golden_result = GoldenRun(init, dict_offset_init);
 
     // run the kernel with 'singlepump' memory attribute
-    unsigned result_sp = RunKernel<1>(init, dict_offset_init);
+    bool first_run = j==0;
+    unsigned result_sp = RunKernel<1>(init, dict_offset_init, first_run);
 
     if (!(result_sp == golden_result)) {
       passed = false;

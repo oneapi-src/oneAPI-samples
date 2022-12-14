@@ -33,17 +33,25 @@ void MatrixMultiply(const std::vector<float> &matrix_a,
                     const std::vector<float> &matrix_b,
                     std::vector<float> &res) {
   double kernel_time = 0.0;
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
+
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
     queue q(selector, fpga_tools::exception_handler, prop_list);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     buffer buffer_in_a(matrix_a);
     buffer buffer_in_b(matrix_b);

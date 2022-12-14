@@ -250,8 +250,8 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
             // Update optval[] -- calculate each level of the binomial tree.
             // reg[] helps to achieve updating INNER_UNROLL elements in optval[]
             // simultaneously.
-            [[intel::disable_loop_pipelining]] for (short t = 0;
-                                                        t <= steps - 1; ++t) {
+            [[intel::disable_loop_pipelining]] // NO-FORMAT: Attribute
+            for (short t = 0; t <= steps - 1; ++t) {
               [[intel::fpga_register]] double reg[INNER_UNROLL + 1][OUTER_UNROLL];
 
               double val_1, val_2;
@@ -264,8 +264,8 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               // L4:
               // Calculate all the elements in optval[] -- all the tree nodes
               // for one level of the tree
-              [[intel::ivdep]] for (int n = 0; n <= steps - 1 - t;
-                                        n += INNER_UNROLL) {
+              [[intel::ivdep]] // NO-FORMAT: Attribute
+              for (int n = 0; n <= steps - 1 - t; n += INNER_UNROLL) {
 
                 #pragma unroll
                 for (short ic = 0; ic < OUTER_UNROLL; ++ic) {

@@ -30,12 +30,13 @@ template <int num_copies> class Kernel;
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
 // performance impact of the private_copies attribute.
-template <int num_copies>
+template <int num_copies, bool first_call = false>
 void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+
+#if FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   double kernel_time = 0.0;
@@ -43,6 +44,14 @@ void SimpleMathWithShift(const IntArray &array, int shift, IntScalar &result) {
   try {
     queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
+
+    if constexpr (first_call){
+      auto device = q.get_device();
+
+      std::cout << "Running on device: "
+                << device.get_info<sycl::info::device::name>().c_str()
+                << std::endl;
+    }
 
     buffer buffer_array(array);
     buffer<int, 1> buffer_result(result.data(), 1);
@@ -135,7 +144,7 @@ int main() {
 
   // Run the kernel with different values of the private_copies
   // attribute to determine the optimal private_copies number.
-  SimpleMathWithShift<0>(a, shift, R0);
+  SimpleMathWithShift<0, true>(a, shift, R0);
   SimpleMathWithShift<1>(a, shift, R1);
   SimpleMathWithShift<2>(a, shift, R2);
   SimpleMathWithShift<3>(a, shift, R3);

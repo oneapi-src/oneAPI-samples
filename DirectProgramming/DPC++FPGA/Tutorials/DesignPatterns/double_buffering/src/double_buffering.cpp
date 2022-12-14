@@ -213,7 +213,7 @@ int main() {
 #endif
 
 #ifndef FPGA_HARDWARE
-  std::cout << "\nEmulator and simualtor outputs do not demonstrate "
+  std::cout << "\nEmulator and simulator outputs do not demonstrate "
                "true hardware performance. The design may need to run "
                "on actual hardware to observe the performance benefit "
                "of the optimization exemplified in this tutorial.\n\n";
