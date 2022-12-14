@@ -22,7 +22,7 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample: Explore the Fundamentals.
+It is categorized as a Tier 2 sample that demonstatres a compiler feature.
 
 ```mermaid
 flowchart LR
