@@ -238,7 +238,7 @@ Performance results are based on testing as of October 27, 2020.
     
  2. Run the sample on the FPGA simulator.
     ```
-    ./gzip.fpga_sim <input_file> -o=<output_file>
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim <input_file> -o=<output_file>
     ```
 
  3. Run the sample on the FPGA device.
@@ -254,7 +254,9 @@ Performance results are based on testing as of October 27, 2020.
     ```
  2. Run the sample on the FPGA simulator.
     ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
     gzip.fpga_sim.exe <input_file> -o=<output_file>
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
  3. Run the sample on the FPGA device.
     ```

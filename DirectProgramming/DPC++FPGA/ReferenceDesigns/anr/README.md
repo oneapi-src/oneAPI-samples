@@ -231,7 +231,7 @@ The design uses the following generic header files.
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./anr.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./anr.fpga_sim
    ```
 3. Alternatively, run the sample on the FPGA device.
    ```
@@ -246,7 +246,9 @@ The design uses the following generic header files.
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    anr.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Alternatively, run the sample on the FPGA device.
    ```

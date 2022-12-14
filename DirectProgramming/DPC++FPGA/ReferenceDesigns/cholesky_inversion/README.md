@@ -261,7 +261,7 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   ./cholesky_inversion.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky_inversion.fpga_sim
    ```
 3. Run on the FPGA device.
    ```
@@ -276,7 +276,9 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    ```
 2. Run the sample on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    cholesky_inversion.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run on the FPGA device.
    ```

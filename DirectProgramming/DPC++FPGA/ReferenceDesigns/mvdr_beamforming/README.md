@@ -210,7 +210,7 @@ The general syntax for running the program is shown below and the table describe
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./mvdr_beamforming.fpga_sim 1024 ../data .
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mvdr_beamforming.fpga_sim 1024 ../data .
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -225,7 +225,9 @@ The general syntax for running the program is shown below and the table describe
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    mvdr_beamforming.fpga_sim.exe ../data .
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

@@ -228,7 +228,7 @@ You can perform the QR-based inversion of the set of matrices repeatedly, as sho
 
 1. Run the sample on the FPGA simulator.
    ```
-   ./qri.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qri.fpga_sim
    ```
 
 #### Run on FPGA
@@ -253,7 +253,9 @@ You can perform the QR-based inversion of the set of matrices repeatedly, as sho
 
 1. Run the sample on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    qri.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
 #### Run on FPGA

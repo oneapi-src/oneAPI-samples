@@ -225,7 +225,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device:
    ```
-   ./db.fpga_sim --dbroot=../data/sf0.01 --test
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
    ```
 3. Run the design on an FPGA device.
    ```
@@ -241,7 +241,9 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    db.fpga_sim.exe --dbroot=../data/sf0.01 --test
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on an FPGA device.
    ```

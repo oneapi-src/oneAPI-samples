@@ -234,7 +234,7 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   ./cholesky.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -249,7 +249,9 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
 2. Run the sample on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    cholesky.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

@@ -200,7 +200,7 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./merge_sort.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./merge_sort.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -214,7 +214,9 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    merge_sort.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

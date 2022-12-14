@@ -393,7 +393,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
     ```
 2. Run the sample on the FPGA simulator device:
     ```
-    ./decompress.fpga_sim
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./decompress.fpga_sim
     ```
 3. Run the sample on the FPGA device.
     ```
@@ -408,7 +408,9 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
     ```
 2. Run the sample on the FPGA simulator device:
     ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
     decompress.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
 3. Run the sample on the FPGA device.
     ```

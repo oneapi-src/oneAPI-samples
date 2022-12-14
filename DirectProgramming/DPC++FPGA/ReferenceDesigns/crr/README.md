@@ -235,7 +235,7 @@ This design measures the FPGA performance to determine how many assets can be pr
    - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
 2. Run the sample on the FPGA simulator.
    ```
-   ./crr.fpga_sim <input_file> [-o=<output_file>]
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./crr.fpga_sim <input_file> [-o=<output_file>]
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -253,7 +253,9 @@ This design measures the FPGA performance to determine how many assets can be pr
    - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
 2. Run the sample on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    crr.fpga_sim.exe <input_file> [-o=<output_file>]
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
 3. Run the sample on the FPGA device.

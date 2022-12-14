@@ -235,7 +235,7 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
 
 1. Run the sample on the FPGA simulator.
    ```
-   ./qrd.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qrd.fpga_sim
    ```
 
 #### Run on FPGA
@@ -260,7 +260,9 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
 
 1. Run the sample on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    qrd.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
 #### Run on FPGA
