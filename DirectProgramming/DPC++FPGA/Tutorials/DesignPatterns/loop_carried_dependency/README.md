@@ -1,22 +1,19 @@
-# Removing Loop Carried Dependencies
+# `Remove Loop Carried Dependency` Sample
+
 This tutorial demonstrates how to remove a loop-carried dependency to improve the performance of the FPGA device code.
 
-| Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | A technique to remove loop carried dependencies from your FPGA device code, and when to apply it.
-| Time to complete                  | 25 minutes
+| Area                   | Description
+|:---                    |:---
+| What you will learn    | How to remove loop carried dependencies from your FPGA device code and when to apply the method.
+| Time to complete       | 25 minutes
+| Category               | Code Optimization
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
->
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
-> - Questa*-Intel® FPGA Edition
-> - Questa*-Intel® FPGA Starter Edition
-> - ModelSim® SE
->
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+## Purpose
+
+This tutorial sample demonstrates the following concepts:
+
+- The impact of loop carried-dependencies on FPGA SYCL kernel performance
+- An optimization technique to break loop-carried data dependencies in critical loops
 
 ## Prerequisites
 
@@ -41,8 +38,26 @@ flowchart LR
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
 You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
 
-## Purpose
-This tutorial demonstrates how to remove a loop-carried dependency in FPGA device code. A snippet of the baseline unoptimized code (the `Unoptimized` function in `src/loop_carried_dependency.cpp`) is given below:
+| Optimized for      | Description
+|:---                |:---
+| OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware           | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Software           | Intel® oneAPI DPC++/C++ Compiler
+
+> **Note**: Even though the Intel® DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+
+## Key Implementation Details
+
+This tutorial demonstrates how to remove a loop-carried dependency in FPGA device code. 
+
+A snippet of the baseline unoptimized code (the `Unoptimized` function in `src/loop_carried_dependency.cpp`) is shown below.
 
 ```
 double sum = 0;
@@ -54,10 +69,9 @@ for (size_t i = 0; i < N; i++) {
 }
 result[0] = sum;
 ```
+In the unoptimized kernel, a sum is computed over two loops.  The inner loop sums over the `a` data and the outer loop over the `b` data. Since the value `sum` updates in both loops, this introduces a _loop carried dependency_ that causes the outer loop to be serialized. It allows only one invocation of the outer loop to be active at a time, which reduces performance.
 
-In the unoptimized kernel, a sum is computed over two loops.  The inner loop sums over the `a` data and the outer loop over the `b` data. Since the value `sum` is updated in both loops, this introduces a _loop carried dependency_ that causes the outer loop to be serialized, allowing only one invocation of the outer loop to be active at a time, which reduces performance.
-
-A snippet of the optimized code (the `Optimized` function in `src/loop_carried_dependency.cpp`) is given below, which removes the loop carried dependency on the `sum` variable:
+A snippet of the optimized code (the `Optimized` function in `src/loop_carried_dependency.cpp`) is given below, which removes the loop carried dependency on the `sum` variable.
 
 ```
 double sum = 0;
@@ -82,17 +96,15 @@ result[0] = sum;
 The optimized kernel demonstrates the use of an independent variable `sum_2` that is not updated in the outer loop and removes the need to serialize the outer loop, which improves the performance.
 
 ### When to Use This Technique
-Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in the reports. The report lists the II and details for each loop. The technique presented in this tutorial may be applicable if the _Brief Info_ of the loop shows _Serial exe: Data dependency_.  The details pane may provide more information:
+
+Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in the reports. The report lists the II and details for each loop. The technique presented in this tutorial may be applicable if the _Brief Info_ of the loop shows _Serial exe: Data dependency_.  The details pane may provide more information.
+
 ```
 * Iteration executed serially across _function.block_. Only a single loop iteration will execute inside this region due to data dependency on variable(s):
     * sum (_filename:line_)
 ```
 
-## Key Concepts
-- Loop carried-dependencies and their impact on FPGA SYCL kernel performance
-- An optimization technique to break loop-carried data dependencies in critical loops
-
-## Building the `loop_carried_dependency` Tutorial
+## Build the `Remove Loop Carried Dependency` Sample
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
@@ -109,117 +121,134 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### On a Linux* System
+1. Change to the sample directory.
+2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
 
-1. Generate the `Makefile` by running `cmake`.
-     ```
+   ```
    mkdir build
    cd build
+   cmake ..
    ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
+   For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
    cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
+
    ```
    cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     make fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     make report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_carried_dependency.fpga.tar.gz" download>here</a>.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `loop_carried_dependency_report.prj/reports/report.html`.
 
-### On a Windows* System
+      (Optional) Navigate to the _Loops Analysis_ view of the report (under _Throughput Analysis_) and observe that the loop in block `UnOptKernel.B1` is showing _Serial exe: Data dependency_.  Click the *source location* field in the table to see the details for the loop. It should show 1 as the maximum interleaving iteration of the loop, as the loop is serialized. Now, observe that the loop in block `OptKernel.B1` is not marked as *Serialized*. It shows 12 as the maximum Interleaving iterations of the loop.
 
-1. Generate the `Makefile` by running `cmake`.
-     ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+      ```
+      make fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      make fpga
+      ```
+
+    (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_carried_dependency.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_carried_dependency.fpga.tar.gz).
+
+
+### On Windows*
+
+>**Note**: The Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+1. Change to the sample directory.
+2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**.
+   ```
    mkdir build
    cd build
+   cmake -G "NMake Makefiles" ..
    ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
+   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
    ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `loop_carried_dependency.prj.a/reports/report.html`.
 
-*Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+      (Optional) Navigate to the _Loops Analysis_ view of the report (under _Throughput Analysis_) and observe that the loop in block `UnOptKernel.B1` is showing _Serial exe: Data dependency_.  Click the *source location* field in the table to see the details for the loop. It should show 1 as the maximum interleaving iteration of the loop, as the loop is serialized. Now, observe that the loop in block `OptKernel.B1` is not marked as *Serialized*. It shows 12 as the maximum Interleaving iterations of the loop.
 
-*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      nmake fpga
+      ```
 
-## Examining the Reports
-Locate `report.html` in the `loop_carried_dependency_report.prj/reports` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+>**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your `build` directory in a shorter path, for example `C:\samples\build`. You can then build the sample in the new location, but you must specify the full path to the build files.
 
-Navigate to the _Loops Analysis_ view of the report (under _Throughput Analysis_) and observe that the loop in block `UnOptKernel.B1` is showing _Serial exe: Data dependency_.  Click on the _source location_ field in the table to see the details for the loop. The maximum interleaving iterations of the loop is 1, as the loop is serialized.
+#### Troubleshooting
 
-Now, observe that the loop in block `OptKernel.B1` is not marked as _Serialized_.  The maximum Interleaving iterations of the loop is now 12.
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+```
+make VERBOSE=1
+```
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-## Running the Sample
+## Run the `Remove Loop Carried Dependency` Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./loop_carried_dependency.fpga_emu     (Linux)
-     loop_carried_dependency.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA simulator device:
-     ```
-     ./loop_carried_dependency.fpga_sim     (Linux)
-     loop_carried_dependency.fpga_sim.exe   (Windows)
-     ```
-3. Run the sample on the FPGA device:
-     ```
-     ./loop_carried_dependency.fpga         (Linux)
-     loop_carried_dependency.fpga.exe       (Windows)
-     ```
+### On Linux
 
-### Example of Output
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./loop_carried_dependency.fpga_emu
+   ```
+2. Run the sample on the FPGA simulator device.
+   ```
+   ./loop_carried_dependency.fpga_sim
+   ```
+3. Run the sample on the FPGA device.
+   ```
+   ./loop_carried_dependency.fpga
+   ```
+
+### On Windows
+
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   loop_carried_dependency.fpga_emu.exe
+   ```
+2. Run the sample on the FPGA simulator device.
+   ```
+   loop_carried_dependency.fpga_sim.exe
+   ```
+3. Run the sample on the FPGA device.
+   ```
+   loop_carried_dependency.fpga.exe
+   ```
+
+## Example Output
+
+### Example Output on FPGA Device
+
+>**Note**: In the sample, applying the optimization yields a total execution time reduction by almost a factor of 4. The Initiation Interval (II) for the inner loop is 12 because a double floating point add takes 11 cycles on the FPGA.
+
 ```
 Number of elements: 16000
 Run: Unoptimized:
@@ -228,12 +257,24 @@ Run: Optimized:
 kernel time : 2736.47 ms
 PASSED
 ```
-### Discussion of Results
 
-In the tutorial example, applying the optimization yields a total execution time reduction by almost a factor of 4.  The Initiation Interval (II) for the inner loop is 12 because a double floating point add takes 11 cycles on the FPGA.
+### Example Output on FPGA Emulation
+
+```
+Number of elements: 16000
+
+Emulator output does not demonstrate true hardware performance. The design may need to run on actual hardware to observe the performance benefit of the optimization exemplified in this tutorial.
+
+Run: Unoptimized:
+kernel time : 334.33 ms
+Run: Optimized:
+kernel time : 335.345 ms
+PASSED
+```
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
