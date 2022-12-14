@@ -57,7 +57,7 @@
         "id": "fpga_emu",
         "steps": [
           "icpx --version",
-          "cd ../../..",
+          "cd ../../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
@@ -69,7 +69,7 @@
         "id": "fpga_sim",
         "steps": [
           "icpx --version",
-          "cd ../../..",
+          "cd ../../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
@@ -81,7 +81,7 @@
         "id": "report",
         "steps": [
           "icpx --version",
-          "cd ../../..",
+          "cd ../../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
