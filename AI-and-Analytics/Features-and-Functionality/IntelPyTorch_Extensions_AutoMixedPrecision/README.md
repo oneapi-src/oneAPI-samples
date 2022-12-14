@@ -34,8 +34,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### On a Linux\* System
 
-Please follow instructions [here](https://intel.github.io/intel-extension-for-pytorch/1.11.200/tutorials/installation.html).
+Please follow instructions [here](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/installation.html).
 
 ## Running the Sample
 
-Please follow instructions [here](https://intel.github.io/intel-extension-for-pytorch/1.11.200/tutorials/examples.html#complete-bfloat16).
+Please follow instructions [here](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html#complete-bfloat16).

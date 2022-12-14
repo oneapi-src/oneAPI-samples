@@ -205,11 +205,11 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | Argument  | Description
 |:---       |:---
-| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition of 8 matrices. Its default value is **16** for the emulation flow and **819200** for the FPGA flow.
+| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation flow, **1** for the simulation flow and **819200** for the FPGA flow.
 
-You can perform the QR decomposition of 8 matrices repeatedly. This step performs the following:
-- Generates 8 random matrices.
-- Computes the QR decomposition of the 8 matrices.
+You can perform the QR decomposition of the set of matrices repeatedly. This step performs the following:
+- Generates the set of random matrices.
+- Computes the QR decomposition of the set of matrices.
 - Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 ### On Linux
