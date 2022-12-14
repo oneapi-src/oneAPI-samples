@@ -315,13 +315,13 @@ In the main **System Viewer** pane, the kernel control interface and kernel argu
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./register_map_and_streaming_interfaces.fpga_emu     (Linux)
-     register_map_and_streaming_interfaces.fpga_emu.exe   (Windows)
+     ./register_map_and_streaming_interfaces.fpga_emu      (Linux)
+     register_map_and_streaming_interfaces.fpga_emu.exe    (Windows)
      ```
 2. Run the sample on the FPGA simulator:
      ```
      ./register_map_and_streaming_interfaces.fpga_sim      (Linux)
-     register_map_and_streaming_interfaces.fpga_sim.exe        (Windows)
+     register_map_and_streaming_interfaces.fpga_sim.exe    (Windows)
      ```
 
 ### Example of Output
