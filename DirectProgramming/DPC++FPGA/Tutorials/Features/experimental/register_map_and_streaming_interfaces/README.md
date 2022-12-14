@@ -203,10 +203,22 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    cmake ..
    ```
    
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the following command:
+   You can also compile for a custom FPGA platform. Run `cmake` using the following command:
    
    ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<device-family-name>
+   ```
+   or
+   ```
+   cmake .. -DFPGA_DEVICE=<device-part-name>
+   ```
+   For example, to target the default Intel® Stratix10® device:
+   ```
+   cmake .. -DFPGA_DEVICE=Stratix10
+   ```
+   To target a specific Intel® Arria10® device:
+   ```
+   cmake .. -DFPGA_DEVICE=10ax115s2f45i2sges
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -236,9 +248,22 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake -G "NMake Makefiles" .. 
    ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   You can also compile for a custom FPGA platform. Run `cmake` using the following command:
+   
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-family-name>
+   ```
+   or
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-part-name>
+   ```
+   For example, to target the default Intel® Stratix10® device:
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=Stratix10
+   ```
+   To target a specific Intel® Arria10® device:
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=10ax115s2f45i2sges
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
