@@ -162,14 +162,13 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-#if defined(FPGA_EMULATOR)
-    // the device selector
-    ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-    // the device simulator
-    ext::intel::fpga_simulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // queue properties to enable profiling
@@ -179,12 +178,16 @@ int main(int argc, char *argv[]) {
     queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // make sure the device supports USM device allocations
-    device d = q.get_device();
-    if (!d.get_info<info::device::usm_device_allocations>()) {
+    auto device = q.get_device();
+    if (!device.get_info<info::device::usm_device_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM device"
                 << " allocations\n";
       return 1;
     }
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // input and output data
     std::vector<Type> in(size);

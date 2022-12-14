@@ -221,7 +221,6 @@ int main(int argc, char *argv[]) {
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
-
     // Enable the queue profiling to time the execution
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};

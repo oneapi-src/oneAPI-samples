@@ -256,16 +256,22 @@ int main(int argc, char** argv) {
     auto props = property_list{property::queue::enable_profiling()};
 
     // the device selector
-#ifdef FPGA_EMULATOR
-    ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-    ext::intel::fpga_simulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // create the device queue
     queue q(selector, props);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     bool success = true;
 
