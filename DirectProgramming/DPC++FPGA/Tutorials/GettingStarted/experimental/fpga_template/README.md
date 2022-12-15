@@ -6,11 +6,20 @@ This project serves as a template for Intel® oneAPI FPGA designs.
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) Note: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® Quartus Prime Pro Edition
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Best practices for creating and managing a oneAPI FPGA project
 | Time to complete                  | 10 minutes
 
-***Notice**: SYCL Unified Shared Memory (USM) host allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support (e.g. the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`)* 
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> To use the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+
+> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support (e.g. the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`). Kernels that use these types of allocations can always be used to generate standalone IPs.
 
 ## Purpose
 
