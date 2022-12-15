@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 #include "common.h"
