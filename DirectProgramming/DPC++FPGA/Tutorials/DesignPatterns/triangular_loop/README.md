@@ -298,21 +298,27 @@ Consult the "Loop Analysis" report to compare the optimized and unoptimized vers
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./triangular_loop.fpga_emu     (Linux)
-     triangular_loop.fpga_emu.exe   (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```
+  ./triangular_loop.fpga_emu     (Linux)
+  triangular_loop.fpga_emu.exe   (Windows)
+  ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./triangular_loop.fpga_sim     (Linux)
-     triangular_loop.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./triangular_loop.fpga_sim
+    ```
+  * On Windows
+    ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    triangular_loop.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
-     ```
-     ./triangular_loop.fpga         (Linux)
-     triangular_loop.fpga.exe       (Windows)
-     ```
+  ```
+  ./triangular_loop.fpga         (Linux)
+  triangular_loop.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 

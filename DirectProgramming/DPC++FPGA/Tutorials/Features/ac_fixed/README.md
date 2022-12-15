@@ -290,10 +290,16 @@ Scroll down on the Summary page of the report and expand the section titled **Co
 
 2. Run the sample of the FPGA simulator device
 
-   ```bash
-   ./ac_fixed.fpga_sim        (Linux)
-   ac_fixed.fpga_sim.exe      (Windows)
-   ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./ac_fixed.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        ac_fixed.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
 3. Run the sample on the FPGA device
 

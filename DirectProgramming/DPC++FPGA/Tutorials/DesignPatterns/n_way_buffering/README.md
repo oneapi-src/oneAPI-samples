@@ -259,7 +259,7 @@ After each kernel is launched, the host-side operations (that occur *after* the 
    ```
 2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./n_way_buffering.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./n_way_buffering.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -274,7 +274,9 @@ After each kernel is launched, the host-side operations (that occur *after* the 
    ```
 2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    n_way_buffering.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

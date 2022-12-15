@@ -217,10 +217,16 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
      loop_fusion.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./loop_fusion.fpga_sim     (Linux)
-     loop_fusion.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_fusion.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    loop_fusion.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```
      ./loop_fusion.fpga         (Linux)

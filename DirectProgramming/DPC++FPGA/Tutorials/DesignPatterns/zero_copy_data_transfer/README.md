@@ -162,21 +162,27 @@ Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` direct
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./zero_copy_data_transfer.fpga_emu     (Linux)
-     zero_copy_data_transfer.fpga_emu.exe   (Windows)
-     ```
- 2. Run the sample on the FPGA simulator:
-     ```
-     ./zero_copy_data_transfer.fpga_sim     (Linux)
-     zero_copy_data_transfer.fpga_sim.exe   (Windows)
-     ```
- 3. Run the sample on the FPGA device:
-     ```
-     ./zero_copy_data_transfer.fpga         (Linux)
-     zero_copy_data_transfer.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+    ```
+    ./zero_copy_data_transfer.fpga_emu     (Linux)
+    zero_copy_data_transfer.fpga_emu.exe   (Windows)
+    ```
+2. Run the sample on the FPGA simulator:
+    * On Linux
+        ```
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./zero_copy_data_transfer.fpga_sim
+        ```
+    * On Windows
+        ```
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        zero_copy_data_transfer.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
+3. Run the sample on the FPGA device:
+    ```
+    ./zero_copy_data_transfer.fpga         (Linux)
+    zero_copy_data_transfer.fpga.exe       (Windows)
+    ```
 
 ### Example of Output
 You should see the following output in the console:

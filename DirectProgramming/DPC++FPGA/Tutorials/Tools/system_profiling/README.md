@@ -295,7 +295,7 @@ You can compile and run this tutorial in the Eclipse* IDE. For instructions, ref
      ```
 2. Run the sample on the FPGA simulator device:
      ```
-     ./double_buffering.fpga_sim     (Linux)
+     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./double_buffering.fpga_sim     (Linux)
      ```
 3. Run the sample on the FPGA device:
      ```

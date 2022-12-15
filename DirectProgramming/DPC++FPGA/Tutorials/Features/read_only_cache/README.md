@@ -233,10 +233,17 @@ cache has been created.
     `-Xsread-only-cache-size<N>` flag does not impact the emulator in any way
     which is why we only have a single executable for this flow.
 2. Run the sample on the FPGA simulation device (two executables should be generated):
-     ```
-     ./read_only_cache.fpga_sim         (Linux)
-     read_only_cache.fpga_sim.exe       (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./read_only_cache.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    read_only_cache.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+    
     Note although the circuit for the read-only cache is implemented in 
     simulation, one cannot see consistent performance increase with the cache 
     enabled as each clock cycle in the simulator doesn't have a consistent 

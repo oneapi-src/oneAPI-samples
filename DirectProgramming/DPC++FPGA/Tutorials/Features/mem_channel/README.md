@@ -292,10 +292,16 @@ significantly lower than the case where burst-interleaving is enabled.
     no impact on the emulator which is why we only have a single executable for
     this flow.
 2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
-     ```
-     ./mem_channel.fpga_sim         (Linux)
-     mem_channel.fpga_sim.exe    (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mem_channel.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    mem_channel.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the simulator which is why we only have a single executable for
     this flow.

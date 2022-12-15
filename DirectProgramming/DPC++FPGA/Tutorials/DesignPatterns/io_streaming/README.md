@@ -228,7 +228,7 @@ Notice that the main kernel in the `SubmitSideChannelKernels` function in *src/S
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./io_streaming.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./io_streaming.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -243,7 +243,9 @@ Notice that the main kernel in the `SubmitSideChannelKernels` function in *src/S
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    io_streaming.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

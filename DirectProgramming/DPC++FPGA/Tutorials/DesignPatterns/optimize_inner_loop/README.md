@@ -243,10 +243,16 @@ Version 2 of the kernel (`Producer<2>`) explicitly bounds the inner loop trip co
      optimize_inner_loop.fpga_emu.exe  (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./loop_carried_dependency.fpga_sim     (Linux)
-     loop_carried_dependency.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_carried_dependency.fpga_sim
+    ```
+  * On Windows
+    ```   
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    loop_carried_dependency.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```
      ./optimize_inner_loop.fpga        (Linux)

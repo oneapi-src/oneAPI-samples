@@ -291,10 +291,16 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
      pipes.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./pipes.fpga_sim     (Linux)
-     pipes.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./pipes.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    pipes.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```
      ./pipes.fpga         (Linux)

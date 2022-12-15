@@ -260,11 +260,18 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
 
 2. Run the sample on the FPGA simulator device
 
-   ```bash
-   ./fpga_reg.fpga_sim                (Linux)
-   ./fpga_reg_registered.fpga_sim     (Linux)
-   fpga_reg.fpga_sim.exe              (Windows)
-   fpga_reg_registered.fpga_sim.exe   (Windows)
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_reg.fpga_sim
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_reg_registered.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    fpga_reg.fpga_sim.exe
+    fpga_reg_registered.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 
 3. Run the sample on the FPGA device
 

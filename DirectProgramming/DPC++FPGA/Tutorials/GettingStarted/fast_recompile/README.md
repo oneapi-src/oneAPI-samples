@@ -243,10 +243,16 @@ For larger and more complex projects, the device link method has the advantage o
     fast_recompile.fpga_emu.exe   (Windows)
     ```
 2. Run the sample on the FPGA simulator device:
-   ```
-   ./fast_recompile.fpga_sim      (Linux)
-   fast_recompile.fpga_sim.exe    (Windows)
-   ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fast_recompile.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    fast_recompile.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
     ```
     ./fast_recompile.fpga         (Linux)

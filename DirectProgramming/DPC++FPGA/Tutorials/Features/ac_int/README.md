@@ -276,10 +276,16 @@ Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in 
 
 2. Run the sample of the FPGA simulator device
 
-   ```bash
-   ./ac_int.fpga_sim        (Linux)
-   ac_int.fpga_sim.exe      (Windows)
-   ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./ac_int.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        ac_int.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
 3. Run the sample on the FPGA device
 

@@ -201,19 +201,25 @@ These results make sense when you recall that the loop exit computation has a la
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```bash
      ./speculated_iterations.fpga_emu     (Linux)
      speculated_iterations.fpga_emu.exe   (Windows)
      ```
 
- 2. Run the sample on the FPGA simulator device:
-     ```bash
-     ./speculated_iterations.fpga_sim     (Linux)
-     speculated_iterations.fpga_sim.exe   (Windows)
-     ```
+2. Run the sample on the FPGA simulator device:
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./speculated_iterations.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    speculated_iterations.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 
- 3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device:
      ```bash
      ./speculated_iterations.fpga         (Linux)
      speculated_iterations.fpga.exe       (Windows)

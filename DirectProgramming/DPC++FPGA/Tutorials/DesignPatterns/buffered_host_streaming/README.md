@@ -175,7 +175,7 @@ This sample demonstrates the following concepts:
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./buffered_host_streaming.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./buffered_host_streaming.fpga_sim
    ```
 3. Run the sample on the FPGA device:
    ```
@@ -190,7 +190,9 @@ This sample demonstrates the following concepts:
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    buffered_host_streaming.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device:
    ```

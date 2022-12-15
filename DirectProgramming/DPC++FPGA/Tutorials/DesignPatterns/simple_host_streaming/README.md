@@ -210,21 +210,27 @@ Locate `report.html` in the `simple_host_streaming_report.prj/reports/` director
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./simple_host_streaming.fpga_emu     (Linux)
-     simple_host_streaming.fpga_emu.exe   (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```
+  ./simple_host_streaming.fpga_emu     (Linux)
+  simple_host_streaming.fpga_emu.exe   (Windows)
+  ```
 2. Run the sample on the FPGA simulator:
-     ```
-     ./simple_host_streaming.fpga_sim     (Linux)
-     simple_host_streaming.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./simple_host_streaming.fpga_sim
+    ```
+  * On Windows
+    ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    simple_host_streaming.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
-     ```
-     ./simple_host_streaming.fpga         (Linux)
-     simple_host_streaming.fpga.exe       (Windows)
-     ```
+  ```
+  ./simple_host_streaming.fpga         (Linux)
+  simple_host_streaming.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 You should see the following output in the console:

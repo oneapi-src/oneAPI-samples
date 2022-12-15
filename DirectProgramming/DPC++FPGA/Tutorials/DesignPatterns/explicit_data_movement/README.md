@@ -201,7 +201,7 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./explicit_data_movement.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./explicit_data_movement.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -216,7 +216,9 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    explicit_data_movement.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

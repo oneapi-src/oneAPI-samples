@@ -240,7 +240,9 @@ To collect dynamic profiling data, choose one of the following methods:
 1. Run the design using the makefile targets generated in "[On a Linux* System](#on-a-linux-system)":
     * Run the design using the simulator:
       ```
+      export CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
       make run_sim
+      unset CL_CONTEXT_MPSIM_DEVICE_INTELFPGA
       ```
     * Run the design on hardware:
       ```

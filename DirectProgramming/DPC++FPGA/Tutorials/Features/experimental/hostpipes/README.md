@@ -401,10 +401,18 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
   hostpipes.fpga_emu.exe   (Windows)
   ```
 2. Run the sample on the FPGA simulator.
-  ```
-  ./hostpipes.fpga_sim <input_file> [-o=<output_file>]    (Linux)
-  hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]  (Windows)
-  ```
+
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+    
 3. Run the sample on the FPGA device:
   ```
   ./hostpipes.fpga         (Linux)

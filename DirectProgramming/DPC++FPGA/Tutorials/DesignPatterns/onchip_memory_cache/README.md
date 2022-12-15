@@ -121,22 +121,22 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Generate the optimization report:
-     ```
-     make report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
+    * Compile for emulation (fast compile time, targets emulated FPGA device):
+        ```
+        make fpga_emu
+        ```
+    * Generate the optimization report:
+        ```
+        make report
+        ```
+    * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+        ```
+        make fpga_sim
+        ```
+    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+        ```
+        make fpga
+        ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/onchip_memory_cache.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -192,21 +192,27 @@ Open the Kernel Memory viewer and compare the Load Latency on the loads from ker
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./onchip_memory_cache.fpga_emu     (Linux)
-     onchip_memory_cache.fpga_emu.exe   (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+    ```
+    ./onchip_memory_cache.fpga_emu     (Linux)
+    onchip_memory_cache.fpga_emu.exe   (Windows)
+    ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./onchip_memory_cache.fpga_sim         (Linux)
-     onchip_memory_cache.fpga_sim.exe       (Windows)
-     ```
+    * On Linux
+        ```
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./onchip_memory_cache.fpga_sim
+        ```
+    * On Windows
+        ```
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        onchip_memory_cache.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 3. Run the sample on the FPGA device:
-     ```
-     ./onchip_memory_cache.fpga         (Linux)
-     onchip_memory_cache.fpga.exe       (Windows)
-     ```
+    ```
+    ./onchip_memory_cache.fpga         (Linux)
+    onchip_memory_cache.fpga.exe       (Windows)
+    ```
 
 ### Example of Output
 

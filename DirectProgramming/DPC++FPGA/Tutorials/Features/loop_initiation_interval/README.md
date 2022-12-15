@@ -287,13 +287,22 @@ Compare the results to the report for the version of the design using the `intel
    ```
 
 2. Run the sample on the FPGA simulator device:
-   ```bash
-   # Sample without intel::initiation_interval attribute
-   ./loop_ii.fpga_sim               (Linux)
-   loop_ii.fpga_sim.exe             (Windows)
-   # Sample with intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga_sim     (Linux)
-   loop_ii_enable_ii.fpga_sim.exe   (Windows)
+
+  * On Linux
+    ```bash
+    # Sample without intel::initiation_interval attribute
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_ii.fpga_sim
+    # Sample with intel::initiation_interval attribute
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_ii_enable_ii.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    # Sample without intel::initiation_interval attribute
+    loop_ii.fpga_sim.exe
+    loop_ii_enable_ii.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 
 3. Run the sample on the FPGA device
 

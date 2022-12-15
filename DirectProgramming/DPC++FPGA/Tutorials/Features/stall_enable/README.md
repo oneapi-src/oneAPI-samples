@@ -173,12 +173,18 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
      stall_enable.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./stall_enable.fpga_sim     (Linux)
-     ./stall_free.fpga_sim       (Linux)
-     stall_enable.fpga_sim.exe   (Windows)
-     stall_free.fpga_sim.exe     (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stall_enable.fpga_sim
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stall_free.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    stall_enable.fpga_sim.exe
+    stall_free.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```
      ./stall_enable.fpga         (Linux)

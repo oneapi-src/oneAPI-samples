@@ -224,10 +224,16 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
 
 2. Run the sample on the FPGA simulator device
 
-     ```bash
-     ./use_library.fpga_sim     (Linux)
-     use_library.fpga_sim.exe   (Windows)
-     ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        use_library.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
 3. Run the sample on the FPGA device:
 

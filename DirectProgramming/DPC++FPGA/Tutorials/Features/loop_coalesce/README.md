@@ -194,21 +194,27 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```bash
-     ./loop_coalesce.fpga_emu     (Linux)
-     loop_coalesce.fpga_emu.exe   (Windows)
-     ```
- 2. Run the sample on the FPGA simulator device:
-     ```bash
-     ./loop_coalesce.fpga_sim     (Linux)
-     loop_coalesce.fpga_sim.exe   (Windows)
-     ```
- 3. Run the sample on the FPGA device:
-     ```bash
-     ./loop_coalesce.fpga         (Linux)
-     loop_coalesce.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```bash
+  ./loop_coalesce.fpga_emu     (Linux)
+  loop_coalesce.fpga_emu.exe   (Windows)
+  ```
+2. Run the sample on the FPGA simulator device:
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_coalesce.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    loop_coalesce.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+3. Run the sample on the FPGA device:
+  ```bash
+  ./loop_coalesce.fpga         (Linux)
+  loop_coalesce.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 

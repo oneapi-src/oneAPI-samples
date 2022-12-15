@@ -188,7 +188,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   ./double_buffering.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./double_buffering.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -203,7 +203,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
 2. Run the sample on the FPGA simulator device.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    double_buffering.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

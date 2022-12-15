@@ -228,10 +228,16 @@ Navigate to the Area Analysis of System (Area Analysis > Area Analysis of System
 
 2. Run the sample on the FPGA simulator device:
 
-     ```
-     ./scheduler_target_fmax.fpga_sim         (Linux)
-     scheduler_target_fmax.fpga_sim.exe       (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./scheduler_target_fmax.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    scheduler_target_fmax.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 
 3. Run the sample on the FPGA device:
 

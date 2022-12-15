@@ -202,6 +202,10 @@ The choice of attributes will be further discussed in the [Examining the Reports
       ```
       make fpga_emu
       ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -238,6 +242,10 @@ The choice of attributes will be further discussed in the [Examining the Reports
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -299,16 +307,27 @@ There are often many ways to generate a stall-free memory system. As a programme
 
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./memory_attributes.fpga_emu     (Linux)
-     memory_attributes.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA device:
-     ```
-     ./memory_attributes.fpga         (Linux)
-     memory_attributes.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+  ```
+  ./memory_attributes.fpga_emu     (Linux)
+  memory_attributes.fpga_emu.exe   (Windows)
+  ```
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./memory_attributes.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    memory_attributes.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+3. Run the sample on the FPGA device:
+  ```
+  ./memory_attributes.fpga         (Linux)
+  memory_attributes.fpga.exe       (Windows)
+  ```
 
 ### Example of Output
 ```

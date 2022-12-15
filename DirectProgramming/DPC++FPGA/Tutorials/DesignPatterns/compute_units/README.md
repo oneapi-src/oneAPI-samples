@@ -227,7 +227,7 @@ Each compute unit in the chain from `Source` to `Sink` must read from a unique p
    ```
 2. Run the sample on the FPGA simulator device:
    ```
-   ./compute_units.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./compute_units.fpga_sim
    ```
 3. Run the sample on the FPGA device.
    ```
@@ -241,7 +241,9 @@ Each compute unit in the chain from `Source` to `Sink` must read from a unique p
    ```
 2. Run the sample on the FPGA simulator device:
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    compute_units.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device.
    ```

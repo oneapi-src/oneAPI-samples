@@ -251,10 +251,16 @@ Next, look at the loop details of the *KernelArgsRestrict* kernel. You will noti
 
 2. Run the sample on the FPGA simulator device:
 
-     ```bash
-     ./kernel_args_restrict.fpga_sim         (Linux)
-     kernel_args_restrict.fpga_sim.exe       (Windows)
-     ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./kernel_args_restrict.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        kernel_args_restrict.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
 3. Run the sample on the FPGA device:
 

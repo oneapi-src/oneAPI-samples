@@ -279,10 +279,16 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
   fpga_compile.fpga_emu.exe   (Windows)
   ```
 2. Run the sample on the FPGA simulator device (the kernel executes in the simulator):
-  ```
-  ./fpga_compile.fpga_sim         (Linux)
-  fpga_compile.fpga_sim.exe       (Windows)
-  ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_compile.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    fpga_compile.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
   ```
   ./fpga_compile.fpga         (Linux)

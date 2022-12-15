@@ -290,10 +290,16 @@ For more details on the descriptions of LSU controls, styles, and modifiers, ref
      lsu_control.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./lsu_control.fpga_sim     (Linux)
-     lsu_control.fpga_sim.exe   (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./lsu_control.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    lsu_control.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```bash
      ./lsu_control.fpga         (Linux)

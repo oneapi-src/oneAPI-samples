@@ -246,10 +246,16 @@ Locate `report.html` in the `dsp_control_report.prj/reports/` directory. Open th
 
  2. Run the sample on the FPGA simulator device:
 
-     ```
-     ./dsp_control.fpga_sim         (Linux)
-     dsp_control.fpga_sim.exe       (Windows)
-     ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./dsp_control.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        dsp_control.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
  3. Run the sample on the FPGA device:
 

@@ -175,7 +175,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
    ```
 2. Run on the FPGA simulator.
    ```
-   ./autorun.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./autorun.fpga_sim
    ```
 3. Run on an FPGA device.
    ```
@@ -188,12 +188,15 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
    ```
    set SYCL_ENABLE_DEFAULT_CONTEXTS=1
    autorun.fpga_emu.exe
+   set SYCL_ENABLE_DEFAULT_CONTEXTS=
    ```
    >**Note**: You must set the `SYCL_ENABLE_DEFAULT_CONTEXTS=1` environment variable or the program will hang.
 
 2. Run on the FPGA simulator.
    ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    autorun.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run on an FPGA device.
    ```
