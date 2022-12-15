@@ -23,7 +23,7 @@
 #include <array>
 #include <iostream>
 #include <string>
-#if FPGA || FPGA_EMULATOR || FPGA_SIMULATOR
+#if FPGA_HARDWARE || FPGA_EMULATOR || FPGA_SIMULATOR
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
