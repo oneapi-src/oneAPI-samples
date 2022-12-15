@@ -235,8 +235,8 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
 3. Run on FPGA simulator.
    ```
-   ./simple-add-buffers.fpga_sim
-   ./simple-add-usm.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./simple-add-buffers.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./simple-add-usm.fpga_sim
    ```
 4. Run on FPGA hardware.
    ```
@@ -267,8 +267,10 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
 3. Run on FPGA simulator.
    ```
-   simple-add-buffers.fpga_sim
-   simple-add-usm.fpga_sim
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   simple-add-buffers.fpga_sim.exe
+   simple-add-usm.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 4. Run on FPGA hardware.
    ```

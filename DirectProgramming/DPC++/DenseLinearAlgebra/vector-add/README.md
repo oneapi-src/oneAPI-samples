@@ -240,8 +240,8 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
     ```
 3. Run on FPGA simulator.
    ```
-   ./vector-add-buffers.fpga_sim
-   ./vector-add-usm.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-buffers.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-usm.fpga_sim
    ```
 4. Run on FPGA hardware.
     ```
@@ -272,8 +272,10 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
     ```
 3. Run on FPGA simulator.
    ```
-   vector-add-buffers.fpga_sim
-   vector-add-usm.fpga_sim
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   vector-add-buffers.fpga_sim.exe
+   vector-add-usm.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 4. Run on FPGA hardware.
     ```
