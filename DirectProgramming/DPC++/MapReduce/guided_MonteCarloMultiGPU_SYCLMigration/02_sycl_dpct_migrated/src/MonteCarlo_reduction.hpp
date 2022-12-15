@@ -28,7 +28,7 @@
 #ifndef MONTECARLO_REDUCTION_CUH
 #define MONTECARLO_REDUCTION_CUH
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 #include "MonteCarlo_common.h"

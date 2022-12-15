@@ -45,7 +45,16 @@ You can also find more information about [troubleshooting build errors](/DirectP
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
-| Software             | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-on for oneAPI Base Toolkit
+| Software             | Intel® oneAPI DPC++/C++ Compiler
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ### Performance
 
@@ -196,11 +205,11 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | Argument  | Description
 |:---       |:---
-| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition of 8 matrices. Its default value is **16** for the emulation flow and **819200** for the FPGA flow.
+| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation flow, **1** for the simulation flow and **819200** for the FPGA flow.
 
-You can perform the QR decomposition of 8 matrices repeatedly. This step performs the following:
-- Generates 8 random matrices.
-- Computes the QR decomposition of the 8 matrices.
+You can perform the QR decomposition of the set of matrices repeatedly. This step performs the following:
+- Generates the set of random matrices.
+- Computes the QR decomposition of the set of matrices.
 - Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 ### On Linux
