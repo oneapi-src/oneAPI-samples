@@ -17,7 +17,7 @@ int main() {
 
   buffer dataBuf{data};
 
-  queue Q{ host_selector{} };
+  queue Q{};
   Q.submit([&](handler& h) {
       accessor dataAcc{ dataBuf, h };
 

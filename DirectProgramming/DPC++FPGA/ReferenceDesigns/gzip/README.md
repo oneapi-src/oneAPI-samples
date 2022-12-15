@@ -40,7 +40,16 @@ You can also find more information about [troubleshooting build errors](/DirectP
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
-| Software             | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-on for oneAPI Base Toolkit
+| Software             | Intel® oneAPI DPC++/C++ Compiler
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
 ## Key Implementation Details
 
@@ -108,7 +117,7 @@ Performance results are based on testing as of October 27, 2020.
 | Device                                          | Throughput
 |:---                                             |:---
 | Intel® PAC with Intel® Arria® 10 GX FPGA        | 1 engine @ 3.4 GB/s
-| Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 5.5 GB/s each = 11.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
+| Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 4.5 GB/s each = 9.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
 
 ## Build the `GZIP` Design
 

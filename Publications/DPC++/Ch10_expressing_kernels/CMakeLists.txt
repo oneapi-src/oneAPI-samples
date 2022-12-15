@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap10)
+project(Chap10 CXX)
 add_book_sample(
     TEST
     TARGET fig_10_2_kernel_lambda
@@ -28,9 +28,12 @@ add_book_sample(
     TARGET fig_10_6_kernel_functor
     SOURCES fig_10_6_kernel_functor.cpp)
 
-add_book_sample(
-    TEST
-    TARGET fig_10_8_opencl_object_interop
-    SOURCES fig_10_8_opencl_object_interop.cpp
-    LIBS OpenCL)
+if(UNIX)
+    add_book_sample(
+        TEST
+        TARGET fig_10_8_opencl_object_interop
+        SOURCES fig_10_8_opencl_object_interop.cpp
+        LIBS OpenCL)
+endif()
+
 

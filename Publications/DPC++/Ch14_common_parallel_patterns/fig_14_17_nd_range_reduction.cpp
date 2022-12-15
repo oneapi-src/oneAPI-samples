@@ -23,7 +23,7 @@ int main() {
      int i = it.get_global_id(0);
      int group_sum = reduce_over_group(it.get_group(), data[i], plus<>());
      if (it.get_local_id(0) == 0) {
-       ext::oneapi::atomic_ref<
+       atomic_ref<
            int,
            memory_order::relaxed,
            memory_scope::system,

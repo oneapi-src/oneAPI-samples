@@ -10,6 +10,14 @@
 
 #include "qri.hpp"
 
+#ifdef FPGA_SIMULATOR
+#define ROWS_COMPONENT_V 8
+#define COLS_COMPONENT_V 8
+#else
+#define ROWS_COMPONENT_V ROWS_COMPONENT
+#define COLS_COMPONENT_V COLS_COMPONENT
+#endif
+
 /*
   COMPLEX, COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD and
   FIXED_ITERATIONS_QRI are defined by the build system.
@@ -36,7 +44,7 @@
 void QRI(std::vector<float> &a_matrix, std::vector<float> &inv_matrix,
          sycl::queue &q, size_t matrices, size_t repetitions) {
   constexpr bool is_complex = false;
-  QRIImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD,
+  QRIImpl<COLS_COMPONENT_V, ROWS_COMPONENT_V, FIXED_ITERATIONS_QRD,
            FIXED_ITERATIONS_QRI, is_complex, float>(a_matrix, inv_matrix, q,
                                                    matrices, repetitions);
 }
@@ -46,7 +54,7 @@ void QRI(std::vector<ac_complex<float> > &a_matrix,
          std::vector<ac_complex<float> > &inv_matrix, sycl::queue &q,
          size_t matrices, size_t repetitions) {
   constexpr bool is_complex = true;
-  QRIImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD,
+  QRIImpl<COLS_COMPONENT_V, ROWS_COMPONENT_V, FIXED_ITERATIONS_QRD,
            FIXED_ITERATIONS_QRI, is_complex, float>(a_matrix, inv_matrix, q,
                                                    matrices, repetitions);
 }
@@ -175,16 +183,16 @@ void GenerateMatrixWithCondititionNumber(float epsilon,
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
-  constexpr size_t kRows = ROWS_COMPONENT;
-  constexpr size_t kColumns = COLS_COMPONENT;
+  constexpr size_t kRows = ROWS_COMPONENT_V;
+  constexpr size_t kColumns = COLS_COMPONENT_V;
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kInverseMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
 
 #if defined(FPGA_SIMULATOR)
-  constexpr size_t kMatricesToInvert = 8;
-#else
   constexpr size_t kMatricesToInvert = 1;
+#else
+  constexpr size_t kMatricesToInvert = 8;
 #endif
 
   // Get the number of times we want to repeat the inversion

@@ -8,7 +8,7 @@ using namespace sycl;
 
 int main() {
   // Create queue to use the CPU device explicitly
-  queue Q{ cpu_selector{} };
+  queue Q{ cpu_selector_v };
 
   std::cout << "Selected device: " <<
     Q.get_device().get_info<info::device::name>() << "\n";

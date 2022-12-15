@@ -25,18 +25,12 @@ cmake_minimum_required(VERSION 3.4)
 # set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
 if(WIN32)
-  #set(CMAKE_C_COMPILER clang-cl)
-  #set(CMAKE_CXX_COMPILER dpcpp)
-  set(CMAKE_C_COMPILER icx)
-  set(CMAKE_CXX_COMPILER dpcpp)
-  set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
-  set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+  include (CMakeForceCompiler)
+  CMAKE_FORCE_CXX_COMPILER (icx-cl IntelDPCPP)
+  include (Platform/Windows-Clang)
 endif(WIN32)
 if(UNIX)
-  set(CMAKE_C_COMPILER icx)
   set(CMAKE_CXX_COMPILER icpx)
-  # set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
-  # set(CMAKE_CXX_LINK_EXECUTABLE "ld.lld <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 endif(UNIX)
 
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -50,7 +44,7 @@ endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-project(DPCPPSamples)
+project(DPCPPSamples CXX)
 option(NODPL "Don't build samples requiring an installation of oneDPL and its dependencies")
 
 enable_testing()
@@ -62,7 +56,7 @@ endif()
 
 # Define project parameters for individual sample dirs.
 
-project(DPCPPSamples)
+project(DPCPPSamples CXX)
 
 function(add_book_sample)
 
@@ -76,10 +70,14 @@ function(add_book_sample)
 
     add_executable(${BOOK_SAMPLE_TARGET} ${BOOK_SAMPLE_SOURCES})
 
+    if(WIN32)
+        target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE /EHsc)
+    endif()
+
     #target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic -Wno-pass-failed)
     target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic -Wno-pass-failed -Wno-unused-variable)
 
-    target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE sycl -fsycl)
+    target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl)
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE ${BOOK_SAMPLE_LIBS})
 
     if(CMAKE_CONFIGURATION_TYPES)
