@@ -257,7 +257,7 @@ int main(int argc, char* argv[]) {
 
     if (success) {
       // don't analyze the runtime in emulation
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
       // compute the average total latency across all iterations,
       // excluding the first 'warmup' iteration
       double total_latency_avg =
