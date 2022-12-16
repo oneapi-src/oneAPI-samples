@@ -26,9 +26,17 @@ set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS "${USER_FLAGS}")
+
+# Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
+# compilation.
+set(USER_INCLUDE_PATHS "${USER_INCLUDE_PATHS}")
 ###############################################################################
 ### no changes after here
 ###############################################################################
+
+set(INCLUDEPATHS_LIST ${USER_INCLUDE_PATHS})
+separate_arguments(INCLUDEPATHS_LIST)
+include_directories(${INCLUDEPATHS_LIST})
 
 set(EMULATOR_EXTENSION fpga_emu)
 set(REPORT_EXTENSION report)
