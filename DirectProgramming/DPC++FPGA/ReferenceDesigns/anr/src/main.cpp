@@ -332,9 +332,17 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
                 ANRParams& params) {
   // parse the pixel data files
   int noisy_w, noisy_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_input_noisy.data", in_pixels, noisy_w, noisy_h);
+#else
   ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
+#endif
   int ref_w, ref_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_output_ref.data", ref_pixels, ref_w, ref_h);
+#else
   ParseDataFile(data_dir + "/output_ref.data", ref_pixels, ref_w, ref_h);
+#endif
 
   // ensure the dimensions match
   if (noisy_w != ref_w) {
