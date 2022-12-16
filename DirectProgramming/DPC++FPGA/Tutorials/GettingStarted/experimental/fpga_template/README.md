@@ -23,14 +23,15 @@ This project serves as a template for Intel® oneAPI FPGA designs.
 
 ## Purpose
 
-Use this project as a starting point when you build designs for the Intel® oneAPI FPGA compiler. It includes a CMake build system to automate selecting the various command-line flags for the oneAPI FPGA compiler, and a simple single-source design to serve as an example. You can customize the build flags by modifying the top part of `src/CMakeLists.txt`: if you want to pass additional flags to the Intel® oneAPI FPGA compiler, you can change the `USER_FLAGS` and `USER_HARDWARE_FLAGS` variables defined in `src/CMakeLists.txt`. 
+Use this project as a starting point when you build designs for the Intel® oneAPI FPGA compiler. It includes a CMake build system to automate selecting the various command-line flags for the oneAPI FPGA compiler, and a simple single-source design to serve as an example. You can customize the build flags by modifying the top part of `src/CMakeLists.txt`: if you want to pass additional flags to the Intel® oneAPI FPGA compiler, you can change the `USER_FLAGS` and `USER_HARDWARE_FLAGS` variables defined in `src/CMakeLists.txt`. Similarly, you can add additional include paths to the `USER_INCLUDE_PATHS` variable. You can also explictly define these variables at the command-line if you don't want to make change to the CMake build system.
 
 > **Note**: The code sample in this design only uses USM for improved code simplicity as compared with buffers/accessors. The included CMake build system can also be used for designs that do not use USM.
 
-| Variable              | Description                                                                                                                                                                       |
+| Variable              | Description
 |:---                   |:---
-| `USER_HARDWARE_FLAGS` | These flags apply only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off` |
-| `USER_FLAGS`          | These flags apply to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`                                             |
+| `USER_HARDWARE_FLAGS` | This space-separated list of flags applies only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
+| `USER_FLAGS`          | This space-separated list of flags applies to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
+| `USER_INCLUDE_PATHS`  | This space-separated list of include paths applies  to all flows, including emulation. Specify include paths relative to the `src/CMakeLists.txt` file, or using absolute paths in the filesystem.
 
 ```bash
 ###############################################################################
@@ -61,6 +62,10 @@ set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS "${USER_FLAGS}")
+
+# Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
+# compilation.
+set(USER_INCLUDE_PATHS "${USER_INCLUDE_PATHS}")
 ```
 
 Everything below this in the `src/CMakeLists.txt` is necessary for selecting the compiler flags that are necessary to support the build targets specified below, and should not need to be modified.
