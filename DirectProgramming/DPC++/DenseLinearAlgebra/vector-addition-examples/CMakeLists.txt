@@ -3,7 +3,7 @@ if(UNIX)
       set(CMAKE_CXX_COMPILER clang++)
     else()
       # Direct CMake to use icpx rather than the default C++ compiler/linker
-      set(CMAKE_CXX_COMPILER dpcpp)
+      set(CMAKE_CXX_COMPILER icpx)
     endif()
 else() # Windows
     # Force CMake to use icx-cl rather than the default C++ compiler/linker
