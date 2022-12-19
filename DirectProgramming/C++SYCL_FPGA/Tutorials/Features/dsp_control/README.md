@@ -1,6 +1,6 @@
 # DSP Control
 
-This FPGA tutorial demonstrates how to set the implementation preference for certain math operations (addition, subtraction, and multiplication by a constant) between hardened DSP blocks and soft logic.
+This FPGA tutorial demonstrates how to set the implementation preference for certain math operations (addition, subtraction, and multiplication) between hardened DSP blocks and soft logic.
 
 | Optimized for                     | Description
 |:---                                 |:---
@@ -27,11 +27,11 @@ This tutorial shows how to apply global and local controls to set the implementa
 
 | Datatype               | Controllable Math Operations
 |:---                  |:---
-| `float`                | addition, subtraction, multiplication by a constant
-| `ap_float<8, 23>`      | addition, subtraction, multiplication by a constant
-| `int`                  | multiplication by a constant
-| `ac_int`               | multiplication by a constant
-| `ac_fixed`             | multiplication by a constant
+| `float`                | addition, subtraction, multiplication
+| `ap_float<8, 23>`      | addition, subtraction, multiplication
+| `int`                  | multiplication
+| `ac_int`               | multiplication
+| `ac_fixed`             | multiplication
 
 ### Global Control
 
