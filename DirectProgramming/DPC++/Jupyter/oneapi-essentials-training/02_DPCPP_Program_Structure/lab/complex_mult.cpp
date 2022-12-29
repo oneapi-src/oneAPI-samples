@@ -3,12 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <vector>
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
-#include "dpc_common.hpp"
 #include "Complex.hpp"
 
 using namespace sycl;
@@ -20,7 +17,7 @@ static const int num_elements = 10000;
 class CustomDeviceSelector {
  public:
   CustomDeviceSelector(std::string vendorName) : vendorName_(vendorName){};
-  int operator()(const device &dev) const override {
+  int operator()(const device &dev) {
     int device_rating = 0;
     //We are querying for the custom device specific to a Vendor and if it is a GPU device we
     //are giving the highest rating as 3 . The second preference is given to any GPU device and the third preference is given to
@@ -118,7 +115,6 @@ int main() {
     std::string vendor_name = "Intel";
     // std::string vendor_name = "AMD";
     // std::string vendor_name = "Nvidia";
-    // queue constructor passed exception handler
     CustomDeviceSelector selector(vendor_name);
     queue q(selector);
     // Call the SYCLParallel with the required inputs and outputs
