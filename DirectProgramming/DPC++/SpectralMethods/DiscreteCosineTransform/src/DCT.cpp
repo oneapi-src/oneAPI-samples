@@ -1,6 +1,6 @@
 #include "DCT.hpp"
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
