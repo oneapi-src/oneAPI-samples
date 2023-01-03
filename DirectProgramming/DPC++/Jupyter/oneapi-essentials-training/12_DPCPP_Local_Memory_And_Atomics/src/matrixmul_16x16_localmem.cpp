@@ -53,8 +53,8 @@ int main() {
         range<2> work_group_size(N,N);
 
         //# Create local accessors
-        accessor<float, 2, access::mode::read_write, access::target::local> A_local(range<2>(N, N), h);
-        accessor<float, 2, access::mode::read_write, access::target::local> B_local(range<2>(N, N), h);
+        local_accessor<float, 2> A_local(range<2>(N, N), h);
+        local_accessor<float, 2> B_local(range<2>(N, N), h);
 
         //# Parallel Compute Matrix Multiplication
         h.parallel_for(nd_range<2>{global_size, work_group_size}, [=](nd_item<2> item){
