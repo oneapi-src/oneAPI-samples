@@ -15,7 +15,7 @@ int main() {
         my_data[i] = i;
     
   {
-    queue q(gpu_selector{});
+    queue q;
     buffer my_buffer(my_data);
       
     //Call the set_write_back method to control the data to be written back to the host from the device. e
