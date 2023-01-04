@@ -55,4 +55,4 @@ def run_gpairs(
     )
 
 
-base_gpairs_diff.run("Gpairs Dppy kernel", run_gpairs)
+base_gpairs_diff.run("Gpairs Dpex kernel", run_gpairs)

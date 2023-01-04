@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap2)
+project(Chap2 CXX)
 add_book_sample(
     TEST
     TARGET fig_2_2_simple_program
@@ -12,11 +12,6 @@ add_book_sample(
     TEST
     TARGET fig_2_7_implicit_default_selector
     SOURCES fig_2_7_implicit_default_selector.cpp)
-
-add_book_sample(
-    TEST
-    TARGET fig_2_9_host_selector
-    SOURCES fig_2_9_host_selector.cpp)
 
 add_book_sample(
     TEST

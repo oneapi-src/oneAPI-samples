@@ -1,6 +1,6 @@
 //==============================================================
 // This sample provides a parallel implementation of a merge based sparse matrix
-// and vector multiplication algorithm using DPC++. The input matrix is in
+// and vector multiplication algorithm using SYCL. The input matrix is in
 // compressed sparse row format.
 //==============================================================
 // Copyright © Intel Corporation
@@ -377,15 +377,23 @@ int main() {
   float *carry_value;
 
   try {
-    queue q{default_selector{}, dpc_common::exception_handler};
+    queue q{default_selector_v};
     auto device = q.get_device();
 
     cout << "Device: " << device.get_info<info::device::name>() << "\n";
 
     // Find max number of compute/execution units and max number of threads per
     // compute unit.
-    auto compute_units = device.get_info<info::device::max_compute_units>();
-    auto work_group_size = device.get_info<info::device::max_work_group_size>();
+    int compute_units = device.get_info<info::device::max_compute_units>();
+    int work_group_size = device.get_info<info::device::max_work_group_size>();
+
+    int thread_count = compute_units * work_group_size;
+
+    // Detect overflow
+    if ((size_t)thread_count > (size_t)INT_MAX) {
+        // Scale down work_group_size so within maximum integer range
+        work_group_size /= 2;
+    }
 
     cout << "Compute units: " << compute_units << "\n";
     cout << "Work group size: " << work_group_size << "\n";

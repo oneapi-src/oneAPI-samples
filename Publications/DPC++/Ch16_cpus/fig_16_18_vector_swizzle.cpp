@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #define SYCL_SIMPLE_SWIZZLES
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 
 using namespace sycl;

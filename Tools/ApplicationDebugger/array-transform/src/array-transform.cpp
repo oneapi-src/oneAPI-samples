@@ -10,7 +10,7 @@
 // essential features of the debugger when the target device is CPU or
 // GPU.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 // Location of file: <oneapi-root>/dev-utilities/<version>/include
 #include "dpc_common.hpp"
@@ -34,8 +34,7 @@ int main(int argc, char *argv[]) {
     input[i] = i + 100;
 
   try {
-    CustomSelector selector(GetDeviceType(argc, argv));
-    queue q(selector, dpc_common::exception_handler);
+    queue q(GetDevice(argc, argv), dpc_common::exception_handler);
     cout << "[SYCL] Using device: ["
          << q.get_device().get_info<info::device::name>()
          << "] from ["

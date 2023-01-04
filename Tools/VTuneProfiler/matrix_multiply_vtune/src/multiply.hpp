@@ -9,7 +9,7 @@ constexpr int NUM=1024;
 constexpr int MATRIXTILESIZE=16;
 constexpr int WPT=8;
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 // exception handler
 /*
 The exception_list parameter is an iterable list of std::exception_ptr objects.
@@ -17,11 +17,11 @@ But those pointers are not always directly readable.
 So, we rethrow the pointer, catch it,  and then we have the exception itself.
 Note: depending upon the operation there may be several exceptions.
 */
-auto exception_handler = [](cl::sycl::exception_list exceptionList) {
+auto exception_handler = [](sycl::exception_list exceptionList) {
   for (std::exception_ptr const& e : exceptionList) {
     try {
       std::rethrow_exception(e);
-    } catch (cl::sycl::exception const& e) {
+    } catch (sycl::exception const& e) {
       std::terminate();  // exit the process immediately.
     }
   }

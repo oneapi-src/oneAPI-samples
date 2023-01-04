@@ -20,7 +20,7 @@ int main() {
     auto end = oneapi::dpl::make_zip_iterator(input_v1.end(), input_v2.end(), input_v3.end());
     //create device policy
     auto exec_policy = make_device_policy(q);
-    std::for_each(exec_policy, start, end, [](auto t) {
+    oneapi::dpl::for_each(exec_policy, start, end, [](auto t) {
         //The zip iterator is used for expressing bounds in PSTL algorithms.
         using std::get;
         get<2>(t) = get<1>(t) * get<0>(t);

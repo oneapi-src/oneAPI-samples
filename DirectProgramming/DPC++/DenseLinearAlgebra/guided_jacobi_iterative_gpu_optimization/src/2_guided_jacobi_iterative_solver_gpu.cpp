@@ -6,7 +6,7 @@
 // =============================================================
 #include <bits/stdc++.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
@@ -16,7 +16,7 @@
 
 using namespace sycl;
 
-typedef double Real;
+typedef float Real;
 
 // Program variables, feel free to change anything .
 static const int kSize = 30000;
@@ -26,19 +26,16 @@ static const int kMinRand = -1000;
 static const int kMaxRand = 1000;
 static const int kMaxSweeps = 100;
 static const std::uint32_t kSeed = 666;
-gpu_selector selector;
 std::ofstream outfile;
 
 // Function responsible for generating a float type
-// diagonally dominant matrix. Float had to be used
-// as using double would result in segmentation faults
-// for extreamlly large matrixes. This is also an example
+// diagonally dominant matrix. This is also an example
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
 void GenerateMatrix(std::vector<float> &input_matrix,
                     std::vector<Real> &input_results) {
-  queue q(selector);
+  queue q(gpu_selector_v);
 
   buffer bufin_mat(input_matrix);
   buffer bufin_res(input_results);
@@ -126,7 +123,7 @@ int main(int argc, char *argv[]) {
   std::vector<float> input_matrix(kSize * kSize);
   std::vector<Real> input_results(kSize);
 
-  queue q(selector);
+  queue q(gpu_selector_v);
 
   std::cout << "Device : " << q.get_device().get_info<info::device::name>()
             << std::endl;

@@ -12,7 +12,7 @@
 #include <iostream>
 #include <limits>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 double rand_uniform();

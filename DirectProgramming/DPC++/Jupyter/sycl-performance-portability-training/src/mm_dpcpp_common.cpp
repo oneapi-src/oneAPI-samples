@@ -1,13 +1,13 @@
 //==============================================================
 // Matrix Multiplication: SYCL Matrix Multiplication Common
 //==============================================================
-// Copyright © 2021 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <getopt.h>
 #include <ctime>
 #include <chrono>

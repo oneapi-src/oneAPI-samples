@@ -34,6 +34,7 @@
 
 #include <iostream>
 #include <string>
+#include <CL/sycl.hpp>
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
@@ -157,11 +158,8 @@ int main(int argc, char* argv[]) {
   int num_iter = log2(nb);
   cout << "\nNum iteration: " << num_iter << "\n";
 
-  // Define device selector as 'default'
-  default_selector device_selector;
-
-  // Create a device queue using DPC++ class queue
-  queue q(device_selector, dpc_common::exception_handler);
+  // Create a device queue using SYCL class queue
+  queue q(default_selector_v);
 
   cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 

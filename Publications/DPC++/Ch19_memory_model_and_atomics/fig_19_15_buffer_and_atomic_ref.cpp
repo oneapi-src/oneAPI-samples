@@ -2,12 +2,11 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <iostream>
 
 using namespace sycl;
-using namespace sycl::ext::oneapi;
 
 int main() {
 

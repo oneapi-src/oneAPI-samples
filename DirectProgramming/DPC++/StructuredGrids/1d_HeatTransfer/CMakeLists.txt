@@ -1,7 +1,7 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_COMPILER "dpcpp")
+set(CMAKE_CXX_COMPILER "icpx")
 
 # CMakeLists.txt for 1d_HeatTransfer project
 project (1d_HeatTransfer)

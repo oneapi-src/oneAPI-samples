@@ -4,13 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// This is a simple DPC++ program that accompanies the Getting Started
+// This is a simple SYCL program that accompanies the Getting Started
 // Guide of the debugger.  The kernel does not compute anything
 // particularly interesting; it is designed to illustrate the most
 // essential features of the debugger when the target device is CPU or
 // GPU.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 // Location of file: <oneapi-root>/dev-utilities/<version>/include
 #include "dpc_common.hpp"
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   try {
     CustomSelector selector(GetDeviceType(argc, argv));
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector);
     cout << "[SYCL] Using device: ["
          << q.get_device().get_info<info::device::name>()
          << "] from ["

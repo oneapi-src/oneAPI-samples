@@ -49,8 +49,7 @@
           "nmake fig_10_3_optional_kernel_lambda_elements",
           "nmake fig_10_4_named_kernel_lambda",
           "nmake fig_10_5_unnamed_kernel_lambda",
-          "nmake fig_10_6_kernel_functor",          
-          "nmake fig_10_8_opencl_object_interop"          
+          "nmake fig_10_6_kernel_functor"
         ]
       }
     ]

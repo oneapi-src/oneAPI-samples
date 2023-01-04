@@ -1,7 +1,7 @@
-CXX = dpcpp
+CXX = icpx
 name=complex_mult
-CXXFLAGS = -g -o
-LDFLAGS = -lOpenCL -lsycl -g
+CXXFLAGS = -fsycl -o
+LDFLAGS = -lOpenCL -lsycl
 EXE_NAME = complex_mult
 SOURCES = lab/${name}.cpp
 INCLUDES = src/

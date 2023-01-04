@@ -62,7 +62,7 @@ int main() {
         buffer<double, 1> pi_buf(pi, N);
 
         //Device initialization.
-        queue q(default_selector{}, dpc_common::exception_handler);
+        queue q(default_selector_v);
         cout << "Device: " << q.get_device().get_info<info::device::name>() << " "
             << q.get_device().get_platform().get_info<info::platform::name>() << "\n";
 

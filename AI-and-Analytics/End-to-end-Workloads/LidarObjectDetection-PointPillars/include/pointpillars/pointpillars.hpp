@@ -17,18 +17,24 @@
 
 #pragma once
 
-#include <inference_engine.hpp>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
+#include <numeric>
+#include <iomanip>
+#include <boost/filesystem.hpp>
+#include <openvino/openvino.hpp>
+
 #include "pointpillars/anchorgrid.hpp"
 #include "pointpillars/pointpillars_config.hpp"
 #include "pointpillars/pointpillars_util.hpp"
 #include "pointpillars/postprocess.hpp"
 #include "pointpillars/preprocess.hpp"
 #include "pointpillars/scatter.hpp"
+
+#include <openvino/runtime/intel_gpu/ocl/ocl.hpp>
 
 namespace pointpillars {
 
@@ -142,17 +148,22 @@ class PointPillars {
   void Detect(const float *in_points_array, const int in_num_points, std::vector<ObjectDetection> &detections);
 
  private:
-  InferenceEngine::ExecutableNetwork pfe_exe_network_;
+  ov::CompiledModel pfe_exe_network_;
   std::map<std::string, float *> pfe_input_map_;
-  InferenceEngine::ExecutableNetwork rpn_exe_network_;
+  ov::CompiledModel rpn_exe_network_;
+
+  ov::InferRequest pfe_infer_request_;
+  ov::InferRequest rpn_infer_request_;
+
+  std::map<std::string, ov::Tensor> pfe_input_tensor_map_;
+  ov::Tensor pfe_output_tensor_;
+  ov::Tensor scattered_feature_tensor_;
+  ov::Tensor rpn_output_tensors_[3];
 
   float *pfe_output_;
   float *rpn_1_output_;
   float *rpn_2_output_;
   float *rpn_3_output_;
-
-  InferenceEngine::InferRequest::Ptr pfe_infer_request_ptr_;
-  InferenceEngine::InferRequest::Ptr rpn_infer_request_ptr_;
 
   void InitComponents();
 

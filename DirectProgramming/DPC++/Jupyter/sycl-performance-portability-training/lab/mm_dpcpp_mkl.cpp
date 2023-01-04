@@ -1,13 +1,13 @@
 //==============================================================
 // Matrix Multiplication: SYCL oneMKL
 //==============================================================
-// Copyright © 2021 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl/blas.hpp"  //# oneMKL DPC++ interface for BLAS functions
 
 using namespace sycl;

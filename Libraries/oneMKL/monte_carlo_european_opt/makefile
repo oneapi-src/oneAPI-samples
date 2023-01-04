@@ -1,20 +1,11 @@
-default: run
+all: montecarlo
 
-all: run
+DPCPP_OPTS=/I$(MKLROOT)\include /DMKL_ILP64 -fsycl -fsycl-device-code-split=per_kernel -qmkl
 
-run: mc_european.exe mc_european_usm.exe
-	.\mc_european.exe
-	.\mc_european_usm.exe
-
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
-
-mc_european.exe: mc_european.cpp
-	dpcpp mc_european.cpp /Femc_european.exe $(DPCPP_OPTS)
-
-mc_european_usm.exe: mc_european_usm.cpp
-	dpcpp mc_european_usm.cpp /Femc_european_usm.exe $(DPCPP_OPTS)
+montecarlo: src/montecarlo_main.cpp
+	icpx src/montecarlo_main.cpp /omontecarlo.exe $(DPCPP_OPTS)
 
 clean:
-	del /q mc_european.exe mc_european_usm.exe
+	del /q montecarlo.exe
 
-pseudo: clean run all
+pseudo: clean all

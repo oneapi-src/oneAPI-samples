@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 
 #include "Iso3dfd.hpp"

@@ -7,11 +7,12 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
-
+#include <CL/sycl.hpp>
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "mandel.hpp"
+
 
 using namespace std;
 using namespace sycl;
@@ -73,7 +74,7 @@ int main(int argc, char *argv[]) {
   try {
     // Create a queue on the default device. Set SYCL_DEVICE_TYPE environment
     // variable to (CPU|GPU|FPGA|HOST) to change the device.
-    queue q(default_selector{}, dpc_common::exception_handler);
+    queue q(default_selector_v);
 
     // Display the device info.
     ShowDevice(q);
