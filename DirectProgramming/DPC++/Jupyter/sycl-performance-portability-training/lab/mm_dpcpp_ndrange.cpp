@@ -1,7 +1,7 @@
 //==============================================================
 // Matrix Multiplication: SYCL ND-range
 //==============================================================
-// Copyright © 2021 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================

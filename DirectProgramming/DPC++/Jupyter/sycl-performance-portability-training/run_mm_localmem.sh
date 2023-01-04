@@ -7,5 +7,5 @@ src="lab/"
 
 echo ====================
 echo mm_dpcpp_localmem
-dpcpp ${src}mm_dpcpp_localmem.cpp ${src}mm_dpcpp_common.cpp -o ${src}mm_dpcpp_localmem -w -O3
+icpx -fsycl ${src}mm_dpcpp_localmem.cpp ${src}mm_dpcpp_common.cpp -o ${src}mm_dpcpp_localmem -w -O3
 ./${src}mm_dpcpp_localmem$arg

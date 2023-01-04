@@ -7,7 +7,7 @@
 #ifndef _GSIMULATION_HPP
 #define _GSIMULATION_HPP
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
