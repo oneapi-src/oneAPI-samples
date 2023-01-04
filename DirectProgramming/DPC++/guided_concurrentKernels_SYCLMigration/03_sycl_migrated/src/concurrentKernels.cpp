@@ -80,7 +80,7 @@ void sum(clock_t *d_clocks, int N, sycl::nd_item<3> item_ct1,
 }
 
 int main(int argc, char **argv) {
-  sycl::queue q_ct1 = sycl::queue(default_selector());
+  sycl::queue q_ct1 = sycl::queue(sycl::default_selector_v);
   int nkernels = 8;             // number of concurrent kernels
   int nstreams = nkernels + 1;  // use one more stream than concurrent kernel
   int nbytes = nkernels * sizeof(clock_t);  // number of data bytes
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < nstreams; i++) {
     streams[i] = (sycl::queue *)malloc(nstreams * sizeof(sycl::queue));
-    *streams[i] = sycl::queue(sycl::default_selector(), exception_handler);
+    *streams[i] = sycl::queue(sycl::default_selector_v, exception_handler);
   }
 
   // create CUDA event handles
@@ -192,10 +192,7 @@ int main(int argc, char **argv) {
   // the commands in this stream get dispatched as soon as all the kernel events
   // have been recorded
   streams[nstreams - 1]->submit([&](sycl::handler &cgh) {
-    sycl::accessor<clock_t, 1, sycl::access_mode::read_write,
-                   sycl::access::target::local>
-        s_clocks_acc_ct1(sycl::range<1>(32), cgh);
-
+    sycl::local_accessor<clock_t, 1> s_clocks_acc_ct1(sycl::range<1>(32), cgh);
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, 32), sycl::range<3>(1, 1, 32)),
         [=](sycl::nd_item<3> item_ct1) {

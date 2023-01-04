@@ -183,9 +183,7 @@ int main(int argc, char **argv) {
   // the commands in this stream get dispatched as soon as all the kernel events
   // have been recorded
   streams[nstreams - 1]->submit([&](sycl::handler &cgh) {
-    sycl::accessor<clock_t, 1, sycl::access_mode::read_write,
-                   sycl::access::target::local>
-        s_clocks_acc_ct1(sycl::range<1>(32), cgh);
+    sycl::local_accessor<clock_t, 1> s_clocks_acc_ct1(sycl::range<1>(32), cgh);
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, 32), sycl::range<3>(1, 1, 32)),
