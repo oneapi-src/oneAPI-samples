@@ -167,17 +167,13 @@ This design measures the FPGA performance to determine how many assets can be pr
        ```
        make fpga_emu
        ```
-   2. Compile for simulation (fast compile time, targets simulator FPGA device):
-      ```
-      make fpga_sim
-      ```
-   3. Generate the HTML performance report.
+   2. Generate the HTML performance report.
       ```
       make report
       ```
       The report resides at `<project name>/reports/report.html`.
 
-   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
        make fpga
        ```
@@ -206,17 +202,13 @@ This design measures the FPGA performance to determine how many assets can be pr
       ```
       nmake fpga_emu
       ```
-   2. Compile for simulation (fast compile time, targets simulator FPGA device):
-      ```
-      nmake fpga_sim
-      ```
-   3. Generate the HTML performance report.
+   2. Generate the HTML performance report.
       ```
       nmake report
       ```
       The report resides at `<project name>.a.prj/reports/report.html`.
 
-   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```

@@ -716,11 +716,7 @@ int main(int argc, char *argv[]) {
   string infilename = "";
   string outfilename = "";
 
-#ifdef FPGA_HARDWARE
   const string default_ifile = "src/data/ordered_inputs.csv";
-#else
-  const string default_ifile = "src/data/small_ordered_inputs.csv";
-#endif
   const string default_ofile = "src/data/ordered_outputs.csv";
 
   char str_buffer[kMaxStringLen] = {0};
@@ -737,9 +733,7 @@ int main(int argc, char *argv[]) {
 
   try {
 
-#if FPGA_SIMULATOR
-    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
-#elif FPGA_HARDWARE
+#if FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
 #else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
@@ -794,9 +788,9 @@ int main(int argc, char *argv[]) {
     ReadInputFromFile(inputFile, inp);
 
 // Get the number of data from the input file
-// Emulator and simulator modes only goes through one input (or through OUTER_UNROLL inputs) to
+// Emulator mode only goes through one input (or through OUTER_UNROLL inputs) to
 // ensure fast runtime
-#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
+#if defined(FPGA_EMULATOR)
     int temp_crrs = 1;
 #else
     int temp_crrs = inp.size();
@@ -868,8 +862,6 @@ int main(int argc, char *argv[]) {
                  "set up correctly\n";
     std::cerr << "   If you are targeting the FPGA emulator, compile with "
                  "-DFPGA_EMULATOR\n";
-    std::cerr << "   If you are targeting the FPGA simulator, compile with "
-                 "-DFPGA_SIMULATOR\n";
     return 1;
   }
   return 0;
