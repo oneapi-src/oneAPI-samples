@@ -1,7 +1,7 @@
 {
   "guid" : "49C65CB6-F9FA-4E3C-B8BE-4A141E4E0F07",
   "name": "Simple Add",
-  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
   "description": "This simple sample adds two large vectors in parallel and provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using C++ with SYCL",
   "toolchain": ["icpx"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],

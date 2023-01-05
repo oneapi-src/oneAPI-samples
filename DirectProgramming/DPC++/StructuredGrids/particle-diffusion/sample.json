@@ -1,7 +1,7 @@
 {
   "guid": "FF17715B-10DD-43E2-A408-67146A93702B",
   "name": "Particle Diffusion",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Structured Grids"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Structured Grids"],
   "description": "The Particle Diffusion code sample illustrates SYCL using a simple (non-optimized) implementation of a Monte Carlo Simulation of the Diffusion of Water Molecules in Tissue",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp":{}}],

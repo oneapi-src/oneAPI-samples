@@ -1,7 +1,7 @@
 {
   "guid": "3A7DA713-6083-4CA3-B66E-A3DF21744EB4",
-  "name": "ISO3DFD DPCPP",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Structured Grids"],
+  "name": "ISO3DFD",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Structured Grids"],
   "description": "The ISO3DFD Sample illustrates SYCL using Finite Difference Stencil Kernel for solving 3D Acoustic Isotropic Wave Equation",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
@@ -21,9 +21,9 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "MSBuild iso3dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
                         "cd x64/Release",
-                        "iso3dfd_dpcpp.exe 256 256 256 32 8 64 10 gpu"
+                        "iso3dfd.exe 256 256 256 32 8 64 10 gpu"
                 ]
         }]
 
