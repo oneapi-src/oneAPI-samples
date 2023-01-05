@@ -14,7 +14,7 @@
  * relevant terms noted in the comments.
  */
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <limits>
 

@@ -33,6 +33,7 @@
 #include "iso3dfd.h"
 #include <iostream>
 #include <string>
+#include <CL/sycl.hpp>
 #include "device_selector.hpp"
 #include "dpc_common.hpp"
 

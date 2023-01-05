@@ -31,7 +31,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <cmath>
 #include <cstring>
 #include <stdio.h>
