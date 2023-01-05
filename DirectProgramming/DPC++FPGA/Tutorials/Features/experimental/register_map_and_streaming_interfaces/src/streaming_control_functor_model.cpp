@@ -93,9 +93,10 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with a streaming invocation interface implemented in the functor
-    // programming model
-    std::cout << "Running the kernel with a streaming invocation interface implemented in the "
+    // Launch the kernel with a streaming invocation interface implemented in
+    // the functor programming model
+    std::cout << "Running the kernel with a streaming invocation interface "
+                 "implemented in the "
                  "functor programming model"
               << std::endl;
     q.single_task(FunctorStreamingIP{in, functorStreamingOut, count}).wait();

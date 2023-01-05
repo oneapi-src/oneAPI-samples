@@ -15,7 +15,7 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 /////////////////////////////////////////
 
 void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out,
-                                      size_t count) {
+                               size_t count) {
   // In the Lambda programming model, all kernel arguments will have the same
   // interface as the kernel invocation interface.
   q.single_task<LambdaStreamingIP>([=] streaming_interface {
@@ -82,9 +82,10 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with a streaming invocation interface implemented in the lambda
-    // programming model
-    std::cout << "Running kernel with a streaming invocation interface implemented in the "
+    // Launch the kernel with a streaming invocation interface implemented in
+    // the lambda programming model
+    std::cout << "Running kernel with a streaming invocation interface "
+                 "implemented in the "
                  "lambda programming model"
               << std::endl;
     TestLambdaStreamingKernel(q, in, LambdaStreamingOut, count);
