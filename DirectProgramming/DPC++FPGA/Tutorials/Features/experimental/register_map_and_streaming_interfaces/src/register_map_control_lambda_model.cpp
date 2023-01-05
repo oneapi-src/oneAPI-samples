@@ -7,18 +7,18 @@
 using ValueT = int;
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaRegisterMapControlIP;
+class LambdaRegisterMapIP;
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
 /////////////////////////////////////////
 
-void TestLambdaRegisterMapControlKernel(sycl::queue &q, ValueT *in, ValueT *out,
+void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out,
                                         size_t count) {
   // In the Lambda programming model, all kernel arguments will have the same
-  // interface as the kernel control interface.
-  q.single_task<LambdaRegisterMapControlIP>([=] register_map_interface {
+  // interface as the kernel invocation interface.
+  q.single_task<LambdaRegisterMapIP>([=] register_map_interface {
      for (int i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }
@@ -82,12 +82,12 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with register map control implemented in the lambda
+    // Launch the kernel with a register map invocation interface implemented in the lambda
     // programming model
-    std::cout << "Running kernel with register map control implemented in the "
+    std::cout << "Running kernel with a register map invocation interface implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaRegisterMapControlKernel(q, in, LambdaRegisterMapOut, count);
+    TestLambdaRegisterMapKernel(q, in, LambdaRegisterMapOut, count);
     passed &= validate(golden, LambdaRegisterMapOut, count);
     std::cout << std::endl;
 

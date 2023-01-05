@@ -1,22 +1,22 @@
-set(REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE register_map_control_functor_model.cpp)
-set(REGISTER_MAP_CONTROL_FUNCTOR_TARGET_NAME register_map_control_functor_model)
-set(REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET ${REGISTER_MAP_CONTROL_FUNCTOR_TARGET_NAME}.fpga_emu)
-set(REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET ${REGISTER_MAP_CONTROL_FUNCTOR_TARGET_NAME}.fpga_sim)
+set(REGISTER_MAP_FUNCTOR_SOURCE_FILE register_map_functor_model.cpp)
+set(REGISTER_MAP_FUNCTOR_TARGET_NAME register_map_functor_model)
+set(REGISTER_MAP_FUNCTOR_EMULATOR_TARGET ${REGISTER_MAP_FUNCTOR_TARGET_NAME}.fpga_emu)
+set(REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET ${REGISTER_MAP_FUNCTOR_TARGET_NAME}.fpga_sim)
 
-set(STREAMING_CONTROL_FUNCTOR_SOURCE_FILE streaming_control_functor_model.cpp)
-set(STREAMING_CONTROL_FUNCTOR_TARGET_NAME streaming_control_functor_model)
-set(STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET ${STREAMING_CONTROL_FUNCTOR_TARGET_NAME}.fpga_emu)
-set(STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET ${STREAMING_CONTROL_FUNCTOR_TARGET_NAME}.fpga_sim)
+set(STREAMING_FUNCTOR_SOURCE_FILE streaming_functor_model.cpp)
+set(STREAMING_FUNCTOR_TARGET_NAME streaming_functor_model)
+set(STREAMING_FUNCTOR_EMULATOR_TARGET ${STREAMING_FUNCTOR_TARGET_NAME}.fpga_emu)
+set(STREAMING_FUNCTOR_SIMULATOR_TARGET ${STREAMING_FUNCTOR_TARGET_NAME}.fpga_sim)
 
-set(REGISTER_MAP_CONTROL_LAMBDA_SOURCE_FILE register_map_control_lambda_model.cpp)
-set(REGISTER_MAP_CONTROL_LAMBDA_TARGET_NAME register_map_control_lambda_model)
-set(REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET ${REGISTER_MAP_CONTROL_LAMBDA_TARGET_NAME}.fpga_emu)
-set(REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET ${REGISTER_MAP_CONTROL_LAMBDA_TARGET_NAME}.fpga_sim)
+set(REGISTER_MAP_LAMBDA_SOURCE_FILE register_map_lambda_model.cpp)
+set(REGISTER_MAP_LAMBDA_TARGET_NAME register_map_lambda_model)
+set(REGISTER_MAP_LAMBDA_EMULATOR_TARGET ${REGISTER_MAP_LAMBDA_TARGET_NAME}.fpga_emu)
+set(REGISTER_MAP_LAMBDA_SIMULATOR_TARGET ${REGISTER_MAP_LAMBDA_TARGET_NAME}.fpga_sim)
 
-set(STREAMING_CONTROL_LAMBDA_SOURCE_FILE streaming_control_lambda_model.cpp)
-set(STREAMING_CONTROL_LAMBDA_TARGET_NAME streaming_control_lambda_model)
-set(STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET ${STREAMING_CONTROL_LAMBDA_TARGET_NAME}.fpga_emu)
-set(STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET ${STREAMING_CONTROL_LAMBDA_TARGET_NAME}.fpga_sim)
+set(STREAMING_LAMBDA_SOURCE_FILE streaming_lambda_model.cpp)
+set(STREAMING_LAMBDA_TARGET_NAME streaming_lambda_model)
+set(STREAMING_LAMBDA_EMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_emu)
+set(STREAMING_LAMBDA_SIMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_sim)
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
@@ -53,112 +53,112 @@ set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${F
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_control_functor_model.cpp -o register_map_control_functor_model.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_control_functor_model.cpp -o streaming_control_functor_model.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_control_lambda_model.cpp -o register_map_control_lambda_model.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_control_lambda_model.cpp -o streaming_control_lambda_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_functor_model.cpp -o register_map_functor_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_functor_model.cpp -o streaming_functor_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_lambda_model.cpp -o register_map_lambda_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_lambda_model.cpp -o streaming_lambda_model.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_control_functor_model.cpp.o -c register_map_control_functor_model.cpp
-#    [link]    icpx -fsycl -fintelfpga register_map_control_functor_model.cpp.o -o register_map_control_functor_model.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_control_functor_model.cpp.o -c streaming_control_functor_model.cpp
-#    [link]    icpx -fsycl -fintelfpga streaming_control_functor_model.cpp.o -o streaming_control_functor_model.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_control_lambda_model.cpp.o -c register_map_control_lambda_model.cpp
-#    [link]    icpx -fsycl -fintelfpga register_map_control_lambda_model.cpp.o -o register_map_control_lambda_model.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_control_lambda_model.cpp.o -c streaming_control_lambda_model.cpp
-#    [link]    icpx -fsycl -fintelfpga streaming_control_lambda_model.cpp.o -o streaming_control_lambda_model.fpga_emu
-add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
+#    [link]    icpx -fsycl -fintelfpga register_map_functor_model.cpp.o -o register_map_functor_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_functor_model.cpp.o -c streaming_functor_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_functor_model.cpp.o -o streaming_functor_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_lambda_model.cpp.o -c register_map_lambda_model.cpp
+#    [link]    icpx -fsycl -fintelfpga register_map_lambda_model.cpp.o -o register_map_lambda_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga_emu
+add_executable(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
-add_executable(${STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET} ${STREAMING_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_executable(${STREAMING_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_SOURCE_FILE})
+target_include_directories(${STREAMING_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_FUNCTOR_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
-add_executable(${REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET} ${REGISTER_MAP_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_executable(${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
-add_executable(${STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET} ${STREAMING_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_executable(${STREAMING_LAMBDA_EMULATOR_TARGET} ${STREAMING_LAMBDA_SOURCE_FILE})
+target_include_directories(${STREAMING_LAMBDA_EMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_LAMBDA_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_LAMBDA_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
-add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} ${STREAMING_CONTROL_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_CONTROL_LAMBDA_EMULATOR_TARGET} ${STREAMING_CONTROL_LAMBDA_EMULATOR_TARGET})
+add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} ${STREAMING_LAMBDA_EMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_functor_model.cpp -o register_map_control_functor_model.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_functor_model.cpp -o streaming_control_functor_model.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_lambda_model.cpp -o register_map_control_lambda_model.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_lambda_model.cpp -o streaming_control_lambda_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_functor_model.cpp -o register_map_functor_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_functor_model.cpp -o streaming_functor_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_lambda_model.cpp -o register_map_lambda_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_lambda_model.cpp -o streaming_lambda_model.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_control_functor_model.cpp.o -c register_map_control_functor_model.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_functor_model.cpp.o -o register_map_control_functor_model.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_control_functor_model.cpp.o -c streaming_control_functor_model.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_functor_model.cpp.o -o streaming_control_functor_model.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_control_lambda_model.cpp.o -c register_map_control_lambda_model.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_lambda_model.cpp.o -o register_map_control_lambda_model.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_control_lambda_model.cpp.o -c streaming_control_lambda_model.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_lambda_model.cpp.o -o streaming_control_lambda_model.fpga
-add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_functor_model.cpp.o -o register_map_functor_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_functor_model.cpp.o -c streaming_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_functor_model.cpp.o -o streaming_functor_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_lambda_model.cpp.o -c register_map_lambda_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_lambda_model.cpp.o -o register_map_lambda_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga
+add_executable(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
-add_executable(${STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_executable(${STREAMING_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_SOURCE_FILE})
+target_include_directories(${STREAMING_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_FUNCTOR_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
-add_executable(${REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET} ${REGISTER_MAP_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_executable(${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
-add_executable(${STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET} ${STREAMING_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_executable(${STREAMING_LAMBDA_SIMULATOR_TARGET} ${STREAMING_LAMBDA_SOURCE_FILE})
+target_include_directories(${STREAMING_LAMBDA_SIMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_LAMBDA_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_LAMBDA_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
-add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_CONTROL_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_CONTROL_LAMBDA_SIMULATOR_TARGET} ${STREAMING_CONTROL_LAMBDA_SIMULATOR_TARGET})
+add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} ${STREAMING_LAMBDA_SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_control_functor_model.cpp -o register_map_control_functor_model.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_control_functor_model.cpp -o streaming_control_functor_model.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_control_lambda_model.cpp -o register_map_control_lambda_model.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_control_lambda_model.cpp -o streaming_control_lambda_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_functor_model.cpp -o register_map_functor_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_functor_model.cpp -o streaming_functor_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_lambda_model.cpp -o register_map_lambda_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_lambda_model.cpp -o streaming_lambda_model.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
-set(REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE ${REGISTER_MAP_CONTROL_FUNCTOR_TARGET_NAME}_report.a)
-add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
+set(REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE ${REGISTER_MAP_FUNCTOR_TARGET_NAME}_report.a)
+add_executable(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
 
-set(STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE ${STREAMING_CONTROL_FUNCTOR_TARGET_NAME}_report.a)
-add_executable(${STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_CONTROL_FUNCTOR_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
+set(STREAMING_FUNCTOR_FPGA_EARLY_IMAGE ${STREAMING_FUNCTOR_TARGET_NAME}_report.a)
+add_executable(${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_SOURCE_FILE})
+target_include_directories(${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
 
-set(REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE ${REGISTER_MAP_CONTROL_LAMBDA_TARGET_NAME}_report.a)
-add_executable(${REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} ${REGISTER_MAP_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
+set(REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE ${REGISTER_MAP_LAMBDA_TARGET_NAME}_report.a)
+add_executable(${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} ${REGISTER_MAP_LAMBDA_SOURCE_FILE})
+target_include_directories(${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
+set_target_properties(${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
 
-set(STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE ${STREAMING_CONTROL_LAMBDA_TARGET_NAME}_report.a)
-add_executable(${STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_CONTROL_LAMBDA_SOURCE_FILE})
-target_include_directories(${STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
-set_target_properties(${STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
+set(STREAMING_LAMBDA_FPGA_EARLY_IMAGE ${STREAMING_LAMBDA_TARGET_NAME}_report.a)
+add_executable(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_LAMBDA_SOURCE_FILE})
+target_include_directories(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -fsycl-link=early")
 
-add_custom_target(report DEPENDS ${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_CONTROL_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_CONTROL_LAMBDA_FPGA_EARLY_IMAGE})
+add_custom_target(report DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_LAMBDA_FPGA_EARLY_IMAGE})
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®

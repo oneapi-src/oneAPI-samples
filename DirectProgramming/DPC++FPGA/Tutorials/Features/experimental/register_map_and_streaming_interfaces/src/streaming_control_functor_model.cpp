@@ -11,19 +11,19 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
 /////////////////////////////////////////
 
-struct FunctorStreamingControlIP {
+struct FunctorStreamingIP {
   // Use the 'conduit' annotation on a kernel argument to specify it to be
   // a streaming kernel argument.
   conduit ValueT *input;
   conduit ValueT *output;
   // Without the annotations, kernel arguments will be inferred to be streaming
-  // kernel arguments if the kernel control interface is streaming, and
+  // kernel arguments if the kernel invocation interface is streaming, and
   // vise-versa.
   size_t n;
-  FunctorStreamingControlIP(ValueT *in_, ValueT *out_, size_t N_)
+  FunctorStreamingIP(ValueT *in_, ValueT *out_, size_t N_)
       : input(in_), output(out_), n(N_) {}
   // Use the 'streaming_interface' annotation on a kernel to specify it to be
-  // a kernel with streaming kernel control signals.
+  // a kernel with a streaming kernel invocation interface.
   streaming_interface void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
@@ -93,12 +93,12 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with streaming control implemented in the functor
+    // Launch the kernel with a streaming invocation interface implemented in the functor
     // programming model
-    std::cout << "Running the kernel with streaming control implemented in the "
+    std::cout << "Running the kernel with a streaming invocation interface implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingControlIP{in, functorStreamingOut, count}).wait();
+    q.single_task(FunctorStreamingIP{in, functorStreamingOut, count}).wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden, functorStreamingOut, count);

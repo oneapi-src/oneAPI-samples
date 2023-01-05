@@ -7,18 +7,18 @@
 using ValueT = int;
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaStreamingControlIP;
+class LambdaStreamingIP;
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
 /////////////////////////////////////////
 
-void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out,
+void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out,
                                       size_t count) {
   // In the Lambda programming model, all kernel arguments will have the same
-  // interface as the kernel control interface.
-  q.single_task<LambdaStreamingControlIP>([=] streaming_interface {
+  // interface as the kernel invocation interface.
+  q.single_task<LambdaStreamingIP>([=] streaming_interface {
      for (int i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }
@@ -82,12 +82,12 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with streaming control implemented in the lambda
+    // Launch the kernel with a streaming invocation interface implemented in the lambda
     // programming model
-    std::cout << "Running kernel with streaming control implemented in the "
+    std::cout << "Running kernel with a streaming invocation interface implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaStreamingControlKernel(q, in, LambdaStreamingOut, count);
+    TestLambdaStreamingKernel(q, in, LambdaStreamingOut, count);
     passed &= validate(golden, LambdaStreamingOut, count);
     std::cout << std::endl;
 

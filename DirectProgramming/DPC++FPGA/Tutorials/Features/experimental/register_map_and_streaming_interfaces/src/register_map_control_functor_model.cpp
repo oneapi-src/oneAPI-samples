@@ -11,18 +11,18 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
 /////////////////////////////////////////
 
-struct FunctorRegisterMapControlIP {
+struct FunctorRegisterMapIP {
   // Use the 'register_map' annotation on a kernel argument to specify it to be
   // a register map kernel argument.
   register_map ValueT *input;
   // Without the annotations, kernel arguments will be inferred to be register
-  // map kernel arguments if the kernel control interface is register map, and
+  // map kernel arguments if the kernel invocation interface is register mapped, and
   // vise-versa.
   ValueT *output;
-  // A kernel with register map control can also independently have streaming
+  // A kernel with a register map invocation interface can also independently have streaming
   // kernel arguments, when annotated by 'conduit'.
   conduit size_t n;
-  FunctorRegisterMapControlIP(ValueT *in_, ValueT *out_, size_t N_)
+  FunctorRegisterMapIP(ValueT *in_, ValueT *out_, size_t N_)
       : input(in_), output(out_), n(N_) {}
   register_map_interface void operator()() const {
     for (int i = 0; i < n; i++) {
@@ -86,12 +86,12 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with register map control implemented in the functor
+    // Launch the kernel with a register map invocation interface implemented in the functor
     // programming model
-    std::cout << "Running the kernel with register map control implemented in "
+    std::cout << "Running the kernel with a register map invocation interface implemented in "
                  "the functor programming model"
               << std::endl;
-    q.single_task(FunctorRegisterMapControlIP{in, functorRegisterMapOut, count}).wait();
+    q.single_task(FunctorRegisterMapIP{in, functorRegisterMapOut, count}).wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden, functorRegisterMapOut, count);
