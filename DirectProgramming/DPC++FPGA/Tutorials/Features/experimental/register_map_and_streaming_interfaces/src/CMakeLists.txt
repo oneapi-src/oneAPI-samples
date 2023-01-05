@@ -53,10 +53,19 @@ set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${F
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_and_streaming_interfaces.cpp -o register_map_and_streaming_interfaces.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_control_functor_model.cpp -o register_map_control_functor_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_control_functor_model.cpp -o streaming_control_functor_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_control_lambda_model.cpp -o register_map_control_lambda_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_control_lambda_model.cpp -o streaming_control_lambda_model.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_and_streaming_interfaces.cpp.o -c register_map_and_streaming_interfaces.cpp
-#    [link]    icpx -fsycl -fintelfpga register_map_and_streaming_interfaces.cpp.o -o register_map_and_streaming_interfaces.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_control_functor_model.cpp.o -c register_map_control_functor_model.cpp
+#    [link]    icpx -fsycl -fintelfpga register_map_control_functor_model.cpp.o -o register_map_control_functor_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_control_functor_model.cpp.o -c streaming_control_functor_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_control_functor_model.cpp.o -o streaming_control_functor_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_control_lambda_model.cpp.o -c register_map_control_lambda_model.cpp
+#    [link]    icpx -fsycl -fintelfpga register_map_control_lambda_model.cpp.o -o register_map_control_lambda_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_control_lambda_model.cpp.o -c streaming_control_lambda_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_control_lambda_model.cpp.o -o streaming_control_lambda_model.fpga_emu
 add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -83,10 +92,19 @@ add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_CONTROL_FUNCTOR_EMULATOR_TARGE
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_and_streaming_interfaces.cpp -o register_map_and_streaming_interfaces.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_functor_model.cpp -o register_map_control_functor_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_functor_model.cpp -o streaming_control_functor_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_lambda_model.cpp -o register_map_control_lambda_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_lambda_model.cpp -o streaming_control_lambda_model.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_and_streaming_interfaces.cpp.o -c register_map_and_streaming_interfaces.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_and_streaming_interfaces.cpp.o -o register_map_and_streaming_interfaces.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_control_functor_model.cpp.o -c register_map_control_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_functor_model.cpp.o -o register_map_control_functor_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_control_functor_model.cpp.o -c streaming_control_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_functor_model.cpp.o -o streaming_control_functor_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_control_lambda_model.cpp.o -c register_map_control_lambda_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> register_map_control_lambda_model.cpp.o -o register_map_control_lambda_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_control_lambda_model.cpp.o -c streaming_control_lambda_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> streaming_control_lambda_model.cpp.o -o streaming_control_lambda_model.fpga
 add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
@@ -113,7 +131,10 @@ add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_CONTROL_FUNCTOR_SIMULATOR_TARG
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_and_streaming_interfaces.cpp -o register_map_and_streaming_interfaces.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_control_functor_model.cpp -o register_map_control_functor_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_control_functor_model.cpp -o streaming_control_functor_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early register_map_control_lambda_model.cpp -o register_map_control_lambda_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -fsycl-link=early streaming_control_lambda_model.cpp -o streaming_control_lambda_model.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 set(REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE ${REGISTER_MAP_CONTROL_FUNCTOR_TARGET_NAME}_report.a)
 add_executable(${REGISTER_MAP_CONTROL_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_CONTROL_FUNCTOR_SOURCE_FILE})
