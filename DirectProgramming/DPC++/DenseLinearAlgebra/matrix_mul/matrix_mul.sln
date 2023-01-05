@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrix_mul_dpcpp", "matrix_mul_dpcpp.vcxproj", "{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrix_mul_sycl", "matrix_mul_sycl.vcxproj", "{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -105,7 +105,7 @@ Build the program using **Visual Studio 2017** or newer.
 **Using MSBuild**
 1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019" or whatever is appropriate for your Visual Studio* version.
 2. Change to the sample directory.
-3. Run the following command: `MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration="Release"`
+3. Run the following command: `MSBuild iso3dfd.sln /t:Rebuild /p:Configuration="Release"`
 
 #### Troubleshooting
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
@@ -137,7 +137,7 @@ Usage: `iso3dfd.exe n1 n2 n3 b1 b2 b3 iterations [omp|sycl] [gpu|cpu]`
 1. Change to the output directory.
 2. Specify the input values, and run the program.
    ```
-   iso3dfd_dpcpp.exe 256 256 256 32 8 64 10 gpu
+   iso3dfd_sycl.exe 256 256 256 32 8 64 10 gpu
    ```
 
 ### Build and Run the `ISO3DFD` Sample in Intel® DevCloud (Optional)

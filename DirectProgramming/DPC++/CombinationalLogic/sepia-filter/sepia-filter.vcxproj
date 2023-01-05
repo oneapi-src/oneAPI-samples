@@ -144,7 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\sepia_dpcpp.cpp" />
+    <ClCompile Include="src\sepia_sycl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\device_selector.hpp" />

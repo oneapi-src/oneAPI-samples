@@ -4,7 +4,7 @@ CXX = icpx
 SYCL_CXXFLAGS = -std=c++17 -fsycl -g -o
 SYCL_LDFLAGS = 
 SYCL_EXE_NAME = matrix_mul_dpc
-SYCL_SOURCES = src/matrix_mul_dpcpp.cpp
+SYCL_SOURCES = src/matrix_mul_sycl.cpp
 
 OMP_CXXFLAGS = -fiopenmp -fopenmp-targets=spir64 -D__STRICT_ANSI__ -g -o
 OMP_LDFLAGS = 

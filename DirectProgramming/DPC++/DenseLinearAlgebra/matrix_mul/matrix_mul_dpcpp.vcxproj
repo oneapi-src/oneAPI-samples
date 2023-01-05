@@ -17,14 +17,14 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\matrix_mul_dpcpp.cpp">
+    <ClCompile Include="src\matrix_mul_sycl.cpp">
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{d41bafbf-46e8-4bf6-ac99-5a311221e7c5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>matrix_mul_dpcpp</RootNamespace>
+    <RootNamespace>matrix_mul_sycl</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

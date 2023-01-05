@@ -1,6 +1,6 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fsycl")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
-add_executable (sepia sepia_dpcpp.cpp)
+add_executable (sepia sepia_sycl.cpp)
 target_link_libraries(sepia OpenCL sycl)
 file(COPY ../input/silverfalls1.png DESTINATION .)
 if(WIN32)

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\sepia_dpcpp.cpp">
+    <ClCompile Include="src\sepia_sycl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

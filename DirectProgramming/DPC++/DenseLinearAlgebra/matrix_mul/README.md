@@ -10,7 +10,7 @@ The `Matrix Multiply` is a simple program that multiplies together two large mat
 
 ### Purpose
 
-The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_dpcpp.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample. 
+The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample. 
 
 The code will attempt to execute on an available GPU first and fallback to the
 system CPU if a compatible GPU is not detected. The device used for the
@@ -129,7 +129,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
 
 ### Application Parameters
-You can modify the computation size by adjusting the size parameter in the `matrix_mul_dpcpp.cpp` and `matrix_mul_omp.cpp` files. You can configure the following parameters in both files:
+You can modify the computation size by adjusting the size parameter in the `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp` files. You can configure the following parameters in both files:
 ```C++
 size = m_size = 150*8; // Must be a multiple of 8.
 M = m_size / 8;
