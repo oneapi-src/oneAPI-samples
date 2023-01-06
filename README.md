@@ -2,8 +2,6 @@
 
 The oneAPI-samples repository contains samples for the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html).
 
-**The latest versions of code samples on the master branch are not guaranteed to be stable.** Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
-
 ## Get the oneAPI Samples
 
 The version of the repository you use should match the version of the Intel® oneAPI Toolkit you have installed, particularly for the compilers.
