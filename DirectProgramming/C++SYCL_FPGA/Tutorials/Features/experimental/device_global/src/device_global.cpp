@@ -34,9 +34,16 @@ class Kernel;
 
 // Launch a kernel that increments the value of a global variable counter
 // at a particular index, and returns the current value of that counter
-void IncrementAndRead(const sycl::device_selector &selector, IntScalar &result,
-                      int index) {
+void IncrementAndRead(IntScalar &result, int index) {
   try {
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+#endif
+
     sycl::queue q(selector, dpc_common::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
@@ -79,14 +86,6 @@ int main() {
 
   IntScalar result;
 
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  sycl::ext::intel::fpga_simulator_selector selector;
-#else
-  sycl::ext::intel::fpga_selector selector;
-#endif
-
   // Increment each counter multiple times
   for (auto num_increments = 1; num_increments <= kNumIncrements;
        num_increments++) {
@@ -94,7 +93,7 @@ int main() {
     for (auto counter_index = 0; counter_index < kNumCounters;
          counter_index++) {
       // Run the kernel
-      IncrementAndRead(selector, result, counter_index);
+      IncrementAndRead(result, counter_index);
 
       // verify the results are correct
       int expected_result = kInitialValue + num_increments;
