@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 #else // FPGA_EMULATOR
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
 #endif
-  constexpr int num_matrices = 1;
+  constexpr int num_matrices = 8;
 
   // Matrix sizes
   constexpr int matsize_A = ROWS_A * COMMON;
