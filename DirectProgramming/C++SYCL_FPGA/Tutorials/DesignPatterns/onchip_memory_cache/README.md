@@ -11,14 +11,35 @@ This FPGA tutorial demonstrates how to build a simple cache (implemented in FPGA
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
+## Prerequisites
 
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 3 sample that demonstatres a design pattern.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
 
 ## Purpose
 In SYCL* task kernels for FPGA, our objective is to achieve an initiation interval (II) of 1 on performance-critical loops. This means that a new loop iteration is launched on every clock cycle, maximizing the loop's throughput.
@@ -41,7 +62,6 @@ In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>, the
 
 To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to improve loop II.
 
-
 ### Implementing the on-chip memory with cache technique
 
 The tutorial demonstrates the technique using a program that computes a histogram. The histogram operation accepts an input vector of values, separates the values into groups, and counts the number of values per group. For each input value, an output group is determined, and the count for that group is incremented. This count is stored in the on-chip memory, and the increment operation requires reading from memory, performing the increment, and storing the result. This read-modify-write operation is the critical path that can result in II > 1.
@@ -56,11 +76,6 @@ For user designs, each iteration takes only a few moments to compile the reports
 
 This tutorial creates multiple kernels sweeping across different cache depths within a single design.  This allows a single compile of the reports to determine the optimal cache depth.
 
-### Additional Documentation
-- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
-
 ## Key Concepts
 * How to implement the on-chip memory cache optimization technique
 * The scenarios in which this technique benefits performance
@@ -68,41 +83,20 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
 
 ## Building the `onchip_memory_cache` Tutorial
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-### Include Files
-The included headers `onchip_memory_with_cache.hpp` and `unrolled_loop.hpp` are located in the same Code Samples GIT repo as this tutorial.
-
-### Running Samples in Intel&reg; DevCloud
-If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
-
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
-
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see the 
-[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### On a Linux* System
 
@@ -127,22 +121,22 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Generate the optimization report:
-     ```
-     make report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
+    * Compile for emulation (fast compile time, targets emulated FPGA device):
+        ```
+        make fpga_emu
+        ```
+    * Generate the optimization report:
+        ```
+        make report
+        ```
+    * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+        ```
+        make fpga_sim
+        ```
+    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+        ```
+        make fpga
+        ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/onchip_memory_cache.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -189,22 +183,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel&reg; oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-
- ### In Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
-
-
 ## Examining the Reports
 Locate `report.html` in the `onchip_memory_cache_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
@@ -212,24 +190,29 @@ Compare the Loop Analysis reports for kernels with various cache depths, as desc
 
 Open the Kernel Memory viewer and compare the Load Latency on the loads from kernels with various cache depths, as describe in the "When is the on-chip memory cache technique applicable?" section. This will illustrate that a cache depth of at least 7 is required to achieve a load latency of > 1.
 
-
 ## Running the Sample
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./onchip_memory_cache.fpga_emu     (Linux)
-     onchip_memory_cache.fpga_emu.exe   (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+    ```
+    ./onchip_memory_cache.fpga_emu     (Linux)
+    onchip_memory_cache.fpga_emu.exe   (Windows)
+    ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./onchip_memory_cache.fpga_sim         (Linux)
-     onchip_memory_cache.fpga_sim.exe       (Windows)
-     ```
+    * On Linux
+        ```
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./onchip_memory_cache.fpga_sim
+        ```
+    * On Windows
+        ```
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        onchip_memory_cache.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 3. Run the sample on the FPGA device:
-     ```
-     ./onchip_memory_cache.fpga         (Linux)
-     onchip_memory_cache.fpga.exe       (Windows)
-     ```
+    ```
+    ./onchip_memory_cache.fpga         (Linux)
+    onchip_memory_cache.fpga.exe       (Windows)
+    ```
 
 ### Example of Output
 
@@ -299,6 +282,7 @@ Because the f<sub>MAX</sub> of a design is determined by the slowest kernel, we 
 When caching is used, performance noticeably increases. As previously mentioned, this technique should result in an II reduction, which should lead to a throughput improvement. The technique can also improve f<sub>MAX</sub> if the compiler had previously implemented a latency=1 load operation, in which case the f<sub>MAX</sub> increase should result in a further throughput improvement.
 
 ## License
+
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 

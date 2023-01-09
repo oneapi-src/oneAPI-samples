@@ -188,19 +188,27 @@ bool ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf) {
 
 int main() {
 // Create queue, get platform and device
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
                "flow. Please compile to FPGA hardware or simulator flow "
                "to collect dynamic profiling data. \n\n";
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
 #endif
 
+
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     std::vector<float> producer_input(kSize, -1);
     std::vector<float> consumer_output_before(kSize, -1);

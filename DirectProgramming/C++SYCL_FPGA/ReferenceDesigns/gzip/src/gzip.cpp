@@ -120,18 +120,23 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-#ifdef FPGA_EMULATOR
-    ext::intel::fpga_emulator_selector device_selector;
-#elif FPGA_SIMULATOR
-    ext::intel::fpga_simulator_selector device_selector;
-#else
-    ext::intel::fpga_selector device_selector;
-#endif
-    auto prop_list = property_list{property::queue::enable_profiling()};
-    queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
-    std::cout << "Running on device:  "
-              << q.get_device().get_info<info::device::name>().c_str() << "\n";
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+#endif
+
+    auto prop_list = property_list{property::queue::enable_profiling()};
+    queue q(selector, fpga_tools::exception_handler, prop_list);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     if (infilename == "") {
       std::cout << "Must specify a filename to compress\n\n";

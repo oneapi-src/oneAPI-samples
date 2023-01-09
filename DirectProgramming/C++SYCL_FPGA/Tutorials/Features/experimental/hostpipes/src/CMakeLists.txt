@@ -1,6 +1,7 @@
 set(SOURCE_FILE hostpipes.cpp)
 set(TARGET_NAME hostpipes)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA device selection
@@ -40,9 +41,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -Xsdsp-mode=prefer-softlogic ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsboard=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -59,6 +62,23 @@ target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -Xsdsp-mode=prefer-softlogic dsp_control.cpp -o dsp_control.fpga
+# CMake executes:
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o dsp_control.cpp.o -c dsp_control.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -Xsdsp-mode=prefer-softlogic dsp_control.cpp.o -o dsp_control.fpga
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../../include)
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
+
 
 ###############################################################################
 ### Generate Report

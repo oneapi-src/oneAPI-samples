@@ -23,11 +23,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${WIN_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fsycl -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${WIN_FLAG} -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA simulator and backend compilation
 

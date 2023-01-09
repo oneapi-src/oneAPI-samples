@@ -124,10 +124,12 @@ int main(int argc, char* argv[]) {
   std::string args = "";
   unsigned int query = QUERY;
   bool test_query = false;
-#ifndef FPGA_EMULATOR
-  unsigned int runs = 5;
-#else
+#if defined(FPGA_EMULATOR)
   unsigned int runs = 1;
+#elif defined(FPGA_SIMULATOR)
+  unsigned int runs = 1;
+#else
+  unsigned int runs = 5;
 #endif
   bool print_result = false;
   bool need_help = false;
@@ -157,7 +159,8 @@ int main(int argc, char* argv[]) {
         // a 'warmup' iteration
         runs = std::max(2, atoi(str_after_equals.c_str()) + 1);
 #else
-        // for emulation, allow a single iteration and don't add a 'warmup' run
+        // for emulation and simulation, allow a single iteration and 
+        // don't add a 'warmup' run
         runs = std::max(1, atoi(str_after_equals.c_str()));
 #endif
       } else {
@@ -191,15 +194,22 @@ int main(int argc, char* argv[]) {
     // queue properties to enable profiling
     auto props = property_list{property::queue::enable_profiling()};
 
-    // the device selector
-#ifdef FPGA_EMULATOR
-    ext::intel::fpga_emulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // create the device queue
     queue q(selector, fpga_tools::exception_handler, props);
+
+    device device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     // parse the database files located in the 'db_root_dir' directory
     bool success = dbinfo.Parse(db_root_dir);
@@ -259,7 +269,7 @@ int main(int argc, char* argv[]) {
 
     if (success) {
       // don't analyze the runtime in emulation
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
       // compute the average total latency across all iterations,
       // excluding the first 'warmup' iteration
       double total_latency_avg =
@@ -292,6 +302,8 @@ int main(int argc, char* argv[]) {
                    "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cout << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }

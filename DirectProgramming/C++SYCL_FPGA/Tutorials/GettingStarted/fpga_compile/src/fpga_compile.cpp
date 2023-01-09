@@ -32,22 +32,28 @@ int main() {
 
   // Select either:
   //  - the FPGA emulator device (CPU emulation of the FPGA)
+  //  - the FPGA simulator
   //  - the FPGA device (a real FPGA)
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   try {
 
     // Create a queue bound to the chosen device.
     // If the device is unavailable, a SYCL runtime exception is thrown.
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 
     // Print out the device information.
+    auto device = q.get_device();
+
     std::cout << "Running on device: "
-              << q.get_device().get_info<info::device::name>() << "\n";
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     {
       // Create buffers to share data between host and device.

@@ -38,12 +38,12 @@ set(CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH} -DMIN_CACHE_DEPTH=${M
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "${AC_TYPES_FLAG} -fsycl -fintelfpga")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG}")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -Xssimulation -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fsycl -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

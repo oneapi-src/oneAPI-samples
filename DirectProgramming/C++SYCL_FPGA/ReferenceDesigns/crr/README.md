@@ -44,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -168,9 +168,9 @@ This design measures the FPGA performance to determine how many assets can be pr
        make fpga_emu
        ```
    2. Generate the HTML performance report.
-       ```
-       make report
-       ```
+      ```
+      make report
+      ```
       The report resides at `<project name>/reports/report.html`.
 
    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
@@ -218,33 +218,42 @@ This design measures the FPGA performance to determine how many assets can be pr
 
 ### On Linux
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./crr.fpga_emu <input_file> [-o=<output_file>]
-    ```
-    where:
-    - `<input_file>` is an **optional** argument to specify the input data file name. The default input file is `/data/ordered_inputs.csv`.
-    - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
-
- 2. Run the sample on the FPGA device.
-    ```
-    ./crr.fpga <input_file> [-o=<output_file>]
-    ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./crr.fpga_emu <input_file> [-o=<output_file>]
+   ```
+   where:
+   - `<input_file>` is an **optional** argument to specify the input data file name. The default input file is `/data/ordered_inputs.csv`.
+   - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
+2. Run the sample on the FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./crr.fpga_sim <input_file> [-o=<output_file>]
+   ```
+3. Run the sample on the FPGA device.
+   ```
+   ./crr.fpga <input_file> [-o=<output_file>]
+   ```
 
 ### On Windows
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    crr.fpga_emu.exe <input_file> [-o=<output_file>]
-    ```
-    where:
-    - `<input_file>` is an **optional** argument to specify the input data file name. The default input file is `/data/ordered_inputs.csv`.
-    - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   crr.fpga_emu.exe <input_file> [-o=<output_file>]
+   ```
+   where:
+   - `<input_file>` is an **optional** argument to specify the input data file name. The default input file is `/data/ordered_inputs.csv`.
+   - `-o=<output_file>`  is an **optional** argument to  specify the name of the output file. The default name of the output file is `ordered_outputs.csv`.
+2. Run the sample on the FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   crr.fpga_sim.exe <input_file> [-o=<output_file>]
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
 
- 2. Run the sample on the FPGA device.
-    ```
-    crr.fpga.exe <input_file> [-o=<output_file>]
-    ```
+3. Run the sample on the FPGA device.
+   ```
+   crr.fpga.exe <input_file> [-o=<output_file>]
+   ```
 
 ## Example Output
 

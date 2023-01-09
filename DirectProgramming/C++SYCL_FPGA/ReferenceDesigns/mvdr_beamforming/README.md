@@ -54,7 +54,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -132,19 +132,23 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-   2. Generate the HTML performance report.
-       ```
-       make report
-       ```
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate the HTML performance report.
+      ```
+      make report
+      ```
       The report resides at `mvdr_beamforming_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-       ```
-       make fpga
-       ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      make fpga
+      ```
 
    (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/mvdr_beamforming.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/mvdr_beamforming.fpga.tar.gz).
 
@@ -169,13 +173,17 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
       ```
       nmake fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       nmake report
       ```
       The report resides at `mvdr_beamforming_report.a.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -196,11 +204,15 @@ The general syntax for running the program is shown below and the table describe
 | 2              | The output directory (default=`.`)
 
 ### On Linux
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./mvdr_beamforming.fpga_emu 1024 ../data .
-    ```
-2. Run the sample on the FPGA device.
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./mvdr_beamforming.fpga_emu 1024 ../data .
+   ```
+2. Run the sample on the FPGA simulator device:
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mvdr_beamforming.fpga_sim 1024 ../data .
+   ```
+3. Run the sample on the FPGA device.
    ```
    ./mvdr_beamforming.fpga 1024 ../data .
    ```
@@ -211,7 +223,13 @@ The general syntax for running the program is shown below and the table describe
    ```
    mvdr_beamforming.fpga_emu.exe 1024 ../data .
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator device:
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   mvdr_beamforming.fpga_sim.exe ../data .
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on the FPGA device.
    ```
    mvdr_beamforming.fpga.exe 1024 ../data .
    ```

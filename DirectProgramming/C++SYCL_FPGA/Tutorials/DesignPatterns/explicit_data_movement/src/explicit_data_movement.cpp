@@ -142,6 +142,9 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   size_t size = 10000;
   size_t iters = 1;
+#elif defined(FPGA_SIMULATOR)
+  size_t size = 100;
+  size_t iters = 1;
 #else
   size_t size = 100000000;
   size_t iters = 5;
@@ -159,11 +162,13 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    // device selector
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // queue properties to enable profiling
@@ -173,12 +178,16 @@ int main(int argc, char *argv[]) {
     queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // make sure the device supports USM device allocations
-    device d = q.get_device();
-    if (!d.get_info<info::device::usm_device_allocations>()) {
+    auto device = q.get_device();
+    if (!device.get_info<info::device::usm_device_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM device"
                 << " allocations\n";
       return 1;
     }
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // input and output data
     std::vector<Type> in(size);
@@ -236,7 +245,7 @@ int main(int argc, char *argv[]) {
     if (passed) {
       // The emulator does not accurately represent real hardware performance.
       // Therefore, we don't show performance results when running in emulation.
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
       double implicit_avg_lat = 
           std::accumulate(implicit_kernel_latency.begin() + 1,
                           implicit_kernel_latency.end(), 0.0)

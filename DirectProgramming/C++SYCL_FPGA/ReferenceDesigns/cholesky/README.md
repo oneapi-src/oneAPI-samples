@@ -49,7 +49,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -161,13 +161,17 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
       ```
       make fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       make report
       ```
       The report resides at `cholesky_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
        make fpga
        ```
@@ -194,11 +198,15 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
       ```
       nmake fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       nmake report
       ```
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -224,7 +232,11 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
    ./cholesky.fpga_emu
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky.fpga_sim
+   ```
+3. Run the sample on the FPGA device.
    ```
    ./cholesky.fpga
    ```
@@ -235,7 +247,13 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
    cholesky.fpga_emu.exe
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   cholesky.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on the FPGA device.
    ```
    cholesky.fpga.exe
    ```

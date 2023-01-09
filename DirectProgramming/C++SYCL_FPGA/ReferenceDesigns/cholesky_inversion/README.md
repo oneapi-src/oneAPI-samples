@@ -62,7 +62,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -180,19 +180,23 @@ Additionaly, the cmake build system can be configured using the following parame
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-   2. Generate the HTML performance report.
-       ```
-       make report
-       ```
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate the HTML performance report.
+      ```
+      make report
+      ```
       The report resides at `cholesky_inversion_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-       ```
-       make fpga
-       ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      make fpga
+      ```
 
      (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky_inversion.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky_inversion.fpga.tar.gz).
 
@@ -218,13 +222,17 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       nmake fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       nmake report
       ```
       The report resides at `cholesky_inversion_report.a.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -251,7 +259,11 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    ```
    ./cholesky_inversion.fpga_emu
    ```
-2. Run on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky_inversion.fpga_sim
+   ```
+3. Run on the FPGA device.
    ```
    ./cholesky_inversion.fpga
    ```
@@ -262,7 +274,13 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    ```
    cholesky_inversion.fpga_emu.exe
    ```
-2. Run on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   cholesky_inversion.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run on the FPGA device.
    ```
    cholesky_inversion.fpga.exe
    ```

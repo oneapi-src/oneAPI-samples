@@ -43,7 +43,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -154,24 +154,29 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       make report
-       ```
-       The report resides at `db_report.prj/reports/report.html`.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `db_report.prj/reports/report.html`.
 
        >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time. You can download pre-generated reports from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
 
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
-       ```
-       make fpga
-       ```
-       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=9 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+      ```
+      make fpga
+      ```
+      When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+
 
    (Optional) The hardware compile may take several hours to complete. You can download a pre-compiled binary (compatible with Linux* Ubuntu* 18.04) for an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
 
@@ -190,23 +195,27 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `db_report.prj/reports/report.html` directory.
 
-       ```
-       nmake fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       nmake report
-       ```
-       The report resides at `db_report.prj/reports/report.html` directory.
+      >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
 
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device):
-       ```
-       nmake fpga
-       ```
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `DB` Reference Design
@@ -224,26 +233,34 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux
 
- 1. Run the design on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./db.fpga_emu --dbroot=../data/sf0.01 --test
-    ```
-    (Optional) Run the design for queries `9`, `11` and `12`.
-
-2. Run the design on an FPGA device.
+1. Run the design on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./db.fpga_emu --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `9`, `11` and `12`.
+2. Run the sample on the FPGA simulator device:
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
+   ```
+3. Run the design on an FPGA device.
    ```
    ./db.fpga --dbroot=../data/sf1 --test
    ```
 
 ### On Windows
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-     ```
-     db.fpga_emu.exe --dbroot=../data/sf0.01 --test
-     ```
-    (Optional) Run the design for queries `9`, `11` and `12`.
-
-2. Run the sample on an FPGA device.
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   db.fpga_emu.exe --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `9`, `11` and `12`.
+2. Run the sample on the FPGA simulator device:
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   db.fpga_sim.exe --dbroot=../data/sf0.01 --test
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on an FPGA device.
    ```
    db.fpga.exe --dbroot=../data/sf1 --test
    ```

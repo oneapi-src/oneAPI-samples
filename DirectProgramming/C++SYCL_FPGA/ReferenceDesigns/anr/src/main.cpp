@@ -42,9 +42,12 @@ int main(int argc, char* argv[]) {
   // reading and validating the command line arguments
   std::string data_dir = "../test_data";
   bool passed = true;
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   int runs = 2;
   int frames = 2;
+#elif defined(FPGA_SIMULATOR)
+  int runs = 2;
+  int frames = 1;
 #else
   int runs = 2;
   int frames = 8;
@@ -78,11 +81,12 @@ int main(int argc, char* argv[]) {
   }
   /////////////////////////////////////////////////////////////
 
-  // the device selector
-#ifdef FPGA_EMULATOR
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   // create the device queue
@@ -95,6 +99,13 @@ int main(int argc, char* argv[]) {
               << " allocations\n";
     std::terminate();
   }
+
+  auto device = q.get_device();
+
+  std::cout << "Running on device: "
+            << device.get_info<info::device::name>().c_str() 
+            << std::endl;
+
 
   // parse the input files
   int cols, rows, pixel_count;
@@ -321,9 +332,17 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
                 ANRParams& params) {
   // parse the pixel data files
   int noisy_w, noisy_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_input_noisy.data", in_pixels, noisy_w, noisy_h);
+#else
   ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
+#endif
   int ref_w, ref_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_output_ref.data", ref_pixels, ref_w, ref_h);
+#else
   ParseDataFile(data_dir + "/output_ref.data", ref_pixels, ref_w, ref_h);
+#endif
 
   // ensure the dimensions match
   if (noisy_w != ref_w) {
