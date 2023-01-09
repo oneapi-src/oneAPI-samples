@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << std::endl;
@@ -17,9 +17,7 @@ int main() {
   int *data = sycl::malloc_shared<int>(N, q);
 
   auto e = q.submit([&](auto &h) {
-    sycl::accessor<int, 1, sycl::access::mode::read_write,
-                   sycl::access::target::local>
-        slm(sycl::range(32 * 64), h);
+    sycl::local_accessor<int, 1> slm(sycl::range(32 * 64), h);
     h.parallel_for(sycl::nd_range(sycl::range{N}, sycl::range{32}),
                    [=](sycl::nd_item<1> it) {
                      int i = it.get_global_linear_id();
