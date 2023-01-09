@@ -12,11 +12,12 @@ using namespace sycl;
 
 class Kernel;
 
-constexpr int kLoopSize = 50;
 constexpr int kInputSize = 1000;
 
-typedef long WorkType;
-typedef std::vector<WorkType> WorkVec;
+typedef int RGBType;
+typedef std::vector<RGBType> RGBVec;
+typedef float GreyType;
+typedef std::vector<GreyType> GreyVec;
 
 // Return the execution time of the event, in seconds
 double GetExecutionTime(const event &e) {
@@ -26,18 +27,14 @@ double GetExecutionTime(const event &e) {
   return kernel_time;
 }
 
-WorkType Compute(WorkType a, WorkType b) {
-#pragma unroll
-  for (size_t j = 0; j < kLoopSize; j++) {
-    if (j & 1)
-      a -= b;
-    else
-      a *= b;
-  }
-  return a;
+GreyType Compute(RGBType r, RGBType g, RGBType b) {
+  GreyType output =
+      (GreyType)r * 0.3f + (GreyType)g * 0.59f + (GreyType)b * 0.11f;
+  return output;
 }
 
-void RunKernel(const WorkVec &a, const WorkVec &b, WorkVec &out) {
+void RunKernel(const RGBVec &r, const RGBVec &g, const RGBVec &b,
+               GreyVec &out) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
 #elif defined(FPGA_SIMULATOR)
@@ -51,13 +48,15 @@ void RunKernel(const WorkVec &a, const WorkVec &b, WorkVec &out) {
     queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
-    buffer a_buf(a);
+    buffer r_buf(r);
+    buffer g_buf(g);
     buffer b_buf(b);
     buffer out_buf(out);
 
     // submit the kernel
     auto e = q.submit([&](handler &h) {
-      accessor a_acc(a_buf, h, read_only);
+      accessor r_acc(r_buf, h, read_only);
+      accessor g_acc(g_buf, h, read_only);
       accessor b_acc(b_buf, h, read_only);
       accessor out_acc(out_buf, h, write_only, no_init);
 
@@ -65,15 +64,19 @@ void RunKernel(const WorkVec &a, const WorkVec &b, WorkVec &out) {
       // Using kernel_args_restrict tells the compiler that the input
       // and output buffers won't alias.
       h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-        for (size_t i = 0; i < kInputSize; i += 2) {
-          out_acc[i] = Compute(a_acc[i], b_acc[i]);
-          out_acc[i + 1] = Compute(b_acc[i], a_acc[i]);
+#if defined(MANUAL_REVERT)
+#if defined(S10)
+        [[intel::speculated_iterations(4)]]
+#endif
+#endif
+        for (size_t i = 0; i < kInputSize; i++) {
+          out_acc[i] = Compute(r_acc[i], g_acc[i], b_acc[i]);
         }
       });
     });
 
     double exec_time = GetExecutionTime(e);
-    double inputMB = (kInputSize * sizeof(WorkType)) / (double)(1024 * 1024);
+    double inputMB = (kInputSize * sizeof(RGBType)) / (double)(1024 * 1024);
 
     std::cout << "Kernel Throughput: " << (inputMB / exec_time) << "MB/s\n";
     std::cout << "Exec Time: " << exec_time << "s, InputMB: " << inputMB
@@ -97,28 +100,28 @@ void RunKernel(const WorkVec &a, const WorkVec &b, WorkVec &out) {
 
 int main() {
   // input/output data
-  std::vector<WorkType> a(kInputSize);
-  std::vector<WorkType> b(kInputSize);
-  std::vector<WorkType> out(kInputSize);
-  std::vector<WorkType> golden(kInputSize);
+  RGBVec r(kInputSize);
+  RGBVec g(kInputSize);
+  RGBVec b(kInputSize);
+  GreyVec out(kInputSize);
 
   // generate random input data
   srand(0);
-  for (size_t i = 0; i < kInputSize; i += 2) {
-    a[i] = static_cast<WorkType>(rand());
-    b[i] = static_cast<WorkType>(rand());
-    golden[i] = Compute(a[i], b[i]);
-    golden[i + 1] = Compute(b[i], a[i]);
+  for (size_t i = 0; i < kInputSize; i++) {
+    r[i] = static_cast<RGBType>(rand() % 256);
+    g[i] = static_cast<RGBType>(rand() % 256);
+    b[i] = static_cast<RGBType>(rand() % 256);
   }
 
-  RunKernel(a, b, out);
+  RunKernel(r, g, b, out);
 
   // validate results
   for (size_t i = 0; i < kInputSize; i++) {
-    if (out[i] != golden[i]) {
+    GreyType golden = Compute(r[i], g[i], b[i]);
+    if (std::fabs(out[i] - golden) > 1e-4) {
       std::cout << "FAILED: result mismatch\n"
-                << "out[" << i << "] = " << out[i] << "; golden[" << i
-                << "] = " << golden[i] << '\n';
+                << "out[" << i << "] = " << out[i] << "; golden = " << golden
+                << '\n';
       return 1;
     }
   }
