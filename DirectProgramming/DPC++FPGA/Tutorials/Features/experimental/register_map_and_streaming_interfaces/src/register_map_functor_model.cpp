@@ -22,8 +22,6 @@ struct FunctorRegisterMapIP {
   // A kernel with a register map invocation interface can also independently
   // have streaming kernel arguments, when annotated by 'conduit'.
   conduit size_t n;
-  FunctorRegisterMapIP(ValueT *in_, ValueT *out_, size_t N_)
-      : input(in_), output(out_), n(N_) {}
   register_map_interface void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);

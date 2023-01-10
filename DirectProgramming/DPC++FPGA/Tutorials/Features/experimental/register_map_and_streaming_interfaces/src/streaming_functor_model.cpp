@@ -20,8 +20,6 @@ struct FunctorStreamingIP {
   // kernel arguments if the kernel invocation interface is streaming, and
   // vise-versa.
   size_t n;
-  FunctorStreamingIP(ValueT *in_, ValueT *out_, size_t N_)
-      : input(in_), output(out_), n(N_) {}
   // Use the 'streaming_interface' annotation on a kernel to specify it to be
   // a kernel with a streaming kernel invocation interface.
   streaming_interface void operator()() const {
@@ -30,13 +28,6 @@ struct FunctorStreamingIP {
     }
   }
 };
-
-template <typename KernelType>
-void TestFunctorKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task(KernelType{in, out, count}).wait();
-
-  std::cout << "\t Done" << std::endl;
-}
 
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
