@@ -7,7 +7,7 @@ The kernel invocation interface (namely, the `start` and `done` signals) can be 
 
 | Invocation Interface    | Argument Interface    | Argument Interface Synchronization       |
 |----------------------|-----------------------|------------------------------------------|
-| Streaming            | Streaming             | Synchronize with `start` and `ready_out` |
+| Streaming            | Streaming             | Synchronized with `start` and `ready_out` |
 | Streaming            | Register mapped       | N/A                                      |
 | Register mapped      | Streaming             | *No synchronization possible*            |
 | Register mapped      | Register mapped       | N/A                                      |
