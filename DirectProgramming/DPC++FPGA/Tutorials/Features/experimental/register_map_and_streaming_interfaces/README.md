@@ -1,9 +1,22 @@
 
 
-# Register Map and streaming interfaces
-This FPGA tutorial demonstrates how to specify the kernel control interfaces and kernel argument interfaces. The kernel control interfaces can be implemented as register map interfaces or streaming interfaces. Similarly, the kernel argument interfaces can be implemented as register map interfaces or streaming interfaces as well, independent of which interface that the kernel control is using. The register map interface is referring to an interface registered in the kernel memory map, where the streaming interface is referring to an interface that signals are implemented in simple conduits.
+# Register Map and Streaming Interfaces
+This FPGA tutorial demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces, and demonstrates the differences between streaming interfaces that use a ready/valid handshake, and register-mapped interfaces that exist in the kernel's control/status register (CSR).
 
-> **Note**: The register map and streaming interface control feature is only supported in the IP Component Authoring design flow. The IP Component Authoring design flow compiles SYCL source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. The generated IP is not meant to run on FPGA devices directly, therefore there will be no FPGA executables generated in this tutorial. Emulator and simulator executables are still generated to allow you to validate your IP.
+The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
+
+| Invocation Interface    | Argument Interface    | Argument Interface Synchronization       |
+|----------------------|-----------------------|------------------------------------------|
+| Streaming            | Streaming             | Synchronize with `start` and `ready_out` |
+| Streaming            | Register mapped       | N/A                                      |
+| Register mapped      | Streaming             | *No synchronization possible*            |
+| Register mapped      | Register mapped       | N/A                                      |
+
+> **Note**: Register mapped kernel arguments are not currently supported in kernels with a streaming invocation interface.
+
+If you would like an argument to have its own dedicated ready/valid handshake, please implement that argument using a [Host Pipe](../hostpipes/).
+
+> **Note**: The register map and streaming interface feature is only supported in the IP Component Authoring design flow. The IP Component Authoring design flow compiles SYCL* source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. The generated IP is not meant to run on FPGA devices directly, therefore there will be no FPGA executables generated in this tutorial. Emulator and simulator executables are still generated to allow you to validate your IP. You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -11,21 +24,21 @@ The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/d
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Basics of specifying kernel control interfaces and kernel argument interfaces
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
+| What you will learn               | Basics of specifying kernel invocation interfaces and kernel argument interfaces
 | Time to complete                  | 30 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 
 ## Purpose
 
-Use register map and streaming interface controls to specify how the kernel control handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
+Use register map and streaming interface annotations to specify how the kernel invocation handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
 
 ### Declaring a register map kernel interface
 
@@ -74,21 +87,19 @@ q.single_task([=] streaming_interface {
 ```c++
 struct MyIP {
   register_map int arg1;
-  MyIP(int arg1_) : arg1(arg1_) {}
   register_map_interface void operator()() const {
     ...
   }
 };
 ```
 
-*__Note__:* Register map kernel arguments are not currently supported in kernels with streaming control.
+*__Note__:* Register mapped kernel arguments are not currently supported in kernels with a streaming invocation interface.
 
 ### Declaring a streaming kernel argument interface
 
 ```c++
 struct MyIP {
   conduit int arg1;
-  MyIP(int arg1_) : arg1(arg1_) {}
   register_map_interface void operator()() const {
     ...
   }
@@ -96,30 +107,28 @@ struct MyIP {
 ```
 
 ### Default Interfaces
-If no annotation is specified for the kernel control, then a register map kernel control interface will be inferred by the compiler. If no annotation is specified for the a kernel argument, then that kernel argument will have the same interface as the kernel control interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel control interface.
+If no annotation is specified for the kernel invocation interface, then a register map kernel invocation interface will be inferred by the compiler. If no annotation is specified for the a kernel argument, then that kernel argument will have the same interface as the kernel invocation interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel invocation interface.
 
 ### Testing the Tutorial
-In `register_map_and_streaming_interfaces.cpp`, a total of four kernels are declared. Two use the functor programming model, and the other use the lambda programming model. For each programming model, one kernel is declared with the register map kernel control interface and the other kernel is declared with the streaming kernel control interface.
+A total of four sources files are in the `src/` directory, declaring a total of four kernels. Two use the functor programming model, and the other use the lambda programming model. For each programming model, one kernel is declared with the register map kernel invocation interface and the other kernel is declared with the streaming kernel invocation interface.
 
 ```c++
-struct FunctorRegisterMapControlIP {
+struct FunctorRegisterMapIP {
   register_map ValueT *input;
   ValueT *output;
   conduit size_t n;
-  FunctorRegisterMapControlIP(ValueT *in_, ValueT *out_, size_t N_)
-      : input(in_), output(out_), n(N_) {}
   register_map_interface void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
     }
   }
 };
-struct FunctorStreamingControlIP {
+```
+```c++
+struct FunctorStreamingIP {
   conduit ValueT *input;
   conduit ValueT *output;
   size_t n;
-  FunctorStreamingControlIP(ValueT *in_, ValueT *out_, size_t N_)
-      : input(in_), output(out_), n(N_) {}
   streaming_interface void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
@@ -131,25 +140,26 @@ struct FunctorStreamingControlIP {
 These two functor kernels are invoked in the same way in the host code, by constructing the struct and submitting a `single_task` into the SYCL `queue`.
 
 ```c++
-template <typename KernelType>
-void TestFunctorKernel(sycl::queue& q, ValueT* in, ValueT* out, size_t count) {
-  q.single_task(KernelType{in, out, count}).wait();
-}
+q.single_task(FunctorRegisterMapIP{in, functorRegisterMapOut, count}).wait();
+```
+```c++
+q.single_task(FunctorStreamingIP{in, functorStreamingOut, count}).wait();
 ```
 
 The two lambda kernels are annotated directly on the lambda function body and submitted into the SYCL `queue` as a `single_task`.
 
 ```c++
-void TestLambdaRegisterMapControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task<LambdaRegisterMapControlIP>([=] register_map_interface  {
+void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
+  q.single_task<LambdaRegisterMapIP>([=] register_map_interface  {
     for (int i = 0; i < count; i++) {
       out[i] = SomethingComplicated(in[i]);
     }
   }).wait();
 }
-
-void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task<LambdaStreamingControlIP>([=] streaming_interface  {
+```
+```c++
+void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
+  q.single_task<LambdaStreamingIP>([=] streaming_interface  {
     for (int i = 0; i < count; i++) {
       out[i] = SomethingComplicated(in[i]);
     }
@@ -157,22 +167,30 @@ void TestLambdaStreamingControlKernel(sycl::queue &q, ValueT *in, ValueT *out, s
 }
 ```
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 ## Key Concepts
-* Basics of declaring kernel control interfaces and kernel argument interfaces
+* Basics of declaring kernel invocation interfaces and kernel argument interfaces
 
 ## Building the `register_map_and_streaming_interfaces` Tutorial
 
-> **Note**: If you have not already done so, set up your CLI
+> __Note__: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: `. /opt/intel/oneapi/setvars.sh`
+> Linux*:
 >
-> Linux User: `. ~/intel/oneapi/setvars.sh`
+> * For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> * For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Windows: `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> Windows*:
 >
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> * `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see __Use the setvars Script__ for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Using Visual Studio Code*  (Optional)
 
@@ -187,8 +205,6 @@ The basic steps to build and run a sample using VS Code include:
 
 To learn more about the extensions and how to configure the oneAPI environment, see
 [Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -299,51 +315,78 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 
 ## Examining the Reports
 
-Locate `report.html` in the `register_map_and_streaming_interfaces_report.prj/reports/` directory. Open the report in any of the following web browsers:  Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the corresponding `<source_file>_report.prj/reports/` directory. Open the report in any of the following web browsers:  Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Open the **Views** menu and select **System Viewer**.
 
-In the left-hand pane, select **FunctorRegisterMapControlIP** or **LambdaRegisterMapControlIP** under the System hierarchy.
+In the left-hand pane, select **FunctorRegisterMapIP** or **LambdaRegisterMapIP** under the System hierarchy for the kernels with a register-mapped invocation interface.
 
-In the main **System Viewer** pane, the kernel control interface and kernel argument interfaces are shown. They show that the `start`, `busy` and `done` kernel control interfaces are implemented in register map interfaces, the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in streaming interface in the **FunctorRegisterMapControlIP**, and in register map interface in the **LambdaRegisterMapControlIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel argument interfaces are shown. They show that the `start`, `busy` and `done` kernel invocation interfaces are implemented in register map interfaces, the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMapIP**, and in a register map interface in the **LambdaRegisterMapIP**.
 
-Similarly, in the left-hand pane, select **StreamingControlIP** or **LambdaStreamingControlIP** under the System hierarchy.
+Similarly, in the left-hand pane, select **FunctorStreamingIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
 
-In the main **System Viewer** pane, the kernel control interface and kernel argument interfaces are shown. They show that the `start`, `done`, `ready_in` and `ready_out` kernel control interfaces are implemented in streaming interfaces, and the `arg_input`, `arg_output` and `arg_n` kernel arguments are all implemented in streaming interfaces.
+In the main **System Viewer** pane, the kernel invocation interface and kernel argument interfaces are shown. They show that the `start`, `done`, `ready_in` and `ready_out` kernel invocation interfaces are implemented in streaming interfaces, and the `arg_input`, `arg_output` and `arg_n` kernel arguments are all implemented in streaming interfaces.
 
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./register_map_and_streaming_interfaces.fpga_emu      (Linux)
-     register_map_and_streaming_interfaces.fpga_emu.exe    (Windows)
+     ./register_map_functor_model.fpga_emu        (Linux)
+     ./streaming_functor_model.fpga_emu           (Linux)
+     ./register_map_lambda_model.fpga_emu         (Linux)
+     ./streaming_lambda_model.fpga_emu            (Linux)
+     register_map_functor_model.fpga_emu.exe      (Windows)
+     streaming_functor_model.fpga_emu.exe         (Windows)
+     register_map_lambda_model.fpga_emu.exe       (Windows)
+     streaming_lambda_model.fpga_emu.exe          (Windows)
      ```
 2. Run the sample on the FPGA simulator:
      ```
-     ./register_map_and_streaming_interfaces.fpga_sim      (Linux)
-     register_map_and_streaming_interfaces.fpga_sim.exe    (Windows)
+     ./register_map_functor_model.fpga_sim        (Linux)
+     ./streaming_functor_model.fpga_sim           (Linux)
+     ./register_map_lambda_model.fpga_sim         (Linux)
+     ./streaming_lambda_model.fpga_sim            (Linux)
+     register_map_functor_model.fpga_sim.exe      (Windows)
+     streaming_functor_model.fpga_sim.exe         (Windows)
+     register_map_lambda_model.fpga_sim.exe       (Windows)
+     streaming_lambda_model.fpga_sim.exe          (Windows)
      ```
 
 ### Example of Output
 
 ```
-Running the kernel with streaming control implemented in the functor programming model
+Running the kernel with register map invocation interface implemented in the functor programming model
 	 Done
-
-Running the kernel with register map control implemented in the functor programming model
-	 Done
-
-Running kernel with streaming control implemented in the lambda programming model
-	 Done
-
-Running kernel with register map control implemented in the lambda programming model
-	 Done
-
 PASSED
 ```
 
+```
+Running the kernel with streaming invocation interface implemented in the functor programming model
+	 Done
+PASSED
+```
+
+```
+Running kernel with register map invocation interface implemented in the lambda programming model
+	 Done
+PASSED
+```
+
+```
+Running kernel with streaming invocation interface implemented in the lambda programming model
+	 Done
+PASSED
+```
+
+### Example Simulation Waveform
+
+The diagram below shows the example waveform generated by the simulator that you will see for the kernels with a register-mapped invocation interface. The waveform shows the register-mapped kernel arguments and kernel invocation handshaking signals are passed in through an Avalon agent interface, whose addresses are as specified in the agent memory map header files in the project directory.
+![register_map_invocation_interface](assets/register_map_invocation_interface.png)
+
+The diagram below shows the example waveform generated by the simulator that you will see for the kernels with a streaming invocation interface. The waveform shows the streaming kernel arguments and kernel invocation handshaking signals follow the Avalon-ST protocol. The streaming invocation interface consumes the kernel arguments on the clock cycle that the `start` and `ready_out` signals are asserted, and the kernel invocation is finished on the clock cycle that the `done` and `ready_in` signals are asserted.
+![streaming_invocation_interface](assets/streaming_invocation_interface.png)
+
 ## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
