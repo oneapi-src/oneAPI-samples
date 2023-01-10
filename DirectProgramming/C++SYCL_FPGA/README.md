@@ -282,4 +282,5 @@ Neither compiling nor executing programs on FPGA hardware are supported on the l
 - The [Intel® oneAPI DPC++/C++ Compiler Release Notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
 - The [Migrating OpenCL™ FPGA Designs to SYCL*](https://www.intel.com/content/www/us/en/develop/documentation/migrate-opencl-fpga-designs-to-dpcpp/top.html) guide.
 - [Additional FPGA-specific Resources](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/additional-information.html).
+- The [Intel® Quartus® Prime Pro and Standard Software User Guides](https://www.intel.com/content/www/us/en/support/programmable/support-resources/design-software/user-guides.html).
 
