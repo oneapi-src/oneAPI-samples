@@ -280,3 +280,6 @@ Neither compiling nor executing programs on FPGA hardware are supported on the l
 - The [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
 - The [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
 - The [Intel® oneAPI DPC++/C++ Compiler Release Notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
+- The [Migrating OpenCL™ FPGA Designs to SYCL*](https://www.intel.com/content/www/us/en/develop/documentation/migrate-opencl-fpga-designs-to-dpcpp/top.html) guide.
+- [Additional FPGA-specific Resources](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/additional-information.html).
+
