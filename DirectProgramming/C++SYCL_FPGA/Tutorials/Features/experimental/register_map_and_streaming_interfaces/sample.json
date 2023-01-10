@@ -1,7 +1,7 @@
 {
   "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
   "name": "register map and streaming interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features/experimental"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of register_map and streaming interface controls",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
