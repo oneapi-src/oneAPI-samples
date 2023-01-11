@@ -32,8 +32,8 @@ flowchart LR
    style tier4 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for        | Description
 |:---                  |:---
@@ -54,7 +54,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 Performance results are based on testing as of ???.
 
-> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/DPC++FPGA/README.md#performance-disclaimers) section for important performance information.
+> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
@@ -80,7 +80,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 
 The key optimization techniques used are as follows:
 
-1. Fully unrolling the loop over the output matrix to instantiate a two-dimension systolic array of PEs
+1. Fully unrolling the loop over the matrix product to instantiate a two-dimensional systolic array of PEs
 2. Using an efficient memory banking scheme to generate high performance hardware.
 3. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
@@ -96,12 +96,13 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | cmake option              | Description
 |:---                       |:---
-| `-DDEBUG` | Used to turn on/off debug information (printing out matrices)
-| `-DROWS_A` | Specifies the number of rows of matrix A
-| `-DCOMMON` | Specifies the number of columns of matrix A or rows of matrix B (must be equal)
-| `-DCOLS_B` | Specifies the number of columns of matrix B
-| `-DTILE_A` | Specifies the tile size used on matrix A
-| `-DTILE_B` | Specifies the tile size used on matrix B
+| `-DSET_ROWS_A` | Specifies the number of rows of matrix A
+| `-DSET_COMMON` | Specifies the number of columns of matrix A / rows of matrix B (these values are equal)
+| `-DSET_COLS_B` | Specifies the number of columns of matrix B
+| `-DSET_TILE_A` | Specifies the tile size used on matrix A
+| `-DSET_TILE_B` | Specifies the tile size used on matrix B
+| `-DSET_TILE_COMMON` | Specifies the tile size used on the common dimension between matrices A and B
+| `-DSET_DEBUG` | Used to turn on/off debug information (printing out matrices)
 
 ## Build the `Matrix multiply` Design
 
@@ -132,7 +133,7 @@ Additionaly, the cmake build system can be configured using the following parame
    ```
    For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -140,18 +141,25 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       make fpga_emu
       ```
+
    2. Generate HTML performance report.
       ```
       make report
       ```
-      The report resides at `matmul_report/reports/report.html`.
+      The report resides at `matmul.report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile for simulation (compiles the FPGA device code to RTL and generates a
+      simulation testbench).
+      ```
+      make fpga_sim
+      ```
+
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz).
+   <!-- (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz). -->
 
 ### On Windows*
 
@@ -166,7 +174,7 @@ Additionaly, the cmake build system can be configured using the following parame
    ```
    To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)
@@ -181,7 +189,13 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       The report resides at `matmul_report.a.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile for simulation (compiles the FPGA device code to RTL and generates a
+      simulation testbench).
+      ```
+      nmake fpga_sim
+      ```
+
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -193,7 +207,7 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | Argument  | Description
 |:---       |:---
-| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation flow, **1** for the simulation flow and **819200** for the FPGA flow.
+| `<num>`   | (Optional) Specifies the number of times to repeat the multiplication of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation and simulation flows, and **819200** for the FPGA flow.
 
 You can perform the multiplication of the set of matrices repeatedly. This step performs the following:
 - Generates the set of random matrices.
@@ -204,12 +218,18 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 #### Run on FPGA Emulator
 
-1. Increase the amount of memory that the emulator runtime is permitted to allocate by exporting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
-2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    ./matmul.fpga_emu
    ```
+
+#### Run on Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   ./matmul.fpga_sim
+   ```
+
 #### Run on FPGA
 
 1. Run the sample on the FPGA device.
@@ -221,11 +241,16 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 #### Run on FPGA Emulator
 
-1. Increase the amount of memory that the emulator runtime is permitted to allocate by setting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
-2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    matmul.fpga_emu.exe
+   ```
+
+#### Run on Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   matmul.fpga_sim.exe
    ```
 #### Run on FPGA
 
@@ -236,7 +261,7 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 ## Example Output
 
-Example Output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
+Example output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
 
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)

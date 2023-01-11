@@ -1,7 +1,7 @@
 {
   "guid": "77C05AED-3CBF-4C3C-8E6E-28253893807D",
   "name": "matmul",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL_FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance general matrix multiplication on an Intel® FPGA",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
@@ -21,9 +21,6 @@
     "linux": [
       {
         "id": "fpga_emu",
-        "env": [
-          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
           "icpx --version",
           "mkdir build",
@@ -47,9 +44,6 @@
     "windows": [
       {
         "id": "fpga_emu",
-        "env": [
-          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
           "icpx --version",
           "cd ../..",

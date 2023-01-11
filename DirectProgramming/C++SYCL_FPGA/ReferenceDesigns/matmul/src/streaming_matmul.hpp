@@ -6,8 +6,8 @@
 #include "unrolled_loop.hpp"
 
 template <typename T, int common, int tile_common, int tile_A, int tile_B,
-          int pipe_size, typename pipe_A, typename pipe_B, typename pipe_C>
-void streaming_matmul() {
+          int pipe_size, typename PipeA, typename PipeB, typename PipeC>
+void streamingMatmul() {
   
   // Iterations to process a row / column
   constexpr bool kIncompleteBurstA = tile_A % pipe_size != 0;
@@ -72,10 +72,10 @@ void streaming_matmul() {
         fpga_tools::NTuple<T, pipe_size> pipe_read_A;
         fpga_tools::NTuple<T, pipe_size> pipe_read_B;
         if (row_iter < kRWIterA) {
-          pipe_read_A = pipe_A::read();
+          pipe_read_A = PipeA::read();
         }
         if (row_iter < kRWIterB) {
-          pipe_read_B = pipe_B::read();
+          pipe_read_B = PipeB::read();
         }
 
         fpga_tools::UnrolledLoop<kIters>([&](auto k) {
@@ -151,7 +151,7 @@ void streaming_matmul() {
         });
       });
 
-      pipe_C::write(pipe_write);
+      PipeC::write(pipe_write);
     }
   }
 }

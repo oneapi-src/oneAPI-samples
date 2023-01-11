@@ -9,8 +9,8 @@ using BurstCoalescedLSU =
     sycl::ext::intel::lsu<sycl::ext::intel::burst_coalesce<true>>;
 
 template <typename T, int rows_A, int common, int cols_B, int tile_A,
-          int tile_B, int pipe_size, typename pipe_A>
-void feeder_A(T *A, int repetitions, int num_matrices) {
+          int tile_B, int pipe_size, typename PipeA>
+void feederA(T *A, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
   // multiple of the burst size
@@ -65,7 +65,7 @@ void feeder_A(T *A, int repetitions, int num_matrices) {
                 }
               });
 
-              pipe_A::write(pipe_write);
+              PipeA::write(pipe_write);
             }
           }
         }
@@ -75,8 +75,8 @@ void feeder_A(T *A, int repetitions, int num_matrices) {
 }
 
 template <typename T, int rows_A, int common, int cols_B, int tile_A,
-          int tile_B, int pipe_size, typename pipe_B>
-void feeder_B(T *B, int repetitions, int num_matrices) {
+          int tile_B, int pipe_size, typename PipeB>
+void feederB(T *B, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
   // multiple of the burst size
@@ -131,7 +131,7 @@ void feeder_B(T *B, int repetitions, int num_matrices) {
                 }
               });
 
-              pipe_B::write(pipe_write);
+              PipeB::write(pipe_write);
             }
           }
         }
@@ -141,7 +141,7 @@ void feeder_B(T *B, int repetitions, int num_matrices) {
 }
 
 template <typename T, int rows_A, int cols_B, int tile_A, int tile_B,
-          int pipe_size, typename pipe_C>
+          int pipe_size, typename PipeC>
 void drain(T *C, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
@@ -186,7 +186,7 @@ void drain(T *C, int repetitions, int num_matrices) {
             int col_iter = (int)(i) / kRWIterA;
 
             // Perform the burst write of pipe_size elements
-            fpga_tools::NTuple<T, pipe_size> pipe_read = pipe_C::read();
+            fpga_tools::NTuple<T, pipe_size> pipe_read = PipeC::read();
             fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
               int idx = (mat * kMatsizeC) + ((int)(block_B)*tile_B * rows_A) +
                         ((int)(block_A)*tile_A) + (col_iter * rows_A) +

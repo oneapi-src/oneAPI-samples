@@ -41,9 +41,9 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_A,       // Tile size for matrix A
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
-          typename pipe_A>  // Input matrix pipe for A
+          typename PipeA>   // Input matrix pipe for A
 void FeederA(T *A, int repetitions, int num_matrices) {
-  feeder_A<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, pipe_A>(
+  feederA<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeA>(
       A, repetitions, num_matrices);
 }
 
@@ -67,9 +67,9 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_A,       // Tile size for matrix A
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
-          typename pipe_B>  // Input matrix pipe for B
+          typename PipeB>   // Input matrix pipe for B
 void FeederB(T *B, int repetitions, int num_matrices) {
-  feeder_B<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, pipe_B>(
+  feederB<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeB>(
       B, repetitions, num_matrices);
 }
 
@@ -86,14 +86,14 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_A,       // Tile size for matrix A
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements read/write per pipe operation
-          typename pipe_A,  // Input matrix pipe for A
-          typename pipe_B,  // Input matrix pipe for B
-          typename pipe_C>  // Output matrix pipe for C
+          typename PipeA,   // Input matrix pipe for A
+          typename PipeB,   // Input matrix pipe for B
+          typename PipeC>   // Output matrix pipe for C
 class StreamingMatmul {
  public:
   void operator()() const {
-    streaming_matmul<T, common, tile_common, tile_A, tile_B, pipe_size, pipe_A,
-                     pipe_B, pipe_C>();
+    streamingMatmul<T, common, tile_common, tile_A, tile_B, pipe_size, PipeA,
+                    PipeB, PipeC>();
   }
 };
 
@@ -113,10 +113,10 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_A,       // Tile size for matrix A
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
-          typename pipe_C>  // Output matrix pipe for C
+          typename PipeC>  // Output matrix pipe for C
 void Drain(T *C, int repetitions, int num_matrices) {
-  drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, pipe_C>(C, repetitions,
-                                                              num_matrices);
+  drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, PipeC>(C, repetitions,
+                                                             num_matrices);
 }
 
 /**

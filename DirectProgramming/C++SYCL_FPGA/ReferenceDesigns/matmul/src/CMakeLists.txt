@@ -1,5 +1,3 @@
-set(CMAKE_VERBOSE_MAKEFILE on)
-
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
@@ -13,6 +11,28 @@ set(TILE_A 8)
 set(TILE_B 8)
 set(TILE_COMMON 64)
 set(DEBUG 0)
+
+if(DEFINED SET_ROWS_A)
+    set(ROWS_A ${SET_ROWS_A})
+endif()
+if(DEFINED SET_COMMON)
+    set(COMMON ${SET_COMMON})
+endif()
+if(DEFINED SET_COLS_B)
+    set(COLS_B ${SET_COLS_B})
+endif()
+if(DEFINED SET_TILE_A)
+    set(TILE_A ${SET_TILE_A})
+endif()
+if(DEFINED SET_TILE_B)
+    set(TILE_B ${SET_TILE_B})
+endif()
+if(DEFINED SET_TILE_COMMON)
+    set(TILE_COMMON ${SET_TILE_COMMON})
+endif()
+if(DEFINED SET_DEBUG)
+    set(DEBUG ${SET_DEBUG})
+endif()
 
 message(STATUS "ROWS_A=${ROWS_A}")
 message(STATUS "COMMON=${COMMON}")
