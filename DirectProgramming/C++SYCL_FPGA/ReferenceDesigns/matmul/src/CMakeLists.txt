@@ -6,6 +6,23 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 set(SOURCE_FILE matmul_demo.cpp)
 set(TARGET_NAME matmul)
 
+set(ROWS_A 8)
+set(COMMON 64)
+set(COLS_B 8)
+set(TILE_A 8)
+set(TILE_B 8)
+set(TILE_COMMON 64)
+set(DEBUG 0)
+
+message(STATUS "ROWS_A=${ROWS_A}")
+message(STATUS "COMMON=${COMMON}")
+message(STATUS "COLS_B=${COLS_B}")
+message(STATUS "TILE_A=${TILE_A}")
+message(STATUS "TILE_B=${TILE_B}")
+message(STATUS "TILE_COMMON=${TILE_COMMON}")
+
+set(MATMUL_PARAMS "-DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} -DTILE_COMMON=${TILE_COMMON} -DDEBUG=${DEBUG}")
+
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device. Here are a few device examples (this list is not
 # exhaustive):
@@ -24,10 +41,10 @@ endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS} -Xsparallel=2")
+set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS "${USER_FLAGS} -Xsseed=7 -Xsclock=360MHz")
+set(USER_FLAGS "${USER_FLAGS} -Xsseed=7 -Xsclock=360MHz ${MATMUL_PARAMS}")
 ###############################################################################
 ### no changes after here
 ###############################################################################

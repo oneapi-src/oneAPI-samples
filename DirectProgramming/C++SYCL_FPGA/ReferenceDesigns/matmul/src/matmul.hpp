@@ -4,15 +4,12 @@
 #include <chrono>
 #include <iostream>
 
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "memory_transfers.hpp"
 #include "streaming_matmul.hpp"
-
-using namespace sycl;
-using namespace fpga_tools;
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
@@ -95,8 +92,8 @@ template <typename T,       // Datatype of the elements of the matrix
 class StreamingMatmul {
  public:
   void operator()() const {
-    streaming_matmul<T, common, tile_common, tile_A, tile_B, pipe_size, 
-        pipe_A, pipe_B, pipe_C>();
+    streaming_matmul<T, common, tile_common, tile_A, tile_B, pipe_size, pipe_A,
+                     pipe_B, pipe_C>();
   }
 };
 
@@ -118,20 +115,20 @@ template <typename T,       // Datatype of the elements of the matrix
           int pipe_size,    // Number of elements per DDR burst access
           typename pipe_C>  // Output matrix pipe for C
 void Drain(T *C, int repetitions, int num_matrices) {
-  drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, pipe_C>(
-      C, repetitions, num_matrices);
+  drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, pipe_C>(C, repetitions,
+                                                              num_matrices);
 }
 
 /**
  * Implementation of the matrix multiplication using multiple streaming kernels.
  * Parameterized by datatype, matrix size, and tile size. Exercises the kernels
  * by running multiple repetitions for a set of matrices.
- * 
+ *
  * Function arguments:
  *  q: device queue
- *  A: input matrix pointer (given in column-major)
- *  B: input matrix pointer (given in row-major, or equivalently, transposed)
- *  C: output matrix pointer (will be stored in column-major)
+ *  A_matrix: input matrix pointer (given in column-major)
+ *  B_matrix: input matrix pointer (given in row-major, i.e., transposed)
+ *  C_matrix: output matrix pointer (will be stored in column-major)
  *  repetitions: number of repetitions of the computation to execute
  *  num_matrices: number of pairs of matrices to multiply
  *
@@ -143,74 +140,77 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_A,       // Tile size for matrix A
           int tile_B,       // Tile size for matrix B
           int tile_common>  // Tile size for common side
-void MATMULImpl(queue &q, T *A, T *B, T *C, int repetitions, int num_matrices) {
-
+void MATMULImpl(sycl::queue &q, T *A_matrix, T *B_matrix, T *C_matrix,
+                int repetitions, int num_matrices) {
   // Number of elements per DDR burst access and number of elements read/written
   // on every pipe operation
-  constexpr int pipe_size = 8;
+  constexpr int kPipeSize = 8;
 
   // Matrix sizes
-  constexpr size_t matsize_A = rows_A * common;
-  constexpr size_t matsize_B = cols_B * common;
-  constexpr size_t matsize_C = rows_A * cols_B;
+  constexpr size_t kMatsizeA = rows_A * common;
+  constexpr size_t kMatsizeB = cols_B * common;
+  constexpr size_t kMatsizeC = rows_A * cols_B;
 
   // Pipes to communicate the matrices between kernels
-  using pipe_A = ext::intel::pipe<PIPEA, NTuple<T, pipe_size>, 64>;
-  using pipe_B = ext::intel::pipe<PIPEB, NTuple<T, pipe_size>, 64>;
-  using pipe_C = ext::intel::pipe<PIPEC, NTuple<T, pipe_size>, 64>;
+  using pipe_A =
+      sycl::ext::intel::pipe<PIPEA, fpga_tools::NTuple<T, kPipeSize>, 64>;
+  using pipe_B =
+      sycl::ext::intel::pipe<PIPEB, fpga_tools::NTuple<T, kPipeSize>, 64>;
+  using pipe_C =
+      sycl::ext::intel::pipe<PIPEC, fpga_tools::NTuple<T, kPipeSize>, 64>;
 
   // Allocate FPGA DDR memory
-  T *MA = malloc_device<T>(matsize_A * num_matrices, q);
-  T *MB = malloc_device<T>(matsize_B * num_matrices, q);
-  T *MC = malloc_device<T>(matsize_C * num_matrices, q);
+  T *A = sycl::malloc_device<T>(kMatsizeA * num_matrices, q);
+  T *B = sycl::malloc_device<T>(kMatsizeB * num_matrices, q);
+  T *C = sycl::malloc_device<T>(kMatsizeC * num_matrices, q);
 
-  q.memcpy(MA, A, matsize_A * num_matrices * sizeof(T)).wait();
-  q.memcpy(MB, B, matsize_B * num_matrices * sizeof(T)).wait();
+  q.memcpy(A, A_matrix, kMatsizeA * num_matrices * sizeof(T)).wait();
+  q.memcpy(B, B_matrix, kMatsizeB * num_matrices * sizeof(T)).wait();
 
   // Producer kernel for matrix B
   auto feederA_event = q.single_task<FEEDERA>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    FeederA<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, pipe_A>(
-        MA, repetitions, num_matrices);
+    FeederA<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_A>(
+        A, repetitions, num_matrices);
   });
 
   // Producer kernel for matrix B
   q.single_task<FEEDERB>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    FeederB<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, pipe_B>(
-        MB, repetitions, num_matrices);
+    FeederB<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_B>(
+        B, repetitions, num_matrices);
   });
 
   // Matrix multiply kernel
   q.single_task<MATMUL>(StreamingMatmul<T, common, tile_common, tile_A, tile_B,
-      pipe_size, pipe_A, pipe_B, pipe_C>{});
+                                        kPipeSize, pipe_A, pipe_B, pipe_C>{});
 
   // Consumer kernel for matrix C
   auto drain_event = q.single_task<DRAIN>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    Drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, pipe_C>(
-        MC, repetitions, num_matrices);
+    Drain<T, rows_A, cols_B, tile_A, tile_B, kPipeSize, pipe_C>(C, repetitions,
+                                                                num_matrices);
   });
 
   drain_event.wait();
 
   // Compute the total time the execution lasted
   auto start_time = feederA_event.template get_profiling_info<
-      info::event_profiling::command_start>();
+      sycl::info::event_profiling::command_start>();
   auto end_time = drain_event.template get_profiling_info<
-      info::event_profiling::command_end>();
+      sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
   q.throw_asynchronous();
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
   std::cout << "Throughput: " << repetitions * num_matrices / diff * 1e-3
             << "k matrices/s" << std::endl;
 
-  q.memcpy(C, MC, matsize_C * num_matrices * sizeof(T)).wait();
+  q.memcpy(C_matrix, C, kMatsizeC * num_matrices * sizeof(T)).wait();
 
   // Free allocated FPGA memory
-  free(MA, q);
-  free(MB, q);
-  free(MC, q);
+  sycl::free(A, q);
+  sycl::free(B, q);
+  sycl::free(C, q);
 }
 
 #endif /* __MATMUL_HPP__ */

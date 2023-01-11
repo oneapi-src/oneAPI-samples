@@ -70,7 +70,7 @@ The multiply-accumulate arithmetic can be optimally implemented using the FPGA's
 
 The design uses the `fpga_reg` attribute to insert additional pipelining registers along the path to each PE. This allows values to be passed from one PE to the next, which reduces the fanout caused by distributing the same value to all PEs in one row or column.
 
-In general, this algorithm allows for greater reuse of input values, reducing the number of times a value needs to be loaded from memory. Each value will be used in multiple computations simultaneously, across all PEs in one row or column. For larger matrices, where it is infeasible to generate a systolic array to compute the full matrix, we split the matrix into smaller tiles, each of which is computed sequentially using a systolic array corresponding to the size of the tile.
+For larger matrices, where it is infeasible to generate a systolic array to compute the full matrix, we split the matrix into smaller tiles, each of which is computed sequentially using a systolic array corresponding to the size of the tile.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -90,7 +90,6 @@ The key optimization techniques used are as follows:
 |:---                   |:---
 | `-Xshardware`         | Target FPGA hardware (as opposed to FPGA emulator)
 | `-Xsclock=360MHz`     | The FPGA backend attempts to achieve 360 MHz
-| `-Xsparallel=2`       | Use 2 cores when compiling the bitstream through Intel® Quartus®
 | `-Xsseed`             | Specifies the Intel® Quartus® compile seed, to yield slightly higher fmax
 
 Additionaly, the cmake build system can be configured using the following parameters:
@@ -103,8 +102,6 @@ Additionaly, the cmake build system can be configured using the following parame
 | `-DCOLS_B` | Specifies the number of columns of matrix B
 | `-DTILE_A` | Specifies the tile size used on matrix A
 | `-DTILE_B` | Specifies the tile size used on matrix B
-
-<!-- >**Note**: The values for `seed`, `-DSET_FIXED_ITERATIONS`, `-DSET_ROWS_COMPONENT`, `-DSET_COLS_COMPONENT` and `-DSET_COMPLEX` depend on the board being targeted. -->
 
 ## Build the `Matrix multiply` Design
 
