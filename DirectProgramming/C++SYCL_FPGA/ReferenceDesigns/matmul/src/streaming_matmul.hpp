@@ -7,7 +7,7 @@
 
 template <typename T, int common, int tile_common, int tile_A, int tile_B,
           int pipe_size, typename PipeA, typename PipeB, typename PipeC>
-void streamingMatmul() {
+void StreamingMatmul() {
   
   // Iterations to process a row / column
   constexpr bool kIncompleteBurstA = tile_A % pipe_size != 0;

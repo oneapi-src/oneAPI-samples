@@ -42,8 +42,8 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
           typename PipeA>   // Input matrix pipe for A
-void FeederA(T *A, int repetitions, int num_matrices) {
-  feederA<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeA>(
+void FeederAKernel(T *A, int repetitions, int num_matrices) {
+  FeederA<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeA>(
       A, repetitions, num_matrices);
 }
 
@@ -68,8 +68,8 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
           typename PipeB>   // Input matrix pipe for B
-void FeederB(T *B, int repetitions, int num_matrices) {
-  feederB<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeB>(
+void FeederBKernel(T *B, int repetitions, int num_matrices) {
+  FeederB<T, rows_A, common, cols_B, tile_A, tile_B, pipe_size, PipeB>(
       B, repetitions, num_matrices);
 }
 
@@ -89,16 +89,16 @@ template <typename T,       // Datatype of the elements of the matrix
           typename PipeA,   // Input matrix pipe for A
           typename PipeB,   // Input matrix pipe for B
           typename PipeC>   // Output matrix pipe for C
-class StreamingMatmul {
+class MatmulKernel {
  public:
   void operator()() const {
-    streamingMatmul<T, common, tile_common, tile_A, tile_B, pipe_size, PipeA,
+    StreamingMatmul<T, common, tile_common, tile_A, tile_B, pipe_size, PipeA,
                     PipeB, PipeC>();
   }
 };
 
 /**
- * Drain kernel.
+ * DrainKernel kernel.
  *
  * Reads all matrix C's tile-by-tile from the pipe, pipe_size elements at a
  * time, and writes to global memory in burst of pipe_size. Matrices are stored
@@ -114,8 +114,8 @@ template <typename T,       // Datatype of the elements of the matrix
           int tile_B,       // Tile size for matrix B
           int pipe_size,    // Number of elements per DDR burst access
           typename PipeC>  // Output matrix pipe for C
-void Drain(T *C, int repetitions, int num_matrices) {
-  drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, PipeC>(C, repetitions,
+void DrainKernel(T *C, int repetitions, int num_matrices) {
+  Drain<T, rows_A, cols_B, tile_A, tile_B, pipe_size, PipeC>(C, repetitions,
                                                              num_matrices);
 }
 
@@ -170,26 +170,26 @@ void MATMULImpl(sycl::queue &q, T *A_matrix, T *B_matrix, T *C_matrix,
   // Producer kernel for matrix B
   auto feederA_event = q.single_task<FEEDERA>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    FeederA<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_A>(
+    FeederAKernel<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_A>(
         A, repetitions, num_matrices);
   });
 
   // Producer kernel for matrix B
   q.single_task<FEEDERB>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    FeederB<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_B>(
+    FeederBKernel<T, rows_A, common, cols_B, tile_A, tile_B, kPipeSize, pipe_B>(
         B, repetitions, num_matrices);
   });
 
   // Matrix multiply kernel
-  q.single_task<MATMUL>(StreamingMatmul<T, common, tile_common, tile_A, tile_B,
-                                        kPipeSize, pipe_A, pipe_B, pipe_C>{});
+  q.single_task<MATMUL>(MatmulKernel<T, common, tile_common, tile_A, tile_B,
+                                     kPipeSize, pipe_A, pipe_B, pipe_C>{});
 
   // Consumer kernel for matrix C
   auto drain_event = q.single_task<DRAIN>([=
   ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-    Drain<T, rows_A, cols_B, tile_A, tile_B, kPipeSize, pipe_C>(C, repetitions,
-                                                                num_matrices);
+    DrainKernel<T, rows_A, cols_B, tile_A, tile_B, kPipeSize, pipe_C>(
+        C, repetitions, num_matrices);
   });
 
   drain_event.wait();

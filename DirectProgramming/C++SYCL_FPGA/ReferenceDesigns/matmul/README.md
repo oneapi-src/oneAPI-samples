@@ -142,17 +142,16 @@ Additionaly, the cmake build system can be configured using the following parame
       make fpga_emu
       ```
 
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `matmul.report.prj/reports/report.html`.
-
-   3. Compile for simulation (compiles the FPGA device code to RTL and generates a
-      simulation testbench).
-      ```
-      make fpga_sim
-      ```
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -183,22 +182,21 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
-      ```
-      nmake report
-      ```
-      The report resides at `matmul_report.a.prj/reports/report.html`.
-
-   3. Compile for simulation (compiles the FPGA device code to RTL and generates a
-      simulation testbench).
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
       ```
       nmake fpga_sim
       ```
+   3. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `qrd_report.a.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
+
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `Matrix Multiply` Design
@@ -223,11 +221,11 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
    ./matmul.fpga_emu
    ```
 
-#### Run on Simulator
+#### Run on FPGA Simulator
 
 1. Run the sample on the FPGA simulator.
    ```
-   ./matmul.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qrd.fpga_sim
    ```
 
 #### Run on FPGA
@@ -246,11 +244,13 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
    matmul.fpga_emu.exe
    ```
 
-#### Run on Simulator
+#### Run on FPGA Simulator
 
 1. Run the sample on the FPGA simulator.
    ```
-   matmul.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   qrd.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 #### Run on FPGA
 

@@ -10,7 +10,7 @@ using BurstCoalescedLSU =
 
 template <typename T, int rows_A, int common, int cols_B, int tile_A,
           int tile_B, int pipe_size, typename PipeA>
-void feederA(T *A, int repetitions, int num_matrices) {
+void FeederA(T *A, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
   // multiple of the burst size
@@ -76,7 +76,7 @@ void feederA(T *A, int repetitions, int num_matrices) {
 
 template <typename T, int rows_A, int common, int cols_B, int tile_A,
           int tile_B, int pipe_size, typename PipeB>
-void feederB(T *B, int repetitions, int num_matrices) {
+void FeederB(T *B, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
   // multiple of the burst size
@@ -142,7 +142,7 @@ void feederB(T *B, int repetitions, int num_matrices) {
 
 template <typename T, int rows_A, int cols_B, int tile_A, int tile_B,
           int pipe_size, typename PipeC>
-void drain(T *C, int repetitions, int num_matrices) {
+void Drain(T *C, int repetitions, int num_matrices) {
 
   // May need to perform incomplete memory read if the tile size if not a
   // multiple of the burst size

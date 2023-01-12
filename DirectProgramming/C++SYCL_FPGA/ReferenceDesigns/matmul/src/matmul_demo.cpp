@@ -8,7 +8,7 @@
 #include "matmul.hpp"
 
 // Fills a matrix with random numbers within the range [lbound, ubound).
-void fillRand(float *M_matrix, int lbound, int ubound, int elements) {
+void FillRand(float *M_matrix, int lbound, int ubound, int elements) {
   for (int element = 0; element < elements; element++) {
     M_matrix[element] =
         static_cast<float>(rand()) /
@@ -18,7 +18,7 @@ void fillRand(float *M_matrix, int lbound, int ubound, int elements) {
 }
 
 // Compares two matrices; returns true iff they are equal.
-bool equalMat(float *C_matrix, float *C_reference, int rows, int cols,
+bool EqualMat(float *C_matrix, float *C_reference, int rows, int cols,
               int kNumMatrices) {
   int matsize = rows * cols;
   bool passed = true;
@@ -51,7 +51,7 @@ bool equalMat(float *C_matrix, float *C_reference, int rows, int cols,
 }
 
 // Output a matrix to the screen (assumes column-major format).
-void printMat(float *M_matrix, int rows, int cols) {
+void PrintMat(float *M_matrix, int rows, int cols) {
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
       std::cout << std::fixed;
@@ -63,7 +63,7 @@ void printMat(float *M_matrix, int rows, int cols) {
 }
 
 // Transpose given matrices in m and store the result in m_transposed.
-void transposeMat(float *M_matrix, float *M_transposed, int rows, int cols,
+void TransposeMat(float *M_matrix, float *M_transposed, int rows, int cols,
                   int kNumMatrices) {
   int matsize = rows * cols;
 
@@ -78,7 +78,7 @@ void transposeMat(float *M_matrix, float *M_transposed, int rows, int cols,
 }
 
 // Multiply two matrices and store to a third matrix.
-void matmulRef(float *A_matrix, float *B_matrix, float *C_matrix, int rows_A,
+void MatmulRef(float *A_matrix, float *B_matrix, float *C_matrix, int rows_A,
                int common, int cols_B, int kNumMatrices) {
   int matsize_A = rows_A * common;
   int matsize_B = cols_B * common;
@@ -146,8 +146,8 @@ int main(int argc, char *argv[]) {
   constexpr int kRandMin = 1;
   constexpr int kRandMax = 10;
   srand(1138);
-  fillRand(A_matrix, kRandMin, kRandMax, kMatsizeA * kNumMatrices);
-  fillRand(B_matrix, kRandMin, kRandMax, kMatsizeB * kNumMatrices);
+  FillRand(A_matrix, kRandMin, kRandMax, kMatsizeA * kNumMatrices);
+  FillRand(B_matrix, kRandMin, kRandMax, kMatsizeB * kNumMatrices);
 
   // Calculate a reference to compare our answer to and store it in C_reference
   // NOTE: since the systolic matrix multiply interprets B as transposed, we
@@ -155,8 +155,8 @@ int main(int argc, char *argv[]) {
   // MM algorithm
   float B_transposed[kMatsizeB * kNumMatrices];
   float C_reference[kMatsizeC * kNumMatrices];
-  transposeMat(B_matrix, B_transposed, COLS_B, COMMON, kNumMatrices);
-  matmulRef(A_matrix, B_transposed, C_reference, ROWS_A, COMMON, COLS_B,
+  TransposeMat(B_matrix, B_transposed, COLS_B, COMMON, kNumMatrices);
+  MatmulRef(A_matrix, B_transposed, C_reference, ROWS_A, COMMON, COLS_B,
              kNumMatrices);
 
   // Run the matrix multiplication
@@ -178,18 +178,18 @@ int main(int argc, char *argv[]) {
   for (int matrix_idx = 0; matrix_idx < kNumMatrices; matrix_idx++) {
     std::cout << std::endl << matrix_idx << std::endl;
     std::cout << std::endl << "Matrix A" << std::endl;
-    printMat(A_matrix + matrix_idx * kMatsizeA, ROWS_A, COMMON);
+    PrintMat(A_matrix + matrix_idx * kMatsizeA, ROWS_A, COMMON);
     std::cout << std::endl << "Matrix B" << std::endl;
-    printMat(B_transposed + matrix_idx * kMatsizeB, COMMON, COLS_B);
+    PrintMat(B_transposed + matrix_idx * kMatsizeB, COMMON, COLS_B);
     std::cout << std::endl << "Matrix C reference" << std::endl;
-    printMat(C_reference + matrix_idx * kMatsizeC, ROWS_A, COLS_B);
+    PrintMat(C_reference + matrix_idx * kMatsizeC, ROWS_A, COLS_B);
     std::cout << std::endl << "Matrix C calculated" << std::endl;
-    printMat(C_matrix + matrix_idx * kMatsizeC, ROWS_A, COLS_B);
+    PrintMat(C_matrix + matrix_idx * kMatsizeC, ROWS_A, COLS_B);
   }
 #endif
 
   // Verify results
-  bool passed = equalMat(C_matrix, C_reference, ROWS_A, COLS_B, kNumMatrices);
+  bool passed = EqualMat(C_matrix, C_reference, ROWS_A, COLS_B, kNumMatrices);
   std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
 
   return !passed;
