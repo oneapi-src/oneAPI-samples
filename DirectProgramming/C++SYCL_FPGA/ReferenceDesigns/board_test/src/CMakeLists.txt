@@ -9,13 +9,18 @@ set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_s10sx_pac:pac_s10")
+    set(FPGA_DEVICE "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Stratix(R) 10 SX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
+
+# Check if the target is a BSP
+if(NOT FPGA_DEVICE MATCHES ".*:.*")
+    message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
+else()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)

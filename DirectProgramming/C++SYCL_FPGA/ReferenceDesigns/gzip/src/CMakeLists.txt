@@ -21,12 +21,27 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -35,7 +50,7 @@ if(WIN32)
 endif()
 
 # Set design parameters according to the selected chip
-if(FPGA_DEVICE MATCHES ".*a10.*")
+if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
     set(NUM_ENGINES 1)
     if(DEFINED LOW_LATENCY)
@@ -45,7 +60,7 @@ if(FPGA_DEVICE MATCHES ".*a10.*")
         set(SEED "-Xsseed=4")
         set(NUM_REORDER "")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*s10.*")
+elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
@@ -57,7 +72,7 @@ elseif(FPGA_DEVICE MATCHES ".*s10.*")
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+elseif(DEVICE_FLAG MATCHES "Agilex")
     # Agilex™
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
@@ -79,11 +94,18 @@ if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+else()
+    set(IS_BSP "0")
+endif()
 
 # Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
 # looking at the name of the BSP, or manually by the user when running CMake.
 # E.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1
-if(LOW_LATENCY AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+if((IS_BSP STREQUAL "1") AND LOW_LATENCY AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     # Low latency design requires USM, so error out
     message(FATAL_ERROR "Error: The Low Latency variant of the design requires USM host allocations")
 endif()

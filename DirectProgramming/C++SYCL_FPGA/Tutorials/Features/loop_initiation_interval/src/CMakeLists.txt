@@ -9,20 +9,21 @@ set(FPGA_TARGET_ENABLE_II ${TARGET_NAME_ENABLE_II}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
-    set(DEVICE_FLAG "-DA10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "-DAgilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    if(FPGA_DEVICE MATCHES ".*a10.*")
-      set(DEVICE_FLAG "-DA10")
-    elseif(FPGA_DEVICE MATCHES ".*s10.*")
-      set(DEVICE_FLAG "-DS10")
-    elseif(FPGA_DEVICE MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "-DAgilex")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
     endif()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)

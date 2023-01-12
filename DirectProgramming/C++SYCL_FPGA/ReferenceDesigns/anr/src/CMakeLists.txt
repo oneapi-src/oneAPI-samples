@@ -6,12 +6,27 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex.")
 endif()
 
 # These are Windows-specific flags:
@@ -46,11 +61,11 @@ endif()
 # e.g. cmake .. -DSEED=7
 if(NOT DEFINED SEED)
     # the default seed
-  if(FPGA_DEVICE MATCHES ".*a10.*")
+  if(DEVICE_FLAG MATCHES "A10")
     set(SEED 1)
-  elseif(FPGA_DEVICE MATCHES ".*s10.*")
+  elseif(DEVICE_FLAG MATCHES "S10")
     set(SEED 2)
-  elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+  elseif(DEVICE_FLAG MATCHES "Agilex")
     set(SEED 3)
   else()
     set(SEED 4)
@@ -79,11 +94,11 @@ if(PIXELS_PER_CYCLE)
     message(STATUS "PIXELS_PER_CYCLE explicitly set to ${PIXELS_PER_CYCLE}")
 else()
   # Default PIXELS_PER_CYCLE based on the board being used
-  if(FPGA_DEVICE MATCHES ".*a10.*")
+  if(DEVICE_FLAG MATCHES "A10")
     set(PIXELS_PER_CYCLE 2)
-  elseif(FPGA_DEVICE MATCHES ".*s10.*")
+  elseif(DEVICE_FLAG MATCHES "S10")
     set(PIXELS_PER_CYCLE 2)
-  elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+  elseif(DEVICE_FLAG MATCHES "Agilex")
     set(PIXELS_PER_CYCLE 1)
   else()
     message(WARNING "Unknown board: setting PIXELS_PER_CYCLE to 1")

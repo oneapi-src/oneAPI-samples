@@ -7,12 +7,27 @@ set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -31,18 +46,15 @@ else()
 endif()
 
 
-# A10 parameters
-set(ROWS_COMPONENT 128)
-set(COLS_COMPONENT 128)
-set(COMPLEX 1)
-set(FIXED_ITERATIONS 64)
-set(CLOCK_TARGET 360MHz)
-set(SEED "-Xsseed=7")
-# Overwrite design parameters according to the selected board
-if(FPGA_DEVICE MATCHES ".*a10.*")
+if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
-    # Nothing to do
-elseif(FPGA_DEVICE MATCHES ".*s10.*")
+    set(ROWS_COMPONENT 128)
+    set(COLS_COMPONENT 128)
+    set(COMPLEX 1)
+    set(FIXED_ITERATIONS 64)
+    set(CLOCK_TARGET 360MHz)
+    set(SEED "-Xsseed=7")
+elseif(FPGA_DEVICE MATCHES "S10")
     # S10 parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
@@ -50,7 +62,7 @@ elseif(FPGA_DEVICE MATCHES ".*s10.*")
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 480MHz)
     set(SEED "-Xsseed=9")
-elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+elseif(FPGA_DEVICE MATCHES "Agilex")
     # Agilex™ parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
@@ -59,9 +71,9 @@ elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     set(CLOCK_TARGET 600MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(STATUS "Unknown board ${FPGA_DEVICE}!")
-    message(STATUS "Using Arria 10 defaults.")
+    message(FATAL_ERROR "Unreachable")
 endif()
+
 
 if(IGNORE_DEFAULT_SEED)
     set(SEED "")
