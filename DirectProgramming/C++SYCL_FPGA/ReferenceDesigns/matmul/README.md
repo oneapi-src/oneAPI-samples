@@ -64,13 +64,19 @@ Performance results are based on testing as of ???.
 
 ## Key Implementation Details
 
-This algorithm multiplies a *m* × *n* matrix with a *n* × *p* matrix using a systolic array. The systolic array consists of a two-dimensional grid of *m* × *p* processing elements (PEs). Each PE is responsible for computing one element of the output matrix. Every cycle, it consumes data from neighboring PEs, and performs a multiply-accumulate. In our FPGA implementation, this is achieved by fully unrolling the loop over the PEs. In total, *mp* multiply-accumulates are performed in parallel on the FPGA.
+This algorithm multiplies a *m* × *n* matrix with a *n* × *p* matrix using a systolic array. The systolic array consists of a two-dimensional grid of *m* × *p* processing elements (PEs). Each PE is responsible for computing one element of the output matrix. Every cycle, it consumes data from neighboring PEs, and performs a multiply-accumulate. Specifically, on iteration *k*, we load column *k* of matrix A and row *k* of matrix B, and each PE[i][j] multiplies A[i][k] by B[j][k].  In our FPGA implementation, this is achieved by fully unrolling the loop over the PEs. In total, *mp* multiply-accumulates are performed in parallel on the FPGA.
+
+![systolic matmul overview](assets/overview.png)
 
 The multiply-accumulate arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware. Our FPGA implementation requires *mp* DSPs to compute the multiply-accumulate over all PEs in one cycle. Thus, the matrix size is constrained by the total FPGA DSP resources available.
 
 The design uses the `fpga_reg` attribute to insert additional pipelining registers along the path to each PE. This allows values to be passed from one PE to the next, which reduces the fanout caused by distributing the same value to all PEs in one row or column.
 
+![systolic matmul use of fpga_reg](assets/fpga_reg.png)
+
 For larger matrices, where it is infeasible to generate a systolic array to compute the full matrix, we split the matrix into smaller tiles, each of which is computed sequentially using a systolic array corresponding to the size of the tile.
+
+![systolic matmul tiling](assets/tiling.png)
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -190,7 +196,7 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       nmake report
       ```
-      The report resides at `qrd_report.a.prj/reports/report.html`.
+      The report resides at `matmul_report.a.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -225,7 +231,7 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 1. Run the sample on the FPGA simulator.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qrd.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./matmul.fpga_sim
    ```
 
 #### Run on FPGA
@@ -249,7 +255,7 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 1. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   qrd.fpga_sim.exe
+   matmul.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 #### Run on FPGA
