@@ -1,26 +1,22 @@
 
 
-# Register Map and Streaming Interfaces
+# `Register Map and Streaming Interfaces` sample
 This FPGA tutorial demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces, and demonstrates the differences between streaming interfaces that use a ready/valid handshake, and register-mapped interfaces that exist in the kernel's control/status register (CSR).
 
 The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
 
-| Invocation Interface    | Argument Interface    | Argument Interface Synchronization       |
-|----------------------|-----------------------|------------------------------------------|
-| Streaming            | Streaming             | Synchronized with `start` and `ready_out` |
-| Streaming            | Register mapped       | N/A                                      |
-| Register mapped      | Streaming             | *No synchronization possible*            |
-| Register mapped      | Register mapped       | N/A                                      |
+| Invocation Interface    | Argument Interface    | Argument Interface Synchronization        |
+|-------------------------|-----------------------|-------------------------------------------|
+| Streaming               | Streaming             | Synchronized with `start` and `ready_out` |
+| Streaming               | Register mapped       | N/A                                       |
+| Register mapped         | Streaming             | *No synchronization possible*             |
+| Register mapped         | Register mapped       | N/A                                       |
 
 > **Note**: Register mapped kernel arguments are not currently supported in kernels with a streaming invocation interface.
 
 If you would like an argument to have its own dedicated ready/valid handshake, please implement that argument using a [Host Pipe](../hostpipes/).
 
-> **Note**: The register map and streaming interface feature is only supported in the IP Component Authoring design flow. The IP Component Authoring design flow compiles SYCL* source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. The generated IP is not meant to run on FPGA devices directly, therefore there will be no FPGA executables generated in this tutorial. Emulator and simulator executables are still generated to allow you to validate your IP. You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates.
-
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) is a general resource for target-independent DPC++ programming.
+:warning: The register map and streaming interface feature is only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
 
 | Optimized for                     | Description
 ---                                 |---
@@ -35,6 +31,31 @@ The [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/d
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+
+## Prerequisites
+
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 2 sample that demonstatres a compiler feature.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -167,44 +188,25 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
 }
 ```
 
-### Additional Documentation
-- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
-
 ## Key Concepts
 * Basics of declaring kernel invocation interfaces and kernel argument interfaces
 
 ## Building the `register_map_and_streaming_interfaces` Tutorial
 
-> __Note__: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
->
-> * For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> * For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> * `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
->
->For more information on environment variables, see __Use the setvars Script__ for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### On a Linux* System
 
@@ -214,19 +216,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cd build
    ```
    To compile for the Intel® Arria10® FPGA family, run `cmake` using the following command:
-
    ```
    cmake ..
    ```
-   
    You can also compile for a custom FPGA platform. Run `cmake` using the following command:
-   
    ```
    cmake .. -DFPGA_DEVICE=<device-family-name>
    ```
    or
    ```
-   cmake .. -DFPGA_DEVICE=<device-part-name>
+   cmake .. -DFPGA_DEVICE=<device-part-number>
    ```
    For example, to target the default Intel® Stratix10® device:
    ```
@@ -243,13 +242,18 @@ To learn more about the extensions and how to configure the oneAPI environment, 
       ```
       make fpga_emu
       ```
+   * Compile for FPGA simulator (fast compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
      ```
-   * Compile for FPGA simulator
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
+   :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
-     make fpga_sim
+     make fpga
      ```
 
 ### On a Windows* System
@@ -271,7 +275,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    or
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-part-name>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-part-number>
    ```
    For example, to target the default Intel® Stratix10® device:
    ```
@@ -288,30 +292,21 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake fpga_emu
      ```
+   * Compile for FPGA simulator (fast compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Generate the optimization report:
      ```
      nmake report
      ```
-   * Compile for FPGA simulator:
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
+   :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
-     nmake fpga_sim
+     nmake fpga
      ```
 
->**Tip**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
-
-### Troubleshooting
-
-If an error occurs, get more details by running `make` with
-the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
- ### In Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs]([https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html))
+>**Note**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
 ## Examining the Reports
 
@@ -341,15 +336,21 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
      streaming_lambda_model.fpga_emu.exe          (Windows)
      ```
 2. Run the sample on the FPGA simulator:
+  * On Linux
+     ```bash
+     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor_model.fpga_sim
+     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor_model.fpga_sim
+     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda_model.fpga_sim
+     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda_model.fpga_sim
      ```
-     ./register_map_functor_model.fpga_sim        (Linux)
-     ./streaming_functor_model.fpga_sim           (Linux)
-     ./register_map_lambda_model.fpga_sim         (Linux)
-     ./streaming_lambda_model.fpga_sim            (Linux)
-     register_map_functor_model.fpga_sim.exe      (Windows)
-     streaming_functor_model.fpga_sim.exe         (Windows)
-     register_map_lambda_model.fpga_sim.exe       (Windows)
-     streaming_lambda_model.fpga_sim.exe          (Windows)
+  * On Windows
+     ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+     register_map_functor_model.fpga_sim.exe
+     streaming_functor_model.fpga_sim.exe
+     register_map_lambda_model.fpga_sim.exe
+     streaming_lambda_model.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
      ```
 
 ### Example of Output

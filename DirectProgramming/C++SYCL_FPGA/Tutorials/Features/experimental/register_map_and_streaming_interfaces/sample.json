@@ -34,20 +34,6 @@
         ]
       },
       {
-        "id": "fpga_sim",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make fpga_sim",
-          "./register_map_functor_model.fpga_sim",
-          "./streaming_functor_model.fpga_sim",
-          "./register_map_lambda_model.fpga_sim",
-          "./streaming_lambda_model.fpga_sim"
-        ]
-      },
-      {
         "id": "report",
         "steps": [
           "icpx --version",
@@ -72,21 +58,6 @@
           "streaming_functor_model.fpga_emu.exe",
           "register_map_lambda_model.fpga_emu.exe",
           "streaming_lambda_model.fpga_emu.exe"
-        ]
-      },
-      {
-        "id": "fpga_sim",
-        "steps": [
-          "icpx --version",
-          "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
-          "nmake fpga_sim",
-          "register_map_functor_model.fpga_sim.exe",
-          "streaming_functor_model.fpga_sim.exe",
-          "register_map_lambda_model.fpga_sim.exe",
-          "streaming_lambda_model.fpga_sim.exe"
         ]
       },
       {
