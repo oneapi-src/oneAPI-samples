@@ -19,6 +19,8 @@ This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::pri
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
+> :warning: this sample only supports emulation, unless the target is an FPGA platform (using the `-DFPGA_DEVICE=<board-support-package>:<board-variant>` shown below).
+
 ## Prerequisites
 
 This sample is part of the FPGA code samples.

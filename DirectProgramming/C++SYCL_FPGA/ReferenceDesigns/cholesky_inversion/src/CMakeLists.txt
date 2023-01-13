@@ -30,6 +30,16 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex.")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+    set(BSP_FLAG "-DIS_BSP")
+else()
+    set(IS_BSP "0")
+    set(BSP_FLAG "")
+endif()
+
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall /fp:precise")
@@ -97,12 +107,12 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed ${USER_HARDWARE_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} -Xsfp-relaxed")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR ${BSP_FLAG}")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} -Xsfp-relaxed ${BSP_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed -DFPGA_HARDWARE ${BSP_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed ${BSP_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

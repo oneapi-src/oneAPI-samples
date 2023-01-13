@@ -97,8 +97,8 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
     h.single_task<ExplicitKernel>([=]() [[intel::kernel_args_restrict]] {
       // create device pointers to explicitly inform the compiler these
       // pointer reside in the device's address space
-      device_ptr<T> in_ptr_d(in_ptr);
-      device_ptr<T> out_ptr_d(out_ptr);
+      T* in_ptr_d(in_ptr);
+      T* out_ptr_d(out_ptr);
 
       for (size_t  i = 0; i < size; i ++) {
         out_ptr_d[i] = in_ptr_d[i] * i;

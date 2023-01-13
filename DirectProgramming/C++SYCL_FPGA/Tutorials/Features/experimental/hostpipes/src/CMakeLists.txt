@@ -14,10 +14,18 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+else()
+    set(IS_BSP "0")
+endif()
+
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
 # to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
 # to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if(NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+if((IS_BSP STREQUAL "1") AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
 endif()
 
@@ -46,7 +54,7 @@ set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -Xsdsp-mode=prefer-softlogic ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsboard=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -84,7 +92,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fintelfpga -Xshardware -Xsboard=<FPGA_DEVICE> -fsycl-link=early hostpipes.cpp -o hostpipes_report.a
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early hostpipes.cpp -o hostpipes_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -98,10 +106,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> hostpipes.cpp -o hostpipes.fpga
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> hostpipes.cpp -o hostpipes.fpga
 # CMake executes:
 #   [compile] icpx -fintelfpga -o hostpipes.cpp.o -c hostpipes.cpp
-#   [link]    icpx -fintelfpga -Xshardware -Xsboard=<FPGA_DEVICE> hostpipes.cpp.o -o hostpipes.fpga
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> hostpipes.cpp.o -o hostpipes.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})

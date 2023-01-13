@@ -38,8 +38,6 @@ void MatrixReadFromDDRToPipe(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
-  sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
-
   // Repeatedly read matrix_count matrices from DDR and send them to the pipe
   for (int repetition = 0; repetition < repetitions; repetition++) {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
@@ -71,12 +69,12 @@ void MatrixReadFromDDRToPipe(
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
               ddr_read.template get<k>() =
-                  matrix_ptr_device[matrix_index * kMatrixSize + load_index +
+                  matrix_ptr[matrix_index * kMatrixSize + load_index +
                                     k];
             }
           } else {
             ddr_read.template get<k>() =
-                matrix_ptr_device[matrix_index * kMatrixSize +
+                matrix_ptr[matrix_index * kMatrixSize +
                                   (int)(li)*num_elem_per_bank + k];
           }
         });

@@ -20,7 +20,7 @@ endif()
 # Check if the target is a BSP
 if(NOT FPGA_DEVICE MATCHES ".*:.*")
     message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
-else()
+endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)

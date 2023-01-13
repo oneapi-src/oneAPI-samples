@@ -19,8 +19,16 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# check if the BSP has USM host allocations
-if(FPGA_DEVICE MATCHES ".usm.*")
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+else()
+    set(IS_BSP "0")
+endif()
+
+# Use USM host allocations if the BSP supports them or if we target an FPGA part 
+if((IS_BSP STREQUAL "0") OR FPGA_DEVICE MATCHES ".usm.*")
   set(USM_HOST_ALLOCATIONS "-DUSM_HOST_ALLOCATIONS")
   message(STATUS "USM host allocations are enabled")
 endif()

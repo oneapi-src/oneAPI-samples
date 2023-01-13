@@ -38,8 +38,6 @@ void MatrixReadFromDDRToPipe(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
-  sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
-
   // Repeatedly read matrix_count matrices from the DDR and send them to the
   // pipe
   for (int repetition = 0; repetition < repetitions; repetition++) {
@@ -72,12 +70,12 @@ void MatrixReadFromDDRToPipe(
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
               ddr_read.template get<k>() =
-                  matrix_ptr_device[matrix_index * kMatrixSize + load_index +
+                  matrix_ptr[matrix_index * kMatrixSize + load_index +
                                     k];
             }
           } else {
             ddr_read.template get<k>() =
-                matrix_ptr_device[matrix_index * kMatrixSize +
+                matrix_ptr[matrix_index * kMatrixSize +
                                   (int)(li)*num_elem_per_bank + k];
           }
         });
@@ -118,8 +116,6 @@ void VectorReadFromPipeToDDR(
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
   constexpr int kLoopIter = (vector_size / num_elem_per_bank) + kExtraIteration;
 
-  sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
-
   // Repeat vector_count complete I vector pipe reads
   // for as many repetitions as needed
   for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
@@ -139,7 +135,7 @@ void VectorReadFromPipeToDDR(
 #pragma unroll
           for (int k = 0; k < num_elem_per_bank; k++) {
             if (((li * num_elem_per_bank) + k) < vector_size) {
-              vector_ptr_device[(vector_idx * vector_size) +
+              vector_ptr[(vector_idx * vector_size) +
                                 (li * num_elem_per_bank) + k] = bank[k];
             }
           }
@@ -147,7 +143,7 @@ void VectorReadFromPipeToDDR(
 // Write a burst of num_elem_per_bank elements to DDR
 #pragma unroll
           for (int k = 0; k < num_elem_per_bank; k++) {
-            vector_ptr_device[(vector_idx * vector_size) +
+            vector_ptr[(vector_idx * vector_size) +
                               (li * num_elem_per_bank) + k] = bank[k];
           }
         }

@@ -15,10 +15,18 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+else()
+    set(IS_BSP "0")
+endif()
+
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
 # to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
 # to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if(NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+if((IS_BSP STREQUAL "1") AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
 endif()
 

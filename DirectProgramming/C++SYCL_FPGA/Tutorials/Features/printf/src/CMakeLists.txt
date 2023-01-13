@@ -14,6 +14,18 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+else()
+    set(IS_BSP "0")
+endif()
+
+if(IS_BSP STREQUAL "0")
+    message(STATUS "Only emulation is supported if no FPGA/BSP is provided as a target")
+endif()
+
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
@@ -45,6 +57,8 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_CO
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
+# The HW related targets are only supported if an FPGA/BSP is targeted 
+if(IS_BSP STREQUAL "1")
 ###############################################################################
 ### FPGA Simulator
 ###############################################################################
@@ -88,3 +102,4 @@ set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPIL
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See C++SYCL_FPGA/GettingStarted/fast_recompile for details.
+endif()

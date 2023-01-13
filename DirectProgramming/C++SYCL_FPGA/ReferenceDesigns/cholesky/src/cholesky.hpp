@@ -54,8 +54,14 @@ void CholeskyDecompositionImpl(
       sycl::ext::intel::pipe<LPipe, TT, kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
+#if defined (IS_BSP)
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *l_device = sycl::malloc_device<TT>(kLMatrixSize * matrix_count, q);
+#else
+  // malloc_device are not supported when targetting an FPGA part/family
+  TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
+  TT *l_device = sycl::malloc_shared<TT>(kLMatrixSize * matrix_count, q);
+#endif  
 
   if ((a_device == nullptr) || (l_device == nullptr)) {
     std::cerr << "Error when allocating FPGA DDR" << std::endl;
@@ -93,8 +99,6 @@ void CholeskyDecompositionImpl(
     constexpr int kLoopIter =
         (kLMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
 
-    sycl::device_ptr<TT> vector_ptr_device(l_device);
-
     // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
     // The loop coalescing directive merges the two outer loops together
@@ -117,7 +121,7 @@ void CholeskyDecompositionImpl(
 #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
-                vector_ptr_device[(matrix_idx * kLMatrixSize) +
+                l_device[(matrix_idx * kLMatrixSize) +
                                   (li * kNumElementsPerDDRBurst) + k] = bank[k];
               }
             }
@@ -125,7 +129,7 @@ void CholeskyDecompositionImpl(
 // Write a burst of kNumElementsPerDDRBurst elements to DDR
 #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[(matrix_idx * kLMatrixSize) +
+              l_device[(matrix_idx * kLMatrixSize) +
                                 (li * kNumElementsPerDDRBurst) + k] = bank[k];
             }
           }
