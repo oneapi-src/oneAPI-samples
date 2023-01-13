@@ -31,11 +31,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -43,9 +43,9 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${HANDSHAKING} -Xstarget
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR device_global.cpp -o device_global.fpga_emu
+#    icpx -fsycl -fintelfpga device_global.cpp -o device_global.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o device_global.cpp.o -c device_global.cpp
+#    [compile] icpx -fsycl -fintelfpga -o device_global.cpp.o -c device_global.cpp
 #    [link]    icpx -fsycl -fintelfpga device_global.cpp.o -o device_global.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../../include)
@@ -85,9 +85,9 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> device_global.cpp -o device_global.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -DFPGA_HARDWARE -Xstarget=<FPGA_DEVICE> device_global.cpp -o device_global.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o device_global.cpp.o -c device_global.cpp
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o device_global.cpp.o -c device_global.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> device_global.cpp.o -o device_global.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../../include)
