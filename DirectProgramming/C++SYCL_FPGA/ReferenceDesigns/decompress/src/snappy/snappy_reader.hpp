@@ -385,7 +385,11 @@ template <typename Id, typename InPipe, typename OutPipe,
 sycl::event SubmitSnappyReader(sycl::queue& q, unsigned in_count,
                                unsigned* preamble_count_ptr) {
   return q.single_task<Id>([=] {
+#if defined (IS_BSP)
     sycl::device_ptr<unsigned> preamble_count(preamble_count_ptr);
+#else
+    unsigned* preamble_count(preamble_count_ptr);
+#endif
     *preamble_count =
         SnappyReader<InPipe, OutPipe, literals_per_cycle>(in_count);
   });

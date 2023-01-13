@@ -14,8 +14,18 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
+# Check if the target is a BSP
+if(FPGA_DEVICE MATCHES ".*:.*")
+    set(IS_BSP "1")
+    message(STATUS "Targetting a BSP.")
+    set(BSP_FLAG "-DIS_BSP")
+else()
+    set(IS_BSP "0")
+    set(BSP_FLAG "")
+endif()
+
 # check if the BSP has USM host allocations
-if(FPGA_DEVICE MATCHES ".usm.*")
+if((IS_BSP STREQUAL "0") OR FPGA_DEVICE MATCHES ".usm.*")
     set(ENABLE_USM "-DUSM_HOST_ALLOCATIONS")
     message(STATUS "USM host allocations are enabled")
 endif()
