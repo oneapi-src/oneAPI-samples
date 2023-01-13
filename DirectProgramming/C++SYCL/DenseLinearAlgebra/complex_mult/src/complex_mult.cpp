@@ -47,7 +47,7 @@ void SYCLParallel(queue &q, std::vector<Complex2> &in_vect1,
                    std::vector<Complex2> &in_vect2,
                    std::vector<Complex2> &out_vect) {
   auto R = range(in_vect1.size());
-  if (in_vect2.size() != in_vect1.size() || out_vect.size() != in_vect1.size()){
+  if (in_vect2.size() != in_vect1.size() || out_vect.size() != in_vect1.size()){ 
 	  std::cout << "ERROR: Vector sizes do not  match"<< "\n";
 	  return;
   }
@@ -55,7 +55,7 @@ void SYCLParallel(queue &q, std::vector<Complex2> &in_vect1,
   buffer bufin_vect1(in_vect1);
   buffer bufin_vect2(in_vect2);
 
-  // Setup Output buffers
+  // Setup Output buffers 
   buffer bufout_vect(out_vect);
 
   std::cout << "Target Device: "
@@ -81,7 +81,7 @@ void Scalar(std::vector<Complex2> &in_vect1,
   if ((in_vect2.size() != in_vect1.size()) || (out_vect.size() != in_vect1.size())){
 	  std::cout<<"ERROR: Vector sizes do not match"<<"\n";
 	  return;
-  }
+  }              
   for (int i = 0; i < in_vect1.size(); i++) {
     out_vect[i] = in_vect1[i].complex_mul(in_vect2[i]);
   }
