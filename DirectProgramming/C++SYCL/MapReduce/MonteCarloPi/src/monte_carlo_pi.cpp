@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "monte_carlo_pi.hpp"
-#define STB_IMAGE_IMPLEMENTATION 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
