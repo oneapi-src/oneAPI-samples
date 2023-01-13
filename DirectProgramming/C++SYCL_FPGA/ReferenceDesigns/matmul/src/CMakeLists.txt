@@ -4,9 +4,9 @@
 set(SOURCE_FILE matmul_demo.cpp)
 set(TARGET_NAME matmul)
 
-set(ROWS_A 8)
+set(ROWS_A 64)
 set(COMMON 64)
-set(COLS_B 8)
+set(COLS_B 64)
 set(TILE_A 8)
 set(TILE_B 8)
 set(TILE_COMMON 64)
