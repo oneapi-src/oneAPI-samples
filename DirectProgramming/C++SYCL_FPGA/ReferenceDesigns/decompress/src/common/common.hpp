@@ -322,8 +322,14 @@ sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
     // functions in ../gzip/gzip_decompressor.hpp and
     // ../snappy/snappy_decompressor.hpp respectively.
 #if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
     sycl::device_ptr<unsigned char> in(in_ptr);
 #else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
     unsigned char* in(in_ptr);
 #endif
     fpga_tools::MemoryToPipe<InPipe, literals_per_cycle, false>(
@@ -359,9 +365,16 @@ sycl::event SubmitConsumer(sycl::queue& q, unsigned out_count_padded,
     // elements at once from 'OutPipe' and write them to 'out_ptr'.
     // For details about the 'false' template parameter, see the SubmitProducer
     // function above.
+
 #if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
     sycl::device_ptr<unsigned char> out(out_ptr);
 #else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
     unsigned char* out(out_ptr);
 #endif
     

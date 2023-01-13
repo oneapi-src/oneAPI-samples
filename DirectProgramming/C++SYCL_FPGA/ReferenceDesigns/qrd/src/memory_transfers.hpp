@@ -37,6 +37,18 @@ void MatrixReadFromDDRToPipe(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
+#if defined (IS_BSP)
+  // When targeting a BSP, we instruct the compiler that this pointer
+  // lives on the device.
+  // Knowing this, the compiler won't generate hardware to
+  // potentially get data from the host.
+  sycl::device_ptr<TT> matrix_ptr_located(matrix_ptr);
+#else
+  // Device pointers are not supported when targeting an FPGA 
+  // family/part
+  TT* matrix_ptr_located(matrix_ptr);
+#endif
+
   // Repeatedly read matrix_count matrices from DDR and sends them to the pipe
   for (int repetition = 0; repetition < repetitions; repetition++){
 
@@ -70,12 +82,12 @@ void MatrixReadFromDDRToPipe(
             // Only perform the DDR reads that are relevant (and don't access a
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
-              ddr_read.template get<k>() = matrix_ptr
+              ddr_read.template get<k>() = matrix_ptr_located
                                   [matrix_index * kMatrixSize + load_index + k];
             }
           }
           else{
-            ddr_read.template get<k>() = matrix_ptr
+            ddr_read.template get<k>() = matrix_ptr_located
                 [matrix_index * kMatrixSize + (int)(li)*num_elem_per_bank + k];
 
           }
@@ -126,6 +138,19 @@ void MatrixReadPipeToDDR(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
+#if defined (IS_BSP)
+  // When targeting a BSP, we instruct the compiler that this pointer
+  // lives on the device.
+  // Knowing this, the compiler won't generate hardware to
+  // potentially get data from the host.
+  sycl::device_ptr<TT> matrix_ptr_located(matrix_ptr);
+#else
+  // Device pointers are not supported when targeting an FPGA 
+  // family/part
+  TT* matrix_ptr_located(matrix_ptr);
+#endif  
+
+
   // Repeatedly read matrix_count matrices from the pipe and write them to DDR
   for (int repetition = 0; repetition < repetitions; repetition++){
 
@@ -157,12 +182,12 @@ void MatrixReadPipeToDDR(
             // Only perform the DDR writes that are relevant (and don't access a
             // memory address that may be beyond the buffer last address)
             if (!out_of_bounds) {
-              matrix_ptr[matrix_index * kMatrixSize + write_idx + k] =
+              matrix_ptr_located[matrix_index * kMatrixSize + write_idx + k] =
                                                     pipe_read.template get<k>();
             }
           }
           else{
-            matrix_ptr[matrix_index * kMatrixSize
+            matrix_ptr_located[matrix_index * kMatrixSize
               + int(li) * num_elem_per_bank + k] = pipe_read.template get<k>();
           }
 

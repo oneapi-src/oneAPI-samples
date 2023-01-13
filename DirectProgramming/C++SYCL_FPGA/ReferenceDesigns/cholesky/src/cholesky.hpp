@@ -109,6 +109,18 @@ void CholeskyDecompositionImpl(
         for (int li = 0; li < kLoopIter; li++) {
           TT bank[kNumElementsPerDDRBurst];
 
+#if defined (IS_BSP)
+          // When targeting a BSP, we instruct the compiler that this pointer
+          // lives on the device.
+          // Knowing this, the compiler won't generate hardware to
+          // potentially get data from the host.
+          sycl::device_ptr<TT> vector_ptr(l_device);
+#else
+          // Device pointers are not supported when targeting an FPGA 
+          // family/part
+          TT* vector_ptr(l_device);
+#endif  
+
           for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
             if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
               bank[k] = LMatrixPipe::read();
@@ -121,7 +133,7 @@ void CholeskyDecompositionImpl(
 #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
-                l_device[(matrix_idx * kLMatrixSize) +
+                vector_ptr[(matrix_idx * kLMatrixSize) +
                                   (li * kNumElementsPerDDRBurst) + k] = bank[k];
               }
             }
@@ -129,7 +141,7 @@ void CholeskyDecompositionImpl(
 // Write a burst of kNumElementsPerDDRBurst elements to DDR
 #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              l_device[(matrix_idx * kLMatrixSize) +
+              vector_ptr[(matrix_idx * kLMatrixSize) +
                                 (li * kNumElementsPerDDRBurst) + k] = bank[k];
             }
           }

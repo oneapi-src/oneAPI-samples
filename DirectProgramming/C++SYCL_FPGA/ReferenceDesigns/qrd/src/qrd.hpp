@@ -103,6 +103,19 @@ void QRDecompositionImpl(
                                     ]() [[intel::kernel_args_restrict]] {
     // Read the R matrix from the RMatrixPipe pipe and copy it to the
     // FPGA DDR
+
+#if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
+    sycl::device_ptr<TT> vector_ptr_located(r_device);
+#else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
+    TT* vector_ptr_located(r_device);
+#endif  
+
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
     for (int repetition_index = 0; repetition_index < repetitions;
@@ -111,7 +124,7 @@ void QRDecompositionImpl(
       [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
       for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
         for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
-          r_device[matrix_index * kRMatrixSize + r_idx] =
+          vector_ptr_located[matrix_index * kRMatrixSize + r_idx] =
               RMatrixPipe::read();
         }  // end of r_idx
       }    // end of repetition_index
