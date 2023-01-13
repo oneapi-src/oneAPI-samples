@@ -81,7 +81,7 @@ void Scalar(std::vector<Complex2> &in_vect1,
   if ((in_vect2.size() != in_vect1.size()) || (out_vect.size() != in_vect1.size())){
 	  std::cout<<"ERROR: Vector sizes do not match"<<"\n";
 	  return;
-  }              
+  }		
   for (int i = 0; i < in_vect1.size(); i++) {
     out_vect[i] = in_vect1[i].complex_mul(in_vect2[i]);
   }
