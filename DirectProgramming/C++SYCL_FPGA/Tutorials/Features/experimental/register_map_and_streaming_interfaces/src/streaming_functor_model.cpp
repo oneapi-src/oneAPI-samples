@@ -1,8 +1,10 @@
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
-#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
+
+using namespace sycl;
 
 using ValueT = int;
 
@@ -30,12 +32,12 @@ struct FunctorStreamingIP {
 };
 
 int main(int argc, char *argv[]) {
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector device_selector;
-#elif defined(FPGA_SIMULATOR)
-  sycl::ext::intel::fpga_simulator_selector device_selector;
-#else
-  sycl::ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   bool passed = true;
@@ -51,7 +53,7 @@ int main(int argc, char *argv[]) {
 
   try {
     // create the device queue
-    sycl::queue q(device_selector, fpga_tools::exception_handler);
+    sycl::queue q(selector, fpga_tools::exception_handler);
 
     // make sure the device supports USM host allocations
     sycl::device d = q.get_device();
