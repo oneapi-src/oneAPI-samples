@@ -151,7 +151,7 @@ If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Addit
 
 The following image shows approximate performance speed increases using AMX INT8 during inference.  
 
-![comparison images](assets/relative_speedup.png)
+<img src="assets/relative_speedup.png" width="180" height="150"/>
 
 ## License
 
