@@ -67,9 +67,9 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o private_copies.cpp.o -c private_copies.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> private_copies.cpp.o -o private_copies.fpga
-add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
-add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
