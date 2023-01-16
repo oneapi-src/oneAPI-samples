@@ -130,6 +130,10 @@ A typical design flow may be to:
      ```
      make report
      ```
+  * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -167,6 +171,10 @@ A typical design flow may be to:
      ```
      nmake report
      ```
+  * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -188,7 +196,18 @@ On the main report page, scroll down to the section titled "Estimated Resource U
      ./private_copies.fpga_emu     (Linux)
      private_copies.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./private_copies.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    private_copies.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+3. Run the sample on the FPGA device:
      ```
      ./private_copies.fpga         (Linux)
      private_copies.fpga.exe       (Windows)
@@ -218,7 +237,7 @@ When run on the Intel&reg; PAC with Intel Arria10&reg; 10 GX FPGA hardware board
 
 Setting the `private_copies` attribute to 0 (or equivalently omitting the attribute entirely) produced good throughput, and the reports show us that the compiler selected 3 private copies. This does produce the optimal throughput, but in this case it probably makes sense to save some area in exchange for a very small throughput loss by specifying 2 private copies instead.
 
-When run on the FPGA emulator, the `private_copies` attribute has no effect on kernel time. You may actually notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spatial compute resources available on the FPGA.
+When run on the FPGA emulator or simulator, the `private_copies` attribute has no effect on kernel time. You may actually notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spatial compute resources available on the FPGA.
 
 ## License
 
