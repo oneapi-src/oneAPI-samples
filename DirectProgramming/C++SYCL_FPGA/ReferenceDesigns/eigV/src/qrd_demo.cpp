@@ -231,7 +231,6 @@ int main(int argc, char *argv[]) {
     // CPU based computation 
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
-      int evec_offset = matrix_index * kRows;
 
       // copy A matrix to CPU data
       // column major to row major conversion 
@@ -255,7 +254,6 @@ int main(int argc, char *argv[]) {
     std::ofstream osA("mat_A.txt");
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
-      int evec_offset = matrix_index * kRows;
       for(int i = 0; i < kRows; i++){
         for(int j = 0; j < kRows; j++){
           osA << std::setprecision(15) << a_matrix[matrix_offset+j*kRows+i];
@@ -282,13 +280,17 @@ int main(int argc, char *argv[]) {
       int matrix_offset = matrix_index * kAMatrixSize;
       int evec_offset = matrix_index * kRows;
       for(int i = 0; i < kRows; i++){
-        osW >> py_w[i+evec_offset];
+        float tmp;
+        osW >> tmp; //py_w[i+evec_offset];
+        py_w[i+evec_offset] = tmp;
       }
       
       // reading back golden results
       for(int i = 0; i < kRows; i++){
         for(int j = 0; j < kRows; j++){
-          osV >> py_V[matrix_offset+i*kRows+j];
+          float tmp;
+          osV >> tmp; // py_V[matrix_offset+i*kRows+j];
+          py_V[matrix_offset+i*kRows+j] = tmp;
         }
       }
       
@@ -316,7 +318,8 @@ int main(int argc, char *argv[]) {
         T c_wilk = a_matrix_cpu[matrix_offset+(kP-1)*kRows+kP-1];
 
         T lamda = (a_wilk - c_wilk)/2.0;
-        T sign_lamda = (lamda > 0) - (lamda < 0);
+        T sign_lamda = (lamda > 0) ? 1.0 : -1.0;
+        // T sign_lamda = (int)((lamda > 0) - (lamda < 0));
 
         T shift = RELSHIFT ? c_wilk : c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
         shift -= shift*SHIFT_NOISE;
