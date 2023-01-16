@@ -197,10 +197,16 @@ On the main report page, scroll down to the section titled "Estimated Resource U
      private_copies.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./private_copies.fpga_sim         (Linux)
-     private_copies.fpga_sim.exe       (Windows)
-     ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./private_copies.fpga_sim
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    private_copies.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 3. Run the sample on the FPGA device:
      ```
      ./private_copies.fpga         (Linux)
