@@ -250,7 +250,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
      ```
      make report
      ```
-   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates  
    :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
      make fpga
@@ -300,7 +300,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
      ```
      nmake report
      ```
-   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates  
    :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
      nmake fpga
