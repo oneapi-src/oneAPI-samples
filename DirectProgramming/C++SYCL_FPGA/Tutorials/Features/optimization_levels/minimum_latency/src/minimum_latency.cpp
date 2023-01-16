@@ -12,7 +12,11 @@ using namespace sycl;
 
 class Kernel;
 
+#if defined(FPGA_SIMULATOR)
+constexpr int kInputSize = 10;
+#else
 constexpr int kInputSize = 1000;
+#endif
 
 typedef int RGBType;
 typedef std::vector<RGBType> RGBVec;
@@ -115,17 +119,23 @@ int main() {
 
   RunKernel(r, g, b, out);
 
+  bool passed = true;
+
   // validate results
   for (size_t i = 0; i < kInputSize; i++) {
     GreyType golden = Compute(r[i], g[i], b[i]);
     if (std::fabs(out[i] - golden) > 1e-4) {
-      std::cout << "FAILED: result mismatch\n"
+      std::cout << "Result mismatch:\n"
                 << "out[" << i << "] = " << out[i] << "; golden = " << golden
                 << '\n';
-      return 1;
+      passed = false;
     }
   }
 
-  std::cout << "PASSED\n";
-  return 0;
+  if (passed) {
+    std::cout << "PASSED: all kernel results are correct\n";
+  } else {
+    std::cout << "FAILED\n";
+  }
+  return passed ? 0 : 1;
 }
