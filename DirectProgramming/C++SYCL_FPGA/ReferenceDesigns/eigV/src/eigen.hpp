@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "memory_transfers.hpp"
-#include "eig.hpp"
+#include "streaming_eigen.hpp"
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names

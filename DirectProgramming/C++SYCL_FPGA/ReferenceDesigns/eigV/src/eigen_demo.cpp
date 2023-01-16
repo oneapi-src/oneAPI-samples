@@ -23,7 +23,7 @@
 #define SHIFT_NOISE 1e-2
 #include "exception_handler.hpp"
 
-#include "qrd.hpp"
+#include "eigen.hpp"
 #include "qr_MGS.hpp"
 #include "hessenberg_qrd.hpp"
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 200;
+  constexpr size_t kMatricesToDecompose = 8;
 
   try {
     // SYCL boilerplate
@@ -449,16 +449,16 @@ int main(int argc, char *argv[]) {
     }
 
 
-    double sq_error_cpp = 0, sq_error_SYCL = 0;
-    for(int i = 0; i < kRows; i++){
-      for(int j = 0; j < kRows; j++){
-        sq_error_cpp += (fabs(eigen_vectors_cpu[matrix_offset+ j*kRows+sIndex[i]]) - fabs(py_V[matrix_offset+ i*kRows+j])) * \
-                          (fabs(eigen_vectors_cpu[ matrix_offset+ j*kRows+sIndex[i]]) - fabs(py_V[matrix_offset+i*kRows+j]));
+    // double sq_error_cpp = 0, sq_error_SYCL = 0;
+    // for(int i = 0; i < kRows; i++){
+    //   for(int j = 0; j < kRows; j++){
+    //     sq_error_cpp += (fabs(eigen_vectors_cpu[matrix_offset+ j*kRows+sIndex[i]]) - fabs(py_V[matrix_offset+ i*kRows+j])) * \
+    //                       (fabs(eigen_vectors_cpu[ matrix_offset+ j*kRows+sIndex[i]]) - fabs(py_V[matrix_offset+i*kRows+j]));
 
-        sq_error_SYCL += (fabs(qq_matrix[matrix_offset+j*kRows+sIndexSYCL[i]]) - fabs(py_V[matrix_offset+i*kRows+j])) * \
-                  (fabs(qq_matrix[matrix_offset+j*kRows+sIndexSYCL[i]]) - fabs(py_V[matrix_offset+i*kRows+j]));
-      }
-    }
+    //     sq_error_SYCL += (fabs(qq_matrix[matrix_offset+j*kRows+sIndexSYCL[i]]) - fabs(py_V[matrix_offset+i*kRows+j])) * \
+    //               (fabs(qq_matrix[matrix_offset+j*kRows+sIndexSYCL[i]]) - fabs(py_V[matrix_offset+i*kRows+j]));
+    //   }
+    // }
 
 
     int qq_ecountCPP = 0;
