@@ -1,10 +1,8 @@
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
-
-using namespace sycl;
 
 using ValueT = int;
 // Forward declare the kernel names in the global scope.
@@ -24,7 +22,8 @@ void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out,
      for (int i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }
-   }).wait();
+   })
+      .wait();
 
   std::cout << "\t Done" << std::endl;
 }
@@ -41,8 +40,7 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 
   size_t count = 16;
-  if (argc > 1)
-    count = atoi(argv[1]);
+  if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
     std::cerr << "ERROR: 'count' must be positive" << std::endl;
@@ -55,6 +53,12 @@ int main(int argc, char *argv[]) {
 
     // make sure the device supports USM host allocations
     sycl::device d = q.get_device();
+
+    // Print out the device information.
+    std::cout << "Running on device: "
+              << q.get_device().get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
     if (!d.has(sycl::aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations" << std::endl;
@@ -62,14 +66,14 @@ int main(int argc, char *argv[]) {
     }
 
     ValueT *in = sycl::malloc_host<ValueT>(count, q);
-    ValueT *LambdaRegisterMapOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *lambda_register_map_out = sycl::malloc_host<ValueT>(count, q);
     ValueT *golden = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       in[i] = rand() % 77;
       golden[i] = SomethingComplicated(in[i]);
-      LambdaRegisterMapOut[i] = 0;
+      lambda_register_map_out[i] = 0;
     }
 
     // validation lambda
@@ -90,12 +94,12 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaRegisterMapKernel(q, in, LambdaRegisterMapOut, count);
-    passed &= validate(golden, LambdaRegisterMapOut, count);
+    TestLambdaRegisterMapKernel(q, in, lambda_register_map_out, count);
+    passed &= validate(golden, lambda_register_map_out, count);
     std::cout << std::endl;
 
     sycl::free(in, q);
-    sycl::free(LambdaRegisterMapOut, q);
+    sycl::free(lambda_register_map_out, q);
     sycl::free(golden, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code

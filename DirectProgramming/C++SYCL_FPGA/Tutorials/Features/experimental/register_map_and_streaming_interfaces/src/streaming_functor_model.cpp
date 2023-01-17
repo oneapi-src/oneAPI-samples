@@ -1,10 +1,8 @@
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
-
-using namespace sycl;
 
 using ValueT = int;
 
@@ -43,8 +41,7 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 
   size_t count = 16;
-  if (argc > 1)
-    count = atoi(argv[1]);
+  if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
     std::cerr << "ERROR: 'count' must be positive" << std::endl;
@@ -57,6 +54,12 @@ int main(int argc, char *argv[]) {
 
     // make sure the device supports USM host allocations
     sycl::device d = q.get_device();
+
+    // Print out the device information.
+    std::cout << "Running on device: "
+              << q.get_device().get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
     if (!d.has(sycl::aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations" << std::endl;
@@ -64,14 +67,14 @@ int main(int argc, char *argv[]) {
     }
 
     ValueT *in = sycl::malloc_host<ValueT>(count, q);
-    ValueT *functorStreamingOut = sycl::malloc_host<ValueT>(count, q);
+    ValueT *functor_streaming_out = sycl::malloc_host<ValueT>(count, q);
     ValueT *golden = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       in[i] = rand() % 77;
       golden[i] = SomethingComplicated(in[i]);
-      functorStreamingOut[i] = 0;
+      functor_streaming_out[i] = 0;
     }
 
     // validation lambda
@@ -92,14 +95,14 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingIP{in, functorStreamingOut, count}).wait();
+    q.single_task(FunctorStreamingIP{in, functor_streaming_out, count}).wait();
     std::cout << "\t Done" << std::endl;
 
-    passed &= validate(golden, functorStreamingOut, count);
+    passed &= validate(golden, functor_streaming_out, count);
     std::cout << std::endl;
 
     sycl::free(in, q);
-    sycl::free(functorStreamingOut, q);
+    sycl::free(functor_streaming_out, q);
     sycl::free(golden, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
