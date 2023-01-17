@@ -55,8 +55,8 @@ void IncrementAndRead(IntScalar &result, int index) {
       h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
         // Initialize counters the first time we use it
         if (!is_counters_initialized.get()) {
-          for (size_t index = 0; index < kNumCounters; index++)
-            counters[index] = kInitialValue;
+          for (size_t init_index = 0; init_index < kNumCounters; init_index++)
+            counters[init_index] = kInitialValue;
           is_counters_initialized = true;
         }
 
