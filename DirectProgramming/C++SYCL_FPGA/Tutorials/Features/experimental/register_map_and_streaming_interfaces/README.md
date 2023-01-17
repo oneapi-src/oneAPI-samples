@@ -3,21 +3,6 @@
 # `Register Map and Streaming Interfaces` sample
 This FPGA tutorial demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces, and demonstrates the differences between streaming interfaces that use a ready/valid handshake, and register-mapped interfaces that exist in the kernel's control/status register (CSR).
 
-The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
-
-| Invocation Interface    | Argument Interface    | Argument Interface Synchronization        |
-|-------------------------|-----------------------|-------------------------------------------|
-| Streaming               | Streaming             | Synchronized with `start` and `ready_out` |
-| Streaming               | Register mapped       | N/A                                       |
-| Register mapped         | Streaming             | *No synchronization possible*             |
-| Register mapped         | Register mapped       | N/A                                       |
-
-> **Note**: Register mapped kernel arguments are not currently supported in kernels with a streaming invocation interface.
-
-If you would like an argument to have its own dedicated ready/valid handshake, please implement that argument using a [Host Pipe](../hostpipes/).
-
-:warning: The register map and streaming interface feature is only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
-
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
@@ -60,6 +45,23 @@ You can also find more information about [troubleshooting build errors](/DirectP
 ## Purpose
 
 Use register map and streaming interface annotations to specify how the kernel invocation handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
+
+## Understanding Register Map and Streaming Interfaces
+
+The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
+
+| Invocation Interface    | Argument Interface    | Argument Interface Synchronization        |
+|-------------------------|-----------------------|-------------------------------------------|
+| Streaming               | Streaming             | Synchronized with `start` and `ready_out` |
+| Streaming               | Register mapped       | N/A                                       |
+| Register mapped         | Streaming             | *No synchronization possible*             |
+| Register mapped         | Register mapped       | N/A                                       |
+
+> **Note**: Register mapped kernel arguments are not currently supported in kernels with a streaming invocation interface.
+
+If you would like an argument to have its own dedicated ready/valid handshake, please implement that argument using a [Host Pipe](../hostpipes/).
+
+:warning: The register map and streaming interface feature is only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to standalone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
 
 ### Declaring a register map kernel interface
 
@@ -161,10 +163,10 @@ struct FunctorStreamingIP {
 These two functor kernels are invoked in the same way in the host code, by constructing the struct and submitting a `single_task` into the SYCL `queue`.
 
 ```c++
-q.single_task(FunctorRegisterMapIP{in, functorRegisterMapOut, count}).wait();
+q.single_task(FunctorRegisterMapIP{in, functor_register_map_out, count}).wait();
 ```
 ```c++
-q.single_task(FunctorStreamingIP{in, functorStreamingOut, count}).wait();
+q.single_task(FunctorStreamingIP{in, functor_streaming_out, count}).wait();
 ```
 
 The two lambda kernels are annotated directly on the lambda function body and submitted into the SYCL `queue` as a `single_task`.
@@ -305,8 +307,6 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
      ```
      nmake fpga
      ```
-
->**Note**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
 ## Examining the Reports
 
