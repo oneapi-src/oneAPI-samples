@@ -47,13 +47,7 @@ set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ${USER_INCLUDE_PATHS} ../../../../include/)
-
-# Use cmake -DUSER_LIB_PATHS=<paths> to set extra paths to target_link_libraries
-set(USER_LIB_PATHS ${USER_LIB_PATHS})
-
-# Use cmake -DUSER_LIBS=<libs> to add extra static libraries
-set(USER_LIBS ${USER_LIBS})
+set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 
 ###############################################################################
 ### no changes after here

@@ -37,7 +37,7 @@ Use this project as a starting point when you build designs for the Intel® oneA
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-set(SOURCE_FILE fpga_template.cpp)
+set(SOURCE_FILES src/fpga_template.cpp)
 set(TARGET_NAME fpga_template)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
@@ -58,14 +58,14 @@ endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS "${USER_FPGA_FLAGS}")
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS "${USER_FLAGS}")
+set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS "${USER_INCLUDE_PATHS}")
+set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 ```
 
 Everything below this in the `src/CMakeLists.txt` is necessary for selecting the compiler flags that are necessary to support the build targets specified below, and should not need to be modified.
