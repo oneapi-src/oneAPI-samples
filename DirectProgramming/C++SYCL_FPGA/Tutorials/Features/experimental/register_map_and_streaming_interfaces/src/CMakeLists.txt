@@ -24,9 +24,9 @@ set(STREAMING_LAMBDA_FPGA_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga)
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Arria10")
+    set(FPGA_DEVICE "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) Arria(R) 10 FPGAs). \
+                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) Agilex(R) FPGAs). \
                     \nPlease refer to the README for information on board selection.")
 else()
     message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
