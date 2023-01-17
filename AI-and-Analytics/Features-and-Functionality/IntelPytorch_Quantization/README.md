@@ -36,10 +36,9 @@ You will need to download and install the following toolkits, tools, and compone
 
 - **Additional Packages**
 
-  You will need to install these additional packages: **Matplotlib** and **Py-cpuinfo** and **tqdm**.
+  You will need to install these additional packages: **Matplotlib** and **tqdm**.
   ```
   python -m pip install matplotlib
-  python -m pip install py-cpuinfo
   python -m pip install tqdm
   ```
 

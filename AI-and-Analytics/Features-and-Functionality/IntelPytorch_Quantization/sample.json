@@ -21,7 +21,7 @@
 			"id": "ipex_inference_optimization",
 			"steps": [
 				"source activate user_pytorch",
-				"python scripts/ci_test.py"
+				"python IntelPytorch_Quantization.py"
 			]
 		}]
 	},

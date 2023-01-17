@@ -11,8 +11,8 @@
 import torch
 import torchvision
 import tqdm
+import os
 from time import time
-import matplotlib.pyplot as plt
 import intel_extension_for_pytorch as ipex
 from intel_extension_for_pytorch.quantization import prepare, convert
 
@@ -20,7 +20,69 @@ from intel_extension_for_pytorch.quantization import prepare, convert
 LR = 0.001
 DOWNLOAD = True
 DATA = 'datasets/cifar10/'
+WARMUP = 3
 ITERS = 100
+
+
+def inference(model, data):
+    # Warmup for several iteration.
+    for i in range(WARMUP):
+        out = model(data)
+
+    # Benchmark: accumulate inference time for multi iteration and calculate the average inference time.
+    print("Inference ...")
+    inference_time = 0
+    for i in range(ITERS):
+        start_time = time()
+        _ = model(data)
+        end_time = time()
+        inference_time = inference_time + (end_time - start_time)
+
+
+
+    inference_time = inference_time / ITERS
+    print("Inference Time Avg: ", inference_time)
+    return inference_time
+
+
+def staticQuantize(model_fp32, data, calibration_data_loader):
+    # Acquire inference times for static quantization INT8 model 
+    qconfig_static = ipex.quantization.default_static_qconfig
+    # Alternatively, define your own qconfig:
+    # from torch.ao.quantization import MinMaxObserver, PerChannelMinMaxObserver, QConfig
+    # qconfig = QConfig(activation=MinMaxObserver.with_args(qscheme=torch.per_tensor_affine, dtype=torch.quint8),
+    #        weight=PerChannelMinMaxObserver.with_args(dtype=torch.qint8, qscheme=torch.per_channel_symmetric))
+    prepared_model_static = prepare(model_fp32, qconfig_static, example_inputs=data, inplace=False)
+    print("Calibration with Static Quantization ...")
+    for batch_idx, (data, target) in enumerate(calibration_data_loader):
+        prepared_model_static(data)
+        if batch_idx % 10 == 0:
+            print("Batch %d/%d complete, continue ..." %(batch_idx+1, len(calibration_data_loader)))
+    print("Calibration Done")
+
+    converted_model_static = convert(prepared_model_static)
+    with torch.no_grad():
+        traced_model_static = torch.jit.trace(converted_model_static, data)
+        traced_model_static = torch.jit.freeze(traced_model_static)
+
+    traced_model_static.save("quantized_model_static.pt")
+    return traced_model_static
+
+def dynamicQuantize(model_fp32, data):
+    # Acquire inference times for dynamic quantization INT8 model
+    qconfig_dynamic = ipex.quantization.default_dynamic_qconfig
+    print("Quantize Model with Dynamic Quantization ...")
+
+    prepared_model_dynamic = prepare(model_fp32, qconfig_dynamic, example_inputs=data, inplace=False)
+
+    converted_model_dynamic = convert(prepared_model_dynamic)
+    with torch.no_grad():
+        traced_model_dynamic = torch.jit.trace(converted_model_dynamic, data)
+        traced_model_dynamic = torch.jit.freeze(traced_model_dynamic)
+
+    # save the quantized static model 
+    traced_model_dynamic.save("quantized_model_dynamic.pt")
+    return traced_model_dynamic
 
 
 """
@@ -46,69 +108,33 @@ def main():
     )
 
     data = torch.rand(1, 3, 224, 224)
-    # Acquire inference times for FP32 model
     model_fp32 = torchvision.models.resnet50(weights=torchvision.models.ResNet50_Weights.DEFAULT)
     model_fp32.eval()
 
-    start_time = time()
+    if not os.path.exists('quantized_model_static.pt'):
+        # Static Quantizaton & Save Model to quantized_model_static.pt
+        print('quantize the model with static quantization')
+        staticQuantize(model_fp32, data, calibration_data_loader)
+
+    if not os.path.exists('quantized_model_dynamic.pt'):
+        # Dynamic Quantization & Save Model to quantized_model_dynamic.pt
+        print('quantize the model with dynamic quantization')
+        dynamicQuantize(model_fp32, data)
+
     print("Inference with FP32")
-    for i in tqdm.tqdm(range(ITERS)):
-        out = model_fp32(data)
-    end_time = time()
+    fp32_inference_time = inference(model_fp32, data)
 
-    fp32_inference_time = (end_time - start_time) / ITERS
+    traced_model_static = torch.jit.load('quantized_model_static.pt')
+    traced_model_static.eval()
+    traced_model_static = torch.jit.freeze(traced_model_static)
+    print("Inference with Static INT8")
+    int8_inference_time_static = inference(traced_model_static, data)
 
-    # Acquire inference times for static quantization INT8 model 
-    qconfig_static = ipex.quantization.default_static_qconfig
-    # Alternatively, define your own qconfig:
-    #from torch.ao.quantization import MinMaxObserver, PerChannelMinMaxObserver, QConfig
-    #qconfig = QConfig(activation=MinMaxObserver.with_args(qscheme=torch.per_tensor_affine, dtype=torch.quint8),
-    #        weight=PerChannelMinMaxObserver.with_args(dtype=torch.qint8, qscheme=torch.per_channel_symmetric))
-    prepared_model_static = prepare(model_fp32, qconfig_static, example_inputs=data, inplace=False)
-    print("Calibration with Static Quantization")
-    for (data, _) in tqdm.tqdm(calibration_data_loader):
-        prepared_model_static(data)
-
-    converted_model_static = convert(prepared_model_static)
-    with torch.no_grad():
-        traced_model_static = torch.jit.trace(converted_model_static, data)
-        traced_model_static = torch.jit.freeze(traced_model_static)
-    
-    # save the quantized static model 
-    traced_model_static.save("quantized_model_static.pt")
-
-    start_time = time()
-    print("Inference with Static Quantization")
-    for i in tqdm.tqdm(range(ITERS)):
-        out = traced_model_static(data)
-    end_time = time()
-
-    int8_inference_time_static = (end_time - start_time) / ITERS
-
-    # Acquire inference times for dynamic quantization INT8 model
-    qconfig_dynamic = ipex.quantization.default_dynamic_qconfig
-    # Alternatively, define your own qconfig:
-    #from torch.ao.quantization import MinMaxObserver, PerChannelMinMaxObserver, QConfig
-    #qconfig = QConfig(activation=MinMaxObserver.with_args(qscheme=torch.per_tensor_affine, dtype=torch.quint8),
-    #        weight=PerChannelMinMaxObserver.with_args(dtype=torch.qint8, qscheme=torch.per_channel_symmetric))
-    prepared_model_dynamic = prepare(model_fp32, qconfig_dynamic, example_inputs=data, inplace=False)
-
-    converted_model_dynamic = convert(prepared_model_dynamic)
-    with torch.no_grad():
-        traced_model_dynamic = torch.jit.trace(converted_model_dynamic, data)
-        traced_model_dynamic = torch.jit.freeze(traced_model_dynamic)
-    
-    # save the quantized static model 
-    traced_model_dynamic.save("quantized_model_dynamic.pt")
-
-    start_time = time()
-    print("Inference with Dynamic Quantization")
-    for i in tqdm.tqdm(range(ITERS)):
-        out = traced_model_dynamic(data)
-    end_time = time()
-
-    int8_inference_time_dynamic = (end_time - start_time) / ITERS
-
+    traced_model_dynamic = torch.jit.load('quantized_model_dynamic.pt')
+    traced_model_dynamic.eval()
+    traced_model_dynamic = torch.jit.freeze(traced_model_dynamic)
+    print("Inference with Dynamic INT8")
+    int8_inference_time_dynamic = inference(traced_model_dynamic, data)
 
     # Inference time results
     print("Summary")
@@ -116,27 +142,11 @@ def main():
     print("INT8 static quantization inference time: %.3f" %int8_inference_time_static)
     print("INT8 dynamic quantization inference time: %.3f" %int8_inference_time_dynamic)
 
-    # Create bar chart with training time results
-    plt.figure()
-    plt.title("ResNet Inference Time")
-    plt.xlabel("Test Case")
-    plt.ylabel("Inference Time (seconds)")
-    plt.bar(["FP32", "INT8 static Quantization", "INT8 dynamic Quantization"], [fp32_inference_time, int8_inference_time_static, int8_inference_time_dynamic])
-
     # Calculate speedup when using quantization
     speedup_from_fp32_static = fp32_inference_time / int8_inference_time_static
     print("Staic INT8 %.2fX faster than FP32" %speedup_from_fp32_static)
     speedup_from_fp32_dynamic = fp32_inference_time / int8_inference_time_dynamic
     print("Dynamic INT8 %.2fX faster than FP32" %speedup_from_fp32_dynamic)
-
-
-    # Create bar chart with speedup results
-    plt.figure()
-    plt.title("Quantization Speedup")
-    plt.xlabel("Test Case")
-    plt.ylabel("Speedup")
-    plt.bar(["FP32-static INT8", "FP32-dynamic INT8"], [speedup_from_fp32_static, speedup_from_fp32_dynamic])
-    
 
 
 if __name__ == '__main__':
