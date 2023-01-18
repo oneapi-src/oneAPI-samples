@@ -8,8 +8,6 @@
 #include <sycl/sycl.hpp>
 #include <vector>
 
-using namespace sycl;
-
 class Kernel;
 
 #if defined(FPGA_SIMULATOR)
@@ -24,9 +22,11 @@ typedef float GreyType;
 typedef std::vector<GreyType> GreyVec;
 
 // Return the execution time of the event, in seconds
-double GetExecutionTime(const event &e) {
-  double start_k = e.get_profiling_info<info::event_profiling::command_start>();
-  double end_k = e.get_profiling_info<info::event_profiling::command_end>();
+double GetExecutionTime(const sycl::event &e) {
+  double start_k =
+      e.get_profiling_info<sycl::info::event_profiling::command_start>();
+  double end_k =
+      e.get_profiling_info<sycl::info::event_profiling::command_end>();
   double kernel_time = (end_k - start_k) * 1e-9; // ns to s
   return kernel_time;
 }
@@ -39,30 +39,36 @@ GreyType Compute(RGBType r, RGBType g, RGBType b) {
 
 void RunKernel(const RGBVec &r, const RGBVec &g, const RGBVec &b,
                GreyVec &out) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   try {
     // create the SYCL device queue
-    queue q(selector, fpga_tools::exception_handler,
-            property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler,
+                  sycl::property::queue::enable_profiling{});
 
-    buffer r_buf(r);
-    buffer g_buf(g);
-    buffer b_buf(b);
-    buffer out_buf(out);
+    sycl::device device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
+    sycl::buffer r_buf(r);
+    sycl::buffer g_buf(g);
+    sycl::buffer b_buf(b);
+    sycl::buffer out_buf(out);
 
     // submit the kernel
-    auto e = q.submit([&](handler &h) {
-      accessor r_acc(r_buf, h, read_only);
-      accessor g_acc(g_buf, h, read_only);
-      accessor b_acc(b_buf, h, read_only);
-      accessor out_acc(out_buf, h, write_only, no_init);
+    auto e = q.submit([&](sycl::handler &h) {
+      sycl::accessor r_acc(r_buf, h, sycl::read_only);
+      sycl::accessor g_acc(g_buf, h, sycl::read_only);
+      sycl::accessor b_acc(b_buf, h, sycl::read_only);
+      sycl::accessor out_acc(out_buf, h, sycl::write_only, sycl::no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input
@@ -86,7 +92,7 @@ void RunKernel(const RGBVec &r, const RGBVec &g, const RGBVec &b,
     std::cout << "Exec Time: " << exec_time << "s, InputMB: " << inputMB
               << "MB\n";
 
-  } catch (exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 

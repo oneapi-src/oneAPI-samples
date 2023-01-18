@@ -1,6 +1,6 @@
-# Minimum Latency Flow
+# `Minimum Latency Flow` sample
 
-This FPGA tutorial demonstrates how to compile your design with the minimum latency flow to achieve low latency at the cost of increased f<sub>MAX</sub>.
+This FPGA tutorial demonstrates how to compile your design with the minimum latency flow to achieve low latency at the cost of reduced f<sub>MAX</sub>.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -12,16 +12,39 @@ This FPGA tutorial demonstrates how to compile your design with the minimum late
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
+## Prerequisites
+
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 3 sample that demonstatres a compiler feature.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+
+   tier1 --> tier2 --> tier3 --> tier4
+
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+
 ## Purpose
 
-This FPGA tutorial demonstrates how to use the minimum latency flow to compile low-latency designs and how to manually override underlying controls set by the minimum latency flow. By default, the minimum latency flow tries to achieve lower latency at the cost of decresed f<sub>MAX</sub>, so this flow is a good starting point for optimizing latency-sensitive designs.
+This FPGA tutorial demonstrates how to use the minimum latency flow to compile low-latency designs and how to manually override underlying controls set by the minimum latency flow. By default, the minimum latency flow tries to achieve lower latency at the cost of decreased f<sub>MAX</sub>, so this flow is a good starting point for optimizing latency-sensitive designs.
 
 To compile your design with the minimum latency flow, pass the `-Xsoptimize=latency` flag to the `icpx` command.
 
@@ -32,14 +55,14 @@ The minimum latency flow implies the following compiler controls:
 - Remove the 1-cycle delay on the pipelined loop limiter
 
 The following table shows how users can manually override these underlying controls:
-||Control Flags/Attributes|Reference
-|:---|:---|:---
-|Hyper-optimized handshaking|`-Xshyper-optimized-handshaking=<auto\|off\|on>`|[Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html)
+|                                        |Control Flags/Attributes                                    |Reference
+|:---                                    |:---                                                        |:---
+|Hyper-optimized handshaking             |`-Xshyper-optimized-handshaking=<auto\|off\|on>`            |[Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html)
 |Exit FIFO latency of stall-free clusters|`-Xssfc-exit-fifo-type=<default\|zero-latency\|low-latency>`|[Global Control of Exit FIFO Latency of Stall-free Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/control-exit-fifo-latency.html)
-|Loop speculation|`[[intel::speculated_iterations(N)]]`|[`speculated_iterations` Attribute](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/loop-directives/speculated-iterations-attribute.html) 
-|Pipelined loop limiter|N/A|N/A
+|Loop speculation                        |`[[intel::speculated_iterations(N)]]`                       |[`speculated_iterations` Attribute](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/loop-directives/speculated-iterations-attribute.html)
+|Pipelined loop limiter                  |N/A                                                         |N/A
 
-> **Note**: The more specific manual control overrides minimum latency flow's default control.
+> **Note**: Using these manual controls overrides the underlying controls individually without affecting other underlying controls introduced by the `-Xsoptimize=latency` compiler flag.
 
 ### Understanding the Tutorial Design
 
@@ -51,11 +74,6 @@ Part 2 compiles the design with the `-Xsoptimize=latency` flag, so the minimum l
 
 Part 3 also compiles the design with the minimum latency flow, as well as manual controls that revert minimum latency flow's default underlying controls. Therefore, latency and f<sub>MAX</sub> of this compile are the same as part 1.
 
-### Additional Documentation
-- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
-
 ## Key Concepts
 
 * How to use the minimum latency flow to compile low-latency designs
@@ -63,39 +81,20 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
 
 ## Building the `minimum_latency` Tutorial
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-### Running Samples in Intel&reg; DevCloud
-If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
-
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
-
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the Generate Launch Configurations extension.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### On a Linux* System
 
@@ -194,20 +193,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel&reg; oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-### In Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
-
 ## Examining the Reports
 
 Locate the pair of `report.html` files in either:
@@ -226,34 +211,36 @@ Navigate to **Clock Frequency Summary** (**Summary > Clock Frequency Summary**) 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./no_control.fpga_emu               (Linux)
-   no_control.fpga_emu.exe             (Windows)
+   ./no_control.fpga_emu    (Linux)
+   no_control.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA simulator device:
-   ```bash
-   # Sample without minimum latency flow
-   ./no_control.fpga_sim               (Linux)
-   no_control.fpga_sim.exe             (Windows)
-   # Sample with minimum latency flow
-   ./minimum_latency.fpga_sim          (Linux)
-   minimum_latency.fpga_sim.exe        (Windows)
-   # Sample with minimum latency flow but controls manually reverted
-   ./manual_revert.fpga_sim            (Linux)
-   manual_revert.fpga_sim.exe          (Windows)
+
+   * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./no_control.fpga_sim
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./minimum_latency.fpga_sim
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./manual_revert.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        no_control.fpga_sim.exe
+        minimum_latency.fpga_sim.exe
+        manual_revert.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
 3. Run the sample on the FPGA device
 
    ```bash
-   # Sample without minimum latency flow
-   ./no_control.fpga                   (Linux)
-   no_control.fpga.exe                 (Windows)
-   # Sample with minimum latency flow
-   ./minimum_latency.fpga              (Linux)
-   minimum_latency.fpga.exe            (Windows)
-   # Sample with minimum latency flow but controls manually reverted
-   ./manual_revert.fpga                (Linux)
-   manual_revert.fpga.exe              (Windows)
+   ./no_control.fpga         (Linux)
+   ./minimum_latency.fpga    (Linux)
+   ./manual_revert.fpga      (Linux)
+   no_control.fpga.exe       (Windows)
+   minimum_latency.fpga.exe  (Windows)
+   manual_revert.fpga.exe    (Windows)
    ```
 
 ### Example of Output
