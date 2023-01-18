@@ -1,6 +1,6 @@
 
 
-# `Register Map and Streaming Interfaces` sample
+# `Invocation Interfaces` sample
 This FPGA tutorial demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces, and demonstrates the differences between streaming interfaces that use a ready/valid handshake, and register-mapped interfaces that exist in the kernel's control/status register (CSR).
 
 | Optimized for                     | Description
@@ -193,7 +193,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
 ## Key Concepts
 * Basics of declaring kernel invocation interfaces and kernel argument interfaces
 
-## Building the `register_map_and_streaming_interfaces` Tutorial
+## Building the `invocation_interfaces` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.

@@ -1,8 +1,8 @@
 {
   "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
-  "name": "register map and streaming interfaces",
+  "name": "invocation interfaces",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
-  "description": "An Intel® FPGA tutorial demonstrating the usage of register_map and streaming interface controls",
+  "description": "An Intel® FPGA tutorial demonstrating the usage of register_map and streaming invocation interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/experimental/register_map_and_streaming_interfaces",
+      "Tutorials/Features/experimental/invocation_interfaces",
       "include"
     ],
     "exclude": []
@@ -52,7 +52,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/invocation_interfaces",
           "nmake fpga_emu",
           "register_map_functor_model.fpga_emu.exe",
           "streaming_functor_model.fpga_emu.exe",
@@ -67,7 +67,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/register_map_and_streaming_interfaces",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/invocatoin_interfaces",
           "nmake report"
         ]
       }
