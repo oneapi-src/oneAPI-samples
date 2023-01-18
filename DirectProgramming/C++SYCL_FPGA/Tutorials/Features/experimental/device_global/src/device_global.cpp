@@ -9,9 +9,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 constexpr size_t kNumCounters = 4;
 constexpr int kInitialValue = 10;
@@ -34,37 +32,65 @@ class Kernel;
 
 // Launch a kernel that increments the value of a global variable counter
 // at a particular index, and returns the current value of that counter
-void IncrementAndRead(IntScalar &result, int index) {
+void IncrementAndRead(sycl::queue q, IntScalar &result, int index) {
+  sycl::buffer<int, 1> buffer_result(result.data(), 1);
+  q.submit([&](sycl::handler &h) {
+    sycl::accessor accessor_result{buffer_result, h, sycl::write_only,
+                                   sycl::no_init};
+
+    h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
+      // Initialize counters the first time we use it
+      if (!is_counters_initialized.get()) {
+        for (size_t init_index = 0; init_index < kNumCounters; init_index++)
+          counters[init_index] = kInitialValue;
+        is_counters_initialized = true;
+      }
+
+      // Increment and read at a specific index
+      counters[index]++;
+      accessor_result[0] = counters[index];
+    });
+  });
+  q.wait();
+}
+
+int main() {
+  bool success = true;
+
+  IntScalar result;
+
   try {
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else  // #if FPGA_EMULATOR
+#else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
-    sycl::queue q(selector, dpc_common::exception_handler,
+    sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
-    sycl::buffer<int, 1> buffer_result(result.data(), 1);
-    q.submit([&](sycl::handler &h) {
-      sycl::accessor accessor_result{buffer_result, h, sycl::write_only,
-                                     sycl::no_init};
+    // Increment each counter multiple times
+    for (auto num_increments = 1; num_increments <= kNumIncrements;
+         num_increments++) {
+      // Increment each position
+      for (auto counter_index = 0; counter_index < kNumCounters;
+           counter_index++) {
+        // Run the kernel
+        IncrementAndRead(q, result, counter_index);
 
-      h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-        // Initialize counters the first time we use it
-        if (!is_counters_initialized.get()) {
-          for (size_t init_index = 0; init_index < kNumCounters; init_index++)
-            counters[init_index] = kInitialValue;
-          is_counters_initialized = true;
+        // verify the results are correct
+        int expected_result = kInitialValue + num_increments;
+        if (result[0] != expected_result) {
+          std::cerr << "device_global: mismatch at index {" << num_increments
+                    << ", " << counter_index << "}: " << result[0]
+                    << " != " << expected_result << " (kernel != expected)"
+                    << '\n';
+          success = false;
         }
-
-        // Increment and read at a specific index
-        counters[index]++;
-        accessor_result[0] = counters[index];
-      });
-    });
+      }
+    }
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
@@ -78,32 +104,6 @@ void IncrementAndRead(IntScalar &result, int index) {
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
-  }
-}
-
-int main() {
-  bool success = true;
-
-  IntScalar result;
-
-  // Increment each counter multiple times
-  for (auto num_increments = 1; num_increments <= kNumIncrements;
-       num_increments++) {
-    // Increment each position
-    for (auto counter_index = 0; counter_index < kNumCounters;
-         counter_index++) {
-      // Run the kernel
-      IncrementAndRead(result, counter_index);
-
-      // verify the results are correct
-      int expected_result = kInitialValue + num_increments;
-      if (result[0] != expected_result) {
-        std::cout << "device_global: mismatch at index " << counter_index
-                  << ": " << result[0] << " != " << expected_result
-                  << " (kernel != expected)" << '\n';
-        success = false;
-      }
-    }
   }
 
   if (success) {
