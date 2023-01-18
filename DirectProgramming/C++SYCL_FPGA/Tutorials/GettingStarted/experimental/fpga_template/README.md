@@ -31,7 +31,7 @@ Use this project as a starting point when you build designs for the Intel® oneA
 |:---                   |:---
 | `USER_HARDWARE_FLAGS` | This space-separated list of flags applies only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
 | `USER_FLAGS`          | This space-separated list of flags applies to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
-| `USER_INCLUDE_PATHS`  | This space-separated list of include paths applies  to all flows, including emulation. Specify include paths relative to the `src/CMakeLists.txt` file, or using absolute paths in the filesystem.
+| `USER_INCLUDE_PATHS`  | This semicolon-separated list of include paths applies  to all flows, including emulation. Specify include paths relative to the `src/CMakeLists.txt` file, or using absolute paths in the filesystem.
 
 ```bash
 ###############################################################################
@@ -135,6 +135,7 @@ This design uses CMake to generate a build script for GNU/make.
    | `make report`   | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package.
    | `make fpga_sim` | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
    | `make fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and generate an FPGA image that you can run on a supported accelerator board.
+   | `make fpga_ip_export` | Minutes  | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL that may be exported to Intel® Quartus Prime software
 
    The `fpga_emu`, `fpga_sim` and `fpga` targets produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu`, `TARGET_NAME.fpga_sim`, and `TARGET_NAME.fpga`, where `TARGET_NAME` is the value you specify in `src/CMakeLists.txt`.
 
@@ -171,6 +172,7 @@ This design uses CMake to generate a build script for  `nmake`.
    | `nmake report`   | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package.
    | `nmake fpga_sim` | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
    | `nmake fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and generate an FPGA image that you can run on a supported accelerator board.
+   | `nmake fpga_ip_export` | Minutes  | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL that may be exported to Intel® Quartus Prime software
 
    The `fpga_emu`, `fpga_sim`, and `fpga` targets also produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu.exe`, `TARGET_NAME.fpga_sim.exe`, and `TARGET_NAME.fpga.exe`, where `TARGET_NAME` is the value you specify in `src/CMakeLists.txt`.
 
