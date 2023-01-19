@@ -1,18 +1,18 @@
-# `IPEX Static and Dynamic Quantization` Sample
+# `Optimize PyTorch Models using Intel® Extension for PyTorch* Quantization` Sample
 
-The `IPEX static and dynamic quantization` sample will demonstrate how to quantize a ResNet50 model calirating with the CIFAR10 dataset using the Intel® Extension for PyTorch*.
+The `Optimize PyTorch Models using Intel® Extension for PyTorch* Quantization` sample demonstrates how to quantize a ResNet50 model that is calibrated by the CIFAR10 dataset using the Intel® Extension for PyTorch*.
 
 The Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch* with feature quantization
+| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch* (IPEX) with feature quantization
 | Time to complete      | 5 minutes
-| Category              | Code Optimization
+| Category              | Concepts and Functionality
 
 ## Purpose
 
-The Intel® Extension for PyTorch* gives users the ability to speed up inference on Intel® Xeon Scalable processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. 
+The Intel® Extension for PyTorch* gives users the ability to speed up inference on Intel® Xeon Scalable processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process.
 
 ## Prerequisites
 
@@ -48,27 +48,27 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample will quantize a ResNet50 model calibrated with the CIFAR10 dataset while using Intel® Extension for PyTorch*. The model is inferenced using FP32 and INT8 precision, including the use of Intel® Advanced Matrix Extensions (AMX). AMX is supported on BF16 and INT8 data types starting with the 4th Generation of Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of INT8.
+This code sample quantizes a ResNet50 model that is calibrated with the CIFAR10 dataset while using Intel® Extension for PyTorch*. The model is inferenced using FP32 and INT8 precision, including the use of Intel® Advanced Matrix Extensions (AMX). AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of INT8.
 
 The sample tutorial contains one Jupyter Notebook and a Python script. You can use either.
 
 ### Jupyter Notebook
 
-| Notebook                              | Description
-|:---                                   |:---
-|`IntelPyTorch_Quantization.ipynb` | Performs inference with IPEX quantization in jupyter notebook.
+| Notebook                         | Description
+|:---                              |:---
+|`IntelPyTorch_Quantization.ipynb` | Performs inference with IPEX quantization in Jupyter Notebook.
 
 ### Python Scripts
 
-| Script                             | Description
-|:---                                |:---
+| Script                        | Description
+|:---                           |:---
 |`IntelPyTorch_Quantization.py` | The script performs inference with IPEX quantization and compares the performance against the baseline
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `IPEX Quantization` Sample
+## Run the `Optimize PyTorch Models using Intel® Extension for PyTorch* Quantization` Sample
 
 ### On Linux*
 
@@ -81,7 +81,6 @@ When working with the command-line interface (CLI), you should configure the one
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
-
 #### Activate Conda
 
 1. Activate the Conda environment.
@@ -122,7 +121,7 @@ When working with the command-line interface (CLI), you should configure the one
    python IntelPyTorch_Quantization.py
    ```
 
-### Run the `IPEX Quantization` Sample on Intel® DevCloud
+### Run the `Optimize PyTorch Models using Intel® Extension for PyTorch* Quantization` Sample on Intel® DevCloud
 
 1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 2. On a Linux* system, open a terminal.
@@ -148,9 +147,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The following image shows approximate performance speed increases using AMX INT8 during inference.  
+The following image shows approximate performance speed increases using AMX INT8 during inference.
 
-<img src="assets/relative_speedup.png" width="180" height="150"/>
+![](assets/relative_speedup.png)
 
 ## License
 
