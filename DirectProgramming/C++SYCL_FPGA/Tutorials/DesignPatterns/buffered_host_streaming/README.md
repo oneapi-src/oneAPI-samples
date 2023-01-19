@@ -47,7 +47,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware           | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -63,7 +63,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
-*Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex).*
+*Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex™).*
 
 ## Key Implementation Details
 
@@ -94,7 +94,7 @@ This sample demonstrates the following concepts:
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for the Agilex device family, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
@@ -138,7 +138,7 @@ This sample demonstrates the following concepts:
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Agilex device family, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build

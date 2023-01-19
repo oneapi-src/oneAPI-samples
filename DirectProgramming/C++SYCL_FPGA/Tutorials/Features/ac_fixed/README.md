@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS*Linux 8 <br> Red Hat* Enterprise Linux*8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu*18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA
 | Time to complete                  | 30 minutes
@@ -170,7 +170,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -221,7 +221,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

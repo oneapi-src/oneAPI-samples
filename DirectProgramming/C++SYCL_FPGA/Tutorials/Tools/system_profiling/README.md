@@ -8,7 +8,7 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
@@ -246,7 +246,7 @@ The Intercept Layer for OpenCL™ Applications makes it clear why the double buf
     mkdir build
     cd build
     ```
-    To compile for the default target (the Agilex device family), run `cmake` using the command:
+    To compile for the default target (the Agilex™ device family), run `cmake` using the command:
     ```
     cmake ..
     ```

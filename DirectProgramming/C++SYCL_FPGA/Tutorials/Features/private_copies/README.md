@@ -4,7 +4,7 @@ This FPGA tutorial explains how to use the `private_copies` attribute to trade o
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program
 | Time to complete                  | 15 minutes
@@ -110,7 +110,7 @@ A typical design flow may be to:
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -149,7 +149,7 @@ A typical design flow may be to:
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
@@ -220,7 +220,7 @@ PASSED: The results are correct
 
 The stdout output shows the throughput (GFlops) for each kernel.
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput of the kernel approximately doubles when going from 1 to 2 private copies for array `a`. Increasing to 3 private copies has a very small effect, and further increasing the number of private copies does not increase the throughput achieved. This means that increasing private copies beyond 2 will incur an area penalty for little or no throughput gain. As such, for this tutorial design, optimal throughput/area tradeoff is achieved when using 2 private copies. This is as expected based on an analysis of the code, as there are two inner loops which are able to run in parallel if they each have their own private copy of the array. The small jump in throughput observed from using 3 private copies instead of 2 can be attributed to the third private copy allowing subsequent outer loop iterations to launch slightly sooner than they would with 2 private copies due to internal delays in tracking the use of each private copy.
+When run on the Intel® PAC with Intel Arria® 10® 10 GX FPGA hardware board, we see that the throughput of the kernel approximately doubles when going from 1 to 2 private copies for array `a`. Increasing to 3 private copies has a very small effect, and further increasing the number of private copies does not increase the throughput achieved. This means that increasing private copies beyond 2 will incur an area penalty for little or no throughput gain. As such, for this tutorial design, optimal throughput/area tradeoff is achieved when using 2 private copies. This is as expected based on an analysis of the code, as there are two inner loops which are able to run in parallel if they each have their own private copy of the array. The small jump in throughput observed from using 3 private copies instead of 2 can be attributed to the third private copy allowing subsequent outer loop iterations to launch slightly sooner than they would with 2 private copies due to internal delays in tracking the use of each private copy.
 
 Setting the `private_copies` attribute to 0 (or equivalently omitting the attribute entirely) produced good throughput, and the reports show us that the compiler selected 3 private copies. This does produce the optimal throughput, but in this case it probably makes sense to save some area in exchange for a very small throughput loss by specifying 2 private copies instead.
 

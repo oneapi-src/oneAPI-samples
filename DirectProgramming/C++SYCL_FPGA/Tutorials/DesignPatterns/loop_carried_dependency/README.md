@@ -41,7 +41,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware           | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -126,7 +126,7 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 1. Change to the sample directory.
-2. Build the program for the Agilex device family, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
@@ -172,7 +172,7 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Agilex device family, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build

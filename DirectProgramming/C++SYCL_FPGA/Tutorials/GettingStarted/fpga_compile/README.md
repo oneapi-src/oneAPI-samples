@@ -4,7 +4,7 @@ This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGA throu
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile options used to target FPGA
 | Time to complete                  | 15 minutes
@@ -195,7 +195,7 @@ Notice that whether you target the FPGA emulator, FPGA simulator or FPGA hardwar
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -238,7 +238,7 @@ Notice that whether you target the FPGA emulator, FPGA simulator or FPGA hardwar
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

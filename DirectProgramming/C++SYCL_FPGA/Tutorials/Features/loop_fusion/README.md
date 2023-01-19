@@ -4,7 +4,7 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
 | Time to complete                  | 20 minutes
@@ -126,7 +126,7 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -169,7 +169,7 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

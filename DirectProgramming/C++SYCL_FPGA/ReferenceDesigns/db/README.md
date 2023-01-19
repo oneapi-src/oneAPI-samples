@@ -12,7 +12,7 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 
 The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
 
-Note that this design uses a lot of resources and is designed with Intel® Stratix10 FPGA capabilities in mind.
+Note that this design uses a lot of resources and is designed with Intel® Stratix® 10 FPGA capabilities in mind.
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -148,7 +148,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux*
 1. Change to the sample directory.
-2. Configure the build system for the default target (the Agilex device family).
+2. Configure the build system for the default target (the Agilex™ device family).
    ```
    mkdir build
    cd build
@@ -197,7 +197,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the default target (the Agilex device family).
+2. Configure the build system for the default target (the Agilex™ device family).
    ```
    mkdir build
    cd build

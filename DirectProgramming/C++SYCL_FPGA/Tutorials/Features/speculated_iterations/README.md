@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates applying the `speculated_iterations` attribute t
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | What the `speculated_iterations` attribute does <br> How to apply the `speculated_iterations` attribute to loops in your program <br> How to determine the optimal number of speculated iterations
 | Time to complete                  | 15 minutes
@@ -113,7 +113,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -156,7 +156,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

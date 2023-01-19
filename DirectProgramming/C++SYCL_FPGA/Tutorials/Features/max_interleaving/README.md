@@ -4,7 +4,7 @@ This FPGA tutorial explains how to use the `max_interleaving` attribute for loop
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basic usage of the `max_interleaving` attribute <br> How the `max_interleaving` attribute affects loop resource use <br> How to apply the `max_interleaving` attribute to loops in your program
 | Time to complete                  | 15 minutes
@@ -96,7 +96,7 @@ In this loop nest, pipelined iterations of L1 are serialized across L2 to preser
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -139,7 +139,7 @@ In this loop nest, pipelined iterations of L1 are serialized across L2 to preser
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
@@ -229,7 +229,7 @@ PASSED: The results are correct
 
 The stdout output shows the giga-floating point operations per second (GFlops) for each kernel.
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput remains unchanged when using `max_interleaving(0)` or `max_interleaving(1)`. However, the kernel using `max_interleaving(1)` uses fewer hardware resources, as shown in the reports.
+When run on the Intel® PAC with Intel Arria® 10® 10 GX FPGA hardware board, we see that the throughput remains unchanged when using `max_interleaving(0)` or `max_interleaving(1)`. However, the kernel using `max_interleaving(1)` uses fewer hardware resources, as shown in the reports.
 
 When run on the FPGA emulator, the `max_interleaving` attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This anomaly occurs because this trivial example uses only a tiny fraction of the compute resources available on the FPGA.
 

@@ -44,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware             | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -80,7 +80,7 @@ The design uses the `-fp-relaxed` option, which permits the compiler to reorder 
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. The matrix size is constrained by the total FPGA DSP resources available.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device; however, the design can process matrices from 4 x 4 to 512 x 512.
+By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex™ FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -139,7 +139,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex device family, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
@@ -183,7 +183,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex device family, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build

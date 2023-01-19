@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
 | Time to complete                  | 30 minutes
@@ -118,7 +118,7 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
     cd build
     ```
 
-    To compile for the default target (the Agilex device family), run `cmake` using the command:
+    To compile for the default target (the Agilex™ device family), run `cmake` using the command:
     ```
     cmake ..
     ```
@@ -170,7 +170,7 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
     cd build
     ```
 
-    To compile for the default target (the Agilex device family), run `cmake` using the command:
+    To compile for the default target (the Agilex™ device family), run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
     ```

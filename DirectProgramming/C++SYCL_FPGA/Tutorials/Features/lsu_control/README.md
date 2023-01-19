@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to configure the load-store units (LSU) in S
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
 | Time to complete                  | 30 minutes
@@ -149,7 +149,7 @@ The kernel design requests data from global memory in a contiguous manner. There
    cd build
    ```
 
-   To compile for the default target (the Agilex device family), run `cmake` using the command:
+   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
    ```
    cmake ..
    ```
@@ -195,7 +195,7 @@ The kernel design requests data from global memory in a contiguous manner. There
    cd build
    ```
 
-   To compile for the default target (the Agilex device family), run `cmake` using the command:
+   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" ..
    ```

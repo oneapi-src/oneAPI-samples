@@ -4,7 +4,7 @@ This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
@@ -187,7 +187,7 @@ Observe that the indexing expression on `temp_buffer` evaluates to the same inde
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -230,7 +230,7 @@ Observe that the indexing expression on `temp_buffer` evaluates to the same inde
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
