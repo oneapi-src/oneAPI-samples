@@ -1,9 +1,9 @@
 {
   "guid": "418AA4D8-0A61-4FDB-845A-CDA4DA0655E7",
   "name": "FPGA Template",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
-  "description": "This project serves as a template for Intel® oneAPI FPGA designs. ",
-  "toolchain": ["dpcpp"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
+  "description": "This project serves as a template for Intel® oneAPI DPC++/C++ designs targeting FPGAs. ",
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["cmake"],
@@ -39,17 +39,6 @@
           "cmake ..",
           "make report"
         ]
-      },
-      {
-        "id": "fpga_sim",
-        "steps": [
-          "dpcpp --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make fpga_sim",
-          "./fpga_template.fpga_sim"
-        ]
       }
     ],
     "windows": [
@@ -74,18 +63,6 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/experimental/fpga_template",
           "nmake report"
-        ]
-      },
-      {
-        "id": "fpga_sim",
-        "steps": [
-          "dpcpp --version",
-          "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/experimental/fpga_template",
-          "nmake fpga_sim",
-          "fpga_template.fpga_sim.exe"
         ]
       }
     ]

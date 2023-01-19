@@ -82,10 +82,10 @@ message(STATUS "Additional USER_LIB_PATHS=${USER_LIB_PATHS}")
 link_libraries(${USER_LIBS})
 message(STATUS "Additional USER_LIBS=${USER_LIBS}")
 
-# This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
-    # add qactypes to link command on Windows only
+    # add qactypes for Windows
     set(QACTYPES "-Qactypes")
+    # This is a Windows-specific flag that enables exception handling in host code
     set(WIN_FLAG "/EHsc")
 else()
     # add qactypes for Linux
