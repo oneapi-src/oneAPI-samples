@@ -10,7 +10,9 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 
 ## Purpose
 
-The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+
+Note that this design uses a lot of resources and is designed with Intel® Stratix10 FPGA capabilities in mind.
 
 ## Prerequisites
 
