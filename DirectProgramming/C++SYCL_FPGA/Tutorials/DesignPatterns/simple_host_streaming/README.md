@@ -5,7 +5,7 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to achieve low-latency host-device streaming while maintaining throughput
 | Time to complete                  | 45 minutes
@@ -18,8 +18,12 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
-> **Notice**: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)* 
+*Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex).*
 
 > **Notice**: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)*
 
@@ -134,18 +138,26 @@ We are currently working on an API and tutorial to address both of these drawbac
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -169,18 +181,25 @@ We are currently working on an API and tutorial to address both of these drawbac
 
 ### On a Windows* System
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -226,7 +245,7 @@ Locate `report.html` in the `simple_host_streaming_report.prj/reports/` director
     simple_host_streaming.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```
   ./simple_host_streaming.fpga         (Linux)
   simple_host_streaming.fpga.exe       (Windows)
@@ -258,7 +277,7 @@ You should see the following output in the console:
     ```
     > **Note**: The FPGA emulator does not accurately represent the performance (throughput or latency) of the kernels.
 
-2. When running on the FPGA device
+2. When running on the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support:
     ```
     # Chunks:             512
     Chunk count:          32768

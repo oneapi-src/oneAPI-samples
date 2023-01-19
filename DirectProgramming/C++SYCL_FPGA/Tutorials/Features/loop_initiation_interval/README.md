@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how a user can use the `intel::initiation_interv
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The f<sub>MAX</sub>-II tradeoff <br>Default behavior of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
 | Time to complete                  | 20 minutes
@@ -18,6 +18,10 @@ This FPGA tutorial demonstrates how a user can use the `intel::initiation_interv
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 
@@ -166,27 +170,26 @@ The second `intel::initiation_interval` declaration sets an II of 1 for the long
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```bash
-   mkdir build
-   cd build
-   ```
-
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-   ```bash
-   cmake ..
-   ```
-
-   Alternatively, to compile for the Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```bash
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design using the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -219,23 +222,25 @@ The second `intel::initiation_interval` declaration sets an II of 1 for the long
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-   ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -255,8 +260,6 @@ The second `intel::initiation_interval` declaration sets an II of 1 for the long
      ```
      nmake fpga
      ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -286,7 +289,7 @@ Compare the results to the report for the version of the design using the `intel
    loop_ii.fpga_emu.exe             (Windows)
    ```
 
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
 
   * On Linux
     ```bash
@@ -304,7 +307,7 @@ Compare the results to the report for the version of the design using the `intel
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
 
-3. Run the sample on the FPGA device
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
 
    ```bash
    # Sample without intel::initiation_interval attribute

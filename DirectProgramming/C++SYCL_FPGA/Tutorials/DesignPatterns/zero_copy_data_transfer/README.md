@@ -4,7 +4,7 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL Unified
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to use SYCL USM host allocations for the FPGA
 | Time to complete                  | 15 minutes
@@ -17,8 +17,12 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL Unified
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
-*Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)*
+*Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex).*
 
 ## Prerequisites
 
@@ -83,19 +87,26 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   To compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -116,23 +127,30 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -153,8 +171,6 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
      nmake fpga
      ```
 
-> **Note**: The Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) does not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your `build` directory in a shorter path, for example `c:\samples\build`.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Reports
@@ -167,7 +183,7 @@ Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` direct
     ./zero_copy_data_transfer.fpga_emu     (Linux)
     zero_copy_data_transfer.fpga_emu.exe   (Windows)
     ```
-2. Run the sample on the FPGA simulator:
+2. Run the sample on the FPGA simulator (the kernel executes on the CPU):
     * On Linux
         ```
         CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./zero_copy_data_transfer.fpga_sim
@@ -178,7 +194,7 @@ Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` direct
         zero_copy_data_transfer.fpga_sim.exe
         set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
         ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
     ```
     ./zero_copy_data_transfer.fpga         (Linux)
     zero_copy_data_transfer.fpga.exe       (Windows)

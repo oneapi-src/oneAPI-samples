@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br>Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br>Intel® FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
 | Time to complete                  | 30 minutes
@@ -18,6 +18,10 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 
@@ -109,28 +113,27 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
 
 1. Generate the `Makefile` by running `cmake`.
 
-   ```bash
-   mkdir build
-   cd build
-   ```
+    ```bash
+    mkdir build
+    cd build
+    ```
 
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-
-   ```bash
+    To compile for the default target (the Agilex device family), run `cmake` using the command:
+    ```
     cmake ..
-   ```
+    ```
 
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -164,28 +167,26 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
 
 1. Generate the `Makefile` by running `cmake`.
 
-   ```
-   mkdir build
-   cd build
-   ```
+    ```
+    mkdir build
+    cd build
+    ```
 
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" ..
-   ```
-
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    To compile for the default target (the Agilex device family), run `cmake` using the command:
+    ```
+    cmake -G "NMake Makefiles" ..
+    ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -235,7 +236,7 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
         set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
         ```
 
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
 
      ```bash
      ./use_library.fpga         (Linux)

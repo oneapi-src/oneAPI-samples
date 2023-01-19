@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS*Linux 8 <br> Red Hat* Enterprise Linux*8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu*18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br>Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br>Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA
 | Time to complete                  | 30 minutes
@@ -18,6 +18,10 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 
@@ -162,28 +166,26 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 1. Install the design in `build` directory from the design directory by running `cmake`:
 
-   ```bash
-   mkdir build
-   cd build
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   If you are compiling for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-   ```bash
-   cmake ..
-   ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design using the generated `Makefile`. The following four build targets are provided that match the recommended development flow:
 
@@ -217,28 +219,25 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 1. Generate the `Makefile` by running `cmake`.
 
-   ```
-   mkdir build
-   cd build
-   ```
-
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -266,8 +265,6 @@ When you use the `ac_fixed` library, keep the following points in mind:
      nmake fpga
      ```
 
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you might have to create your `build` directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
 ## Examining the Reports
@@ -288,7 +285,7 @@ Scroll down on the Summary page of the report and expand the section titled **Co
    ac_fixed.fpga_emu.exe  (Windows)
    ```
 
-2. Run the sample of the FPGA simulator device
+2. Run the sample of the FPGA simulator device (the kernel executes on the CPU):
 
     * On Linux
         ```bash
@@ -301,7 +298,7 @@ Scroll down on the Summary page of the report and expand the section titled **Co
         set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
         ```
 
-3. Run the sample on the FPGA device
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
 
    ```bash
    ./ac_fixed.fpga             (Linux)

@@ -269,8 +269,6 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
 
 Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
 
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
-
 Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
 
 >**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.

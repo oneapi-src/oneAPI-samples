@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to configure the load-store units (LSU) in S
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
 | Time to complete                  | 30 minutes
@@ -18,6 +18,10 @@ This FPGA tutorial demonstrates how to configure the load-store units (LSU) in S
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 
@@ -60,7 +64,7 @@ The two LSU styles used in this tutorial are listed below:
 The best LSU style depends on the memory access pattern in your design. There are trade-offs for each LSU, so picking a configuration solely based on the area may compromise throughput. In this tutorial, the access pattern is ideal for the prefetching LSU, and it will achieve the same throughput as the burst coalesced LSU, but this is not always the case.
 
 In addition to these two styles, there are also LSU modifiers. LSU modifiers are addons that can be combined with LSU styles, such as caching, which can be combined with the burst-coalesced LSU style.
-For more details on LSU modifiers and LSU styles, refer to the Memory Accesses section in the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+For more details on LSU modifiers and LSU styles, refer to the Memory Accesses section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 ### Introduction to the LSU Control Extension
 
@@ -97,7 +101,7 @@ q.submit([&](handler &h) {
 ```
 
 Currently, not every combination of parameters is valid in the compiler.
-For more details on the descriptions of LSU controls, styles, and modifiers please refer to the LSU Controls section in the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+For more details on the descriptions of LSU controls, styles, and modifiers please refer to the LSU Controls section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 ### Tutorial Code Overview
 
@@ -140,28 +144,27 @@ The kernel design requests data from global memory in a contiguous manner. There
 
 1. Generate the `Makefile` by running `cmake`.
 
-     ```bash
+   ```bash
    mkdir build
    cd build
    ```
 
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-    ```bash
-    cmake ..
+   To compile for the default target (the Agilex device family), run `cmake` using the command:
+   ```
+   cmake ..
    ```
 
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -194,23 +197,21 @@ The kernel design requests data from global memory in a contiguous manner. There
    cd build
    ```
 
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-   ```bat
-    cmake -G "NMake Makefiles" ..
+   To compile for the default target (the Agilex device family), run `cmake` using the command:
    ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```bat
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" ..
    ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```bat
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -230,8 +231,6 @@ The kernel design requests data from global memory in a contiguous manner. There
      ```bash
      nmake fpga
      ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -280,7 +279,7 @@ If your design is limited by the available FPGA resources, you can try the follo
 
 However, configuring an LSU solely based on area may compromise throughput. In this tutorial, the access pattern is ideal for the prefetch LSU and it will achieve the same throughput as the burst coalesced, but this is not always the case.
 
-For more details on the descriptions of LSU controls, styles, and modifiers, refer to the LSU Controls section in the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+For more details on the descriptions of LSU controls, styles, and modifiers, refer to the LSU Controls section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 ## Running the Sample
 
@@ -300,7 +299,7 @@ For more details on the descriptions of LSU controls, styles, and modifiers, ref
     lsu_control.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```bash
      ./lsu_control.fpga         (Linux)
      lsu_control.fpga.exe       (Windows)
@@ -319,7 +318,7 @@ PASSED: all kernel results are correct.
 
 The throughput observed when running all three kernels, ```KernelPrefetch```, ```KernelBurst```, and ```KernelDefault```, is printed to the standard out. The throughput values are comparable among these, however from the reports, we see an area savings for the ```KernelPrefetch```. Therefore, we can leverage the area savings of the ```KernelPrefetch``` knowing we won't compromise throughput.
 
-> **Note**: The numbers shown are from a compile and run on the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA.
+> **Note**: The numbers shown are from a compile and run on the Intel® PAC with Intel Arria® 10 GX FPGA.
 
 > **Note**: The performance difference will be apparent only when running on FPGA hardware. The emulator and simulator do not reflect the design's hardware memory system performance.
 

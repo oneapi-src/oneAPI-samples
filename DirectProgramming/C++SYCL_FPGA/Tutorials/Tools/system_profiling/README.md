@@ -8,7 +8,7 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
@@ -21,6 +21,10 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 
@@ -47,6 +51,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL™ Applications, an open-source tool, to perform system-level profiling on a design and reveal areas for improvement.
+When targeting an FPGA family/part, no FPGA executable is generated. So this sample is really meant to be used when targeting a device with a BSP (e.g. the Intel® PAC with Intel Arria® 10 GX FPGA) where an FPGA executable would be produced.
 
 ### Profiling Techniques
 The following code snippet uses standard SYCL* and C++ language features to extract profiling information from code.
@@ -237,23 +242,26 @@ The Intercept Layer for OpenCL™ Applications makes it clear why the double buf
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+    ```
+    mkdir build
+    cd build
+    ```
+    To compile for the default target (the Agilex device family), run `cmake` using the command:
     ```
     cmake ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+    ```
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided:
 
@@ -297,7 +305,8 @@ You can compile and run this tutorial in the Eclipse* IDE. For instructions, ref
      ```
      CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./double_buffering.fpga_sim     (Linux)
      ```
-3. Run the sample on the FPGA device:
+     > **Note**: for the following steps, you need to have acees to an FPGA device, and the code must have been compiled by targeting its BSP.
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./double_buffering.fpga         (Linux)
      ```

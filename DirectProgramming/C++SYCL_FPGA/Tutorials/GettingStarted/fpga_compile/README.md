@@ -243,17 +243,17 @@ Notice that whether you target the FPGA emulator, FPGA simulator or FPGA hardwar
   ```
   cmake -G "NMake Makefiles" ..
   ```
-> **Note**: You can change the default target by using the command:
->  ```
->  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
->  ``` 
->
-> Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
->  ```
->  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
->  ``` 
->
-> You will only be able to run an executable on the FPGA if you specified a BSP.
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -273,10 +273,6 @@ Notice that whether you target the FPGA emulator, FPGA simulator or FPGA hardwar
     ```
     nmake fpga
     ```
-
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
-> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Reports
 Locate `report.html` in the `fpga_compile_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
@@ -301,7 +297,7 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
     fpga_compile.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device (only if you ran cmake with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```
   ./fpga_compile.fpga         (Linux)
   fpga_compile.fpga.exe       (Windows)

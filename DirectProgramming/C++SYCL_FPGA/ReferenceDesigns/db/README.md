@@ -38,7 +38,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -49,8 +49,10 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
-
-> **Note**: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX).
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ### Performance
 
@@ -144,13 +146,25 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux*
 1. Change to the sample directory.
-2. Configure the build system for query number 1.
+2. Configure the build system for the default target (the Agilex device family).
    ```
    mkdir build
    cd build
    cmake .. -DQUERY=1
    ```
    `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -182,16 +196,26 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Windows*
 
->**Note**: The FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for query number 1.
+2. Configure the build system for the default target (the Agilex device family).
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" -DQUERY=1
+   cmake -G "NMake Makefiles" .. -DQUERY=1
    ```
    `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -238,11 +262,11 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    ./db.fpga_emu --dbroot=../data/sf0.01 --test
    ```
    (Optional) Run the design for queries `9`, `11` and `12`.
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
    ```
-3. Run the design on an FPGA device.
+3. Run the design on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./db.fpga --dbroot=../data/sf1 --test
    ```
@@ -254,13 +278,13 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    db.fpga_emu.exe --dbroot=../data/sf0.01 --test
    ```
    (Optional) Run the design for queries `9`, `11` and `12`.
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    db.fpga_sim.exe --dbroot=../data/sf0.01 --test
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on an FPGA device.
+3. Run the sample on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    db.fpga.exe --dbroot=../data/sf1 --test
    ```

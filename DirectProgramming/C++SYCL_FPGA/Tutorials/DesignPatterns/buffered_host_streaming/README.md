@@ -47,7 +47,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware           | Intel® CycloneV, Cyclone10GX, Agilex, Arria10, and Stratix10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -58,10 +58,12 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
+>
+> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
->**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
-
->**Note**: SYCL* USM host allocations (and the code in this sample) are only supported for the **FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)** with USM support (for example, intel_s10sx_pac:pac_s10_usm).
+*Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex).*
 
 ## Key Implementation Details
 
@@ -92,16 +94,25 @@ This sample demonstrates the following concepts:
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**.
+2. Build the program for the Agilex device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -128,19 +139,25 @@ This sample demonstrates the following concepts:
 
 ### On Windows*
 
->**Note**: The Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Build the program for **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**.
+2. Build the program for the Agilex device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -177,7 +194,7 @@ This sample demonstrates the following concepts:
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./buffered_host_streaming.fpga_sim
    ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
    ```
    ./buffered_host_streaming.fpga
    ```
@@ -194,7 +211,7 @@ This sample demonstrates the following concepts:
    buffered_host_streaming.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
    ```
    buffered_host_streaming.fpga.exe
    ```
