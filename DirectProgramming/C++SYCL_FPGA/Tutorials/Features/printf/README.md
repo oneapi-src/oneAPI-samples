@@ -50,7 +50,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 This tutorial shows how to use some simple macros to enable easy use of the SYCL `printf()` function. This function allows printing from within code running on the FPGA.
 
 ### Motivation
-Previously, we've provided examples for how to print data using the Stream class in the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/kernel-controls/pipes-extension/i-o-pipes.html).
+Previously, we've provided examples for how to print data using the Stream class in the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/kernel-controls/pipes-extension/i-o-pipes.html).
 
 Compare to the Stream class, `printf()` has the following advantages:
 

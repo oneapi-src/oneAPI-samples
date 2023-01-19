@@ -312,7 +312,7 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA and the Intel® oneAPI DPC++/C++ Compiler.
+The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++/C++ Compiler.
 
 |Safelen | Kernel Time (ms) | Throughput (KB/s)
 |:---  |:--- |:---

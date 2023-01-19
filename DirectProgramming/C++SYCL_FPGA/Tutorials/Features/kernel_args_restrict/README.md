@@ -273,7 +273,7 @@ PASSED
 
 ### Discussion of Results
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA) is shown.
 
 |Attribute used?  | II | Kernel Throughput (MB/s)
 |:--- |:--- |:---

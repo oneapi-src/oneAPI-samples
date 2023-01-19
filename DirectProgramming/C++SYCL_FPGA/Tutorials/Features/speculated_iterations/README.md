@@ -82,7 +82,7 @@ In both increasing and decreasing cases, some experimentation is usually necessa
 ### Tutorial example
 In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```.
 
-The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA. Different numbers are chosen for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute.
@@ -196,7 +196,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 ## Examining the Reports
 Locate `report.html` in the `speculated_iterations_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA.
+In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on the Intel® PAC with Intel Arria® 10 GX FPGA.
 
 * When the number of  `speculated iterations` is set to 0, loop II is 27.
 * Setting the `speculated iterations` to 27 yielded an II of 1.

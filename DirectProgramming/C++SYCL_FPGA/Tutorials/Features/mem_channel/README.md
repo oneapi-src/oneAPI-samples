@@ -64,7 +64,7 @@ without worrying about where each buffer should be allocated. However, this
 configuration can be expensive in terms of FPGA resources because the global
 memory interconnect required to orchestrate the memory accesses across all the
 channels is complex. For more information about burst-interleaving, please
-refer to the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+refer to the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 The compiler allows you to avoid this area overhead by
 disabling burst-interleaving and assigning buffers to individual channels. There
@@ -87,7 +87,7 @@ To disable burst-interleaving, you need to pass the
 global memory type is indicated in the board specification XML file for the
 Board Support Package (BSP) that you're using. The board specification XML
 file, called `board_spec.xml`, can be found in the root directory of your BSP.
-For example, for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA BSP, the location
+For example, for the Intel® PAC with Intel Arria® 10 GX FPGA BSP, the location
 of this file is:
 `$INTELFPGAOCLSDKROOT/board/intel_a10gx_pac/hardware/pac_a10/board_spec.xml`.
 Note that this BSP only has a single memory type available as indicated in its
@@ -139,10 +139,10 @@ created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
 `TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
-defined when the design is compiled for the Intel&reg; PAC with Arria&reg; 10 GX FPGA
+defined when the design is compiled for the Intel® PAC with Arria® 10 GX FPGA
 because that board has an external memory with two available channels. In that
 case, the 4 buffers are evenly assigned to the available channels on that
-board. When the design is compiled for the Intel&reg; FPGA PAC D5005 Stratix&reg; 10 SX
+board. When the design is compiled for the Intel® FPGA PAC D5005 Stratix® 10 SX
 FPGA, the 4 buffers are assigned to the 4 available channels on that board.
 For other devices, please make sure to pass the correct macro (or create your
 own) that clearly matches the number of channels available.
@@ -327,7 +327,7 @@ Kernel throughput without burst-interleaving: 796.379552 MB/s
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
-Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA. The table
+Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The table
 below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
@@ -335,8 +335,8 @@ Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM
 |Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0
 |With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
 
-Similarly, when compiled for the Intel&reg; Programmable Acceleration Card with
-Intel&reg; Stratix&reg; 10 SX FPGA, the tutorial design achieved the following results:
+Similarly, when compiled for the Intel® Programmable Acceleration Card with
+Intel® Stratix® 10 SX FPGA, the tutorial design achieved the following results:
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
 |Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0

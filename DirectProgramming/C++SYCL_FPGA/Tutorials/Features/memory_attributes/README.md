@@ -296,7 +296,7 @@ In this tutorial, both the single-pumped and double-pumped versions of the kerne
 
 If you want to observe the f<sub>MAX</sub> effect, modify the code to enqueue only the single-pumped (or only the double-pumped) version of the kernel. Only the report generated from a full FPGA compile (`make fpga`) will provide f<sub>MAX</sub> information.
 
-The table below summarizes the f<sub>MAX</sub> achieved when compiling single-kernel variants of the tutorial design to an on Intel&reg; PAC with Intel&reg; Arria&reg; 10 GX FPGA.
+The table below summarizes the f<sub>MAX</sub> achieved when compiling single-kernel variants of the tutorial design to an on Intel® PAC with Intel® Arria® 10 GX FPGA.
 
 Variant  | Fmax (MHz) | \# MLABs in `dict_offset`
 |:--- |:--- |:---

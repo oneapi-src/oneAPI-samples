@@ -182,8 +182,6 @@ Additionaly, the cmake build system can be configured using the following parame
 
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
 2. Configure the build system for the Agilex device family, which is the default.
    ```

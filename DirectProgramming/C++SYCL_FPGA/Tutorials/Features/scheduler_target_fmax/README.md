@@ -1,6 +1,6 @@
 # Scheduler Target FMAX
 
-This tutorial explains the `scheduler_target_fmax_mhz` attribute and its effect on the performance of Intel&reg; FPGA kernels.
+This tutorial explains the `scheduler_target_fmax_mhz` attribute and its effect on the performance of Intel® FPGA kernels.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -69,7 +69,7 @@ It is recommended that you use `[[intel::initiation_interval(N)]]` attribute on 
 
 ### Understanding the Tutorial Design
 
-In the tutorial, all four kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied. All specific numbers mentioned below are expected observations on Intel Arria&reg; 10 GX FPGA. Even so, the tradeoff between fMAX and II is also expected on other devices.
+In the tutorial, all four kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied. All specific numbers mentioned below are expected observations on Intel Arria® 10 GX FPGA. Even so, the tradeoff between fMAX and II is also expected on other devices.
 
 In kernel `Default`, no fMAX or II constraints are provided. By default, the compiler tries to optimize throughput using heuristics to balance high fMAX and small II. The block `B1` is scheduled at less than 240 MHz, so this block is limiting this kernel's fMAX but is able to achieve II=1.
 
