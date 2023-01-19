@@ -213,11 +213,6 @@ own) that clearly matches the number of channels available.
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete,
-   FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be
-   downloaded <a
-   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mem_channel.fpga.tar.gz"
-   download>here</a>.
 
 ### On a Windows* System
 

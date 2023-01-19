@@ -187,7 +187,6 @@ Performance results are based on testing as of October 27, 2020.
        ```
        make fpga
        ```
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz).
 
 ### On Windows*
 

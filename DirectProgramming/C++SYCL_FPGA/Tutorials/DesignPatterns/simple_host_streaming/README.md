@@ -177,7 +177,6 @@ We are currently working on an API and tutorial to address both of these drawbac
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel&reg; PAC with Intel Stratix&reg; 10 SX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/simple_host_streaming.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 1. Generate the `Makefile` by running `cmake`.

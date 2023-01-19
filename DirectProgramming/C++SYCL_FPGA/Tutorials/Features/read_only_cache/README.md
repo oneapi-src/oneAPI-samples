@@ -153,11 +153,6 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete,
-   FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be
-   downloaded <a
-   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/read_only_cache.fpga.tar.gz"
-   download>here</a>.
 
 ### On a Windows* System
 

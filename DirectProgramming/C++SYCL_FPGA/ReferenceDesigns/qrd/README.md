@@ -180,8 +180,6 @@ Additionaly, the cmake build system can be configured using the following parame
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz).
-
 ### On Windows*
 
 >**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.

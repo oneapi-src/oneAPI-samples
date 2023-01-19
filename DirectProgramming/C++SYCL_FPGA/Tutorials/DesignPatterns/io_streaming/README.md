@@ -178,7 +178,6 @@ Notice that the main kernel in the `SubmitSideChannelKernels` function in *src/S
       ```
       make fpga
       ```
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/io_streaming.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/io_streaming.fpga.tar.gz).
 
 ### On Windows*
 

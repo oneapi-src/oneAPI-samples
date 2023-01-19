@@ -127,7 +127,6 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/stall_enable.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

@@ -213,8 +213,6 @@ When you use the `ac_fixed` library, keep the following points in mind:
      make fpga
      ```
 
-3. (Optional) As the earlier hardware compile can take several hours to complete, FPGA precompiled binaries (compatible with Ubuntu 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/ac_fixed.fpga.tar.gz).
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.

@@ -127,8 +127,6 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.

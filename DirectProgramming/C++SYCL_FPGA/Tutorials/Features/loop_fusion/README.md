@@ -161,7 +161,6 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_fusion.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

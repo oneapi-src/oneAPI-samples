@@ -230,7 +230,6 @@ Notice that whether you target the FPGA emulator, FPGA simulator or FPGA hardwar
     ```
     make fpga
     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fpga_compile.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

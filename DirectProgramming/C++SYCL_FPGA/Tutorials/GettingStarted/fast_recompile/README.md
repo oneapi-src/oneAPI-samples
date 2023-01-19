@@ -202,7 +202,6 @@ For larger and more complex projects, the device link method has the advantage o
         ```
         make fpga
         ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fast_recompile.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

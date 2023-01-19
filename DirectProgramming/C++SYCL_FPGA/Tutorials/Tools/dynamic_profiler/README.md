@@ -222,8 +222,6 @@ When looking at the performance data for the two "after optimization" kernels in
     ```bash
     make fpga
     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler.fpga.tar.gz).
-Alternatively, if you wish to view the dynamic profiler data in the VTune Profiler, you can download a sample `dynamic_profiler_tutorial.json` file [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json).
 
 ## Running the Sample
 
@@ -278,7 +276,7 @@ Post-processing complete.
 
 > **Note**: You can ignore warnings about pipe data resulting in a division by zero. These are the result of pipes not yet receiving data resulting in metrics being zero.
 
-An example output, `dynamic_profiler_tutorial.json`, can be downloaded from [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json). Without needing to run the design, you can import this data file in the VTune Profiler, as described in the [Import Results and Traces into VTune Profiler GUI](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/manage-result-files/importing-results-to-gui.html) documentation, to observe the kind of data the Dynamic Profiler can collect.
+An example output, `dynamic_profiler_tutorial.json`, can be found zipped in the `data` folder. Without needing to run the design, you can import this data file in the VTune Profiler, as described in the [Import Results and Traces into VTune Profiler GUI](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/manage-result-files/importing-results-to-gui.html) documentation, to observe the kind of data the Dynamic Profiler can collect.
 
 ## Examining the Reports
 In the tab containing the data from your run, ensure the view is set to "CPU/FPGA Interaction". There should be three windows for viewing:

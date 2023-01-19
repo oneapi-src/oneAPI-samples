@@ -148,7 +148,6 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   ```
   make fpga
   ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/speculated_iterations.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

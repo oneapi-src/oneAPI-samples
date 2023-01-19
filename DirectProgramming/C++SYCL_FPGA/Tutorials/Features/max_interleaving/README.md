@@ -132,8 +132,6 @@ In this loop nest, pipelined iterations of L1 are serialized across L2 to preser
      make fpga
      ```
 
-3. (Optional) As the FPGA hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/max_interleaving.fpga.tar.gz" download>here</a>.
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.

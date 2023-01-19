@@ -135,8 +135,6 @@ This sample demonstrates the following concepts:
       make fpga
       ```
 
-      (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/buffered_host_streaming.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/buffered_host_streaming.fpga.tar.gz).
-
 ### On Windows*
 
 1. Change to the sample directory.

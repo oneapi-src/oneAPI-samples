@@ -161,8 +161,6 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -D
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/use_library.fpga.tar.gz" download>here</a>.
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.

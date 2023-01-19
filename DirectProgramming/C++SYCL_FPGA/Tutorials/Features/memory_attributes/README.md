@@ -221,7 +221,6 @@ The choice of attributes will be further discussed in the [Examining the Reports
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/memory_attributes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

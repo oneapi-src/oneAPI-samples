@@ -209,9 +209,6 @@ After each kernel is launched, the host-side operations (that occur *after* the 
       make fpga
       ```
 
-    (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/n_way_buffering.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/n_way_buffering.fpga.tar.gz).
-
-
 ### On Windows*
 
 1. Change to the sample directory.

@@ -184,6 +184,7 @@ The compiler tries to achieve the latency constraints, and it errors out if some
   >  ``` 
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
@@ -209,8 +210,6 @@ The compiler tries to achieve the latency constraints, and it errors out if some
      ```
      make fpga
      ```
-
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/latency_control.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

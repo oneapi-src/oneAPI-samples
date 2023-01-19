@@ -176,8 +176,6 @@ Each compute unit in the chain from `Source` to `Sink` must read from a unique p
       ```
       make fpga
       ```
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/compute_units.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/compute_units.fpga.tar.gz).
-
 
 ### On Windows*
 

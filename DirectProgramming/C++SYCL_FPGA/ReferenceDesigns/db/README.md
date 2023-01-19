@@ -184,7 +184,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       The report resides at `db_report.prj/reports/report.html`.
 
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time. You can download pre-generated reports from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
+       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
@@ -193,8 +193,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
 
-
-   (Optional) The hardware compile may take several hours to complete. You can download a pre-compiled binary (compatible with Linux* Ubuntu* 18.04) for an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
 
 ### On Windows*
 

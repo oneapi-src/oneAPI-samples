@@ -164,8 +164,6 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/mvdr_beamforming.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/mvdr_beamforming.fpga.tar.gz).
-
 ### On Windows*
 
 1. Change to the sample directory.

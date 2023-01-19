@@ -192,8 +192,6 @@ This design measures the FPGA performance to determine how many assets can be pr
        make fpga
        ```
 
-      (Optional) As the above hardware compile may take several hours to complete, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/crr.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/crr.fpga.tar.gz).
-
 ### On Windows*
 
 1. Change to the sample directory.

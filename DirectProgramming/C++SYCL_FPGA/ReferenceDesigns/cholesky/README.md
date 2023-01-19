@@ -190,8 +190,6 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
        make fpga
        ```
 
-   (Optional) The hardware compile may take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky.fpga.tar.gz).
-
 ### On Windows*
 
 1. Change to the sample directory.
