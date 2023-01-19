@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS*Linux 8 <br> Red Hat* Enterprise Linux*8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu*18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA
 | Time to complete                  | 30 minutes
@@ -18,10 +18,6 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
->
-> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 

@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to set latency constraints to pipes and load
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to set latency constraints to pipes and LSUs accesses.<br>How to confirm that the compiler respected the latency control directive.
 | Time to complete                  | 15 minutes
@@ -18,10 +18,6 @@ This FPGA tutorial demonstrates how to set latency constraints to pipes and load
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
->
-> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 ## Prerequisites
 

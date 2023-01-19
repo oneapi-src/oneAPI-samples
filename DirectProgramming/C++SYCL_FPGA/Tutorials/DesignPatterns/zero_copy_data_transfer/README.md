@@ -4,7 +4,7 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL Unified
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® CycloneV, Cyclone10GX, Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to use SYCL USM host allocations for the FPGA
 | Time to complete                  | 15 minutes
@@ -17,10 +17,6 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL Unified
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> When targeting the CycloneV FPGA family, Intel® Quartus® Standard Edition must be used instead of Intel® Quartus® Prime Pro Edition.
->
-> :warning: The appropriate device files must be installed during the Intel® Quartus® installation.
 
 *Notice: SYCL USM host allocations, and therefore this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm). USM host allocations are supported for all non FPGA board targets (e.g. Agilex™).*
 
