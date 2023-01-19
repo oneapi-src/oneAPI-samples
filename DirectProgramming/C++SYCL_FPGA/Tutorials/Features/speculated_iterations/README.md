@@ -78,7 +78,7 @@ In both increasing and decreasing cases, some experimentation is usually necessa
 ### Tutorial example
 In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```.
 
-The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on an Intel® Arria® 10 FPGA. Different numbers are chosen for the Intel® Stratix® 10 and Intel Agilex™ targets accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute.

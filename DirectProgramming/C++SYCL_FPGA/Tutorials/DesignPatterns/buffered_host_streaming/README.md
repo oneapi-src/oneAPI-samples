@@ -212,15 +212,6 @@ This sample demonstrates the following concepts:
 
 ## Example Output
 
-The following results were obtained on a system with the following specification.
-
-| Area         | Description
-|:---          |:---
-| CPU          | Intel® Xeon® CPU E5-1650 v3 @ 3.50GHz (6 cores, 12 threads)
-| CPU Memory   | 65 Gb
-| Accelerator  | Intel® PAC D5005 (with Intel Stratix® 10 SX)
-| PCIe         | Gen 3.0 x16
-
 ### Example Output on an FPGA Emulator
 
 > **Note**: The FPGA emulator does not accurately represent the performance (throughput or latency) of the kernels.
@@ -263,7 +254,7 @@ The following results were obtained on a system with the following specification
     PASSED
 ```
 
-### Example Output on an FPGA Device
+### Example Output on an Intel® PAC D5005 (with Intel Stratix® 10 SX)
 
 >**Note**: In the performance results shown below the FPGA kernel is **not** the bottleneck of the full system. Instead, the **Producer**/**Consumer** running in parallel are the bottlenecks. (See the [Roofline Analysis](#roofline-analysis) section below for more information.) The full design achieves ~87% of the maximum throughput, as measured by the roofline analysis.
 

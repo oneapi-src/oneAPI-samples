@@ -30,10 +30,14 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=-DAgilex.")
 endif()
 
-
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
+endif()
+
+# Allow disabling of hyper-optimization for S10 and Agilex
+if((DEVICE_FLAG MATCHES "S10") OR (DEVICE_FLAG MATCHES "Agilex") OR (DEFINED ${NO_HYPER_OPTIMIZATION}))
+    set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
@@ -43,15 +47,10 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR -D${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR -D${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl ${HYPER_FLAG} -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -D${DEVICE_FLAG} -DFPGA_HARDWARE")
-if(FPGA_DEVICE MATCHES ".s10.*")
-    # hyper-optimized-handshaking only applies to Intel Stratix® 10 FPGAs
-    set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-    set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-else()
-    set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-    set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-endif()
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${HYPER_FLAG} -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

@@ -135,13 +135,14 @@ created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
 `TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
-defined when the design is compiled for the Intel® PAC with Arria® 10 GX FPGA
-because that board has an external memory with two available channels. In that
-case, the 4 buffers are evenly assigned to the available channels on that
-board. When the design is compiled for the Intel® FPGA PAC D5005 Stratix® 10 SX
-FPGA, the 4 buffers are assigned to the 4 available channels on that board.
-For other devices, please make sure to pass the correct macro (or create your
-own) that clearly matches the number of channels available.
+defined when the design is compiled for an Intel® Arria® GX FPGA as the 
+Intel® PAC with Arria® 10 GX FPGA has an external memory with two available 
+channels. In that case, the 4 buffers are evenly assigned to the available 
+channels on that board. When the design is compiled for an Intel® Stratix® or
+Agilex™ FPGA, the 4 buffers are assigned to the 4 available channels.
+This can be parametrize by setting the correct macro (or create your
+own) that clearly matches the number of channels available on your specific
+board.
 
 ## Key Concepts
 * How to disable global memory burst-interleaving using the

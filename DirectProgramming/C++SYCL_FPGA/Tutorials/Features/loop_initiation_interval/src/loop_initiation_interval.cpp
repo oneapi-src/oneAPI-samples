@@ -111,8 +111,8 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // default heuristic of finding the minimum II * (1/fMAX) Relaxing the
           // II on a short loop with a long feedback path will remove the
           // bottleneck the loop had on the maximum achievable fMAX of the
-          // design The default targeted fMAX is 240MHz for Arria® 10 and 480MHz
-          // for Stratix® 10, so different IIs need to be specified so the
+          // design. The default targeted fMAX is target dependent,
+          // so different IIs need to be specified so the
           // compiler can schedule the loop such that it does not restrict the
           // maximum fMAX
 #if defined(ENABLE_II)

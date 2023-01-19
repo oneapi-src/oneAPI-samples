@@ -20,7 +20,7 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
-# Allow disabling of hyper-optimization for S10
+# Allow disabling of hyper-optimization for S10 and Agilex
 if (${NO_HYPER_OPTIMIZATION})
     set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif(${NO_HYPER_OPTIMIZATION})

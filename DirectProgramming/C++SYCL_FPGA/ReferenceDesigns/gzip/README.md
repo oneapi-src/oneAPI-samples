@@ -55,7 +55,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The GZIP DEFLATE algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman, and CRC).
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for an Intel® Stratix® 10 FPGA, which is a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex™ FPGAs, which are a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 
