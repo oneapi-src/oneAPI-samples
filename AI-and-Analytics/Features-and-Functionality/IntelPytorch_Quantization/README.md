@@ -1,6 +1,6 @@
-# `IPEX Staic and Dynamic Quantization` Sample
+# `IPEX Static and Dynamic Quantization` Sample
 
-The `IPEX Staic and Dynamic Quantization` sample will demonstrate how to quantize a ResNet50 model calirating with the CIFAR10 dataset using the Intel® Extension for PyTorch*.
+The `IPEX static and dynamic quantization` sample will demonstrate how to quantize a ResNet50 model calirating with the CIFAR10 dataset using the Intel® Extension for PyTorch*.
 
 The Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
