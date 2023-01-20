@@ -273,10 +273,10 @@ Kernel throughput with the read-only cache: 298.51 MB/s
 A test compile of this tutorial design achieved the following results on the
 Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
 
-Configuration | Execution Time (ms) | Throughput (MB/s)
-|:--- |:--- |:---
-|Without caching | 3.377 | 148.06
-|With caching | 1.675 | 298.51
+Configuration     | Execution Time (ms) | Throughput (MB/s)
+|:---             |:---                 |:---
+|Without caching  | 3.377               | 148.06
+|With caching     | 1.675               | 298.51
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (i.e.

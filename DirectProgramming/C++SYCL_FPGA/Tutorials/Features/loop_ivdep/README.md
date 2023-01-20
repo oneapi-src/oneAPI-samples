@@ -311,9 +311,9 @@ PASSED: The results are correct
 The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++/C++ Compiler.
 
 |Safelen | Kernel Time (ms) | Throughput (KB/s)
-|:---  |:--- |:---
-|1     | 50 | 1320
-|128   | 10 | 6403
+|:---    |:---              |:---
+|1       | 50               | 1320
+|128     | 10               | 6403
 
 With the `ivdep` attribute applied with the maximum safe `safelen` parameter, the kernel execution time is decreased by a factor of ~5.
 

@@ -294,10 +294,10 @@ If you want to observe the f<sub>MAX</sub> effect, modify the code to enqueue on
 
 The table below summarizes the f<sub>MAX</sub> achieved when compiling single-kernel variants of the tutorial design to an on Intel® PAC with Intel® Arria® 10 GX FPGA.
 
-Variant  | Fmax (MHz) | \# MLABs in `dict_offset`
-|:--- |:--- |:---
-|Single-pumped  | 307.9 | 32
-|Double-pumped  | 200.0 | 16
+Variant         | Fmax (MHz) | \# MLABs in `dict_offset`
+|:---           |:---        |:---
+|Single-pumped  | 307.9      | 32
+|Double-pumped  | 200.0      | 16
 
 > **Note**: The numbers reported in the table will vary slightly from compile to compile.
 

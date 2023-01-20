@@ -79,12 +79,12 @@ Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
 To disable burst-interleaving, you need to pass the
-`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. The
-global memory type is indicated in the board specification XML file for the
-Board Support Package (BSP) that you're using. The board specification XML
-file, called `board_spec.xml`, can be found in the root directory of your BSP.
-For example, for the Intel® PAC with Intel Arria® 10 GX FPGA BSP, the location
-of this file is:
+`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. In the 
+case of targeting a BSP, the global memory type is indicated in the board 
+specification XML file for the Board Support Package (BSP) that you're using. 
+The board specification XML file, called `board_spec.xml`, can be found in the 
+root directory of your BSP. For example, for the Intel® PAC with Intel Arria® 10 
+GX FPGA BSP, the location of this file is:
 `$INTELFPGAOCLSDKROOT/board/intel_a10gx_pac/hardware/pac_a10/board_spec.xml`.
 Note that this BSP only has a single memory type available as indicated in its
 `board_spec.xml` file: `<global_mem name="DDR"`. The appropriate flag to pass

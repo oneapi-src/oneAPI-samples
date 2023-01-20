@@ -225,7 +225,7 @@ PASSED: The results are correct
 
 The stdout output shows the giga-floating point operations per second (GFlops) for each kernel.
 
-When run on the Intel® PAC with Intel Arria® 10® 10 GX FPGA hardware board, we see that the throughput remains unchanged when using `max_interleaving(0)` or `max_interleaving(1)`. However, the kernel using `max_interleaving(1)` uses fewer hardware resources, as shown in the reports.
+When run on an Intel® PAC with Intel Arria® 10® 10 GX FPGA hardware board, we see that the throughput remains unchanged when using `max_interleaving(0)` or `max_interleaving(1)`. However, the kernel using `max_interleaving(1)` uses fewer hardware resources, as shown in the reports.
 
 When run on the FPGA emulator, the `max_interleaving` attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This anomaly occurs because this trivial example uses only a tiny fraction of the compute resources available on the FPGA.
 

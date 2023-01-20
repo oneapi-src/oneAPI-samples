@@ -91,7 +91,7 @@ The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https:
 #### FPGA Hardware
 This is a full compile through to the FPGA hardware image. 
 You can target an FPGA family/part number to get accurate resource usage and fmax estimates.
-You can also target a device with a BSP (e.g. the Intel® PAC with Intel Arria® 10 GX FPGA) to get an executable that can be directly executed.
+You can also target a device with a BSP (e.g. for the Intel® PAC with Intel Arria® 10 GX FPGA: intel_a10gx_pac:pac_a10) to get an executable that can be directly executed.
 
 ### Device Selectors
 The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
