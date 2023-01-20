@@ -235,10 +235,16 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      device_global.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA simulator device:
-     ```
-     ./device_global.fpga_sim     (Linux)
-     device_global.fpga_sim.exe   (Windows)
-     ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./device_global.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        device_global.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 3. Run the sample on the FPGA device:
      ```
      ./device_global.fpga         (Linux)
