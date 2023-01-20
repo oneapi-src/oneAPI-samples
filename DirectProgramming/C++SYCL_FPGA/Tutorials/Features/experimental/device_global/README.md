@@ -63,7 +63,7 @@ A `device_global` instance is always zero-initialized. If you need the first usa
 ```cpp
 namespace exp = sycl::ext::oneapi::experimental;
 using FPGAProperties = decltype(exp::properties(
-    exp::device_image_scope));
+    exp::device_image_scope, exp::host_access_none));
 exp::device_global<int, FPGAProperties> val;
 exp::device_global<bool, FPGAProperties> is_val_initialized;
 int main () {
