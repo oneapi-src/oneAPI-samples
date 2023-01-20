@@ -71,6 +71,13 @@ int main() {
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;                  
+                  
+
     // Increment each counter multiple times
     for (auto num_increments = 1; num_increments <= kNumIncrements;
          num_increments++) {
