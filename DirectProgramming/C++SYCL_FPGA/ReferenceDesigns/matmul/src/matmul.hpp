@@ -211,4 +211,4 @@ void MatmulImpl(sycl::queue &q, T *a_matrix, T *b_matrix, T *c_matrix,
   sycl::free(c, q);
 }
 
-#endif /* __Matmul_HPP__ */
+#endif /* __MATMUL_HPP__ */

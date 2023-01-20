@@ -19,7 +19,7 @@ void FillRand(float *m_matrix, int l_bound, int u_bound, int elements) {
 
 // Compares num_matrices pairs of matrices; returns true iff they are equal
 // given a tolerated error bound.
-bool EqualMat(float *c_matrix, float *c_transposed, int rows, int cols,
+bool EqualMat(float *c_matrix, float *c_reference, int rows, int cols,
               int num_matrices) {
   int matsize = rows * cols;
   bool passed = true;
@@ -31,13 +31,13 @@ bool EqualMat(float *c_matrix, float *c_transposed, int rows, int cols,
     for (int col = 0; col < cols; col++) {
       for (int row = 0; row < rows; row++) {
         int idx = matrix_idx * matsize + col * rows + row;
-        if (abs(c_matrix[idx] - c_transposed[idx]) > kEpsilon) {
+        if (abs(c_matrix[idx] - c_reference[idx]) > kEpsilon) {
           passed = false;
 #if DEBUG == 1
           std::cout << "Error: C[" << col << "][" << row << "] = "
                     << c_matrix[idx]
                     << " but REF[" << col << "][" << row << "] = "
-                    << c_transposed[idx] << std::endl;
+                    << c_reference[idx] << std::endl;
 #endif
         }
         if (!std::isfinite(c_matrix[idx])) {
@@ -160,14 +160,14 @@ int main(int argc, char *argv[]) {
   FillRand(a_matrix, kRandMin, kRandMax, kMatsizeA * num_matrices);
   FillRand(b_matrix, kRandMin, kRandMax, kMatsizeB * num_matrices);
 
-  // Calculate a reference to compare our answer to and store it in c_transposed
+  // Calculate a reference to compare our answer to and store it in c_reference
   // NOTE: since the systolic matrix multiply interprets B as transposed, we
   // need to first transpose b_matrix to b_transposed to use it in the standard
   // MM algorithm
   float b_transposed[kMatsizeB * num_matrices];
-  float c_transposed[kMatsizeC * num_matrices];
+  float c_reference[kMatsizeC * num_matrices];
   TransposeMat(b_matrix, b_transposed, kColsB, kCommon, num_matrices);
-  MatmulRef(a_matrix, b_transposed, c_transposed, kRowsA, kCommon, kColsB,
+  MatmulRef(a_matrix, b_transposed, c_reference, kRowsA, kCommon, kColsB,
             num_matrices);
 
   // Run the matrix multiplication
@@ -193,14 +193,14 @@ int main(int argc, char *argv[]) {
     std::cout << std::endl << "Matrix B" << std::endl;
     PrintMat(b_transposed + matrix_idx * kMatsizeB, kCommon, kColsB);
     std::cout << std::endl << "Matrix C reference" << std::endl;
-    PrintMat(c_transposed + matrix_idx * kMatsizeC, kRowsA, kColsB);
+    PrintMat(c_reference + matrix_idx * kMatsizeC, kRowsA, kColsB);
     std::cout << std::endl << "Matrix C calculated" << std::endl;
     PrintMat(c_matrix + matrix_idx * kMatsizeC, kRowsA, kColsB);
   }
 #endif
 
   // Verify results
-  bool passed = EqualMat(c_matrix, c_transposed, kRowsA, kColsB, num_matrices);
+  bool passed = EqualMat(c_matrix, c_reference, kRowsA, kColsB, num_matrices);
   std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
 
   return !passed;
