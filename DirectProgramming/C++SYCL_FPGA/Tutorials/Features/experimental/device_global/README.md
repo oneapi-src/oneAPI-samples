@@ -93,18 +93,20 @@ int main () {
 
 
 ## Building the `device_global` Tutorial
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
