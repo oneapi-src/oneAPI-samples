@@ -20,6 +20,7 @@ else()
       set(DEVICE_FLAG "S10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
       set(DEVICE_FLAG "Agilex")
+    endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
