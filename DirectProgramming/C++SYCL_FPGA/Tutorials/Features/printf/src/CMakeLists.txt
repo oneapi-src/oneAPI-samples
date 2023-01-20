@@ -15,15 +15,16 @@ else()
 endif()
 
 # Check if the target is a BSP
-if(FPGA_DEVICE MATCHES ".*:.*")
-    set(IS_BSP "1")
-    message(STATUS "Targetting a BSP.")
-else()
+if(IS_BSP MATCHES "0" OR FPGA_DEVICE MATCHES "Arria10|Stratix10|Agilex")
     set(IS_BSP "0")
+else()
+    set(IS_BSP "1")
+    message(STATUS "Unrecognized FPGA family. Assuming the target is a BSP.")
+    message(STATUS "If the target is not a BSP, run cmake with -DIS_BSP=0")
 endif()
 
 if(IS_BSP STREQUAL "0")
-    message(STATUS "Only emulation is supported if no FPGA/BSP is provided as a target")
+    message(STATUS "Only emulation is supported if not targeting an FPGA board/BSP")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code

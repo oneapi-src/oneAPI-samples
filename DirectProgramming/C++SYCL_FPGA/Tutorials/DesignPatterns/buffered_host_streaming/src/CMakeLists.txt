@@ -16,11 +16,12 @@ else()
 endif()
 
 # Check if the target is a BSP
-if(FPGA_DEVICE MATCHES ".*:.*")
-    set(IS_BSP "1")
-    message(STATUS "Targetting a BSP.")
-else()
+if(IS_BSP MATCHES "0" OR FPGA_DEVICE MATCHES "Arria10|Stratix10|Agilex")
     set(IS_BSP "0")
+else()
+    set(IS_BSP "1")
+    message(STATUS "Unrecognized FPGA family. Assuming the target is a BSP.")
+    message(STATUS "If the target is not a BSP, run cmake with -DIS_BSP=0")
 endif()
 
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')

@@ -31,13 +31,14 @@ if(NOT DEFINED DEVICE_FLAG)
 endif()
 
 # Check if the target is a BSP
-if(FPGA_DEVICE MATCHES ".*:.*")
-    set(IS_BSP "1")
-    message(STATUS "Targetting a BSP.")
-    set(BSP_FLAG "-DIS_BSP")
-else()
+if(IS_BSP MATCHES "0" OR FPGA_DEVICE MATCHES "Arria10|Stratix10|Agilex")
     set(IS_BSP "0")
     set(BSP_FLAG "")
+else()
+    set(IS_BSP "1")
+    set(BSP_FLAG "-DIS_BSP")
+    message(STATUS "Unrecognized FPGA family. Assuming the target is a BSP.")
+    message(STATUS "If the target is not a BSP, run cmake with -DIS_BSP=0")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
