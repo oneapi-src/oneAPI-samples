@@ -18,6 +18,8 @@ This tutorial demonstrates how to use SYCL* Universal Shared Memory (USM) to str
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 *Notice: SYCL USM host allocations, used in this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
 

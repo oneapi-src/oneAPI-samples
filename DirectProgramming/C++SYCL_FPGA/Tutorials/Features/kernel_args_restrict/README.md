@@ -18,6 +18,8 @@ This tutorial explains the  `kernel_args_restrict` attribute and its effect on t
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 

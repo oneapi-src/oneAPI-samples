@@ -17,6 +17,8 @@ This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to 
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
