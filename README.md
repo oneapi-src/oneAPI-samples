@@ -2,26 +2,38 @@
 
 The oneAPI-samples repository contains samples for the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html).
 
-**The latest versions of code samples on the master branch are not guaranteed to be stable.** Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
+The contents of the default branch in this repository are meant to be used with the most recent released version of the Intel® oneAPI Toolkits.
 
 ## Get the oneAPI Samples
 
-The version of the repository you use should match the version of the Intel® oneAPI Toolkit you have installed, particularly for the compilers.
+Clone the repository by entering the following command:
 
-Clone a stable version of the repository using Git by entering a command similar to the following:
+`git clone https://github.com/oneapi-src/oneAPI-samples.git`
+
+Alternatively, you can download a zip file containing the primary branch in repository.
+
+1. Click the **Code** button.
+2. Select **Download ZIP** from the menu options.
+3. After downloading the file, unzip the repository contents.
+
+### Get Earlier Versions of the oneAPI Samples
+
+If you need samples for an earlier version of any of the Intel® oneAPI Toolkits, then use a [tagged version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository that corresponds with the toolkit version.
+
+Clone an earlier version of the repository using Git by entering a command similar to the following:
 
 `git clone -b <tag> https://github.com/oneapi-src/oneAPI-samples.git`
 
-where `<tag>` is the stable version number, like **2023.0.0**.
+where `<tag>` is the GitHub tag corresponding to the toolkit version number, like **2023.0.0**.
 
-Alternatively, you can download a zip file containing a stable version of the repository.
+Alternatively, you can download a zip file containing a specific tagged version of the repository.
 
 1. Select the appropriate tag.
 2. Click the **Code** button.
 3. Select **Download ZIP** from the menu options.
 4. After downloading the file, unzip the repository contents.
 
-### Getting Started with oneAPI Samples
+## Getting Started with oneAPI Samples
 
 The best oneAPI sample to start with depends on what you are trying to learn or types of problems you are trying to solve.
 
@@ -32,7 +44,7 @@ The best oneAPI sample to start with depends on what you are trying to learn or 
 | the basics of image rendering workloads and ray tracing                              | [Getting Started Samples for Intel® oneAPI Rendering Toolkit (Render Kit)](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit/GettingStarted)
 | how to modify or create build files for SYCL-compliant projects                      | [Vector Add](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C++SYCL/DenseLinearAlgebra/vector-add) sample
 
->**Note**: The README.md included with each samples provides build instructions for all supported operating system. For samples run in Jupyter Notebooks, you might need to install or configure additional frameworks or package managers if you do not already have them on your system.
+>**Note**: The README.md included with each sample provides build instructions for all supported operating system. For samples run in Jupyter Notebooks, you might need to install or configure additional frameworks or package managers if you do not already have them on your system.
 
 ### Using Integrated Development Environments (IDE)
 
