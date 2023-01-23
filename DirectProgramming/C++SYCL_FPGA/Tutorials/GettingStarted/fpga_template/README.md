@@ -52,8 +52,8 @@ Use this project as a starting point when you build designs for the Intel® oneA
 
 | Variable              | Description
 |:---                   |:---
-| `USER_HARDWARE_FLAGS` | This space-separated list of flags applies only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
-| `USER_FLAGS`          | This space-separated list of flags applies to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
+| `USER_HARDWARE_FLAGS` | This semicolon-separated list of flags applies only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
+| `USER_FLAGS`          | This semicolon-separated list of flags applies to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
 | `USER_INCLUDE_PATHS`  | This semicolon-separated list of include paths applies  to all flows, including emulation. Specify include paths relative to the `CMakeLists.txt` file, or using absolute paths in the filesystem.
 
 ```bash
@@ -95,19 +95,20 @@ Everything below this in the `CMakeLists.txt` is necessary for selecting the com
 
 ## Building the `fpga_template` Tutorial
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
-> - For system wide installations: `/opt/intel/oneapi/setvars.sh`
-> - For private installations: `~/intel/oneapi/setvars.sh`
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 Use these commands to run the design, depending on your OS.
 
@@ -176,7 +177,7 @@ This design uses CMake to generate a build script for  `nmake`.
    | `nmake fpga_emu` | Seconds        | x86-64 binary                                                                | Compiles the FPGA device code to the CPU. Use the Intel® FPGA Emulation Platform for OpenCL™ software to verify your SYCL code’s functional correctness.
    | `nmake report`   | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package.
    | `nmake fpga_sim` | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
-   | `nmake fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and generate an FPGA image that you can run on a supported accelerator board.
+   | `nmake fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime. If you specified a BSP with `FPGA_DEVICE`, this will generate an FPGA image that you can run on the corresponding accelerator board.
    | `nmake fpga_ip_export` | Minutes  | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL that may be exported to Intel® Quartus Prime software
 
    The `fpga_emu`, `fpga_sim`, and `fpga` targets also produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu.exe`, `TARGET_NAME.fpga_sim.exe`, and `TARGET_NAME.fpga.exe`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
