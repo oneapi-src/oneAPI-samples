@@ -80,7 +80,7 @@ Follow these steps to compile and test the design:
    Windows:
    
    ```
-   > cd ../../add-quartus
+   > cd ..\..\add-quartus
    > quartus.exe
    ```
 

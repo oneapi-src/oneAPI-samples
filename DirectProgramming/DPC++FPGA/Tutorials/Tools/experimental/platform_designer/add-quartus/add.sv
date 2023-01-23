@@ -1,23 +1,23 @@
-//  Copyright (c) 2022 Intel Corporation                                  
+//  Copyright (c) 2023 Intel Corporation                                  
 //  SPDX-License-Identifier: MIT                                          
 
 module add (
     input wire i_clk,
     input wire reset_button_n,
-    output reg fpga_led
+    output logic fpga_led
   );
 
-  // pipeline the `reset` signal so the fitter can move logic around on the
-  // chip. Also synchronize `reset` signal to clock. Debouncing logic would be
-  // good, but it is omitted for simplicity.
-  reg reset_button_d1;
-  reg reset_button_d2;
-
-  always @ (posedge i_clk)
-  begin
-    reset_button_d1 <= ~reset_button_n;
-    reset_button_d2 <= reset_button_d1;
+  // reset synchronizer
+  logic [2:0] sync_resetn;
+  always @(posedge i_clk or negedge reset_button_n) begin
+    if (!reset_button_n) begin
+      sync_resetn <= 3'b0;
+    end else begin
+      sync_resetn <= {sync_resetn[1:0], 1'b1};
+    end
   end
+  logic synchronized_resetn;
+  assign synchronized_resetn = sync_resetn[2];
   
   // register the signal used by the LED
   wire sort_done;

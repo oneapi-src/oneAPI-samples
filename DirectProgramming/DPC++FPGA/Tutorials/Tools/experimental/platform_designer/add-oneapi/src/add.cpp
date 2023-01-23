@@ -1,10 +1,14 @@
-#include <iostream> 
+//  Copyright (c) 2023 Intel Corporation
+//  SPDX-License-Identifier: MIT
+
 #include <stdlib.h>
 
+#include <iostream>
+
 // oneAPI headers
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/host_pipes.hpp>
+#include <sycl/sycl.hpp>
 
 // use host pipes to write into addresses in the CSR
 using OutputPipe = sycl::ext::intel::prototype::pipe<
@@ -13,6 +17,13 @@ using OutputPipe = sycl::ext::intel::prototype::pipe<
     0, 1, true, false,
     // store the most recently processed index to the CSR
     sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+
+using InterruptPipe = sycl::ext::intel::prototype::pipe<
+    class IRQ_user1, int, 1,
+    // choose defaults for these 4:
+    0, 1, true, false,
+    // add an additional IRQ interface
+    sycl::ext::intel::prototype::internal::protocol_name::IRQ>;
 
 class Add_Kernel {
  public:
