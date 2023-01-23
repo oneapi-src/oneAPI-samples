@@ -1,4 +1,4 @@
-# FPGA Template
+# `FPGA Template` Sample
 
 This project serves as a template for Intel® oneAPI FPGA designs. 
 
