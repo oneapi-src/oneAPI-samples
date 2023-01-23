@@ -285,7 +285,7 @@ The Intercept Layer for OpenCL™ Applications makes it clear why the double buf
      ```
      CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./double_buffering.fpga_sim     (Linux)
      ```
-     > **Note**: for the following steps, you need to have acees to an FPGA device, and the code must have been compiled by targeting its BSP.
+     > **Note**: for the following steps, you need to have access to an FPGA device, and the code must have been compiled by targeting its BSP.
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./double_buffering.fpga         (Linux)
