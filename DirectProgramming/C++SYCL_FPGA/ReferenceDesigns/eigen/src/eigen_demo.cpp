@@ -19,8 +19,10 @@
 #define KDEFLIM 2
 #define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
-#define RELSHIFT 0
+#define RELSHIFT 1
 #define SHIFT_NOISE 1e-2
+#define SHIFT_NOISE_CPU 1e-2
+#define ITER_PER_EIGEN 8
 #include "exception_handler.hpp"
 
 #include "eigen.hpp"
@@ -101,7 +103,7 @@ bool IsFinite(float val) { return std::isfinite(val); }
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
-  constexpr size_t kRandomMax = 20;
+  constexpr size_t kRandomMax = 100;
   constexpr size_t kRows = ROWS_COMPONENT;
   constexpr size_t kColumns = COLS_COMPONENT;
   constexpr size_t kAMatrixSize = kRows * kColumns;
@@ -109,7 +111,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kQQMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
 
-  int iter = 10000;
+  int iter = kRows*ITER_PER_EIGEN;
 
 
   // Get the number of times we want to repeat the decomposition
@@ -312,6 +314,24 @@ int main(int argc, char *argv[]) {
       int kP = kRows;
       for(int li = 0; li < iter; li++){
 
+        // convergence test 
+        bool close2zero = 1;
+
+        // check zero thereshold for lower part 
+        for(int j = 0; j < kP-1; j++){
+          if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
+            close2zero = 0;
+            break;
+          }
+        }
+
+        if(close2zero && kP == KDEFLIM){
+          break;
+        } else if(close2zero){
+          kP -= 1;
+          continue;
+        }
+
         // Wilkinson shift computation 
         T a_wilk = a_matrix_cpu[matrix_offset+(kP-2)*kRows+kP-2];
         T b_wilk = a_matrix_cpu[matrix_offset+(kP-1)*kRows+kP-2];
@@ -322,6 +342,7 @@ int main(int argc, char *argv[]) {
         // T sign_lamda = (int)((lamda > 0) - (lamda < 0));
 
         T shift = RELSHIFT ? c_wilk : c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
+
         shift -= shift*SHIFT_NOISE;
 
         for(int i = 0; i < kP; i++){
@@ -359,24 +380,7 @@ int main(int argc, char *argv[]) {
           for(int k = 0; k < kRows; k++) eigen_vectors_cpu[matrix_offset+i*kRows+k] = TmpRow[k];
         }
 
-        // convergence test 
-        bool close2zero = 1;
-
-        // check zero thereshold for lower part 
-        for(int j = 0; j < kP-1; j++){
-          if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
-            // std::cout << "failed at i: " << i << " j: " << j << "\n"; 
-            close2zero = 0;
-            break;
-          }
-        }
-
-        if(close2zero && kP == KDEFLIM){
-          // std::cout << "CPU convergence achieved at iter: " << li << "\n";
-          break;
-        } else if(close2zero){
-          kP -= 1;
-        }
+        
       
       }
     }
@@ -424,8 +428,8 @@ int main(int argc, char *argv[]) {
       if((fabs(fabs(py_w[evec_offset+i]) - fabs(rq_matrix[matrix_offset + sIS*kRows+sIS])))/fabs(fabs(py_w[evec_offset+i])) > KETHRESHOLD_Eigen 
       || isnan(py_w[evec_offset+i]) || isnan(rq_matrix[matrix_offset + sIS*kRows+sIS])){
         rq_ecount_SYCL++;
-        std::cout << "Mis matched values are: " << py_w[evec_offset+i] \
-        << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << i << "\n";
+        std::cout << "Mis matched numpy SYCL eigen values are: " << py_w[evec_offset+i] \
+        << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << sIS << "\n";
       }
 
       if((fabs(fabs(py_w[evec_offset+i]) - fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])))/fabs(fabs(py_w[evec_offset+i])) > KETHRESHOLD_Eigen 
@@ -480,7 +484,7 @@ int main(int argc, char *argv[]) {
         || isnan(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]) || isnan(py_V[matrix_offset + i*kRows+j])){
           qq_ecountSYCL++;
           std::cout << "SYCL Mis matched values are: " << py_V[matrix_offset + i*kRows+j] << ", " << qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]  << " at i,j:"
-           << i << "," << j << "\n";
+           << sIndexSYCL[i] << "," << j << "\n";
         }
       }
     }
@@ -504,7 +508,7 @@ int main(int argc, char *argv[]) {
     }
 
   }
-
+    std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes << "\n";
     std::cout << "Passed matrix percenage is " << (100.0 *passsed_marixes)/kMatricesToDecompose << "\n";
     return 0;
 

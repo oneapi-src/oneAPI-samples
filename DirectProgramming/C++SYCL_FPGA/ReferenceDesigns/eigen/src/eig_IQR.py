@@ -3,6 +3,7 @@ import math
 import sys
 
 np.random.seed(100)
+eigVal_threhhold = 1e-2
 
 def is_invertible(a):
     return a.shape[0] == a.shape[1] and np.linalg.matrix_rank(a) == a.shape[0]
@@ -31,16 +32,19 @@ if __name__ == "__main__":
 
     w_str = ""
     v_str = ""
+    SmallE_str = ""
     for i in range(Matrices):
-        if(i == 189):
+        if(i == 1078):
             print("input matrix is:\n")
             print(C[i, :, :])
         if(not is_invertible(C[i, :, :])):
             print("This matrix is singular")
 
-        w,v = np.linalg.eig(C[i, :, :])
-        if(i == 189):
+        w,v = np.linalg.eigh(C[i, :, :])
+        if(i == 1078):
             print(w)
+            print(v)
+
 
         w_abs =np.array([abs(w[i]) for i in range(w.shape[0])])
         w_sort_index = w_abs.argsort()[::-1]
@@ -48,6 +52,9 @@ if __name__ == "__main__":
         w = w[w_sort_index]
         v = np.transpose(v)
         v = v[w_sort_index]
+
+        if(w[N-1] < eigVal_threhhold):
+            SmallE_str += "small eigen value is found at Matrix: " + str(i) + "\n"
 
 
 
@@ -62,3 +69,6 @@ if __name__ == "__main__":
 
     with open('../build/mat_V.txt', 'w') as Vfile:
         Vfile.write(v_str)
+
+    with open('../build/smalE.txt', 'w') as smallEfile:
+        smallEfile.write(SmallE_str)
