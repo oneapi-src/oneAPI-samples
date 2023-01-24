@@ -53,11 +53,11 @@ template<typename T>  QR_Decmp<T>::QR_Decmp(T *InA, int n){
 
 template <typename T> QR_Decmp<T>::~QR_Decmp(){
 
-    delete this->matR;
-    delete this->matQ;
-    delete this->matIR;
-    delete this->matS;
-    delete this->matP;
+    delete[] this->matR;
+    delete[] this->matQ;
+    delete[] this->matIR;
+    delete[] this->matS;
+    delete[] this->matP;
 }
 
 template<typename T> T  QR_Decmp<T>::dotA(int a, int b, int p){

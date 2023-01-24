@@ -310,7 +310,7 @@ int main(int argc, char *argv[]) {
       int matrix_offset = matrix_index * kAMatrixSize;
       // QR decomposition on CPU 
       QR_Decmp<T> qrd_cpu(&a_matrix_cpu[matrix_offset], kRows);
-      iter = 10000;
+      // iter = 10000;
       int kP = kRows;
       for(int li = 0; li < iter; li++){
 
