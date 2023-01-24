@@ -7,11 +7,9 @@
 #include <chrono>
 #include <iostream>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 #include "align.hpp"
-
-sycl::default_selector d_selector;
 
 template <typename T> using VectorAllocator = AlignedAllocator<T>;
 
@@ -165,7 +163,7 @@ void Initialize(AlignedVector<int> &a) {
 
 int main() {
 
-  sycl::queue q(d_selector);
+  sycl::queue q(sycl::default_selector_v);
   VectorAllocator<int> alloc;
   AlignedVector<int> a(array_size, alloc);
   AlignedVector<int> b(array_size, alloc);

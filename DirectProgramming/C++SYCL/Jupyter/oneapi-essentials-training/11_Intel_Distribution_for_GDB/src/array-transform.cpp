@@ -12,8 +12,6 @@
 
 #include <sycl/sycl.hpp>
 #include <iostream>
-// Location of file: <oneapi-root>/dev-utilities/<version>/include
-#include "dpc_common.hpp"
 #include "selector.hpp"
 
 using namespace std;

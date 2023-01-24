@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -96,7 +96,7 @@ void vec_copy(sycl::queue &q, std::vector<int> &src, std::vector<int> &dst,
 
 int main(void) {
 
-  sycl::queue q{sycl::gpu_selector{}, exception_handler};
+  sycl::queue q{sycl::gpu_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   std::vector<int> src(N, 1);
