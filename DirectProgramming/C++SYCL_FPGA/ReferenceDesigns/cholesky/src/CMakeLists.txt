@@ -12,6 +12,7 @@ if(NOT DEFINED FPGA_DEVICE)
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
+    set(BSP_FLAG "")
 else()
     string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
     if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
@@ -22,23 +23,20 @@ else()
       set(DEVICE_FLAG "Agilex")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+        set(BSP_FLAG "-DIS_BSP")
+    else()
+        set(BSP_FLAG "")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so the IS_BSP macro will not be passed to your C++ code.")
+        message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1 to pass the IS_BSP macro to your C++ code.")
+    endif()
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
-                         -DDEVICE_FLAG=Agilex.")
-endif()
-
-# Check if the target is a BSP
-if(IS_BSP MATCHES "0" OR FPGA_DEVICE MATCHES "Arria10|Stratix10|Agilex")
-    set(IS_BSP "0")
-    set(BSP_FLAG "")
-else()
-    set(IS_BSP "1")
-    set(BSP_FLAG "-DIS_BSP")
-    message(STATUS "Unrecognized FPGA family. Assuming the target is a BSP.")
-    message(STATUS "If the target is not a BSP, run cmake with -DIS_BSP=0")
+                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
 endif()
 
 if(DEVICE_FLAG MATCHES "A10")
@@ -63,7 +61,7 @@ elseif(DEVICE_FLAG MATCHES "Agilex")
     set(CLOCK_TARGET 520MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(FATAL_ERROR "Unreachable")
+    message(FATAL_ERROR "An incorrect DEVICE_FLAG was given. Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code

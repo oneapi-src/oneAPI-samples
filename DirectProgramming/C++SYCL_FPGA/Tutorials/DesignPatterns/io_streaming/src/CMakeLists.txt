@@ -10,22 +10,23 @@ if(NOT DEFINED FPGA_DEVICE)
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
+    set(IS_BSP "0")
 else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+        set(IS_BSP "1")
+    else()
+        set(IS_BSP "0")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so USM will be enabled by default.")
+        message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
+    endif()
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-endif()
-
-# Check if the target is a BSP
-if(IS_BSP MATCHES "0" OR FPGA_DEVICE MATCHES "Arria10|Stratix10|Agilex")
-    set(IS_BSP "0")
-else()
-    set(IS_BSP "1")
-    message(STATUS "Unrecognized FPGA family. Assuming the target is a BSP.")
-    message(STATUS "If the target is not a BSP, run cmake with -DIS_BSP=0")
 endif()
 
 # Use USM host allocations if the BSP supports them or if we target an FPGA part 
