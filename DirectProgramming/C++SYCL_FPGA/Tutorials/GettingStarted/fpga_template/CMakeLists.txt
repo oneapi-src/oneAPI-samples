@@ -106,8 +106,8 @@ set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
 set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
-set(HARDWARE_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(HARDWARE_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
+set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
 # get rid of this once host pipes work properly
 set(IP_EXPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(IP_EXPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early -fsycl-device-code-split=per_kernel)
@@ -152,9 +152,9 @@ set_target_properties(${REPORT_TARGET} PROPERTIES OUTPUT_NAME ${REPORT_OUTPUT_NA
 ###############################################################################
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${FPGA_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
-target_compile_options(${FPGA_TARGET} PRIVATE ${HARDWARE_COMPILE_FLAGS})
+target_compile_options(${FPGA_TARGET} PRIVATE ${FPGA_COMPILE_FLAGS})
 target_link_libraries(${FPGA_TARGET} ${COMMON_LINK_FLAGS})
-target_link_libraries(${FPGA_TARGET} ${HARDWARE_LINK_FLAGS})
+target_link_libraries(${FPGA_TARGET} ${FPGA_LINK_FLAGS})
 set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
 
 ###############################################################################
@@ -171,7 +171,6 @@ list(REMOVE_ITEM MODIFIED_COMMON_LINK_FLAGS_EXPORT ${QACTYPES})
 target_link_libraries(${IP_EXPORT_TARGET} ${MODIFIED_COMMON_LINK_FLAGS_EXPORT})
 target_link_libraries(${IP_EXPORT_TARGET} ${IP_EXPORT_LINK_FLAGS})
 set_target_properties(${IP_EXPORT_TARGET} PROPERTIES OUTPUT_NAME ${IP_EXPORT_OUTPUT_NAME})
-
 
 ###############################################################################
 ### This part only manipulates cmake variables to print the commands to the user
