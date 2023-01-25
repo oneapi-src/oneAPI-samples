@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 using namespace sycl;
@@ -17,7 +17,7 @@ int main() {
 
   buffer dataBuf{data};
 
-  queue Q{ host_selector{} };
+  queue Q{ default_selector_v };
   Q.submit([&](handler& h) {
       accessor dataAcc{ dataBuf, h };
 

@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 using namespace sycl;
@@ -20,7 +20,7 @@ int main() {
   {
     buffer data_buf{data};
 
-    queue Q{ host_selector{} };
+    queue Q{ default_selector_v };
     std::cout << "Running on device: "
               << Q.get_device().get_info<info::device::name>() << "\n";
 
@@ -29,7 +29,7 @@ int main() {
       accessor data_acc {data_buf, h};
 
       h.parallel_for(size,
-          [=](id<1> i) noexcept [[cl::reqd_work_group_size(8,1,1)]] -> void {
+          [=](id<1> i) noexcept [[sycl::reqd_work_group_size(8,1,1)]] -> void {
             data_acc[i] = data_acc[i] + 1;
           });
     });

@@ -2,9 +2,9 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
-using dinfo = info::device;
+namespace dinfo = info::device;
 constexpr int N = 42;
 
 template <typename T> void foo(T data, id<1> i) { data[i] = N; }

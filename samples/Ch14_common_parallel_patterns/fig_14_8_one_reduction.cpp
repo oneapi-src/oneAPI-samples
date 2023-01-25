@@ -9,7 +9,7 @@
 //   added sycl::ONEAPI:: to plus
 // -------------------------------------------------------
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <numeric>
 
@@ -30,7 +30,7 @@ int main() {
 // BEGIN CODE SNIP
      h.parallel_for(
          nd_range<1>{N, B},
-         reduction(sum, sycl::ONEAPI::plus<>()),
+         reduction(sum, sycl::plus<>()),
          [=](nd_item<1> it, auto& sum) {
            int i = it.get_global_id(0);
            sum += data[i];

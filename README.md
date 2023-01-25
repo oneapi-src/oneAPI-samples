@@ -5,6 +5,14 @@ This repository accompanies [*Data Parallel C++: Mastering DPC++ for Programming
 [comment]: #cover
 ![Cover image](9781484255735.jpg)
 
+## Purpose of this branch (main)
+
+This branch (main) contains source code derived from what was published with the First Edition of the DPC++ book, but modified to be compatible with the SYCL 2020 specification which was released by The Khronos Group after book publication.  The original book source was primarily based on the older SYCL 1.2.1 specification, and many enhancements and changes were added in the later SYCL 2020 specification.  More importantly, most current toolchains which support SYCL are based on SYCL 2020, so this main branch is intended to be compatible with recent compiler and toolchain releases.
+
+The Second Edition of the DPC++ book, likely to release in 2023, will be based on the updated code examples in this main branch.
+
+## Overview
+
 Many of the samples in the book are snips from the more complete files in this repository.  The full files contain supporting code, such as header inclusions, which are not shown in every listing within the book.  The complete listings are intended to compile and be modifiable for experimentation.
 
 > :warning: Samples in this repository are updated to align with the most recent changes to the language and

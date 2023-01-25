@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -11,10 +11,6 @@
 #include <random>
 
 using namespace sycl;
-
-template <typename T, int dimensions>
-using local_accessor =
-    accessor<T, dimensions, access::mode::read_write, access::target::local>;
 
 int main() {
   queue Q;
@@ -54,7 +50,7 @@ int main() {
                 tile[ti][tj] = input[gi][gj];
               }
             }
-            it.barrier(access::fence_space::local_space);
+            group_barrier(it.get_group());
 
             // Compute the stencil using values from local memory
             int gi = it.get_global_id(0) + 1;

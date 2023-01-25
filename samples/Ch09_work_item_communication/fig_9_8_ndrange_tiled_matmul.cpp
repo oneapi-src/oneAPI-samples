@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 using namespace sycl;
 
@@ -43,9 +43,7 @@ double run_sycl(
 
       // Local accessor, for one matrix tile:
       constexpr int tile_size = 16;
-      auto tileA =
-          accessor<T, 1, access::mode::read_write, access::target::local>(
-              tile_size, h);
+      auto tileA = local_accessor<T, 1>(tile_size, h);
 
       h.parallel_for(
           nd_range<2>{{M, N}, {1, tile_size}}, [=](nd_item<2> item) {
@@ -62,7 +60,7 @@ double run_sycl(
               // to ensure all work-items have a consistent view
               // of the matrix tile in local memory.
               tileA[i] = matrixA[m][kk + i];
-              item.barrier();
+              group_barrier(item.get_group());
 
               // Perform computation using the local memory tile, and
               // matrix B in global memory.
@@ -72,7 +70,7 @@ double run_sycl(
 
               // After computation, synchronize again, to ensure all
               // reads from the local memory tile are complete.
-              item.barrier();
+              group_barrier(item.get_group());
             }
 
             // Write the final result to global memory.

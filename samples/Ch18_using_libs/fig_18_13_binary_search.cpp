@@ -14,7 +14,7 @@
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/iterator>
 #include <iostream>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 using namespace sycl;
 
@@ -24,8 +24,8 @@ int main()
     buffer<uint64_t, 1> vB{ range<1>(5) };
     buffer<uint64_t, 1> rB{ range<1>(5) };
     {
-      accessor k{kB};
-      accessor v{vB};
+      host_accessor k{kB};
+      host_accessor v{vB};
 
       // Initialize data, sorted
       k[0] = 0; k[1] = 5; k[2] = 6; k[3] = 6; k[4] = 7;
@@ -48,7 +48,7 @@ int main()
     oneapi::dpl::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg);
 
     // check data
-    accessor r{rB};
+    host_accessor r{rB};
     if ((r[0] == false) && (r[1] == true) && (r[2] == false) && (r[3] == true) && (r[4] == true)) {
        std::cout << "Passed. \nRun on "
             << policy.queue().get_device().get_info<info::device::name>() << "\n";

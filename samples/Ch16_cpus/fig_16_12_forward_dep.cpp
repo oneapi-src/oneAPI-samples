@@ -2,11 +2,10 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 int main()
 {
@@ -22,7 +21,7 @@ int main()
     for (int j = 0; j < n+1; j++) a[i*n + j] = i + j;
 
   Q.parallel_for(nd_range<2>{G, L}, [=](nd_item<2> it)
-    [[intel::reqd_sub_group_size(w)]] {
+    [[sycl::reqd_sub_group_size(w)]] {
 
     // distribute uniform "i" over the sub-group with 8-way
     // redundant computation
@@ -33,10 +32,10 @@ int main()
       // load a[i*n+j+1:8] before updating a[i*n+j:8] to preserve
       // loop-carried forward dependency
       auto va = a[i*n + j + 1];
-      sg.barrier();
+      group_barrier(sg);
       a[i*n + j] = va + i + 2;
     }
-    sg.barrier();
+    group_barrier(sg);
 
   }).wait();
 

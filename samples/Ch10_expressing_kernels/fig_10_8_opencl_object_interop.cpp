@@ -2,7 +2,9 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
+#include <CL/cl.h>
+#include <sycl/backend/opencl.hpp>
 #include <iostream>
 using namespace sycl;
 
@@ -20,7 +22,7 @@ int main() {
 // BEGIN CODE SNIP
     // Note: This must select a device that supports interop with OpenCL kernel
     // objects!
-    queue Q{ cpu_selector{} };
+    queue Q{ cpu_selector_v };
     context sc = Q.get_context();
 
     const char* kernelSource =
@@ -30,7 +32,7 @@ int main() {
                 data[index] = data[index] + 1;
             }
         )CLC";
-    cl_context c = sc.get();
+    cl_context c = get_native<backend::opencl>(sc);
     cl_program p =
         clCreateProgramWithSource(c, 1, &kernelSource, nullptr, nullptr);
     clBuildProgram(p, 0, nullptr, nullptr, nullptr, nullptr);
@@ -39,11 +41,13 @@ int main() {
     std::cout << "Running on device: "
               << Q.get_device().get_info<info::device::name>() << "\n";
 
+    kernel sk = make_kernel<backend::opencl>(k, sc);
+
     Q.submit([&](handler& h) {
       accessor data_acc{data_buf, h};
 
       h.set_args(data_acc);
-      h.parallel_for(size, kernel{k, sc});
+      h.parallel_for(size, sk);
     });
 
     clReleaseContext(c);

@@ -2,12 +2,12 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
 
 int main() {
   // Create a buffer of 2x5 ints using the default allocator
-  buffer<int, 2, buffer_allocator> b1{range<2>{2, 5}};
+  buffer<int, 2, buffer_allocator<int>> b1{range<2>{2, 5}};
 
   // Create a buffer of 2x5 ints using the default allocator and CTAD for range
   buffer<int, 2> b2{range{2, 5}};

@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <iostream>
 
@@ -30,7 +30,7 @@ int main() {
        if (i == round) {
          data[j] += 1;
        }
-       it.barrier();
+       group_barrier(it.get_group());
      }
    }).wait();
 

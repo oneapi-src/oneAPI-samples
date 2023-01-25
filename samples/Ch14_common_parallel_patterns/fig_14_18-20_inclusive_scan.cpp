@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -11,10 +11,6 @@
 #include <random>
 
 using namespace sycl;
-
-template <typename T, int dimensions>
-using local_accessor =
-    accessor<T, dimensions, access::mode::read_write, access::target::local>;
 
 int main() {
   queue q;
@@ -40,15 +36,15 @@ int main() {
 
        // Copy input to local memory
        local[li] = input[i];
-       it.barrier();
+       group_barrier(it.get_group());
 
        // Perform inclusive scan in local memory
        for (int32_t d = 0; d <= log2((float)L) - 1; ++d) {
          uint32_t stride = (1 << d);
          int32_t update = (li >= stride) ? local[li - stride] : 0;
-         it.barrier();
+         group_barrier(it.get_group());
          local[li] += update;
-         it.barrier();
+         group_barrier(it.get_group());
        }
 
        // Write the result for each item to the output buffer
@@ -69,15 +65,15 @@ int main() {
 
        // Copy input to local memory
        local[li] = tmp[i];
-       it.barrier();
+       group_barrier(it.get_group());
 
        // Perform inclusive scan in local memory
        for (int32_t d = 0; d <= log2((float)G) - 1; ++d) {
          uint32_t stride = (1 << d);
          int32_t update = (li >= stride) ? local[li - stride] : 0;
-         it.barrier();
+         group_barrier(it.get_group());
          local[li] += update;
-         it.barrier();
+         group_barrier(it.get_group());
        }
 
        // Overwrite result from each work-item in the temporary buffer

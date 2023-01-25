@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 using namespace sycl;
@@ -20,23 +20,22 @@ int main() {
   {
     buffer data_buf{data};
 
-    queue Q{ cpu_selector{} };
+    queue Q{ cpu_selector_v };
     std::cout << "Running on device: "
               << Q.get_device().get_info<info::device::name>() << "\n";
 
 // BEGIN CODE SNIP
-    // This compiles the kernel named by the specified template
-    // parameter using the "fast relaxed math" build option.
-    program p(Q.get_context());
-
-    p.build_with_kernel_type<class Add>("-cl-fast-relaxed-math");
+    kernel_id Add_KID = get_kernel_id<class Add>();
+    auto kb = get_kernel_bundle<bundle_state::executable>(Q.get_context(), {Add_KID});
+    kernel k = kb.get_kernel(Add_KID);
 
     Q.submit([&](handler& h) {
       accessor data_acc {data_buf, h};
 
       h.parallel_for<class Add>(
-          // This uses the previously compiled kernel.
-          p.get_kernel<class Add>(),
+          // This uses the previously compiled kernel k, the body of which is
+          // defined here as a lambda
+          k,
           range{size},
           [=](id<1> i) {
             data_acc[i] = data_acc[i] + 1;
