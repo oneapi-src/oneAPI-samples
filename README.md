@@ -26,7 +26,7 @@ Download the files as a zip using the green button, or clone the repository to y
 ## How to Build the Samples
 
 > :warning: The samples in this repository are intended to compile with the open source project toolchain linked below, or
-with the Beta 10 release or newer of the DPC++ toolchain.  If you have an older toolchain installed, you may encounter
+with the 2023.0 release or newer of the DPC++ toolchain.  If you have an older toolchain installed, you may encounter
 compilation errors due to evolution of the features and extensions.
 
 To build and use these examples, you will need an installed DPC++ toolchain.  For one such toolchain, please visit:
