@@ -2,6 +2,16 @@ The following are known errors in the book Data Parallel C++: Mastering DPC++ fo
 Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
 James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
+p.35 - Fig 2-7 - Output of code:
+       Device: SYCL host device
+       should read
+       Selected device: SYCL host device
+
+p.37 - Fig 2-9 - Output of code:
+       Device: SYCL host device
+       should read
+       Selected device: SYCL host device
+
 p.106 - Fig 4-11 - Comment in code:
 // Return the offset of this item (if with_offset == true)
 should read:
