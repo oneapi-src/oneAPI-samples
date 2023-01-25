@@ -38,7 +38,17 @@ void MatrixReadFromDDRToPipe(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
-  sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
+#if defined (IS_BSP)
+          // When targeting a BSP, we instruct the compiler that this pointer
+          // lives on the device.
+          // Knowing this, the compiler won't generate hardware to
+          // potentially get data from the host.
+          sycl::device_ptr<TT> matrix_ptr_located(matrix_ptr);
+#else
+          // Device pointers are not supported when targeting an FPGA 
+          // family/part
+          TT* matrix_ptr_located(matrix_ptr);
+#endif  
 
   // Repeatedly read matrix_count matrices from the DDR and send them to the
   // pipe
@@ -72,12 +82,12 @@ void MatrixReadFromDDRToPipe(
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
               ddr_read.template get<k>() =
-                  matrix_ptr_device[matrix_index * kMatrixSize + load_index +
+                  matrix_ptr_located[matrix_index * kMatrixSize + load_index +
                                     k];
             }
           } else {
             ddr_read.template get<k>() =
-                matrix_ptr_device[matrix_index * kMatrixSize +
+                matrix_ptr_located[matrix_index * kMatrixSize +
                                   (int)(li)*num_elem_per_bank + k];
           }
         });
@@ -118,7 +128,17 @@ void VectorReadFromPipeToDDR(
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
   constexpr int kLoopIter = (vector_size / num_elem_per_bank) + kExtraIteration;
 
-  sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
+#if defined (IS_BSP)
+          // When targeting a BSP, we instruct the compiler that this pointer
+          // lives on the device.
+          // Knowing this, the compiler won't generate hardware to
+          // potentially get data from the host.
+          sycl::device_ptr<TT> vector_ptr_located(vector_ptr);
+#else
+          // Device pointers are not supported when targeting an FPGA 
+          // family/part
+          TT* vector_ptr_located(vector_ptr);
+#endif  
 
   // Repeat vector_count complete I vector pipe reads
   // for as many repetitions as needed
@@ -139,7 +159,7 @@ void VectorReadFromPipeToDDR(
 #pragma unroll
           for (int k = 0; k < num_elem_per_bank; k++) {
             if (((li * num_elem_per_bank) + k) < vector_size) {
-              vector_ptr_device[(vector_idx * vector_size) +
+              vector_ptr_located[(vector_idx * vector_size) +
                                 (li * num_elem_per_bank) + k] = bank[k];
             }
           }
@@ -147,7 +167,7 @@ void VectorReadFromPipeToDDR(
 // Write a burst of num_elem_per_bank elements to DDR
 #pragma unroll
           for (int k = 0; k < num_elem_per_bank; k++) {
-            vector_ptr_device[(vector_idx * vector_size) +
+            vector_ptr_located[(vector_idx * vector_size) +
                               (li * num_elem_per_bank) + k] = bank[k];
           }
         }

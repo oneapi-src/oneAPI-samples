@@ -7,18 +7,28 @@ set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
+    set(FPGA_DEVICE "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Stratix(R) 10 SX FPGA with USM support). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
+    set(IS_BSP "0")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+        set(IS_BSP "1")
+    else()
+        set(IS_BSP "0")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so USM will be enabled by default.")
+        message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
+    endif()
 endif()
 
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
 # to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
 # to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if(NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+if((IS_BSP STREQUAL "1") AND (NOT FPGA_DEVICE MATCHES ".usm.*") AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
 endif()
 

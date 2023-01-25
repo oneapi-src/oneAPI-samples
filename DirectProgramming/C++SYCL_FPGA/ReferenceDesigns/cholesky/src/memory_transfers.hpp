@@ -38,14 +38,24 @@ void MatrixReadFromDDRToPipe(
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
-  sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
-
   // Repeatedly read matrix_count matrices from DDR and send them to the pipe
   for (int repetition = 0; repetition < repetitions; repetition++) {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       // Keep track of the current element index in the matrix
       // Only useful in the case of kIncompleteBurst
       int load_index = 0;
+
+#if defined (IS_BSP)
+          // When targeting a BSP, we instruct the compiler that this pointer
+          // lives on the device.
+          // Knowing this, the compiler won't generate hardware to
+          // potentially get data from the host.
+          sycl::device_ptr<TT> matrix_ptr_located(matrix_ptr);
+#else
+          // Device pointers are not supported when targeting an FPGA 
+          // family/part
+          TT* matrix_ptr_located(matrix_ptr);
+#endif  
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
@@ -71,12 +81,12 @@ void MatrixReadFromDDRToPipe(
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
               ddr_read.template get<k>() =
-                  matrix_ptr_device[matrix_index * kMatrixSize + load_index +
+                  matrix_ptr_located[matrix_index * kMatrixSize + load_index +
                                     k];
             }
           } else {
             ddr_read.template get<k>() =
-                matrix_ptr_device[matrix_index * kMatrixSize +
+                matrix_ptr_located[matrix_index * kMatrixSize +
                                   (int)(li)*num_elem_per_bank + k];
           }
         });

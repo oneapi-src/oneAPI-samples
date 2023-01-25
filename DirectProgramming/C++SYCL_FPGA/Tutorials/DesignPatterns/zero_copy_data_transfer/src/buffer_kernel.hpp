@@ -28,8 +28,25 @@ double SubmitBufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
 
     // launch the computation kernel
     auto kernel_event = q.submit([&](handler& h) {
+
+#if defined (IS_BSP)
       accessor in_a(in_buf, h, read_only);
       accessor out_a(out_buf, h, write_only, no_init);
+#else
+      // When targeting an FPGA family/part, the compiler does not know
+      // if the two kernels accesses the same memory location
+      // With this property, we tell the compiler that these buffers
+      // are in a location "1" whereas the pointers from ExplicitKernel
+      // are in the default location "0"
+      sycl::ext::oneapi::accessor_property_list location_of_buffer{
+          ext::intel::buffer_location<1>};
+      accessor in_a(in_buf, h, read_only, location_of_buffer);
+
+      sycl::ext::oneapi::accessor_property_list location_of_buffer_no_init{
+          no_init, ext::intel::buffer_location<1>};
+      accessor out_a(out_buf, h, write_only, location_of_buffer_no_init);
+#endif
+
 
       h.single_task<BufferWorker>([=]() [[intel::kernel_args_restrict]] {
         for (size_t i = 0; i < size; i++) {

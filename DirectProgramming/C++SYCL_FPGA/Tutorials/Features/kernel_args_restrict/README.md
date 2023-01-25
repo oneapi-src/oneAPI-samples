@@ -5,7 +5,7 @@ This tutorial explains the  `kernel_args_restrict` attribute and its effect on t
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  The problem of *pointer aliasing* and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel. <br> The effect this attribute can have on your kernel's performance on FPGA.
 | Time to complete                  | 20 minutes
@@ -18,6 +18,8 @@ This tutorial explains the  `kernel_args_restrict` attribute and its effect on t
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -108,29 +110,26 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-     ```
-   mkdir build
-   cd build
-   ```
-
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-    ```
-    cmake ..
-    ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -158,34 +157,29 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/kernel_args_restrict.fpga.tar.gz" download>here</a>.
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
 
-     ```
-   mkdir build
-   cd build
-   ```
-
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-    ```
-    cmake -G "NMake Makefiles" ..
-    ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -212,8 +206,6 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
      ```
      nmake fpga
      ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -262,7 +254,7 @@ Next, look at the loop details of the *KernelArgsRestrict* kernel. You will noti
         set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
         ```
 
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
 
      ```bash
      ./kernel_args_restrict.fpga         (Linux)
@@ -279,7 +271,7 @@ PASSED
 
 ### Discussion of Results
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA) is shown.
 
 |Attribute used?  | II | Kernel Throughput (MB/s)
 |:--- |:--- |:---

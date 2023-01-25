@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | About the Intel® FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
@@ -20,6 +20,8 @@ This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -186,22 +188,26 @@ When looking at the performance data for the two "after optimization" kernels in
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided:
    * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
@@ -214,8 +220,6 @@ When looking at the performance data for the two "after optimization" kernels in
     ```bash
     make fpga
     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler.fpga.tar.gz).
-Alternatively, if you wish to view the dynamic profiler data in the VTune Profiler, you can download a sample `dynamic_profiler_tutorial.json` file [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json).
 
 ## Running the Sample
 
@@ -244,7 +248,7 @@ To collect dynamic profiling data, choose one of the following methods:
       make run_sim
       unset CL_CONTEXT_MPSIM_DEVICE_INTELFPGA
       ```
-    * Run the design on hardware:
+    * Run the design on hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
       ```
       make run
       ```
@@ -270,7 +274,7 @@ Post-processing complete.
 
 > **Note**: You can ignore warnings about pipe data resulting in a division by zero. These are the result of pipes not yet receiving data resulting in metrics being zero.
 
-An example output, `dynamic_profiler_tutorial.json`, can be downloaded from [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json). Without needing to run the design, you can import this data file in the VTune Profiler, as described in the [Import Results and Traces into VTune Profiler GUI](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/manage-result-files/importing-results-to-gui.html) documentation, to observe the kind of data the Dynamic Profiler can collect.
+An example output, `dynamic_profiler_tutorial.json`, can be found zipped in the `data` folder. Without needing to run the design, you can import this data file in the VTune Profiler, as described in the [Import Results and Traces into VTune Profiler GUI](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/manage-result-files/importing-results-to-gui.html) documentation, to observe the kind of data the Dynamic Profiler can collect.
 
 ## Examining the Reports
 In the tab containing the data from your run, ensure the view is set to "CPU/FPGA Interaction". There should be three windows for viewing:

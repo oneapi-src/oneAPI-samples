@@ -7,12 +7,61 @@ set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
+    set(BSP_FLAG "")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+        set(BSP_FLAG "-DIS_BSP")
+    else()
+        set(BSP_FLAG "")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so the IS_BSP macro will not be passed to your C++ code.")
+        message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1 to pass the IS_BSP macro to your C++ code.")
+    endif()
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
+endif()
+
+if(DEVICE_FLAG MATCHES "A10")
+    # A10 parameters
+    set(MATRIX_DIMENSION 32)
+    set(COMPLEX 0)
+    set(FIXED_ITERATIONS 39)
+    set(CLOCK_TARGET 360MHz)
+    set(SEED "-Xsseed=29")
+elseif(DEVICE_FLAG MATCHES "S10")
+    # S10 parameters
+    set(MATRIX_DIMENSION 32)
+    set(COMPLEX 0)
+    set(FIXED_ITERATIONS 44)
+    set(CLOCK_TARGET 450MHz)
+    set(SEED "-Xsseed=5")
+elseif(DEVICE_FLAG MATCHES "Agilex")
+    # Agilex™ parameters
+    set(MATRIX_DIMENSION 32)
+    set(FIXED_ITERATIONS 45)
+    set(COMPLEX 0)
+    set(CLOCK_TARGET 520MHz)
+    set(SEED "-Xsseed=5")
+else()
+    message(FATAL_ERROR "An incorrect DEVICE_FLAG was given. Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -22,36 +71,6 @@ if(WIN32)
 else()
     set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-qactypes -Wall -fno-finite-math-only -fp-model=precise")
     set(PLATFORM_SPECIFIC_LINK_FLAGS "-fp-model=precise")
-endif()
-
-
-# A10 parameters
-set(MATRIX_DIMENSION 32)
-set(COMPLEX 0)
-set(FIXED_ITERATIONS 39)
-set(CLOCK_TARGET 360MHz)
-set(SEED "-Xsseed=29")
-# Overwrite design parameters according to the selected board
-if(FPGA_DEVICE MATCHES ".*a10.*")
-    # A10 parameters
-    # Nothing to do
-elseif(FPGA_DEVICE MATCHES ".*s10.*")
-    # S10 parameters
-    set(MATRIX_DIMENSION 32)
-    set(COMPLEX 0)
-    set(FIXED_ITERATIONS 44)
-    set(CLOCK_TARGET 450MHz)
-    set(SEED "-Xsseed=5")
-elseif(FPGA_DEVICE MATCHES ".*agilex.*")
-    # Agilex™ parameters
-    set(MATRIX_DIMENSION 32)
-    set(FIXED_ITERATIONS 45)
-    set(COMPLEX 0)
-    set(CLOCK_TARGET 520MHz)
-    set(SEED "-Xsseed=5")
-else()
-    message(STATUS "Unknown board ${FPGA_DEVICE}!")
-    message(STATUS "Using Arria 10 defaults.")
 endif()
 
 if(IGNORE_DEFAULT_SEED)
@@ -79,12 +98,12 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR ${BSP_FLAG}")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed ${USER_SIMULATOR_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed ${BSP_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -Xsfp-relaxed -DFPGA_HARDWARE ${BSP_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsfp-relaxed ${BSP_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 

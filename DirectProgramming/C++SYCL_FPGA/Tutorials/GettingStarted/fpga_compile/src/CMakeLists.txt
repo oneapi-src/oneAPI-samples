@@ -4,14 +4,14 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
-# FPGA device selection
+# FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on device selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code

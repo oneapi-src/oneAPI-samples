@@ -385,7 +385,17 @@ template <typename Id, typename InPipe, typename OutPipe,
 sycl::event SubmitSnappyReader(sycl::queue& q, unsigned in_count,
                                unsigned* preamble_count_ptr) {
   return q.single_task<Id>([=] {
+#if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
     sycl::device_ptr<unsigned> preamble_count(preamble_count_ptr);
+#else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
+    unsigned* preamble_count(preamble_count_ptr);
+#endif
     *preamble_count =
         SnappyReader<InPipe, OutPipe, literals_per_cycle>(in_count);
   });

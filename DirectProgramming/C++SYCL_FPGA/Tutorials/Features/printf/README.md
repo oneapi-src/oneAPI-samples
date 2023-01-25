@@ -3,9 +3,9 @@
 This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::printf` to print in a SYCL*-compliant FPGA program.
 
 | Optimized for                     | Description
-|:---                                 |:---
+|:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to declare and use printf in program
 | Time to complete                  | 10 minutes
@@ -18,6 +18,8 @@ This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::pri
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -46,7 +48,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 This tutorial shows how to use some simple macros to enable easy use of the SYCL `printf()` function. This function allows printing from within code running on the FPGA.
 
 ### Motivation
-Previously, we've provided examples for how to print data using the Stream class in the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/kernel-controls/pipes-extension/i-o-pipes.html).
+Previously, we've provided examples for how to print data using the Stream class in the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/kernel-controls/pipes-extension/i-o-pipes.html).
 
 Compare to the Stream class, `printf()` has the following advantages:
 
@@ -101,22 +103,26 @@ PRINTF("Hello: %d\n", 123);
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
+    ```
+    mkdir build
+    cd build
+    ```
+    To compile for the default target (the Agilex™ device family), run `cmake` using the command:
     ```
     cmake ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    ```
+
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -136,27 +142,29 @@ PRINTF("Hello: %d\n", 123);
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/printf.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
+    ```
+    mkdir build
+    cd build
+    ```
+    To compile for the default target (the Agilex™ device family), run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -176,8 +184,6 @@ PRINTF("Hello: %d\n", 123);
      ```
      nmake fpga
      ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -204,7 +210,7 @@ From the report, you can find the compilation information of the design and the 
         printf.fpga_sim.exe
         set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
         ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./printf.fpga         (Linux)
      printf.fpga.exe       (Windows)

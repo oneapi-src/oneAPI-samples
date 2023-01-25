@@ -38,7 +38,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware           | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -49,8 +49,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
-
->**Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -85,22 +85,25 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
 
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -125,23 +128,25 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
 
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Build the program for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   For a custom FPGA platform, ensure that the board support package is installed on your system then enter a command similar to the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -177,7 +182,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./autorun.fpga_sim
    ```
-3. Run on an FPGA device.
+3. Run on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./autorun.fpga
    ```
@@ -198,7 +203,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
    autorun.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run on an FPGA device.
+3. Run on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    autorun.fpga.exe
    ```

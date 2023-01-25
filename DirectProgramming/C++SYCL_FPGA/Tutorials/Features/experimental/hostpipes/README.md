@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of host pipe declaration and usage 
 | Time to complete                  | 30 minutes
@@ -18,6 +18,8 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -286,21 +288,26 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 ### On a Linux* System
 
 1. Generate the Makefile by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the following command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```
-   cmake ..
-   ```
-   
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the following command:
-   
-   ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -320,24 +327,29 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
     ```
     make fpga
     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/hostpipes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. 
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -357,8 +369,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
     ```
     nmake fpga
     ```
-
->*Note:* The Intel® FPGA PAC D5005 with Intel Stratix® 10 SX does not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 
 >**Tip**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
@@ -413,7 +423,7 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
     
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```
   ./hostpipes.fpga         (Linux)
   hostpipes.fpga.exe       (Windows)

@@ -4,9 +4,9 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               |  Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
+| What you will learn               | Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
 | Time to complete                  | 20 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -17,6 +17,8 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -118,23 +120,26 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -154,28 +159,29 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_fusion.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -196,8 +202,6 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
      nmake fpga
      ```
 
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Reports
@@ -216,7 +220,7 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
      ./loop_fusion.fpga_emu     (Linux)
      loop_fusion.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
   * On Linux
     ```bash
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_fusion.fpga_sim
@@ -227,7 +231,7 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
     loop_fusion.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./loop_fusion.fpga         (Linux)
      loop_fusion.fpga.exe       (Windows)

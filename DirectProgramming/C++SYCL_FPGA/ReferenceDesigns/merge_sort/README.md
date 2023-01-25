@@ -41,7 +41,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -52,6 +52,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -116,16 +118,26 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -147,8 +159,6 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/merge_sort.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/merge_sort.fpga.tar.gz).
-
 ## Run the `Merge Sort` Program
 
 ### On Linux
@@ -157,11 +167,11 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
    ```
    ./merge_sort.fpga_emu
    ```
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./merge_sort.fpga_sim
    ```
-3. Run the sample on the FPGA device.
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./merge_sort.fpga
    ```

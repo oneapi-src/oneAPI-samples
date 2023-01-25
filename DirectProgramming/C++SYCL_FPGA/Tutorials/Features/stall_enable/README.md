@@ -4,7 +4,7 @@ This FPGA tutorial demonstrates how to use the `use_stall_enable_clusters` attri
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  What the `use_stall_enable_clusters` attribute does <br> How `use_stall_enable_clusters` attribute affects resource usage and latency <br> How to apply the `use_stall_enable_clusters` attribute to kernels in your program
 | Time to complete                  | 15 minutes (emulator and report) <br> several hours (fpga bitstream generation)
@@ -17,6 +17,8 @@ This FPGA tutorial demonstrates how to use the `use_stall_enable_clusters` attri
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -47,7 +49,8 @@ Computations in an FPGA kernel are normally grouped into *Stall Free Clusters*. 
 
 > **Note**: If you specify `[[intel::use_stall_enable_clusters]]` on one or more kernels, this may reduce the FMax of the generated FPGA bitstream, which may reduce performance on all kernels.
 
-> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target the Stratix&reg; 10 architecture unless the `-Xshyper-optimized-handshaking=off` argument is passed to `icpx`
+> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target FPGA architectures that support hyper optimized handshaking, unless the `-Xshyper-optimized-handshaking=off` argument is passed to `icpx`
+
 ### Example: Using the `use_stall_enable_clusters` attribute
 ```
 h.single_task<class KernelComputeStallFree>( [=]() [[intel::use_stall_enable_clusters]] {
@@ -86,19 +89,24 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
   mkdir build
   cd build
   ```
-  To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
   ```
   cmake ..
   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), with hyper optimized handshaking disabled, run `cmake` using the command:
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10 -DNO_HYPER_OPTIMIZATION=true
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
+
+  > **Note**: for targets that support hyper optimized handshaking, it must be disabled with `-DNO_HYPER_OPTIMIZATION=true`.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -118,45 +126,50 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/stall_enable.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-   ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10 -DNO_HYPER_OPTIMIZATION=true
-   ```
+  > **Note**: for targets that support hyper optimized handshaking, it must be disabled with `-DNO_HYPER_OPTIMIZATION=true`.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for simulation (fast compile time, targets simulator FPGA device):
-     ```
-     nmake fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+  * Compile for emulation (fast compile time, targets emulated FPGA device):
+    ```
+    nmake fpga_emu
+    ```
+  * Generate the optimization report:
+    ```
+    nmake report
+    ```
+  * Compile for simulation (fast compile time, targets simulator FPGA device):
+    ```
+    nmake fpga_sim
+    ```
+  * Compile for FPGA hardware (longer compile time, targets FPGA device):
+    ```
+    nmake fpga
+    ```
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -185,7 +198,7 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
     stall_free.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./stall_enable.fpga         (Linux)
      ./stall_free.fpga           (Linux)

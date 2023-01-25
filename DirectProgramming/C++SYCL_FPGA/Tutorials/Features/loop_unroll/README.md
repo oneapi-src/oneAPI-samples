@@ -2,9 +2,9 @@
 This tutorial demonstrates a simple example of unrolling loops to improve throughput for a SYCL*-compliant FPGA program.
 
 | Optimized for                     | Description
-|:---                                 |:---
+|:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  Basics of loop unrolling. <br> How to unroll loops in your program. <br> Determining the optimal unroll factor for your program.
 | Time to complete                  | 15 minutes
@@ -17,6 +17,8 @@ This tutorial demonstrates a simple example of unrolling loops to improve throug
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -89,7 +91,7 @@ In an FPGA design, unrolling loops is a common strategy to directly trade off on
 ### Tutorial design
 This tutorial demonstrates this trade-off with a simple vector add kernel. The tutorial shows how increasing the unroll factor on a loop increases throughput... until another bottleneck is encountered. This example is constructed to run up against global memory bandwidth constraints.
 
-The memory bandwidth on an Intel&reg; Programmable Acceleration Card with Intel Arria&reg;, 10 GX FPGA system, is about 6 GB/s. The tutorial design will likely run at around 300 MHz. In this design, the FPGA design processes a new iteration every cycle in a pipeline-parallel fashion. The theoretical computation limit for one adder is:
+For this examples, lets consider the Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA. The memory bandwidth of this FPGA board is about 6 GB/s. The tutorial design will likely run at around 300 MHz when targeting this BSP. In this design, the FPGA design processes a new iteration every cycle in a pipeline-parallel fashion. The theoretical computation limit for one adder is:
 
 **GFlops**: 300 MHz \* 1 float = 0.3 GFlops
 
@@ -98,14 +100,14 @@ The memory bandwidth on an Intel&reg; Programmable Acceleration Card with Intel 
 You repeat this back-of-the-envelope calculation for different unroll factors:
 
 |Unroll Factor  | GFlops (GB/s) | Computation Bandwidth (GB/s)
-|:---  |:--- |:---
-|1   | 0.3 | 1.2
-|2   | 0.6 | 2.4
-|4   | 1.2 | 4.8
-|8   | 2.4 | 9.6
-|16  | 4.8 | 19.2
+|:---           |:---           |:---
+|1              | 0.3           | 1.2
+|2              | 0.6           | 2.4
+|4              | 1.2           | 4.8
+|8              | 2.4           | 9.6
+|16             | 4.8           | 19.2
 
-On an Intel&reg; Programmable Acceleration Card with Intel Arria&reg; 10 GX FPGA, it is reasonable to predict that this program will become memory-bandwidth limited when the unroll factor grows from 4 to 8. Check this prediction by running the design following the instructions below.
+On an Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA, it is reasonable to predict that this program will become memory-bandwidth limited when the unroll factor grows from 4 to 8. If you have access to such an FPGA board, check this prediction by running the design following the instructions below, providing the appropriate BSP when running `cmake`.
 
 ## Key Concepts
 * Basics of loop unrolling.
@@ -132,23 +134,26 @@ On an Intel&reg; Programmable Acceleration Card with Intel Arria&reg; 10 GX FPGA
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -168,28 +173,29 @@ On an Intel&reg; Programmable Acceleration Card with Intel Arria&reg; 10 GX FPGA
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_unroll.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -209,8 +215,6 @@ On an Intel&reg; Programmable Acceleration Card with Intel Arria&reg; 10 GX FPGA
      ```
      nmake fpga
      ```
-
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -239,7 +243,7 @@ You can also check the achieved system f<sub>MAX</sub> to verify the earlier cal
     loop_unroll.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./loop_unroll.fpga         (Linux)
      loop_unroll.fpga.exe       (Windows)
@@ -262,15 +266,15 @@ PASSED: The results are correct
 ```
 
 ### Discussion of Results
-The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA:
+The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
 
 Unroll Factor  | Kernel Time (ms) | Throughput (GFlops) | Num of DSPs
-|:--- |:--- |:--- |:---
-|1   | 242 | 0.277 | 1
-|2   | 127 | 0.528 | 2
-|4   | 63  | 1.065 | 4
-|8   | 46  | 1.459 | 8
-|16  | 44  | 1.525 | 16
+|:---          |:---              |:---                 |:---
+|1             | 242              | 0.277               | 1
+|2             | 127              | 0.528               | 2
+|4             | 63               | 1.065               | 4
+|8             | 46               | 1.459               | 8
+|16            | 44               | 1.525               | 16
 
 Notice that when the unroll factor increases from 1 to 2 and from 2 to 4, the kernel execution time decreases by a factor of two. Correspondingly, the kernel throughput doubles. However, when the unroll factor is increased from 4 to 8 or from 8 to 16, the throughput no longer scales by a factor of two at each step. The design is now bound by memory bandwidth limitations instead of compute unit limitations, even though the hardware is replicated.
 
