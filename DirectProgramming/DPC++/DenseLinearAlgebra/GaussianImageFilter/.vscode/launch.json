@@ -1,7 +1,7 @@
 {
     "configurations": [
     {
-        "name": "C/C++: dpc++ build and debug gaussian_blur",
+        "name": "C/C++: Intel icpx build and debug gaussian_blur",
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/bin/${config:programName}_d",
