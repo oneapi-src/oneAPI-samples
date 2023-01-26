@@ -16,24 +16,24 @@
 //
 //*****************************************************************************
 
-// SYCL / Intel oneAPI files:
-#include <CL/sycl.hpp>
+// SYCL or oneAPI toolkit headers:
+#include <sycl/sycl.hpp>
 
-// Third party files:
+// Third party headers:
 #include <cmath>
 #include <iostream>
 // These public domain headers implement useful image reading and writing
 // functions. Find in ${oneAPI}/dev-utilities/include
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
+#include "stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb/stb_image_write.h>
+#include "stb/stb_image_write.h"
 
 // Forward declaration of this example's SYCL kernels
 class KernelFillGaussian;
 class KernelGaussian;
 
-using namespace cl::sycl;
+using namespace sycl;
 using namespace std;
 
 // Attempts to determine a good local size. The best way to *control* 
