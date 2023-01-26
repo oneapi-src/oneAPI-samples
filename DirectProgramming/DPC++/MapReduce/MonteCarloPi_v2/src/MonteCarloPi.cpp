@@ -17,17 +17,17 @@
 //
 //*****************************************************************************
 
-// SYCL includes:
-#include <CL/sycl.hpp>
+// SYCL or oneAPI toolkit headers:
+#include <sycl/sycl.hpp>
 
-// Third party includes:
+// Third party headers:
 #include <algorithm>
 #include <iostream>
 #include <random>
 #include <typeinfo>
 #include <vector>
 
-// In house includes:
+// In-house headers:
 #include "device_selector.hpp"
 
 using namespace std;

@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [],
-            "compilerPath": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp",
+            "compilerPath": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
+            "compilerArgs": [ "-fsycl" ],
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"
