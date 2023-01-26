@@ -1,0 +1,13 @@
+--- resnet50.py	2023-01-24 14:40:21.570401244 +0900
++++ resnet50_xpu.py	2023-01-24 14:43:31.170393594 +0900
+@@ -23,8 +23,8 @@
+ 
+   import intel_extension_for_pytorch as ipex
+ 
+-  model = model.to(memory_format=torch.channels_last)
+-  data = data.to(memory_format=torch.channels_last)
++  model = model.to("xpu", memory_format=torch.channels_last)
++  data = data.to("xpu", memory_format=torch.channels_last)
+ 
+   if args.dtype == 'float32':
+     model = ipex.optimize(model, dtype=torch.float32)
