@@ -336,7 +336,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Streaming pipe width          : 4
-Throughput: 233793 matrices/second
+Throughput: 177299 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED
