@@ -32,7 +32,7 @@ compilation errors due to evolution of the features and extensions.
 ### Prerequisites
 
 1. An installed SYCL toolchain.  See below for details on the tested DPC++ toolchain
-1. CMake 3.10 or newer
+1. CMake 3.14 or newer
 1. Ninja - to use the build system described below
 
 To build and use these examples, you will need an installed DPC++ toolchain.  For one such toolchain, please visit:
