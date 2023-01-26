@@ -19,6 +19,8 @@ function(add_book_sample)
 
     target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic ${BOOK_SAMPLE_ADDITIONAL_COMPILE_OPTIONS})
 
+    target_link_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl)
+
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE ${BOOK_SAMPLE_LIBS})
 
     if(CMAKE_CONFIGURATION_TYPES)

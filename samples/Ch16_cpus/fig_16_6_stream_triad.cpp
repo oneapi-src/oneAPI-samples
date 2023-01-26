@@ -12,6 +12,7 @@ using namespace sycl;
 
 constexpr int num_runs = 10;
 constexpr size_t scalar = 3;
+constexpr size_t default_array_size = 256;
 
 double triad(
     const std::vector<float>& vecA,
@@ -59,7 +60,8 @@ int main(int argc, char *argv[]) {
   }
   else {
     std::cout << "Run as ./<progname> <arraysize in elements>\n";
-    return 1;
+    std::cout << "Defaulting to an array size of " << default_array_size << "\n";
+    array_size = default_array_size;
   }
 
   std::cout << "Running with stream size of " << array_size
