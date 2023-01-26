@@ -138,7 +138,7 @@ int main( int argc, char* argv[] )
          
   try
   {
-    sycl::device hw = device( sycl::cpu_selector() );
+    sycl::device hw = device( sycl::cpu_selector_v );
     queue myQueue( hw, exception_handler );
     
     // *******************************************
