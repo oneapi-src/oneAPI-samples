@@ -124,7 +124,7 @@ class CMonteCarloPiKernel
 // asynchronous error cannot be propagated up the stack. 
 // By default, they are considered 'lost'. The way in which we can retrieve them
 // is by providing an error handler function.
-auto exception_handler = []( cl::sycl::exception_list exceptions ) 
+auto exception_handler = []( sycl::exception_list exceptions ) 
 {
     for( std::exception_ptr const &e : exceptions ) 
     {
@@ -132,7 +132,7 @@ auto exception_handler = []( cl::sycl::exception_list exceptions )
         {
           std::rethrow_exception( e );
         } 
-        catch( cl::sycl::exception const &e ) 
+        catch( sycl::exception const &e ) 
         {
           std::cout << "Queue handler caught asynchronous SYCL exception:\n" 
           << e.what() << std::endl;
@@ -143,6 +143,37 @@ auto exception_handler = []( cl::sycl::exception_list exceptions )
 // The Monto Carlo Pi program
 int main( int argc, char *argv[] ) 
 {
+  CUtilDeviceTargets utilsDev;
+  FnResult fnResult = utilsDev.DiscoverDevsWeWant();
+  if( !fnResult.bSuccess )
+  {
+    cerr << "Program failure: Unable to discover target devices on this platform.\n";
+    exit( -1 );
+  }
+
+  fnResult = UserCheckTheirInput( utilsDev, argc, argv ); 
+  if( !fnResult.bSuccess ) 
+  {
+    cerr << fnResult.strErrMsg << "\n";
+    exit( 1 );
+  }
+
+  bool bDoDevDiscovery = false;
+  fnResult = UserWantsToDiscoverPossibleTargets( argv, bDoDevDiscovery );
+  if( !fnResult.bSuccess )
+  {
+    cerr << fnResult.strErrMsg << "\n";
+    exit( -1 );
+  }
+  if( bDoDevDiscovery ) exit( 1 );
+
+  const SDeviceFoundProxy *pUsersChosenDevice = utilsDev.GetDevUsersFirstChoice();
+  if( pUsersChosenDevice == nullptr )
+  {
+    cerr << "Program failure: Did not create a valid target device object.\n";
+    exit( -1 );
+  }
+
   constexpr size_t iterations = 1 << 20;
   size_t workGroupSize = 1 << 10;
 
@@ -164,8 +195,16 @@ int main( int argc, char *argv[] )
   try 
   {
     // Create a SYCL queue
-    CCustomSelector selector( GetDeviceType( argc, argv ) );
-    sycl::queue queue( selector, exception_handler );
+    queue queue( pUsersChosenDevice->theDevice, exception_handler );
+
+    string strTheDeviceBeingUsed;
+    fnResult = CUtilDeviceTargets::GetQueuesCurrentDevice( queue, strTheDeviceBeingUsed );
+    if( !fnResult.bSuccess )
+    {
+      cerr << fnResult.strErrMsg << "\n";
+      exit( -1 );
+    }
+    cout << strTheDeviceBeingUsed << "\n";
 
     // Get device and display information: name and platform
     const sycl::device hw = queue.get_device();
@@ -255,7 +294,7 @@ size_t GetBestWorkGroupSize( const size_t workGroupSize,
                              const sycl::device &device,
                              const sycl::kernel &kernel ) 
 {
-  if( device.is_host() ) 
+  if( device.is_cpu() ) 
   {
     const size_t maxDeviceWorkGroupSize =
         device.get_info< sycl::info::device::max_work_group_size >();
@@ -266,7 +305,7 @@ size_t GetBestWorkGroupSize( const size_t workGroupSize,
     if( workGroupSize > maxDeviceWorkGroupSize ) 
     {
       cout << "Maximum work-group size for device "
-           << device.get_info<cl::sycl::info::device::name>() << ": "
+           << device.get_info< sycl::info::device::name >() << ": "
            << maxDeviceWorkGroupSize << std::endl;
       
       return maxDeviceWorkGroupSize;
