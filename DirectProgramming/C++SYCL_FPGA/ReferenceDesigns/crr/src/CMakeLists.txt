@@ -94,6 +94,11 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+add_custom_command(TARGET ${SIMULATOR_TARGET} PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan
+                     ""
+                     COMMENT "Running the simulation flow on the CRR design is very long and is therefore not recommended"
+                    )
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
