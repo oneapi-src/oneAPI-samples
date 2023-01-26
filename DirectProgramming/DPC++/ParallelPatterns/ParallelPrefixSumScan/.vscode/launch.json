@@ -41,7 +41,6 @@
             "description": "Program args",
             "default": "cpu",
             "options": [
-                "host",
                 "cpu",
                 "gpu",
                 "accelerator"

@@ -17,7 +17,7 @@
 //*****************************************************************************
 
 // SYCL / Intel oneAPI files:
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "dpc_common.hpp"
 
 // Third party files:
@@ -29,8 +29,28 @@
 // This project's files:
 #include "device_selector.hpp"
 
-using namespace cl::sycl;
+using namespace sycl;
 using namespace std;
+
+// Asynchronous errors hander, catch faults in asynchronously executed code
+// inside a command group or a kernel. They can occur in a different stackframe, 
+// asynchronous error cannot be propagated up the stack. 
+// By default, they are considered 'lost'. The way in which we can retrieve them
+// is by providing an error handler function.
+auto exception_handler = []( sycl::exception_list exceptions ) 
+{
+    for( std::exception_ptr const &e : exceptions ) 
+    {
+        try 
+        {
+          std::rethrow_exception( e );
+        } 
+        catch( sycl::exception const &e ) 
+        {
+          std::cout << "Queue handler caught asynchronous SYCL exception:\n" << e.what() << std::endl;
+        }
+    }
+};
 
 // Forward decleration of functions
 template< typename T, typename OP >
@@ -40,19 +60,52 @@ int TestFactorial( sycl::queue &q );
 
 int main( int argc, char *argv[] ) 
 {
+  CUtilDeviceTargets utilsDev;
+  FnResult fnResult = utilsDev.DiscoverDevsWeWant();
+  if( !fnResult.bSuccess )
+  {
+    cerr << "Program failure: Unable to discover target devices on this platform.\n";
+    exit( -1 );
+  }
+
+  fnResult = UserCheckTheirInput( utilsDev, argc, argv ); 
+  if( !fnResult.bSuccess ) 
+  {
+    cerr << fnResult.strErrMsg << "\n";
+    exit( 1 );
+  }
+
+  bool bDoDevDiscovery = false;
+  fnResult = UserWantsToDiscoverPossibleTargets( argv, bDoDevDiscovery );
+  if( !fnResult.bSuccess )
+  {
+    cerr << fnResult.strErrMsg << "\n";
+    exit( -1 );
+  }
+  if( bDoDevDiscovery ) exit( 1 );
+
+  const SDeviceFoundProxy *pUsersChosenDevice = utilsDev.GetDevUsersFirstChoice();
+  if( pUsersChosenDevice == nullptr )
+  {
+    cerr << "Program failure: Did not create a valid target device object.\n";
+    exit( -1 );
+  }
+
   int retResultSum = 0;
   int retResultFactorial = 0;
 
   try
   {
-    CustomSelector selector( GetDeviceType( argc, argv ) );
-    queue myQueue( selector, dpc_common::exception_handler );
-    
-    cout << "Using device: ["
-      << myQueue.get_device().get_info< info::device::name >()
-      << "] from ["
-      << myQueue.get_device().get_platform().get_info< info::platform::name >()
-      << "]\n";
+    queue myQueue( pUsersChosenDevice->theDevice, exception_handler );
+
+    string strTheDeviceBeingUsed;
+    fnResult = CUtilDeviceTargets::GetQueuesCurrentDevice( myQueue, strTheDeviceBeingUsed );
+    if( !fnResult.bSuccess )
+    {
+      cerr << fnResult.strErrMsg << "\n";
+      exit( -1 );
+    }
+    cout << strTheDeviceBeingUsed << "\n";
 
     retResultSum = TestSum( myQueue );
     retResultFactorial =  (retResultSum == 0) && TestFactorial( myQueue );
@@ -130,10 +183,10 @@ void ParallelScan( sycl::buffer< T, 1 > &bufIn, sycl::queue &q )
 {
   // Retrieve the device associated with the given queue.
   const sycl::device dev = q.get_device();
-  const bool bHwIsHost = dev.is_host();
+  const bool bHwIsCpu = dev.is_cpu();
 
   // Check if local memory is available. On host no local memory is fine, since
-  if( !bHwIsHost && 
+  if( !bHwIsCpu && 
       (dev.get_info< sycl::info::device::local_mem_type >() ==
        sycl::info::local_mem_type::none) ) 
   {
@@ -150,7 +203,7 @@ void ParallelScan( sycl::buffer< T, 1 > &bufIn, sycl::queue &q )
   // Check if there is enough global memory.
   const size_t globalMemSize = 
       dev.get_info< sycl::info::device::global_mem_size >();
-  if( !bHwIsHost && (bufSize > (globalMemSize * 0.5) ) ) 
+  if( !bHwIsCpu && (bufSize > (globalMemSize * 0.5) ) ) 
   {
     throw std::runtime_error( 
       "Non host device input size exceeds device global memory size." );
