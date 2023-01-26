@@ -26,6 +26,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Scikit-learn (OneDAL) | [Intel_Extension_For_SKLearn_GettingStarted](Intel_Extension_For_SKLearn_GettingStarted) |speed up Scikit-learn application use oneDAL
 |oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | configuration script to automatically configure the environment |
 |oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU |
+|Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | guide users how to run a tensorflow inference workload on both GPU and CPU |
+
 
 
 # Using Samples in Intel® DevCloud for oneAPI
