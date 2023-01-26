@@ -4,10 +4,11 @@
 		{
 			"type": "cppbuild",
 			"label": "scan Debug C/C++: Intel icpx build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
 			"args": [
 				"-fsycl",
 				"-fdiagnostics-color=always",
+				"-fno-limit-debug-info",
 				"-fsycl-device-code-split=per_kernel",
 				"-g",
 				"-O0",
@@ -22,12 +23,12 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/dpcpp"
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/dpcpp"
 		},
 		{
 			"type": "cppbuild",
 			"label": "scan Release C/C++: Intel icpx build active file",
-			"command": "/opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
 			"args": [
 				"-fsycl",
 				"-DNDEBUG",
@@ -42,7 +43,7 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /opt/intel/oneapi/compiler/2022.1.0/linux/bin/icpx"
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/icpx"
 		}
 	]
 }
