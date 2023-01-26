@@ -8,7 +8,7 @@ The output file is in a PNG format.
 __Output Image:__
 
 ![Gaussian blur input](images/sample_image.jpg)<br>
-![Gaussian blue output](images/sample_image-blurred.png)
+![Gaussian blur output](images/sample_image-blurred.png)
 
 ## Prerequisites
 
