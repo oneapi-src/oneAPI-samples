@@ -33,9 +33,7 @@ class ProducerAfterKernel;
 class ConsumerAfterKernel;
 
 // kSize = # of floats to process on each kernel execution.
-#if defined(FPGA_EMULATOR)
-constexpr int kSize = 4096;
-#elif defined(FPGA_SIMULATOR)
+#if defined(FPGA_EMULATOR) or defined(FPGA_SIMULATOR)
 constexpr int kSize = 64;
 #else
 constexpr int kSize = 262144;
@@ -43,11 +41,9 @@ constexpr int kSize = 262144;
 
 // Number of iterations performed in the consumer kernels
 // This controls the amount of work done by the Consumer.
-#if defined(FPGA_SIMULATOR)
-constexpr int kComplexity = 2000;
-#else
-constexpr int kComplexity = 32;
-#endif
+// Part of the work moves to the Producer in the "after" case.
+constexpr int kComplexity1 = 1000;
+constexpr int kComplexity2 = 2000;
 
 // Perform two stages of processing on the input data.
 // The output of ConsumerWork1 needs to go to the input
@@ -56,7 +52,7 @@ constexpr int kComplexity = 32;
 // can be replaced with more useful operations.
 float ConsumerWork1(float f) {
   float output = f;
-  for (int j = 0; j < kComplexity; j++) {
+  for (int j = 0; j < kComplexity1; j++) {
     output = 20 * f + j - output;
   }
   return output;
@@ -64,7 +60,7 @@ float ConsumerWork1(float f) {
 
 float ConsumerWork2(float f) {
   auto output = f;
-  for (int j = 0; j < kComplexity; j++) {
+  for (int j = 0; j < kComplexity2; j++) {
     output = output + f * j;
   }
   return output;
