@@ -35,7 +35,7 @@ endif()
 
 # Hyper-optimization is turned off to allow the same set of latency control parameters to work on both A10 and S10.
 # Users can turn it back on and try their own parameters on S10.
-if(FPGA_DEVICE MATCHES ".*A10.*")
+if(DEVICE_FLAG MATCHES "A10")
     set(HANDSHAKING "")
 else()
     set(HANDSHAKING "-Xshyper-optimized-handshaking=off")
