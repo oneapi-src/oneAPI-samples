@@ -1,6 +1,6 @@
 {
   "guid": "60A68888-6099-414E-999B-EDC7310A01EA",
-  "name": "TensorFlow (TF) Transformer with Intel® Advanced Matrix Extensions (Intel® AMX) bfoat16 Mixed Precision Learning",
+  "name": "TensorFlow Transformer with Advanced Matrix Extensions bfoat16 Mixed Precision Learning",
   "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
   "description": "This sample code demonstrates optimizing a TensorFlow model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on Sapphire Rapids",
   "builder": ["cli"],
