@@ -27,7 +27,7 @@ class VectorAdd {
   }
 };
 
-#define VECT_SIZE 256
+constexpr int kVectSize = 256;
 
 int main() {
   bool passed = false;
@@ -37,11 +37,11 @@ int main() {
 // 2023.1
 #if __INTEL_CLANG_COMPILER >= 20230100
 #if FPGA_SIMULATOR
-  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
-  auto selector = sycl::ext::intel::fpga_selector_v;
+    auto selector = sycl::ext::intel::fpga_selector_v;
 #else  // #if FPGA_EMULATOR
-  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 #elif __INTEL_CLANG_COMPILER >= 20230000
 #if FPGA_SIMULATOR
@@ -63,25 +63,23 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    int count = VECT_SIZE;  // pass array size by value
-
     // declare arrays and fill them
     // allocate in shared memory so the kernel can see them
-    int *a = sycl::malloc_shared<int>(count, q);
-    int *b = sycl::malloc_shared<int>(count, q);
-    int *c = sycl::malloc_shared<int>(count, q);
-    for (int i = 0; i < count; i++) {
+    int *a = sycl::malloc_shared<int>(kVectSize, q);
+    int *b = sycl::malloc_shared<int>(kVectSize, q);
+    int *c = sycl::malloc_shared<int>(kVectSize, q);
+    for (int i = 0; i < kVectSize; i++) {
       a[i] = i;
-      b[i] = (count - i);
+      b[i] = (kVectSize - i);
     }
 
-    std::cout << "add two vectors of size " << count << std::endl;
+    std::cout << "add two vectors of size " << kVectSize << std::endl;
 
-    q.single_task<VectorAddID>(VectorAdd{a, b, c, count}).wait();
+    q.single_task<VectorAddID>(VectorAdd{a, b, c, kVectSize}).wait();
 
     // verify that VC is correct
     passed = true;
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < kVectSize; i++) {
       int expected = a[i] + b[i];
       if (c[i] != expected) {
         std::cout << "idx=" << i << ": result " << c[i] << ", expected ("
