@@ -21,7 +21,8 @@ based on a stochastic stock price model. A large number of possible implementati
 price over time are generated, and an estimation of the call and put options is made by averaging
 their values in each realization.
 
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
+This sample performs its computations on the default SYCL* device. You can set
+the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
 ## Key Implementation Details
 
@@ -30,7 +31,7 @@ a distribution object (specifying the desired probability distribution), and fin
 the random numbers themselves. Random number generation can be done from the host,
 storing the results in a SYCL-compliant buffer or USM pointer, or directly in a kernel.
 
-In this sample, a Philox 4x32x10 generator is used, and a gaussian distribution
+In this sample, the MCG59 generator is used by default, and a gaussian distribution
 is the basis for the Monte Carlo simulation. oneMKL provides many other generators
 and distributions to suit a range of applications. After generating the random number
 input for the simulation, prices are calculated and then averaged using reduction functions.
@@ -67,7 +68,10 @@ To learn more about the extensions, see the
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Running Samples In Intel® DevCloud
-If running a sample in the Intel® DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+If running a sample in the Intel® DevCloud, remember that you must specify the
+compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode.
+For more information see the Intel® oneAPI Base Toolkit Get Started Guide
+(https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### On a Linux* System
 Run `make` to build the sample. Then run the sample calling generated execution file.
@@ -78,6 +82,20 @@ You can remove all generated files with `make clean`.
 Run `nmake` to build and run the sample programs. `nmake clean` removes temporary files.
 
 > **Warning**: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
+
+#### Build a sample using others generators
+To use the MRG32k3a generator or the Philox4x32x10 generator use `generator=mrg`
+or `generator=philox` correspondingly when building the sample, e.g.
+```
+make generator=mrg
+```
+for Linux* system or
+
+```
+nmake generator=mrg
+```
+
+for Windows* System.
 
 ## Running the Monte Carlo European Options Sample
 If everything is working correctly, the program will run the Monte Carlo simulation.
