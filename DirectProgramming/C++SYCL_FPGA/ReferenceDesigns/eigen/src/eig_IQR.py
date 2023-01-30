@@ -6,6 +6,7 @@ np.random.seed(100)
 eigVal_threhhold = 1e-2
 SHIFT_NOISE = 1e-2
 KTHRESHOLD = 1e-5
+KDEFLIM = 15
 
 def is_invertible(a):
     return a.shape[0] == a.shape[1] and np.linalg.matrix_rank(a) == a.shape[0]
@@ -77,7 +78,7 @@ def iterative_qrd(C):
                 break
             
 
-        if(ind == 1):
+        if(ind == KDEFLIM):
             print("Total number of Shift QR iteration is: " + str(counter))
             break
     
@@ -138,7 +139,7 @@ def iterative_qrd_nodebug(C):
                 break
             
 
-        if(ind == 3):
+        if(ind == KDEFLIM):
             break
 
     w = [C1[i][i] for i in range(size)]
@@ -180,8 +181,8 @@ if __name__ == "__main__":
         if(not is_invertible(C[i, :, :])):
             print("This matrix is singular")
 
-        # w,v = iterative_qrd_nodebug(C[i, :, :])
-        w,v = np.linalg.eigh(C[i, :, :])
+        w,v = iterative_qrd_nodebug(C[i, :, :])
+        # w,v = np.linalg.eigh(C[i, :, :])
         if(i == 921):
             print(w)
             print(v)

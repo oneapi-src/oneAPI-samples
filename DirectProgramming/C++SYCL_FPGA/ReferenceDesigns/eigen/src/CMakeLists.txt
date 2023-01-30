@@ -44,8 +44,8 @@ if(FPGA_DEVICE MATCHES ".*a10.*")
     # Nothing to do
 elseif(FPGA_DEVICE MATCHES ".*s10.*")
     # S10 parameters
-    set(ROWS_COMPONENT 3)
-    set(COLS_COMPONENT 3)
+    set(ROWS_COMPONENT 16)
+    set(COLS_COMPONENT 16)
     set(COMPLEX 0)
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 480MHz)

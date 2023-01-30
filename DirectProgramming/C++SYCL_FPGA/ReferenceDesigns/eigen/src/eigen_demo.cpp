@@ -16,7 +16,7 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
-#define KDEFLIM 2
+#define KDEFLIM 16
 #define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 1
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
-  int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1000;
 #endif
   if (repetitions < 1) {
     std::cout << "Number of repetitions given is lower that 1." << std::endl;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 2000;
+  constexpr size_t kMatricesToDecompose = 8;
 
   try {
     // SYCL boilerplate
