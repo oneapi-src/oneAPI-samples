@@ -19,12 +19,12 @@ set(FPGA_TARGET_MANUAL_REVERT ${TARGET_NAME_MANUAL_REVERT}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
-    set(DEVICE_FLAG "-DA10")
-    set(MANUAL_REVERT_FLAGS "-Xssfc-exit-fifo-type=default")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "-DAgilex")
+    set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
     if(FPGA_DEVICE MATCHES ".*a10*")
         set(DEVICE_FLAG "-DA10")
@@ -36,7 +36,7 @@ else()
         set(DEVICE_FLAG "-DAgilex")
         set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     endif()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
