@@ -6,6 +6,7 @@ This FPGA tutorial demonstrates how to specify the kernel invocation interfaces 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of specifying kernel invocation interfaces and kernel argument interfaces
 | Time to complete                  | 30 minutes
@@ -18,6 +19,8 @@ This FPGA tutorial demonstrates how to specify the kernel invocation interfaces 
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
@@ -217,26 +220,14 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the Intel® Arria10® FPGA family, run `cmake` using the following command:
+   To compile for the default target (the Agilex™ device family), run `cmake` using the following command:
    ```
    cmake ..
    ```
-   You can also compile for a custom FPGA platform. Run `cmake` using the following command:
-   ```
-   cmake .. -DFPGA_DEVICE=<device-family-name>
-   ```
-   or
-   ```
-   cmake .. -DFPGA_DEVICE=<device-part-number>
-   ```
-   For example, to target the default Intel® Stratix10® device:
-   ```
-   cmake .. -DFPGA_DEVICE=Stratix10
-   ```
-   To target a specific Intel® Arria10® device:
-   ```
-   cmake .. -DFPGA_DEVICE=10ax115s2f45i2sges
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -265,28 +256,14 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the Intel® Arria10® FPGA family, run `cmake` using the following command:
-
+   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. 
    ```
-   You can also compile for a custom FPGA platform. Run `cmake` using the following command:
-   
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-family-name>
-   ```
-   or
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<device-part-number>
-   ```
-   For example, to target the default Intel® Stratix10® device:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=Stratix10
-   ```
-   To target a specific Intel® Arria10® device:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=10ax115s2f45i2sges
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 

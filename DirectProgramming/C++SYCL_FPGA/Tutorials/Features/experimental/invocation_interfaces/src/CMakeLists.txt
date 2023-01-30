@@ -22,14 +22,14 @@ set(STREAMING_LAMBDA_EMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_emu)
 set(STREAMING_LAMBDA_SIMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_sim)
 set(STREAMING_LAMBDA_FPGA_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga)
 
-# FPGA device selection
+# FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA device ${FPGA_DEVICE} (Intel(R) Agilex(R) FPGAs). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to run on the default FPGA family: ${FPGA_DEVICE} \
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
