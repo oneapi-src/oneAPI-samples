@@ -74,10 +74,12 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
+
 | Sample                                                                                                                        | Category                                             | Description
 |:---                                                                                                                           |:---                                                  |:---
 | [ac_fixed](Tutorials/Features/ac_fixed)                                                                                       | [Tutorials/Features](Tutorials/Features)             | How different methods of `ac_fixed` number construction affect hardware resource utilization <br> Recommended method for constructing `ac_fixed` numbers in your kernel <br> Accessing and using the `ac_fixed` math library functions <br> Trading off accuracy of results for reduced resource usage on the FPGA
 | [ac_int](Tutorials/Features/ac_int)                                                                                           | [Tutorials/Features](Tutorials/Features)             | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
+| [device_global (experimental)](Tutorials/Features/experimental/device_global)                                                 | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `device_global` class <br> How to initialize a `device_global` to non-zero values
 | [double_buffering](Tutorials/DesignPatterns/double_buffering)                                                                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the double buffering optimization technique
 | [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement)                                                     | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to explicitly manage the movement of data for the FPGA
 | [hostpipes (experimental)](Tutorials/Features/experimental/hostpipes)                                                         | [Tutorials/Features](Tutorials/Features)             | How to use host pipes to send and receive data between a host and the FPGA 
@@ -92,6 +94,7 @@ flowchart LR
 | [pipes](Tutorials/Features/pipes)                                                                                             | [Tutorials/Features](Tutorials/Features)             | The basics of using SYCL*-compliant pipes extension for FPGA <br> How to declare and use pipes
 | [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to declare and use `printf` in program
 | [register_map_and_streaming_interfaces (experimental)](Tutorials/Features/experimental/register_map_and_streaming_interfaces) | [Tutorials/Features](Tutorials/Features)             | How to specify the kernel invocation interface and kernel argument interfaces
+
 
 #### Tier 3: Explore the Advances Techniques
 
@@ -220,7 +223,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 ### Use Integrated Development Environments (IDEs)
 
-You can compile and run the sample using the Eclipse* IDE (Linux*) and Microsoft Visual Studio* (Windows*). For  on using the IDE integration, see [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
+You can compile and run the sample using the Eclipse* IDE (Linux*) and Microsoft Visual Studio* (Windows*). For  on using the IDE integration, see [FPGA Workflows on Third-Party IDEs for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 
 ### Troubleshooting
@@ -270,16 +273,16 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
 
 Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
 
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
-
 Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
 
 >**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.
 
 ## Documentation
 
-- The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of SYCL for FPGA.
-- The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
+- The [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
 - The [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL by suggesting a series of samples.
 - The [Intel® oneAPI DPC++/C++ Compiler Release Notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
+- The [Migrating OpenCL™ FPGA Designs to SYCL*](https://www.intel.com/content/www/us/en/develop/documentation/migrate-opencl-fpga-designs-to-dpcpp/top.html) guide.
+- [Additional FPGA-specific Resources](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/additional-information.html).
+- The [Intel® Quartus® Prime Pro and Standard Software User Guides](https://www.intel.com/content/www/us/en/support/programmable/support-resources/design-software/user-guides.html).
+

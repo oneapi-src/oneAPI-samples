@@ -44,17 +44,19 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ### Performance
 
@@ -76,7 +78,7 @@ The design uses the `-fp-relaxed` option, which permits the compiler to reorder 
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. The matrix size is constrained by the total FPGA DSP resources available.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device; however, the design can process matrices from 4 x 4 to 512 x 512.
+By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex™ FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -135,51 +137,68 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       make report
       ```
       The report resides at `qrd_report/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz).
-
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -187,13 +206,17 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
       ```
       nmake report
       ```
       The report resides at `qrd_report.a.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -222,9 +245,17 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    ./qrd.fpga_emu
    ```
+
+#### Run on FPGA Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qrd.fpga_sim
+   ```
+
 #### Run on FPGA
 
-1. Run the sample on the FPGA device.
+1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./qrd.fpga
    ```
@@ -239,9 +270,19 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    qrd.fpga_emu.exe
    ```
+   
+#### Run on FPGA Simulator
+
+1. Run the sample on the FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   qrd.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+
 #### Run on FPGA
 
-1. Run the sample on the FPGA device.
+1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    qrd.fpga.exe
    ```

@@ -1,6 +1,7 @@
 set(TARGET_NAME db)
 set(SOURCE_FILE db.cpp dbdata.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # which query are we doing?
@@ -11,26 +12,29 @@ else()
     message(STATUS "\tQUERY=${QUERY}")
 endif()
 
-# select default board based on query
-if(${QUERY} EQUAL 1)
-    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
-    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
-elseif(${QUERY} EQUAL 11)
-    set(DEFAULT_BOARD "intel_s10sx_pac:pac_s10")
-    set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX")
-elseif(${QUERY} EQUAL 12)
-    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
-    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
-endif()
-
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE ${DEFAULT_BOARD})
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with ${DEFAULT_BOARD_STR} FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -42,31 +46,37 @@ else()
 endif()
 
 # ensure a supported query was requested
-if(NOT ${QUERY} EQUAL 1 AND NOT ${QUERY} EQUAL 11 AND NOT ${QUERY} EQUAL 12)
-  message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 11 and 12)")
+if(NOT ${QUERY} EQUAL 1 AND NOT ${QUERY} EQUAL 9 AND NOT ${QUERY} EQUAL 11 AND NOT ${QUERY} EQUAL 12)
+  message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
 endif()
 
 # Pick the default seed if the user did not specify one to CMake.
 # We do a seed sweep to find a good seed by default
 if(NOT DEFINED SEED)
-    if(${FPGA_DEVICE} MATCHES ".*a10.*")
+    if(DEVICE_FLAG MATCHES "A10")
         if(${QUERY} EQUAL 1)
+            set(SEED "-Xsseed=2")
+        elseif(${QUERY} EQUAL 9)
             set(SEED "-Xsseed=2")
         elseif(${QUERY} EQUAL 11)
             set(SEED "-Xsseed=4")
         elseif(${QUERY} EQUAL 12)
             set(SEED "-Xsseed=2")
         endif()
-    elseif(${FPGA_DEVICE} MATCHES ".*s10.*")
+    elseif(DEVICE_FLAG MATCHES "S10")
         if(${QUERY} EQUAL 1)
             set(SEED "-Xsseed=3")
+        elseif(${QUERY} EQUAL 9)
+            set(SEED "-Xsseed=2")
         elseif(${QUERY} EQUAL 11)
             set(SEED "-Xsseed=3")
         elseif(${QUERY} EQUAL 12)
             set(SEED "-Xsseed=2")
         endif()
-    elseif(${FPGA_DEVICE} MATCHES ".*agilex.*")
+    elseif(DEVICE_FLAG MATCHES "Agilex")
         if(${QUERY} EQUAL 1)
+            set(SEED "-Xsseed=2")
+        elseif(${QUERY} EQUAL 9)
             set(SEED "-Xsseed=2")
         elseif(${QUERY} EQUAL 11)
             set(SEED "-Xsseed=4")
@@ -82,10 +92,10 @@ if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-# Error out if trying to run Q11 on Arria 10
-if (${FPGA_DEVICE} MATCHES ".*a10.*")
-    if(${QUERY} EQUAL 11)
-      message(FATAL_ERROR "Query 11 is not supported on Arria 10 devices")
+# Error out if trying to run Q9 or Q11 on Arria 10
+if (DEVICE_FLAG MATCHES "A10")
+    if(${QUERY} EQUAL 9 OR ${QUERY} EQUAL 11)
+      message(FATAL_ERROR "Queries 9 and 11 are not supported on Arria 10 devices")
     endif()
 endif()
 
@@ -106,6 +116,9 @@ endif()
 if(${QUERY} EQUAL 1)
     set(DEVICE_SOURCE query1/query1_kernel.cpp)
     set(DEVICE_HEADER query1/query1_kernel.hpp)
+elseif(${QUERY} EQUAL 9)
+    set(DEVICE_SOURCE query9/query9_kernel.cpp)
+    set(DEVICE_HEADER query9/query9_kernel.hpp)
 elseif(${QUERY} EQUAL 11)
     set(DEVICE_SOURCE query11/query11_kernel.cpp)
     set(DEVICE_HEADER query11/query11_kernel.hpp)
@@ -113,18 +126,20 @@ elseif(${QUERY} EQUAL 12)
     set(DEVICE_SOURCE query12/query12_kernel.cpp)
     set(DEVICE_HEADER query12/query12_kernel.hpp)
 else()
-    message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 11 and 12)")
+    message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(REPORT_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(REPORT_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_HARDWARE")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -136,6 +151,15 @@ target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE} ${DEVICE_SOURCE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report

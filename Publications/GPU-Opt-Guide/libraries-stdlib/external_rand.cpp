@@ -6,7 +6,7 @@
 // Compile:
 // dpcpp -D{HOST|CPU|GPU} -std=c++17 -fsycl external_rand.cpp -o external_rand
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 
@@ -15,12 +15,12 @@
 extern SYCL_EXTERNAL int rand(void);
 
 int main(void) {
-#if defined HOST
-  sycl::queue Q(sycl::host_selector{});
-#elif defined CPU
-  sycl::queue Q(sycl::cpu_selector{});
+#if defined CPU
+  sycl::queue Q(sycl::cpu_selector_v);
 #elif defined GPU
-  sycl::queue Q(sycl::gpu_selector{});
+  sycl::queue Q(sycl::gpu_selector_v);
+#else
+  sycl::queue Q(sycl::default_selector_v);
 #endif
 
   std::cout << "Running on: "

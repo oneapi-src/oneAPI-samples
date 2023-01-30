@@ -3,20 +3,16 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
-
-sycl::default_selector d_selector;
-sycl::gpu_selector g_selector;
-sycl::cpu_selector c_selector;
 
 // Array type and data size for this example.
 constexpr size_t array_size = 3 * 5 * 7 * (1 << 17);
 typedef std::array<int, array_size> IntArray;
 
-//#define mysize (1 << 17)
+// #define mysize (1 << 17)
 
 // Executing entire kernel on the GPU
 size_t VectorAdd1(sycl::queue &q, const IntArray &a, const IntArray &b,
@@ -113,9 +109,9 @@ IntArray a, b, sum;
 
 int main() {
 
-  sycl::queue q(d_selector);
-  sycl::queue q1(g_selector);
-  sycl::queue q2(c_selector);
+  sycl::queue q(sycl::default_selector_v);
+  sycl::queue q1(sycl::gpu_selector_v);
+  sycl::queue q2(sycl::cpu_selector_v);
 
   InitializeArray(a);
   InitializeArray(b);

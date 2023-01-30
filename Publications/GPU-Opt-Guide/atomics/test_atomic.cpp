@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include "align.hpp"
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>

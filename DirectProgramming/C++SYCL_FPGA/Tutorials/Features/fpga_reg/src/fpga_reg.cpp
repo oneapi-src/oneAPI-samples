@@ -73,12 +73,12 @@ void RunKernel(const std::vector<int> &vec_a,
                std::vector<int> &vec_r) {
   // Run the kernel on either the FPGA emulator, or FPGA simulator, or FPGA
   // hardware
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   size_t input_size = vec_a.size();
@@ -87,6 +87,12 @@ void RunKernel(const std::vector<int> &vec_a,
     queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+              
     buffer device_a(vec_a);
     buffer device_r(vec_r);
 

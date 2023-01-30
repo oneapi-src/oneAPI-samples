@@ -21,16 +21,22 @@ int main() {
   unsigned result = 0;
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector device_selector;
-#elif defined(FPGA_SIMULATOR)
-  sycl::ext::intel::fpga_simulator_selector device_selector;
-#else
-  sycl::ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   try {
-    sycl::queue q(device_selector, fpga_tools::exception_handler);
+    sycl::queue q(selector, fpga_tools::exception_handler);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // The scalar inputs are passed to the kernel using the lambda capture,
     // but a SYCL buffer must be used to return a scalar from the kernel.

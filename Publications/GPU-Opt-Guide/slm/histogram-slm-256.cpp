@@ -3,7 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
+#include <cstdint>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -24,7 +25,7 @@ int main() {
     input[i] |= ((long)rand() % 256) << 56;
   }
 
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << "\n";
@@ -39,10 +40,9 @@ int main() {
 
   auto e = q.submit([&](auto &h) {
     sycl::accessor macc(mbuf, h, sycl::read_only);
-    auto hacc = hbuf.get_access<sycl::access::mode::atomic>(h);
-    sycl::accessor<unsigned int, 1, sycl::access::mode::atomic,
-                   sycl::access::target::local>
-        local_histogram(sycl::range(NUM_BINS), h);
+    sycl::accessor hacc(hbuf, h, sycl::read_write);
+    sycl::local_accessor<unsigned int> local_histogram(sycl::range(NUM_BINS),
+                                                       h);
     h.parallel_for(
         sycl::nd_range(sycl::range{N / blockSize}, sycl::range{64}),
         [=](sycl::nd_item<1> it) {
@@ -55,10 +55,18 @@ int main() {
           int factor = NUM_BINS / gSize;
           int local_id = it.get_local_id()[0];
           if ((factor <= 1) && (local_id < NUM_BINS)) {
-            local_histogram[local_id].store(0);
+            sycl::atomic_ref<unsigned int, sycl::memory_order::relaxed,
+                             sycl::memory_scope::device,
+                             sycl::access::address_space::local_space>
+                local_bin(local_histogram[local_id]);
+            local_bin.store(0);
           } else {
             for (int k = 0; k < factor; k++) {
-              local_histogram[gSize * k + local_id].store(0);
+              sycl::atomic_ref<unsigned int, sycl::memory_order::relaxed,
+                               sycl::memory_scope::device,
+                               sycl::access::address_space::local_space>
+                  local_bin(local_histogram[gSize * k + local_id]);
+              local_bin.store(0);
             }
           }
           it.barrier(sycl::access::fence_space::local_space);
@@ -67,23 +75,39 @@ int main() {
             unsigned long x =
                 sg.load(macc.get_pointer() + group * gSize * blockSize +
                         sgGroup * sgSize * blockSize + sgSize * k);
-            local_histogram[x & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 8) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 16) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 24) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 32) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 40) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 48) & 0xFFU].fetch_add(1);
-            local_histogram[(x >> 56) & 0xFFU].fetch_add(1);
+#pragma unroll
+            for (std::uint8_t shift : {0, 8, 16, 24, 32, 40, 48, 56}) {
+              constexpr unsigned long mask = 0xFFU;
+              sycl::atomic_ref<unsigned int, sycl::memory_order::relaxed,
+                               sycl::memory_scope::device,
+                               sycl::access::address_space::local_space>
+                  local_bin(local_histogram[(x >> shift) & mask]);
+              local_bin += 1;
+            }
           }
           it.barrier(sycl::access::fence_space::local_space);
 
           if ((factor <= 1) && (local_id < NUM_BINS)) {
-            hacc[local_id].fetch_add(local_histogram[local_id].load());
+            sycl::atomic_ref<unsigned int, sycl::memory_order::relaxed,
+                             sycl::memory_scope::device,
+                             sycl::access::address_space::local_space>
+                local_bin(local_histogram[local_id]);
+            sycl::atomic_ref<unsigned long, sycl::memory_order::relaxed,
+                             sycl::memory_scope::device,
+                             sycl::access::address_space::global_space>
+                global_bin(hacc[local_id]);
+            global_bin += local_bin.load();
           } else {
             for (int k = 0; k < factor; k++) {
-              hacc[gSize * k + local_id].fetch_add(
-                  local_histogram[gSize * k + local_id].load());
+              sycl::atomic_ref<unsigned int, sycl::memory_order::relaxed,
+                               sycl::memory_scope::device,
+                               sycl::access::address_space::local_space>
+                  local_bin(local_histogram[gSize * k + local_id]);
+              sycl::atomic_ref<unsigned long, sycl::memory_order::relaxed,
+                               sycl::memory_scope::device,
+                               sycl::access::address_space::global_space>
+                  global_bin(hacc[gSize * k + local_id]);
+              global_bin += local_bin.load();
             }
           }
         });

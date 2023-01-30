@@ -24,7 +24,7 @@
 // Note: The implementation uses logarithms of the probabilities to process small numbers correctly
 // and to replace multiplication operations with addition operations.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 #include <math.h>
