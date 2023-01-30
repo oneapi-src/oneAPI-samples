@@ -170,14 +170,14 @@ struct StreamingQRD {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      column_tuple a_load[columns], a_compute[columns], q_result[columns];
+      column_tuple a_load1[columns], a_load2[columns], rq_matrix[columns], a_compute[columns], q_result[columns];
 
       // Contains the values of matrix R in a row by row
       // fashion, starting by row 0
       row_tuple r_matrix[rows];
 
             // Initial Identity Eigen vector matrix 
-      row_tuple QQ_matrix[rows];
+      row_tuple QQ_matrix[rows], QQ_matrixW[rows];
 
       // Copy a matrix from the pipe to a local memory
       // Number of pipe reads of pipe_size required to read a full column
@@ -202,7 +202,7 @@ struct StreamingQRD {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn].template get<k * pipe_size
+                a_load1[li / kLoopIterPerColumn].template get<k * pipe_size
                                           + t>() = pipe_read.template get<t>();
               }
 
@@ -326,7 +326,9 @@ struct StreamingQRD {
             // pointer may lead to bad QoR."
             if (!i_gt_0[fanout_bank_idx]) {
               // supporting matrix deflation
-              TT load_val = a_load[j].template get<k>();
+              TT load_val1 = a_load1[j].template get<k>();
+              TT load_val2 = a_load2[j].template get<k>();
+              TT load_val = (itr == 0) ? load_val1 : load_val2;
               diag_val = (k == j) ? load_val : diag_val;
               col_dummy[k] =  load_val ; // write_val;
             }
@@ -527,6 +529,7 @@ struct StreamingQRD {
 
             if(j_ll ==columns - 1 && QR_iteration_done == 0){
               QQ_matrix[i_ll] = QQ_write;
+              QQ_matrixW[i_ll] = QQ_write;
             }
 
             ////////////////////////////////////////////////////////
@@ -575,7 +578,8 @@ struct StreamingQRD {
             fpga_tools::UnrolledLoop<columns> ([&] (auto k){
               bool cmp = (k==j_ll && j_ll < kDM_size && i_ll < kDM_size);
               if(cmp && QR_iteration_done == 0){
-                a_load[i_ll].template get<k>() = sum_RQ;
+                a_load2[i_ll].template get<k>() = sum_RQ;
+                rq_matrix[i_ll].template get<k>() = sum_RQ;
               }
             });
           }
@@ -625,7 +629,7 @@ struct StreamingQRD {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() = 
-                  get[t] ? QQ_matrix[li / kLoopIterPerColumn]
+                  get[t] ? QQ_matrixW[li / kLoopIterPerColumn]
                                .template get<t * pipe_size + k>()
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
@@ -652,7 +656,7 @@ struct StreamingQRD {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() =
-                  get[t] ? a_load[li / kLoopIterPerColumn]
+                  get[t] ? rq_matrix[li / kLoopIterPerColumn]
                                .template get<t * pipe_size + k>()
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());

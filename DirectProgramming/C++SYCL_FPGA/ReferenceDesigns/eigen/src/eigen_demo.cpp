@@ -23,10 +23,15 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 8
+
+#define DEBUGEN 1
+#define DEBUGMINDEX 921
+
 #include "exception_handler.hpp"
 
 #include "eigen.hpp"
 #include "qr_MGS.hpp"
+// #include "qr_decom.hpp"
 #include "hessenberg_qrd.hpp"
 
 /*
@@ -128,7 +133,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 8;
+  constexpr size_t kMatricesToDecompose = 2000;
 
   try {
     // SYCL boilerplate
@@ -305,6 +310,13 @@ int main(int argc, char *argv[]) {
 ////////  QRD Iteration ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
+    std::ofstream dRQ("Debug_RQ_CPU.txt");
+    std::ofstream dQQ("Debug_QQ_CPU.txt");
+    std::ofstream dQMat("Debug_Q_CPU.txt");
+    std::ofstream dRMat("Debug_R_CPU.txt");
+    std::ofstream dAMat("Debug_A_CPU.txt");
+
+
     T *R, *Q; // pointerfor Q and R matrix after QR decomposition 
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
@@ -318,19 +330,7 @@ int main(int argc, char *argv[]) {
         bool close2zero = 1;
 
         // check zero thereshold for lower part 
-        for(int j = 0; j < kP-1; j++){
-          if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
-            close2zero = 0;
-            break;
-          }
-        }
 
-        if(close2zero && kP == KDEFLIM){
-          break;
-        } else if(close2zero){
-          kP -= 1;
-          continue;
-        }
 
         // Wilkinson shift computation 
         T a_wilk = a_matrix_cpu[matrix_offset+(kP-2)*kRows+kP-2];
@@ -345,21 +345,51 @@ int main(int argc, char *argv[]) {
 
         shift -= shift*SHIFT_NOISE;
 
+
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
+        for(int i = 0; i < kP; i++){
+          for(int j = 0; j < kP; j++){
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+          }
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
+        }
+
+
         for(int i = 0; i < kP; i++){
           a_matrix_cpu[matrix_offset+i*kRows+i] -= shift;
+        }
+
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix after shift at iteration: " << li << "\n";}
+        for(int i = 0; i < kP; i++){
+          for(int j = 0; j < kP; j++){
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+          }
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
         }
 
         qrd_cpu.QR_decompose(kP);
         R = qrd_cpu.get_R();
         Q = qrd_cpu.get_Q();
         // RQ computation and updating A 
+        
         for(int i = 0; i < kP; i++){
           for(int j = 0; j < kP; j++){
             a_matrix_cpu[matrix_offset+i*kRows+j] = 0;
             for(int k = 0; k < kP; k++){
               a_matrix_cpu[matrix_offset+i*kRows+j] += R[i*kRows+k]*Q[k*kRows+j];
-            }
+            } 
           }
+        }
+
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dQMat << "\n\nQ Matrix at iteration: " << li << "\n";}
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRMat << "\n\nR Matrix at iteration: " << li << "\n";}
+        for(int i = 0; i < kP; i++){
+          for(int j = 0; j < kP; j++){
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << Q[i*kRows+j] << " ";
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << R[i*kRows+j] << " ";
+          }
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << "\n";
         }
 
         // adding back the shift from the matrix
@@ -367,7 +397,16 @@ int main(int argc, char *argv[]) {
           a_matrix_cpu[matrix_offset+i*kRows+i] += shift;
         }
 
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n\nRQ Matrix at iteration: " << li << "\n";}
+        for(int i = 0; i < kRows; i++){
+          for(int j = 0; j < kRows; j++){
+            if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << a_matrix_cpu[matrix_offset+i*kRows+j] << " ";}
+          }
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n";}
+        }
+
         // Eigen vector accumulation 
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "QQ Matrix at iteration: " << li << "\n";
         for(int i = 0; i < kRows; i++){
           std::fill(TmpRow.begin(), TmpRow.end(), 0);
           for(int j = 0; j < kRows; j++){
@@ -377,13 +416,32 @@ int main(int argc, char *argv[]) {
               TmpRow[j] += eigen_vectors_cpu[matrix_offset+i*kRows+k]*q_val;
             }
           }
-          for(int k = 0; k < kRows; k++) eigen_vectors_cpu[matrix_offset+i*kRows+k] = TmpRow[k];
+          for(int k = 0; k < kRows; k++) {
+            eigen_vectors_cpu[matrix_offset+i*kRows+k] = TmpRow[k];
+            if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << eigen_vectors_cpu[matrix_offset+i*kRows+k] << " ";
+          }
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+        }
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+
+        for(int j = 0; j < kP-1; j++){
+          if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
+            close2zero = 0;
+            break;
+          }
         }
 
-        
+        if(close2zero && kP == KDEFLIM){
+          break;
+        } else if(close2zero){
+          kP -= 1;
+        }
       
       }
     }
+    dRQ.close();
+    dQQ.close();
+    dAMat.close();
 
 
     int passsed_marixes = 0;
@@ -471,7 +529,8 @@ int main(int argc, char *argv[]) {
         if(fabs(fabs(py_V[matrix_offset + i*kRows+j]) - fabs(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])) > diff_threshold 
         || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]) || isnan(py_V[matrix_offset + i*kRows+j])){
           qq_ecountCPP++;
-          std::cout << "CPU Mis matched values are: " << py_V[matrix_offset + i*kRows+j] << ", " << eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]  << " at i,j:"
+          std::cout << "CPU Mis matched QQ values are: " << py_V[matrix_offset + i*kRows+j] << ", " << \
+          eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]  << " at i,j:"
            << i << "," << j << "\n";
         }
       }
@@ -483,7 +542,8 @@ int main(int argc, char *argv[]) {
         if(fabs(fabs(py_V[matrix_offset + i*kRows+j]) - fabs(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]])) > diff_threshold 
         || isnan(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]) || isnan(py_V[matrix_offset + i*kRows+j])){
           qq_ecountSYCL++;
-          std::cout << "SYCL Mis matched values are: " << py_V[matrix_offset + i*kRows+j] << ", " << qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]  << " at i,j:"
+          std::cout << "SYCL Mis matched QQ values and corr eigen value are: " << py_V[matrix_offset + i*kRows+j] << ", " << 
+          qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]  <<  " " << rq_matrix[matrix_offset + sIndex[i]*kRows+sIndex[i]]  << " at i,j:"
            << sIndexSYCL[i] << "," << j << "\n";
         }
       }
