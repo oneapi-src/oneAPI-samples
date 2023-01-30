@@ -78,6 +78,8 @@ flowchart LR
 |:---                                                                       |:---                                                  |:---
 | [ac_fixed](Tutorials/Features/ac_fixed)                                   | [Tutorials/Features](Tutorials/Features)             | How different methods of `ac_fixed` number construction affect hardware resource utilization <br> Recommended method for constructing `ac_fixed` numbers in your kernel <br> Accessing and using the `ac_fixed` math library functions <br> Trading off accuracy of results for reduced resource usage on the FPGA
 | [ac_int](Tutorials/Features/ac_int)                                       | [Tutorials/Features](Tutorials/Features)             | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
+| [device_global (experimental)](Tutorials/Features/experimental/device_global)| [Tutorials/Features](Tutorials/Features)             | The basic usage of the `device_global` class <br> How to initialize a `device_global` to non-zero values
+
 | [double_buffering](Tutorials/DesignPatterns/double_buffering)             | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the double buffering optimization technique
 | [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement) | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to explicitly manage the movement of data for the FPGA
 | [hostpipes (experimental)](Tutorials/Features/experimental/hostpipes)     | [Tutorials/Features](Tutorials/Features)             | How to use host pipes to send and receive data between a host and the FPGA 
