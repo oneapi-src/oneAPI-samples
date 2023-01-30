@@ -1,6 +1,21 @@
 all: montecarlo
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
+# setting non-default generator
+generator ?= mcg59
+
+ifeq ($(generator), mrg)
+	GENERATOR = -DUSE_MRG
+endif
+
+ifeq ($(generator), philox)
+	GENERATOR = -DUSE_PHILOX
+endif
+
+ifneq ($(generator), $(filter $(generator),mrg philox mcg59))
+ 	$(error "You use unknown generator. Please, use mrg philox or mcg59 (default)")
+endif
+
+MKL_COPTS = -DMKL_ILP64 $(GENERATOR) -I"${MKLROOT}/include" -Wall -Wformat-security -Werror=format-security
 MKL_LIBS = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
 
 DPCPP_OPTS = $(MKL_COPTS) -fsycl -fsycl-device-code-split=per_kernel $(MKL_LIBS)
