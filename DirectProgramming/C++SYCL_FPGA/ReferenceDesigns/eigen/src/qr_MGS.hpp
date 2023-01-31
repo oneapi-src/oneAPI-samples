@@ -74,25 +74,25 @@ template <typename T> QR_Decmp<T>::~QR_Decmp(){
 
 template<typename T> T  QR_Decmp<T>::dotA(int a, int b, int p){
     T sum = 0;
-    bool C_flag = false;
+    // bool C_flag = false;
     for(int i = 0; i < p; i++){
         T mul = this->matA[i*n+a] * this->matA[i*n+b];
-        float_cast d1 = {.f = sum};
-        float_cast d2 = {.f = mul};
+        // float_cast d1 = {.f = sum};
+        // float_cast d2 = {.f = mul};
         sum += mul;
-        float_cast res = {.f = sum};
-        int shift = std::max(d1.parts.exponent, d2.parts.exponent) - res.parts.exponent;
-        if(shift > 10){
-            C_flag = true;
-            // std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
-            // std::cout << "inputs: " << d1.f << "," << d2.f << "\n";
-        }
+        // float_cast res = {.f = sum};
+        // int shift = std::max(d1.parts.exponent, d2.parts.exponent) - res.parts.exponent;
+        // if(shift > 10){
+        //     C_flag = true;
+        //     // std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
+        //     // std::cout << "inputs: " << d1.f << "," << d2.f << "\n";
+        // }
 
         
     }
-    if(C_flag && a == b){
-        std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
-    }
+    // if(C_flag && a == b){
+    //     std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
+    // }
     return sum;
 }
 
