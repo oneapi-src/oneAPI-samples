@@ -209,13 +209,19 @@ Follow these steps to compile and test the design:
 
       Don't forget to export the `irq_add` and `exception_add` signals. We provided a top-level RTL file (`add.v`) that uses the generated IP. Following these naming conventions allows you to connect the oneAPI kernel to this handwritten RTL.
 
-   4. Save the system by clicking `File` > `Save`, then close Platform Designer. 
+   4. Save the system by clicking `File` > `Save`
+
+   5. Generate the syste so we can include it in the Intel® Quartus® Prime project by clicking `Generate HDL...`
+
+      ![](README.md.assets/generate-hdl.png)
    
-6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start analysis and Elaboration'.
+   6. Close Platform Designer. 
+   
+6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
    ![](README.md.assets/start-analysis.png)
 
-7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to Avalon Agent IP will handle the connection between your design and the JTAG pins on your board automatically.
+7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG IP will handle the connection between your design and the JTAG pins on your board automatically.
 
    1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. Consult the data sheet for your board to choose an appropriate clock input. In this project, the `PIN_AM10` was chosen because it is used for supplying a 100MHz clock signal in the the GHRD source code (see link in **Board-specifc Considerations**).
 
@@ -229,7 +235,7 @@ Follow these steps to compile and test the design:
 
       ![](README.md.assets/pins-from-design.png)
 
-8. Now we will add the timing constraints. 
+8. Now add the timing constraints. 
 
    1. If you are using the Intel® Arria® 10 SX SoC Dev Kit, you can find a timing constraints file for the JTAG interface (jtag.sdc) in the GHRD. This was added in step 2.5.
 
