@@ -10,7 +10,7 @@
 // The linear system is solved via Jacobi iteration.
 // The algorithm converges, as the matrix A is strictly diagonally dominant.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <cmath>
 // Location of file: <oneapi-root>/dev-utilities/<version>/include
@@ -104,9 +104,10 @@ void prepare_for_next_iteration (queue &q, buffer_args &buffers,size_t n) {
     accessor acc_abs_error(buffers.abs_error, h, read_write);
     accessor acc_x_k(buffers.x_k, h, read_only);
     accessor acc_x_k1(buffers.x_k1, h, read_only);
+    auto r_abs_error = reduction(buffers.abs_error, h, std::plus<>());
 
     h.parallel_for(nd_range<1>{n, l},
-                   reduction(acc_abs_error, std::plus<>()),
+                   r_abs_error,
                    [=](nd_item<1> index, auto& acc_abs_error) {
       auto gid = index.get_global_id();
 
@@ -121,9 +122,10 @@ void prepare_for_next_iteration (queue &q, buffer_args &buffers,size_t n) {
   q.submit([&](auto &h) {
     accessor acc_x_k1(buffers.x_k1, h, read_only);
     accessor acc_l1_norm_x_k1(buffers.l1_norm_x_k1, h, read_write);
+    auto r_l1_norm_x_k1 = reduction(buffers.l1_norm_x_k1, h, std::plus<>());
 
     h.parallel_for(nd_range<1>{n, l},
-                   reduction(acc_l1_norm_x_k1, std::plus<>()),
+                   r_l1_norm_x_k1,
                    [=](nd_item<1> index, auto& acc_l1_norm_x_k1) {
       auto gid = index.get_global_id();
       // Compute the sum.
@@ -192,8 +194,7 @@ int main(int argc, char *argv[]) {
   // Iteration counter.
   int k = 0;
   try {
-    CustomSelector selector(GetDeviceType(argc, argv));
-    queue q(selector, dpc_common::exception_handler);
+    queue q(GetDevice(argc, argv), dpc_common::exception_handler);
     cout << "[SYCL] Using device: ["
          << q.get_device().get_info<info::device::name>() << "] from ["
          << q.get_device().get_platform().get_info<info::platform::name>()

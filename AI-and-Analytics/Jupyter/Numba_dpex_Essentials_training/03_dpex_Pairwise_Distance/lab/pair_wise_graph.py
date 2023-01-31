@@ -6,12 +6,12 @@
 import dpctl
 import base_pair_wise_graph
 import numpy as np
-import numba_dppy
+import numba_dpex
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def pairwise_python(X1, X2, D):
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpex.get_global_id(0)
     
     N = X2.shape[0]
     O = X1.shape[1]
@@ -24,7 +24,7 @@ def pairwise_python(X1, X2, D):
 
 def pw_distance(X1,X2,D):
     with dpctl.device_context(base_pair_wise_graph.get_device_selector(is_gpu=True)):
-        #pairwise_python[X1.shape[0],numba_dppy.DEFAULT_LOCAL_SIZE](X1, X2, D)
+        #pairwise_python[X1.shape[0],numba_dpex.DEFAULT_LOCAL_SIZE](X1, X2, D)
         pairwise_python[X1.shape[0],8](X1, X2, D)
 
 base_pair_wise_graph.run("Pairwise Distance Kernel", pw_distance)

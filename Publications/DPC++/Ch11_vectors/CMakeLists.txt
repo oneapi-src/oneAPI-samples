@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap11)
+project(Chap11 CXX)
 add_book_sample(
     TEST
     TARGET fig_11_6_load_store

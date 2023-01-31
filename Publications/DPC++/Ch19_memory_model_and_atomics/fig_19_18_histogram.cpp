@@ -2,22 +2,21 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <cstdio>
 #include <numeric>
 #include <random>
 
 using namespace sycl;
-using namespace sycl::ext::oneapi;
 
 std::tuple<size_t, size_t> distribute_range(group<1> g, size_t N) {
   size_t work_per_group = N / g.get_group_range(0);
   size_t remainder = N - g.get_group_range(0) * work_per_group;
   size_t group_start =
-      g.get_id(0) * work_per_group + min(g.get_id(0), remainder);
+      g.get_group_id(0) * work_per_group + min(g.get_group_id(0), remainder);
   size_t group_end =
-      (g.get_id(0) + 1) * work_per_group + min(g.get_id(0) + 1, remainder);
+      (g.get_group_id(0) + 1) * work_per_group + min(g.get_group_id(0) + 1, remainder);
   return {group_start, group_end};
 }
 

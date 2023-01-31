@@ -2,13 +2,14 @@
 from importlib import util
 tensorflow_found = util.find_spec("tensorflow") is not None
 pytorch_found = util.find_spec("torch") is not None
-pytorch_ext_found = util.find_spec("intel_pytorch_extension") is not None
+pytorch_ext_found = util.find_spec("intel_extension_for_pytorch") is not None
 tensorflow_ext_found = util.find_spec("intel_extension_for_tensorflow") is not None
 xgboost_found = util.find_spec("xgboost") is not None
 sklearn_found = util.find_spec("sklearn") is not None
 sklearnex_found = util.find_spec("sklearnex") is not None
 inc_found = util.find_spec("neural_compressor") is not None
 modin_found = util.find_spec("modin") is not None
+torchccl_found = util.find_spec("oneccl_bindings_for_pytorch") is not None
 
 if tensorflow_found == True:
 
@@ -47,9 +48,9 @@ if pytorch_found == True:
     openmp_enabled = torch.backends.openmp.is_available()
     print('mkldnn : {0},  mkl : {1}, openmp : {2}'.format(mkldnn_enabled, mkl_enabled, openmp_enabled))
     print(torch.__config__.show())
-    
+
     if pytorch_ext_found == True:
-        import intel_pytorch_extension as ipex
+        import intel_extension_for_pytorch as ipex
         print("ipex_verion : ",ipex.__version__)
 
 if xgboost_found == True:
@@ -65,7 +66,7 @@ if modin_found == True:
     cfg_engine = ''
     if minor_version > 12 and major_version == 0:
         cfg_engine = cfg.StorageFormat.get()
-    
+
     else:
         cfg_engine = cfg.Engine.get()
     print("Modin Engine: ", cfg_engine)
@@ -80,3 +81,7 @@ if sklearn_found == True:
 if inc_found == True:
     import neural_compressor as inc
     print("neural_compressor version {}".format(inc.__version__))
+
+if torchccl_found == True:
+    import oneccl_bindings_for_pytorch as torchccl
+    print("oneCCL Bindings version {}".format(torchccl.__version__))

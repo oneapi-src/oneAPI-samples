@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <exception>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 namespace dpc_common {
 // This exception handler will catch async exceptions
-static auto exception_handler = [](cl::sycl::exception_list eList) {
+static auto exception_handler = [](sycl::exception_list eList) {
   for (std::exception_ptr const &e : eList) {
     try {
       std::rethrow_exception(e);

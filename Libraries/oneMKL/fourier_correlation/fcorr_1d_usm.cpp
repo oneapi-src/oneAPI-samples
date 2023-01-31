@@ -11,7 +11,7 @@
 // =============================================================
 
 #include <mkl.h>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <string>
 #include <oneapi/mkl/dfti.hpp>

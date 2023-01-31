@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap4)
+project(Chap4 CXX)
 add_book_sample(
     TEST
     TARGET fig_4_5_vector_add

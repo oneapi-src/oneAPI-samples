@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <numeric>
 
@@ -18,7 +18,7 @@ int main() {
   *sum = 0;
 
   Q.parallel_for(N, [=](id<1> i) {
-     ext::oneapi::atomic_ref<
+     atomic_ref<
          int,
          memory_order::relaxed,
          memory_scope::system,
