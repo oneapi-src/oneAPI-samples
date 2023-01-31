@@ -594,6 +594,7 @@ struct StreamingQRD {
 
         if(converged && kDM_size == KDEFLIM){
           QR_iteration_done = 1;
+          break;
         }  
         
         if(converged){

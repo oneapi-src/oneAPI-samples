@@ -6,7 +6,8 @@ np.random.seed(100)
 eigVal_threhhold = 1e-2
 SHIFT_NOISE = 1e-2
 KTHRESHOLD = 1e-5
-KDEFLIM = 15
+KDEFLIM = 1
+DEBUG_INDEX = 9797
 
 def is_invertible(a):
     return a.shape[0] == a.shape[1] and np.linalg.matrix_rank(a) == a.shape[0]
@@ -108,7 +109,10 @@ def iterative_qrd_nodebug(C):
   
     # QR with shift 
     ind = size
+
+    rc_list = []
     for itr in range(size):
+        
         for i in range(2000):
             H = C1[0:ind,0:ind]
             # Wilkinson shift
@@ -117,6 +121,14 @@ def iterative_qrd_nodebug(C):
             
             H -= np.eye(ind)*mu
             q, r = np.linalg.qr(H)
+
+            # min max ratio of r diagonal 
+            r_dia = [abs(r[i][i]) for i in range(ind)]
+            r_dia = np.array(r_dia)
+            r_min = np.amin(r_dia)
+            r_max = np.amax(r_dia)
+            r_cond = r_max / r_min
+            rc_list.append(r_cond)
 
             H = np.matmul(r,q)
             H += np.eye(ind)*mu
@@ -142,10 +154,12 @@ def iterative_qrd_nodebug(C):
         if(ind == KDEFLIM):
             break
 
+
+
     w = [C1[i][i] for i in range(size)]
     w = np.array(w)
     
-    return w, Eig
+    return w, Eig, rc_list
 
 
 if __name__ == "__main__":
@@ -173,17 +187,29 @@ if __name__ == "__main__":
     w_str = ""
     v_str = ""
     SmallE_str = ""
+    Rcond_str = ""
+    Rcond_max = ""
+    fail_list = []
     for i in range(Matrices):
-        if(i == 921):
+        if(i == DEBUG_INDEX):
             iterative_qrd(C[i, :, :])
             print("input matrix is:\n")
             print(C[i, :, :])
         if(not is_invertible(C[i, :, :])):
             print("This matrix is singular")
 
-        w,v = iterative_qrd_nodebug(C[i, :, :])
+        w,v, r_list = iterative_qrd_nodebug(C[i, :, :])
+        cond_max = max(r_list)
+        if(cond_max > 100000):
+            fail_list.append(i)
+            # print("Matrix id: " + str(i) +" will possibly fail in test")
+
+
+        Rcond_str += "R matrix condition list for matrix: " + str(i) + "\n"
+        Rcond_str += str(r_list) + "\n\n"
+
         # w,v = np.linalg.eigh(C[i, :, :])
-        if(i == 921):
+        if(i == DEBUG_INDEX):
             print(w)
             print(v)
 
@@ -215,3 +241,10 @@ if __name__ == "__main__":
 
     with open('../build/smalE.txt', 'w') as smallEfile:
         smallEfile.write(SmallE_str)
+
+    with open('../build/Rcond.txt', 'w') as Rcondfile:
+        Rcondfile.write(Rcond_str)
+
+    with open('../build/possibleFail.txt', 'w') as Findexfile:
+        f_str = ' '.join(map(str, fail_list))
+        Findexfile.write(f_str)

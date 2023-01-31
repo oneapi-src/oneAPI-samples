@@ -16,16 +16,16 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
-#define KDEFLIM 16
+#define KDEFLIM 2
 #define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 1
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
-#define ITER_PER_EIGEN 8
+#define ITER_PER_EIGEN 100
 
 #define DEBUGEN 1
-#define DEBUGMINDEX 921
+#define DEBUGMINDEX 9797
 
 #include "exception_handler.hpp"
 
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 8;
+  constexpr size_t kMatricesToDecompose = 10000;
 
   try {
     // SYCL boilerplate
@@ -321,7 +321,7 @@ int main(int argc, char *argv[]) {
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
       // QR decomposition on CPU 
-      QR_Decmp<T> qrd_cpu(&a_matrix_cpu[matrix_offset], kRows);
+      QR_Decmp<T> qrd_cpu(&a_matrix_cpu[matrix_offset], kRows, matrix_index);
       // iter = 10000;
       int kP = kRows;
       for(int li = 0; li < iter; li++){
@@ -486,12 +486,14 @@ int main(int argc, char *argv[]) {
       if((fabs(fabs(py_w[evec_offset+i]) - fabs(rq_matrix[matrix_offset + sIS*kRows+sIS])))/fabs(fabs(py_w[evec_offset+i])) > KETHRESHOLD_Eigen 
       || isnan(py_w[evec_offset+i]) || isnan(rq_matrix[matrix_offset + sIS*kRows+sIS])){
         rq_ecount_SYCL++;
-        std::cout << "Mis matched numpy SYCL eigen values are: " << py_w[evec_offset+i] \
+        std::cout << "Mis matched numpy and SYCL eigen values are: " << py_w[evec_offset+i] \
         << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << sIS << "\n";
       }
 
       if((fabs(fabs(py_w[evec_offset+i]) - fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])))/fabs(fabs(py_w[evec_offset+i])) > KETHRESHOLD_Eigen 
       || isnan(py_w[evec_offset+i]) || isnan(a_matrix_cpu[matrix_offset + sI*kRows+sI])){
+        std::cout << "Mis matched numpy and CPU eigen values are: " << py_w[evec_offset+i] \
+        << ", " << a_matrix_cpu[matrix_offset + sI*kRows+sI] << " at i: " << sI << "\n";
         rq_ecount_CPP++;
       }
     }
@@ -506,9 +508,11 @@ int main(int argc, char *argv[]) {
     if(rq_ecount_CPP == 0){
       // std::cout << "Matrix: " << matrix_index << " passed:  CPU eigen values and numpy values are matched\n";
     } else {
-      std::cout << "Matrix: " << matrix_index << " Error: Mismatch is found between CPU and numpy eigen values, Mismatch count: " \
+      std::cout << "\nMatrix: " << matrix_index << " Error: Mismatch is found between CPU and numpy eigen values, Mismatch count: " \
        << rq_ecount_CPP << "\n";
     }
+
+    if(rq_ecount_SYCL > 0 || rq_ecount_CPP > 0) std::cout  << "\n\n\n";
 
 
     // double sq_error_cpp = 0, sq_error_SYCL = 0;
@@ -529,7 +533,7 @@ int main(int argc, char *argv[]) {
         if(fabs(fabs(py_V[matrix_offset + i*kRows+j]) - fabs(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])) > diff_threshold 
         || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]) || isnan(py_V[matrix_offset + i*kRows+j])){
           qq_ecountCPP++;
-          std::cout << "CPU Mis matched QQ values are: " << py_V[matrix_offset + i*kRows+j] << ", " << \
+          std::cout << "Mis matched numpy and CPU QQ values are: " << py_V[matrix_offset + i*kRows+j] << ", " << \
           eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]  << " at i,j:"
            << i << "," << j << "\n";
         }
@@ -542,9 +546,9 @@ int main(int argc, char *argv[]) {
         if(fabs(fabs(py_V[matrix_offset + i*kRows+j]) - fabs(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]])) > diff_threshold 
         || isnan(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]) || isnan(py_V[matrix_offset + i*kRows+j])){
           qq_ecountSYCL++;
-          std::cout << "SYCL Mis matched QQ values and corr eigen value are: " << py_V[matrix_offset + i*kRows+j] << ", " << 
+          std::cout << "Mis matched numpy and SYCL QQ values and corr eigen value are: " << py_V[matrix_offset + i*kRows+j] << ", " << 
           qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]  <<  " " << rq_matrix[matrix_offset + sIndex[i]*kRows+sIndex[i]]  << " at i,j:"
-           << sIndexSYCL[i] << "," << j << "\n";
+           << i << "," << j << "\n";
         }
       }
     }
@@ -566,6 +570,8 @@ int main(int argc, char *argv[]) {
       std::cout  << "Matrix: " << matrix_index \
       << "  Error: Mismatch is found between SYCL and numpy QQ, count: " << qq_ecountSYCL << "\n";
     }
+
+    if(qq_ecountCPP >  0 || qq_ecountSYCL > 0)  std::cout << "\n\n\n";
 
   }
     std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes << "\n";

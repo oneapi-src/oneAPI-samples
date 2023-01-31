@@ -8,17 +8,28 @@
 
 */
 
+
+typedef union {
+  float f;
+  struct {
+    unsigned int mantisa : 23;
+    unsigned int exponent : 8;
+    unsigned int sign : 1;
+  } parts;
+} float_cast;
+
 template<typename T> 
 class QR_Decmp{
     
     private:
         // this is for square matrix
         int n;
+        int matrix_id;
         T  *matA;
         T  *matR, *matQ, *matIR, *matS,*matP;
 
     public: 
-        QR_Decmp(T *InA, int n);
+        QR_Decmp(T *InA, int n, int id);
         ~QR_Decmp();
 
         T dotA(int a, int b, int p);
@@ -33,8 +44,9 @@ class QR_Decmp{
 
 
 
-template<typename T>  QR_Decmp<T>::QR_Decmp(T *InA, int n){
+template<typename T>  QR_Decmp<T>::QR_Decmp(T *InA, int n, int id){
     this->n = n;
+    this->matrix_id = id;
     this->matA = InA;
 
     this->matR = new T[n*n];
@@ -62,8 +74,24 @@ template <typename T> QR_Decmp<T>::~QR_Decmp(){
 
 template<typename T> T  QR_Decmp<T>::dotA(int a, int b, int p){
     T sum = 0;
+    bool C_flag = false;
     for(int i = 0; i < p; i++){
-        sum += this->matA[i*n+a] * this->matA[i*n+b];
+        T mul = this->matA[i*n+a] * this->matA[i*n+b];
+        float_cast d1 = {.f = sum};
+        float_cast d2 = {.f = mul};
+        sum += mul;
+        float_cast res = {.f = sum};
+        int shift = std::max(d1.parts.exponent, d2.parts.exponent) - res.parts.exponent;
+        if(shift > 10){
+            C_flag = true;
+            // std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
+            // std::cout << "inputs: " << d1.f << "," << d2.f << "\n";
+        }
+
+        
+    }
+    if(C_flag && a == b){
+        std::cout << "floating point cancellatin matrix id: " << this->matrix_id <<"\n";
     }
     return sum;
 }
