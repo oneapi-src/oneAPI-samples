@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap19)
+project(Chap19 CXX)
 
 add_book_sample(
     TARGET fig_19_3_data_race

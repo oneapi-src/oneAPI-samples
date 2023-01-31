@@ -48,7 +48,7 @@
 # include <limits.h>
 # include <sys/time.h>
 
-# include <CL/sycl.hpp>
+# include <sycl/sycl.hpp>
 # include <iostream>
 
 /*-----------------------------------------------------------------------

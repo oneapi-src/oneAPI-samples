@@ -2,11 +2,11 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 using namespace sycl;
 
-class my_selector : public device_selector {
+class my_selector {
   public:
     int operator()(const device &dev) const {
       int score = -1;
@@ -20,10 +20,10 @@ class my_selector : public device_selector {
             == std::string::npos) score += 800;
       }
 
-      // Give host device points so it is used if no GPU is available.
+      // Give cpu device points so it is used if no GPU is available.
       // Without these next two lines, systems with no GPU would select
       // nothing, since we initialize the score to a negative number above.
-      if (dev.is_host()) score += 100;
+      if (dev.is_cpu()) score += 100;
 
       return score;
     }
@@ -41,7 +41,7 @@ int main() {
   // 
   // Sample output using a system with an FPGA accelerator, but no GPU:
   // After checking for a GPU, we are running on:
-  //  SYCL host device.
+  //  SYCL cpu device.
 
   return 0;
 }

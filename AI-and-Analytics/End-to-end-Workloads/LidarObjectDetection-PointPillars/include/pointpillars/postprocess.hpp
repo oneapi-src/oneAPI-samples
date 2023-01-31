@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <memory>
 #include <vector>
 #include "pointpillars/nms.hpp"

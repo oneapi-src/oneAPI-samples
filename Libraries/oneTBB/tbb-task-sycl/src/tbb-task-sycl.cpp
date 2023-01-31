@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2019 Intel Corporation
+// Copyright ï¿½ 2019 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include <tbb/blocked_range.h>
 #include <tbb/global_control.h>

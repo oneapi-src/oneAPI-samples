@@ -1,8 +1,8 @@
 import dpctl
 import base_kmeans_gpu_graph
 import numpy
-import numba_dppy as nb
-from numba_dppy import atomic
+import numba_dpex as nb
+from numba_dpex import atomic
 
 REPEAT = 1
 ITERATIONS = 30

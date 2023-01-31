@@ -40,7 +40,8 @@ def create_default_device():
     SYCL runtime.
     """
     d1 = dpctl.SyclDevice()
-    d2 = dpctl.select_default_device()    
+    d2 = dpctl.select_default_device()
+    assert d1 == d2
     print_device(d1)
     return d1
 
@@ -53,7 +54,8 @@ def create_gpu_device():
     SYCL runtime.
     """
     d1 = dpctl.SyclDevice("gpu")
-    d2 = dpctl.select_gpu_device()    
+    d2 = dpctl.select_gpu_device()
+    assert d1 == d2
     print_device(d1)
     return d1
 

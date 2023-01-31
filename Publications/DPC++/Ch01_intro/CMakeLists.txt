@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap1)
+project(Chap1 CXX)
 
 add_book_sample(
     TEST

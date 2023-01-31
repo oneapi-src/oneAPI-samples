@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cassert>
 #include <cstdio>
 
@@ -17,7 +17,7 @@ struct device_latch {
     // Elect one work-item per work-group to be involved in the synchronization
     // All other work-items wait at the barrier after the branch
     if (it.get_local_linear_id() == 0) {
-      ext::oneapi::atomic_ref<
+      atomic_ref<
           size_t,
           memory_order::acq_rel,
           memory_scope::device,
