@@ -10,22 +10,22 @@
 #include <sycl/ext/intel/prototype/host_pipes.hpp>
 #include <sycl/sycl.hpp>
 
+#include "exception_handler.hpp"
+
 // use host pipes to write into addresses in the CSR
+class OutputPipeID;
 using OutputPipe = sycl::ext::intel::prototype::pipe<
-    class ID_PipeOut, int, 1,
+    OutputPipeID, int, 1,
     // choose defaults for these 4:
     0, 1, true, false,
     // store the most recently processed index to the CSR
     sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
 
-using InterruptPipe = sycl::ext::intel::prototype::pipe<
-    class IRQ_user1, int, 1,
-    // choose defaults for these 4:
-    0, 1, true, false,
-    // add an additional IRQ interface
-    sycl::ext::intel::prototype::internal::protocol_name::IRQ>;
+// Forward declare the kernel name in the global scope. This is an FPGA best
+// practice that reduces name mangling in the optimization reports.
+class AdderID;
 
-class Add_Kernel {
+class Adder {
  public:
   int a;
   int b;
@@ -45,29 +45,26 @@ int main() {
 // 2023.1
 #if __INTEL_CLANG_COMPILER >= 20230100
 #if FPGA_SIMULATOR
-    std::cout << "using FPGA Simulator." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_simulator_selector_v);
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
-    std::cout << "using FPGA Hardware." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_selector_v);
+    auto selector = sycl::ext::intel::fpga_selector_v;
 #else  // #if FPGA_EMULATOR
-    std::cout << "using FPGA Emulator." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_emulator_selector_v);
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 #elif __INTEL_CLANG_COMPILER >= 20230000
 #if FPGA_SIMULATOR
-    std::cout << "using FPGA Simulator." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_simulator_selector{});
+    auto selector = sycl::ext::intel::fpga_simulator_selector{};
 #elif FPGA_HARDWARE
-    std::cout << "using FPGA Hardware." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_selector{});
+    auto selector = sycl::ext::intel::fpga_selector{};
 #else  // #if FPGA_EMULATOR
-    std::cout << "using FPGA Emulator." << std::endl;
-    sycl::queue q(sycl::ext::intel::fpga_emulator_selector{});
+    auto selector = sycl::ext::intel::fpga_emulator_selector{};
 #endif
 #else
     assert(false) && "this design requires oneAPI 2023.0 or 2023.1!"
 #endif
+
+    sycl::queue q(selector, fpga_tools::exception_handler,
+                  sycl::property::queue::enable_profiling{});
 
     int a = 3;
     int b = 76;
@@ -76,7 +73,9 @@ int main() {
 
     std::cout << "add two integers using CSR for input." << std::endl;
 
-    q.single_task<class Add>(Add_Kernel{a, b});
+    // no need to wait() since the pipe read will block until `Adder` has some
+    // output.
+    q.single_task<AdderID>(Adder{a, b});
 
     // verify that outputs are correct
     passed = true;

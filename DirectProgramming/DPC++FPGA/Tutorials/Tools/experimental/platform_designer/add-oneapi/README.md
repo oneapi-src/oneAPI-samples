@@ -1,4 +1,4 @@
-# Platform Designer - oneAPI code
+# `Platform Designer` Sample - oneAPI code
 
 This oneAPI project will be compiled and deployed in an Intel® Platform Designer system in the Intel Quartus® Prime software.
 

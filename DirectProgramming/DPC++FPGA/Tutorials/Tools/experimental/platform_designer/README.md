@@ -1,20 +1,54 @@
-# Platform Designer Pro
+# `Platform Designer` Sample
 
-This example design shows how to use an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with the rest of the Intel® FPGA software suite.
+This example design shows how to use an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with the Intel® Quartus® Prime Pro software suite.
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | This process applies to any Intel® FPGA that is supported by the oneAPI compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition 21.4 or later <br> Python 3.8.10 or later **OR** <br> Python 2.7.13 or later
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition 21.4 or later <br> [oneAPI 2023.0 only] Python 3.8.10 or later **OR** <br> [oneAPI 2023.0 only] Python 2.7.13 or later
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel to an Intel® Quartus® Prime Pro Edition project
 | Time to complete                  | 1 hour
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> To use the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+
+> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support (e.g. the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`). Kernels that use these types of allocations can always be used to generate standalone IPs.
+
+## Prerequisites
+
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 1 sample that helps you getting started.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
 
 ## Purpose
 
 This sample demonstrates how to add a oneAPI kernel to an Intel® Platform Designer system, and how to run it on a hardware board. It uses a JTAG to Avalon MM Agent IP to expose a oneAPI IP Authoring kernel to the JTAG control interface. This lets the user control and observe the behavior of the kernel using the System Console application.
 
-![](Readme.md.assets/csr-output-example-simple.svg)
+![](README.md.assets/csr-output-example-simple.svg)
 
 This example is intended for users interested in creating standalone modules that can be included in Intel® Quartus® Prime projects. It serves as a minimal example, and while it targets a very specific board, a user familiar with the Intel® Quartus® Prime suite should be able to easily port this design to other hardware.
 
@@ -29,19 +63,20 @@ This design is intended to work with the Intel® Arria® 10 SX SoC Development K
 
 ## Building the `platform_designer` Tutorial
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
-> - For system wide installations: `/opt/intel/oneapi/setvars.sh`
-> - For private installations: `~/intel/oneapi/setvars.sh`
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 Follow these steps to compile and test the design:
 1. Compile the SYCL code to RTL using a Windows or Linux machine. 
@@ -66,7 +101,7 @@ Follow these steps to compile and test the design:
    > nmake fpga_ip_export
    ```
 
-   For more details, see the Readme in the `add-oneapi` directory.
+   For more details, see the README in the `add-oneapi` directory.
 
 2. **From the same terminal**, launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard. 
 
@@ -88,13 +123,13 @@ Follow these steps to compile and test the design:
 
    2. Set the top-level entity to be `add` to make project management easier.
 
-      ![](Readme.md.assets/quartus_new_project.png)
+      ![](README.md.assets/quartus_new_project.png)
 
    4. Choose **Empty Project** when prompted to select a project type.
 
-   5. Add the source file `add.v` and `jtag.sdc` to the design when the wizard prompts you.
+   5. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you.
 
-      ![](Readme.md.assets/add-files.png)
+      ![](README.md.assets/add-files.png)
 
    4. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
 
@@ -140,7 +175,7 @@ Follow these steps to compile and test the design:
    > xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
    ```
 
-4. Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the .prj directory.
+4. [oneAPI 2023.0 only] Correct the generated `_hw.tcl` file by running the `*_di_hw_tcl_adjustment_script.py` script in the .prj directory.
 
    Linux/Windows:
 
@@ -156,21 +191,21 @@ Follow these steps to compile and test the design:
 
    1. Open Platform Designer from the Intel® Quartus® Prime GUI:
 
-      ![](Readme.md.assets/open-platform-designer-button.png)
+      ![](README.md.assets/open-platform-designer-button.png)
 
-      Create a new system by clicking the 'New Platform Designer System' button (![](Readme.md.assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
+      Create a new system by clicking the 'New Platform Designer System' button (![](README.md.assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
 
-   2. Add the following JTAG to Avalon Master Bridge Intel® FPGA IP to your system:
+   2. Add the following IP to your system:
 
       * Basic Functions > Bridges and Adaptors > Memory Mapped > JTAG to Avalon Master Bridge Intel® FPGA IP
 
       * oneAPI > add_fpga_ip_expor_1_di
 
-      ![](Readme.md.assets/add-ip-platform-designer.png)
+      ![](README.md.assets/add-ip-platform-designer.png)
 
    3. Connect the modules as shown:
 
-      ![](Readme.md.assets/complete-system_platform-designer.png)
+      ![](README.md.assets/complete-system_platform-designer.png)
 
       Don't forget to export the `irq_add` and `exception_add` signals. We provided a top-level RTL file (`add.v`) that uses the generated IP. Following these naming conventions allows you to connect the oneAPI kernel to this handwritten RTL.
 
@@ -178,7 +213,7 @@ Follow these steps to compile and test the design:
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start analysis and Elaboration'.
 
-   ![](Readme.md.assets/start-analysis.png)
+   ![](README.md.assets/start-analysis.png)
 
 7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to Avalon Agent IP will handle the connection between your design and the JTAG pins on your board automatically.
 
@@ -188,11 +223,11 @@ Follow these steps to compile and test the design:
    
       *Pin planner from GHRD:*
 
-      ![](Readme.md.assets/pins-from-ghrd.png)
+      ![](README.md.assets/pins-from-ghrd.png)
 
       *Final pin planner configuration:*
 
-      ![](Readme.md.assets/pins-from-design.png)
+      ![](README.md.assets/pins-from-design.png)
 
 8. Now we will add the timing constraints. 
 
@@ -215,7 +250,7 @@ Follow these steps to compile and test the design:
 
 9. Compile the full design by clicking the 'Start Compilation' button in the Intel® Quartus® Prime GUI.
 
-      ![](Readme.md.assets/start-compilation-quartus.png)
+      ![](README.md.assets/start-compilation-quartus.png)
 
 ### Additional Documentation
 - [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
