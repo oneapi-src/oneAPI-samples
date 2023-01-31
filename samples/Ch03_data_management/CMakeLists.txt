@@ -30,7 +30,8 @@ add_book_sample(
 add_book_sample(
     TEST
     TARGET fig_3_13_read_after_write
-    SOURCES fig_3_13_read_after_write.cpp)
+    SOURCES fig_3_13_read_after_write.cpp
+    ADDITIONAL_COMPILE_OPTIONS -Wno-unused-variable)
 
 add_book_sample(
     TEST
