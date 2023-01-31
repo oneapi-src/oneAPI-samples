@@ -1,19 +1,28 @@
 {
   "guid": "293B78FB-40A3-4F81-A3CB-D2C3ED344AE1",
   "name": "Platform Designer - Intel® Arria® 10 SX SoC Developer Kit",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Tools/experimental"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL_FPGA/Tutorials/Tools/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating how to export a reusable IP component to Intel® Quartus® Prime Pro and Platform Designer.",
   "toolchain": ["icpx"],
-  "os": ["linux"],
+  "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../../",
+    "include": [
+      "README.md",
+      "Tutorials/Tools/experimental/platform_designer",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,22 +33,11 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
           "make report"
-        ]
-      },
-      {
-        "id": "fpga_sim",
-        "steps": [
-          "dpcpp --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make fpga_sim",
-          "./add.fpga_sim"
         ]
       }
     ],
@@ -47,11 +45,11 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icx-cl --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
           "nmake fpga_emu",
           "add.fpga_emu.exe"
         ]
@@ -59,24 +57,12 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icx-cl --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
           "nmake report"
-        ]
-      },
-      {
-        "id": "fpga_sim",
-        "steps": [
-          "dpcpp --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/add",
-          "nmake fpga_sim",
-          "add.fpga_sim.exe"
         ]
       }
     ]
