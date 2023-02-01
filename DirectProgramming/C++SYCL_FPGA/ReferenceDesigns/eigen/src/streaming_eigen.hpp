@@ -69,7 +69,6 @@ template <typename T,        // The datatype for the computation
           >
 struct StreamingQRD {
   void operator()() const {
-    PRINTF("R matrix is: \n");
 
     // Functional limitations
     static_assert(rows >= columns,
