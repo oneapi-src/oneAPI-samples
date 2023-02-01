@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1;
+  constexpr size_t kMatricesToDecompose = 8;
 
   try {
     // SYCL boilerplate
