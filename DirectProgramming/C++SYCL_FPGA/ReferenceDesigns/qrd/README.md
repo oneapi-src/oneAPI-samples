@@ -74,8 +74,6 @@ Performance results are based on testing as of July 29, 2020.
 
 The QR decomposition algorithm factors a complex _m_ × _n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is unrolled fully to maximize throughput. The *m* complex multiplication operations are performed in parallel on the FPGA followed by sequential additions to compute the dot product result.
 
-The design uses the `-fp-relaxed` option, which permits the compiler to reorder floating point additions (to assume that floating point addition is commutative). The compiler reorders the additions so that the dot product arithmetic can be optimally implemented using the specialized floating point DSP (Digital Signal Processing) hardware in the FPGA.
-
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. The matrix size is constrained by the total FPGA DSP resources available.
 
 By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex™ FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
@@ -92,9 +90,8 @@ The key optimization techniques used are as follows:
 1. Refactoring the original Gram-Schmidt algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
 2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
 3. Fully vectorizing the dot products using loop unrolling.
-4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-5. Using an efficient memory banking scheme to generate high performance hardware.
-6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+4. Using an efficient memory banking scheme to generate high performance hardware.
+5. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ### Compiler Flags Used
 
@@ -102,7 +99,6 @@ The key optimization techniques used are as follows:
 |:---                   |:---
 | `-Xshardware`         | Target FPGA hardware (as opposed to FPGA emulator)
 | `-Xsclock=360MHz`     | The FPGA backend attempts to achieve 360 MHz
-| `-Xsfp-relaxed`       | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 | `-Xsparallel=2`       | Use 2 cores when compiling the bitstream through Intel® Quartus®
 | `-Xsseed`             | Specifies the Intel® Quartus® compile seed, to yield slightly higher fmax
 

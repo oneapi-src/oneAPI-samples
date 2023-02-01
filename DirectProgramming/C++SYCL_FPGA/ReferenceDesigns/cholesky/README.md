@@ -83,15 +83,12 @@ The following list shows the key optimization techniques included in the referen
 2. Using two copies of the compute matrix to read a full row and a full column per cycle.
 3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This approach enables the ability to generate a design that is pipelined efficiently.
 4. Fully vectorizing the dot products using loop unrolling.
-5. Using the `-Xsfp-relaxed` compiler option to reorder floating point operations and allowing the inference of a specialized dot-product DSP. This option further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
-7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+5. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
+6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ### Matrix Dimensions and FPGA Resources
 
 In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the _n_ elements in the row. The loop is fully unrolled to maximize throughput, so *n* real multiplication operations are performed in parallel on the FPGA and followed by sequential additions to compute the dot product result.
-
-The sample uses the `-fp-relaxed` compiler option, which permits the compiler to reorder floating point additions (for example, to assume that floating point addition is commutative). The compiler reorders the additions so that the dot product arithmetic can be optimally implemented using the specialized floating point Digital Signal Processing (DSP) hardware on the FPGA.
 
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
@@ -101,7 +98,6 @@ With this optimization, our FPGA implementation requires _n_ DSPs to compute the
 |:---                         |:---
 |`-Xshardware`                | Target FPGA hardware (as opposed to FPGA emulator)
 |`-Xsclock=<target fmax>MHz`  | The FPGA backend attempts to achieve <target fmax> MHz
-|`-Xsfp-relaxed`              | Allows the FPGA backend to re-order floating point arithmetic operations (for example, permit assuming $(a + b + c) == (c + a + b)$ )
 |`-Xsparallel=2`              | Use 2 cores when compiling the bitstream through Quartus
 |`-Xsseed`                    | Specifies the Quartus compile seed, to potentially yield slightly higher fmax
 

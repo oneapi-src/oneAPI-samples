@@ -62,10 +62,6 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The QR-based matrix inversion algorithm factors a complex *n* × *n* matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's *n* elements. The loop is fully unrolled to maximize throughput. As a result, *n* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over *n* elements. Finally, the final matrix multiplication also requires a dot product in a loop over *n* elements.
 
-We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
-
->**Note**: The `-fp-relaxed` compiler option is being deprecated.
-
 With this optimization, our FPGA implementation requires 4*_n_ DSPs to compute each of the complex floating point dot products or 2*_n_ DSPs in the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
 
 By default, the design is parameterized to process real floating-point matrices of size 32 × 32.
@@ -82,10 +78,9 @@ The key optimization techniques used are as follows:
 1. Refactoring the original Gram-Schmidt algorithm to merge two dot products of the QR decomposition into one, thus reducing the total number of dot products needed from three to two. This helps us reduce the DSPs required for the implementation.
 2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
 3. Fully vectorizing the dot products using loop unrolling.
-4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-5. Using an efficient memory banking scheme to generate high performance hardware.
-6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
-7. Using the triangular loop optimization technique to maintain high throughput in triangular loops
+4. Using an efficient memory banking scheme to generate high performance hardware.
+5. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+6. Using the triangular loop optimization technique to maintain high throughput in triangular loops
 
 ### Compiler Flags Used
 
@@ -93,7 +88,6 @@ The key optimization techniques used are as follows:
 |:---                       |:---
 | `-Xshardware`             | Target FPGA hardware (as opposed to FPGA emulator)
 | `-Xsclock=330MHz`         | The FPGA backend attempts to achieve 330 MHz
-| `-Xsfp-relaxed`           | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 | `-Xsparallel=2`           | Use 2 cores when compiling the bitstream through Intel® Quartus®
 | `-Xsseed`                 | Specifies the Intel® Quartus® compile seed, to yield slightly higher fmax
 

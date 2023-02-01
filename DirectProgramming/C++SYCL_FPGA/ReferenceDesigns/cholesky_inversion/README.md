@@ -86,8 +86,6 @@ Performance results are based on testing as of April 26, 2022.
 
 In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
 
-We use the compiler option `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
-
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
 The matrix inversion algorithm used in this reference design performs a Gaussian elimination to invert the triangular matrix _L_ obtained by the Cholesky decomposition. To do so, another _n_ DSPs are required to perform the associated dot-product. Finally, the matrix product of $LI^{\star}LI$ also requires _n_ DSPs.
@@ -111,10 +109,9 @@ The design uses the following key optimization techniques:
 2. Using two copies of the compute matrix in order to be able to read a full row and a full column per cycle.
 3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
 4. Fully vectorizing the dot products using loop unrolling.
-5. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
-7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
-8. Using the input matrices properties (hermitian positive matrices) to reduce the number of operations. For example, the (_LI_*) * _LI_ computation only requires to compute half of the output matrix as the result is symmetric.
+5. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
+6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+7. Using the input matrices properties (hermitian positive matrices) to reduce the number of operations. For example, the (_LI_*) * _LI_ computation only requires to compute half of the output matrix as the result is symmetric.
 
 ### Source Code Breakdown
 
@@ -134,7 +131,6 @@ For descriptions of `streaming_cholesky.hpp`, `streaming_cholesky_inversion.hpp`
 |:---                               |:---
 |`-Xshardware`                      | Target FPGA hardware (as opposed to FPGA emulator)
 |`-Xsclock=<target fmax>MHz`        | The FPGA backend attempts to achieve <target fmax> MHz
-|`-Xsfp-relaxed`                    | Allows the FPGA backend to re-order floating point arithmetic operations (for example, permit assuming $(a + b + c) == (c + a + b)$)
 |`-Xsparallel=2`                    | Use 2 cores when compiling the bitstream through Quartus
 |`-Xsseed`                          | Specifies the Quartus compile seed to yield slightly higher, possibly, fmax
 
