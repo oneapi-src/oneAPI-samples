@@ -1,14 +1,11 @@
-# `Minimum Latency Flow` sample
+# `Minimum Latency Flow` Sample
 
 This FPGA tutorial demonstrates how to compile your design with the minimum latency flow to achieve low latency at the cost of reduced f<sub>MAX</sub>.
 
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | How to use the minimum latency flow to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency flow
-| Time to complete                  | 20 minutes
+| Area                      | Description
+|:---                       |:---
+| What you will learn       | How to use the minimum latency flow to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency flow
+| Time to complete          | 20 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -23,8 +20,14 @@ This FPGA tutorial demonstrates how to compile your design with the minimum late
 
 ## Prerequisites
 
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
+
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR
@@ -51,7 +54,7 @@ This FPGA tutorial demonstrates how to use the minimum latency flow to compile l
 To compile your design with the minimum latency flow, pass the `-Xsoptimize=latency` flag to the `icpx` command.
 
 The minimum latency flow implies the following compiler controls:
-- Disable hyper-optimized handshaking on Intel Stratix&reg; 10 and Intel Agilex&trade; devices
+- Disable hyper-optimized handshaking on Intel Stratix® 10 and Intel Agilex&trade; devices
 - Use zero-latency stall-free clusters exit FIFO
 - Disable loop speculation
 - Remove the 1-cycle delay on the pipelined loop limiter
@@ -68,7 +71,7 @@ The following table shows how users can manually override these underlying contr
 
 ### Understanding the Tutorial Design
 
-The basic function performed by the tutorial kernel is a RGB to grayscale algorithm. To see the impact of the minimum latency flow in this tutorial in terms of latency and f<sub>MAX</sub>, and also see how to override the minimum latency flow with specific manual controls, the design needs to be compiled three times.
+The basic function performed by the tutorial kernel is an RGB to grayscale algorithm. To see the impact of the minimum latency flow in this tutorial in terms of latency and f<sub>MAX</sub>, and also see how to override the minimum latency flow with specific manual controls, the design needs to be compiled three times.
 
 Part 1 compiles the design without passing the `-Xsoptimize=latency` flag. In this default flow, the compiler targets higher throughput and f<sub>MAX</sub> with the sacrifice of latency and area.
 
@@ -79,7 +82,7 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
 ## Key Concepts
 
 * How to use the minimum latency flow to compile low-latency designs
-* How to manually override underlying controls set by the minimum latency flow
+* How to override underlying controls set by the minimum latency flow
 
 ## Building the `minimum_latency` Tutorial
 
@@ -98,30 +101,29 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### On a Linux* System
+### On Linux*
 
 1. Generate the `Makefile` by running `cmake`:
+   ```
+   mkdir build
+   cd build
+   ```
+   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   ```
+   cmake ..
+   ```
 
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
-  ```
-  cmake ..
-  ```
-
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ```
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ```
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design using the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -149,29 +151,29 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
      make fpga
      ```
 
-### On a Windows* System
+### On Windows*
 
 1. Generate the `Makefile` by running `cmake`.
 
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
-  ```
-  cmake -G "NMake Makefiles" ..
-  ```
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ```
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ```
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
+   ```
+   mkdir build
+   cd build
+   ```
+   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   ```
+   cmake -G "NMake Makefiles" ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -194,7 +196,7 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Examining the Reports
+### Examining the Reports
 
 Locate the pair of `report.html` files in either:
 
@@ -244,7 +246,7 @@ Navigate to **Clock Frequency Summary** (**Summary > Clock Frequency Summary**) 
    manual_revert.fpga.exe    (Windows)
    ```
 
-### Example of Output
+## Example Output
 
 Output of sample without minimum latency flow:
 ```txt
@@ -269,7 +271,7 @@ PASSED: all kernel results are correct
 
 ### Discussion of Results
 
-Comparing to Intel Arria&reg; 10 GX FPGA, it is more notable on Intel Stratix&reg; 10 SX FPGA that the minimum latency flow significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency flow disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix&reg; 10 and Intel Agilex&trade; devices, see [Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html).
+Comparing to Intel Arria® 10 GX FPGA, it is more notable on Intel Stratix® 10 SX FPGA that the minimum latency flow significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency flow disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix® 10 and Intel Agilex&trade; devices, see [Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html).
 
 ## License
 
