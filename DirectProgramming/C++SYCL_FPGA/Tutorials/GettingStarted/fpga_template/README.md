@@ -5,7 +5,7 @@ This project serves as a template for Intel® oneAPI FPGA designs.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) Note: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Best practices for creating and managing a oneAPI FPGA project
 | Time to complete                  | 10 minutes
@@ -17,7 +17,9 @@ This project serves as a template for Intel® oneAPI FPGA designs.
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 > **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support (e.g. the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`). Kernels that use these types of allocations can always be used to generate standalone IPs.
 
@@ -115,28 +117,29 @@ Use these commands to run the design, depending on your OS.
 ### On a Linux* System 
 This design uses CMake to generate a build script for GNU/make.
 
-1. Generate the `Makefile` by running `cmake`.
+1. Change to the sample directory.
 
-   ```bash
+2. Configure the build system for the Agilex™ device family, which is the default.
+
+   ```
    mkdir build
    cd build
-   ```
-
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```bash
    cmake ..
    ```
 
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
-
-   > **NOTE**: This design will **not** work on the Intel® PAC with Intel Arria® 10 GX FPGA, because the design depends on USM.
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    | Target          | Expected Time  | Output                                                                       | Description
    |:---             |:---            |:---                                                                          |:---
@@ -151,26 +154,28 @@ This design uses CMake to generate a build script for GNU/make.
 ### On a Windows* System
 This design uses CMake to generate a build script for  `nmake`.
 
-1. Generate the `Makefile` by running `cmake`.
+1. Change to the sample directory.
 
-   ```bash
+2. Configure the build system for the Agilex™ device family, which is the default.
+   ```
    mkdir build
    cd build
-   ```
-
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```bash
    cmake -G "NMake Makefiles" ..
    ```
 
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    | Target           | Expected Time  | Output                                                                       | Description
    |:---              |:---            |:---                                                                          |:---
@@ -182,39 +187,46 @@ This design uses CMake to generate a build script for  `nmake`.
 
    The `fpga_emu`, `fpga_sim`, and `fpga` targets also produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu.exe`, `TARGET_NAME.fpga_sim.exe`, and `TARGET_NAME.fpga.exe`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
 
-   > **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Running the Sample
+## Run the `fpga_template` Executable
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-
+### On Linux
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./fpga_template.fpga_emu     (Linux)
-   fpga_template.fpga_emu.exe   (Windows)
+   ./fpga_template.fpga_emu
+   ```
+2. Run the sample on the FPGA simulator device.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_template.fpga_sim
+   ```
+3. Alternatively, run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   ./fpga_template.fpga
+   ```
+### On Windows
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   fpga_template.fpga_emu.exe
+   ```
+2. Run the sample on the FPGA simulator device.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   fpga_template.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Alternatively, run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   fpga_template.fpga.exe
    ```
 
-2. Run the sample on the FPGA simulator device:
+## Example Output
 
-  * On Linux
-     ```bash
-     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_template.fpga_sim
-     ```
-   
-  * On Windows
-     ```bash
-     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-     fpga_template.fpga_sim.exe
-     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-     ```
-
-3. Run the sample on the FPGA device:
-   ```
-   ./fpga_template.fpga         (Linux)
-   fpga_template.fpga.exe       (Windows)
-   ```
-
+```
+Running on device: Intel(R) FPGA Emulation Device
+add two vectors of size 256
+PASSED
+```
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
