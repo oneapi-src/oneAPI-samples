@@ -15,6 +15,16 @@
             static const CL_CONSTANT char _format[] = format; \
             sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
 
+// #ifdef __SYCL_DEVICE_ONLY__
+// #define CL_CONSTANT __attribute__((opencl_constant))
+// #else
+// #define CL_CONSTANT
+// #endif  #define PRINTF(format, ...)                                    \
+// {                                                            \
+//   static const CL_CONSTANT char _format[] = format;          \
+//   ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
+// }
+
 namespace fpga_linalg {
 
 /*
@@ -59,6 +69,8 @@ template <typename T,        // The datatype for the computation
           >
 struct StreamingQRD {
   void operator()() const {
+    PRINTF("R matrix is: \n");
+
     // Functional limitations
     static_assert(rows >= columns,
                   "only rectangular matrices with rows>=columns are supported");
@@ -151,6 +163,8 @@ struct StreamingQRD {
 
     // Compute QRDs as long as matrices are given as inputs
     while(1) {
+
+      // for(int witr = 0; witr < 1; witr++){
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
       // a_load is the initial matrix received from the pipe
@@ -249,6 +263,15 @@ struct StreamingQRD {
       const int QR_RQ_iterations = (rows-1)*iterPerEigen;
       constexpr int kIBitSize_QR_RQ_itr = fpga_tools::BitsForMaxValue<QR_RQ_iterations + 1>() + 1;
       
+      // for(ac_int<kIBitSize , false> r_row = 0; r_row < rows; r_row++){
+      //   row_tuple rowR_write;
+      //   fpga_tools::UnrolledLoop<columns>([&](auto t) {
+      //     rowR_write.template get<t>() = 5;
+      //   });
+      //   r_matrix[r_row] = rowR_write;
+      //   QQ_matrix[r_row] = rowR_write;
+      // }
+
       // Iterative loop for QR and RQ/QQ coputation
       for(ac_int<kIBitSize_QR_RQ_itr, false> itr = 0; itr < QR_RQ_iterations; itr++){
         // PRINTF("Itr is: %d\n", (int)itr);
@@ -274,6 +297,7 @@ struct StreamingQRD {
         ac_int<kIBitSize, true> i = -1;
         ac_int<kJBitSize, true> j = 0;
 
+        row_tuple rowR_write;
 
         // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
         [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
@@ -318,7 +342,7 @@ struct StreamingQRD {
             // matrix A directly from the a_load; col then contains a_j
 
             if (i_gt_0[fanout_bank_idx]) {
-              col[k] = a_compute[j].template get<k>();
+              col_dummy[k] = a_compute[j].template get<k>();
             }
             // Using an else statement makes the compiler throw an
             // inexplicable warning when using non complex types:
@@ -335,6 +359,9 @@ struct StreamingQRD {
 
           });
 
+
+
+
           diag_val = diag_val - R_shift;
 
           // Preload col and a_i with the correct data for the current iteration
@@ -344,6 +371,9 @@ struct StreamingQRD {
             // find which fanout bank this unrolled iteration is going to use
             constexpr auto fanout_bank_idx = k / kFanoutReduction;
             
+            if (i_gt_0[fanout_bank_idx]) {
+              col[k] = col_dummy[k];
+            }
 
             if (!i_gt_0[fanout_bank_idx]) {
               // supporting matrix deflation
@@ -455,7 +485,7 @@ struct StreamingQRD {
             r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
           }
 
-          row_tuple rowR_write;
+          
           fpga_tools::UnrolledLoop<columns>([&](auto t) {
             TT tra_val = (j >= i + 1 && (i+1) < kDM_size) ? r_ip1j : 0;
             rowR_write.template get<t>() = 
@@ -497,7 +527,26 @@ struct StreamingQRD {
         TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
 
 
-        [[intel::initiation_interval(1)]]  
+
+        // PRINTF("R matrix is: \n");
+        // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+        //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+        //       PRINTF("%f ", r_matrix[ik].template get<k>())
+        //     });
+        //   PRINTF("\n");
+        // }
+
+        // PRINTF("Q matrix is: \n");
+        // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+        //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+        //       PRINTF("%f ", q_result[ik].template get<k>())
+        //     });
+        //   PRINTF("\n");
+        // }
+
+        
+
+        // [[intel::initiation_interval(1)]]  
         [[intel::loop_coalesce(2)]]
         for(ac_int<kIBitSize , false> i_ll = 0; i_ll < columns; i_ll++){
           for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
@@ -608,6 +657,9 @@ struct StreamingQRD {
         }
 
         R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
+
+
+        
         
 
 
@@ -630,7 +682,8 @@ struct StreamingQRD {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() = 
-                  get[t] ? QQ_matrixW[li / kLoopIterPerColumn]
+                   // QQ_matrixW r_matrix
+                  get[t] ? QQ_matrixW [li / kLoopIterPerColumn]
                                .template get<t * pipe_size + k>()
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());

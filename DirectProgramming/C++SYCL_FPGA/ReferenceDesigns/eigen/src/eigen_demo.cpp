@@ -16,16 +16,17 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
-#define KDEFLIM 16
+#define KDEFLIM 2
 #define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 1
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
-#define ITER_PER_EIGEN 100
+#define ITER_PER_EIGEN 8
 
 #define DEBUGEN 1
-#define DEBUGMINDEX 9797
+#define DEBUGMINDEX 0
+#define DEBUG 1
 
 #include "exception_handler.hpp"
 
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
-  int repetitions = argc > 1 ? atoi(argv[1]) : 1000;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #endif
   if (repetitions < 1) {
     std::cout << "Number of repetitions given is lower that 1." << std::endl;
@@ -136,20 +137,24 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 8;
+  constexpr size_t kMatricesToDecompose = 1;
 
   try {
     // SYCL boilerplate
-#if defined(FPGA_EMULATOR)
-    auto device_selector = sycl::ext::intel::fpga_emulator_selector_v;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
 #else
-    auto device_selector = sycl::ext::intel::fpga_selector_v;
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
+
+
 
     // Enable the queue profiling to time the execution
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
-    sycl::queue q = sycl::queue(device_selector,
+    sycl::queue q = sycl::queue(selector,
                                 fpga_tools::exception_handler,
                                 queue_properties);
 
@@ -203,6 +208,28 @@ int main(int argc, char *argv[]) {
         }  // end of col
       }    // end of row
 
+      // a_matrix[0] = 112;
+      // a_matrix[1] = 0;
+      // a_matrix[2] = 0;
+      // a_matrix[3] = 0;
+
+      // a_matrix[4] = 0;
+      // a_matrix[5] = 90;
+      // a_matrix[6] = 0;
+      // a_matrix[7] = 0;
+
+
+      // a_matrix[8] = 0;
+      // a_matrix[9] = 0;
+      // a_matrix[10] = 30;
+      // a_matrix[11] = 0;
+
+      // a_matrix[12] = 0;
+      // a_matrix[13] = 0;
+      // a_matrix[14] = 0;
+      // a_matrix[15] = 8;
+
+
   #ifdef DEBUG
       std::cout << "A MATRIX " << matrix_index << std::endl;
       for (size_t row = 0; row < kRows; row++) {
@@ -230,6 +257,25 @@ int main(int argc, char *argv[]) {
     std::vector<DTypeCPU> TmpRow(kRows);
     std::vector<int> sIndex(kRows);
     std::vector<int> sIndexSYCL(kRows);
+
+
+    if(DEBUG){
+      std::cout << "\n RQ Matrix: \n";
+      for(int i = 0; i < kRows; i++){
+        for(int j = 0; j < kRows; j++){
+          std::cout << rq_matrix[i*kRows+j] << " ";
+        }
+        std::cout << "\n";
+      }
+
+      std::cout << "\n QQ Matrix: \n";
+      for(int i = 0; i < kRows; i++){
+        for(int j = 0; j < kRows; j++){
+          std::cout << qq_matrix[i*kRows+j]  << " ";
+        }
+        std::cout << "\n";
+      }
+    }
 
     // data strucutre for golden results from numpy 
     // std::vector<T> py_w(kRows*kMatricesToDecompose);
