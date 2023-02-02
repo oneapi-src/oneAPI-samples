@@ -25,14 +25,12 @@ module add (
   begin
     fpga_led <= sort_done;
   end
-
-  assign reset = reset_button_d2;
   
   add_kernel_wrapper u0 (
-    .exception_add_data (),           //  output,  width = 64, exception_add_1.data
-    .irq_add_irq        (sort_done),  //  output,   width = 1,       irq_add_1.irq
-    .clk_clk            (i_clk),      //   input,   width = 1,             clk.clk
-    .reset_reset        (reset)       //   input,   width = 1,           reset.reset
+    .exception_add_data (),                   //  output,  width = 64, exception_add_1.data
+    .irq_add_irq        (sort_done),          //  output,   width = 1,       irq_add_1.irq
+    .clk_clk            (i_clk),              //   input,   width = 1,             clk.clk
+    .reset_reset        (synchronized_resetn) //   input,   width = 1,           reset.reset
   );
 
 endmodule
