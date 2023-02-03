@@ -3,12 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
-
-sycl::default_selector d_selector;
 
 // Array type and data size for this example.
 constexpr size_t array_size = (1 << 15);
@@ -99,7 +97,7 @@ IntArray a, b;
 
 int main() {
 
-  sycl::queue q(d_selector);
+  sycl::queue q(sycl::default_selector_v);
 
   InitializeArray(a);
   InitializeArray(b);
@@ -118,17 +116,17 @@ int main() {
 
   std::cout << "Submission to different queues with same context\n";
   // Submission to different queues with same context
-  sycl::queue q1(d_selector);
-  sycl::queue q2(q1.get_context(), d_selector);
-  sycl::queue q3(q1.get_context(), d_selector);
+  sycl::queue q1(sycl::default_selector_v);
+  sycl::queue q2(q1.get_context(), sycl::default_selector_v);
+  sycl::queue q3(q1.get_context(), sycl::default_selector_v);
   VectorAdd(q1, q2, q3, a, b);
   // End Submission to different queues with same context
 
   std::cout << "Submission to diffferent queues with different contexts\n";
   // Submission to different queues with different contexts
-  sycl::queue q4(d_selector);
-  sycl::queue q5(d_selector);
-  sycl::queue q6(d_selector);
+  sycl::queue q4(sycl::default_selector_v);
+  sycl::queue q5(sycl::default_selector_v);
+  sycl::queue q6(sycl::default_selector_v);
   VectorAdd(q4, q5, q6, a, b);
   // End Submission to different queues with different contexts
 

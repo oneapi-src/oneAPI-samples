@@ -23,7 +23,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#if FPGA || FPGA_EMULATOR
+#if FPGA_HARDWARE || FPGA_EMULATOR || FPGA_SIMULATOR
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
@@ -109,13 +109,16 @@ int main(int argc, char* argv[]) {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // Intel extension: FPGA emulator selector on systems without FPGA card.
-  ext::intel::fpga_emulator_selector d_selector;
-#elif FPGA
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+#elif FPGA_SIMULATOR
+  // Intel extension: FPGA simulator selector on systems without FPGA card.
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
   // Intel extension: FPGA selector on systems with FPGA card.
-  ext::intel::fpga_selector d_selector;
+  auto selector = sycl::ext::intel::fpga_selector_v;
 #else
   // The default device selector will select the most performant device.
-  auto d_selector{default_selector_v};
+  auto selector = default_selector_v;
 #endif
 
   // Create vector objects with "vector_size" to store the input and output data.
@@ -130,7 +133,7 @@ int main(int argc, char* argv[]) {
   InitializeVector(b);
 
   try {
-    queue q(d_selector, exception_handler);
+    queue q(selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     std::cout << "Running on device: "
