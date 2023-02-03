@@ -10,11 +10,11 @@
 // practice that reduces name mangling in the optimization reports.
 class VectorAddID;
 
-class VectorAdd {
+struct VectorAdd {
  public:
-  int *a_in;
-  int *b_in;
-  int *c_out;
+  int *const a_in;
+  int *const b_in;
+  int *const c_out;
   int len;
 
   void operator()() const {
