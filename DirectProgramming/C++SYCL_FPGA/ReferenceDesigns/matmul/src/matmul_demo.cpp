@@ -81,8 +81,8 @@ void TransposeMat(float *m_matrix, float *m_transposed, int rows, int cols,
   }
 }
 
-// Multiply num_matrices pairs of matrices and store all the results in
-// c_matrix.
+// Multiply num_matrices pairs of matrices from a_matrix and b_matrix and store
+// all the results in c_matrix.
 void MatmulRef(float *a_matrix, float *b_matrix, float *c_matrix, int rows_a,
                int common, int cols_b, int num_matrices) {
   int matsize_a = rows_a * common;
@@ -125,14 +125,14 @@ int main(int argc, char *argv[]) {
 
   // Repetitions and number of matrices to measure performance
 #if FPGA_SIMULATOR
-  int repetitions = argc > 1 ? atoi(argv[1]) : 16;
-  int num_matrices = 1;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
+  constexpr int kNumMatrices = 1;
 #elif FPGA_HARDWARE
   int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
-  int num_matrices = 8;
-#else  // #if FPGA_EMULATOR
+  constexpr int kNumMatrices = 8;
+#else // #if FPGA_EMULATOR
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
-  int num_matrices = 8;
+  constexpr int kNumMatrices = 8;
 #endif
 
   // Matrix paramters specified by build system
@@ -141,7 +141,6 @@ int main(int argc, char *argv[]) {
   constexpr int kColsB = COLS_B;
   constexpr int kTileA = TILE_A;
   constexpr int kTileB = TILE_B;
-  constexpr int kTileCommon = TILE_COMMON;
 
   // Matrix sizes
   constexpr int kMatsizeA = kRowsA * kCommon;
@@ -149,44 +148,44 @@ int main(int argc, char *argv[]) {
   constexpr int kMatsizeC = kRowsA * kColsB;
 
   // Create arrays to hold the input and output matrices
-  float a_matrix[kMatsizeA * num_matrices];
-  float b_matrix[kMatsizeB * num_matrices];
-  float c_matrix[kMatsizeC * num_matrices];
+  float a_matrix[kMatsizeA * kNumMatrices];
+  float b_matrix[kMatsizeB * kNumMatrices];
+  float c_matrix[kMatsizeC * kNumMatrices];
 
   // Generate random A and B matrices
   constexpr int kRandMin = 1;
   constexpr int kRandMax = 10;
   srand(1138);
-  FillRand(a_matrix, kRandMin, kRandMax, kMatsizeA * num_matrices);
-  FillRand(b_matrix, kRandMin, kRandMax, kMatsizeB * num_matrices);
+  FillRand(a_matrix, kRandMin, kRandMax, kMatsizeA * kNumMatrices);
+  FillRand(b_matrix, kRandMin, kRandMax, kMatsizeB * kNumMatrices);
 
   // Calculate a reference to compare our answer to and store it in c_reference
   // NOTE: since the systolic matrix multiply interprets B as transposed, we
   // need to first transpose b_matrix to b_transposed to use it in the standard
   // MM algorithm
-  float b_transposed[kMatsizeB * num_matrices];
-  float c_reference[kMatsizeC * num_matrices];
-  TransposeMat(b_matrix, b_transposed, kColsB, kCommon, num_matrices);
+  float b_transposed[kMatsizeB * kNumMatrices];
+  float c_reference[kMatsizeC * kNumMatrices];
+  TransposeMat(b_matrix, b_transposed, kColsB, kCommon, kNumMatrices);
   MatmulRef(a_matrix, b_transposed, c_reference, kRowsA, kCommon, kColsB,
-            num_matrices);
+            kNumMatrices);
 
-  // Run the matrix multiplication
   std::cout << " Matrix A size: " << kRowsA << " x " << kCommon
-            << " (tile: " << kTileA << " x " << kTileCommon << ")" << std::endl
+            << " (tile: " << kTileA << " x " << kCommon << ")" << std::endl
             << " Matrix B size: " << kCommon << " x " << kColsB
-            << " (tile: " << kTileCommon << " x " << kTileB << ")" << std::endl
+            << " (tile: " << kCommon << " x " << kTileB << ")" << std::endl
             << " Systolic array size: " << kTileA << " x " << kTileB << " PEs"
             << std::endl;
-  std::cout << "Running matrix multiplication of " << num_matrices
-            << ((num_matrices > 1) ? " matrices " : " matrix ") << repetitions
+  std::cout << "Running matrix multiplication of " << kNumMatrices
+            << ((kNumMatrices > 1) ? " matrices " : " matrix ") << repetitions
             << " times" << std::endl;
 
-  MatmulImpl<float, kRowsA, kCommon, kColsB, kTileA, kTileB, kTileCommon>(
-      q, a_matrix, b_matrix, c_matrix, repetitions, num_matrices);
+  // Run the matrix multiplication
+  MatmulImpl<float, kRowsA, kCommon, kColsB, kTileA, kTileB, kNumMatrices>(
+      q, a_matrix, b_matrix, c_matrix, repetitions);
 
 #if DEBUG == 1
   // Print A, B, C and reference matrices
-  for (int matrix_idx = 0; matrix_idx < num_matrices; matrix_idx++) {
+  for (int matrix_idx = 0; matrix_idx < kNumMatrices; matrix_idx++) {
     std::cout << std::endl << matrix_idx << std::endl;
     std::cout << std::endl << "Matrix A" << std::endl;
     PrintMat(a_matrix + matrix_idx * kMatsizeA, kRowsA, kCommon);
@@ -200,7 +199,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   // Verify results
-  bool passed = EqualMat(c_matrix, c_reference, kRowsA, kColsB, num_matrices);
+  bool passed = EqualMat(c_matrix, c_reference, kRowsA, kColsB, kNumMatrices);
   std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
 
   return !passed;

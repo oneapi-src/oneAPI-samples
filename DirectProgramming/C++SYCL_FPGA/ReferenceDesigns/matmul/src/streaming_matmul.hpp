@@ -5,120 +5,58 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
-template <typename T, int k_common, int k_tile_common, int k_tile_a,
-          int k_tile_b, int k_pipe_size, typename PipeA, typename PipeB,
-          typename PipeC>
-void StreamingMatmul() {
-  
-  // Iterations to process a row / column
-  constexpr bool kIncompleteBurstA = k_tile_a % k_pipe_size != 0;
-  constexpr bool kIncompleteBurstB = k_tile_b % k_pipe_size != 0;
-  constexpr int kRWIterA = k_tile_a / k_pipe_size + (kIncompleteBurstA ? 1 : 0);
-  constexpr int kRWIterB = k_tile_b / k_pipe_size + (kIncompleteBurstB ? 1 : 0);
-  constexpr int kIters = std::max(kRWIterA, kRWIterB);
+/**
+ * Matrix multiply kernel.
+ * 
+ * Repeatedly reads matrix tiles of A and B from input pipes and computes A * B
+ * using a systolic array of PEs. Writes result matrix tile of C to output pipe.
+ *
+ */
+template <typename T,     // Datatype of the elements of the matrix
+          int k_common,   // Columns of matrix A / rows of matrix B
+          int k_tile_a,   // Tile size for matrix A
+          int k_tile_b,   // Tile size for matrix B
+          typename PipeA, // Input pipe for matrix A
+          typename PipeB, // Input pipe for matrix B
+          typename PipeC> // Output pipe for matrix C
+class StreamingMatmul {
+public:
+  void operator()() const {
+    constexpr int kCommonBitSize = fpga_tools::BitsForMaxValue<k_common + 1>();
+    constexpr int kTileBBitSize = fpga_tools::BitsForMaxValue<k_tile_b + 1>();
 
-  // Iterations to process a tile
-  constexpr int kNumTiles = k_common / k_tile_common;
-  constexpr int kCommonBitSize =
-      fpga_tools::BitsForMaxValue<k_tile_common + 1>();
+    // Compute matrix multiplications as long as matrices are given as inputs
+    while (1) {
 
-  // Iterations to load matrix from pipe
-  constexpr int kFeederIters = k_tile_common * kIters;
-  constexpr int kFeederItersBitSize =
-      fpga_tools::BitsForMaxValue<kFeederIters + 1>();
+      // An array of registers to accumulate the dot products which form the
+      // output matrix C; one register per PE; initialized to 0
+      [[intel::fpga_register]] // NO-FORMAT: Attribute
+      T accum[k_tile_a][k_tile_b];
 
-  // Iterations to store matrix to pipe
-  constexpr int kDrainIters = k_tile_b * kRWIterA;
-  constexpr int kDrainItersBitSize =
-      fpga_tools::BitsForMaxValue<kDrainIters + 1>();
-
-  // Memory attributes
-  constexpr short kBankWidth = k_pipe_size * sizeof(T);
-  constexpr int kNumBanksA = k_tile_a / k_pipe_size;
-  constexpr int kNumBanksB = k_tile_b / k_pipe_size;
-  constexpr int kNumBanksAPow2 =
-      fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanksA));
-  constexpr int kNumBanksBPow2 =
-      fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanksB));
-
-  while (1) {
-
-    [[intel::fpga_register]]  // NO-FORMAT: Attribute
-    T accum[k_tile_a][k_tile_b];
-
-    fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
-      fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
-        accum[row][col] = 0;
-      });
-    });
-
-    for (int tile = 0; tile < kNumTiles; tile++) {
-      
-      [[intel::numbanks(kNumBanksAPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankWidth)]]     // NO-FORMAT: Attribute
-      [[intel::private_copies(4)]]         // NO-FORMAT: Attribute
-      [[intel::max_replicates(1)]]         // NO-FORMAT: Attribute
-      T mem_a[k_tile_common][k_tile_a];
-
-      [[intel::numbanks(kNumBanksBPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankWidth)]]     // NO-FORMAT: Attribute
-      [[intel::private_copies(4)]]         // NO-FORMAT: Attribute
-      [[intel::max_replicates(1)]]         // NO-FORMAT: Attribute
-      T mem_b[k_tile_common][k_tile_b];
-
-      // Copy a matrix from the pipe to a local memory
-      [[intel::initiation_interval(1)]]    // NO-FORMAT: Attribute
-      [[intel::speculated_iterations(0)]]  // NO-FORMAT: Attribute
-      for (ac_int<kFeederItersBitSize, false> i = 0; i < kFeederIters; i++) {
-        int row_iter = (int)(i) % kIters;
-        int col_iter = (int)(i) / kIters;
-
-        fpga_tools::NTuple<T, k_pipe_size> pipe_read_a;
-        fpga_tools::NTuple<T, k_pipe_size> pipe_read_b;
-        if (row_iter < kRWIterA) {
-          pipe_read_a = PipeA::read();
-        }
-        if (row_iter < kRWIterB) {
-          pipe_read_b = PipeB::read();
-        }
-
-        fpga_tools::UnrolledLoop<kIters>([&](auto k) {
-          fpga_tools::UnrolledLoop<k_pipe_size>([&](auto t) {
-            constexpr int kIdx = k * k_pipe_size + t;
-            if constexpr (kIdx < k_tile_a) {
-              if (row_iter == k) {
-                mem_a[col_iter][kIdx] = pipe_read_a.template get<t>();
-              }
-            }
-            if constexpr (kIdx < k_tile_b) {
-              if (row_iter == k) {
-                mem_b[col_iter][kIdx] = pipe_read_b.template get<t>();
-              }
-            }
-            pipe_read_a.template get<t>() =
-                sycl::ext::intel::fpga_reg(pipe_read_a.template get<t>());
-            pipe_read_b.template get<t>() =
-                sycl::ext::intel::fpga_reg(pipe_read_b.template get<t>());
-          });
-          row_iter = sycl::ext::intel::fpga_reg(row_iter);
+      fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
+        fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
+          accum[row][col] = 0;
         });
-      }
+      });
 
-      // Compute the matrix product
-      [[intel::initiation_interval(1)]]    // NO-FORMAT: Attribute
-      [[intel::speculated_iterations(0)]]  // NO-FORMAT: Attribute
-      for (ac_int<kCommonBitSize, false> i = 0; i < k_tile_common; i++) {
+      // Read matrices A and B from the two input pipes and compute the matrix
+      // product; store the result in registers
+      [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+      for (ac_int<kCommonBitSize, false> i = 0; i < k_common; i++) {
+        fpga_tools::NTuple<T, k_tile_a> pipe_read_a = PipeA::read();
+        fpga_tools::NTuple<T, k_tile_b> pipe_read_b = PipeB::read();
+
         T fed_A[k_tile_a];
         T fed_B[k_tile_b];
 
         fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
-          fed_A[row] = mem_a[i][row];
+          fed_A[row] = pipe_read_a.template get<row>();
         });
         fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
-          fed_B[col] = mem_b[i][col];
+          fed_B[col] = pipe_read_b.template get<col>();
         });
 
-        // Unrolled loop to describe an array of PEs
+        // Fully unrolled loop to describe an array of PEs
         fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
           fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
             fed_A[row] = sycl::ext::intel::fpga_reg(fed_A[row]);
@@ -126,38 +64,22 @@ void StreamingMatmul() {
             accum[row][col] += fed_A[row] * fed_B[col];
           });
         });
-      }
-    }
+      }  // end of i
 
-    // Copy the result matrix on the output pipe
-    [[intel::initiation_interval(1)]]    // NO-FORMAT: Attribute
-    [[intel::speculated_iterations(0)]]  // NO-FORMAT: Attribute
-    for (ac_int<kDrainItersBitSize, false> i = 0; i < kDrainIters; i++) {
-      int row_iter = (int)(i) % kRWIterA;
-      int col_iter = (int)(i) / kRWIterA;
-      bool get[kRWIterA];
-
-      fpga_tools::UnrolledLoop<kRWIterA>([&](auto k) {
-        get[k] = row_iter == k;
-        row_iter = sycl::ext::intel::fpga_reg(row_iter);
-      });
-
-      fpga_tools::NTuple<T, k_pipe_size> pipe_write;
-      fpga_tools::UnrolledLoop<kRWIterA>([&](auto k) {
-        fpga_tools::UnrolledLoop<k_pipe_size>([&](auto t) {
-          constexpr int kIdx = k * k_pipe_size + t;
-          if constexpr (kIdx < k_tile_a) {
-            pipe_write.template get<t>() =
-                get[k]
-                    ? accum[kIdx][col_iter]
-                    : sycl::ext::intel::fpga_reg(pipe_write.template get<t>());
-          }
+      // Write the result matrix C from the registers to the output pipe
+      [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+      for (ac_int<kTileBBitSize, false> i = 0; i < k_tile_b; i++) {
+        fpga_tools::NTuple<T, k_tile_a> pipe_write;
+        fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
+          pipe_write.template get<row>() = accum[row][0];
+          fpga_tools::UnrolledLoop<k_tile_b - 1>([&](auto k) {
+            accum[row][k] = accum[row][k + 1];
+          });
         });
-      });
-
-      PipeC::write(pipe_write);
-    }
-  }
-}
+        PipeC::write(pipe_write);
+      }  // end of i
+    }    // end of while(1)
+  }      // end of operator
+};
 
 #endif /* __STREAMING_MATMUL_HPP__ */
