@@ -17,7 +17,7 @@ h5py==3.6.0
 huggingface-hub==0.10.0
 idna==3.3
 importlib-metadata==4.11.3
-joblib==1.1.1
+joblib==1.2.0
 keras==2.8.0
 Keras-Preprocessing==1.1.2
 kiwisolver==1.4.2
