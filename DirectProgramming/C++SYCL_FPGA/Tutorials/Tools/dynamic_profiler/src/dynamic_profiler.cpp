@@ -41,8 +41,8 @@ constexpr int kSize = 262144;
 
 // Number of iterations performed in the consumer kernels
 // This controls the amount of work done by the Consumer.
-// Part of the work moves to the Producer in the "after" case.
-constexpr int kComplexity1 = 1000;
+// After the optimization, the Producer and Consumer split the work.
+constexpr int kComplexity1 = 1900;
 constexpr int kComplexity2 = 2000;
 
 // Perform two stages of processing on the input data.
