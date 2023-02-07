@@ -1,0 +1,32 @@
+diff --git a/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/Intel_Extension_For_PyTorch_Hello_World.py b/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/Intel_Extension_For_PyTorch_Hello_World.py
+index 00eb371b..a3ded045 100755
+--- a/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/Intel_Extension_For_PyTorch_Hello_World.py
++++ b/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/Intel_Extension_For_PyTorch_Hello_World.py
+@@ -75,7 +75,7 @@ def main():
+     3. crite: Criterion function to minimize loss
+     '''
+     model = TestModel()
+-    model = model.to(memory_format=torch.channels_last)
++    model = model.to("xpu", memory_format=torch.channels_last)
+     optim = torch.optim.SGD(model.parameters(), lr=0.01)
+     crite = nn.MSELoss(reduction='sum')
+ 
+@@ -104,7 +104,8 @@ def main():
+         '''
+         model.train()
+         for batch_index, (data, y_ans) in enumerate(trainLoader):
+-            data = data.to(memory_format=torch.channels_last)
++            data = data.to("xpu", memory_format=torch.channels_last)
++            y_ans = y_ans.to("xpu", memory_format=torch.channels_last)
+             optim.zero_grad()
+             y = model(data)
+             loss = crite(y, y_ans)
+@@ -116,7 +117,7 @@ def main():
+         '''
+         model.eval()
+         for batch_index, data in enumerate(testLoader):
+-            data = data.to(memory_format=torch.channels_last)
++            data = data.to("xpu", memory_format=torch.channels_last)
+             y = model(data)
+ 
+ if __name__ == '__main__':
