@@ -7,7 +7,8 @@
     this implements the QR decmposition using Gram-Schmidt process
 
 */
-
+#ifndef __QR_MGS_HPP__
+#define __QR_MGS_HPP__
 
 typedef union {
   float f;
@@ -154,3 +155,5 @@ template<typename T> T* QR_Decmp<T>::get_Q(){
 template<typename T> T* QR_Decmp<T>::get_R(){
     return this->matR;
 }
+
+#endif 

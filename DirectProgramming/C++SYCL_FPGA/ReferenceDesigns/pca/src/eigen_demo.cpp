@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 500;
+  constexpr size_t kMatricesToDecompose = 5000;
 
   try {
     // SYCL boilerplate
@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
     // Generate the random symmetric square matrices
     srand(kRandomSeed);
 
-    PCA<float> pca(kRows*2, kRows, kMatricesToDecompose, 0);
+    PCA<float> pca(kRows*10000, kRows, kMatricesToDecompose, 0);
     pca.populate_A();
     pca.normalizeSamples();
     pca.calculate_covariance();
@@ -505,9 +505,12 @@ int main(int argc, char *argv[]) {
 
     T diff_threshold = KETHRESHOLD;
     int rq_ecount_SYCL = 0;
+    if(DEBUGEN) std::cout << "\nEigen values are:\n";
     for(int i = 0; i < kRows; i++){
       int sI = sIndex[i];
       int sIS = sIndexSYCL[i];
+      if(DEBUGEN) std::cout << a_matrix_cpu[matrix_offset + sI*kRows+sI] << " ";
+
       if(fabs(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])- fabs(rq_matrix[matrix_offset + sIS*kRows+sIS]))   \
       /(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])) > KETHRESHOLD_Eigen 
       || isnan(a_matrix_cpu[matrix_offset + sI*kRows+sI]) || isnan(rq_matrix[matrix_offset + sIS*kRows+sIS])){
@@ -528,8 +531,11 @@ int main(int argc, char *argv[]) {
 
 
     int qq_ecountSYCL = 0;
+    if(DEBUGEN) std::cout << "\n Eigen vector is: \n"; 
     for(int i = 0; i < kRows; i++){
       for(int j = 0; j < kRows; j++){
+          if(DEBUGEN) std::cout << eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]] << " ";
+
         if(fabs(fabs(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]) - fabs(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]])) > diff_threshold 
         || isnan(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]) || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])){
           qq_ecountSYCL++;
@@ -538,6 +544,7 @@ int main(int argc, char *argv[]) {
            << i << "," << j << "\n";
         }
       }
+      if(DEBUGEN) std::cout << "\n";
     }
  
 
