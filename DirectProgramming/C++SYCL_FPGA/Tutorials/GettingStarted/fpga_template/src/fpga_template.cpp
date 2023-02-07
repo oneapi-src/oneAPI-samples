@@ -11,7 +11,6 @@
 class VectorAddID;
 
 struct VectorAdd {
- public:
   int *const a_in;
   int *const b_in;
   int *const c_out;
