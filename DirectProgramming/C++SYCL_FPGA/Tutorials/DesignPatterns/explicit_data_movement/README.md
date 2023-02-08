@@ -15,7 +15,7 @@ The purpose of this tutorial is to demonstrate an alternative coding style that 
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstatres a design pattern.
+It is categorized as a Tier 2 sample that demonstrates a design pattern.
 
 ```mermaid
 flowchart LR

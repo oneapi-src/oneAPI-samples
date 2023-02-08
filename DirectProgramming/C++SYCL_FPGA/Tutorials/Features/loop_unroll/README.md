@@ -23,7 +23,7 @@ This tutorial demonstrates a simple example of unrolling loops to improve throug
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstatres a compiler feature.
+It is categorized as a Tier 2 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR

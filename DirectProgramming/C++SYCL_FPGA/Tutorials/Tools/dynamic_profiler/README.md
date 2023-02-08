@@ -26,7 +26,7 @@ This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres the usage of a tool.
+It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
 
 ```mermaid
 flowchart LR

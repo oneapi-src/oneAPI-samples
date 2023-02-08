@@ -23,7 +23,7 @@ This FPGA tutorial explains how to use the `private_copies` attribute to trade o
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR
