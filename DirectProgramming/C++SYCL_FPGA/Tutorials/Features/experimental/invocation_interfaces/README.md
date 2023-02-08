@@ -25,7 +25,7 @@ This FPGA tutorial demonstrates how to specify the kernel invocation interfaces 
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstatres a compiler feature.
+It is categorized as a Tier 2 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR

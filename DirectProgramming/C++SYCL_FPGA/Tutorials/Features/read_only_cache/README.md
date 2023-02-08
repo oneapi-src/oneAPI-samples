@@ -25,7 +25,7 @@ memory in a non-contiguous manner.
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR

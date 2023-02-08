@@ -24,7 +24,7 @@ This FPGA tutorial showcases a design pattern that makes it possible to create a
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres a design pattern.
+It is categorized as a Tier 3 sample that demonstrates a design pattern.
 
 ```mermaid
 flowchart LR

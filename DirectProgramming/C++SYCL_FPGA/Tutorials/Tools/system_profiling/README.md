@@ -27,7 +27,7 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres the usage of a tool.
+It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
 
 ```mermaid
 flowchart LR

@@ -19,7 +19,7 @@ This sample demonstrates double buffering to overlap kernel execution with buffe
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstatres a design pattern.
+It is categorized as a Tier 2 sample that demonstrates a design pattern.
 
 ```mermaid
 flowchart LR
