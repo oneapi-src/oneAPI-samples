@@ -79,8 +79,8 @@ template<typename T> void PCA<T>::populate_A(){
     constexpr size_t kRandomMin = 0;
     constexpr size_t kRandomMax = 1000;
 
-    constexpr size_t kEigenMin = 500;
-    constexpr size_t kEigenMax = 10000;
+    size_t kEigenMin = 2*this->p;
+    size_t kEigenMax = 6*this->p;
 
     constexpr size_t kNoiseMin = 0;
     constexpr size_t kNoiseMax = 5000;
@@ -95,7 +95,8 @@ template<typename T> void PCA<T>::populate_A(){
     // initialising TeigVec with random numbers
 
         for(int i = 0; i < this->p; i++){
-            Teigval[i] = (rand() % (kEigenMax - kEigenMin) + kEigenMin);
+            // making sure two eigen values are unlikely same
+            Teigval[i] = (rand() % (kEigenMax - kEigenMin) + kEigenMin) + (((double)rand()-RAND_MAX/2)/(double)RAND_MAX);
         }
 
         for(int i =0; i < this->p; i++){

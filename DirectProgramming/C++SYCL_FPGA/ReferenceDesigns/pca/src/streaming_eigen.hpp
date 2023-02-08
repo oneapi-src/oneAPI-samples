@@ -1,5 +1,5 @@
-#ifndef __STREAMING_QRD_HPP__
-#define __STREAMING_QRD_HPP__
+#ifndef __STREAMING_EIGEN_HPP__
+#define __STREAMING_EIGEN_HPP__
 
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
