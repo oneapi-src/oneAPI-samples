@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 if(WIN32)
-        set(CMAKE_CXX_COMPILER "dpcpp")
+        set(CMAKE_CXX_COMPILER "icx-cl")
 else()
         set(CMAKE_CXX_COMPILER "icpx")
 endif()
