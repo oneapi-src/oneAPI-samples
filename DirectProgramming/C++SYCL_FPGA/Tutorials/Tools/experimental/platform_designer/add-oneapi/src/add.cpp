@@ -25,8 +25,7 @@ using OutputPipe = sycl::ext::intel::prototype::pipe<
 // practice that reduces name mangling in the optimization reports.
 class AdderID;
 
-class Adder {
- public:
+struct Adder {
   int a;
   int b;
 
@@ -83,8 +82,9 @@ int main() {
     std::cout << "collect results." << std::endl;
     int calc_add = OutputPipe::read(q);
 
-    std::cout << "Add sum: " << calc_add << ", expected (" << expectedSum << ")"
-              << std::endl;
+    std::cout << a << " + " << b << " = " << calc_add << ", expected "
+              << expectedSum << ". " << std::endl;
+
     if (calc_add != expectedSum) {
       passed = false;
     }

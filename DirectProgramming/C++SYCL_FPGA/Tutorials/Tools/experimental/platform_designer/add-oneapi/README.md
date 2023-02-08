@@ -2,7 +2,7 @@
 
 This oneAPI project will be compiled and deployed in an Intel® Platform Designer system in the Intel Quartus® Prime software.
 
-## Building the `add-oneapi` Design
+## Building the `add-oneapi` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
@@ -96,28 +96,31 @@ This design uses CMake to generate a build script for  `nmake`.
 
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Running the Sample
+## Run the `add-oneapi` Executable
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-
+### On Linux
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./add.fpga_emu     (Linux)
-   add.fpga_emu.exe   (Windows)
+   ./add.fpga_emu
    ```
 
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./add.fpga_sim
+   ```
 
-  * On Linux
-     ```bash
-     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./add.fpga_sim
-     ```
-   
-  * On Windows
-     ```bash
-     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-     add.fpga_sim.exe
-     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-     ```
+### On Windows
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   add.fpga_emu.exe
+   ```
+
+2. Run the sample on the FPGA simulator device.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   add.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
 
 ## License
 Code samples are licensed under the MIT license. See

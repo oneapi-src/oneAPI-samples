@@ -15,8 +15,11 @@
 @ SET SYSCONSOLE_PATH=%QUARTUS_PATH%\..\..\syscon\bin
 @ SET QUARTUSPGM_PATH=%QUARTUS_PATH%
 
-%QUARTUSPGM_PATH%\quartus_pgm.exe -m jtag -c 1 -o "p;..\output_files\add.sof@1"
+%QUARTUSPGM_PATH%\quartus_pgm.exe -m jtag -c 1 -o "p;add.sof@1"
 
-PAUSE
-
-"%SYSCONSOLE_PATH%\system-console.exe" -cli --rc_script=main.tcl
+@ IF %ERRORLEVEL% EQU 0 (
+    PAUSE
+    "%SYSCONSOLE_PATH%\system-console.exe" -cli --rc_script=main.tcl
+) ELSE (
+    EXIT /B 1
+)
