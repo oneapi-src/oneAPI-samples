@@ -38,7 +38,7 @@ Please follow bellow steps to setup GPU environment.
 3. Activate the created conda env:  ```$source activate user-tensorflow-gpu ```
 4. Install the required packages:  ```(user-tensorflow-gpu) $pip install tensorflow_hub ipykernel ```
 5. Deactivate conda env:  ```(user-tensorflow-gpu)$conda deactivate ```
-6. Register the kernel to Jupyter NB: ``` $~/.conda/envs/user-tensorflowgpu/bin/python  -m ipykernel install --user --name=user-tensorflow-gpu ```  
+6. Register the kernel to Jupyter NB: ``` $~/.conda/envs/user-tensorflow-gpu/bin/python  -m ipykernel install --user --name=user-tensorflow-gpu ```  
 
 Once users finish GPU environment setup, please do the same steps but remove "-gpu" from above steps. 
 In the end, you will have two new conda environments which are user-tensorflow-gpu and user-tensorflow
