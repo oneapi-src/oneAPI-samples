@@ -48,13 +48,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 This sample demonstrates how to add a oneAPI kernel to an Intel® Platform Designer system, and how to run it on a hardware board. It uses a JTAG to Avalon MM Agent IP to expose a oneAPI IP Authoring kernel to the JTAG control interface. This lets the user control and observe the behavior of the kernel using the System Console application.
 
-![](README.md.assets/csr-output-example-simple.svg)
+![](assets/csr-output-example-simple.svg)
 
 This example is intended for users interested in creating standalone modules that can be included in Intel® Quartus® Prime projects. It serves as a minimal example, and while it targets a very specific board, a user familiar with the Intel® Quartus® Prime suite should be able to easily port this design to other hardware.
 
 ### Board-specific Considerations
 
-This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. The board specific configurations are:
+This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. The board specific configurations that you should specify in Intel® Quartus® Prime are:
 1. Choose `10AS066N3F40E2SG` device to match the devkit
 2. Choose pin `PIN_AM10` to drive the `i_clk` signal
 3. Choose pin `PIN_AR23` to drive the `fpga_led` signal
@@ -127,13 +127,13 @@ Follow these steps to compile and test the design:
 
    2. Set the top-level entity to be `add` to make project management easier.
 
-      ![](README.md.assets/quartus_new_project.png)
+      ![](assets/quartus_new_project.png)
 
    3. Choose **Empty Project** when prompted to select a project type.
 
    4. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `add-quartus-sln`.
 
-      ![](README.md.assets/add-files.png)
+      ![](assets/add-files.png)
 
    5. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
 
@@ -181,13 +181,13 @@ Follow these steps to compile and test the design:
 
    1. Open Platform Designer from the Intel® Quartus® Prime GUI:
 
-      ![](README.md.assets/open-platform-designer-button.png)
+      ![](assets/open-platform-designer-button.png)
 
-      Create a new system by clicking the 'New Platform Designer System' button (![](README.md.assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
+      Create a new system by clicking the 'New Platform Designer System' button (![](assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
 
       Configure the `Reset Bridge` IP as shown:
 
-      ![](README.md.assets/reset-bridge.png)
+      ![](assets/reset-bridge.png)
 
    2. Add the following IP to your system:
 
@@ -195,29 +195,29 @@ Follow these steps to compile and test the design:
 
       * oneAPI > **add_fpga_ip_export_1_di**
 
-      ![](README.md.assets/add-ip-platform-designer.png)
+      ![](assets/add-ip-platform-designer.png)
 
    3. Connect the modules as shown:
 
-      ![](README.md.assets/complete-system_platform-designer.png)
+      ![](assets/complete-system_platform-designer.png)
 
       Don't forget to export the `irq_add` and `exception_add` signals. We provided a top-level RTL file (`add.sv`) that uses the generated IP. Following these naming conventions allows you to connect the oneAPI kernel to this handwritten RTL.
 
       > **Note**: There is a bug in oneAPI 2023.1 that causes the generated IP to be incorrectly documented in its hardware TCL script. You can override this in platform designer by changing the signal type of the `resetn` signal to `reset_n`:
       > 
-      > ![](README.md.assets/fix-reset_n-platform-designer.png)
+      > ![](assets/fix-reset_n-platform-designer.png)
 
    4. Save the system by clicking `File` > `Save`
 
    5. Generate the syste so we can include it in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
-      ![](README.md.assets/generate-hdl.png)
+      ![](assets/generate-hdl.png)
    
    6. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
-   ![](README.md.assets/start-analysis.png)
+   ![](assets/start-analysis.png)
 
 7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG IP will handle the connection between your design and the JTAG pins on your board automatically.
 
@@ -227,11 +227,11 @@ Follow these steps to compile and test the design:
    
       *Pin planner from GHRD:*
 
-      ![](README.md.assets/pins-from-ghrd.png)
+      ![](assets/pins-from-ghrd.png)
 
       *Final pin planner configuration:*
 
-      ![](README.md.assets/pins-from-design.png)
+      ![](assets/pins-from-design.png)
 
 8. Now add the timing constraints. 
 
@@ -254,17 +254,14 @@ Follow these steps to compile and test the design:
 
 9. Compile the full design by clicking the 'Start Compilation' button in the Intel® Quartus® Prime GUI.
 
-      ![](README.md.assets/start-compilation-quartus.png)
+      ![](assets/start-compilation-quartus.png)
 
 10. Copy the generated `add.sof` file to the `system_console` directory.
 
 ### Additional Documentation
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
 - [Intel® Arria® 10 SoC Golden System Reference Design](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD) describes a reference design you can use with your Intel® Arria® 10 SX SoC Developer kit.
 - [Intel® Arria 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html) describes the Intel® Arria® 10 SX SoC Development kit in greater detail.
 - [Intel® FPGA Software Installation and Licensing](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/faq.html) describes how to license Intel® Quartus® Prime Pro software.
-- [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
 - [Intel® Quartus® Prime Pro Edition User Guide: Getting Started](https://www.intel.com/content/www/us/en/docs/programmable/683463/current/faq.html) introduces you to the Intel® Quartus® Prime Pro software.
 - [Intel® Quartus® Prime Pro Edition User Guide: Platform Designer](https://www.intel.com/content/www/us/en/docs/programmable/683609/current/faq.html) describes the Intel® Platform Designer software.
 - [Intel® Quartus® Prime Pro Edition User Guide: Programmer](https://www.intel.com/content/www/us/en/docs/programmable/683039/current/programmer-user-guide.html) describes the Intel® Quartus® Prime Pro Programmer software.

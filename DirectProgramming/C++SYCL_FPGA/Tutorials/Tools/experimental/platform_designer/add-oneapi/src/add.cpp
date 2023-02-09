@@ -73,7 +73,7 @@ int main() {
     int a = 3;
     int b = 76;
 
-    int expectedSum = a + b;
+    int expected_sum = a + b;
 
     std::cout << "add two integers using CSR for input." << std::endl;
 
@@ -88,9 +88,9 @@ int main() {
     int calc_add = OutputPipe::read(q);
 
     std::cout << a << " + " << b << " = " << calc_add << ", expected "
-              << expectedSum << ". " << std::endl;
+              << expected_sum << ". " << std::endl;
 
-    if (calc_add != expectedSum) {
+    if (calc_add != expected_sum) {
       passed = false;
     }
 

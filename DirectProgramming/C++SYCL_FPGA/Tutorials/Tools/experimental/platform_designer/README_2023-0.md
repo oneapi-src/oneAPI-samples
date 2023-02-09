@@ -48,7 +48,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 This sample demonstrates how to add a oneAPI kernel to an Intel® Platform Designer system, and how to run it on a hardware board. It uses a JTAG to Avalon MM Agent IP to expose a oneAPI IP Authoring kernel to the JTAG control interface. This lets the user control and observe the behavior of the kernel using the System Console application.
 
-![](README.md.assets/csr-output-example-simple.svg)
+![](assets/csr-output-example-simple.svg)
 
 This example is intended for users interested in creating standalone modules that can be included in Intel® Quartus® Prime projects. It serves as a minimal example, and while it targets a very specific board, a user familiar with the Intel® Quartus® Prime suite should be able to easily port this design to other hardware.
 
@@ -127,13 +127,13 @@ Follow these steps to compile and test the design:
 
    2. Set the top-level entity to be `add` to make project management easier.
 
-      ![](README.md.assets/quartus_new_project.png)
+      ![](assets/quartus_new_project.png)
 
    3. Choose **Empty Project** when prompted to select a project type.
 
    4. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `add-quartus-sln`.
 
-      ![](README.md.assets/add-files.png)
+      ![](assets/add-files.png)
 
    5. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
 
@@ -195,13 +195,13 @@ Follow these steps to compile and test the design:
 
    1. Open Platform Designer from the Intel® Quartus® Prime GUI:
 
-      ![](README.md.assets/open-platform-designer-button.png)
+      ![](assets/open-platform-designer-button.png)
 
-      Create a new system by clicking the 'New Platform Designer System' button (![](README.md.assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
+      Create a new system by clicking the 'New Platform Designer System' button (![](assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
 
       Configure the `Reset Bridge` IP as shown:
 
-      ![](README.md.assets/reset-bridge.png)
+      ![](assets/reset-bridge.png)
 
    2. Add the following IP to your system:
 
@@ -209,11 +209,11 @@ Follow these steps to compile and test the design:
 
       * oneAPI > **add_fpga_ip_export_1_di**
 
-      ![](README.md.assets/add-ip-platform-designer.png)
+      ![](assets/add-ip-platform-designer.png)
 
    3. Connect the modules as shown:
 
-      ![](README.md.assets/complete-system_platform-designer.png)
+      ![](assets/complete-system_platform-designer.png)
 
       Don't forget to export the `irq_add` and `exception_add` signals. We provided a top-level RTL file (`add.sv`) that uses the generated IP. Following these naming conventions allows you to connect the oneAPI kernel to this handwritten RTL.
 
@@ -221,13 +221,13 @@ Follow these steps to compile and test the design:
 
    5. Generate the syste so we can include it in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
-      ![](README.md.assets/generate-hdl.png)
+      ![](assets/generate-hdl.png)
    
    6. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
-   ![](README.md.assets/start-analysis.png)
+   ![](assets/start-analysis.png)
 
 7. Now, we will select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG IP will handle the connection between your design and the JTAG pins on your board automatically.
 
@@ -237,11 +237,11 @@ Follow these steps to compile and test the design:
    
       *Pin planner from GHRD:*
 
-      ![](README.md.assets/pins-from-ghrd.png)
+      ![](assets/pins-from-ghrd.png)
 
       *Final pin planner configuration:*
 
-      ![](README.md.assets/pins-from-design.png)
+      ![](assets/pins-from-design.png)
 
 8. Now add the timing constraints. 
 
@@ -264,7 +264,7 @@ Follow these steps to compile and test the design:
 
 9. Compile the full design by clicking the 'Start Compilation' button in the Intel® Quartus® Prime GUI.
 
-      ![](README.md.assets/start-compilation-quartus.png)
+      ![](assets/start-compilation-quartus.png)
 
 10. Copy the generated `add.sof` file to the `system_console` directory.
 
