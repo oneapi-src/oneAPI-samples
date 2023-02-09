@@ -11,6 +11,29 @@ inc_found = util.find_spec("neural_compressor") is not None
 modin_found = util.find_spec("modin") is not None
 torchccl_found = util.find_spec("oneccl_bindings_for_pytorch") is not None
 
+class arch_checker:
+
+    def __init__(self):
+        cpuinfo_found = util.find_spec("cpuinfo") is not None
+        if cpuinfo_found == False:
+            self.arch = 'None'
+            print("please install py-cpuinfo")
+            return
+        from cpuinfo import get_cpu_info
+        info = get_cpu_info()
+        flags = info['flags']
+        arch_list = ['SPR', 'CPX',"ICX|CLX", "SKX", "BDW|CORE|ATOM"]
+        isa_list = [['amx_bf16', 'amx_int8', 'amx_tile'],['avx512_bf16'],['avx512_vnni'],['avx512'],['avx2']]
+        index = len(arch_list) - 1
+        for flag in flags:
+            for idx, isa_sublist in enumerate(isa_list):
+                for isa in isa_sublist:
+                    if isa in flag:
+                        if idx < index:
+                            index = idx
+        self.arch = arch_list[index]
+        return
+
 if tensorflow_found == True:
 
     import tensorflow as tf
@@ -85,3 +108,7 @@ if inc_found == True:
 if torchccl_found == True:
     import oneccl_bindings_for_pytorch as torchccl
     print("oneCCL Bindings version {}".format(torchccl.__version__))
+
+
+checker = arch_checker()
+print("Arch : ", checker.arch)

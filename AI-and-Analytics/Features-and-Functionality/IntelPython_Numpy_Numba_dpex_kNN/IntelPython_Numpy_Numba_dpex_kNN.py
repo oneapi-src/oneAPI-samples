@@ -217,7 +217,7 @@ def knn_numba(X_train, y_train, X_test, k):
 predictions = knn_numba(X_train.values, y_train.values, X_test.values, 3)
 true_values = y_test.to_numpy()
 accuracy = np.mean(predictions == true_values)
-print('Numba accuracy:' + accuracy)
+print('Numba accuracy:', accuracy)
 
 
 # ## Numba_dpex k-NN
@@ -335,7 +335,7 @@ with dpctl.device_context("opencl:cpu:0"):
 
 true_values = y_test.to_numpy()
 accuracy = np.mean(predictions_numba == true_values)
-print('Numba_dpex accuracy:' + accuracy)
+print('Numba_dpex accuracy:', accuracy)
 
 
 # In[ ]:
