@@ -65,6 +65,11 @@ int main() {
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
+    auto device = q.get_device();
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
     int a = 3;
     int b = 76;
 
