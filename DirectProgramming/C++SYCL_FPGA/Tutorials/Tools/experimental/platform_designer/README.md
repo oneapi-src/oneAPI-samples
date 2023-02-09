@@ -41,7 +41,7 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
 You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
@@ -79,7 +79,7 @@ This design is intended to work with the Intel® Arria® 10 SX SoC Development K
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 Follow these steps to compile and test the design:
-1. Compile the SYCL code to RTL using a Windows or Linux machine. 
+1. Compile the SYCL code to RTL using a Windows or Linux machine. This design supports emulation and simulation just like the other code samples, but since that is not the focus of this tutorial, the emulation and simulation commands have been omitted.
 
    Linux:
 
@@ -101,9 +101,9 @@ Follow these steps to compile and test the design:
    > nmake fpga_ip_export
    ```
 
-   For more details, including guidance on testing with emulation and co-simulation, see the [README](add-oneapi/README.md) in the `add-oneapi` directory.
-
 2. **From the same terminal**, launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard. 
+
+> **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
 
    Linux:
    
