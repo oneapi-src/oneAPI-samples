@@ -11,7 +11,7 @@ pip install --editable .
 cd ..
 
 # Add speechbrain to environment variable PYTHONPATH
-export PYTHONPATH=$PYTHONPATH:/Inference/speechbrain
+export PYTHONPATH=$PYTHONPATH:/Training/speechbrain
 
 # Install webdataset
 pip install webdataset==0.1.96
