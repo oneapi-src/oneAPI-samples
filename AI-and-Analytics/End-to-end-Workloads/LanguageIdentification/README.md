@@ -131,14 +131,9 @@ The `prepareAllCommonVoice.py` script performs the following data preprocessing 
 - Generates .csv files for training, validation, and testing and puts them into the **/save** folder.
 - Opens each .csv file to get the path to the **.mp3** file, and converts the file to **.wav** format.
 
-1. If you want to prepare the CommonVoice dataset directly downloaded from the website, then enter the following command:
-   ```
-   python prepareAllCommonVoice.py
-   ```
+1. If you want to add additional languages, then modify the `LANGUAGE_PATHS` list in the file to reflect the languages to be included in the model.
 
-2. Alternatively, if you want to add additional languages, then modify the `LANGUAGE_PATHS` list in the file to reflect the languages to be included in the model.
-
-3. Run the script with additional options. The samples will be divided as follows: 80% training, 10% validation, 10% testing.
+2. Run the script with options. The samples will be divided as follows: 80% training, 10% validation, 10% testing.
    ```
    python prepareAllCommonVoice.py -path /data -max_samples 2000 --createCsv --train --dev --test
    ```
@@ -261,6 +256,8 @@ Both scripts support input options; however, some options can be use on `inferen
 | `-s`                       | Specify size of sample waves, default is **100**.
 | `--vad`                    | (`inference_custom.py` only) Enable VAD model to detect active speech. The VAD option will identify speech segments in the audio file and construct a new **.wav** file containing only the speech segments. This improves the quality of speech data used as input into the language identification model.
 | `--ipex`                   | Run inference with optimizations from Intel® Extension for PyTorch*. This option will apply optimizations to the pretrained model. Using this option should result in performance improvements related to latency.
+| `--bf16`                   | Run inference with auto-mixed precision featuring Bfloat16.
+| `--int8_model`             | Run inference with the INT8 model generated from Intel® Neural Compressor
 | `--ground_truth_compare`   | (`inference_custom.py` only) Enable comparison of prediction labels to ground truth values.
 | `--verbose`                | Print additional debug information, like latency.
 
@@ -316,7 +313,7 @@ The following examples describe how to use the scripts to produce specific outco
 
 1. To improve inference latency, you can use the Neural Compressor to quantize the trained model from FP32 to INT8 by running `quantize_model.py`.
    ```
-   python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/commonVoiceData/commonVoice/dev
+   python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/dev
    ```
    Use the `-datapath` argument to specify a custom evaluation dataset. By default, the datapath is set to the `/data/commonVoice/dev` folder that was generated from the data preprocessing scripts in the `Training` folder.
 
