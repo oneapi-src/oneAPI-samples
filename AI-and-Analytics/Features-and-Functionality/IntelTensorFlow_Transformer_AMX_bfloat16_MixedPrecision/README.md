@@ -1,4 +1,4 @@
-# `TensorFlow (TF) Transformer with Intel® Advanced Matrix Extensions (Intel® AMX) bfoat16 Mixed Precision Learning` 
+# `TensorFlow (TF) Transformer with Intel® Advanced Matrix Extensions (Intel® AMX) bfloat16 Mixed Precision Learning` 
 
 This sample code demonstrates optimizing a TensorFlow model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on  4th Gen Intel® Xeon® Scalable Processors (Sapphire Rapids).
 
