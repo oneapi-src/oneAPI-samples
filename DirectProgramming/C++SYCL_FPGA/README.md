@@ -56,6 +56,7 @@ flowchart LR
 |:---                                                       |:---                                                  |:---
 | [fpga_compile](Tutorials/GettingStarted/fpga_compile)     | [Tutorials/GettingStarted](Tutorials/GettingStarted) | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> FPGA device image types and when to use them. <br> The compile options used to target FPGA
 | [fast_recompile](Tutorials/GettingStarted/fast_recompile) | [Tutorials/GettingStarted](Tutorials/GettingStarted) | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link. <br> Which method to choose for your project
+| [fpga_template](Tutorials/GettingStarted/fpga_template) | [Tutorials/GettingStarted](Tutorials/GettingStarted) | Showcases the CMake build system that is used in other code samples, and serves as a template that you can re-use in your own designs.
 
 #### Tier 2: Explore the Fundamentals
 
@@ -96,7 +97,7 @@ flowchart LR
 | [register_map_and_streaming_interfaces (experimental)](Tutorials/Features/experimental/register_map_and_streaming_interfaces) | [Tutorials/Features](Tutorials/Features)             | How to specify the kernel invocation interface and kernel argument interfaces
 
 
-#### Tier 3: Explore the Advances Techniques
+#### Tier 3: Explore the Advanced Techniques
 
 ```mermaid
 flowchart LR
