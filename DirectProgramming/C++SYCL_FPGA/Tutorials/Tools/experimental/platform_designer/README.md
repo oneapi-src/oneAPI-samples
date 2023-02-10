@@ -210,7 +210,7 @@ Follow these steps to compile and test the design:
 
    4. Save the system by clicking `File` > `Save`
 
-   5. Generate the syste so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
+   5. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
       ![](assets/generate-hdl.png)
    
