@@ -37,8 +37,7 @@ a miss.  Output is written to the console (stdout).
 
 ```
 call <path-to-oneapi-folder>\setvars.bat
-cd <path-to-oneAPI-samples>\RenderingToolkit\02_embree_gsg
-cd gpu
+cd <path-to-oneAPI-samples>\RenderingToolkit\02_embree_gsg\gpu
 mkdir build
 cd build
 cmake ..
@@ -48,15 +47,18 @@ minimal_sycl.exe
 ```
 
 2. Review the terminal output (stdout).
+```
+0.330000, 0.330000, -1.000000: Found intersection on geometry 0, primitive 0 at tfar=1.000000
+1.000000, 1.000000, -1.000000: Did not find any intersection.
 
+```
 
 ### Linux* OS
 
 1. Start a new Terminal session.
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/02_embree_gsg
-cd gpu
+cd <path-to-oneAPI-samples>/RenderingToolkit/02_embree_gsg/gpu
 mkdir build
 cd build
 cmake ..
@@ -65,7 +67,6 @@ cd bin
 ./minimal_sycl
 ```
 2. Review the terminal output (stdout).
-
 ```
 0.330000, 0.330000, -1.000000: Found intersection on geometry 0, primitive 0 at tfar=1.000000
 1.000000, 1.000000, -1.000000: Did not find any intersection.
