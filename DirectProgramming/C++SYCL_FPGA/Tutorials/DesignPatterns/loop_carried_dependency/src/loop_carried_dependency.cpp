@@ -128,16 +128,19 @@ int main(int argc, char *argv[]) {
 
   // Initialize queue with device selector and enabling profiling
   // Create queue, get platform and device
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-  cout << "\nEmulator output does not demonstrate true hardware "
-          "performance. The design may need to run on actual hardware "
-          "to observe the performance benefit of the optimization "
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+#endif
+
+#ifndef FPGA_HARDWARE
+  cout << "\nEmulator and simulator outputs do not demonstrate true "
+          "hardware performance. The design may need to run on actual "
+          "hardware to observe the performance benefit of the optimization "
           "exemplified in this tutorial.\n\n";
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
 #endif
 
   double unopt_sum = -1, opt_sum = -1;
@@ -146,6 +149,12 @@ int main(int argc, char *argv[]) {
     // Create a profiling queue
     queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // compute result on device
     PrintTime(Unoptimized(q, vec_a, vec_b, unopt_sum, n), q, "Unoptimized");

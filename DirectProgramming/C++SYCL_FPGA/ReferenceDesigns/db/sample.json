@@ -31,6 +31,17 @@
         ]
       },
       {
+        "id": "fpga_emu_q9",
+        "steps": [
+          "icpx --version",
+          "mkdir build-q9",
+          "cd build-q9",
+          "cmake .. -DQUERY=9",
+          "make fpga_emu",
+          "./db.fpga_emu --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
         "id": "fpga_emu_q11",
         "steps": [
           "icpx --version",
@@ -93,6 +104,19 @@
           "cd build-q1",
           "xcopy /E ..\\ReferenceDesigns\\db\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=1",
+          "nmake fpga_emu",
+          "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q9",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build-q9",
+          "cd build-q9",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=9",
           "nmake fpga_emu",
           "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
         ]

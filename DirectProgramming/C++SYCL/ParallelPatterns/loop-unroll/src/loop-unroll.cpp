@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>

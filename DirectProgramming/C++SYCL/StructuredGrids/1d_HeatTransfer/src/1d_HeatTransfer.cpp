@@ -33,7 +33,7 @@
 //   1d_HeatTransfer.cpp
 //
 //******************************************************************************
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <fstream>
 #include <iomanip>

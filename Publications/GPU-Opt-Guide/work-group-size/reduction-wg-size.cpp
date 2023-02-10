@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -93,9 +93,7 @@ void reduction(sycl::queue &q, std::vector<int> &data, std::vector<int> &flush,
     // reductionMapToHWVector main begin
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
 
       h.parallel_for(
@@ -135,7 +133,7 @@ void reduction(sycl::queue &q, std::vector<int> &data, std::vector<int> &flush,
 
 int main(void) {
 
-  sycl::queue q{sycl::gpu_selector{}, exception_handler};
+  sycl::queue q{sycl::gpu_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   std::vector<int> data(N, 1);

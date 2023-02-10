@@ -22,7 +22,13 @@ event Consume(queue& q, ValueT* out_ptr, IndexT total_count, IndexT offset,
     // Creating a device_ptr tells the compiler that this pointer is in
     // device memory, not host memory, and avoids creating extra connections
     // to host memory
+    // This is only done in the case where we target a BSP as device 
+    // pointers are not supported when targeting an FPGA family/part
+#if defined(IS_BSP)
     device_ptr<ValueT> out(out_ptr);
+#else
+    ValueT* out(out_ptr);
+#endif
 
     for (IndexT i = 0; i < iterations; i++) {
       // get the data from the pipe

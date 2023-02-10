@@ -22,11 +22,13 @@ template <typename KernelId, typename T, typename Pipe, int pixels_per_cycle>
 event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
   using PipeType = DataBundle<T, pixels_per_cycle>;
 
+#if defined (IS_BSP)
   // LSU attribute to  turn off caching
   using NonCachingLSU =
       ext::intel::lsu<ext::intel::burst_coalesce<true>, ext::intel::cache<0>,
                       ext::intel::statically_coalesce<true>,
                       ext::intel::prefetch<false>>;
+#endif 
 
   // validate the number of columns
   if ((cols % pixels_per_cycle) != 0) {
@@ -41,7 +43,12 @@ event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
 
   // Using device memory
   return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
+
+#if defined (IS_BSP)
     device_ptr<T> in(in_ptr);
+#else 
+    T* in(in_ptr);
+#endif  
 
     // coalesce the following two loops into a single for-loop using the
     // loop_coalesce attribute
@@ -51,7 +58,11 @@ event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
         PipeType pipe_data;
         #pragma unroll
         for (int k = 0; k < pixels_per_cycle; k++) {
+#if defined (IS_BSP)
           pipe_data[k] = NonCachingLSU::load(in + i * pixels_per_cycle + k);
+#else 
+          pipe_data[k] = in[i * pixels_per_cycle + k];
+#endif   
         }
         Pipe::write(pipe_data);
       }
@@ -77,7 +88,12 @@ event SubmitOutputDMA(queue &q, T *out_ptr, int rows, int cols, int frames) {
 
   // Using device memory
   return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
+
+#if defined (IS_BSP)
     device_ptr<T> out(out_ptr);
+#else 
+    T* out(out_ptr);
+#endif      
 
     // coalesce the following two loops into a single for-loop using the
     // loop_coalesce attribute

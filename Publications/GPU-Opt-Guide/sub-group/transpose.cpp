@@ -7,13 +7,13 @@
 #include <iostream>
 #include <vector>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 constexpr size_t N = 16;
 typedef unsigned int uint;
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << std::endl;
@@ -39,12 +39,10 @@ int main() {
 
     auto e = q.submit([&](auto &h) {
       sycl::accessor marr(m, h);
-      sycl::accessor<uint, 2, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          barr1(sycl::range<2>(blockSize, blockSize), h);
-      sycl::accessor<uint, 2, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          barr2(sycl::range<2>(blockSize, blockSize), h);
+      sycl::local_accessor<uint, 2> barr1(sycl::range<2>(blockSize, blockSize),
+                                          h);
+      sycl::local_accessor<uint, 2> barr2(sycl::range<2>(blockSize, blockSize),
+                                          h);
 
       h.parallel_for(
           sycl::nd_range<2>(sycl::range<2>(N / blockSize, N),

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -25,7 +25,7 @@ int main() {
     kernel[i] = rand();
   }
 
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << "\n";
@@ -40,9 +40,7 @@ int main() {
       sycl::accessor iacc(ibuf, h, sycl::read_only);
       sycl::accessor oacc(obuf, h);
       sycl::accessor kacc(kbuf, h, sycl::read_only);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          ciacc(sycl::range(256 + (M / 2) * 2), h);
+      sycl::local_accessor<int, 1> ciacc(sycl::range(256 + (M / 2) * 2), h);
 
       h.parallel_for(
           sycl::nd_range(sycl::range{N}, sycl::range{256}),

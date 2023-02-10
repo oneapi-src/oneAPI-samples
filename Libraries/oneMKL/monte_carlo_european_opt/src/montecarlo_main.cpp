@@ -20,10 +20,21 @@ int main(int argc, char** argv)
 {
     try {
         std::cout << "MonteCarlo European Option Pricing in " <<
-            (std::is_same_v<DataType, double> ? "Double" : "Single") << " precision" << std::endl;
+            (std::is_same_v<DataType, double> ? "Double" : "Single") <<
+            " precision using " <<
+#if USE_PHILOX
+            "PHILOX4x32x10" <<
+#elif USE_MRG
+            "MRG32k3a" <<
+#else
+            "MCG59" <<
+#endif
+            " generator." <<
+        std::endl;
+
         std::cout <<
-            "Pricing "<< num_options <<
-            " Options with Path Length = "<< path_length <<
+            "Pricing " << num_options <<
+            " Options with Path Length = " << path_length <<
             ", sycl::vec size = " << VEC_SIZE <<
             ", Options Per Work Item = " << ITEMS_PER_WORK_ITEM <<
             " and Iterations = " << num_iterations <<
@@ -57,19 +68,19 @@ int main(int argc, char** argv)
 
         namespace mkl_rng = oneapi::mkl::rng;
 
-        mkl_rng::philox4x32x10 engine(my_queue, rand_seed); // random number generator object
+        mkl_rng::mcg59 engine(my_queue, rand_seed); // random number generator object
         auto rng_event_1 = mkl_rng::generate(mkl_rng::uniform<DataType>(5.0, 50.0), engine, num_options, h_stock_price_ptr);
         auto rng_event_2 = mkl_rng::generate(mkl_rng::uniform<DataType>(10.0, 25.0), engine, num_options, h_option_strike_ptr);
         auto rng_event_3 = mkl_rng::generate(mkl_rng::uniform<DataType>(1.0, 5.0), engine, num_options, h_option_years_ptr);
 
         std::size_t n_states = global_size;
         using EngineType =
-#if USE_MCG59
-            mkl_rng::device::mcg59<VEC_SIZE>;
+#if USE_PHILOX
+            mkl_rng::device::philox4x32x10<VEC_SIZE>;
 #elif USE_MRG
             mkl_rng::device::mrg32k3a<VEC_SIZE>;
 #else
-            mkl_rng::device::philox4x32x10<VEC_SIZE>;
+            mkl_rng::device::mcg59<VEC_SIZE>;
 #endif
 
         // initialization needs only on first step
@@ -159,4 +170,5 @@ int main(int argc, char** argv)
         std::cout << e.what();
         exit(1);
     }
+    return 0;
 }
