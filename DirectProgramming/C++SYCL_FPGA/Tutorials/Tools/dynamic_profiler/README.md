@@ -12,6 +12,8 @@ This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for
 | What you will learn               | About the Intel® FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
 
+> **Note**: This sample has been tuned to show the results described on Arria 10 devices. While it compiles and runs on the other supported devices, the hardware profiling results may differ slighly from what is described below.
+
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
