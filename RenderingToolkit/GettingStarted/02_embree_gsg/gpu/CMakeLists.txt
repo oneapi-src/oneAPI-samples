@@ -1,7 +1,7 @@
-## Copyright 2009-2021 Intel Corporation
+## Copyright 2009-2023 Intel Corporation
 ## SPDX-License-Identifier: Apache-2.0
 
-project(minimal_sycl LANGUAGES CXX)
+project(EMBREE_SYCL_GSG LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.2.0)
 
 
@@ -44,6 +44,11 @@ endif()
   TARGET_LINK_LIBRARIES(minimal_sycl embree)
 set_property(TARGET minimal_sycl APPEND PROPERTY COMPILE_FLAGS ${SYCL_COMPILE_FLAGS})
 set_property(TARGET minimal_sycl APPEND PROPERTY LINK_FLAGS    ${SYCL_LINK_FLAGS})
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
+endif()
+
 install(TARGETS minimal_sycl
         RUNTIME DESTINATION bin/)
 

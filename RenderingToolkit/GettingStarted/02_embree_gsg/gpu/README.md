@@ -42,7 +42,8 @@ mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
-cd bin
+cmake --install . --config Release
+cd ..\bin
 minimal_sycl.exe
 ```
 
@@ -61,9 +62,10 @@ source <path-to-oneapi-folder>/setvars.sh
 cd <path-to-oneAPI-samples>/RenderingToolkit/02_embree_gsg/gpu
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_CXX_COMPILER=icpx ..
 cmake --build .
-cd bin
+cmake --install .
+cd ../bin
 ./minimal_sycl
 ```
 2. Review the terminal output (stdout).
