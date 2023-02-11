@@ -1,4 +1,4 @@
-# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Embree 
+# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Embree GPU
 
 Intel Embree is a library of high-performance ray tracing kernels. Improve performance of photo-realistic rendering applications with Intel Embree.
 
@@ -23,7 +23,7 @@ a miss.  Output is written to the console (stdout).
 
 ## Key Implementation Details
 
-- This source code is written to build with Intel&reg; oneAPI Data Parallel C/C++ compiler 2023.0.0 or higher.
+- This source code is written to build with Intel&reg; oneAPI Data Parallel C/C++ Compiler 2023.0.0 or higher.
 - Embree computation is offloaded to the GPU device via the SYCL* implementation.
 - The SYCL* implementation is provided with Intel DPC/C++ runtime libraries. It uses the system graphics driver.
 - Embree releases with Beta GPU functionality report a Beta message.
@@ -41,6 +41,7 @@ cd <path-to-oneAPI-samples>\RenderingToolkit\02_embree_gsg\gpu
 mkdir build
 cd build
 cmake ..
+cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2023" ..
 cmake --build . --config Release
 cmake --install . --config Release
 cd ..\bin

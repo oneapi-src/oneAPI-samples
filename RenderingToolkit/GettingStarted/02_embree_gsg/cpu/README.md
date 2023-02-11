@@ -1,4 +1,4 @@
-# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Embree
+# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Embree CPU
 
 Intel Embree is a library of high-performance ray tracing kernels. Improve performance of photo-realistic rendering applications with Intel Embree.
 
@@ -22,7 +22,7 @@ a miss.  Output is written to the console (stdout).
 
 ## Key Implementation Details
 
-This source code is constructed to build with a C++ or a C compiler.
+This source code is written to build with a C++11 or C99 compiler.
 
 ## Build and Run
 
@@ -39,7 +39,7 @@ cmake ..
 cmake --build . --config Release
 cmake --install . --config Release
 cd ..\bin
-minimal.exe
+.\minimal.exe
 ```
 
 2. Review the terminal output (stdout).
@@ -62,7 +62,7 @@ cmake ..
 cmake --build .
 cmake --install .
 cd ../bin
-../minimal
+./minimal
 ```
 2. Review the terminal output (stdout).
 

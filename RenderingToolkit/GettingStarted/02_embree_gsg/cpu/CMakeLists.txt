@@ -29,7 +29,7 @@ link_directories(${EMBREE_ROOT}/lib)
 add_executable(minimal src/minimal.cpp)
 target_link_libraries(minimal PRIVATE embree)
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
+  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" CACHE PATH "" FORCE)
 endif()
 
 install(TARGETS minimal RUNTIME DESTINATION bin/)
