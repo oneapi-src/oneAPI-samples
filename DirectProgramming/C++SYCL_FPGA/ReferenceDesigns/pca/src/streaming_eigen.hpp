@@ -69,7 +69,7 @@ template <typename T,        // The datatype for the computation
           >
 struct StreamingQRD {
   void operator()() const {
-    PRINTF("R matrix is: \n");
+    // PRINTF("R matrix is: \n");
 
     // Functional limitations
     static_assert(rows >= columns,
@@ -241,6 +241,15 @@ struct StreamingQRD {
 
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
+      }
+
+
+      PRINTF("A matrix is: \n");
+      for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+        fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+            PRINTF("%f ", a_load1[ik].template get<k>())
+          });
+        PRINTF("\n");
       }
 
       TT lamda = (a_wilk-c_wilk)/2.0;

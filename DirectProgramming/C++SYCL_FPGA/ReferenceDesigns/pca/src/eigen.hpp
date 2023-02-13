@@ -13,15 +13,19 @@
 
 #include "memory_transfers.hpp"
 #include "streaming_eigen.hpp"
+#include "CovMatrix.hpp"
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class QRDDDRToLocalMem;
+class COV;
 class QRD;
 class QRDLocalMemToDDRQ;
 class QRDLocalMemToDDRR;
+class CPipe;
 class APipe;
+class CMatrixPipe;
 class RQPipe;
 class QQPipe;
 
@@ -47,7 +51,7 @@ void QRDecompositionImpl(
   int repetitions           // Number of repetitions, for performance evaluation
 ) {
 
-  constexpr int kAMatrixSize = columns * rows;
+  constexpr int kAMatrixSize = SAMPE_SIZE * rows;
   constexpr int kQMatrixSize = columns * rows;
   constexpr int kRMatrixSize = columns * rows;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
@@ -56,6 +60,7 @@ void QRDecompositionImpl(
 
   // Pipes to communicate the A, Q and R matrices between kernels
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
+  using CMatrixPipe = sycl::ext::intel::pipe<CPipe, PipeType, 3>;
   using RQMatrixPipe = sycl::ext::intel::pipe<RQPipe, PipeType, 3>;
   using QQMatrixPipe = sycl::ext::intel::pipe<QQPipe, PipeType, 3>;
 
@@ -71,18 +76,24 @@ void QRDecompositionImpl(
   auto ddr_write_event =
   q.submit([&](sycl::handler &h) {
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
-      MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
+      MatrixReadFromDDRToPipe<TT, SAMPE_SIZE, rows, kNumElementsPerDDRBurst,
                             AMatrixPipe>(a_device, matrix_count, repetitions);
     });
   });
 
+
+  q.single_task<COV>(
+    fpga_linalg::StreamingMM<T, is_complex, rows, SAMPE_SIZE, kNumElementsPerDDRBurst,
+            kNumElementsPerDDRBurst, AMatrixPipe, CMatrixPipe>());
+
+
   // Read the A matrix from the AMatrixPipe pipe and compute the QR
   // decomposition. Write the Q and R output matrices to the QMatrixPipe
   // and RMatrixPipe pipes.
+
   q.single_task<QRD>(
     fpga_linalg::StreamingQRD<T, is_complex, rows, columns, raw_latency,
-                kNumElementsPerDDRBurst,
-                AMatrixPipe, RQMatrixPipe, QQMatrixPipe>());
+                kNumElementsPerDDRBurst, CMatrixPipe, RQMatrixPipe, QQMatrixPipe>());
 
 
   auto q_event = q.single_task<QRDLocalMemToDDRQ>([=

@@ -23,10 +23,12 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
+#define SAMPE_SIZE 100
 
-#define DEBUGEN 0
+#define DEBUGEN 1
 #define DEBUGMINDEX 13
 #define DEBUG 0
+
 
 #include "exception_handler.hpp"
 
@@ -114,8 +116,10 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 100;
+  constexpr size_t kSampleSize = SAMPE_SIZE;
   constexpr size_t kRows = ROWS_COMPONENT;
   constexpr size_t kColumns = COLS_COMPONENT;
+  constexpr size_t kDAMatrixSize = kRows * SAMPE_SIZE;
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kRQMatrixSize = kRows * kColumns;
   constexpr size_t kQQMatrixSize = kRows * kColumns;
@@ -138,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1000;
+  constexpr size_t kMatricesToDecompose = 1;
 
   try {
     // SYCL boilerplate
@@ -173,7 +177,7 @@ int main(int argc, char *argv[]) {
     std::vector<T> rq_matrix;
     std::vector<T> qq_matrix;
 
-    a_matrix.resize(kAMatrixSize * kMatricesToDecompose);
+    a_matrix.resize(kDAMatrixSize * kMatricesToDecompose);
     rq_matrix.resize(kRQMatrixSize * kMatricesToDecompose);
     qq_matrix.resize(kQQMatrixSize * kMatricesToDecompose);
 
@@ -190,7 +194,7 @@ int main(int argc, char *argv[]) {
     // Generate the random symmetric square matrices
     srand(kRandomSeed);
 
-    PCA<float> pca(kRows*20, kRows, kMatricesToDecompose, 0);
+    PCA<float> pca(SAMPE_SIZE, kRows, kMatricesToDecompose, 1);
     pca.populate_A();
     pca.normalizeSamples();
     pca.calculate_covariance();
@@ -199,9 +203,9 @@ int main(int argc, char *argv[]) {
     // copying the covariance matrix 
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       for(int i = 0; i < kRows; i++){
-        for(int j = 0; j < kRows; j++){
-          a_matrix[matrix_index * kAMatrixSize + j * kRows + i] = 
-                        pca.matC[matrix_index * kAMatrixSize + i * kRows + j];
+        for(int j = 0; j < SAMPE_SIZE; j++){
+          a_matrix[matrix_index * kDAMatrixSize + i * SAMPE_SIZE + j] = 
+                        pca.matUA[matrix_index * kDAMatrixSize + j * kRows + i];
         }
       }
 
@@ -211,10 +215,10 @@ int main(int argc, char *argv[]) {
   if(DEBUGEN){
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       std::cout << "A MATRIX " << matrix_index << std::endl;
-      for (size_t row = 0; row < kRows; row++) {
-        for (size_t col = 0; col < kColumns; col++) {
-          std::cout << a_matrix[matrix_index * kAMatrixSize
-                              + col * kRows + row] << " ";
+      for (size_t i = 0; i < kRows; i++) {
+        for (size_t j = 0; j < SAMPE_SIZE; j++) {
+          std::cout << a_matrix[matrix_index * kDAMatrixSize
+                              + i * SAMPE_SIZE + j] << " ";
         }  // end of col
         std::cout << std::endl;
       }  // end of row
@@ -270,7 +274,7 @@ int main(int argc, char *argv[]) {
       // column major to row major conversion 
       for(int i = 0; i < kRows; i++){
         for(int j = 0; j < kRows; j++){
-          a_matrix_cpu[matrix_offset+ i*kRows+j] = a_matrix[matrix_offset+ j*kRows+i];
+          a_matrix_cpu[matrix_offset+ i*kRows+j] = pca.matC[matrix_offset+ i*kRows+j];
         }
       }
 

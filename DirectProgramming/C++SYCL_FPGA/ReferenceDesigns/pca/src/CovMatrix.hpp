@@ -1,13 +1,15 @@
-#ifndef __STREAMING_EIGEN_HPP__
-#define __STREAMING_EIGEN_HPP__
+#ifndef __STREAMING_CovMM_HPP__
+#define __STREAMING_CovMM_HPP__
+
+namespace fpga_linalg {
 
 template <typename T,        // The datatype for the computation
           bool is_complex,   // True if T is ac_complex<X>
-          int rows,          // Number of rows in the A matrices
-          int columns,       // Number of columns in the A matrices
+          unsigned rows,          // Number of rows in the A matrices
+          unsigned columns,       // Number of columns in the A matrices
 
-          int blockSize,	 // number of parallel mult and add 
-          int pipe_size,     // Number of elements read/write per pipe
+          unsigned blockSize,	 // number of parallel mult and add 
+          unsigned pipe_size,     // Number of elements read/write per pipe
                              // operation
           typename AIn,      // A matrix input pipe, receive pipe_size
                              // elements from the pipe with each read
@@ -42,11 +44,13 @@ struct StreamingMM{
   	constexpr int kRowpipeBlk = (columns + pipe_size-1)/pipe_size ;
 
 
-  	constexpr int kIBitSizeRows = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
-  	constexpr int kIBitSizeColumnBlks = fpga_tools::BitsForMaxValue<kRowBlocks + 1>() + 1;
+  	constexpr int kRamSize = kRowBlocks * rows;
+  	constexpr int kLoopIter = kRowpipeBlk * rows;
 
-  	constexpr int kRamSize = kRowBlocks x rows;
-  	constexpr int kLoopIter = kRowpipeBlk x rows;
+  	constexpr int kIBitSizeRows = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
+  	constexpr int kIBitSizeColumns = fpga_tools::BitsForMaxValue<columns + 1>() + 1;
+  	constexpr int kIBitSizeColumnBlks = fpga_tools::BitsForMaxValue<kRowBlocks + 1>() + 1;
+  	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>() + 1;
 
   	constexpr int kBlkFold  = blockSize/pipe_size;
 
@@ -61,22 +65,26 @@ struct StreamingMM{
   		// storing in a internal matrix 
 	  	[[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
 		for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-		    fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
+		    pipe_tuple pipe_read = AIn::read();
 		    int MatrixA_addr = li / kBlkFold;
 		    int wordId = li % kBlkFold;
 
 		    fpga_tools::UnrolledLoop<kBlkFold>([&](auto k) {
 		      fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-		      	blkRow.template get<k*pipe_size+t> = pipe_read.template get<t>(); 
+		      	if(wordId == k){
+		      		blkRow.template get<k*pipe_size+t>() = pipe_read.template get<t>(); 
+		      		PRINTF("%f ", pipe_read.template get<t>());
+		      	}
 		      });
 		    });
+		    PRINTF("\n");
 		    MatrixA[MatrixA_addr] = blkRow;
 		}
 
 		// computing the eigen vectors
-		for (ac_int<kIBitSizeColumns, false> li = 0; li < columns; li++) {
-			pipe_tuple pipe_write;
-			for (ac_int<kIBitSizeColumns, false> lj = 0; lj < columns; lj++) {
+		pipe_tuple pipe_write;
+		for (ac_int<kIBitSizeColumns, false> li = 0; li < rows; li++) {
+			for (ac_int<kIBitSizeColumns, false> lj = 0; lj < rows; lj++) {
 				T sum = 0;
 				// need get dot product of li row and lj row
 				for (ac_int<kIBitSizeColumnBlks, false> lk = 0; lk < kRowBlocks; lk++) {
@@ -84,17 +92,21 @@ struct StreamingMM{
 					int add2 = lj*kRowBlocks + lk;
 
 					fpga_tools::UnrolledLoop<blockSize>([&](auto t) {
-						sum += MatrixA[add1].template get<t> * MatrixA[add2].template get<t>
+						if(lk*blockSize+t < columns){
+							sum += MatrixA[add1].template get<t>() * MatrixA[add2].template get<t>();
+						}
 
 					});
 				}
-				fpga_tools::UnrolledLoop<kBlkFold>([&](auto t) {
+
+				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
 					if(t == lj % pipe_size){
-						pipe_write.template get<t> = sum;
+						pipe_write.template get<t>() = (1.0f/(columns-1)) * sum;
 					}
 				});
-
-				if(lj % pipe_size = pipe_size -1 || lj == columns-1){
+				
+				// sending column by column
+				if(lj % pipe_size == pipe_size -1 || lj == rows-1){
 					AOut::write(pipe_write);
 				}
 
@@ -104,5 +116,10 @@ struct StreamingMM{
 
   	}
 
- }
+ 	};
+};
+
+}
+
+
 #endif 
