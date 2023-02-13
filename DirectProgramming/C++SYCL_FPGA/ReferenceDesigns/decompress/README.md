@@ -195,7 +195,7 @@ Snappy is compression format that aims for high throughput compression and decom
 
 Unlike many compression encodings, like DEFLATE, Snappy encoding is byte oriented. The Snappy format does not use entropy encoding, such as Huffman or range encoding.
 
-Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository.
+Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository. The files being decompressed in this tutorial have been compressed using [python-snappy](https://github.com/andrix/python-snappy) which is a python library for the snappy compression library from Google.
 
 The basic Snappy format is a *preamble* followed by the *compressed data stream*.
 
