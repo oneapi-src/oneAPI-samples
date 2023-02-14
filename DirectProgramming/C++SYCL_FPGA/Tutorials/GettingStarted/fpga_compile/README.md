@@ -101,7 +101,7 @@ For this compilation type, your SYCL device code is optimized and converted into
 
 The optimization report contains significant information about how the compiler has transformed your device code into an FPGA design. The report includes visualizations of structures generated on the FPGA, performance and expected performance bottleneck information, and estimated resource utilization. Optimization reports are generated for the "optimization report", "simulator" and "hardware" compilation types. 
 
-The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide][1] contains a chapter about how to analyze the reports generated after the FPGA early image and FPGA image.
+The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter about how to analyze the reports generated after the FPGA early image and FPGA image.
 
 #### FPGA Simulator
 The FPGA simulator allows you to simulate the exact behavior of the synthesized kernel. Like emulation, you can run simulation on a system that does not have a target FPGA board installed. The simulator models a kernel much more accurately than the emulator, but it is much slower than the emulator.
@@ -180,7 +180,7 @@ Through `-Xstarget`, you can target an explicit board, a device family or a FPGA
 
 `-DFPGA_EMULATOR`, `-DFPGA_SIMULATOR`, `-DFPGA_HARDWARE` are options that adds a preprocessor define that invokes the emulator/simulator/FPGA device selector in this sample (see code snippet above).
 
-The [Intel® oneAPI Programming Guide][2] contains a chapter explains the compiler options used here.
+The [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/programming-interface/fpga-flow/fpga-compilation-flags.html) contains a chapter explains the compiler options used here.
 
 ### Source Code
 
@@ -219,7 +219,7 @@ Part 5 demonstrates the vector addition in SYCL* C++  with a 'functor' coding st
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*][3] or [Use the setvars Script with Windows*][4].
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Run CMake to generate the Makefiles
 
@@ -346,8 +346,3 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
-
-[1]: <https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html>
-[2]: <https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/programming-interface/fpga-flow/fpga-compilation-flags.html>
-[3]: <https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html>
-[4]: <https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html>
