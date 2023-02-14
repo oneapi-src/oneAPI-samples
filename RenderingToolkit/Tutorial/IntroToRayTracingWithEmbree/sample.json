@@ -16,7 +16,7 @@
 		    "cd cpu",
 		    "mkdir build",
 		    "cd build",
-		    "cmake ..",
+		    "cmake -DCMAKE_BUILD_TYPE=Release ..",
 		    "cmake --build .",
 		    "./rkRayTracer",
 		    "cd ../..",
@@ -67,8 +67,10 @@
 			"cd cpu",
                     "mkdir build",
                     "cd build",
-                    "cmake ..",
+                    "cmake -DCMAKE_BUILD_TYPE=Release ..",
                     "cmake --build .",
+		    "cmake --install .",
+		    "cd ../bin",
                     "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./rkRayTracer"
                  ]
                  }
