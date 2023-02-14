@@ -49,6 +49,7 @@ struct StreamingMM{
 
   	constexpr int kIBitSizeRows = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
   	constexpr int kIBitSizeColumns = fpga_tools::BitsForMaxValue<columns + 1>() + 1;
+  	constexpr int kIBitSizeColumnspipes = fpga_tools::BitsForMaxValue<kRowpipeBlk + 1>() + 1;
   	constexpr int kIBitSizeColumnBlks = fpga_tools::BitsForMaxValue<kRowBlocks + 1>() + 1;
   	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>() + 1;
 
@@ -59,26 +60,60 @@ struct StreamingMM{
 
     // NO-FORMAT: Attribute
   	block_tuple MatrixA[kRamSize];
-  	block_tuple blkRow;
+  	block_tuple blkRow[kRowBlocks];
+  	block_tuple blk_W, blk_R;
   	while(1){
 
   		// storing in a internal matrix 
-	  	[[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-		for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-		    pipe_tuple pipe_read = AIn::read();
-		    int MatrixA_addr = li / kBlkFold;
-		    int wordId = li % kBlkFold;
+  		T sum, mu, mu_old; 
+  		pipe_tuple pipe_read;
 
-		    fpga_tools::UnrolledLoop<kBlkFold>([&](auto k) {
-		      fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-		      	if(wordId == k){
-		      		blkRow.template get<k*pipe_size+t>() = pipe_read.template get<t>(); 
-		      		PRINTF("%f ", pipe_read.template get<t>());
-		      	}
-		      });
-		    });
-		    PRINTF("\n");
-		    MatrixA[MatrixA_addr] = blkRow;
+  		PRINTF("MU values \n");
+	  	[[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+	  	for (ac_int<kIBitSizeRows, false> li = 0; li < rows+1; li++) {
+			for (ac_int<kIBitSizeColumnspipes, false> lj = 0; lj < kRowpipeBlk; lj++) {
+				if(lj == 0){
+					sum  = 0;
+				}
+				if(li < rows){
+		    	pipe_read = AIn::read();
+		    	}
+		    	int li_1 = (li-1);
+		    	int MatrixA_addr = li_1*kRowBlocks + lj/kBlkFold;
+		    	int wordId = lj % kBlkFold;
+
+		    	fpga_tools::UnrolledLoop<kBlkFold>([&](auto k) {
+		      		fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+		      			if(wordId == k && lj*pipe_size+t < columns){
+		      				blk_W.template get<k*pipe_size+t>() = pipe_read.template get<t>(); 
+		      				sum +=  pipe_read.template get<t>(); 
+		      				// PRINTF("%f ", pipe_read.template get<t>());
+		      			}
+		      		});
+		    	});
+
+		    	if(lj == kRowpipeBlk -1){
+		    		mu = sum * 1.0f/(columns);
+		    		PRINTF("%f ", mu);
+
+		    	}
+
+		    	blk_R = blkRow[lj/kBlkFold];
+
+		    	fpga_tools::UnrolledLoop<blockSize>([&](auto k) {
+		    		blk_R.template get<k>() -= mu_old;
+		    	});
+
+		    	// PRINTF("\n");
+		    	if(li > 0){
+		    		MatrixA[MatrixA_addr] = blk_R;
+		    	}
+		    	blkRow[lj/kBlkFold] = blk_W;
+
+		    	if(lj == kRowpipeBlk -1){
+		    		mu_old = mu;
+		    	}
+			}
 		}
 
 		// computing the eigen vectors

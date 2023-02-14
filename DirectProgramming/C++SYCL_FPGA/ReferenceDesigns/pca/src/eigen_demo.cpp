@@ -23,9 +23,9 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 100
+#define SAMPE_SIZE 20
 
-#define DEBUGEN 1
+#define DEBUGEN 0
 #define DEBUGMINDEX 13
 #define DEBUG 0
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[]) {
       for(int i = 0; i < kRows; i++){
         for(int j = 0; j < SAMPE_SIZE; j++){
           a_matrix[matrix_index * kDAMatrixSize + i * SAMPE_SIZE + j] = 
-                        pca.matUA[matrix_index * kDAMatrixSize + j * kRows + i];
+                        pca.matA[matrix_index * kDAMatrixSize + j * kRows + i];
         }
       }
 

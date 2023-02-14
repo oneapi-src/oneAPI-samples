@@ -244,13 +244,13 @@ struct StreamingQRD {
       }
 
 
-      PRINTF("A matrix is: \n");
-      for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-        fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-            PRINTF("%f ", a_load1[ik].template get<k>())
-          });
-        PRINTF("\n");
-      }
+      // PRINTF("A matrix is: \n");
+      // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+      //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+      //       PRINTF("%f ", a_load1[ik].template get<k>())
+      //     });
+      //   PRINTF("\n");
+      // }
 
       TT lamda = (a_wilk-c_wilk)/2.0;
       TT sign_lamda = (lamda > 0) - (lamda < 0);
