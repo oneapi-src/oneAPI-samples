@@ -58,17 +58,21 @@ struct StreamingMM{
   	constexpr int kColpipeBlk = (rows + pipe_size-1)/pipe_size;
   	constexpr int kOutMatrixSize = kColpipeBlk*columns;
 
-    // NO-FORMAT: Attribute
-  	block_tuple MatrixA[kRamSize];
-  	block_tuple blkRow[kRowBlocks];
-  	block_tuple blk_W, blk_R;
+
   	while(1){
 
   		// storing in a internal matrix 
+
+  		// NO-FORMAT: Attribute
+		block_tuple MatrixA[kRamSize];
+		block_tuple blkRow[kRowBlocks];
+		block_tuple blk_W, blk_R;
+
+
   		T sum, mu, mu_old; 
   		pipe_tuple pipe_read;
 
-  		PRINTF("MU values \n");
+  		// PRINTF("Normalised matrix is: \n");
 	  	[[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
 	  	for (ac_int<kIBitSizeRows, false> li = 0; li < rows+1; li++) {
 			for (ac_int<kIBitSizeColumnspipes, false> lj = 0; lj < kRowpipeBlk; lj++) {
@@ -76,7 +80,7 @@ struct StreamingMM{
 					sum  = 0;
 				}
 				if(li < rows){
-		    	pipe_read = AIn::read();
+		    		pipe_read = AIn::read();
 		    	}
 		    	int li_1 = (li-1);
 		    	int MatrixA_addr = li_1*kRowBlocks + lj/kBlkFold;
@@ -94,7 +98,7 @@ struct StreamingMM{
 
 		    	if(lj == kRowpipeBlk -1){
 		    		mu = sum * 1.0f/(columns);
-		    		PRINTF("%f ", mu);
+		    		// PRINTF("%f ", mu);
 
 		    	}
 
@@ -102,6 +106,7 @@ struct StreamingMM{
 
 		    	fpga_tools::UnrolledLoop<blockSize>([&](auto k) {
 		    		blk_R.template get<k>() -= mu_old;
+		    		// if(li > 0) PRINTF("%f ", blk_R.template get<k>());
 		    	});
 
 		    	// PRINTF("\n");
@@ -114,13 +119,16 @@ struct StreamingMM{
 		    		mu_old = mu;
 		    	}
 			}
+			// PRINTF("\n");
 		}
+		// PRINTF("\n");
 
 		// computing the eigen vectors
+		// PRINTF("Covariance Matrix is: \n");
 		pipe_tuple pipe_write;
-		for (ac_int<kIBitSizeColumns, false> li = 0; li < rows; li++) {
-			for (ac_int<kIBitSizeColumns, false> lj = 0; lj < rows; lj++) {
-				T sum = 0;
+		for (ac_int<kIBitSizeRows, false> li = 0; li < rows; li++) {
+			for (ac_int<kIBitSizeRows, false> lj = 0; lj < rows; lj++) {
+				T Dot = 0;
 				// need get dot product of li row and lj row
 				for (ac_int<kIBitSizeColumnBlks, false> lk = 0; lk < kRowBlocks; lk++) {
 					int add1 = li*kRowBlocks + lk;
@@ -128,15 +136,16 @@ struct StreamingMM{
 
 					fpga_tools::UnrolledLoop<blockSize>([&](auto t) {
 						if(lk*blockSize+t < columns){
-							sum += MatrixA[add1].template get<t>() * MatrixA[add2].template get<t>();
+							Dot += MatrixA[add1].template get<t>() * MatrixA[add2].template get<t>();
 						}
 
 					});
 				}
+				// PRINTF("%f ", (1.0f/(columns-1)) * Dot);
 
 				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
 					if(t == lj % pipe_size){
-						pipe_write.template get<t>() = (1.0f/(columns-1)) * sum;
+						pipe_write.template get<t>() = (1.0f/(columns-1)) * Dot;
 					}
 				});
 				
@@ -146,7 +155,9 @@ struct StreamingMM{
 				}
 
 			}
+			// PRINTF("\n");
 		}
+		// PRINTF("\n");
 
 
   	}

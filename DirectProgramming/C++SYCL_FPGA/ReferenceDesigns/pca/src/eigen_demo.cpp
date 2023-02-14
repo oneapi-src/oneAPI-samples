@@ -23,7 +23,7 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 20
+#define SAMPE_SIZE 10
 
 #define DEBUGEN 0
 #define DEBUGMINDEX 13
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1;
+  constexpr size_t kMatricesToDecompose = 1000;
 
   try {
     // SYCL boilerplate
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
     // Generate the random symmetric square matrices
     srand(kRandomSeed);
 
-    PCA<float> pca(SAMPE_SIZE, kRows, kMatricesToDecompose, 1);
+    PCA<float> pca(SAMPE_SIZE, kRows, kMatricesToDecompose, 0);
     pca.populate_A();
     pca.normalizeSamples();
     pca.calculate_covariance();

@@ -156,7 +156,7 @@ template<typename T> void PCA<T>::populate_A(){
                     // int noise =  (rand() % (kNoiseMax - kNoiseMin) + kNoiseMin);
                     this->matA[offset+ i*p+j] +=  noise[k] * Q[j*this->p+k];
                 }
-                if(this->debug) std::cout << this->matA[i*p+j] << " ";
+                if(this->debug) std::cout << this->matA[offset+i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";
         }
@@ -246,15 +246,16 @@ template<typename T> void PCA<T>::calculate_covariance(){
     if(this->debug) std::cout << "\nCovariance matrix is: \n";
 
     for(int m_id  =0; m_id < this->matrixCount; m_id++){
-        int offset = m_id * this->p * this->p;
+        int offsetUA = m_id * this->n * this->p;
+        int offsetC = m_id * this->p * this->p;
         for(int i = 0; i < p; i++){
             for(int j = 0; j < p; j++ ){
-                this->matC[offset + i*p+j] = 0;
+                this->matC[offsetC + i*p+j] = 0;
                 for(int k = 0; k < this->n; k++){
-                    this->matC[offset + i*p+j] += this->matUA[offset + k*p+i]*this->matUA[offset + k*p+j];
+                    this->matC[offsetC + i*p+j] += this->matUA[offsetUA + k*p+i]*this->matUA[offsetUA + k*p+j];
                 }
-                this->matC[offset + i*p+j] = (1.0/(this->n-1))*this->matC[offset + i*p+j];
-                if(this->debug) std::cout << this->matC[offset + i*p+j] << " ";
+                this->matC[offsetC + i*p+j] = (1.0/(this->n-1))*this->matC[offsetC + i*p+j];
+                if(this->debug) std::cout << this->matC[offsetC + i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";
         }
