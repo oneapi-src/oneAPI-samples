@@ -6,7 +6,7 @@
 #endif
 #endif
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 #include <rkcommon/math/vec.h>
 #include <rkcommon/memory/malloc.h>
 #include <tbb/parallel_for.h>
@@ -322,8 +322,13 @@ void renderPixelStandard(int x, int y, unsigned char* pixels,
                          const unsigned int width, const unsigned int height,
                          const unsigned int channels, const float time,
                          const ISPCCamera& camera) {
-  RTCIntersectContext context;
-  rtcInitIntersectContext(&context);
+
+  /* RTCIntersectArguments is new for Embree 4 */
+  RTCIntersectArguments iargs;
+  rtcInitIntersectArguments(&iargs);
+  iargs.feature_mask = RTC_FEATURE_FLAG_TRIANGLE;
+  iargs.flags = RTC_RAY_QUERY_FLAG_COHERENT;
+
   const Vec3fa dir = rkcommon::math::normalize(x * camera.l.vx +
                                                y * camera.l.vy + camera.l.vz);
   const Vec3fa org = Vec3fa(camera.p.x, camera.p.y, camera.p.z);
@@ -344,7 +349,7 @@ void renderPixelStandard(int x, int y, unsigned char* pixels,
   rhPrimary.ray.mask = -1;
 
   /* intersect ray with scene */
-  rtcIntersect1(g_scene, &context, &rhPrimary);
+  rtcIntersect1(g_scene, &rhPrimary, &iargs);
 
   /* shade pixels */
   Vec3fa color = Vec3fa(0.0f);
@@ -373,8 +378,14 @@ void renderPixelStandard(int x, int y, unsigned char* pixels,
     rShadow.tfar = std::numeric_limits<float>::infinity();
     rShadow.mask = -1;
 
+    /* New for Embree 4 */
+    RTCOccludedArguments oargs;
+    rtcInitOccludedArguments(&oargs);
+    oargs.flags = RTC_RAY_QUERY_FLAG_INCOHERENT;
+    oargs.feature_mask = RTC_FEATURE_FLAG_TRIANGLE;
+
     /* trace shadow ray */
-    rtcOccluded1(g_scene, &context, &rShadow);
+    rtcOccluded1(g_scene, &rShadow, &oargs);
 
     /* add light contribution */
     if (rShadow.tfar >= 0.0f) {
