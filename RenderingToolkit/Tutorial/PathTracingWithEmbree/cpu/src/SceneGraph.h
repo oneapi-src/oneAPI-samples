@@ -39,9 +39,9 @@ struct SceneGraph {
   float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
                                     float tnear, float tfar, float _time);
 
-  void set_intersect_context_coherent();
+  void set_intersect_query_flag_coherent(bool b_coherent);
 
-  void set_intersect_context_incoherent();
+  void set_occluded_query_flag_coherent(bool b_coherent);
 
   Vec3fa get_camera_origin();
 
@@ -66,7 +66,10 @@ struct SceneGraph {
   SceneSelector m_sceneSelector;
   rkcommon::math::AffineSpace3fa m_camera;
 
-  RTCIntersectContext m_context;
+  /* New Intersect and Occluded arguments from Embree 4 */
+  RTCIntersectArguments m_iargs;
+  RTCOccludedArguments m_oargs;
+
   std::map<unsigned int, size_t> m_mapGeomToLightIdx;
   void scene_cleanup();
 
@@ -139,16 +142,18 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
   rtcCommitScene(m_scene);
 }
 
-void SceneGraph::init_embree_context() { rtcInitIntersectContext(&m_context); }
-
-void SceneGraph::set_intersect_context_coherent() {
-  m_context.flags =
-      RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT;
+void SceneGraph::init_embree_context() { 
+  
+  rtcInitIntersectArguments(&m_iargs);
+  rtcInitOccludedArguments(&m_oargs);
 }
 
-void SceneGraph::set_intersect_context_incoherent() {
-  m_context.flags =
-      RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
+void SceneGraph::set_intersect_query_flag_coherent(bool b_coherent) {
+  m_iargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT : RTCRayQueryFlags::RTC_INTERSECT_CONTECT_FLAG_INCOHERENT;
+}
+
+void SceneGraph::set_query_flag_incoherent(bool b_coherent) {
+  m_oargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT : RTCRayQueryFlags::RTC_INTERSECT_CONTECT_FLAG_INCOHERENT;
 }
 
 bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
@@ -156,7 +161,7 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
                                           DifferentialGeometry& dg) {
   /* intersect ray with scene */
 
-  rtcIntersect1(m_scene, &m_context, &rayhit);
+  rtcIntersect1(m_scene, &rayhit, &m_iargs);
 
   /* if nothing hit the path is terminated, this could be an light lookup
    * insteead */
@@ -205,7 +210,7 @@ void SceneGraph::cast_shadow_rays(
 
     RTCRayHit shadow;
     init_RayHit(shadow, dg.P, ls.dir, dg.eps, ls.dist, time);
-    rtcOccluded1(m_scene, &m_context, &shadow.ray);
+    rtcOccluded1(m_scene, &shadow.ray, &m_oargs);
     if (shadow.ray.tfar >= 0.0f) {
       L = L + Lw * ls.weight *
                   Material_eval(albedo, materialType, Lw, wo, dg, ls.dir,
@@ -218,7 +223,7 @@ float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
                                   float tnear, float tfar, float _time) {
   RTCRayHit shadow;
   init_RayHit(shadow, org, dir, tnear, tfar, _time);
-  rtcOccluded1(m_scene, &m_context, &shadow.ray);
+  rtcOccluded1(m_scene, &shadow.ray, &m_oargs);
   return shadow.ray.tfar;
 }
 

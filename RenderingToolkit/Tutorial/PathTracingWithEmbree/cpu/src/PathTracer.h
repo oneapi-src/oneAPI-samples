@@ -69,7 +69,9 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
 
   DifferentialGeometry dg;
 
-  sg->set_intersect_context_coherent();
+  sg->set_intersect_query_flag_coherent(true);
+  /* Per Embree 4.0.0 API the Occluded ray query flag is set to RTC_RAY_QUERY_INCOHERENT upon init. Setting incoherent rays is here to be explicit and redundant */
+  sg->set_occluded_query_flag_coherent(false);
   /* iterative path tracer loop */
   for (int i = 0; i < m_max_path_length; i++) {
     /* terminate if contribution too low */
@@ -114,9 +116,14 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     Vec3fa wi1;
     Vec2f randomMatSample(randomSampler.get_float(), randomSampler.get_float());
 
-    /* Search for each light in the scene from our hit point. Aggregate the
+    
+    /* Occlusion and Intersect test arguments have changed with Embree 4. Occlusion query flags are set before the loop for RTC_RAY_QUERY_INCOHERENT 
+     * In this example program, Intersect query flags will be set to RTC_RAY_QUERY_INCOHERENT at the end of the loop for all non-primary rays. Previously, in Embree4 one coherency flag was set here for both Occlusion and Intersection tests.
+     */
+
+    /* For the occlusion test, search for each light in the scene from the hit point. Aggregate the
      * radiance if hit point is not occluded */
-    sg->set_intersect_context_incoherent();
+
 
     if (Material_direct_illumination(materialType)) {
       /* Cast shadow ray(s) from the hit point */
@@ -141,6 +148,9 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     org = dg.P;
     dir = normalize(wi1);
     init_RayHit(rayhit, org, dir, dg.eps, inf, m_time);
+
+    /* In Embree 4 Ray Query Flags have changed... After the primary Intesection rays the RTCIntersectArguments ray query flags is set to RTC_RAY_QUER_FLAG_INCOHERENT for all subsequent rays */
+    sg->set_intersect_query_flag_coherent(false);
   }
 
   return L;
