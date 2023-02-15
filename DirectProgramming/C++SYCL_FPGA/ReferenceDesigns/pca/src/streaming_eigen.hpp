@@ -60,7 +60,7 @@ template <typename T,        // The datatype for the computation
                              // operation
           typename AIn,      // A matrix input pipe, receive pipe_size
                              // elements from the pipe with each read
-          typename RQOut,     // Q matrix output pipe, send pipe_size
+          typename EigOut,     // Q matrix output pipe, send pipe_size
                              // elements to the pipe with each write
           typename QQOut      // R matrix output pipe, send pipe_size
                              // elements to the pipe with each write.
@@ -697,6 +697,8 @@ struct StreamingQRD {
       }
 
 
+      PRINTF("Starting to send the eigen values\n");
+      fpga_tools::NTuple<TT, pipe_size> pipe_writeEigen;
       [[intel::loop_coalesce(2)]]
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
         for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
@@ -714,8 +716,20 @@ struct StreamingQRD {
               Nsorted[index] = 0;
               indexArray[i_ll] = index;
             }
+
+            fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+              if(j_ll == rows -1 && k == i_ll % pipe_size){
+                pipe_writeEigen.template get<k>() = max;
+              }
+            });
+
+            if(j_ll == rows -1 && (i_ll % pipe_size == pipe_size -1 || i_ll == rows-1)){
+              EigOut::write(pipe_writeEigen);
+            }
         }
       }
+
+      PRINTF("Completed sending the eigen values\n");
 
       //-------------------------------------------------------------------------
       //END Eigen value sort
@@ -756,32 +770,32 @@ struct StreamingQRD {
       }
       
 
-      // Wrriting out the computer RQ to streaming interface
-      // RQ is stored back in a_load matrix
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        int column_iter = li % kLoopIterPerColumn;
-        bool get[kLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          get[k] = column_iter == k;
-          column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
+      // // Wrriting out the computer RQ to streaming interface
+      // // RQ is stored back in a_load matrix
+      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      // for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+      //   int column_iter = li % kLoopIterPerColumn;
+      //   bool get[kLoopIterPerColumn];
+      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+      //     get[k] = column_iter == k;
+      //     column_iter = sycl::ext::intel::fpga_reg(column_iter);
+      //   });
 
-        fpga_tools::NTuple<TT, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-            if constexpr (t * pipe_size + k < rows) {
-              pipe_write.template get<k>() =
-                  get[t] ? rq_matrix[li / kLoopIterPerColumn]
-                               .template get<t * pipe_size + k>()
-                         : sycl::ext::intel::fpga_reg(
-                               pipe_write.template get<k>());
-            }
-          });
-        });
-        // if(li == 0){pipe_write.template get<0> () = converge_itr;}
-        RQOut::write(pipe_write);
-      }
+      //   fpga_tools::NTuple<TT, pipe_size> pipe_write;
+      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+      //     fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+      //       if constexpr (t * pipe_size + k < rows) {
+      //         pipe_write.template get<k>() =
+      //             get[t] ? rq_matrix[li / kLoopIterPerColumn]
+      //                          .template get<t * pipe_size + k>()
+      //                    : sycl::ext::intel::fpga_reg(
+      //                          pipe_write.template get<k>());
+      //       }
+      //     });
+      //   });
+      //   // if(li == 0){pipe_write.template get<0> () = converge_itr;}
+      //   RQOut::write(pipe_write);
+      // }
 
     }  // end of while(1)
   }    // end of operator

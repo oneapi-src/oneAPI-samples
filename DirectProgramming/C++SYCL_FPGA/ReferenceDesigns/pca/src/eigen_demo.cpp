@@ -23,7 +23,7 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 10
+#define SAMPE_SIZE 100
 
 #define DEBUGEN 0
 #define DEBUGMINDEX 13
@@ -174,11 +174,11 @@ int main(int argc, char *argv[]) {
 
     // Create vectors to hold all the input and output matrices
     std::vector<T> a_matrix;
-    std::vector<T> rq_matrix;
+    std::vector<T> eig_matrix;
     std::vector<T> qq_matrix;
 
     a_matrix.resize(kDAMatrixSize * kMatricesToDecompose);
-    rq_matrix.resize(kRQMatrixSize * kMatricesToDecompose);
+    eig_matrix.resize(kRows * kMatricesToDecompose);
     qq_matrix.resize(kQQMatrixSize * kMatricesToDecompose);
 
     std::cout << "Generating " << kMatricesToDecompose << " random ";
@@ -230,7 +230,7 @@ int main(int argc, char *argv[]) {
               << " matri" << (kMatricesToDecompose > 1 ? "ces " : "x ")
               << repetitions << " times" << std::endl;
 
-    QRDecomposition(a_matrix, rq_matrix, qq_matrix, q, kMatricesToDecompose,
+    QRDecomposition(a_matrix, eig_matrix, qq_matrix, q, kMatricesToDecompose,
                                                                   repetitions);
 
     // eigen value & vector computation on CPU for same data
@@ -242,13 +242,12 @@ int main(int argc, char *argv[]) {
 
 
     if(DEBUGEN){
-      std::cout << "\n RQ Matrix: \n";
+      std::cout << "\n Eigen Values: \n";
       for(int i = 0; i < kRows; i++){
-        for(int j = 0; j < kRows; j++){
-          std::cout << rq_matrix[i*kRows+j] << " ";
-        }
-        std::cout << "\n";
+        std::cout << eig_matrix[i] << " ";
       }
+      std::cout << "\n";
+
 
       std::cout << "\n QQ Matrix: \n";
       for(int i = 0; i < kRows; i++){
@@ -302,40 +301,6 @@ int main(int argc, char *argv[]) {
       }
     }
     osA.close();
-
-    // executing the python script 
-    // it gets input matrices from the mat_A.txt file 
-    // and write the eigen vectors and eigen values to mat_W.txt and mat_V.txt  
-    // std::string cmd = "python2 ../src/eig_IQR.py " + std::to_string(kMatricesToDecompose) + " " + std::to_string(kRows);
-    // if(system(cmd.c_str()) != 0){
-    //   std::cout << "Error occured when trying to execute the python script\n";
-    // }
-
-    // reading back golden results: eigen values and eigen vectors
-    // std::ifstream osW("mat_W.txt");
-    // std::ifstream osV("mat_V.txt");  
-    // for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
-    //   int matrix_offset = matrix_index * kAMatrixSize;
-    //   int evec_offset = matrix_index * kRows;
-    //   for(int i = 0; i < kRows; i++){
-    //     float tmp;
-    //     osW >> tmp; //py_w[i+evec_offset];
-    //     py_w[i+evec_offset] = tmp;
-    //   }
-      
-    //   // reading back golden results
-    //   for(int i = 0; i < kRows; i++){
-    //     for(int j = 0; j < kRows; j++){
-    //       float tmp;
-    //       osV >> tmp; // py_V[matrix_offset+i*kRows+j];
-    //       py_V[matrix_offset+i*kRows+j] = tmp;
-    //     }
-    //   }
-      
-    // }
-    // osW.close();
-    // osV.close();
-
 
 ////////////////////////////////////////////////////////////////
 ////////  QRD Iteration ////////////////////////////////////////
@@ -484,6 +449,7 @@ int main(int argc, char *argv[]) {
 
   for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
     int matrix_offset = matrix_index * kAMatrixSize;
+    int Eigmatrix_offset = matrix_index * kRows;
     // int evec_offset = matrix_index * kRows;
 
     // Initialize the idexes for sorting 
@@ -515,12 +481,12 @@ int main(int argc, char *argv[]) {
       int sIS = sIndexSYCL[i];
       if(DEBUGEN) std::cout << a_matrix_cpu[matrix_offset + sI*kRows+sI] << " ";
 
-      if(fabs(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])- fabs(rq_matrix[matrix_offset + sIS*kRows+sIS]))   \
+      if(fabs(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])- fabs(eig_matrix[Eigmatrix_offset+i]))   \
       /(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])) > KETHRESHOLD_Eigen 
-      || isnan(a_matrix_cpu[matrix_offset + sI*kRows+sI]) || isnan(rq_matrix[matrix_offset + sIS*kRows+sIS])){
+      || isnan(a_matrix_cpu[matrix_offset + sI*kRows+sI]) || isnan(eig_matrix[i+Eigmatrix_offset])){
         rq_ecount_SYCL++;
         std::cout << "Mis matched CPU and SYCL eigen values are: " << a_matrix_cpu[matrix_offset + sI*kRows+sI] \
-        << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << sI << "\n";
+        << ", " << eig_matrix[i+Eigmatrix_offset] << " at i: " << sI << "\n";
       }
     }
 
@@ -544,7 +510,7 @@ int main(int argc, char *argv[]) {
         || isnan(qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]]) || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])){
           qq_ecountSYCL++;
           std::cout << "Mis matched CPU and SYCL QQ values and corr eigen value are: " << eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]] << ", " << 
-          qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]]  <<  " " << rq_matrix[matrix_offset + sIndex[i]*kRows+sIndex[i]]  << " at i,j:"
+          qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]]  <<  " " << eig_matrix[i+Eigmatrix_offset]  << " at i,j:"
            << i << "," << j << "\n";
         }
       }
