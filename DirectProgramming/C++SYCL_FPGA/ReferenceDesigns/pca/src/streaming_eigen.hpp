@@ -190,7 +190,10 @@ struct StreamingQRD {
       // fashion, starting by row 0
       row_tuple r_matrix[rows];
 
-            // Initial Identity Eigen vector matrix 
+      // Eigen Value Matrix
+      TT eArrray[rows];
+
+      // Initial Identity Eigen vector matrix 
       row_tuple QQ_matrix[rows], QQ_matrixW[rows];
 
       // Copy a matrix from the pipe to a local memory
@@ -587,7 +590,15 @@ struct StreamingQRD {
 
             if(j_ll ==columns - 1 && QR_iteration_done == 0){
               QQ_matrix[i_ll] = QQ_write;
-              QQ_matrixW[i_ll] = QQ_write;
+              // QQ_matrixW[i_ll] = QQ_write;
+            }
+
+            if(QR_iteration_done == 0){
+              fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+                if(k == i_ll){
+                  QQ_matrixW[j_ll].template get<k> () = sum_QQ;
+                }
+              });
             }
 
             ////////////////////////////////////////////////////////
@@ -633,6 +644,10 @@ struct StreamingQRD {
               c_wilk = sum_RQ;
             }
 
+            if(j_ll == i_ll && j_ll < kDM_size && i_ll < kDM_size){
+              eArrray[i_ll] = sum_RQ;
+            }
+
             fpga_tools::UnrolledLoop<columns> ([&] (auto k){
               bool cmp = (k==j_ll && j_ll < kDM_size && i_ll < kDM_size);
               if(cmp && QR_iteration_done == 0){
@@ -668,12 +683,50 @@ struct StreamingQRD {
         R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
 
 
-        
-        
-
-
       } // End iterative loop
 
+      //--------------------------------------------------------------------------
+      // sorting Eigen Values 
+      //--------------------------------------------------------------------------
+      T max; 
+      int indexArray[rows];
+      [[intel::fpga_register]] bool Nsorted[rows];
+      int index;
+      for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
+          Nsorted[i_ll] = 1;
+      }
+
+
+      [[intel::loop_coalesce(2)]]
+      for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
+        for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
+            if(j_ll == 0){
+              max = -1e30;
+            }
+
+            TT load_val = eArrray[j_ll];
+            if(load_val > max && Nsorted[j_ll]){
+              max = load_val;
+              index = j_ll;
+            }
+
+            if(j_ll == rows -1){
+              Nsorted[index] = 0;
+              indexArray[i_ll] = index;
+            }
+        }
+      }
+
+      //-------------------------------------------------------------------------
+      //END Eigen value sort
+      //-------------------------------------------------------------------------
+
+
+      PRINTF("\nIndex Array is: \n");
+      for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
+          PRINTF("%d ", indexArray[i_ll]);
+      }
+      PRINTF("\n");
 
       // writing out eigen vector matrix QQ row by row 
       // Eigen vectors are the columns of this matrix 
@@ -692,7 +745,7 @@ struct StreamingQRD {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() = 
                    // QQ_matrixW r_matrix
-                  get[t] ? QQ_matrixW [li / kLoopIterPerColumn]
+                  get[t] ? QQ_matrixW [indexArray[li / kLoopIterPerColumn]]
                                .template get<t * pipe_size + k>()
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());

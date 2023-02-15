@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1000;
+  constexpr size_t kMatricesToDecompose = 1;
 
   try {
     // SYCL boilerplate
@@ -500,8 +500,8 @@ int main(int argc, char *argv[]) {
     std::sort(sIndex.begin(), sIndex.end(), [=](int a, int b) \
       { return fabs(a_matrix_cpu[matrix_offset+a*kRows+a]) > fabs(a_matrix_cpu[matrix_offset+b*kRows+b]);});
 
-    std::sort(sIndexSYCL.begin(), sIndexSYCL.end(), [=](int a, int b) \
-      { return fabs(rq_matrix[matrix_offset+a*kRows+a]) > fabs(rq_matrix[matrix_offset+b*kRows+b]);});
+    // std::sort(sIndexSYCL.begin(), sIndexSYCL.end(), [=](int a, int b) \
+    //   { return fabs(rq_matrix[matrix_offset+a*kRows+a]) > fabs(rq_matrix[matrix_offset+b*kRows+b]);});
 
 
     // Relative error is used in error calculation of eigen values 
@@ -520,7 +520,7 @@ int main(int argc, char *argv[]) {
       || isnan(a_matrix_cpu[matrix_offset + sI*kRows+sI]) || isnan(rq_matrix[matrix_offset + sIS*kRows+sIS])){
         rq_ecount_SYCL++;
         std::cout << "Mis matched CPU and SYCL eigen values are: " << a_matrix_cpu[matrix_offset + sI*kRows+sI] \
-        << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << sIS << "\n";
+        << ", " << rq_matrix[matrix_offset + sIS*kRows+sIS] << " at i: " << sI << "\n";
       }
     }
 
@@ -540,11 +540,11 @@ int main(int argc, char *argv[]) {
       for(int j = 0; j < kRows; j++){
           if(DEBUGEN) std::cout << eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]] << " ";
 
-        if(fabs(fabs(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]) - fabs(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]])) > diff_threshold 
-        || isnan(qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]) || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])){
+        if(fabs(fabs(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]]) - fabs(qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]])) > diff_threshold 
+        || isnan(qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]]) || isnan(eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]])){
           qq_ecountSYCL++;
           std::cout << "Mis matched CPU and SYCL QQ values and corr eigen value are: " << eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]] << ", " << 
-          qq_matrix[matrix_offset + j*kRows+sIndexSYCL[i]]  <<  " " << rq_matrix[matrix_offset + sIndex[i]*kRows+sIndex[i]]  << " at i,j:"
+          qq_matrix[matrix_offset + i*kRows+sIndexSYCL[j]]  <<  " " << rq_matrix[matrix_offset + sIndex[i]*kRows+sIndex[i]]  << " at i,j:"
            << i << "," << j << "\n";
         }
       }
