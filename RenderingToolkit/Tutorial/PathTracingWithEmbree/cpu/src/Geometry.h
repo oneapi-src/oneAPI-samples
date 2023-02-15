@@ -3,7 +3,7 @@
 #ifndef FILE_GEOMETRYH_SEEN
 #define FILE_GEOMETRYH_SEEN
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include <map>
 #include <vector>

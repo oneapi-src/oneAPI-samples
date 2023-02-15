@@ -2,7 +2,7 @@
 #ifndef FILE_CORNELLBOX_SEEN
 #define FILE_CORNELLBOX_SEEN
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include <vector>
 

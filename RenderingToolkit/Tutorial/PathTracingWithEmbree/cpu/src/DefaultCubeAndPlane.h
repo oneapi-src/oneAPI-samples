@@ -2,7 +2,7 @@
 #ifndef FILE_DEFAULTCUBEANDPLANE_SEEN
 #define FILE_DEFAULTCUBEANDPLANE_SEEN
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include <vector>
 

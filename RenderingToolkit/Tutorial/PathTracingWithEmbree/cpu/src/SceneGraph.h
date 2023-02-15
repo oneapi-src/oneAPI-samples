@@ -1,5 +1,5 @@
 #pragma once
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include "CornellBox.h"
 #include "DefaultCubeAndPlane.h"
@@ -149,11 +149,11 @@ void SceneGraph::init_embree_context() {
 }
 
 void SceneGraph::set_intersect_query_flag_coherent(bool b_coherent) {
-  m_iargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT : RTCRayQueryFlags::RTC_INTERSECT_CONTECT_FLAG_INCOHERENT;
+  m_iargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_RAY_QUERY_FLAG_COHERENT : RTCRayQueryFlags::RTC_RAY_QUERY_FLAG_INCOHERENT;
 }
 
-void SceneGraph::set_query_flag_incoherent(bool b_coherent) {
-  m_oargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT : RTCRayQueryFlags::RTC_INTERSECT_CONTECT_FLAG_INCOHERENT;
+void SceneGraph::set_occluded_query_flag_coherent(bool b_coherent) {
+  m_oargs.flags = (b_coherent) ? RTCRayQueryFlags::RTC_RAY_QUERY_FLAG_COHERENT : RTCRayQueryFlags::RTC_RAY_QUERY_FLAG_INCOHERENT;
 }
 
 bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,

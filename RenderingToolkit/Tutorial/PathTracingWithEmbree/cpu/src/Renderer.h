@@ -3,7 +3,7 @@
 #ifndef FILE_RENDERER_SEEN
 #define FILE_RENDERER_SEEN
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 #include <tbb/parallel_for.h>
 
 #include "PathTracer.h"
