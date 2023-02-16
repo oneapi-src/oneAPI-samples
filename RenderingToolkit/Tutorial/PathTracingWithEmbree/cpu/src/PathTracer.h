@@ -5,9 +5,9 @@
 #include <random>
 
 #include "Lights.h"
+#include "RandomSampler.h"
 #include "SceneGraph.h"
 #include "definitions.h"
-#include "RandomSampler.h"
 
 struct misData {
   Light_SampleRes sam;
@@ -26,8 +26,7 @@ struct PathTracer {
 
   /* task that renders a single path pixel */
   Vec3fa render_path(float x, float y, RandomSampler& randomSampler,
-                                 std::shared_ptr<SceneGraph> sg,
-                                 unsigned int pxID);
+                     std::shared_ptr<SceneGraph> sg, unsigned int pxID);
 
  private:
   unsigned int m_max_path_length;
@@ -37,7 +36,6 @@ struct PathTracer {
   const float m_time = 0.0f;
 
   unsigned int m_numLights;
-
 };
 
 PathTracer::PathTracer(unsigned int max_path_length)
@@ -45,9 +43,7 @@ PathTracer::PathTracer(unsigned int max_path_length)
 
 PathTracer::PathTracer(unsigned int max_path_length, unsigned int width,
                        unsigned int height, unsigned int numLights)
-    : m_max_path_length(max_path_length), m_numLights(numLights) {
-
-}
+    : m_max_path_length(max_path_length), m_numLights(numLights) {}
 
 /* task that renders a single screen pixel */
 Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
@@ -75,7 +71,8 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     /* terminate if contribution too low */
     if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f) break;
 
-    /* New for Embree 4: Use coherent ray designation on pramary ray cast with rtcIntersectArguments::flags by passing bCoherent*/
+    /* New for Embree 4: Use coherent ray designation on pramary ray cast with
+     * rtcIntersectArguments::flags by passing bCoherent*/
     if (!sg->intersect_path_and_scene(org, dir, rayhit, dg, bCoherent)) break;
 
     const Vec3fa wo = -dir;
@@ -115,14 +112,14 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     Vec3fa wi1;
     Vec2f randomMatSample(randomSampler.get_float(), randomSampler.get_float());
 
-    
-    /* Occlusion and Intersect test arguments have changed with Embree 4. Occlusion query flags are set before the shadow ray lookup
-     * In this example program, Intersect query flags will be set to RTC_RAY_QUERY_INCOHERENT for all non-primary rays.     */
+    /* Occlusion and Intersect test arguments have changed with Embree 4.
+     * Occlusion query flags are set before the shadow ray lookup In this
+     * example program, Intersect query flags will be set to
+     * RTC_RAY_QUERY_INCOHERENT for all non-primary rays.     */
     bCoherent = false;
 
-    /* For the occlusion test, search for each light in the scene from the hit point. Aggregate the
-     * radiance if hit point is not occluded */
-
+    /* For the occlusion test, search for each light in the scene from the hit
+     * point. Aggregate the radiance if hit point is not occluded */
 
     if (Material_direct_illumination(materialType)) {
       /* Cast shadow ray(s) from the hit point */
@@ -147,7 +144,6 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     org = dg.P;
     dir = normalize(wi1);
     init_RayHit(rayhit, org, dir, dg.eps, inf, m_time);
-
   }
 
   return L;

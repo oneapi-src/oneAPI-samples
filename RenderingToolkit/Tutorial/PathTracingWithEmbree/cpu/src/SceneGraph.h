@@ -6,36 +6,34 @@
 #include "Geometry.h"
 #include "Lights.h"
 #include "Pool.h"
-#include "Sphere.h"
 #include "RandomSampler.h"
+#include "Sphere.h"
 
 /* Added for geometry selection in pathtracer */
 enum class SceneSelector { SHOW_CUBE_AND_PLANE, SHOW_CORNELL_BOX, SHOW_POOL };
 
 /* The most basic scene graph possible for exploratory code... please consider
- * the scene graph from ospray studio or embree tutorials themselves as better production
- * references */
+ * the scene graph from ospray studio or embree tutorials themselves as better
+ * production references */
 struct SceneGraph {
  public:
   SceneGraph(RTCDevice device, SceneSelector SELECT_SCENE, unsigned int width,
              unsigned int height);
 
-  void init_embree_scene(const RTCDevice device,
-                                     SceneSelector SELECT_SCENE,
-                                     const unsigned int width,
-                                     const unsigned int height);
+  void init_embree_scene(const RTCDevice device, SceneSelector SELECT_SCENE,
+                         const unsigned int width, const unsigned int height);
 
-  bool intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
-                                            RTCRayHit& rayhit,
-                                            DifferentialGeometry& dg, bool bCoherent);
+  bool intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& rayhit,
+                                DifferentialGeometry& dg, bool bCoherent);
 
-  void cast_shadow_rays(
-      DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
-      const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-      Vec3fa& L, RandomSampler& randomSampler, bool bCoherent);
+  void cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo,
+                        MaterialType materialType, const Vec3fa& Lw,
+                        const Vec3fa& wo, const Medium& medium, float time,
+                        Vec3fa& L, RandomSampler& randomSampler,
+                        bool bCoherent);
 
-  float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
-                                    float tnear, float tfar, float _time, bool bCoherent);
+  float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir, float tnear,
+                        float tfar, float _time, bool bCoherent);
 
   Vec3fa get_camera_origin();
 
@@ -61,7 +59,8 @@ struct SceneGraph {
   std::map<unsigned int, size_t> m_mapGeomToLightIdx;
   void scene_cleanup();
 
-  /* We'll use this 'geometries' container to automatically clean up the data arrays created that are used to create embree geometries */
+  /* We'll use this 'geometries' container to automatically clean up the data
+   * arrays created that are used to create embree geometries */
   std::vector<std::unique_ptr<Geometry>> geometries;
 };
 
@@ -89,7 +88,7 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
       /* The sphere can be used in the cube and plane scene with a corresponding
        * position for that scene */
 
-      /* 
+      /*
        * geometries.push_back(std::make_unique<Sphere>(m_scene, device,
        m_mapGeomToPrim, MaterialType::MATERIAL_MIRROR, Vec3fa(2.5f, 0.f, 2.5f),
        Vec3fa(0.8f, 0.8f, 0.8f), 1.0f, m_mapGeomToLightIdx, m_lights, m_camera,
@@ -128,19 +127,21 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
 
 bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
                                           RTCRayHit& rayhit,
-                                          DifferentialGeometry& dg, bool bCoherent) {
+                                          DifferentialGeometry& dg,
+                                          bool bCoherent) {
   /* New with Embree 4... RTCIntersectArguments to set ray coherency */
   /* Only primary rays are set as coherent in this example program */
   RTCIntersectArguments iargs;
   rtcInitIntersectArguments(&iargs);
-  iargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT : RTC_RAY_QUERY_FLAG_INCOHERENT;
- 
+  iargs.flags =
+      (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT : RTC_RAY_QUERY_FLAG_INCOHERENT;
+
   /* intersect ray with scene */
 
   rtcIntersect1(m_scene, &rayhit, &iargs);
 
-  /* if nothing hit the path is terminated, this could be an environment light lookup
-   * instead */
+  /* if nothing hit the path is terminated, this could be an environment light
+   * lookup instead */
   if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID) return false;
 
   Vec3fa Ng = Vec3fa(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z);
@@ -170,22 +171,25 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
   return true;
 }
 
-void SceneGraph::cast_shadow_rays(
-    DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
-    const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-    Vec3fa& L, RandomSampler& randomSampler, bool bCoherent) {
+void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo,
+                                  MaterialType materialType, const Vec3fa& Lw,
+                                  const Vec3fa& wo, const Medium& medium,
+                                  float time, Vec3fa& L,
+                                  RandomSampler& randomSampler,
+                                  bool bCoherent) {
+  Vec3fa ret;
 
-      	Vec3fa ret;
-  
   RTCOccludedArguments oargs;
   rtcInitOccludedArguments(&oargs);
   /* In this program Occluded rays are never coherent so this is hard coded. */
   oargs.flags = RTC_RAY_QUERY_FLAG_INCOHERENT;
   /* Otherwise, the assignment commented below would apply */
-  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT : RTC_RAY_QUERY_FLAG_INCOHERENT; */
+  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT :
+   * RTC_RAY_QUERY_FLAG_INCOHERENT; */
 
   for (std::shared_ptr<Light> light : m_lights) {
-    Vec2f randomLightSample(randomSampler.get_float(), randomSampler.get_float());
+    Vec2f randomLightSample(randomSampler.get_float(),
+                            randomSampler.get_float());
     Light_SampleRes ls = light->sample(dg, randomLightSample);
 
     /* If the sample probability density evaluation is 0 then no need to
@@ -204,16 +208,18 @@ void SceneGraph::cast_shadow_rays(
 }
 
 float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
-                                  float tnear, float tfar, float _time, bool bCoherent) {
+                                  float tnear, float tfar, float _time,
+                                  bool bCoherent) {
   RTCRayHit shadow;
   init_RayHit(shadow, org, dir, tnear, tfar, _time);
 
   RTCOccludedArguments oargs;
   rtcInitOccludedArguments(&oargs);
-  /* In this program Occluded rays are never coherent so this is hard coded. */
+  /* In this program Occluded rays are assumed coherent so this is hard coded. */
   oargs.flags = RTC_RAY_QUERY_FLAG_INCOHERENT;
   /* Otherwise, the assignment commented below would apply */
-  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT : RTC_RAY_QUERY_FLAG_INCOHERENT; */
+  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT :
+   * RTC_RAY_QUERY_FLAG_INCOHERENT; */
 
   rtcOccluded1(m_scene, &shadow.ray, &oargs);
   return shadow.ray.tfar;
