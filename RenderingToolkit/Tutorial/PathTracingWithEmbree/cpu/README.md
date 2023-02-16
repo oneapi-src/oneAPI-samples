@@ -809,10 +809,14 @@ Define a `DifferentialGeometry` data structure for storing hit information.
 ```
   DifferentialGeometry dg;
 ```
-Lastly, we tell Embree it is free to internally optimize for coherent rays, given that first rays on the path are primary rays.
+
+Before the iterative path loop, we tell Embree it is free to internally optimize for ray coherency, given that first rays on the path are primary rays. Occlusion rays are assumed to be incoherent.
 
 ```
-  sg->set_intersect_context_coherent();
+  sg->set_intersect_query_flag_coherent(true);
+  /* Per Embree 4.0.0 API the Occluded ray query flag is set to RTC_RAY_QUERY_INCOHERENT upon init. Setting incoherent rays is here to be explicit and redundant */
+  sg->set_occluded_query_flag_coherent(false);
+
 ```
 
 Next, we iterate for every segment of the path. If it so happens that our remaining weight along the path is sufficiently low, we terminate the path.
@@ -857,12 +861,6 @@ We initialize an attenuation scaling value, `c`, for our material. We also initi
 
     Vec3fa wi1;
     Vec2f randomMatSample(randomSampler.get_float(), randomSampler.get_float());
-```
-
-
-We tell Embree our rays will become incoherent as they are no longer primary rays.
-```
-sg->set_intersect_context_incoherent();
 ```
 
 If the material does not simply pass light through like in a pure reflection or refraction, we perform a shadow ray test to each light. We perform a random sample on each light, perform an occlusion test to the sample, then add direction and material weighted luminance to our running total for the path. Semi-obscure lights and lights at oblique angles will leave soft shadows or be attenuated.
@@ -923,7 +921,7 @@ We set the medium state for the next segment.
   medium = nextMedium;
 ```
 
-We move slightly forward from the intersection point along the unit normal. This location is used as our next origin. `dg.eps` and epsilon value is used to avoid artifacts.
+We move slightly forward from the intersection point along the unit normal. This location is used as our next origin. `dg.eps`, an epsilon value based on the floating point dynamic range is used to avoid artifacts.
 ```
     float sign = dot(wi1, dg.Ng) < 0.0f ? -1.0f : 1.0f;
     dg.P = dg.P + sign * dg.eps * dg.Ng;
