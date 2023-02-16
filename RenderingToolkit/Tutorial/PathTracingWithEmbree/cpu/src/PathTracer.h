@@ -9,12 +9,6 @@
 #include "SceneGraph.h"
 #include "definitions.h"
 
-struct misData {
-  Light_SampleRes sam;
-  float tfar;
-  Vec2f randomLightSample;
-};
-
 struct PathTracer {
  public:
   PathTracer(unsigned int max_path_length);
@@ -72,7 +66,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomSampler& randomSampler,
     if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f) break;
 
     /* New for Embree 4: Use coherent ray designation on pramary ray cast with
-     * rtcIntersectArguments::flags by passing bCoherent*/
+     * RTCIntersectArguments::flags by passing bCoherent*/
     if (!sg->intersect_path_and_scene(org, dir, rayhit, dg, bCoherent)) break;
 
     const Vec3fa wo = -dir;
