@@ -45,7 +45,7 @@
                     "cd cpu",
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_BUILD_TYPE=Release ..",
+                    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi ..",
                     "cmake --build . ",
                     "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./rkPathTracer"
                  ]
