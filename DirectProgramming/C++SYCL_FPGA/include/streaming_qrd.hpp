@@ -274,15 +274,18 @@ struct StreamingQRD {
         // kFanoutReduction times to reduce fanout
         bool j_eq_i[kBanksForFanout], i_gt_0[kBanksForFanout],
             i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
-            i_lt_0[kBanksForFanout];
+            i_lt_0[kBanksForFanout], j_ge_0[kBanksForFanout];
 
         fpga_tools::UnrolledLoop<kBanksForFanout>([&](auto k) {
           i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
           i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
           j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
+          j_ge_0[k] = sycl::ext::intel::fpga_reg(j >= 0);
           i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
           j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
-          s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
+          if (j >= 0) {
+            s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
+          }
         });
 
         // Preload col and a_i with the correct data for the current iteration
@@ -298,14 +301,14 @@ struct StreamingQRD {
           // If no i iteration elapsed, we must read the column of
           // matrix A directly from the a_load; col then contains a_j
 
-          if (i_gt_0[fanout_bank_idx]) {
+          if (i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
             col[k] = a_compute[j].template get<k>();
           }
           // Using an else statement makes the compiler throw an
           // inexplicable warning when using non complex types:
           // "Compiler Warning: Memory instruction with unresolved
           // pointer may lead to bad QoR."
-          if (!i_gt_0[fanout_bank_idx]) {
+          if (!i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
             col[k] = a_load[j].template get<k>();
           }
 
@@ -347,7 +350,7 @@ struct StreamingQRD {
           // are either going to be:
           // -> overwritten for the matrix Q (q_result)
           // -> unused for the a_compute
-          if (i_ge_0_j_ge_i[fanout_bank_idx]) {
+          if (i_ge_0_j_ge_i[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
             q_result[j].template get<k>() = col1[k];
             a_compute[j].template get<k>() = col1[k];
           }
