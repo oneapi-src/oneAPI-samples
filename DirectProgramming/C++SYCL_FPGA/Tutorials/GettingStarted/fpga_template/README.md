@@ -5,7 +5,7 @@ This project serves as a template for Intel® oneAPI FPGA designs.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Best practices for creating and managing a oneAPI FPGA project
 | Time to complete                  | 10 minutes
@@ -119,7 +119,7 @@ This design uses CMake to generate a build script for GNU/make.
 
 1. Change to the sample directory.
 
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
 
    ```
    mkdir build
@@ -156,7 +156,7 @@ This design uses CMake to generate a build script for  `nmake`.
 
 1. Change to the sample directory.
 
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build

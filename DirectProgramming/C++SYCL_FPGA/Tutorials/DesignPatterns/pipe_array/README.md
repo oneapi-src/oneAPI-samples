@@ -5,7 +5,7 @@ This FPGA tutorial showcases a design pattern that makes it possible to create a
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
 | Time to complete                  | 15 minutes
@@ -188,7 +188,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -230,7 +230,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

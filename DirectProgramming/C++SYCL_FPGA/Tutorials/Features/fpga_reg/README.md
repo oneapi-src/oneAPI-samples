@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how a power user can apply the SYCL*-compliant C
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial
 | Time to complete                  | 20 minutes
@@ -143,7 +143,7 @@ Since the outer loop is pipelined and has a high trip count, the inner loop's in
    cd build
    ```
 
-   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® device family), run `cmake` using the command:
    ```
    cmake ..
    ```
@@ -195,7 +195,7 @@ Since the outer loop is pipelined and has a high trip count, the inner loop's in
    cd build
    ```
 
-   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" ..
    ```
