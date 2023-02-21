@@ -160,10 +160,10 @@ struct StreamingQRD {
 
 
 
-
+    int matrix_id = 0;
     // Compute QRDs as long as matrices are given as inputs
     while(1) {
-
+      matrix_id++;
       // for(int witr = 0; witr < 1; witr++){
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
@@ -557,7 +557,7 @@ struct StreamingQRD {
         // }
 
         
-
+        column_tuple Q_load_ii;
         // [[intel::initiation_interval(1)]]  
         [[intel::loop_coalesce(2)]]
         for(ac_int<kIBitSize , false> i_ll = 0; i_ll < columns; i_ll++){
@@ -575,6 +575,22 @@ struct StreamingQRD {
                 TT Ival = (j_ll == k) ? 1 : 0; 
                 Q_load.template get<k>() = (k >= kDM_size || j_ll >= kDM_size ? Ival : Q_load.template get<k>());
             });
+
+            // -------------------------------------------------------
+            Q_load_ii = (i_ll == j_ll) ? Q_load  : Q_load_ii;
+            TT chk_ortho = 0;
+            fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+                chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
+            });
+
+            if(i_ll < j_ll && fabs(chk_ortho) > 1e-3){
+              PRINTF("SOme error has occured in kernel QR decomposition, \
+               chk_ortho:%f, matrix_id:%d\n", chk_ortho, matrix_id);
+            }
+
+            //------------------------------------------------------------
+
+
             TT sum_QQ = 0;
             fpga_tools::UnrolledLoop<rows> ([&] (auto k){
               TT Ival = (k == i_ll) ? 1 : 0;
@@ -697,7 +713,7 @@ struct StreamingQRD {
       }
 
 
-      PRINTF("Starting to send the eigen values\n");
+      // PRINTF("Starting to send the eigen values\n");
       fpga_tools::NTuple<TT, pipe_size> pipe_writeEigen;
       [[intel::loop_coalesce(2)]]
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
@@ -729,18 +745,18 @@ struct StreamingQRD {
         }
       }
 
-      PRINTF("Completed sending the eigen values\n");
+      // PRINTF("Completed sending the eigen values\n");
 
       //-------------------------------------------------------------------------
       //END Eigen value sort
       //-------------------------------------------------------------------------
 
 
-      PRINTF("\nIndex Array is: \n");
-      for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
-          PRINTF("%d ", indexArray[i_ll]);
-      }
-      PRINTF("\n");
+      // PRINTF("\nIndex Array is: \n");
+      // for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
+      //     PRINTF("%d ", indexArray[i_ll]);
+      // }
+      // PRINTF("\n");
 
       // writing out eigen vector matrix QQ row by row 
       // Eigen vectors are the columns of this matrix 

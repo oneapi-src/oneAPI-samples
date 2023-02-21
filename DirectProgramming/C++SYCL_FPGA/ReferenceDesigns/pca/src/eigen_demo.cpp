@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1;
+  constexpr size_t kMatricesToDecompose = 5000;
 
   try {
     // SYCL boilerplate
@@ -516,10 +516,41 @@ int main(int argc, char *argv[]) {
       }
       if(DEBUGEN) std::cout << "\n";
     }
+
+    //---------------------------------------------------------
+    //---------- Checking the accuracy by matching vectors ----
+    //---------------------------------------------------------
+    int qq_VecSYCL = 0;
+    T Dotmin = 1;
+    for(int i = 0; i < kRows; i++){
+      T sum = 0;
+      for(int j = 0; j < kRows; j++){
+        sum += qq_matrix[matrix_offset + i*kRows+j] * eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]];
+      }
+
+      // if(fabs(sum) < 1 - 1e-2 && isnan(sum)){
+      //     qq_VecSYCL++;
+      //     std::cout << "Vector Dot product of " << i << " th vectors are: " << sum << "\n";
+      // }
+      if(isnan(sum)){
+        std::cout << "Some error has occured\n";
+      }
+
+      if(fabs(sum) < Dotmin){
+        Dotmin = fabs(sum);
+      }
+    }
+
+    if(fabs(1-Dotmin) >  1e-4){
+      std::cout << "Dot product minimum for matrix id" << matrix_index  << " is: " << Dotmin << "\n";
+    } else {
+      passsed_marixes++;
+    }
+    //-------------- End --------------------------------------
  
 
     if(qq_ecountSYCL == 0){
-      passsed_marixes++;
+      // passsed_marixes++;
       // std::cout << "Matrix: " << matrix_index \
       // << " passed:  SYCL and numpy Eigen vectors are matched\n";
     } else {
