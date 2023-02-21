@@ -76,14 +76,14 @@ template<typename T> PCA<T>::~PCA(){
 
 // populating matrix a with random numbers
 template<typename T> void PCA<T>::populate_A(){
-    constexpr size_t kRandomMin = 0;
-    constexpr size_t kRandomMax = 1000;
+    // constexpr size_t kRandomMin = 0;
+    // constexpr size_t kRandomMax = 1000;
 
     size_t kEigenMin = 2*this->p;
     size_t kEigenMax = 6*this->p;
 
-    constexpr size_t kNoiseMin = 0;
-    constexpr size_t kNoiseMax = 5000;
+    // constexpr size_t kNoiseMin = 0;
+    // constexpr size_t kNoiseMax = 5000;
 
 
     T* TeigVec = new T[this->p * this->p];
@@ -110,35 +110,7 @@ template<typename T> void PCA<T>::populate_A(){
         qr_decom.QR_decompose(this->p);
         T* Q = qr_decom.get_Q();
 
-        // T Q[5*5] = {-0.6267675666742987,0.22499524355785394,0.6380304839079842,0.23211364638804452,-0.3091600144037226,-0.01129237663111344,-0.654231795494806,-0.06151038599510441,0.7535663032385346,-0.014406215040944245,-0.4777076293368368,-0.0020245259873950677,-0.6972641085018443,-0.0759440963299726,-0.5290052735045824,-0.0332016368092065,-0.6997500858368986,0.29611963370306005,-0.5890567264953692,-0.27308021567035545,-0.6145957791766623,-0.17805509486045076,-0.12356981649889559,-0.15970519398891908,0.7414803860358399};
-
-        // std::cout << "Matrix Q is: \n";
-        // for(int i = 0; i < this->p; i++){
-        //     for(int j = 0; j < this->p; j++){
-        //         std::cout << Q[i*this->p+j] << " ";
-        //     }
-        //     std::cout << "\n";
-        // }
-        // std::cout << "\n";
-
-
-        // std::cout << "Sum is: \n";
-        // for(int i = 0; i < this->p; i++){
-        //     double sum = 0;
-        //     for(int j = 0; j < this->p; j++){
-        //         sum += Q[j*this->p+0] * Q[j*this->p+i];
-        //     }
-        //     std::cout << sum << " ";
-        // }
-        // std::cout << "\n";
-
-        //setting eigen values 
-        // for(int i = 0; i < this->p; i++){
-        //     Teigval[i] = (rand() % (kEigenMax - kEigenMin) + kEigenMin);
-        // }
-
-
-
+    
         if(this->debug) std::cout << "Initial input Matrix A for PCA :"  << this->matrixCount << " \n";
         int offset = m_id * this->n * this->p;
         for(int i = 0; i < this->n; i++){ // samples 

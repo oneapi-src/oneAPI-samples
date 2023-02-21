@@ -160,10 +160,8 @@ struct StreamingQRD {
 
 
 
-    int matrix_id = 0;
     // Compute QRDs as long as matrices are given as inputs
     while(1) {
-      matrix_id++;
       // for(int witr = 0; witr < 1; witr++){
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
@@ -185,6 +183,7 @@ struct StreamingQRD {
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       column_tuple a_load1[columns], a_load2[columns], rq_matrix[columns], a_compute[columns], q_result[columns];
+      bool QRD_failed = 0;
 
       // Contains the values of matrix R in a row by row
       // fashion, starting by row 0
@@ -584,8 +583,7 @@ struct StreamingQRD {
             });
 
             if(i_ll < j_ll && fabs(chk_ortho) > 1e-3){
-              PRINTF("SOme error has occured in kernel QR decomposition, \
-               chk_ortho:%f, matrix_id:%d\n", chk_ortho, matrix_id);
+              QRD_failed = 1;
             }
 
             //------------------------------------------------------------
@@ -740,10 +738,27 @@ struct StreamingQRD {
             });
 
             if(j_ll == rows -1 && (i_ll % pipe_size == pipe_size -1 || i_ll == rows-1)){
-              EigOut::write(pipe_writeEigen);
+              // EigOut::write(pipe_writeEigen);
+              if(i_ll == rows-1 && rows % pipe_size != 0){
+                fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+                  if(k == (i_ll+1) % pipe_size){
+                    pipe_writeEigen.template get<k>() = QRD_failed;
+                  }
+                });
+                EigOut::write(pipe_writeEigen);
+              } else {
+                EigOut::write(pipe_writeEigen);
+              }
             }
         }
       }
+
+      if(rows % pipe_size == 0){
+        pipe_writeEigen.template get<0>() = QRD_failed;
+        EigOut::write(pipe_writeEigen);
+      }
+      
+      
 
       // PRINTF("Completed sending the eigen values\n");
 

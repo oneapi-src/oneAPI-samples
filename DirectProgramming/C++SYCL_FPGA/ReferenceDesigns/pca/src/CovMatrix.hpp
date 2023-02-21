@@ -45,18 +45,18 @@ struct StreamingMM{
 
 
   	constexpr int kRamSize = kRowBlocks * rows;
-  	constexpr int kLoopIter = kRowpipeBlk * rows;
+  	// constexpr int kLoopIter = kRowpipeBlk * rows;
 
   	constexpr int kIBitSizeRows = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
-  	constexpr int kIBitSizeColumns = fpga_tools::BitsForMaxValue<columns + 1>() + 1;
+  	// constexpr int kIBitSizeColumns = fpga_tools::BitsForMaxValue<columns + 1>() + 1;
   	constexpr int kIBitSizeColumnspipes = fpga_tools::BitsForMaxValue<kRowpipeBlk + 1>() + 1;
   	constexpr int kIBitSizeColumnBlks = fpga_tools::BitsForMaxValue<kRowBlocks + 1>() + 1;
-  	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>() + 1;
+  	// constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>() + 1;
 
   	constexpr int kBlkFold  = blockSize/pipe_size;
 
-  	constexpr int kColpipeBlk = (rows + pipe_size-1)/pipe_size;
-  	constexpr int kOutMatrixSize = kColpipeBlk*columns;
+  	// constexpr int kColpipeBlk = (rows + pipe_size-1)/pipe_size;
+  	// constexpr int kOutMatrixSize = kColpipeBlk*columns;
 
 
   	while(1){

@@ -51,10 +51,11 @@ void QRDecompositionImpl(
   int repetitions           // Number of repetitions, for performance evaluation
 ) {
 
+  constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
   constexpr int kAMatrixSize = SAMPE_SIZE * rows;
   constexpr int kQQMatrixSize = columns * rows;
-  constexpr int kEigMatrixSize = rows;
-  constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
+  constexpr int kEigMatrixSize = rows + 1; // additional one for debug data
+  
 
   using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
 
@@ -104,7 +105,7 @@ void QRDecompositionImpl(
 
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
-     MatrixReadPipeToDDR<TT, rows, 1, kNumElementsPerDDRBurst,
+     MatrixReadPipeToDDR<TT, rows+1, 1, kNumElementsPerDDRBurst,
                         EigMatrixPipe>(eig_device, matrix_count, repetitions);
   });
 

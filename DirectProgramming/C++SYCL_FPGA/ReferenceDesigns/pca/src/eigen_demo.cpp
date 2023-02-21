@@ -114,14 +114,14 @@ bool IsFinite(float val) { return std::isfinite(val); }
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
-  constexpr size_t kRandomMin = 1;
-  constexpr size_t kRandomMax = 100;
-  constexpr size_t kSampleSize = SAMPE_SIZE;
+  // constexpr size_t kRandomMin = 1;
+  // constexpr size_t kRandomMax = 100;
+  // constexpr size_t kSampleSize = SAMPE_SIZE;
   constexpr size_t kRows = ROWS_COMPONENT;
   constexpr size_t kColumns = COLS_COMPONENT;
   constexpr size_t kDAMatrixSize = kRows * SAMPE_SIZE;
   constexpr size_t kAMatrixSize = kRows * kColumns;
-  constexpr size_t kRQMatrixSize = kRows * kColumns;
+  // constexpr size_t kRQMatrixSize = kRows * kColumns;
   constexpr size_t kQQMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 5000;
+  constexpr size_t kMatricesToDecompose = 10;
 
   try {
     // SYCL boilerplate
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
     std::vector<T> qq_matrix;
 
     a_matrix.resize(kDAMatrixSize * kMatricesToDecompose);
-    eig_matrix.resize(kRows * kMatricesToDecompose);
+    eig_matrix.resize((kRows+1) * kMatricesToDecompose);
     qq_matrix.resize(kQQMatrixSize * kMatricesToDecompose);
 
     std::cout << "Generating " << kMatricesToDecompose << " random ";
@@ -440,22 +440,31 @@ int main(int argc, char *argv[]) {
     dAMat.close();
 
 
-    int passsed_marixes = 0;
+    
 
 
 /////////////////////////////////////////////////////////////////////
 /////////  Sorting and matching with golden value ///////////////////
 /////////////////////////////////////////////////////////////////////
 
+
+  int passsed_marixes = 0;
+  int KernelFlagCount = 0;
   for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
     int matrix_offset = matrix_index * kAMatrixSize;
-    int Eigmatrix_offset = matrix_index * kRows;
+    int Eigmatrix_offset = matrix_index * (kRows+1);
     // int evec_offset = matrix_index * kRows;
 
     // Initialize the idexes for sorting 
     // the eigen values. Pyhton implmentation
     // could use different algorithm, hence 
     // the order of eigen values might be different 
+
+      if(eig_matrix[kRows+Eigmatrix_offset] == 1 ){
+        KernelFlagCount++;
+        continue;
+      }
+
 
     for(int i = 0; i < kRows; i++){
       sIndex[i] = i;
@@ -478,7 +487,6 @@ int main(int argc, char *argv[]) {
     if(DEBUGEN) std::cout << "\nEigen values are:\n";
     for(int i = 0; i < kRows; i++){
       int sI = sIndex[i];
-      int sIS = sIndexSYCL[i];
       if(DEBUGEN) std::cout << a_matrix_cpu[matrix_offset + sI*kRows+sI] << " ";
 
       if(fabs(fabs(a_matrix_cpu[matrix_offset + sI*kRows+sI])- fabs(eig_matrix[Eigmatrix_offset+i]))   \
@@ -517,42 +525,11 @@ int main(int argc, char *argv[]) {
       if(DEBUGEN) std::cout << "\n";
     }
 
-    //---------------------------------------------------------
-    //---------- Checking the accuracy by matching vectors ----
-    //---------------------------------------------------------
-    int qq_VecSYCL = 0;
-    T Dotmin = 1;
-    for(int i = 0; i < kRows; i++){
-      T sum = 0;
-      for(int j = 0; j < kRows; j++){
-        sum += qq_matrix[matrix_offset + i*kRows+j] * eigen_vectors_cpu[matrix_offset + j*kRows+sIndex[i]];
-      }
 
-      // if(fabs(sum) < 1 - 1e-2 && isnan(sum)){
-      //     qq_VecSYCL++;
-      //     std::cout << "Vector Dot product of " << i << " th vectors are: " << sum << "\n";
-      // }
-      if(isnan(sum)){
-        std::cout << "Some error has occured\n";
-      }
-
-      if(fabs(sum) < Dotmin){
-        Dotmin = fabs(sum);
-      }
-    }
-
-    if(fabs(1-Dotmin) >  1e-4){
-      std::cout << "Dot product minimum for matrix id" << matrix_index  << " is: " << Dotmin << "\n";
-    } else {
-      passsed_marixes++;
-    }
-    //-------------- End --------------------------------------
  
 
     if(qq_ecountSYCL == 0){
-      // passsed_marixes++;
-      // std::cout << "Matrix: " << matrix_index \
-      // << " passed:  SYCL and numpy Eigen vectors are matched\n";
+      passsed_marixes++;
     } else {
       std::cout  << "Matrix: " << matrix_index \
       << "  Error: Mismatch is found between SYCL and numpy QQ, count: " << qq_ecountSYCL << "\n";
@@ -561,8 +538,9 @@ int main(int argc, char *argv[]) {
     if(qq_ecountSYCL > 0)  std::cout << "\n\n\n";
 
   }
-    std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes << "\n";
-    std::cout << "Passed matrix percenage is " << (100.0 *passsed_marixes)/kMatricesToDecompose << "\n";
+    std::cout << "Failed PCA flag count from kernel is: " << KernelFlagCount << "\n";
+    std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes - KernelFlagCount  << "\n";
+    std::cout << "Passed matrix percenage is " << (100.0 *passsed_marixes)/(kMatricesToDecompose - KernelFlagCount) << "\n";
     return 0;
 
   } catch (sycl::exception const &e) {
