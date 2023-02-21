@@ -249,10 +249,6 @@ The choice of attributes will be further discussed in the [Examining the Reports
      ```
      nmake fpga_emu
      ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
-     ```
    * Generate the optimization report:
      ```
      nmake report
@@ -320,12 +316,6 @@ There are often many ways to generate a stall-free memory system. As a programme
   * On Linux
     ```bash
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./memory_attributes.fpga_sim
-    ```
-  * On Windows
-    ```bash
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-    memory_attributes.fpga_sim.exe
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```
