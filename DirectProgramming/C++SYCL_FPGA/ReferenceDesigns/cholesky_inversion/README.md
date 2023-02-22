@@ -57,7 +57,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -165,7 +165,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
 
    ```
    mkdir build
@@ -209,7 +209,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build

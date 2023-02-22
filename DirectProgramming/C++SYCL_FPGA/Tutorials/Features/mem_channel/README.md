@@ -7,7 +7,7 @@ SYCL*-compliant FPGA design.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
@@ -141,7 +141,7 @@ defined when the design is compiled for an Intel® Arria® GX FPGA as the
 Intel® PAC with Arria® 10 GX FPGA has an external memory with two available 
 channels. In that case, the 4 buffers are evenly assigned to the available 
 channels on that board. When the design is compiled for an Intel® Stratix® or
-Agilex™ FPGA, the 4 buffers are assigned to the 4 available channels.
+Agilex® FPGA, the 4 buffers are assigned to the 4 available channels.
 This can be parametrize by setting the correct macro (or create your
 own) that clearly matches the number of channels available on your specific
 board.
@@ -176,7 +176,7 @@ board.
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -220,7 +220,7 @@ board.
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
