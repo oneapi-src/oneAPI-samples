@@ -261,7 +261,7 @@ private:
       //    2) the user has requested us to flush the launch queue and the
       //       launch queue is not empty (i.e. flush_ && launch_q_.size() != 0)
       if ((launch_q_.Size() >= wait_threshold_) ||
-          (flush_ && !LaunchQueueEmpty())) {
+          (flush_ && !LaunchQueueEmpty() && ProducerQueueEmpty() && ConsumerQueueEmpty())) {
         // grab the oldest request from the launch queue
         size_t buf_idx;
         size_t count;
