@@ -32,9 +32,9 @@
 
 #include "exception_handler.hpp"
 
-#include "eigen.hpp"
-#include "qr_MGS.hpp"
 #include "pca.hpp"
+#include "qr_MGS.hpp"
+#include "pca_cpu.hpp"
 // #include "qr_decom.hpp"
 #include "hessenberg_qrd.hpp"
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 10;
+  constexpr size_t kMatricesToDecompose = 2;
 
   try {
     // SYCL boilerplate

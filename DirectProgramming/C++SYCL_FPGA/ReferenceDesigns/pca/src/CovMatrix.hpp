@@ -73,7 +73,8 @@ struct StreamingMM{
   		pipe_tuple pipe_read;
 
   		// PRINTF("Normalised matrix is: \n");
-	  	[[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+	  	// [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+	  	[[intel::loop_coalesce(2)]]
 	  	for (ac_int<kIBitSizeRows, false> li = 0; li < rows+1; li++) {
 			for (ac_int<kIBitSizeColumnspipes, false> lj = 0; lj < kRowpipeBlk; lj++) {
 				if(lj == 0){
@@ -86,15 +87,25 @@ struct StreamingMM{
 		    	int MatrixA_addr = li_1*kRowBlocks + lj/kBlkFold;
 		    	int wordId = lj % kBlkFold;
 
+		    	T localSum = 0;
 		    	fpga_tools::UnrolledLoop<kBlkFold>([&](auto k) {
 		      		fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
 		      			if(wordId == k && lj*pipe_size+t < columns){
 		      				blk_W.template get<k*pipe_size+t>() = pipe_read.template get<t>(); 
-		      				sum +=  pipe_read.template get<t>(); 
 		      				// PRINTF("%f ", pipe_read.template get<t>());
 		      			}
 		      		});
 		    	});
+
+
+		    	fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+	      			if(lj*pipe_size+t < columns){
+	      				localSum +=  pipe_read.template get<t>(); 
+	      				// PRINTF("%f ", pipe_read.template get<t>());
+	      			}
+	      		});
+
+		    	sum += localSum;
 
 		    	if(lj == kRowpipeBlk -1){
 		    		mu = sum * 1.0f/(columns);
@@ -113,6 +124,7 @@ struct StreamingMM{
 		    	if(li > 0){
 		    		MatrixA[MatrixA_addr] = blk_R;
 		    	}
+		    	blkRow[lj] = blk_W;
 		    	blkRow[lj/kBlkFold] = blk_W;
 
 		    	if(lj == kRowpipeBlk -1){

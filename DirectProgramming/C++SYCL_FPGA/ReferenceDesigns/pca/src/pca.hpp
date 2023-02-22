@@ -1,237 +1,153 @@
-#include<iostream>
-#include<math.h> 
-#include<cstdlib>
-#include<algorithm>
+#ifndef __QRD_HPP__
+#define __QRD_HPP__
 
+#include <sycl/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 
-#include "qr_MGS.hpp"
-// #include "qr_decom.hpp"
-// #include <sycl/sycl.hpp>
-// #include <sycl/ext/intel/fpga_extensions.hpp>
-// #include <sycl/ext/intel/ac_types/ac_complex.hpp>
+#include <chrono>
+#include <cstring>
+#include <type_traits>
+#include <vector>
+
+#include "memory_transfers.hpp"
+#include "streaming_eigen.hpp"
+#include "CovMatrix.hpp"
+#include "tuple.hpp"
+
+// Forward declare the kernel and pipe names
+// (This prevents unwanted name mangling in the optimization report.)
+class QRDDDRToLocalMem;
+class COV;
+class EIGEN;
+class QRDLocalMemToDDRQ;
+class QRDLocalMemToDDRR;
+class CPipe;
+class APipe;
+class CMatrixPipe;
+class RQPipe;
+class QQPipe;
 
 /*
-this source implements the steps to 
-identify principal compoents (eigen vectors) 
-of a matrix and finally transform input matrix
-along the directions of the principal components
-
-Following are the main steps in order to transform a 
-matrix A. Matrix A will contain n samples with p features
-making it nxp order matrix
-
-1. Calculating the mean vector u
-   (F_0, F_1, ..., F_(p-1))
-
-2. Calculating zero mean matrix 
-   B = A - h^{T}*u                 
-   here h is a vector with ones of size n
-
-3. Calculate covariance matrix of size pxp
-   C = (1.0/(n-1)) * B*B^{T}
-
-4. Calculating eigen vectors and eigen values QR decomposition
-   in an iterative loop
-
-5. sort eigen vectors using eigen values in a decending order
-
-6. form the tranformation matrix using eigen vectors
+  Implementation of the QR decomposition using multiple streaming kernels
+  Can be configured by datatype, matrix size and works with square or
+  rectangular matrices, real and complex.
 */
-typedef double F_type;
+template <unsigned columns,     // Number of columns in the input matrix
+          unsigned rows,        // Number of rows in the input matrix
+          unsigned raw_latency, // RAW latency for triangular loop optimization
+          bool is_complex,      // Selects between ac_complex<T> and T datatype
+          typename T,           // The datatype for the computation
+          typename TT = std::conditional_t<is_complex, ac_complex<T>, T>
+                        // TT will be ac_complex<T> or T depending on is_complex
+         >
+void QRDecompositionImpl(
+  std::vector<TT> &a_matrix, // Input matrix to decompose
+  std::vector<TT> &eig_matrix, // Output matrix Q
+  std::vector<TT> &qq_matrix, // Output matrix R
+  sycl::queue &q,            // Device queue
+  int matrix_count,          // Number of matrices to decompose
+  int repetitions           // Number of repetitions, for performance evaluation
+) {
 
-template <typename T> class PCA {
- public: 
-    // n - number of samples, p - number of features 
-    int n, p, matrixCount, debug;
-    std::vector<T> matA, matUA, matC;
+  constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
+  constexpr int kAMatrixSize = SAMPE_SIZE * rows;
+  constexpr int kQQMatrixSize = columns * rows;
+  constexpr int kEigMatrixSize = rows + 1; // additional one for debug data
+  
+
+  using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
+
+  // Pipes to communicate the A, Q and R matrices between kernels
+  using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
+  using CMatrixPipe = sycl::ext::intel::pipe<CPipe, PipeType, 3>;
+  using EigMatrixPipe = sycl::ext::intel::pipe<RQPipe, PipeType, 3>;
+  using QQMatrixPipe = sycl::ext::intel::pipe<QQPipe, PipeType, 3>;
+
+
+  // Allocate FPGA DDR memory.
+  TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
+  TT *qq_device = sycl::malloc_device<TT>(kQQMatrixSize * matrix_count, q);
+  TT *eig_device = sycl::malloc_device<TT>(kEigMatrixSize * matrix_count, q);
+
+  q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
+                                                          * sizeof(TT)).wait();
+
+  auto ddr_write_event =
+  q.submit([&](sycl::handler &h) {
+    h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
+      MatrixReadFromDDRToPipe<TT, SAMPE_SIZE, rows, kNumElementsPerDDRBurst,
+                            AMatrixPipe>(a_device, matrix_count, repetitions);
+    });
+  });
+
+
+  q.single_task<COV>(
+    fpga_linalg::StreamingMM<T, is_complex, rows, SAMPE_SIZE, kNumElementsPerDDRBurst,
+            kNumElementsPerDDRBurst, AMatrixPipe, CMatrixPipe>());
+
+
+  // Read the A matrix from the AMatrixPipe pipe and compute the QR
+  // decomposition. Write the Q and R output matrices to the QMatrixPipe
+  // and RMatrixPipe pipes.
+
+  q.single_task<EIGEN>(
+    fpga_linalg::StreamingQRD<T, is_complex, rows, columns, raw_latency,
+                kNumElementsPerDDRBurst, CMatrixPipe, EigMatrixPipe, QQMatrixPipe>());
+
+
+  auto eig_event = q.single_task<QRDLocalMemToDDRR>([=
+                                    ]() [[intel::kernel_args_restrict]] {
+    // Read the R matrix from the RMatrixPipe pipe and copy it to the
+    // FPGA DDR
+    sycl::device_ptr<TT> vector_ptr_device(eig_device);
+
+    // Repeat matrix_count complete R matrix pipe reads
+    // for as many repetitions as needed
+     MatrixReadPipeToDDR<TT, rows+1, 1, kNumElementsPerDDRBurst,
+                        EigMatrixPipe>(eig_device, matrix_count, repetitions);
+  });
+
+
+  auto qq_event = q.single_task<QRDLocalMemToDDRQ>([=
+                                    ]() [[intel::kernel_args_restrict]] {
+    // Read the Q matrix from the QMatrixPipe pipe and copy it to the
+    // FPGA DDR
+    sycl::device_ptr<TT> vector_ptr_device(qq_device);
+    MatrixReadPipeToDDR<TT, rows, columns, kNumElementsPerDDRBurst,
+                        QQMatrixPipe>(qq_device, matrix_count, repetitions);
+  });
 
 
 
- public: 
-    PCA(int n, int p, int count, int debug = 0);
-    ~PCA();
-    void populate_A();
-    void normalizeSamples();
-    void calculate_covariance();
+  qq_event.wait();
+  eig_event.wait();
 
-};
+  // Compute the total time the execution lasted
+  auto start_time = ddr_write_event.template
+              get_profiling_info<sycl::info::event_profiling::command_start>();
+  auto end_time = qq_event.template
+                get_profiling_info<sycl::info::event_profiling::command_end>();
+  double diff = (end_time - start_time) / 1.0e9;
+  q.throw_asynchronous();
+
+  std::cout << "   Total duration:   " << diff << " s" << std::endl;
+  std::cout << "Throughput: "
+            << repetitions * matrix_count / diff * 1e-3
+            << "k matrices/s" << std::endl;
 
 
-template<typename T> PCA<T>::PCA(int n,int p, int count,  int debug){
-    this->n = n;
-    this->p = p;
-    this->matrixCount = count;
-    this->debug = debug;
-    this->matA.resize(n*p*this->matrixCount);
-    this->matUA.resize(n*p*this->matrixCount);
-    this->matC.resize(p*p*this->matrixCount);
+  // Copy the Q and R matrices result from the FPGA DDR to the host memory
+  q.memcpy(qq_matrix.data(), qq_device, kQQMatrixSize * matrix_count
+                                                          * sizeof(TT)).wait();
+  q.memcpy(eig_matrix.data(), eig_device, kEigMatrixSize * matrix_count
+                                                          * sizeof(TT)).wait();
 
+  // Clean allocated FPGA memory
+  free(a_device, q);
+  free(eig_device, q);
+  free(qq_device, q);
 }
 
-
-template<typename T> PCA<T>::~PCA(){
-}
-
-
-
-// populating matrix a with random numbers
-template<typename T> void PCA<T>::populate_A(){
-    // constexpr size_t kRandomMin = 0;
-    // constexpr size_t kRandomMax = 1000;
-
-    size_t kEigenMin = 2*this->p;
-    size_t kEigenMax = 6*this->p;
-
-    // constexpr size_t kNoiseMin = 0;
-    // constexpr size_t kNoiseMax = 5000;
-
-
-    T* TeigVec = new T[this->p * this->p];
-    T* Teigval = new T[this->p];
-    T* noise = new T[this->p];
-
-    // int Teigval[5] = {100, 50, 25, 15, 2};
-    for(int m_id  =0; m_id < this->matrixCount; m_id++){
-    // initialising TeigVec with random numbers
-
-        for(int i = 0; i < this->p; i++){
-            // making sure two eigen values are unlikely same
-            Teigval[i] = (rand() % (kEigenMax - kEigenMin) + kEigenMin) + (((double)rand()-RAND_MAX/2)/(double)RAND_MAX);
-        }
-
-        for(int i =0; i < this->p; i++){
-            for(int j = 0; j < this->p; j++){
-                TeigVec[i*this->p+j] = (((double)rand()-RAND_MAX/2)/(double)RAND_MAX);//(rand() % (kRandomMax - kRandomMin) + kRandomMin);
-            }
-        }
-
-        // setting eigen vectors
-        QR_Decmp<T> qr_decom(TeigVec, this->p, m_id);
-        qr_decom.QR_decompose(this->p);
-        T* Q = qr_decom.get_Q();
-
-    
-        if(this->debug) std::cout << "Initial input Matrix A for PCA :"  << this->matrixCount << " \n";
-        int offset = m_id * this->n * this->p;
-        for(int i = 0; i < this->n; i++){ // samples 
-
-            // std::default_random_engine generator;
-            // std::normal_distribution<double> distribution(0,Teigval[k]);
-
-            for(int k = 0; k < this->p; k++){
-                noise[k] = (((double)rand()-RAND_MAX/2)/(double)RAND_MAX) * Teigval[k];
-            }
-
-            for(int j = 0; j < this->p; j++){ // features 
-                this->matA[offset+ i*p+j] = 0;
-                for(int k = 0; k < this->p; k++){ // vectors
-                    // int noise =  (rand() % (kNoiseMax - kNoiseMin) + kNoiseMin);
-                    this->matA[offset+ i*p+j] +=  noise[k] * Q[j*this->p+k];
-                }
-                if(this->debug) std::cout << this->matA[offset+i*p+j] << " ";
-            }
-            if(this->debug) std::cout << "\n";
-        }
-    }
-
-    delete[] TeigVec;
-    delete[] Teigval;
-    delete[] noise;
-
-
-}
-
-
-// Pre process steps for PCA
-// Samples need to be normalised 
-// First mean vector is computed
-// standard devaition comutation 
-// Normalized   
-template<typename T> void PCA<T>::normalizeSamples(){
-    // setting mean vector to zero
-    T* meanVec = new T[this->p];
-    T* Var = new T[this->p];
-    T* stDev = new T[this->p];
-
-    for(int m_id  =0; m_id < this->matrixCount; m_id++){
-        int offset = m_id * this->n * this->p;
-        for(int i = 0; i < p; i++){
-            meanVec[i] = 0;
-            Var[i] = 0;
-        }
-
-        // getting vector sum of the samples
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < p; j++){
-                meanVec[j] += this->matA[offset+ i*p+j];
-            }
-        }
-
-        // Calculating the mean vector
-        if(this->debug) std::cout << "\nMean Vec is: \n";
-        for(int i = 0; i < p; i++){
-            meanVec[i] /= this->n;
-            if(this->debug) std::cout << meanVec[i] << " ";
-        }
-        if(this->debug) std::cout << "\n";
-
-        // calculating the variance vector 
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < p; j++){
-                T val = this->matA[offset+ i*p+j] - meanVec[j];
-                Var[j] += val*val;
-
-            }
-        }
-
-        // // calculating Standard Deviation 
-        if(this->debug) std::cout << "\nStandard deviation is: \n";
-        for(int i = 0; i < p; i++){
-            stDev[i] = sqrt(Var[i]/this->n);
-            if(this->debug) std::cout << stDev[i] << " ";
-        }
-        if(this->debug) std::cout << "\n";
-
-        // normalising the input matrix 
-        if(this->debug) std::cout << "\nNormalized matrix is: \n";
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < p; j++){
-                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j]); // /stDev[j];
-                if(this->debug) std::cout << this->matUA[offset + i*p+j] << " ";
-            }
-            if(this->debug) std::cout << "\n";
-        }
-    }
-
-    // Standard deviation 
-    delete[]  meanVec;
-    delete[]  Var;
-    delete[]  stDev;
-}
-
-
-
-
-template<typename T> void PCA<T>::calculate_covariance(){
-    // covariance matrix matdA^{T} * matdA
-    // this corresponds to matrix order pxp
-    if(this->debug) std::cout << "\nCovariance matrix is: \n";
-
-    for(int m_id  =0; m_id < this->matrixCount; m_id++){
-        int offsetUA = m_id * this->n * this->p;
-        int offsetC = m_id * this->p * this->p;
-        for(int i = 0; i < p; i++){
-            for(int j = 0; j < p; j++ ){
-                this->matC[offsetC + i*p+j] = 0;
-                for(int k = 0; k < this->n; k++){
-                    this->matC[offsetC + i*p+j] += this->matUA[offsetUA + k*p+i]*this->matUA[offsetUA + k*p+j];
-                }
-                this->matC[offsetC + i*p+j] = (1.0/(this->n-1))*this->matC[offsetC + i*p+j];
-                if(this->debug) std::cout << this->matC[offsetC + i*p+j] << " ";
-            }
-            if(this->debug) std::cout << "\n";
-        }
-    }
-}
-
-
+#endif /* __QRD_HPP__ */

@@ -1,5 +1,5 @@
-set(TARGET_NAME eigen)
-set(SOURCE_FILE eigen_demo.cpp)
+set(TARGET_NAME pca)
+set(SOURCE_FILE pca_demo.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
@@ -32,8 +32,8 @@ endif()
 
 
 # A10 parameters
-set(ROWS_COMPONENT 16)
-set(COLS_COMPONENT 16)
+set(ROWS_COMPONENT 64)
+set(COLS_COMPONENT 64)
 set(COMPLEX 0)
 set(FIXED_ITERATIONS 64)
 set(CLOCK_TARGET 360MHz)
