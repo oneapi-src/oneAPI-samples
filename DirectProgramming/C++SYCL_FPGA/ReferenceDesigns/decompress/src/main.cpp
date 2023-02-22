@@ -258,11 +258,11 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
 
 #else
   std::cout << ">>>>> Alice In Wonderland Test <<<<<" << std::endl;
-  std::string alice_in_file = test_dir + "/alice29_small.txt.sz";
+  std::string alice_in_file = test_dir + "/alice29.txt.sz";
   auto in_bytes = ReadInputFile(alice_in_file);
   auto result = decompressor.DecompressBytes(q, in_bytes, 1, false);
 
-  std::string alice_ref_file = test_dir + "/alice29_small.ref.txt";
+  std::string alice_ref_file = test_dir + "/alice29.ref.txt";
   auto ref_bytes = ReadInputFile(alice_ref_file);
   bool alice_test_pass =
       (result != std::nullopt) && (result.value() == ref_bytes);
