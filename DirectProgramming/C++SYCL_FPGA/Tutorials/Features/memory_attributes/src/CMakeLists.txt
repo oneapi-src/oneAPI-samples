@@ -1,8 +1,11 @@
 set(SOURCE_FILE memory_attributes.cpp)
 set(TARGET_NAME memory_attributes)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
+
+if(UNIX)
+    set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
+endif()
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
