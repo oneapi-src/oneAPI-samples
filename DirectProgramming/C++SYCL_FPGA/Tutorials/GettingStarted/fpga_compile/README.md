@@ -22,7 +22,7 @@ This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGAs thro
 > 
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: SYCL USM allocations, used in `part2` and `part5` of this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
+> **Note**: SYCL USM allocations, used in `part2` and `part3` of this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
 
 ## Prerequisites
 This sample is part of the FPGA code samples.
@@ -184,7 +184,7 @@ The [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/d
 
 ### Source Code
 
-There are 5 parts to this tutorial located in the 3 sub-folders. Together, they demonstrate how you can migrate an algorithm from vanilla C++ code to SYCL for FPGA. Note that you may also choose to use a functor with buffers, or a function with USM.
+There are 4 parts to this tutorial located in the 3 sub-folders. Together, they demonstrate how you can migrate an algorithm from vanilla C++ code to SYCL for FPGA. Note that you may also choose to use a functor with buffers, or a function with USM.
 
 #### Part 1 C++
 Part 1 demonstrates a vector addition program in vanilla C++. Observe how the `VectorAdd` function is separated from the `main()` function, and the `vec_a`, `vec_b`, and `vec_c` vectors are allocated onto the heap.
@@ -201,9 +201,6 @@ h.single_task<...>([=]() {
 ```
 #### Part 4 SYCL* (lambda function and buffer)
 Part 4 shows the vector addition in SYCL* C++ with a 'function' coding style and buffer & accessor interface. This code style will be familiar to users who are already experienced with SYCL*. Observe how `vec_a`, `vec_b`, and `vec_c` are copied into buffers before the `VectorAdd` function is called.
-
-#### Part 5 SYCL* (functor and buffer)
-Part 5 demonstrates the vector addition in SYCL* C++  with a 'functor' coding style using buffer & accessor interface. Observe how template parameters are used in the functor to pass in the accessors.
 
 ## Building the `fpga_compile` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
@@ -233,7 +230,6 @@ cd <partX-XXX>
 - `part2-dpcpp_functor_usm`
 - `part3-dpcpp_lambda_usm`
 - `part4-dpcpp_lambda_buffers`
-- `part5-dpcpp_functor_buffers`
 
 Generate the `Makefile` by running `cmake`.
   ```
@@ -266,7 +262,6 @@ cd <partX-XXX>
 - `part2-dpcpp_functor_usm`
 - `part3-dpcpp_lambda_usm`
 - `part4-dpcpp_lambda_buffers`
-- `part5-dpcpp_functor_buffers`
 
 Generate the `Makefile` by running `cmake`.
   ```
@@ -304,7 +299,7 @@ The `fpga_emu`, `fpga_sim` and `fpga` targets produce binaries that you can run.
 For part 1 of this tutorial, only the `fpga_emu` target is available as this regular C++ code only  target a CPU.
 
 ## Examining the Reports
-In *part2*, *part3*, *part4* and *part5*, after running the `report` target, the optimization report can be viewed using the `fpga_report` application:
+In *part2*, *part3* and *part4*, after running the `report` target, the optimization report can be viewed using the `fpga_report` application:
 ```
 fpga_report vector_add.report.prj/reports/vector_add_report.zip
 ```
