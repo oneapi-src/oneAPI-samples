@@ -140,7 +140,7 @@ Follow these steps to compile and test the design:
 
 3. Copy the generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_ip_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels have their own reports and associated RTL. You must locate the the `.prj_X` directory that contains the IP you want to use in your design.
 
-   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` is the correct `.prj_x` directory, because `add_example_fpga_ip_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
+   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add.fpga_ip_export.prj_1` is the correct `.prj_x` directory, because `add_fpga_ip_export_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
    
    ```verilog
    add_fpga_ip_export_1_di add_fpga_ip_export_1_di_inst (
