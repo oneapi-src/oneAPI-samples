@@ -9,7 +9,6 @@
 class VectorAddID;
 
 struct VectorAdd {
-  public:
     int *const vec_a_in;
     int *const vec_b_in;
     int *const vec_c_out;
