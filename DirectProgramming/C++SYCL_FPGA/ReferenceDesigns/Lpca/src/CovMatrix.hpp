@@ -41,6 +41,11 @@ struct StreamingMM{
 
   	constexpr int kColBlocks = (columns+rows-1)/rows;
   	constexpr int kRowBlocks = (rows+pipe_size-1)/pipe_size;
+  	constexpr int kLoopItr = rows*kRowBlocks;
+
+  	constexpr int kColBlockBitSize = fpga_tools::BitsForMaxValue<kColBlocks + 1>();
+  	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopItr + 1>();
+  	constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<rows + 1>();
 
 
 
@@ -56,11 +61,11 @@ struct StreamingMM{
 
 
 
-  		for(int blk = 0; blk < kColBlocks; blk++){
+  		for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
   			// loading data onchip memory 
-  			for(int itr = 0; itr < rows*kRowBlocks; itr++){
-  				int i_ll = itr / kRowBlocks;
-  				int j_ll = itr % kRowBlocks;
+  			for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
+  				ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
+  				ac_int<kRowBitSize, false> j_ll = itr % kRowBlocks;
 
   				pipe_read = AIn::read();
 				fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
@@ -79,8 +84,8 @@ struct StreamingMM{
 
 
   			row_tuple row1, row2, row_temp, rowSumL, rowSumW;
-  			for(int i_ll = 0; i_ll < rows; i_ll++){
-  				for(int j_ll = 0; j_ll < rows; j_ll++){
+  			for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
+  				for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   					T sum = 0;
   					
   					if(j_ll == 0){
@@ -143,8 +148,8 @@ struct StreamingMM{
   		// row_tuple row_write;
   		pipe_tuple pipe_write;
   		TT avg1, avg2, avg_temp;
-  		for(int i_ll = 0; i_ll < rows; i_ll++){
-  			for(int j_ll = 0; j_ll < rows; j_ll++){
+  		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
+  			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   				T loadVal;
   				row_tuple loadRow = MatrixCW[i_ll];
   				fpga_tools::UnrolledLoop<rows>([&](auto t) {
