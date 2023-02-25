@@ -52,7 +52,7 @@ void QRDecompositionImpl(
 ) {
 
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
-  constexpr int kAMatrixSize = SAMPE_SIZE * rows;
+  constexpr int kAMatrixSize = ((SAMPE_SIZE+rows-1)/rows) * rows * rows;
   constexpr int kQQMatrixSize = columns * rows;
   constexpr int kEigMatrixSize = rows + 1; // additional one for debug data
   
@@ -77,8 +77,8 @@ void QRDecompositionImpl(
   auto ddr_write_event =
   q.submit([&](sycl::handler &h) {
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
-      MatrixReadFromDDRToPipe<TT, SAMPE_SIZE, rows, kNumElementsPerDDRBurst,
-                            AMatrixPipe>(a_device, matrix_count, repetitions);
+      MatrixReadFromDDRToPipe<TT, rows, rows, kNumElementsPerDDRBurst,
+                            AMatrixPipe>(a_device, matrix_count*(SAMPE_SIZE+rows-1)/rows, repetitions);
     });
   });
 

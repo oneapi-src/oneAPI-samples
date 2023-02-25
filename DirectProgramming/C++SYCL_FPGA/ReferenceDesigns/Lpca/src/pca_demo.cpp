@@ -23,7 +23,7 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 100
+#define SAMPE_SIZE 96
 
 #define DEBUGEN 0
 #define DEBUGMINDEX 13
@@ -119,13 +119,16 @@ int main(int argc, char *argv[]) {
   // constexpr size_t kSampleSize = SAMPE_SIZE;
   constexpr size_t kRows = ROWS_COMPONENT;
   constexpr size_t kColumns = COLS_COMPONENT;
-  constexpr size_t kDAMatrixSize = kRows * SAMPE_SIZE;
+  constexpr size_t kDAMatrixSize = kRows * ((SAMPE_SIZE+kRows-1)/kRows) * kRows;
+  constexpr size_t kDAMatrixSizeCPU = kRows * SAMPE_SIZE;
   constexpr size_t kAMatrixSize = kRows * kColumns;
   // constexpr size_t kRQMatrixSize = kRows * kColumns;
   constexpr size_t kQQMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
 
   int iter = kRows*ITER_PER_EIGEN;
+
+  std::cout << "kDAMatrixSize is: " << kDAMatrixSize << "\n";
 
 
   // Get the number of times we want to repeat the decomposition
@@ -200,12 +203,30 @@ int main(int argc, char *argv[]) {
     pca.calculate_covariance();
 
 
+    // // copying the covariance matrix 
+    // for(int matrix_index = 0; matrix_index < kMatricesToDecompose; matrix_index++){
+    //   for(int i = 0; i < kRows; i++){
+    //     for(int j = 0; j < SAMPE_SIZE; j++){
+    //       a_matrix[matrix_index * kDAMatrixSize + i * SAMPE_SIZE + j] = 
+    //                     pca.matA[matrix_index * kDAMatrixSize + j * kRows + i];
+    //     }
+    //   }
+
+    // }
+
     // copying the covariance matrix 
-    for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
-      for(int i = 0; i < kRows; i++){
-        for(int j = 0; j < SAMPE_SIZE; j++){
-          a_matrix[matrix_index * kDAMatrixSize + i * SAMPE_SIZE + j] = 
-                        pca.matA[matrix_index * kDAMatrixSize + j * kRows + i];
+    // kRows x kRows block datalayout on device 
+    for(int matrix_index = 0; matrix_index < kMatricesToDecompose; matrix_index++){
+      for(int blk = 0; blk < (SAMPE_SIZE+kRows-1)/kRows; blk++){
+        for(int i = 0; i < kRows; i++){
+          for(int j = 0; j < kRows; j++){
+            if((blk*kRows+j) < SAMPE_SIZE){
+              a_matrix[matrix_index * kDAMatrixSize + blk*kRows*kRows + i * kRows + j] = 
+                            pca.matA[matrix_index * kDAMatrixSizeCPU + (blk*kRows+j)*kRows + i];
+            } else {
+              a_matrix[matrix_index * kDAMatrixSize + blk*kRows*kRows + i * kRows + j] = 0;
+            }
+          }
         }
       }
 
