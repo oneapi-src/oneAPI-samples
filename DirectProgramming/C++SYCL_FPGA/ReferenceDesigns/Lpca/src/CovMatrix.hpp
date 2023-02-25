@@ -50,33 +50,45 @@ struct StreamingMM{
 
   		// NO-FORMAT: Attribute
 		row_tuple MatrixA[rows];
-		row_tuple MatrixC[rows];
-		TT Avg[rows];
+		row_tuple MatrixC[rows], MatrixCW[rows];
+		TT Avg[rows], AvgW[rows], avgVal;
   		pipe_tuple pipe_read;
+
+
 
   		for(int blk = 0; blk < kColBlocks; blk++){
   			// loading data onchip memory 
-  			for(int i_ll = 0; i_ll < rows; i_ll++){
-  				for(int j_ll = 0; j_ll < kRowBlocks; j_ll++){
-  					pipe_read = AIn::read();
-  					fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
-          				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-          					if(k == j_ll){
-          						if constexpr (k*pipe_size+t < rows){
-          							MatrixA[i_ll].template get<k*pipe_size+t> () = pipe_read.template get<t>();
-          						}
-          					}
-          				});
-          			});
+  			for(int itr = 0; itr < rows*kRowBlocks; itr++){
+  				int i_ll = itr / kRowBlocks;
+  				int j_ll = itr % kRowBlocks;
 
-  				}
+  				pipe_read = AIn::read();
+				fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
+      			fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+      				if(k == j_ll){
+      					if constexpr (k*pipe_size+t < rows){
+      						MatrixA[i_ll].template get<k*pipe_size+t> () = pipe_read.template get<t>();
+      					}
+      				}
+      				});
+      			});
+
+
+
   			}
 
-  			row_tuple row1, row2, row_temp;
+
+  			row_tuple row1, row2, row_temp, rowSumL, rowSumW;
   			for(int i_ll = 0; i_ll < rows; i_ll++){
   				for(int j_ll = 0; j_ll < rows; j_ll++){
   					T sum = 0;
   					
+  					if(j_ll == 0){
+  						rowSumL = MatrixC[i_ll];
+  						avgVal = Avg[i_ll];
+  					}
+
+
   					row2 = MatrixA[j_ll];
   					if(j_ll == i_ll + 1){
   						row_temp = row2;
@@ -92,13 +104,16 @@ struct StreamingMM{
   						sum += row1.template get<t>() * row2.template get<t>();
   					});
 
+
   					fpga_tools::UnrolledLoop<rows>([&](auto t) {
   						if(j_ll == t && blk == 0){
-  							MatrixC[i_ll].template get<t> () = sum;
+  							rowSumW.template get<t> () = sum;
   						} else if(j_ll == t){
-  							MatrixC[i_ll].template get<t> () += sum;
+  							rowSumW.template get<t> () = rowSumL.template get<t> () + sum;
   						}
   					});
+
+
 
   					T colSum = 0;
   					fpga_tools::UnrolledLoop<rows>([&](auto t) {
@@ -106,34 +121,58 @@ struct StreamingMM{
   					});
 
 					if(j_ll == 0  && blk == 0){
-						Avg[i_ll] = colSum;
+						avgVal= colSum;
 					} else if(j_ll == 0){
-						Avg[i_ll] += colSum;
+						avgVal += colSum;
 					}
+
+					if(j_ll == rows - 1){
+  						MatrixC[i_ll] = rowSumW;
+  						Avg[i_ll] = avgVal;
+  					}
+
+  					if(blk == kColBlocks-1 && j_ll == rows - 1){
+  						MatrixCW[i_ll] = rowSumW;
+  						AvgW[i_ll] = avgVal;
+  					}
 
   				}
   			}
   		}
 
-  		row_tuple row_write;
+  		// row_tuple row_write;
   		pipe_tuple pipe_write;
+  		TT avg1, avg2, avg_temp;
   		for(int i_ll = 0; i_ll < rows; i_ll++){
   			for(int j_ll = 0; j_ll < rows; j_ll++){
   				T loadVal;
+  				row_tuple loadRow = MatrixCW[i_ll];
   				fpga_tools::UnrolledLoop<rows>([&](auto t) {
   					if(j_ll == t){
-  						loadVal = MatrixC[i_ll].template get<t>();
+  						loadVal = loadRow.template get<t>();
   					}
   				});
 
-  				T cov_i_j_tmp = loadVal - columns * Avg[i_ll] * Avg[j_ll];
+
+  				avg2 = AvgW[j_ll];
+  				if(j_ll == i_ll + 1){
+  					avg_temp = avg2;
+  				}
+
+  				if(i_ll == 0 && j_ll == 0){
+  					avg1 = avg2;
+  				} else if(j_ll == 0){
+  					avg1 = avg_temp;
+  				}
+
+  				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
   				T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
 
-  				fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  					if(j_ll == t){
-  						row_write.template get<t>() = cov_i_j;
-  					}
-  				});
+  				// fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  				// 	if(j_ll == t){
+  				// 		row_write.template get<t>() = cov_i_j;
+  				// 	}
+  				// });
 
   				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
   					if(t == j_ll % pipe_size){
