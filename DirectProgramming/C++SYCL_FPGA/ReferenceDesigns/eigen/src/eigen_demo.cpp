@@ -22,10 +22,10 @@
 #define RELSHIFT 1
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
-#define ITER_PER_EIGEN 8
+#define ITER_PER_EIGEN 100
 
-#define DEBUGMINDEX 0
-#define DEBUG 0
+#define DEBUGEN 1
+#define DEBUGMINDEX 9797
 
 #include "exception_handler.hpp"
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
-  int repetitions = argc > 1 ? atoi(argv[1]) : 10;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1000;
 #endif
   if (repetitions < 1) {
     std::cout << "Number of repetitions given is lower that 1." << std::endl;
@@ -136,24 +136,20 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 100;
+  constexpr size_t kMatricesToDecompose = 8;
 
   try {
     // SYCL boilerplate
-#if FPGA_SIMULATOR
-    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
-#elif FPGA_HARDWARE
-    auto selector = sycl::ext::intel::fpga_selector_v;
+#if defined(FPGA_EMULATOR)
+    auto device_selector = sycl::ext::intel::fpga_emulator_selector_v;
 #else
-    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+    auto device_selector = sycl::ext::intel::fpga_selector_v;
 #endif
-
-
 
     // Enable the queue profiling to time the execution
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
-    sycl::queue q = sycl::queue(selector,
+    sycl::queue q = sycl::queue(device_selector,
                                 fpga_tools::exception_handler,
                                 queue_properties);
 
@@ -207,38 +203,16 @@ int main(int argc, char *argv[]) {
         }  // end of col
       }    // end of row
 
-      // a_matrix[0] = 112;
-      // a_matrix[1] = 0;
-      // a_matrix[2] = 0;
-      // a_matrix[3] = 0;
-
-      // a_matrix[4] = 0;
-      // a_matrix[5] = 90;
-      // a_matrix[6] = 0;
-      // a_matrix[7] = 0;
-
-
-      // a_matrix[8] = 0;
-      // a_matrix[9] = 0;
-      // a_matrix[10] = 30;
-      // a_matrix[11] = 0;
-
-      // a_matrix[12] = 0;
-      // a_matrix[13] = 0;
-      // a_matrix[14] = 0;
-      // a_matrix[15] = 8;
-
-
-      if (DEBUG) {
-          std::cout << "A MATRIX " << matrix_index << std::endl;
-          for (size_t row = 0; row < kRows; row++) {
-            for (size_t col = 0; col < kColumns; col++) {
-              std::cout << a_matrix[matrix_index * kAMatrixSize
-                                  + col * kRows + row] << " ";
-            }  // end of col
-            std::cout << std::endl;
-          }  // end of row
-      }
+  #ifdef DEBUG
+      std::cout << "A MATRIX " << matrix_index << std::endl;
+      for (size_t row = 0; row < kRows; row++) {
+        for (size_t col = 0; col < kColumns; col++) {
+          std::cout << a_matrix[matrix_index * kAMatrixSize
+                              + col * kRows + row] << " ";
+        }  // end of col
+        std::cout << std::endl;
+      }  // end of row
+  #endif
 
     } // end of matrix_index
 
@@ -256,25 +230,6 @@ int main(int argc, char *argv[]) {
     std::vector<DTypeCPU> TmpRow(kRows);
     std::vector<int> sIndex(kRows);
     std::vector<int> sIndexSYCL(kRows);
-
-
-    if(DEBUG){
-      std::cout << "\n RQ Matrix: \n";
-      for(int i = 0; i < kRows; i++){
-        for(int j = 0; j < kRows; j++){
-          std::cout << rq_matrix[i*kRows+j] << " ";
-        }
-        std::cout << "\n";
-      }
-
-      std::cout << "\n QQ Matrix: \n";
-      for(int i = 0; i < kRows; i++){
-        for(int j = 0; j < kRows; j++){
-          std::cout << qq_matrix[i*kRows+j]  << " ";
-        }
-        std::cout << "\n";
-      }
-    }
 
     // data strucutre for golden results from numpy 
     // std::vector<T> py_w(kRows*kMatricesToDecompose);
@@ -365,7 +320,6 @@ int main(int argc, char *argv[]) {
     std::ofstream dAMat("Debug_A_CPU.txt");
 
 
-    int total_teration = 0; // accumulating total iteration to predict performance 
     DTypeCPU *R, *Q; // pointerfor Q and R matrix after QR decomposition 
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
@@ -395,12 +349,12 @@ int main(int argc, char *argv[]) {
         shift -= shift*SHIFT_NOISE;
 
 
-        if(DEBUG && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
         for(int i = 0; i < kP; i++){
           for(int j = 0; j < kP; j++){
-              if(DEBUG && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
           }
-          if(DEBUG && matrix_index == DEBUGMINDEX) dAMat << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
         }
 
 
@@ -408,12 +362,12 @@ int main(int argc, char *argv[]) {
           a_matrix_cpu[matrix_offset+i*kRows+i] -= shift;
         }
 
-          if(DEBUG && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix after shift at iteration: " << li << "\n";}
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix after shift at iteration: " << li << "\n";}
         for(int i = 0; i < kP; i++){
           for(int j = 0; j < kP; j++){
-              if(DEBUG && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
           }
-          if(DEBUG && matrix_index == DEBUGMINDEX) dAMat << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
         }
 
         qrd_cpu.QR_decompose(kP);
@@ -430,15 +384,15 @@ int main(int argc, char *argv[]) {
           }
         }
 
-        if(DEBUG && matrix_index == DEBUGMINDEX) {dQMat << "\n\nQ Matrix at iteration: " << li << "\n";}
-        if(DEBUG && matrix_index == DEBUGMINDEX) {dRMat << "\n\nR Matrix at iteration: " << li << "\n";}
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dQMat << "\n\nQ Matrix at iteration: " << li << "\n";}
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRMat << "\n\nR Matrix at iteration: " << li << "\n";}
         for(int i = 0; i < kP; i++){
           for(int j = 0; j < kP; j++){
-              if(DEBUG && matrix_index == DEBUGMINDEX) dQMat << Q[i*kRows+j] << " ";
-              if(DEBUG && matrix_index == DEBUGMINDEX) dRMat << R[i*kRows+j] << " ";
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << Q[i*kRows+j] << " ";
+              if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << R[i*kRows+j] << " ";
           }
-          if(DEBUG && matrix_index == DEBUGMINDEX) dQMat << "\n";
-          if(DEBUG && matrix_index == DEBUGMINDEX) dRMat << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << "\n";
         }
 
         // adding back the shift from the matrix
@@ -446,16 +400,16 @@ int main(int argc, char *argv[]) {
           a_matrix_cpu[matrix_offset+i*kRows+i] += shift;
         }
 
-        if(DEBUG && matrix_index == DEBUGMINDEX) {dRQ << "\n\nRQ Matrix at iteration: " << li << "\n";}
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n\nRQ Matrix at iteration: " << li << "\n";}
         for(int i = 0; i < kRows; i++){
           for(int j = 0; j < kRows; j++){
-            if(DEBUG && matrix_index == DEBUGMINDEX) {dRQ << a_matrix_cpu[matrix_offset+i*kRows+j] << " ";}
+            if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << a_matrix_cpu[matrix_offset+i*kRows+j] << " ";}
           }
-          if(DEBUG && matrix_index == DEBUGMINDEX) {dRQ << "\n";}
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n";}
         }
 
         // Eigen vector accumulation 
-        if(DEBUG && matrix_index == DEBUGMINDEX) dQQ << "QQ Matrix at iteration: " << li << "\n";
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "QQ Matrix at iteration: " << li << "\n";
         for(int i = 0; i < kRows; i++){
           std::fill(TmpRow.begin(), TmpRow.end(), 0);
           for(int j = 0; j < kRows; j++){
@@ -467,11 +421,11 @@ int main(int argc, char *argv[]) {
           }
           for(int k = 0; k < kRows; k++) {
             eigen_vectors_cpu[matrix_offset+i*kRows+k] = TmpRow[k];
-            if(DEBUG && matrix_index == DEBUGMINDEX) dQQ << eigen_vectors_cpu[matrix_offset+i*kRows+k] << " ";
+            if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << eigen_vectors_cpu[matrix_offset+i*kRows+k] << " ";
           }
-          if(DEBUG && matrix_index == DEBUGMINDEX) dQQ << "\n";
+          if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
         }
-        if(DEBUG && matrix_index == DEBUGMINDEX) dQQ << "\n";
+        if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
 
         for(int j = 0; j < kP-1; j++){
           if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
@@ -481,7 +435,6 @@ int main(int argc, char *argv[]) {
         }
 
         if(close2zero && kP == KDEFLIM){
-          total_teration += li+1;
           break;
         } else if(close2zero){
           kP -= 1;
@@ -578,29 +531,6 @@ int main(int argc, char *argv[]) {
   }
     std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes << "\n";
     std::cout << "Passed matrix percenage is " << (100.0 *passsed_marixes)/kMatricesToDecompose << "\n";
-
-    //-----------------------------------------------------------
-    // calculating the expected run time ------------------------
-    //-----------------------------------------------------------
-
-
-    // Total number of dummy iterations
-    const bool is_complex = false;
-    constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
-    static constexpr int kDummyIterations =
-        FIXED_ITERATIONS > kRows
-            ? (kRows - 1) * kRows / 2 + (FIXED_ITERATIONS - kRows) * kRows
-            : kRows * (kRows - 1) / 2;
-    // Total number of iterations (including dummy iterations)
-    static constexpr int kIterations =
-        kRows + kRows * (kRows + 1) / 2 + kDummyIterations;
-    double clocks = 1.0* (total_teration * (kIterations + kRows*kRows) + 3*(kRows*kRows/kNumElementsPerDDRBurst)) * \
-                    repetitions;
-    double predicted_time = clocks/3.6e8;
-    std::cout << "Predicted runtime is: " << predicted_time << " seconds\n";
-
-
-
     return 0;
 
   } catch (sycl::exception const &e) {
