@@ -36,27 +36,17 @@ struct StreamingMM{
     void operator()() const {
   	
   	using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
-  	using block_tuple = fpga_tools::NTuple<TT, blockSize>;
+  	using row_tuple = fpga_tools::NTuple<TT, rows>;
   	using pipe_tuple = fpga_tools::NTuple<TT, pipe_size>;
 
+  	constexpr int kColBlocks = (columns+rows-1)/rows;
+  	constexpr int kRowBlocks = (rows+pipe_size-1)/pipe_size;
+  	constexpr int kLoopItr = rows*kRowBlocks;
 
-  	constexpr int kRowBlocks = (columns + blockSize-1)/blockSize;
-  	constexpr int kRowpipeBlk = (columns + pipe_size-1)/pipe_size ;
+  	constexpr int kColBlockBitSize = fpga_tools::BitsForMaxValue<kColBlocks + 1>();
+  	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopItr + 1>();
+  	constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<rows + 1>();
 
-
-  	constexpr int kRamSize = kRowBlocks * rows;
-  	// constexpr int kLoopIter = kRowpipeBlk * rows;
-
-  	constexpr int kIBitSizeRows = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
-  	// constexpr int kIBitSizeColumns = fpga_tools::BitsForMaxValue<columns + 1>() + 1;
-  	constexpr int kIBitSizeColumnspipes = fpga_tools::BitsForMaxValue<kRowpipeBlk + 1>() + 1;
-  	constexpr int kIBitSizeColumnBlks = fpga_tools::BitsForMaxValue<kRowBlocks + 1>() + 1;
-  	// constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>() + 1;
-
-  	constexpr int kBlkFold  = blockSize/pipe_size;
-
-  	// constexpr int kColpipeBlk = (rows + pipe_size-1)/pipe_size;
-  	// constexpr int kOutMatrixSize = kColpipeBlk*columns;
 
 
   	while(1){
@@ -64,112 +54,144 @@ struct StreamingMM{
   		// storing in a internal matrix 
 
   		// NO-FORMAT: Attribute
-		block_tuple MatrixA[kRamSize];
-		block_tuple blkRow[kRowBlocks];
-		block_tuple blk_W, blk_R;
-
-
-  		T sum, mu, mu_old; 
+		row_tuple MatrixA[rows];
+		row_tuple MatrixC[rows], MatrixCW[rows];
+		TT Avg[rows], AvgW[rows], avgVal;
   		pipe_tuple pipe_read;
 
-  		// PRINTF("Normalised matrix is: \n");
-	  	// [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-	  	[[intel::loop_coalesce(2)]]
-	  	for (ac_int<kIBitSizeRows, false> li = 0; li < rows+1; li++) {
-			for (ac_int<kIBitSizeColumnspipes, false> lj = 0; lj < kRowpipeBlk; lj++) {
-				if(lj == 0){
-					sum  = 0;
-				}
-				if(li < rows){
-		    		pipe_read = AIn::read();
-		    	}
-		    	int li_1 = (li-1);
-		    	int MatrixA_addr = li_1*kRowBlocks + lj/kBlkFold;
-		    	int wordId = lj % kBlkFold;
-
-		    	T localSum = 0;
-		    	fpga_tools::UnrolledLoop<kBlkFold>([&](auto k) {
-		      		fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-		      			if(wordId == k && lj*pipe_size+t < columns){
-		      				blk_W.template get<k*pipe_size+t>() = pipe_read.template get<t>(); 
-		      				// PRINTF("%f ", pipe_read.template get<t>());
-		      			}
-		      		});
-		    	});
 
 
-		    	fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-	      			if(lj*pipe_size+t < columns){
-	      				localSum +=  pipe_read.template get<t>(); 
-	      				// PRINTF("%f ", pipe_read.template get<t>());
-	      			}
-	      		});
+  		for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
+  			// loading data onchip memory 
+  			for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
+  				ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
+  				ac_int<kRowBitSize, false> j_ll = itr % kRowBlocks;
 
-		    	sum += localSum;
+  				pipe_read = AIn::read();
+				fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
+      			fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+      				if(k == j_ll){
+      					if constexpr (k*pipe_size+t < rows){
+      						MatrixA[i_ll].template get<k*pipe_size+t> () = pipe_read.template get<t>();
+      					}
+      				}
+      				});
+      			});
 
-		    	if(lj == kRowpipeBlk -1){
-		    		mu = sum * 1.0f/(columns);
-		    		// PRINTF("%f ", mu);
 
-		    	}
 
-		    	blk_R = blkRow[lj/kBlkFold];
+  			}
 
-		    	fpga_tools::UnrolledLoop<blockSize>([&](auto k) {
-		    		blk_R.template get<k>() -= mu_old;
-		    		// if(li > 0) PRINTF("%f ", blk_R.template get<k>());
-		    	});
 
-		    	// PRINTF("\n");
-		    	if(li > 0){
-		    		MatrixA[MatrixA_addr] = blk_R;
-		    	}
-		    	blkRow[lj] = blk_W;
-		    	blkRow[lj/kBlkFold] = blk_W;
+  			row_tuple row1, row2, row_temp, rowSumL, rowSumW;
+  			for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
+  				for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
+  					T sum = 0;
+  					
+  					if(j_ll == 0){
+  						rowSumL = MatrixC[i_ll];
+  						avgVal = Avg[i_ll];
+  					}
 
-		    	if(lj == kRowpipeBlk -1){
-		    		mu_old = mu;
-		    	}
-			}
-			// PRINTF("\n");
-		}
-		// PRINTF("\n");
 
-		// computing the eigen vectors
-		// PRINTF("Covariance Matrix is: \n");
-		pipe_tuple pipe_write;
-		for (ac_int<kIBitSizeRows, false> li = 0; li < rows; li++) {
-			for (ac_int<kIBitSizeRows, false> lj = 0; lj < rows; lj++) {
-				T Dot = 0;
-				// need get dot product of li row and lj row
-				for (ac_int<kIBitSizeColumnBlks, false> lk = 0; lk < kRowBlocks; lk++) {
-					int add1 = li*kRowBlocks + lk;
-					int add2 = lj*kRowBlocks + lk;
+  					row2 = MatrixA[j_ll];
+  					if(j_ll == i_ll + 1){
+  						row_temp = row2;
+  					}
 
-					fpga_tools::UnrolledLoop<blockSize>([&](auto t) {
-						if(lk*blockSize+t < columns){
-							Dot += MatrixA[add1].template get<t>() * MatrixA[add2].template get<t>();
-						}
+  					if(i_ll == 0 && j_ll == 0){
+  						row1 = row2;
+  					} else if(j_ll == 0){
+  						row1 = row_temp;
+  					}
 
-					});
-				}
-				// PRINTF("%f ", (1.0f/(columns-1)) * Dot);
+  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  						sum += row1.template get<t>() * row2.template get<t>();
+  					});
 
-				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-					if(t == lj % pipe_size){
-						pipe_write.template get<t>() = (1.0f/(columns-1)) * Dot;
+
+  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  						if(j_ll == t && blk == 0){
+  							rowSumW.template get<t> () = sum;
+  						} else if(j_ll == t){
+  							rowSumW.template get<t> () = rowSumL.template get<t> () + sum;
+  						}
+  					});
+
+
+
+  					T colSum = 0;
+  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  						colSum += row1.template get<t>() / columns;
+  					});
+
+					if(j_ll == 0  && blk == 0){
+						avgVal= colSum;
+					} else if(j_ll == 0){
+						avgVal += colSum;
 					}
-				});
-				
-				// sending column by column
-				if(lj % pipe_size == pipe_size -1 || lj == rows-1){
-					AOut::write(pipe_write);
-				}
 
-			}
-			// PRINTF("\n");
-		}
-		// PRINTF("\n");
+					if(j_ll == rows - 1){
+  						MatrixC[i_ll] = rowSumW;
+  						Avg[i_ll] = avgVal;
+  					}
+
+  					if(blk == kColBlocks-1 && j_ll == rows - 1){
+  						MatrixCW[i_ll] = rowSumW;
+  						AvgW[i_ll] = avgVal;
+  					}
+
+  				}
+  			}
+  		}
+
+  		// row_tuple row_write;
+  		pipe_tuple pipe_write;
+  		TT avg1, avg2, avg_temp;
+  		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
+  			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
+  				T loadVal;
+  				row_tuple loadRow = MatrixCW[i_ll];
+  				fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  					if(j_ll == t){
+  						loadVal = loadRow.template get<t>();
+  					}
+  				});
+
+
+  				avg2 = AvgW[j_ll];
+  				if(j_ll == i_ll + 1){
+  					avg_temp = avg2;
+  				}
+
+  				if(i_ll == 0 && j_ll == 0){
+  					avg1 = avg2;
+  				} else if(j_ll == 0){
+  					avg1 = avg_temp;
+  				}
+
+  				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
+  				T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
+
+  				// fpga_tools::UnrolledLoop<rows>([&](auto t) {
+  				// 	if(j_ll == t){
+  				// 		row_write.template get<t>() = cov_i_j;
+  				// 	}
+  				// });
+
+  				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+  					if(t == j_ll % pipe_size){
+  						pipe_write.template get<t> () = cov_i_j;
+  					}
+  				});
+
+  				if(j_ll % pipe_size == pipe_size -1 || j_ll == rows-1){
+  					AOut::write(pipe_write);
+  				}
+
+  			}
+  		}
+
 
 
   	}
