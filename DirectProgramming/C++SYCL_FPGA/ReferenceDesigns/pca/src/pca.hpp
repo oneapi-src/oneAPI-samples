@@ -42,7 +42,7 @@ template <unsigned columns,     // Number of columns in the input matrix
           typename TT = std::conditional_t<is_complex, ac_complex<T>, T>
                         // TT will be ac_complex<T> or T depending on is_complex
          >
-void QRDecompositionImpl(
+void PCAsyclImpl(
   std::vector<TT> &a_matrix, // Input matrix to decompose
   std::vector<TT> &eig_matrix, // Output matrix Q
   std::vector<TT> &qq_matrix, // Output matrix R

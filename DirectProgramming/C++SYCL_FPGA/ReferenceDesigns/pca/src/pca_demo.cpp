@@ -23,7 +23,7 @@
 #define SHIFT_NOISE 1e-2
 #define SHIFT_NOISE_CPU 1e-2
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 96
+#define SAMPE_SIZE 5000
 
 #define DEBUGEN 0
 #define DEBUGMINDEX 13
@@ -63,12 +63,12 @@ typedef double DTypeCPU;
 
 #if COMPLEX == 0
 // Real single precision floating-point QR Decomposition
-void QRDecomposition(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
+void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
                      std::vector<float> &r_matrix, sycl::queue &q,
                      int matrix_count,
                      int repetitions) {
   constexpr bool is_complex = false;
-  QRDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+  PCAsyclImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
                        is_complex, float>(a_matrix, q_matrix, r_matrix, q,
                                           matrix_count, repetitions);
 
@@ -87,13 +87,13 @@ void QRDecomposition(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
 // }
 #else
 // Complex single precision floating-point QR Decomposition
-void QRDecomposition(std::vector<ac_complex<float> > &a_matrix,
+void PCAsycl(std::vector<ac_complex<float> > &a_matrix,
                      std::vector<ac_complex<float> > &q_matrix,
                      std::vector<ac_complex<float> > &r_matrix, sycl::queue &q,
                      int matrix_count,
                      int repetitions) {
   constexpr bool is_complex = true;
-  QRDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+  PCAsyclImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
                        is_complex, float>(a_matrix, q_matrix, r_matrix, q,
                                           matrix_count, repetitions);
 }
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 2;
+  constexpr size_t kMatricesToDecompose = 200;
 
   try {
     // SYCL boilerplate
@@ -247,11 +247,11 @@ int main(int argc, char *argv[]) {
   }
 
 
-    std::cout << "Running QR decomposition of " << kMatricesToDecompose
+    std::cout << "Running Principal Component analysis of " << kMatricesToDecompose
               << " matri" << (kMatricesToDecompose > 1 ? "ces " : "x ")
               << repetitions << " times" << std::endl;
 
-    QRDecomposition(a_matrix, eig_matrix, qq_matrix, q, kMatricesToDecompose,
+    PCAsycl(a_matrix, eig_matrix, qq_matrix, q, kMatricesToDecompose,
                                                                   repetitions);
 
     // eigen value & vector computation on CPU for same data
@@ -334,6 +334,7 @@ int main(int argc, char *argv[]) {
     std::ofstream dAMat("Debug_A_CPU.txt");
 
 
+    int total_iteration = 0; // for the run time prediction on FPGA
     DTypeCPU *R, *Q; // pointerfor Q and R matrix after QR decomposition 
     for(int matrix_index = 0; matrix_index <kMatricesToDecompose; matrix_index++){
       int matrix_offset = matrix_index * kAMatrixSize;
@@ -449,6 +450,7 @@ int main(int argc, char *argv[]) {
         }
 
         if(close2zero && kP == KDEFLIM){
+          total_iteration += li+1;
           break;
         } else if(close2zero){
           kP -= 1;
@@ -562,6 +564,35 @@ int main(int argc, char *argv[]) {
     std::cout << "Failed PCA flag count from kernel is: " << KernelFlagCount << "\n";
     std::cout << "Mis Matched matrix count is " << kMatricesToDecompose - passsed_marixes - KernelFlagCount  << "\n";
     std::cout << "Passed matrix percenage is " << (100.0 *passsed_marixes)/(kMatricesToDecompose - KernelFlagCount) << "\n";
+    
+
+    // Runtime Prediction
+    const bool is_complex = false;
+    constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
+    static constexpr int kDummyIterations =
+        FIXED_ITERATIONS > kRows
+            ? (kRows - 1) * kRows / 2 + (FIXED_ITERATIONS - kRows) * kRows
+            : kRows * (kRows - 1) / 2;
+    // Total number of iterations (including dummy iterations)
+    static constexpr int kIterations =
+        kRows + kRows * (kRows + 1) / 2 + kDummyIterations;
+
+    double preProcLat = (kRows * kRows) * ((SAMPE_SIZE+kRows-1)/kRows) 
+          + kRows*(kRows+kNumElementsPerDDRBurst-1)/kNumElementsPerDDRBurst;
+
+    double QRItrLat = total_iteration * (kIterations + kRows*kRows);
+
+    double SortLat = 2*kRows*kRows;
+
+    double WBackLat = (kRows*(kRows+kNumElementsPerDDRBurst-1)/kNumElementsPerDDRBurst + 
+      (kRows+kNumElementsPerDDRBurst)/kNumElementsPerDDRBurst);
+
+    double clocks = 1.0* (preProcLat + QRItrLat + (SortLat + WBackLat)*kMatricesToDecompose) * repetitions;
+    double predicted_time = clocks/2.39e8;
+    std::cout << "Predicted runtime is: " << predicted_time << " seconds\n";
+
+
+
     return 0;
 
   } catch (sycl::exception const &e) {

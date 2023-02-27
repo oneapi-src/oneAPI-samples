@@ -523,19 +523,7 @@ struct StreamingQRD {
         }  // end of s
 
 
-        // Eigen vector QQ computation
-        row_tuple QQ_write;
-        row_tuple QQ_load;
-        column_tuple Q_load_RQ, Q_load_RQ_tmp;
 
-        // RQ computation and writig the results back in a_load 
-        column_tuple colA_write;
-        // const float threshold = 1e-4;
-        bool converged = 1;
-        // TT R_shift_tmp = 0;
-        // TT R_shift_1BF = 0;
-
-        TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
 
 
 
@@ -556,8 +544,22 @@ struct StreamingQRD {
         // }
 
         
+
+        // Eigen vector QQ computation
+        row_tuple QQ_write;
+        row_tuple QQ_load;
+        column_tuple Q_load_RQ, Q_load_RQ_tmp;
+
+        // RQ computation and writig the results back in a_load 
+        column_tuple colA_write;
+        // const float threshold = 1e-4;
+        bool converged = 1;
+        // TT R_shift_tmp = 0;
+        // TT R_shift_1BF = 0;
+
+        TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
+
         column_tuple Q_load_ii;
-        // [[intel::initiation_interval(1)]]  
         [[intel::loop_coalesce(2)]]
         for(ac_int<kIBitSize , false> i_ll = 0; i_ll < columns; i_ll++){
           for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
@@ -569,14 +571,16 @@ struct StreamingQRD {
             }
 
             column_tuple Q_load = q_result[j_ll];
-
             fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
                 TT Ival = (j_ll == k) ? 1 : 0; 
                 Q_load.template get<k>() = (k >= kDM_size || j_ll >= kDM_size ? Ival : Q_load.template get<k>());
             });
 
             // -------------------------------------------------------
-            Q_load_ii = (i_ll == j_ll) ? Q_load  : Q_load_ii;
+            
+            if(i_ll == j_ll){
+              Q_load_ii = Q_load;
+            } 
             TT chk_ortho = 0;
             fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
