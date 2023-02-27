@@ -1,5 +1,6 @@
 if(WIN32)
-        set(CMAKE_CXX_COMPILER "dpcpp-cl")
+        set(CMAKE_CXX_COMPILER "icx-cl")
+        set(CMAKE_CXX_FLAGS "fsycl")
 else()
         set(CMAKE_CXX_COMPILER "icpx")
 endif()

@@ -4,7 +4,7 @@ This tutorial describes the process of _Shannonization_ (named after [Claude Sha
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II
 | Time to complete                  | 45 minutes
@@ -40,8 +40,8 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 Demonstrate a loop optimization to improve the f<sub>MAX</sub>/II of an FPGA design.
@@ -164,7 +164,7 @@ To achieve an II of 1 for the main `while` loop in the FPGA code shown above, th
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -277,7 +277,7 @@ However, this places a 32-bit Integer Add Operation back into the critical path 
 In general, these shannonization optimizations create a shift-register that precomputes and *passes* values (additions and comparisons) to the loop's later iterations. The size of the shift-register determines how many *future* iterations we precompute for. In version 1, we precompute for one iteration; in this version, we precompute for 2 iterations. The reports for the `Intersection<2>` should show a critical path with: a single 32-bit Integer Compare Operation (`a < b`), a 32-bit Select Operation (`::read`) and a 1-bit And Operation (`a < b && A_count_inrange`). Thus, we have removed two 32-bit Compare Operations and one 32-bit Add Operation from the critical path. Looking at the *Loop Analysis* pane, you will see that the *Block Scheduled f<sub>MAX</sub>* is highest for `Intersection<2>` (e.g., 240 MHz).
 
 #### Version 3
-As a consequence of the fabric architecture of the Intel Stratix® 10 SX FPGA, the hardware implementation of pipes for the Intel Stratix® 10 SX FPGA has a longer latency for blocking pipe reads and writes. In version 3 of the kernel, `Intersection<3>`, we transform the code to use non-blocking pipe reads. For the Intel® Arria® 10 FPGA, this does not have a noticeable difference. However, this transformation allows the design to reach an II of 1 for the Intel Stratix® 10 and Intel Agilex™ FPGAs.
+As a consequence of the fabric architecture of the Intel Stratix® 10 SX FPGA, the hardware implementation of pipes for the Intel Stratix® 10 SX FPGA has a longer latency for blocking pipe reads and writes. In version 3 of the kernel, `Intersection<3>`, we transform the code to use non-blocking pipe reads. For the Intel® Arria® 10 FPGA, this does not have a noticeable difference. However, this transformation allows the design to reach an II of 1 for the Intel Stratix® 10 and Intel Agilex® FPGAs.
 
 ## Running the Sample
 

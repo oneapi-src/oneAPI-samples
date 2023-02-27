@@ -46,7 +46,7 @@ class ExecuteOnGpu {
       sycl::buffer b_buffer(b_array);
       sycl::buffer c_buffer(c_array);
 
-      sycl::queue q(sycl::default_selector{}, dpc_common::exception_handler);
+      sycl::queue q(sycl::default_selector_v, dpc_common::exception_handler);
       q.submit([&](sycl::handler& h) {            
             sycl::accessor a_accessor(a_buffer, h, sycl::read_only);
             sycl::accessor b_accessor(b_buffer, h, sycl::read_only);

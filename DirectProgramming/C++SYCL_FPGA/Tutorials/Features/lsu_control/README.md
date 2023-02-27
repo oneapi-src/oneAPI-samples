@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to configure the load-store units (LSU) in S
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
 | Time to complete                  | 30 minutes
@@ -41,8 +41,8 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -147,7 +147,7 @@ The kernel design requests data from global memory in a contiguous manner. There
    cd build
    ```
 
-   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® device family), run `cmake` using the command:
    ```
    cmake ..
    ```
@@ -193,7 +193,7 @@ The kernel design requests data from global memory in a contiguous manner. There
    cd build
    ```
 
-   To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" ..
    ```

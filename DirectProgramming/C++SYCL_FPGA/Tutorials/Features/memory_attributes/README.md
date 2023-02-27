@@ -4,7 +4,7 @@ This FPGA tutorial demonstrates how to use on-chip memory attributes to control 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes
 | Time to complete                  | 30 minutes
@@ -40,8 +40,8 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 For each private or local array in your FPGA device code, the compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of SYCL*-compliant extensions for FPGA that enable you to override the internal compiler heuristics and control kernel memory architecture.
@@ -184,7 +184,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -227,7 +227,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
@@ -248,10 +248,6 @@ The choice of attributes will be further discussed in the [Examining the Reports
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -320,12 +316,6 @@ There are often many ways to generate a stall-free memory system. As a programme
   * On Linux
     ```bash
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./memory_attributes.fpga_sim
-    ```
-  * On Windows
-    ```bash
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-    memory_attributes.fpga_sim.exe
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```

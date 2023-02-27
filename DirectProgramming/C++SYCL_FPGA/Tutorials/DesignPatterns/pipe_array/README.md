@@ -5,7 +5,7 @@ This FPGA tutorial showcases a design pattern that makes it possible to create a
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
 | Time to complete                  | 15 minutes
@@ -41,8 +41,8 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 In certain situations, it is useful to create a collection of pipes that can be indexed like an array in a SYCL-compliant FPGA design. If you are not yet familiar with pipes, refer to the prerequisite tutorial "Data Transfers Using Pipes".
@@ -188,7 +188,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -230,7 +230,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

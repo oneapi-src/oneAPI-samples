@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates an advanced technique to improve the performance
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
@@ -42,8 +42,8 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -215,7 +215,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -257,7 +257,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex™ device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

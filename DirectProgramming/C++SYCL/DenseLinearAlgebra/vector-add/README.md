@@ -25,7 +25,7 @@ This sample provides example implementations of both Unified Shared Memory (USM)
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 <br> Windows* 10
-| Hardware                          | GEN9 or newer <br> Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA)
+| Hardware                          | GEN9 or newer <br> Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for CPU, GPU, FPGA emulation, generating FPGA reports and generating RTL for FPGAs, there are extra software requirements for the FPGA simulation flow and FPGA compiles.
@@ -36,6 +36,7 @@ This sample provides example implementations of both Unified Shared Memory (USM)
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -103,6 +104,19 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake .. -DUSM=1
    ```
 
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 #### Build for CPU and GPU
     
 1. Build the program.
@@ -161,6 +175,19 @@ time.)
    cd build
    cmake -G "NMake Makefiles" .. -DUSM=1
    ```
+
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
 
@@ -243,7 +270,7 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-buffers.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-usm.fpga_sim
    ```
-4. Run on FPGA hardware.
+4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     ./vector-add-buffers.fpga
     ./vector-add-usm.fpga
@@ -277,7 +304,7 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
    vector-add-usm.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-4. Run on FPGA hardware.
+4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     vector-add-buffers.fpga.exe
     vector-add-usm.fpga.exe
