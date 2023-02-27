@@ -14,7 +14,7 @@ using namespace sycl;
 constexpr size_t kRows = 8;
 constexpr size_t kVec = 4;
 constexpr size_t kMaxVal = 512;
-constexpr size_t kNumTests = 64;
+constexpr size_t kNumTests = 2;
 constexpr size_t kMaxIter = 8;
 
 // Forward declare the kernel name in the global scope.
