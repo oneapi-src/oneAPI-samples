@@ -12,7 +12,12 @@ using namespace sycl;
 
 // constants for this tutorial
 constexpr size_t kRows = 8;
+#if defined(FPGA_SIMULATOR)
+// Use a smaller unroll factor when running simulation
+constexpr size_t kVec = 1;
+#else
 constexpr size_t kVec = 4;
+#endif
 constexpr size_t kMaxVal = 512;
 constexpr size_t kNumTests = 64;
 constexpr size_t kMaxIter = 8;
