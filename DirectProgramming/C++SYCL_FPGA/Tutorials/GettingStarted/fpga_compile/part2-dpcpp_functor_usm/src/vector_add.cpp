@@ -50,6 +50,11 @@ int main() {
                 << device.get_info<sycl::info::device::name>().c_str()
                 << std::endl;
 
+if (!device.has(aspect::usm_host_allocations)) {
+     std::terminate();
+}
+
+
         // declare arrays and fill them
         // allocate in shared memory so the kernel can see them
         int *vec_a = sycl::malloc_shared<int>(kVectSize, q);
