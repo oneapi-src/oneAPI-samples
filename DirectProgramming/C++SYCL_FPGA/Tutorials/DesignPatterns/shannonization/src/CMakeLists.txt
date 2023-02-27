@@ -26,8 +26,8 @@ endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=-DA10, -DDEVICE_FLAG=-DS10 or \
-                         -DDEVICE_FLAG=-DAgilex.")
+                         Please make sure you have set -DDEVICE_FLAG=-A10, -DDEVICE_FLAG=-S10 or \
+                         -DDEVICE_FLAG=-Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
