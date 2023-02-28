@@ -6,14 +6,7 @@
 #include "constexpr_math.hpp"
 
 
-#ifdef __SYCL_DEVICE_ONLY__
-  #define CL_CONSTANT __attribute__((opencl_constant))
-#else
-  #define CL_CONSTANT
-#endif
-#define PRINTF(format, ...) { \
-            static const CL_CONSTANT char _format[] = format; \
-            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 
 // #ifdef __SYCL_DEVICE_ONLY__
 // #define CL_CONSTANT __attribute__((opencl_constant))
@@ -284,6 +277,7 @@ struct StreamingQRD {
       // }
 
       // Iterative loop for QR and RQ/QQ coputation
+      TT accError = 0;
       for(ac_int<kIBitSize_QR_RQ_itr, false> itr = 0; itr < QR_RQ_iterations; itr++){
         // PRINTF("Itr is: %d\n", (int)itr);
 
@@ -586,7 +580,11 @@ struct StreamingQRD {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
             });
 
-            if(i_ll < j_ll && fabs(chk_ortho) > 1e-3){
+            if(i_ll < j_ll){
+              accError += fabs(chk_ortho);
+            }
+
+            if(i_ll < j_ll && fabs(chk_ortho) > (1e-3)){
               QRD_failed = 1;
             }
 
@@ -685,6 +683,7 @@ struct StreamingQRD {
 
         if(converged && kDM_size == KDEFLIM){
           QR_iteration_done = 1;
+          PRINTF("It took %d iteration, accError:%f \n", (int)itr, accError);
           break;
         }  
         

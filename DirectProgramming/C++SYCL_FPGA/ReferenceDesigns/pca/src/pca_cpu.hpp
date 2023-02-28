@@ -79,8 +79,8 @@ template<typename T> void PCA<T>::populate_A(){
     // constexpr size_t kRandomMin = 0;
     // constexpr size_t kRandomMax = 1000;
 
-    size_t kEigenMin = 2*this->p;
-    size_t kEigenMax = 6*this->p;
+    size_t kEigenMin = 10*this->p;
+    size_t kEigenMax = 20*this->p;
 
     // constexpr size_t kNoiseMin = 0;
     // constexpr size_t kNoiseMax = 5000;
@@ -126,7 +126,7 @@ template<typename T> void PCA<T>::populate_A(){
                 this->matA[offset+ i*p+j] = 0;
                 for(int k = 0; k < this->p; k++){ // vectors
                     // int noise =  (rand() % (kNoiseMax - kNoiseMin) + kNoiseMin);
-                    this->matA[offset+ i*p+j] +=  noise[k] * Q[j*this->p+k];
+                   this->matA[offset+ i*p+j] +=  noise[k] * Q[j*this->p+k];
                 }
                 if(this->debug) std::cout << this->matA[offset+i*p+j] << " ";
             }
@@ -187,7 +187,7 @@ template<typename T> void PCA<T>::normalizeSamples(){
         // // calculating Standard Deviation 
         if(this->debug) std::cout << "\nStandard deviation is: \n";
         for(int i = 0; i < p; i++){
-            stDev[i] = sqrt(Var[i]/this->n);
+            stDev[i] = sqrt(Var[i]/(this->n-1));
             if(this->debug) std::cout << stDev[i] << " ";
         }
         if(this->debug) std::cout << "\n";
@@ -196,7 +196,7 @@ template<typename T> void PCA<T>::normalizeSamples(){
         if(this->debug) std::cout << "\nNormalized matrix is: \n";
         for(int i = 0; i < n; i++){
             for(int j = 0; j < p; j++){
-                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j]); // /stDev[j];
+                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j])/stDev[j];
                 if(this->debug) std::cout << this->matUA[offset + i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";

@@ -77,6 +77,9 @@ void MatrixReadFromDDRToPipe(
             }
           }
           else{
+
+            // int linInt = (int) li;
+            // PRINTF("matrix index: %d li:%d\n", matrix_index, linInt);
             ddr_read.template get<k>() = matrix_ptr_device
                 [matrix_index * kMatrixSize + (int)(li)*num_elem_per_bank + k];
 

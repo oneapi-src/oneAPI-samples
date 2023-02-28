@@ -57,7 +57,8 @@ struct StreamingMM{
 		row_tuple MatrixA[rows];
 		row_tuple MatrixC[rows], MatrixCW[rows];
 		TT Avg[rows], AvgW[rows], avgVal;
-  		pipe_tuple pipe_read;
+  	pipe_tuple pipe_read;
+    TT digValM[rows];
 
 
 
@@ -110,14 +111,21 @@ struct StreamingMM{
   					});
 
 
+            TT newSum;
   					fpga_tools::UnrolledLoop<rows>([&](auto t) {
   						if(j_ll == t && blk == 0){
   							rowSumW.template get<t> () = sum;
+                newSum = sum;
   						} else if(j_ll == t){
+                newSum = rowSumL.template get<t> () + sum;
   							rowSumW.template get<t> () = rowSumL.template get<t> () + sum;
   						}
   					});
 
+
+            if(i_ll == j_ll){
+              digValM[i_ll] = newSum;
+            }
 
 
   					T colSum = 0;
@@ -125,13 +133,13 @@ struct StreamingMM{
   						colSum += row1.template get<t>() / columns;
   					});
 
-					if(j_ll == 0  && blk == 0){
-						avgVal= colSum;
-					} else if(j_ll == 0){
-						avgVal += colSum;
-					}
+					  if(j_ll == 0  && blk == 0){
+						  avgVal= colSum;
+					  }else if(j_ll == 0){
+						  avgVal += colSum;
+					  }
 
-					if(j_ll == rows - 1){
+					  if(j_ll == rows - 1){
   						MatrixC[i_ll] = rowSumW;
   						Avg[i_ll] = avgVal;
   					}
@@ -148,6 +156,9 @@ struct StreamingMM{
   		// row_tuple row_write;
   		pipe_tuple pipe_write;
   		TT avg1, avg2, avg_temp;
+
+      TT digVal1, digVal2, dig_temp; 
+
   		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
   			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   				T loadVal;
@@ -158,26 +169,32 @@ struct StreamingMM{
   					}
   				});
 
-
+          //---------------------------
   				avg2 = AvgW[j_ll];
+          digVal2 = digValM[j_ll];
   				if(j_ll == i_ll + 1){
   					avg_temp = avg2;
+            dig_temp = digVal2;
   				}
 
   				if(i_ll == 0 && j_ll == 0){
   					avg1 = avg2;
+            digVal1 = digVal2;
   				} else if(j_ll == 0){
   					avg1 = avg_temp;
+            digVal1 = dig_temp;
   				}
+          //---------------------------
+          
+          T cov_i_i = digVal1 - columns * avg1 * avg1;
+          T cov_j_j = digVal2 - columns * avg2 * avg2;
+
 
   				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
-  				T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
+  				// T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
 
-  				// fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  				// 	if(j_ll == t){
-  				// 		row_write.template get<t>() = cov_i_j;
-  				// 	}
-  				// });
+          T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
+
 
   				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
   					if(t == j_ll % pipe_size){

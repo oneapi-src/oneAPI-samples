@@ -11,6 +11,16 @@
 #include <type_traits>
 #include <vector>
 
+
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 #include "memory_transfers.hpp"
 #include "streaming_eigen.hpp"
 #include "CovMatrix.hpp"
@@ -74,11 +84,15 @@ void PCAsyclImpl(
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
                                                           * sizeof(TT)).wait();
 
+
+  int matrixBlocks = matrix_count*((SAMPE_SIZE+rows-1)/rows);
+  // std::cout << "matrixBlocks: " << matrixBlocks << "\n";
+
   auto ddr_write_event =
   q.submit([&](sycl::handler &h) {
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, rows, kNumElementsPerDDRBurst,
-                            AMatrixPipe>(a_device, matrix_count*(SAMPE_SIZE+rows-1)/rows, repetitions);
+                            AMatrixPipe>(a_device, matrixBlocks, repetitions);
     });
   });
 

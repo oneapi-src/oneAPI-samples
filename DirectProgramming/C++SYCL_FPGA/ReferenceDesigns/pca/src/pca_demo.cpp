@@ -20,9 +20,9 @@
 #define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 1
-#define SHIFT_NOISE 1e-2
-#define SHIFT_NOISE_CPU 1e-2
-#define ITER_PER_EIGEN 100
+#define SHIFT_NOISE 1e-3
+#define SHIFT_NOISE_CPU 1e-3
+#define ITER_PER_EIGEN 1000
 #define SAMPE_SIZE 5000
 
 #define DEBUGEN 0
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 200;
+  constexpr size_t kMatricesToDecompose = 1000;
 
   try {
     // SYCL boilerplate
