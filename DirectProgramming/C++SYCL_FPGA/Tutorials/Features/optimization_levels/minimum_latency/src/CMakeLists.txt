@@ -20,20 +20,21 @@ set(FPGA_TARGET_MANUAL_REVERT ${TARGET_NAME_MANUAL_REVERT}.fpga)
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex")
-    set(DEVICE_FLAG "-DAgilex")
+    set(DEVICE_FLAG "Agilex")
     set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
 else()
-    if(FPGA_DEVICE MATCHES ".*a10*")
-        set(DEVICE_FLAG "-DA10")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10*")
+        set(DEVICE_FLAG "A10")
         set(MANUAL_REVERT_FLAGS "-Xssfc-exit-fifo-type=default")
-    elseif(FPGA_DEVICE MATCHES ".*s10*")
-        set(DEVICE_FLAG "-DS10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10*")
+        set(DEVICE_FLAG "S10")
         set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
-    elseif(FPGA_DEVICE MATCHES ".*agilex*")
-        set(DEVICE_FLAG "-DAgilex")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex*")
+        set(DEVICE_FLAG "Agilex")
         set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
@@ -41,8 +42,8 @@ endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=-DA10, -DDEVICE_FLAG=-DS10 or \
-                         -DDEVICE_FLAG=-DAgilex.")
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -54,12 +55,12 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR -D${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_HARDWARE ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_SIMULATOR -D${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_HARDWARE -D${DEVICE_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
