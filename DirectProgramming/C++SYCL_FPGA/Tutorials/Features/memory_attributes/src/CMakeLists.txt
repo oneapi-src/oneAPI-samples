@@ -1,11 +1,8 @@
 set(SOURCE_FILE memory_attributes.cpp)
 set(TARGET_NAME memory_attributes)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
-
-if(UNIX)
-    set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
-endif()
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
@@ -49,20 +46,18 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
 ###############################################################################
-### FPGA Simulator (for UNIX)
+### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
 #    icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR mem_channel.cpp -o mem_channel.fpga_sim
 # CMake executes:
 #    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation  mem_channel.cpp.o -o mem_channel.fpga_sim
-if(UNIX)
-    add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-    target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
-    set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-    set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
-    add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-endif()
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report
