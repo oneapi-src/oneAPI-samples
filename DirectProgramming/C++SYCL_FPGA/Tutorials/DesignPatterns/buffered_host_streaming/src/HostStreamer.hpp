@@ -223,7 +223,7 @@ private:
   // to the user code when the requests have been completed.
   static void KernelLaunchAndWaitThread() {
     size_t producer_count = 0;
-	  size_t consumer_count = 0;
+    size_t consumer_count = 0;
 
     // Do this loop until told (by main thread) to stop via the
     // 'kill_kernel_thread_flag_' atomic shared variable.
