@@ -158,7 +158,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -201,7 +201,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
