@@ -60,9 +60,9 @@ The sample is intended for exercising the debugger, not for performance
 benchmarking.
 
 The debugger supports debugging kernels that run on the CPU, GPU, or accelerator
-devices. For convenience, the `jacobi` code sample provides the ability to
-select the target device by using a command-line argument of `cpu`, `gpu`, or
-`accelerator`.
+devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
+to select device.  The default device is Level Zero GPU device, if available.
+For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
 
 For an overview of the Jacobi method, please refer to the Wikipedia article on the [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method).
 
@@ -280,21 +280,19 @@ Perform the following steps:
 2.  Run the buggy program:
 
     ```
-    $ ./jacobi-bugged <device>
+    $ ./jacobi-bugged
+    ```
+    > Note: to specify a device type to offload the kernel, use
+    > the `ONEAPI_DEVICE_SELECTOR` environment variable.
+    > E.g.  to restrict the offload only to CPU devices use:
+    ```
+    $ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
     ```
 
-    > Note: `<device>` is the type of the device to offload the kernel.
-    > Use `cpu`, `gpu`, or `accelerator` to select the CPU, GPU, or the
-    > FPGA emulator device, respectively.  E.g.:
+3.  Start a debugging session on a CPU device:
 
     ```
-    $ ./jacobi-bugged cpu
-    ```
-
-3.  Start a debugging session:
-
-    ```
-    $ gdb-oneapi --args jacobi-bugged <device>
+    $ ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi jacobi-bugged
     ```
 
 4.  Clean the program using:
@@ -311,26 +309,12 @@ For instructions about starting and using the debugger, please see
 
 The selected device is displayed in the output.
 
-#### No device specified
-
-If no device is specified both programs `jacobi-bugged` and `jacobi-fixed` return an error:
-
-```
-$ ./jacobi-bugged
-Usage: ./jacobi-bugged <host|cpu|gpu|accelerator>
-```
-
-```
-$ ./jacobi-fixed
-Usage: ./jacobi-fixed <host|cpu|gpu|accelerator>
-```
-
 #### CPU
 
 When run, the original `jacobi-bugged` program shows the first bug:
 
 ```
-$ ./jacobi-bugged cpu
+$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -345,7 +329,7 @@ Hint: figure out which elements are farthest from 1.0.
 Once the first bug is fixed, the second bug becomes visible:
 
 ```
-$ ./jacobi-bugged cpu
+$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -371,7 +355,7 @@ Once this bug is fixed, while offloading to CPU you receive the correct result:
 which are the same as in `jacobi-fixed` for the offload to CPU device:
 
 ```
-$ ./jacobi-fixed cpu
+$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-fixed
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -384,11 +368,15 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 #### GPU
 
 Start debugging GPU only after first two bugs are fixed on CPU.
+To debug on Intel GPU device, the device must be Level Zero.  The Level
+Zero GPU device, if available, is the default choice when no
+`ONEAPI_DEVICE_SELECTOR` is specified.  It corresponds to
+`ONEAPI_DEVICE_SELECTOR=level_zero:gpu`.
 
 Bug 3 is immediately hit while offloading to GPU:
 
 ```
-$ ./jacobi-bugged gpu
+$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
 
 fail; Bug 3. Fix it on GPU. The relative error has invalid value after iteration 0.
@@ -406,7 +394,7 @@ Once all three bugs are fixed, the output of the program should be the same
 as for `jacobi-fixed` with the offload to GPU device:
 
 ```
-$ ./jacobi-fixed gpu
+$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-fixed
 [SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -421,7 +409,7 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 While offloading to FPGA emulation device, only first two bugs appear (similar to CPU):
 
 ```
-$ ./jacobi-bugged accelerator
+$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -436,7 +424,7 @@ Hint: figure out which elements are farthest from 1.0.
 And after fixing the first bug:
 
 ```
-$ ./jacobi-bugged accelerator
+$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -462,7 +450,7 @@ After both bugs are fixed, the output of `jacobi-bugged` should become the same 
 `jacobi-fixed`:
 
 ```
-$ ./jacobi-fixed accelerator
+$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-fixed
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
