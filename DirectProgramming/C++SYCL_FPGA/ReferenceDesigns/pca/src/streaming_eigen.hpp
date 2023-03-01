@@ -580,11 +580,11 @@ struct StreamingQRD {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
             });
 
-            if(i_ll < j_ll){
-              accError += fabs(chk_ortho);
+            if(i_ll < j_ll && accError < fabs(chk_ortho)){
+              accError = fabs(chk_ortho);
             }
 
-            if(i_ll < j_ll && fabs(chk_ortho) > (1e-3)){
+            if(i_ll < j_ll && fabs(chk_ortho) > (1e-4)){
               QRD_failed = 1;
             }
 
@@ -708,7 +708,7 @@ struct StreamingQRD {
       T max; 
       int indexArray[rows];
       [[intel::fpga_register]] bool Nsorted[rows];
-      int index;
+      int index = -1;
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
           Nsorted[i_ll] = 1;
       }
@@ -720,16 +720,20 @@ struct StreamingQRD {
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
         for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
             if(j_ll == 0){
-              max = -1e30;
+              max = -1e35;
             }
 
+
+
             TT load_val = eArrray[j_ll];
+            // PRINTF("load_val value is: %d\n", load_val);
             if(load_val > max && Nsorted[j_ll]){
               max = load_val;
               index = j_ll;
             }
 
             if(j_ll == rows -1){
+              // PRINTF("Index value is: %d\n", index);
               Nsorted[index] = 0;
               indexArray[i_ll] = index;
             }

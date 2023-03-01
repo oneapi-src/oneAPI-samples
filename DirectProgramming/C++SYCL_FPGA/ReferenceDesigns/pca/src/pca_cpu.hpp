@@ -2,6 +2,7 @@
 #include<math.h> 
 #include<cstdlib>
 #include<algorithm>
+#include <random>
 
 
 #include "qr_MGS.hpp"
@@ -79,8 +80,8 @@ template<typename T> void PCA<T>::populate_A(){
     // constexpr size_t kRandomMin = 0;
     // constexpr size_t kRandomMax = 1000;
 
-    size_t kEigenMin = 10*this->p;
-    size_t kEigenMax = 20*this->p;
+    size_t kEigenMin = 50*this->p;
+    size_t kEigenMax = 60*this->p;
 
     // constexpr size_t kNoiseMin = 0;
     // constexpr size_t kNoiseMax = 5000;
@@ -96,7 +97,7 @@ template<typename T> void PCA<T>::populate_A(){
 
         for(int i = 0; i < this->p; i++){
             // making sure two eigen values are unlikely same
-            Teigval[i] = (rand() % (kEigenMax - kEigenMin) + kEigenMin) + (((double)rand()-RAND_MAX/2)/(double)RAND_MAX);
+            Teigval[i] =  (rand() % (kEigenMax - kEigenMin) + kEigenMin) + (((double)rand()-RAND_MAX/2)/(double)RAND_MAX);
         }
 
         for(int i =0; i < this->p; i++){
@@ -111,6 +112,13 @@ template<typename T> void PCA<T>::populate_A(){
         T* Q = qr_decom.get_Q();
 
     
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
+ 
+        // values near the mean are the most likely
+        // standard deviation affects the dispersion of generated values from the mean
+        std::normal_distribution<> d{0, 1};
+
         if(this->debug) std::cout << "Initial input Matrix A for PCA :"  << this->matrixCount << " \n";
         int offset = m_id * this->n * this->p;
         for(int i = 0; i < this->n; i++){ // samples 
@@ -118,8 +126,11 @@ template<typename T> void PCA<T>::populate_A(){
             // std::default_random_engine generator;
             // std::normal_distribution<double> distribution(0,Teigval[k]);
 
+
+
             for(int k = 0; k < this->p; k++){
-                noise[k] = (((double)rand()-RAND_MAX/2)/(double)RAND_MAX) * Teigval[k];
+                noise[k] = rand() % ((int)(Teigval[k])); //(((double)rand()-RAND_MAX/2)/(double)RAND_MAX) * Teigval[k];
+                // noise[k] = (((double)rand()-RAND_MAX/2)/(double)RAND_MAX) * Teigval[k];
             }
 
             for(int j = 0; j < this->p; j++){ // features 
@@ -196,7 +207,7 @@ template<typename T> void PCA<T>::normalizeSamples(){
         if(this->debug) std::cout << "\nNormalized matrix is: \n";
         for(int i = 0; i < n; i++){
             for(int j = 0; j < p; j++){
-                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j])/stDev[j];
+                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j]); ///stDev[j];
                 if(this->debug) std::cout << this->matUA[offset + i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";

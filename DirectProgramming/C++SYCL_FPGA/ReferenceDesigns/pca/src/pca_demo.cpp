@@ -22,8 +22,8 @@
 #define RELSHIFT 1
 #define SHIFT_NOISE 1e-3
 #define SHIFT_NOISE_CPU 1e-3
-#define ITER_PER_EIGEN 1000
-#define SAMPE_SIZE 5000
+#define ITER_PER_EIGEN 100
+#define SAMPE_SIZE 50
 
 #define DEBUGEN 0
 #define DEBUGMINDEX 13
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1000;
+  constexpr size_t kMatricesToDecompose = 1;
 
   try {
     // SYCL boilerplate
@@ -451,6 +451,7 @@ int main(int argc, char *argv[]) {
 
         if(close2zero && kP == KDEFLIM){
           total_iteration += li+1;
+          // std::cout << "It took " << li+1 << " iteration to compute\n";
           break;
         } else if(close2zero){
           kP -= 1;
@@ -463,7 +464,7 @@ int main(int argc, char *argv[]) {
     dAMat.close();
 
 
-    
+  // exit(0);
 
 
 /////////////////////////////////////////////////////////////////////

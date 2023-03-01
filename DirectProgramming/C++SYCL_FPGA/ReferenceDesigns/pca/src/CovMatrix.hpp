@@ -45,7 +45,9 @@ struct StreamingMM{
 
   	constexpr int kColBlockBitSize = fpga_tools::BitsForMaxValue<kColBlocks + 1>();
   	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopItr + 1>();
-  	constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<rows + 1>();
+
+    constexpr int maxRow = (rows > pipe_size) ? rows : pipe_size;
+  	constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<maxRow + 1>();
 
 
 
@@ -159,6 +161,8 @@ struct StreamingMM{
 
       TT digVal1, digVal2, dig_temp; 
 
+      // PRINTF("Covariance Matrix is: \n");
+
   		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
   			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   				T loadVal;
@@ -191,13 +195,18 @@ struct StreamingMM{
 
 
   				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
-  				// T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
+  				T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
 
-          T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
+          // PRINTF("%f ", cov_i_j);
+
+          // T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
 
 
   				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+            // pipe_write.template get<t> () = 5;
+            // PRINTF("j_ll=%d pipe_size=%d val:%d\n", j_ll, pipe_size, j_ll % pipe_size);
   					if(t == j_ll % pipe_size){
+
   						pipe_write.template get<t> () = cov_i_j;
   					}
   				});
@@ -207,6 +216,7 @@ struct StreamingMM{
   				}
 
   			}
+        // PRINTF("\n");
   		}
 
 
