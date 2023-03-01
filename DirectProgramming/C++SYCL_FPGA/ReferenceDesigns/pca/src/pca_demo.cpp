@@ -17,16 +17,16 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
 #define KDEFLIM 2
-#define KETHRESHOLD 1e-3
+#define KETHRESHOLD 1e-2
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 1
 #define SHIFT_NOISE 1e-3
 #define SHIFT_NOISE_CPU 1e-3
 #define ITER_PER_EIGEN 100
-#define SAMPE_SIZE 50
+#define SAMPE_SIZE 500
 
 #define DEBUGEN 0
-#define DEBUGMINDEX 13
+#define DEBUGMINDEX 24
 #define DEBUG 0
 
 
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 1;
+  constexpr size_t kMatricesToDecompose = 400;
 
   try {
     // SYCL boilerplate
@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
     // Generate the random symmetric square matrices
     srand(kRandomSeed);
 
-    PCA<float> pca(SAMPE_SIZE, kRows, kMatricesToDecompose, 0);
+    PCA<double> pca(SAMPE_SIZE, kRows, kMatricesToDecompose, 0);
     pca.populate_A();
     pca.normalizeSamples();
     pca.calculate_covariance();
@@ -362,7 +362,7 @@ int main(int argc, char *argv[]) {
         T shift = RELSHIFT ? c_wilk : c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
 
         shift -= shift*SHIFT_NOISE;
-
+        shift = (li < 10) ? 0 : shift;
 
         if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
         for(int i = 0; i < kP; i++){

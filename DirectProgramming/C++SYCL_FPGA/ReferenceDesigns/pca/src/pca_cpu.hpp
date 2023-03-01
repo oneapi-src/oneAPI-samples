@@ -198,7 +198,7 @@ template<typename T> void PCA<T>::normalizeSamples(){
         // // calculating Standard Deviation 
         if(this->debug) std::cout << "\nStandard deviation is: \n";
         for(int i = 0; i < p; i++){
-            stDev[i] = sqrt(Var[i]/(this->n-1));
+            stDev[i] = sqrt(Var[i]/(this->n));
             if(this->debug) std::cout << stDev[i] << " ";
         }
         if(this->debug) std::cout << "\n";
@@ -207,7 +207,7 @@ template<typename T> void PCA<T>::normalizeSamples(){
         if(this->debug) std::cout << "\nNormalized matrix is: \n";
         for(int i = 0; i < n; i++){
             for(int j = 0; j < p; j++){
-                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j]); ///stDev[j];
+                this->matUA[offset + i*p+j] = (this->matA[offset + i*p+j]-meanVec[j])/stDev[j];
                 if(this->debug) std::cout << this->matUA[offset + i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";
@@ -237,7 +237,7 @@ template<typename T> void PCA<T>::calculate_covariance(){
                 for(int k = 0; k < this->n; k++){
                     this->matC[offsetC + i*p+j] += this->matUA[offsetUA + k*p+i]*this->matUA[offsetUA + k*p+j];
                 }
-                this->matC[offsetC + i*p+j] = (1.0/(this->n-1))*this->matC[offsetC + i*p+j];
+                this->matC[offsetC + i*p+j] = (1.0/(this->n))*this->matC[offsetC + i*p+j];
                 if(this->debug) std::cout << this->matC[offsetC + i*p+j] << " ";
             }
             if(this->debug) std::cout << "\n";

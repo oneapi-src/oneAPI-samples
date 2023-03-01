@@ -152,9 +152,10 @@ struct StreamingQRD {
 
 
 
-
+    // int matrix_id = 0;
     // Compute QRDs as long as matrices are given as inputs
     while(1) {
+      // matrix_id++;
       // for(int witr = 0; witr < 1; witr++){
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
@@ -238,13 +239,14 @@ struct StreamingQRD {
         });
       }
 
-
+      // if(matrix_id == 25){
       // PRINTF("A matrix is: \n");
       // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
       //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
       //       PRINTF("%f ", a_load1[ik].template get<k>())
       //     });
       //   PRINTF("\n");
+      // }
       // }
 
       TT lamda = (a_wilk-c_wilk)/2.0;
@@ -253,6 +255,7 @@ struct StreamingQRD {
 
       R_shift = RELSHIFT ? c_wilk : l_shift;
       R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
+      R_shift = 0;
   
       // size of Deflated matrix
       int kDM_size = rows;
@@ -528,15 +531,16 @@ struct StreamingQRD {
         //     });
         //   PRINTF("\n");
         // }
-
-        // PRINTF("Q matrix is: \n");
-        // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-        //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-        //       PRINTF("%f ", q_result[ik].template get<k>())
-        //     });
+        // if(matrix_id == 25){
+        //   PRINTF("Q matrix from SYCL is at iteration:%d \n",(int)itr);
+        //   for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+        //     fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+        //         PRINTF("%f ", q_result[ik].template get<k>())
+        //       });
+        //     PRINTF("\n");
+        //   }
         //   PRINTF("\n");
         // }
-
         
 
         // Eigen vector QQ computation
@@ -550,6 +554,8 @@ struct StreamingQRD {
         bool converged = 1;
         // TT R_shift_tmp = 0;
         // TT R_shift_1BF = 0;
+
+        accError = 0;
 
         TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
 
@@ -580,9 +586,14 @@ struct StreamingQRD {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
             });
 
+            // if(matrix_id == 25){
+            //   PRINTF("chk_ortho:%f ", chk_ortho);
+            // }
+
             if(i_ll < j_ll && accError < fabs(chk_ortho)){
               accError = fabs(chk_ortho);
             }
+
 
             if(i_ll < j_ll && fabs(chk_ortho) > (1e-4)){
               QRD_failed = 1;
@@ -674,6 +685,22 @@ struct StreamingQRD {
           }
         }
 
+        // if(matrix_id == 25){
+        //   PRINTF("Q matrix from SYCL is at iteration:%d, kDM_size:%d \n",(int)itr, (int)kDM_size);
+        //   for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
+        //     fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
+        //         PRINTF("%f ", q_result[ik].template get<k>())
+        //       });
+        //     PRINTF("\n");
+        //   }
+        //   PRINTF("\n");
+        // }
+
+
+        // if(matrix_id == 25){
+        //     PRINTF("accError:%f at itr:%d\n", accError, (int)itr);
+        // }
+
 
         TT lamda = (a_wilk-c_wilk)/2.0;
         TT sign_lamda = (lamda > 0) - (lamda < 0);
@@ -683,7 +710,7 @@ struct StreamingQRD {
 
         if(converged && kDM_size == KDEFLIM){
           QR_iteration_done = 1;
-          PRINTF("It took %d iteration, accError:%f \n", (int)itr, accError);
+          // PRINTF("It took %d iteration, accError:%f \n", (int)itr, accError);
           break;
         }  
         
@@ -698,6 +725,9 @@ struct StreamingQRD {
         }
 
         R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
+        if(itr < 9){
+          R_shift = 0;
+        }
 
 
       } // End iterative loop

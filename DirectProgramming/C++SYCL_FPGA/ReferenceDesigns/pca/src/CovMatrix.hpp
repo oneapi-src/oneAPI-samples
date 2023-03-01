@@ -195,11 +195,11 @@ struct StreamingMM{
 
 
   				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
-  				T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
+  				// T cov_i_j = (1.0f/(columns-1)) * cov_i_j_tmp;
 
           // PRINTF("%f ", cov_i_j);
 
-          // T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
+          T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
 
 
   				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
