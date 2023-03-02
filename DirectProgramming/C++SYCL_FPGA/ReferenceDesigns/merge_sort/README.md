@@ -41,7 +41,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -118,7 +118,7 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
 
    ```
    mkdir build
@@ -133,7 +133,7 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.

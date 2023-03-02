@@ -39,7 +39,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -57,7 +57,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The GZIP DEFLATE algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman, and CRC).
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex™ FPGAs, which are a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex® FPGAs, which are a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 
@@ -142,7 +142,7 @@ Performance results are based on testing as of October 27, 2020.
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
 
    ```
    mkdir build
@@ -159,7 +159,7 @@ Performance results are based on testing as of October 27, 2020.
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -189,7 +189,7 @@ Performance results are based on testing as of October 27, 2020.
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex™ device family, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
@@ -205,7 +205,7 @@ Performance results are based on testing as of October 27, 2020.
   >
   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
   >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ``` 
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.

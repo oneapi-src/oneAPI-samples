@@ -32,13 +32,13 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
+| Hardware           | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -107,7 +107,7 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for the Agilex™ device family, which is the default.
+2. Build the program for the Agilex® device family, which is the default.
 
    ```
    mkdir build
@@ -122,7 +122,7 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -150,7 +150,7 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Agilex™ device family, which is the default.
+2. Build the program for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
@@ -164,7 +164,7 @@ Alternatively, there is a hybrid approach that uses some implicit data movement 
   >
   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
   >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ``` 
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.

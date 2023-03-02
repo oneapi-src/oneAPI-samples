@@ -49,10 +49,10 @@ using namespace sycl;
 /// \param[out] out     result
 ///////////////////////////////////////////////////////////////////////////////
 void DownscaleKernel(int width, int height, int stride, float *out,
-                     accessor<cl::sycl::float4, 2, cl::sycl::access::mode::read,
+                     accessor<sycl::float4, 2, sycl::access::mode::read,
                               sycl::access::target::image>
                          tex_acc,
-                     cl::sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
+                     sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
   const int ix = item_ct1.get_local_id(2) +
                  item_ct1.get_group(2) * item_ct1.get_local_range(2);
   const int iy = item_ct1.get_local_id(1) +
@@ -89,7 +89,7 @@ static void Downscale(const float *src, int width, int height, int stride,
                       queue q) {
   sycl::range<3> threads(1, 8, 32);
   auto max_wg_size =
-      q.get_device().get_info<cl::sycl::info::device::max_work_group_size>();
+      q.get_device().get_info<sycl::info::device::max_work_group_size>();
   if (max_wg_size < 8 * 32) {
     threads[0] = 1;
     threads[2] = 32;
@@ -114,20 +114,20 @@ static void Downscale(const float *src, int width, int height, int stride,
     }
   }
 
-  auto texDescr = cl::sycl::sampler(
+  auto texDescr = sycl::sampler(
       sycl::coordinate_normalization_mode::unnormalized,
       sycl::addressing_mode::clamp_to_edge, sycl::filtering_mode::nearest);
 
-  auto texFine = cl::sycl::image<2>(src_p, cl::sycl::image_channel_order::rgba,
-                                    cl::sycl::image_channel_type::fp32,
+  auto texFine = sycl::image<2>(src_p, sycl::image_channel_order::rgba,
+                                    sycl::image_channel_type::fp32,
                                     range<2>(width, height),
                                     range<1>(stride * sizeof(sycl::float4)));
 
   dpct::get_default_queue()
       .submit([&](sycl::handler &cgh) {
         auto tex_acc =
-            texFine.template get_access<cl::sycl::float4,
-                                        cl::sycl::access::mode::read>(cgh);
+            texFine.template get_access<sycl::float4,
+                                        sycl::access::mode::read>(cgh);
 
         cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
                          [=](sycl::nd_item<3> item_ct1) {
