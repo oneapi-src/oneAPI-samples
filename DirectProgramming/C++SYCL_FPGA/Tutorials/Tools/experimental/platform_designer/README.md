@@ -206,6 +206,10 @@ Follow these steps to compile and test the design:
 
       ![](assets/add-ip-platform-designer.png)
 
+      > **Note**: If you cannot see the oneAPI IP component, refresh Platform Designer by clicking `File` > `Refresh System`
+      >
+      > ![](assets/refresh-system.png)
+
    6. Connect the modules as shown:
 
       ![](assets/complete-system_platform-designer.png)
