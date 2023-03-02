@@ -6,7 +6,7 @@ Languages are selected from the CommonVoice dataset for training, validation, an
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch* inference, INC quantization, and a oneapi-aikit container
+| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch* inference, Intel® Neural Compressor quantization, and a oneapi-aikit container
 | Time to complete      | 60 minutes
 
 ## Purpose
