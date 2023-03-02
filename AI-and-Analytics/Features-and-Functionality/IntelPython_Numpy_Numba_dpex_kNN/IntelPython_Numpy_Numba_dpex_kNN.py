@@ -139,7 +139,7 @@ def knn(X_train, y_train, X_test, k):
 predictions = knn(X_train, y_train, X_test, 3)
 true_values = y_test.to_numpy()
 accuracy = np.mean(predictions == true_values)
-print('Numpy accuracy:' + accuracy)
+print('Numpy accuracy:', accuracy)
 
 
 # ## Numba k-NN
