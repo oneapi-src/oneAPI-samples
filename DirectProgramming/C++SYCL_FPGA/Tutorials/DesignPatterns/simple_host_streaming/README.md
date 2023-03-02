@@ -141,7 +141,6 @@ We are currently working on an API and tutorial to address both of these drawbac
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
 ### On Linux*
 
 1. Change to the sample directory.
@@ -158,7 +157,7 @@ We are currently working on an API and tutorial to address both of these drawbac
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -200,7 +199,7 @@ We are currently working on an API and tutorial to address both of these drawbac
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
