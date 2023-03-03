@@ -224,13 +224,13 @@ Part 4 shows the vector addition in SYCL* C++ with a 'function' coding style and
 #### On a Linux* System
 For different parts of this tutorial, navigate to the appropriate sub-folder.
 ```bash
-cd <partX-XXX>
+cd <partX_XXX>
 ```
-`<partX-XXX>` can be:
-- `part1-C++`
-- `part2-dpcpp_functor_usm`
-- `part3-dpcpp_lambda_usm`
-- `part4-dpcpp_lambda_buffers`
+`<partX_XXX>` can be:
+- `part1_cpp`
+- `part2_dpcpp_functor_usm`
+- `part3_dpcpp_lambda_usm`
+- `part4_dpcpp_lambda_buffers`
 
 Generate the `Makefile` by running `cmake`.
   ```
@@ -256,13 +256,13 @@ Generate the `Makefile` by running `cmake`.
 #### On a Windows* System
 For different parts of this tutorial, navigate to the appropriate sub-folder.
 ```cmd
-cd <partX-XXX>
+cd <partX_XXX>
 ```
-`<partX-XXX>` can be:
-- `part1-C++`
-- `part2-dpcpp_functor_usm`
-- `part3-dpcpp_lambda_usm`
-- `part4-dpcpp_lambda_buffers`
+`<partX_XXX>` can be:
+- `part1_cpp`
+- `part2_dpcpp_functor_usm`
+- `part3_dpcpp_lambda_usm`
+- `part4_dpcpp_lambda_buffers`
 
 Generate the `Makefile` by running `cmake`.
   ```
