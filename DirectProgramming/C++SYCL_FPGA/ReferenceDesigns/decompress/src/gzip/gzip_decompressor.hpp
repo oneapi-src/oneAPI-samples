@@ -157,6 +157,7 @@ class GzipDecompressor : public DecompressorBase {
     bool passed = true;
 
     try {
+#if defined (IS_BSP)
       // allocate memory on the device
       if ((in = sycl::malloc_device<unsigned char>(in_count, q)) == nullptr) {
         std::cerr << "ERROR: could not allocate space for 'in'\n";
@@ -179,6 +180,30 @@ class GzipDecompressor : public DecompressorBase {
         std::cerr << "ERROR: could not allocate space for 'count'\n";
         std::terminate();
       }
+#else
+      // allocate shared memory 
+      if ((in = sycl::malloc_shared<unsigned char>(in_count, q)) == nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'in'\n";
+        std::terminate();
+      }
+      if ((out = sycl::malloc_shared<unsigned char>(out_count_padded, q)) ==
+          nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'out'\n";
+        std::terminate();
+      }
+      if ((hdr_data = sycl::malloc_shared<GzipHeaderData>(1, q)) == nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'hdr_data'\n";
+        std::terminate();
+      }
+      if ((crc = sycl::malloc_shared<int>(1, q)) == nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'crc'\n";
+        std::terminate();
+      }
+      if ((count = sycl::malloc_shared<int>(1, q)) == nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'count'\n";
+        std::terminate();
+      }
+#endif
 
       // copy the input data to the device memory and wait for the copy to
       // finish

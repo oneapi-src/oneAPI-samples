@@ -24,9 +24,9 @@ scheduler-locking and SIMD lane views.  The sample is intended
 for exercising the debugger, not for performance benchmarking.
 
 The debugger supports debugging kernels that run on the CPU, GPU, or
-accelerator devices.  For convenience, the `array-transform`
-code sample provides the ability to select the target device by passing the
-program `cpu`, `gpu`, or `accelerator` as the command-line argument.
+accelerator devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
+to select device.  The default device is Level Zero GPU device, if available.
+For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
 The selected device is displayed in the output.  Concrete instructions
 about how to run the program and example outputs are given further
 below.  For complete setup and usage instructions, see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
@@ -143,18 +143,18 @@ Perform the following steps:
 
 2.  Run the program:
     ```
-    $ ./array-transform <device>
+    $ ./array-transform
     ```
-    > Note: `<device>` is the type of the device type to offload the kernel.
-    > Use `cpu`, `gpu`, or `accelerator` to select the CPU, GPU, or the
-    > FPGA emulator device, respectively.  E.g.:
+    > Note: to specify a device type to offload the kernel, use
+    > the `ONEAPI_DEVICE_SELECTOR` environment variable.
+    > E.g.  to restrict the offload only to CPU devices use:
     ```
-    $ ./array-transform cpu
+    $ ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform
     ```
 
 3.  Start a debugging session:
     ```
-    $ gdb-oneapi --args array-transform <device>
+    $ gdb-oneapi array-transform
     ```
 
 4.  Clean the program using:
@@ -165,13 +165,11 @@ Perform the following steps:
 By default, CMake configures the build for Just-in-Time (JIT)
 compilation of the kernel.  However, it also offers an option for
 *Ahead-of-Time* (AoT) compilation.  To compile the kernel
-ahead-of-time for a specific device, set the `DPCPP_COMPILE_TARGET`
+ahead-of-time for a specific device, set the `SYCL_COMPILE_TARGET`
 option to the desired device during configuration.  For CPU, use the
 `cpu` value; for FPGA-emu, use the `fpga-emu` value.  Other values are
 assumed to be for GPU and are passed directly to the GPU AoT
 compiler.
-
-> *Hint:* Run `ocloc compile --help` to see available GPU device options.
 
 For example, to do AoT compilation for a specific GPU device ID:
 
@@ -190,6 +188,8 @@ $ sycl-ls
 ```
 
 In the above example, the device ID is `0x56c1`.
+
+> *Hint:* Run `ocloc compile --help` to see all available GPU device options.
 
 > **Note**: AoT compilation is particularly helpful in larger
 > applications where compiling with debug information takes
@@ -223,11 +223,11 @@ dependencies and permissions errors.
 
 3. Select Menu "Debug > Start Debugging" to run the program.
 
-4. The solution file is configured to pass `cpu` as the argument to the
-   program.  To select a different device, go to the project's "Configuration
-   Properties > Debugging" and set the "Command Arguments" field.
-   Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
-   respectively.
+4. The solution file is configured to set `ONEAPI_DEVICE_SELECTOR=*:cpu`
+   for Local Windows Debugging.  That setting causes the program to offload
+   on a CPU device.  To select a different device, go to the project's
+   "Configuration Properties > Debugging" and edit the "Environment" field.
+   Modify the value of `ONEAPI_DEVICE_SELECTOR` as you need.
 
 For detailed instructions about starting and using the debugger,
 please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
@@ -236,55 +236,49 @@ please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](
 ### Example Outputs
 
 ```
-$ gdb-oneapi -q --args ./array-transform cpu
+$ ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
 [SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
-Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
-(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
-(cl::sycl::item<1, true>) const (this=0x7fffe3bfcfa8, index=...) at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 4 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0x7fffc85582c8, index=sycl::_V1::id<1> = {...}) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
 ```
-$ gdb-oneapi -q --args ./array-transform accelerator
+$ ONEAPI_DEVICE_SELECTOR=*:fpga gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 [Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
 
-Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
-(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
-(cl::sycl::item<1, true>) const (this=0x7fffe1ff9fa8, index=...) at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 6 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0x7fffc08cef48, index=sycl::_V1::id<1> = {...}) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
 ```
-$ gdb-oneapi -q --args ./array-transform gpu
+$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
+intelgt: gdbserver-ze started for process 18496.
 ...<snip>...
-[Switching to Thread 1073741824 lane 0]
+[SYCL] Using device: [Intel(R) Data Center GPU Flex Series 140 [0x56c1]] from [Intel(R) Level-Zero]
+[Switching to Thread 1.153 lane 0]
 
-Thread 2.2 hit Breakpoint 1,  with SIMD lanes [0-7], main::$_1::operator()
-<cl::sycl::handler>(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()
-<cl::sycl::item<1, true> >(cl::sycl::item<1, true>) const (this=0x2f690c0, index=...)
-at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 2.153 hit Breakpoint 1, with SIMD lanes [0-7], main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0xffffd556ab1898d0, index=...) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
