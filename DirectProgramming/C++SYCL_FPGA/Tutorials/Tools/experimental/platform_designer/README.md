@@ -55,7 +55,7 @@ This example is intended for users interested in creating standalone modules tha
 
 ### Board-specific Considerations
 
-This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. The board-specific configurations that you should specify in Intel® Quartus® Prime are as follows:
+This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. These board-specific configurations are not guaranteed to work with different boards:
 1. Choose `10AS066N3F40E2SG` device to match the devkit
 2. Choose pin `PIN_AM10` to drive the `i_clk` signal
 3. Choose pin `PIN_AR23` to drive the `fpga_led` signal
@@ -102,7 +102,7 @@ Follow these steps to compile and test the design:
    > nmake fpga_ip_export
    ```
 
-2. **From the same terminal**, launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard. 
+2. **From the same terminal**, prepare a project directory for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `add-quartus-sln` into it. Then launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
 > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
 
@@ -111,6 +111,8 @@ Follow these steps to compile and test the design:
    ```
    $> cd ../../
    $> mkdir add-quartus
+   $> cp add-quartus/add.sv add-quartus
+   $> cp add-quartus/jtag.sdc add-quartus
    $> cd add-quartus
    $> quartus
    ```
@@ -120,11 +122,13 @@ Follow these steps to compile and test the design:
    ```
    > cd ..\..\
    > mkdir add-quartus
+   > xcopy add-quartus\add.sv add-quartus
+   > xcopy add-quartus\jtag.sdc add-quartus
    > cd add-quartus
    > quartus.exe
    ```
 
-   1. Set the project directory to be the `add-quartus` directory of this code sample.
+   1. Set the project directory to be the `add-quartus` directory.
 
    2. Set the top-level entity to be `add` to make project management easier.
 
@@ -140,7 +144,7 @@ Follow these steps to compile and test the design:
 
 3. Copy the generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_ip_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels have their own reports and associated RTL. You must locate the the `.prj_X` directory that contains the IP you want to use in your design.
 
-   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` is the correct `.prj_x` directory, because `add_example_fpga_ip_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
+   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add.fpga_ip_export.prj_1` is the correct `.prj_x` directory, because `add_fpga_ip_export_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
    
    ```verilog
    add_fpga_ip_export_1_di add_fpga_ip_export_1_di_inst (
@@ -184,13 +188,17 @@ Follow these steps to compile and test the design:
 
       ![](assets/open-platform-designer-button.png)
 
-      Create a new system by clicking the 'New Platform Designer System' button (![](assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
+   2. Create a new system by clicking the 'New Platform Designer System' button (![](assets/new-platform-designer-system-button.png)) and name it `add_kernel_wrapper.qsys`.
 
-      Configure the `Reset Bridge` IP as shown:
+   3. Disconnect the clock from the `Reset Bridge` IP:
+
+      ![](assets/disconnect-clock_mouse.png)
+
+   4. Configure the `Reset Bridge` IP as shown:
 
       ![](assets/reset-bridge.png)
 
-   2. Add the following IP to your system:
+   5. Add the following IP to your system:
 
       * Basic Functions > Bridges and Adaptors > Memory Mapped > **JTAG to Avalon Master Bridge Intel® FPGA IP**
 
@@ -198,7 +206,11 @@ Follow these steps to compile and test the design:
 
       ![](assets/add-ip-platform-designer.png)
 
-   3. Connect the modules as shown:
+      > **Note**: If you cannot see the oneAPI IP component, refresh Platform Designer by clicking `File` > `Refresh System`
+      >
+      > ![](assets/refresh-system.png)
+
+   6. Connect the modules as shown:
 
       ![](assets/complete-system_platform-designer.png)
 
@@ -208,13 +220,13 @@ Follow these steps to compile and test the design:
       > 
       > ![](assets/fix-reset_n-platform-designer.png)
 
-   4. Save the system by clicking `File` > `Save`
+   7. Save the system by clicking `File` > `Save`
 
-   5. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
+   8. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
       ![](assets/generate-hdl.png)
    
-   6. Close Platform Designer. 
+   9. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
@@ -233,6 +245,10 @@ Follow these steps to compile and test the design:
       *Final pin planner configuration:*
 
       ![](assets/pins-from-design.png)
+
+      > **Note**: If you cannot see the pin details, click the `All Pins` button in the bottom left corner of the Pin Planner GUI.
+      > 
+      > ![](assets/all-pins.png)
 
 8. Add the timing constraints. 
 
