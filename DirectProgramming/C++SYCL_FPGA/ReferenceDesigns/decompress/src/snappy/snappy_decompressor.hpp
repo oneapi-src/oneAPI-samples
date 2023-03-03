@@ -150,6 +150,7 @@ class SnappyDecompressor : public DecompressorBase {
     unsigned* preamble_count;
 
     try {
+#if defined (IS_BSP)
       // allocate memory on the device for the input and output
       if ((in = sycl::malloc_device<unsigned char>(in_count_padded, q)) ==
           nullptr) {
@@ -165,6 +166,23 @@ class SnappyDecompressor : public DecompressorBase {
         std::cerr << "ERROR: could not allocate space for 'preamble_count'\n";
         std::terminate();
       }
+#else
+      // allocate shared memory
+      if ((in = sycl::malloc_shared<unsigned char>(in_count_padded, q)) ==
+          nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'in'\n";
+        std::terminate();
+      }
+      if ((out = sycl::malloc_shared<unsigned char>(out_count_padded, q)) ==
+          nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'out'\n";
+        std::terminate();
+      }
+      if ((preamble_count = sycl::malloc_shared<unsigned>(1, q)) == nullptr) {
+        std::cerr << "ERROR: could not allocate space for 'preamble_count'\n";
+        std::terminate();
+      }
+#endif
 
       // copy the input data to the device memory and wait for the copy to
       // finish
