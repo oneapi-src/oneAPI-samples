@@ -50,7 +50,7 @@ int main() {
                 << device.get_info<sycl::info::device::name>().c_str()
                 << std::endl;
 
-if (!device.has(aspect::usm_host_allocations)) {
+if (!device.has(sycl::aspect::usm_host_allocations)) {
      std::terminate();
 }
 
