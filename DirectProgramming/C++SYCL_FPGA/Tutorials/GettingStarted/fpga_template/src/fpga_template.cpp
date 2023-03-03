@@ -58,6 +58,14 @@ int main() {
                   sycl::property::queue::enable_profiling{});
 
     auto device = q.get_device();
+
+    if (!device.has(sycl::aspect::usm_host_allocations)) {
+      std::cerr << "This design must either target a board that supports USM "
+                   "Host/Shared allocations, or IP Component Authoring. "
+                << std::endl;
+      std::terminate();
+    }
+
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
