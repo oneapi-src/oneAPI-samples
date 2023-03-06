@@ -1,0 +1,226 @@
+---
+MainSourceFile:  '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/dpct_output/curand_utils.h'
+Replacements:
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1580
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1637
+    Length:          0
+    ReplacementText: "\n#include <oneapi/mkl.hpp>\n#include <oneapi/mkl/rng/device.hpp>\n#include <dpct/rng_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1639
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1665
+    Length:          20
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1713
+    Length:          0
+    ReplacementText: "/*\nDPCT1001:0: The statement could not be removed.\n*/\n/*\nDPCT1000:1: Error handling if-stmt was detected but could not be rewritten.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1879
+    Length:          11
+    ReplacementText: int
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          1972
+    Length:          11
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          2490
+    Length:          14
+    ReplacementText: int
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Offset:          2583
+    Length:          21
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_utils.h'
+    Digest:          5132d798d6308a6702506a3e03c827ba
+DpctVersion:     2023.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    cpu_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     cpu_device
+      SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        false
+      FeatureName:     ''
+      SubFeatureMap:
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+          FeatureName:     'device_ext::create_queue'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_destroy_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+          FeatureName:     'device_ext::destroy_queue'
+          SubFeatureMap:   {}
+        device_ext_reset:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+          FeatureName:     'device_ext::reset'
+          SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     queue_ptr
+      SubFeatureMap:   {}
+  memory.hpp:
+    async_dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration/curand_mt19937_lognormal_example.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/iochocki/Projects/oneAPI-samples/DirectProgramming/C++SYCL/guided_cuRAND_examples_SYCL_migration'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           ''
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
