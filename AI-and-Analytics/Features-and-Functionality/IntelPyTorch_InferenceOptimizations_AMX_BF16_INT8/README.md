@@ -64,7 +64,7 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Notebook                                                 | Description
 |:---                                                      |:---
-|`IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb` | PyTorch Inference Optimizations with Advanced Matrix Extensions BF16/INT8
+|`IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb` | PyTorch* Inference Optimizations with Advanced Matrix Extensions BF16/INT8
 
 ### Python Scripts
 
@@ -76,7 +76,7 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `PyTorch Inference Optimizations with Advanced Matrix Extensions Bfloat16 Integer8` Sample
+## Run the `PyTorch* Inference Optimizations with Advanced Matrix Extensions Bfloat16 Integer8` Sample
 
 ### On Linux*
 
