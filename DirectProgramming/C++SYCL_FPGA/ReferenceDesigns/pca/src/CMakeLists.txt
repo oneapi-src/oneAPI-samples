@@ -32,8 +32,8 @@ endif()
 
 
 # A10 parameters
-set(ROWS_COMPONENT 64)
-set(COLS_COMPONENT 64)
+set(ROWS_COMPONENT 128)
+set(COLS_COMPONENT 128)
 set(COMPLEX 0)
 set(FIXED_ITERATIONS 64)
 set(CLOCK_TARGET 360MHz)
@@ -44,19 +44,19 @@ if(FPGA_DEVICE MATCHES ".*a10.*")
     # Nothing to do
 elseif(FPGA_DEVICE MATCHES ".*s10.*")
     # S10 parameters
-    set(ROWS_COMPONENT 16)
-    set(COLS_COMPONENT 16)
+    set(ROWS_COMPONENT 256)
+    set(COLS_COMPONENT 256)
     set(COMPLEX 0)
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 480MHz)
     set(SEED "-Xsseed=9")
 elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     # Agilex™ parameters
-    set(ROWS_COMPONENT 256)
-    set(COLS_COMPONENT 256)
+    set(ROWS_COMPONENT 8)
+    set(COLS_COMPONENT 8)
     set(FIXED_ITERATIONS 110)
     set(COMPLEX 0)
-    set(CLOCK_TARGET 600MHz)
+    set(CLOCK_TARGET 360MHz)
     set(SEED "-Xsseed=5")
 else()
     message(STATUS "Unknown board ${FPGA_DEVICE}!")
@@ -93,11 +93,11 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -fsycl -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} ${AC_TYPES_LINK_FLAG}")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} ${USER_HARDWARE_FLAGS}")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${AC_TYPES_LINK_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_HARDWARE")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fsycl -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${AC_TYPES_LINK_FLAG}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${STACK_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation

@@ -17,9 +17,9 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
 #define KDEFLIM 2
-#define KETHRESHOLD 1e-2
+#define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
-#define RELSHIFT 1
+#define RELSHIFT 0
 #define SHIFT_NOISE 1e-3
 #define SHIFT_NOISE_CPU 1e-3
 #define ITER_PER_EIGEN 100
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 400;
+  constexpr size_t kMatricesToDecompose = 40;
 
   try {
     // SYCL boilerplate

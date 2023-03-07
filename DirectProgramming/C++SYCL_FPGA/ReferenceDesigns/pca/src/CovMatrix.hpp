@@ -55,47 +55,56 @@ struct StreamingMM{
 
   		// storing in a internal matrix 
 
-  		// NO-FORMAT: Attribute
-		row_tuple MatrixA[rows];
-		row_tuple MatrixC[rows], MatrixCW[rows];
-		TT Avg[rows], AvgW[rows], avgVal;
-  	pipe_tuple pipe_read;
-    TT digValM[rows];
+    		// NO-FORMAT: Attribute
+  		row_tuple MatrixC[rows], MatrixCW[rows];
+  		TT Avg[rows], AvgW[rows];
+    	pipe_tuple pipe_read;
+      TT digValM[rows], avgVal;
 
 
 
   		for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
   			// loading data onchip memory 
+        row_tuple MatrixA[rows];
   			for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
   				ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
   				ac_int<kRowBitSize, false> j_ll = itr % kRowBlocks;
 
-  				pipe_read = AIn::read();
-				fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
+  			  pipe_read = AIn::read();
+          row_tuple rowblk;
+				  fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
       			fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
       				if(k == j_ll){
       					if constexpr (k*pipe_size+t < rows){
-      						MatrixA[i_ll].template get<k*pipe_size+t> () = pipe_read.template get<t>();
+      						rowblk.template get<k*pipe_size+t> () = pipe_read.template get<t>();
       					}
       				}
-      				});
       			});
+      		});
 
-
+          MatrixA[i_ll] = rowblk;
 
   			}
 
 
-  			row_tuple row1, row2, row_temp, rowSumL, rowSumW;
+  			// [[intel::loop_coalesce(2)]]
+        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        T colSum;
+        row_tuple row1, row2, row_temp, rowSumL, rowSumW;
   			for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
   				for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   					T sum = 0;
   					
   					if(j_ll == 0){
   						rowSumL = MatrixC[i_ll];
-  						avgVal = Avg[i_ll];
   					}
 
+            if(j_ll == 0 && blk == 0){
+              avgVal = 0;
+            } else if(j_ll == 0){
+              avgVal = Avg[i_ll];
+            }
+            
 
   					row2 = MatrixA[j_ll];
   					if(j_ll == i_ll + 1){
@@ -129,26 +138,29 @@ struct StreamingMM{
               digValM[i_ll] = newSum;
             }
 
+            if(j_ll == 0){
+              colSum = 0;
+            }
 
-  					T colSum = 0;
+            T Elem;
   					fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  						colSum += row1.template get<t>() / columns;
+              if(t == j_ll){
+                Elem = row1.template get<t>();
+              }
   					});
 
-					  if(j_ll == 0  && blk == 0){
-						  avgVal= colSum;
-					  }else if(j_ll == 0){
-						  avgVal += colSum;
-					  }
+
+            colSum += Elem/columns ;
+            T tempVal =  avgVal + colSum; //colSum;
 
 					  if(j_ll == rows - 1){
   						MatrixC[i_ll] = rowSumW;
-  						Avg[i_ll] = avgVal;
+  						Avg[i_ll] = tempVal;
   					}
 
   					if(blk == kColBlocks-1 && j_ll == rows - 1){
   						MatrixCW[i_ll] = rowSumW;
-  						AvgW[i_ll] = avgVal;
+  						AvgW[i_ll] = tempVal;
   					}
 
   				}
@@ -158,11 +170,7 @@ struct StreamingMM{
   		// row_tuple row_write;
   		pipe_tuple pipe_write;
   		TT avg1, avg2, avg_temp;
-
       TT digVal1, digVal2, dig_temp; 
-
-      // PRINTF("Covariance Matrix is: \n");
-
   		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
   			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
   				T loadVal;
