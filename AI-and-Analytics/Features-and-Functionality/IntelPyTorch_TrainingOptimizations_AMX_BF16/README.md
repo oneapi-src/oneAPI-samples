@@ -148,11 +148,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
+If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample will print out the runtimes and charts of relative performance with the FP32 model without any optimizations as the baseline. 
 
-The following image shows approximate performance speed increases using AMX BF16 with auto-mixed precision during training. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the amount of required computations in one batch. This can be done by increasing the batch size with CIFAR10 or using another dataset.  
-
-![comparison images](assets/amx_relative_speedup.png)
+The performance speedups using AMX BF16 are approximate on ResNet50. Performance will vary based on your hardware and software versions. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the amount of required computations in one batch. This can be done by increasing the batch size with CIFAR10 or using another dataset. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html). 
 
 ## License
 
