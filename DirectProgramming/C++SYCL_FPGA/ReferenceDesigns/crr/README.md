@@ -53,6 +53,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
+> **Note**: You'll need a large FPGA part to be able to fit this design 
+
 ### Performance
 
 Performance results are based on testing as of July 20, 2020.
