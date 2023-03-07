@@ -37,6 +37,46 @@
 #include <oneapi/mkl/rng/device.hpp>
 #include <dpct/rng_utils.hpp>
 
+enum curandRngType {
+    CURAND_RNG_TEST = 0,
+    CURAND_RNG_PSEUDO_DEFAULT = 100, ///< Default pseudorandom generator
+    CURAND_RNG_PSEUDO_XORWOW = 101, ///< XORWOW pseudorandom generator
+    CURAND_RNG_PSEUDO_MRG32K3A = 121, ///< MRG32k3a pseudorandom generator
+    CURAND_RNG_PSEUDO_MTGP32 = 141, ///< Mersenne Twister MTGP32 pseudorandom generator
+    CURAND_RNG_PSEUDO_MT19937 = 142, ///< Mersenne Twister MT19937 pseudorandom generator
+    CURAND_RNG_PSEUDO_PHILOX4_32_10 = 161, ///< PHILOX-4x32-10 pseudorandom generator
+    CURAND_RNG_QUASI_DEFAULT = 200, ///< Default quasirandom generator
+    CURAND_RNG_QUASI_SOBOL32 = 201, ///< Sobol32 quasirandom generator
+    CURAND_RNG_QUASI_SCRAMBLED_SOBOL32 = 202,  ///< Scrambled Sobol32 quasirandom generator
+    CURAND_RNG_QUASI_SOBOL64 = 203, ///< Sobol64 quasirandom generator
+    CURAND_RNG_QUASI_SCRAMBLED_SOBOL64 = 204  ///< Scrambled Sobol64 quasirandom generator
+};
+
+/*
+ * CURAND generator types
+ */
+/** \cond UNHIDE_TYPEDEFS */
+typedef enum curandRngType curandRngType_t;
+/** \endcond */
+
+enum curandOrdering {
+    CURAND_ORDERING_PSEUDO_BEST = 100, ///< Best ordering for pseudorandom results
+    CURAND_ORDERING_PSEUDO_DEFAULT = 101, ///< Specific default thread sequence for pseudorandom results, same as CURAND_ORDERING_PSEUDO_BEST
+    CURAND_ORDERING_PSEUDO_SEEDED = 102, ///< Specific seeding pattern for fast lower quality pseudorandom results
+    CURAND_ORDERING_PSEUDO_LEGACY = 103, ///< Specific legacy sequence for pseudorandom results, guaranteed to remain the same for all cuRAND release
+    CURAND_ORDERING_PSEUDO_DYNAMIC = 104, ///< Specific ordering adjusted to the device it is being executed on, provides the best performance
+    CURAND_ORDERING_QUASI_DEFAULT = 201 ///< Specific n-dimensional ordering for quasirandom results
+};
+
+/*
+ * CURAND ordering of results in memory
+ */
+/** \cond UNHIDE_TYPEDEFS */
+typedef enum curandOrdering curandOrdering_t;
+/** \endcond */
+
+
+
 // CUDA API error checking
 /*
 DPCT1001:0: The statement could not be removed.
