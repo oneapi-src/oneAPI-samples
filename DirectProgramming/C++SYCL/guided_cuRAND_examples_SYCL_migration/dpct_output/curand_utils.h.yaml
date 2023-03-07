@@ -180,7 +180,7 @@ OptionMap:
     Specified:       false
   CompilationsDir:
     Value:           ''
-    Specified:       true
+    Specified:       false
   CtadEnabled:
     Value:           'false'
     Specified:       false
