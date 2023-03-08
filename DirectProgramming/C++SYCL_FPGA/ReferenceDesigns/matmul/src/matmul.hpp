@@ -9,6 +9,7 @@
 #include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/sycl.hpp>
 
+#include "matmul_common.hpp"
 #include "memory_transfers.hpp"
 #include "streaming_matmul.hpp"
 
@@ -35,18 +36,22 @@ class CPipe;
  *  repetitions: number of repetitions of the computation to execute
  *
  */
-template <typename T,         // Datatype of the elements of the matrix
-          int k_rows_a,       // Rows of matrix A
-          int k_common,       // Columns of matrix A / rows of matrix B
-          int k_cols_b,       // Columns of matrix B
-          int k_tile_a,       // Tile size for matrix A
-          int k_tile_b,       // Tile size for matrix B
-          int k_num_matrices> // Number of pairs of matrices to multiply
-void MatmulImpl(sycl::queue &q, T *a_matrix, T *b_matrix, T *c_matrix,
-                int repetitions) {
-  // Number of elements per DDR burst access
+template <typename TT,          // Datatype of the elements of the matrix
+          int k_rows_a,         // Rows of matrix A
+          int k_common,         // Columns of matrix A / rows of matrix B
+          int k_cols_b,         // Columns of matrix B
+          int k_tile_a,         // Tile size for matrix A
+          int k_tile_b,         // Tile size for matrix B
+          int k_num_matrices>   // Number of pairs of matrices to multiply
+void MatmulImpl(sycl::queue &q, // Device queue
+                std::vector<TT> &a_matrix, // Input matrix A
+                std::vector<TT> &b_matrix, // Input matrix B
+                std::vector<TT> &c_matrix, // Output matrix C = A * B
+                int repetitions            // Number of repetitions
+) {
+  // Number of elements per DDR access
   // NOTE: optimized for single-precision floating-point matrices
-  constexpr int kDDRBurst = 8;
+  constexpr int kElemsPerDDRAccess = 8;
 
   // Matrix sizes
   constexpr int kMatsizeA = k_rows_a * k_common;
@@ -54,45 +59,57 @@ void MatmulImpl(sycl::queue &q, T *a_matrix, T *b_matrix, T *c_matrix,
   constexpr int kMatsizeC = k_rows_a * k_cols_b;
 
   // Allocate FPGA DDR memory
-  T *a = sycl::malloc_device<T>(kMatsizeA * k_num_matrices, q);
-  T *b = sycl::malloc_device<T>(kMatsizeB * k_num_matrices, q);
-  T *c = sycl::malloc_device<T>(kMatsizeC * k_num_matrices, q);
+#if defined(IS_BSP)
+  TT *a = sycl::malloc_device<TT>(kMatsizeA * k_num_matrices, q);
+  TT *b = sycl::malloc_device<TT>(kMatsizeB * k_num_matrices, q);
+  TT *c = sycl::malloc_device<TT>(kMatsizeC * k_num_matrices, q);
+#else
+  // malloc_device are not supported when targetting an FPGA part/family
+  TT *a = sycl::malloc_shared<TT>(kMatsizeA * k_num_matrices, q);
+  TT *b = sycl::malloc_shared<TT>(kMatsizeB * k_num_matrices, q);
+  TT *c = sycl::malloc_shared<TT>(kMatsizeC * k_num_matrices, q);
+#endif
 
   // Copy matrices over
-  q.memcpy(a, a_matrix, kMatsizeA * k_num_matrices * sizeof(T)).wait();
-  q.memcpy(b, b_matrix, kMatsizeB * k_num_matrices * sizeof(T)).wait();
+  q.memcpy(a, a_matrix.data(), kMatsizeA * k_num_matrices * sizeof(TT)).wait();
+  q.memcpy(b, b_matrix.data(), kMatsizeB * k_num_matrices * sizeof(TT)).wait();
+
+  using PipeDataA = FeederAData<fpga_tools::NTuple<TT, TILE_A>>;
+  using PipeDataB = fpga_tools::NTuple<TT, TILE_B>;
+  using PipeDataC = fpga_tools::NTuple<TT, TILE_A>;
 
   // Pipes to communicate the matrices between kernels
-  using PipeA =
-      sycl::ext::intel::pipe<APipe, fpga_tools::NTuple<T, k_tile_a>, 64>;
-  using PipeB =
-      sycl::ext::intel::pipe<BPipe, fpga_tools::NTuple<T, k_tile_b>, 64>;
-  using PipeC =
-      sycl::ext::intel::pipe<CPipe, fpga_tools::NTuple<T, k_tile_a>, 64>;
+  using PipeA = sycl::ext::intel::pipe<APipe, PipeDataA, 64>;
+  using PipeB = sycl::ext::intel::pipe<BPipe, PipeDataB, 64>;
+  using PipeC = sycl::ext::intel::pipe<CPipe, PipeDataC, 64>;
 
   // Producer kernel for matrix A
   auto feeder_a_event = q.single_task<FeederA>([=
-  ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-      MatrixReadFromDDRToPipeA<T, k_rows_a, k_common, k_cols_b, k_tile_a,
-          k_tile_b, kDDRBurst, k_num_matrices, PipeA>(a, repetitions);
+  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
+    MatrixReadFromDDRToPipeA<TT, k_rows_a, k_common, k_cols_b, k_tile_a,
+                             k_tile_b, kElemsPerDDRAccess, k_num_matrices,
+                             PipeA>(a, repetitions);
   });
 
   // Producer kernel for matrix B
   q.single_task<FeederB>([=
-  ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-      MatrixReadFromDDRToPipeB<T, k_rows_a, k_common, k_cols_b, k_tile_a,
-          k_tile_b, kDDRBurst, k_num_matrices, PipeB>(b, repetitions);
+  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
+    MatrixReadFromDDRToPipeB<TT, k_rows_a, k_common, k_cols_b, k_tile_a,
+                             k_tile_b, kElemsPerDDRAccess, k_num_matrices,
+                             PipeB>(b, repetitions);
   });
 
   // Matrix multiply kernel
-  q.single_task<Matmul>(StreamingMatmul<T, k_common, k_tile_a, k_tile_b,
-      PipeA, PipeB, PipeC>{});
+  q.single_task<Matmul>(
+      fpga_linalg::StreamingMatmul<TT, k_common, k_tile_a, k_tile_b, PipeA,
+                                   PipeB, PipeC>{});
 
   // Consumer kernel for matrix C
   auto drain_event = q.single_task<Drain>([=
-  ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-      MatrixReadPipeToDDR<T, k_rows_a, k_cols_b, k_tile_a, k_tile_b, kDDRBurst,
-          k_num_matrices, PipeC>(c, repetitions);
+  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
+    MatrixReadPipeToDDR<TT, k_rows_a, k_cols_b, k_tile_a, k_tile_b,
+                        kElemsPerDDRAccess, k_num_matrices, PipeC>(c,
+                                                                   repetitions);
   });
 
   drain_event.wait();
@@ -108,7 +125,7 @@ void MatmulImpl(sycl::queue &q, T *a_matrix, T *b_matrix, T *c_matrix,
             << "k matrices/s" << std::endl;
 
   // Copy result matrix back
-  q.memcpy(c_matrix, c, kMatsizeC * k_num_matrices * sizeof(T)).wait();
+  q.memcpy(c_matrix.data(), c, kMatsizeC * k_num_matrices * sizeof(TT)).wait();
 
   // Free USM
   sycl::free(a, q);
