@@ -43,7 +43,7 @@ double run_sycl(
       // Local accessor, for one matrix tile:
       constexpr int tile_size = 16;
       auto tileA =
-          accessor<T, 1, access::mode::read_write, access::target::local>(
+          local_accessor<T, 1>(
               tile_size, h);
 
 // BEGIN CODE SNIP

@@ -2,7 +2,7 @@
 
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
-project(Chap5)
+project(Chap5 CXX)
 add_book_sample(
     TEST
     TARGET fig_5_1_async_task_graph
