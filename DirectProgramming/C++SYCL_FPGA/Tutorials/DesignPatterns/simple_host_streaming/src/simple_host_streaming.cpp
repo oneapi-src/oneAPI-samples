@@ -58,8 +58,8 @@ int main(int argc, char* argv[]) {
   size_t chunk_count = 1 << 8;    // 256
   size_t iterations = 2;
 #elif defined(FPGA_SIMULATOR)
-  size_t chunks = 1 << 5;         // 64
-  size_t chunk_count = 1 << 9;    // 1024
+  size_t chunks = 1 << 3;         // 8
+  size_t chunk_count = 1 << 7;    // 128
   size_t iterations = 2;
 #else
   size_t chunks = 1 << 9;         // 512
