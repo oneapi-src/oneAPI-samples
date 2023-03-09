@@ -7,30 +7,37 @@
 
 
 
-
-// #ifdef __SYCL_DEVICE_ONLY__
-// #define CL_CONSTANT __attribute__((opencl_constant))
-// #else
-// #define CL_CONSTANT
-// #endif  #define PRINTF(format, ...)                                    \
-// {                                                            \
-//   static const CL_CONSTANT char _format[] = format;          \
-//   ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-// }
-
 namespace fpga_linalg {
 
 /*
-  QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
+  Eigen vale and Eigen vector computation for symmetric matrices. 
+  Compute QQ matrix and Eig Vector where A QQ[i] = Eig[i] QQ[i]
+  
   - A is the input matrix
-  - Q is a unitary/orthogonal matrix
-  - R is an upper triangular matrix
+  - QQ is a eigen vector matrix
+  - Eig is vector for eigen values
 
-  This function implements a OneAPI optimized version of the "High performance
-  QR Decomposition for FPGAs" FPGA'18 paper by Martin Langhammer and Bogdan
-  Pasca.
+  This function implements Eigen vector and Eigen value comptation 
+  based on Iterative QRD with with shift. The High level Algorithm 
+  for calculating the first / right bottom eigen value is
+  as follows, @ for matrix matrix multiplication 
 
-  Each matrix (input and output) are represented in a column wise (transposed).
+  QQ = I
+  while(1):
+    mu = A[n-1, n-1]
+    A = A - mu @ I
+    Q, R = qrDecompose(A)
+    QQ = QQ @ Q
+    A = R @ Q + mu @ I
+    if(abs(A[n-1, 0:n-2]) < threshold):
+      break;
+
+  Once first eigen value is computed matrix A is deflated 
+  into A[0:n-2, 0:n-2] and abobe loop is executed. 
+  deflation will continue until A[0:1, 0:1]
+
+
+  Input matrix A is organized column wise (transposed).
 
   Then input and output matrices are consumed/produced from/to pipes.
 */
@@ -38,7 +45,6 @@ template <typename T,        // The datatype for the computation
           bool is_complex,   // True if T is ac_complex<X>
           int rows,          // Number of rows in the A matrices
           int columns,       // Number of columns in the A matrices
-                             // , must be <= rows
           int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
@@ -64,15 +70,11 @@ struct StreamingQRD {
   void operator()() const {
     // PRINTF("R matrix is: \n");
 
-    // Functional limitations
-    static_assert(rows >= columns,
-                  "only rectangular matrices with rows>=columns are supported");
-    // static_assert(columns >= 4,
-    //               "only matrices of size 4x4 and over are supported");
+    static_assert(columns >= 4,
+                  "only matrices of size 4x4 and over are supported");
 
     /*
-      This code implements a OneAPI optimized variation of the following
-      algorithm
+      QR Decomposition implementation is based on following algorithm 
 
       for i=0:n
         for j=max(i,1):n
@@ -98,15 +100,17 @@ struct StreamingQRD {
       -> <x,y> represents the dot product of the vectors x and y
     */
 
+
+
     // Set the computation type to T or ac_complex<T> depending on the value
-    // of is_complex
+    // of is_complex, currently Complex eigen vector and eigen value computation is 
+    // not supported 
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
     // Type used to store the matrices in the compute loop
     using column_tuple = fpga_tools::NTuple<TT, rows>;
     using row_tuple = fpga_tools::NTuple<TT, columns>;
 
-    // Number of upper-right elements in the R output matrix
     // constexpr int kMatrixSize = rows * rows;
     // constexpr int kMatrixBitSize = fpga_tools::BitsForMaxValue<kMatrixSize + 1>()+1;
     // Fanout reduction factor for signals that fanout to rows compute cores
@@ -145,6 +149,8 @@ struct StreamingQRD {
     // -> enough bits to encode columns+1 for the positive iterations and
     //    the exit condition
     // -> enough bits to encode the maximum number of negative iterations
+
+
     static constexpr int kJNegativeIterations =
         kVariableIterations < 0 ? -kVariableIterations : 1;
     static constexpr int kJBitSize = fpga_tools::BitsForMaxValue<columns + 1>()
@@ -152,20 +158,21 @@ struct StreamingQRD {
 
 
 
-    // int matrix_id = 0;
-    // Compute QRDs as long as matrices are given as inputs
+    // Compute Eigen vectors and Eigen values as long as matrices are given as inputs
     while(1) {
-      // matrix_id++;
-      // for(int witr = 0; witr < 1; witr++){
-      // Three copies of the full matrix, so that each matrix has a single
-      // load and a single store.
-      // a_load is the initial matrix received from the pipe
-      // a_compute is used and modified during calculations
-      // q_result is a copy of a_compute and is used to send the final output
+
 
       // Break memories up to store 4 complex numbers (32 bytes) per bank
       constexpr short kBankwidth = pipe_size * sizeof(TT);
       constexpr unsigned short kNumBanks = rows / pipe_size;
+
+      // 7 copies of the full matrix, so that each matrix has a single
+      // load and a single store.
+      // a_load1 is the initial matrix received from the pipe
+      // a_load2 is the matrix obtained from RQ computation
+      // rq_matrix is another copy of RQ 
+      // a_compute is used and modified during calculations
+      // q_result is a copy of a_compute and is used to send the final output
 
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
@@ -176,20 +183,27 @@ struct StreamingQRD {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      column_tuple a_load1[columns], a_load2[columns], rq_matrix[columns], a_compute[columns], q_result[columns];
-      bool QRD_failed = 0;
+      column_tuple a_load1[columns], a_load2[columns],
+             a_compute[columns], q_result[columns];
+
+      // Initial Identity Eigen vector matrix 
+      row_tuple QQ_matrix[rows], QQ_matrixW[rows];
 
       // Contains the values of matrix R in a row by row
       // fashion, starting by row 0
       row_tuple r_matrix[rows];
 
+      bool QRD_failed = 0;
+
+
+      
+
       // Eigen Value Matrix
       TT eArrray[rows];
 
-      // Initial Identity Eigen vector matrix 
-      row_tuple QQ_matrix[rows], QQ_matrixW[rows];
 
-      // Copy a matrix from the pipe to a local memory
+
+      
       // Number of pipe reads of pipe_size required to read a full column
       constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
       constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
@@ -198,6 +212,9 @@ struct StreamingQRD {
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize =
                                   fpga_tools::BitsForMaxValue<kLoopIter + 1>();
+
+      // Copy a matrix from the pipe to a local memory
+
 
       // plceholder for releigh shift 
       TT R_shift;
@@ -215,6 +232,7 @@ struct StreamingQRD {
                 a_load1[li / kLoopIterPerColumn].template get<k * pipe_size
                                           + t>() = pipe_read.template get<t>();
               }
+
 
               if(li / kLoopIterPerColumn == columns -1 && k * pipe_size + t == rows -1){
                 c_wilk = pipe_read.template get<t>();
@@ -239,15 +257,7 @@ struct StreamingQRD {
         });
       }
 
-      // if(matrix_id == 25){
-      // PRINTF("A matrix is: \n");
-      // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-      //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-      //       PRINTF("%f ", a_load1[ik].template get<k>())
-      //     });
-      //   PRINTF("\n");
-      // }
-      // }
+
 
       TT lamda = (a_wilk-c_wilk)/2.0;
       TT sign_lamda = (lamda > 0) - (lamda < 0);
@@ -257,10 +267,9 @@ struct StreamingQRD {
       R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
       R_shift = 0;
   
-      // size of Deflated matrix
-      int kDM_size = rows;
 
-      // int converge_itr = 1;
+      // variable to track the deflated matrix size 
+      int kDM_size = rows;
 
 
       bool QR_iteration_done = 0;
@@ -679,7 +688,7 @@ struct StreamingQRD {
               bool cmp = (k==j_ll && j_ll < kDM_size && i_ll < kDM_size);
               if(cmp && QR_iteration_done == 0){
                 a_load2[i_ll].template get<k>() = sum_RQ;
-                rq_matrix[i_ll].template get<k>() = sum_RQ;
+                // rq_matrix[i_ll].template get<k>() = sum_RQ;
               }
             });
           }
