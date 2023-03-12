@@ -40,20 +40,20 @@ add_custom_target (debug-session
   DEPENDS ${PROJECT_NAME_BUGGED})
 
 # Add custom target for running
-add_custom_target(run ./${PROJECT_NAME_BUGGED} cpu
+add_custom_target(run ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-cpu-fixed ./${PROJECT_NAME_FIXED} cpu
+add_custom_target(run-cpu-fixed ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-cpu ./${PROJECT_NAME_BUGGED} cpu
+add_custom_target(run-cpu ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-gpu-fixed ./${PROJECT_NAME_FIXED} gpu
+add_custom_target(run-gpu-fixed ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-gpu ./${PROJECT_NAME_BUGGED} gpu
+add_custom_target(run-gpu ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-fpga-fixed ./${PROJECT_NAME_FIXED} accelerator
+add_custom_target(run-fpga-fixed ONEAPI_DEVICE_SELECTOR=*:fpga ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-fpga ./${PROJECT_NAME_BUGGED} accelerator
+add_custom_target(run-fpga ONEAPI_DEVICE_SELECTOR=*:fpga ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
