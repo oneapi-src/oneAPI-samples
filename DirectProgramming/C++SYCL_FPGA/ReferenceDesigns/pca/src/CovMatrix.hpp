@@ -8,7 +8,7 @@ template <typename T,        // The datatype for the computation
           unsigned rows,          // Number of rows in the A matrices
           unsigned columns,       // Number of columns in the A matrices
 
-          unsigned blockSize,	 // number of parallel mult and add 
+          unsigned blockSize,  // number of parallel mult and add 
           unsigned pipe_size,     // Number of elements read/write per pipe
                              // operation
           typename AIn,      // A matrix input pipe, receive pipe_size
@@ -34,172 +34,154 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 struct StreamingMM{
     void operator()() const {
-  	
-  	using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
-  	using row_tuple = fpga_tools::NTuple<TT, rows>;
-  	using pipe_tuple = fpga_tools::NTuple<TT, pipe_size>;
+    
+    using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
+    using row_tuple = fpga_tools::NTuple<TT, rows>;
+    using pipe_tuple = fpga_tools::NTuple<TT, pipe_size>;
 
-  	constexpr int kColBlocks = (columns+rows-1)/rows;
-  	constexpr int kRowBlocks = (rows+pipe_size-1)/pipe_size;
-  	constexpr int kLoopItr = rows*kRowBlocks;
+    constexpr int kColBlocks = (columns+rows-1)/rows;
+    constexpr int kRowBlocks = (rows+pipe_size-1)/pipe_size;
+    constexpr int kLoopItr = rows*kRowBlocks;
 
-  	constexpr int kColBlockBitSize = fpga_tools::BitsForMaxValue<kColBlocks + 1>();
-  	constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopItr + 1>();
+    constexpr int kColBlockBitSize = fpga_tools::BitsForMaxValue<kColBlocks + 1>();
+    constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopItr + 1>();
 
     constexpr int maxRow = (rows > pipe_size) ? rows : pipe_size;
-  	constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<maxRow + 1>();
+    constexpr int kRowBitSize = fpga_tools::BitsForMaxValue<maxRow + 1>();
 
 
 
-  	while(1){
+    while(1){
 
-  		// storing in a internal matrix 
+      // storing in a internal matrix 
 
-    		// NO-FORMAT: Attribute
-  		row_tuple MatrixC[rows], MatrixCW[rows];
-      row_tuple Avg, Avg_G;
-    	pipe_tuple pipe_read;
+        // NO-FORMAT: Attribute
+      TT MatrixC[rows][rows], MatrixCW[rows][rows];
+      row_tuple  Avg_G;
+      TT Avg[rows];
+      pipe_tuple pipe_read;
       TT digValM[rows];
 
 
 
-  		for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
-  			// loading data onchip memory 
-        row_tuple MatrixA[rows];
-  			for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
-  				ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
-  				ac_int<kRowBitSize, false> j_ll = itr % kRowBlocks;
 
-  			  pipe_read = AIn::read();
+      for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
+
+        // loading data onchip memory 
+        row_tuple MatrixA[rows];
+        for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
+          ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
+          ac_int<kRowBitSize, false> j_ll = itr % kRowBlocks;
+
+          pipe_read = AIn::read();
           row_tuple rowblk;
-				  fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
-      			fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-      				if(k == j_ll){
-      					if constexpr (k*pipe_size+t < rows){
-      						rowblk.template get<k*pipe_size+t> () = pipe_read.template get<t>();
-      					}
-      				}
-      			});
-      		});
+          fpga_tools::UnrolledLoop<kRowBlocks>([&](auto k) {
+            fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+              if(k == j_ll){
+                if constexpr (k*pipe_size+t < rows){
+                  rowblk.template get<k*pipe_size+t> () = pipe_read.template get<t>();
+                }
+              }
+            });
+          });
 
           MatrixA[i_ll] = rowblk;
 
-  			}
+        }
 
 
-  			// [[intel::loop_coalesce(2)]]
+        // [[intel::loop_coalesce(2)]]
         // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-        T colSum;
-        row_tuple row1, row2, row_temp, rowSumL, rowSumW;
-        
-  			for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
-  				for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
-  					T sum = 0;
-  					
-  					if(j_ll == 0){
-  						rowSumL = MatrixC[i_ll];
-  					}
-            
-
-  					row2 = MatrixA[j_ll];
-  					if(j_ll == i_ll + 1){
-  						row_temp = row2;
-  					}
-
-  					if(i_ll == 0 && j_ll == 0){
-  						row1 = row2;
-  					} else if(j_ll == 0){
-  						row1 = row_temp;
-  					}
-
-  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  						sum += row1.template get<t>() * row2.template get<t>();
-  					});
+        // T colSum;
+        TT row1[rows], row2[rows], row_temp[rows];
+        for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
 
 
-            TT newSum;
-  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  						if(j_ll == t && blk == 0){
-  							rowSumW.template get<t> () = sum;
-                newSum = sum;
-  						} else if(j_ll == t){
-                newSum = rowSumL.template get<t> () + sum;
-  							rowSumW.template get<t> () = rowSumL.template get<t> () + sum;
-  						}
-  					});
+          fpga_tools::UnrolledLoop<rows>([&](auto t) {
+            row1[t] = row_temp[t];
+          });
 
+          if(blk == 0){
+            Avg[i_ll] = 0;
+          }
 
-            if(i_ll == j_ll){
-              digValM[i_ll] = newSum;
-            }
-
-            T Elem = 0;
-  					fpga_tools::UnrolledLoop<rows>([&](auto t) {
-                Elem += row1.template get<t>();
-  					});
-
-
-            colSum = Elem/columns ;
-            T tempVal =  colSum; 
+          T avg = 0;
+          [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+          // [[intel::ivdep(rowSumL, rows)]]
+          for(int j_ll = 0; j_ll < rows; j_ll++){
 
             fpga_tools::UnrolledLoop<rows>([&](auto t) {
-              if(t == i_ll){
-                  Avg.template get<t>() = tempVal;
+              row2[t] = MatrixA[j_ll].template get <t>();
+              if(j_ll == i_ll + 1){
+                row_temp[t] = row2[t];
               }
+              if(i_ll == 0 && j_ll == 0){
+                row1[t] = row2[t];
+              } 
             });
 
-					  if(j_ll == rows - 1){
-  						MatrixC[i_ll] = rowSumW;
-  					}
+            TT rowSum = 0;
+            fpga_tools::UnrolledLoop<rows>([&](auto t) {
+              TT row1Elem = row1[t];
+              rowSum += row1Elem * row2[t];
+            });
 
-  					if(blk == kColBlocks-1 && j_ll == rows - 1){
-  						MatrixCW[i_ll] = rowSumW;
-  					}
+            avg += row1[j_ll];
 
-  				}
-  			}
+            T sum_a = rowSum;
+            T sum_b = blk == 0 ? 0 : MatrixC[i_ll][j_ll];
+            T sum = sum_a + sum_b; 
 
-        fpga_tools::UnrolledLoop<rows>([&](auto t) {
-            if(blk == 0){
-              Avg_G.template get<t> () = Avg.template get<t> ();
-            } else {
-              Avg_G.template get<t> () += Avg.template get<t> ();
+            MatrixC[i_ll][j_ll] = sum;
+            MatrixCW[i_ll][j_ll] = sum;
+            
+            if (i_ll == j_ll){
+              digValM[i_ll] = sum;
             }
-        });
 
-  		}
+          } // end of j_ll 
 
-  		// row_tuple row_write;
-  		pipe_tuple pipe_write;
-  		TT avg1, avg2;
+          Avg[i_ll] += avg/columns;
+        } // end of i_ll
+
+      } // end of blk
+      
+      // row_tuple row_write;
+      pipe_tuple pipe_write;
+      TT avg1, avg2, avg_temp;
       TT digVal1, digVal2, dig_temp; 
-  		for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
-  			for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
-  				T loadVal;
-  				row_tuple loadRow = MatrixCW[i_ll];
-  				fpga_tools::UnrolledLoop<rows>([&](auto t) {
-  					if(j_ll == t){
-  						loadVal = loadRow.template get<t>();
-  					}
-  				});
+      for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
+        for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
+          T loadVal;
+          row_tuple loadRow;
+          fpga_tools::UnrolledLoop<rows>([&](auto t) {
+            loadRow.template get<t>() = MatrixCW[i_ll][t];
+            if(j_ll == t){
+              loadVal = loadRow.template get<t>();
+            }
+          });
 
           //---------------------------
           digVal2 = digValM[j_ll];
-  				if(j_ll == i_ll + 1){
+          avg2 = Avg[j_ll];
+          if(j_ll == i_ll + 1){
             dig_temp = digVal2;
-  				}
+            avg_temp = avg2;
+          }
 
-  				if(i_ll == 0 && j_ll == 0){
+          if(i_ll == 0 && j_ll == 0){
             digVal1 = digVal2;
-  				} else if(j_ll == 0){
+            avg1 = avg2;
+          } else if(j_ll == 0){
             digVal1 = dig_temp;
-  				}
+            avg1 = avg_temp;
+          }
 
-          fpga_tools::UnrolledLoop<rows>([&](auto t) {
-              if(t == i_ll){ avg1 = Avg_G.template get<t>();}
-              if(t == j_ll){ avg2 = Avg_G.template get<t>();}
+          // fpga_tools::UnrolledLoop<rows>([&](auto t) {
+          //     if(t == i_ll){ avg1 = Avg_G.template get<t>();}
+          //     if(t == j_ll){ avg2 = Avg_G.template get<t>();}
 
-          });
+          // });
 
           //---------------------------
           
@@ -207,29 +189,29 @@ struct StreamingMM{
           T cov_j_j = digVal2 - columns * avg2 * avg2;
 
 
-  				T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
+          T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
           T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
 
 
-  				fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-  					if(t == j_ll % pipe_size){
-  						pipe_write.template get<t> () = cov_i_j;
-  					}
-  				});
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+            if(t == j_ll % pipe_size){
+              pipe_write.template get<t> () = cov_i_j;
+            }
+          });
 
-  				if(j_ll % pipe_size == pipe_size -1 || j_ll == rows-1){
-  					AOut::write(pipe_write);
-  				}
+          if(j_ll % pipe_size == pipe_size -1 || j_ll == rows-1){
+            AOut::write(pipe_write);
+          }
 
-  			}
+        }
         // PRINTF("\n");
-  		}
+      }
 
 
 
-  	}
+    }
 
- 	};
+  };
 };
 
 }
