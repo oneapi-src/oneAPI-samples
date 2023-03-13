@@ -1,18 +1,18 @@
-# `Intel® Python NumPy vs Numba_dpex` Sample
+# `Intel® Python NumPy vs numba-dpex` Sample
 
-The `Intel® Python NumPy vs Numba_dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using numpy, numba, and numba_dpex.
+The `Intel® Python NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy, Numba, and Data-parallel Extension for Numba* (numba-dpex).
 
 | Area                    | Description
 | :---                    | :---
-| What you will learn     | How to program using numba_dpex
+| What you will learn     | How to program using the Data-parallel Extension for Numba* (numba-dpex)
 | Time to complete        | 5 minutes
-| Category                | Component
+| Category                | Code Optimization
 
 >**Note**: The libraries used in this sample are available in Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/en-us/oneapi/ai-kit).
 
 ## Purpose
 
-In this sample, you will run a k-nearest neighbors algorithm using 3 different Intel® Distribution for Python* libraries: numpy, numba, and numba_dpex. You will learn how to use k-NN model and how to optimize it by numba_dpex operations without sacrificing accuracy.
+In this sample, you will run a k-nearest neighbors algorithm using 3 different Intel® Distribution for Python* libraries: NumPy, Numba, and numba-dpex. You will learn how to use k-NN model and how to optimize it by numba-dpex operations without sacrificing accuracy.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ In this sample, you will run a k-nearest neighbors algorithm using 3 different I
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
 | Hardware                | CPU
-| Software                | Intel® AI Analytics Toolkit
+| Software                | Intel® AI Analytics Toolkit (AI Kit)
 
 ### For Local Development Environments
 
@@ -40,11 +40,11 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This sample code is implemented for the CPU using Python. The sample assumes you have numba_dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
+This sample code is implemented for the CPU using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
 
 >**Note**: Read *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
 
-## Run the `Intel® Python NumPy vs Numba_dpex` Sample
+## Run the `Intel® Python NumPy vs numba-dpex` Sample
 
 ### On Linux*
 
@@ -73,7 +73,15 @@ This sample code is implemented for the CPU using Python. The sample assumes you
    conda activate usr_base
    ```
 
-#### Run the Jupyter Notebook
+#### Run the Python Script
+
+1. Change to the sample directory.
+2. Run the script.
+   ```
+   python IntelPython_Numpy_Numba_dpex_kNN.py
+   ```
+
+#### Run the Jupyter Notebook (Optional)
 
 1. Launch Jupyter Notebook.
    ```
@@ -90,21 +98,31 @@ This sample code is implemented for the CPU using Python. The sample assumes you
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
-### Run the Sample on Intel® DevCloud
+### Build and Run the Sample on Intel® DevCloud (Optional)
 
-1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-2. On a Linux* system, open a terminal.
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
+>**Note**: For more information on using Intel® DevCloud, see the Intel® oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started/) page.
 
-4. Locate and select the Notebook.
+1. Open a terminal on a Linux* system.
+2. Log in to the Intel® DevCloud.
    ```
-   numba_numpy.ipynb
+   ssh devcloud
    ```
-5. Run every cell in the Notebook in sequence.
+3. If the sample is not already available, download the samples from GitHub.
+   ```
+   git clone https://github.com/oneapi-src/oneAPI-samples.git
+   ```
+4. Change to the sample directory.
+5. Launch Jupyter Notebook.
+6. Locate and select the Notebook.
+   ```
+   IntelPython_Numpy_Numba_dpex_kNN.ipynb
+   ```
+7. Run every cell in the Notebook in sequence.
+8. Review the output.
+9. Disconnect from Intel® DevCloud.
+	```
+	exit
+	```
 
 ## Example Output
 
