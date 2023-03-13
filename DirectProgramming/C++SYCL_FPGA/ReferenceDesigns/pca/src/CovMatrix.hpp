@@ -19,18 +19,33 @@ template <typename T,        // The datatype for the computation
 
 
 
-// input matrix will be A with order NxP (rows x columns)
-// output will be A x transpose(A) 
-// sample size N would be larger 
-// this makes doing a full dot product inefficient 
 
-/*
-Matrix - each row contains samples of a feature 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-*/
+// this is a kernel for preprocessing input samples with multiple features 
+// input is essentially Nxp matrix - A 
+// Preprocessing Algorithm  
+// 1. compute mean feature, subtract the mean feature from all the samples(A_new) 
+// 2. Standardize the samples for each feature and make the variance to one  
+// 3. compute the covariance matrix C = A_new@transpose(A_new)
+
+// In this impmentation step 3 is executed first and computed value is adjusted for 
+// step 1 and 2. This allows blockwise matrix multiplication, saving required memory 
+// for larger matrices 
+
+
+// Inorder to handle the larger matrix size input block is partioned into pxp blocks 
+// input is organized such that samples for each feature is sequential 
+// A@transpose(A) = Sigma_{0}^{blocks} A_blk@transpose(A_blk) 
+
+// A_new[i][j] = (A[i][j] - mean[i])/variance[i]; // j - sample index, i - feature index
+// C[i][j] = Dot(A_new[i][] , A_new[j][] )
+// C[i][j] = Dot((A[i][] - mean[i])/variance[i] , (A[j][] - mean[j])/variance[j])
+// C[i][j] = (1.0f/variance[i]^2 ) * Dot((A[i][] - mean[i]), (A[j][] - mean[j]))
+// C[i][j] = (1.0f/(variance[i]*variance[j])) * Dot((A[i][] - mean[i]), (A[j][] - mean[j]))
+// C[i][j] = (1.0f/(variance[i]*variance[j])) * (Dot(A[i][], A[j][]) - N* mean[i]*mean[j])
+
+
+// mean[i] = sum(Dot(A[i][])/N
+// var[i] = sqrt((Dot(A[i][], A[j][]) - N* mean[i]*mean[j])/N)
 
 struct StreamingMM{
     void operator()() const {
@@ -67,7 +82,8 @@ struct StreamingMM{
 
       for(ac_int<kColBlockBitSize, false> blk = 0; blk < kColBlocks; blk++){
 
-        // loading data onchip memory 
+        // loading block data onchip memory 
+        // samples for a feature comes sequentially 
         row_tuple MatrixA[rows];
         for(ac_int<kLoopIterBitSize, false> itr = 0; itr < kLoopItr; itr++){
           ac_int<kRowBitSize, false> i_ll = itr / kRowBlocks;
@@ -90,9 +106,7 @@ struct StreamingMM{
         }
 
 
-        // [[intel::loop_coalesce(2)]]
-        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-        // T colSum;
+        // computing the covariance matrix block wise and accumulating 
         TT row1[rows], row2[rows], row_temp[rows];
         for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
 
@@ -145,8 +159,12 @@ struct StreamingMM{
         } // end of i_ll
 
       } // end of blk
+
       
-      // row_tuple row_write;
+      // adjusting based on variance and mean
+      // C[i][j] = (1.0f/(variance[i]*variance[j])) * (Dot(A[i][], A[j][]) - N* mean[i]*mean[j])
+      // mean[i] = sum(Dot(A[i][])/N
+      // var[i] = sqrt((Dot(A[i][], A[j][]) - N* mean[i]*mean[j])/N)
       pipe_tuple pipe_write;
       TT avg1, avg2, avg_temp;
       TT digVal1, digVal2, dig_temp; 
@@ -177,13 +195,6 @@ struct StreamingMM{
             avg1 = avg_temp;
           }
 
-          // fpga_tools::UnrolledLoop<rows>([&](auto t) {
-          //     if(t == i_ll){ avg1 = Avg_G.template get<t>();}
-          //     if(t == j_ll){ avg2 = Avg_G.template get<t>();}
-
-          // });
-
-          //---------------------------
           
           T cov_i_i = digVal1 - columns * avg1 * avg1;
           T cov_j_j = digVal2 - columns * avg2 * avg2;
@@ -203,18 +214,17 @@ struct StreamingMM{
             AOut::write(pipe_write);
           }
 
-        }
-        // PRINTF("\n");
-      }
+        } // end of j_ll
+      } // endo of i_ll
 
 
 
-    }
+    } // end of while
 
-  };
-};
+  }; // end of operator()
+}; // end of struct{}
 
-}
+} // namespace fpga_linalg
 
 
 #endif 

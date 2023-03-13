@@ -107,7 +107,7 @@ void PCAsyclImpl(
   // and RMatrixPipe pipes.
 
   q.single_task<EIGEN>(
-    fpga_linalg::StreamingQRD<T, is_complex, rows, columns, raw_latency,
+    fpga_linalg::StreamingEig<T, is_complex, rows, raw_latency,
                 kNumElementsPerDDRBurst, CMatrixPipe, EigMatrixPipe, QQMatrixPipe>());
 
 

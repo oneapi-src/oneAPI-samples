@@ -4,6 +4,7 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 #include "constexpr_math.hpp"
+#include <float.h>
 
 
 
@@ -43,8 +44,7 @@ namespace fpga_linalg {
 */
 template <typename T,        // The datatype for the computation
           bool is_complex,   // True if T is ac_complex<X>
-          int rows,          // Number of rows in the A matrices
-          int columns,       // Number of columns in the A matrices
+          int MatrixSize,    // Input covariance matrices are square matrix 
           int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
@@ -66,9 +66,15 @@ template <typename T,        // The datatype for the computation
                              // Only upper-right elements of R are
                              // sent in row order, starting with row 0.
           >
-struct StreamingQRD {
+struct StreamingEig {
   void operator()() const {
     // PRINTF("R matrix is: \n");
+
+
+    // although colums and rows are same separate identifier is 
+    // used to indicate operations are related to colums or rows in QR decomposition 
+    const int columns = MatrixSize;
+    const int rows = MatrixSize;
 
     static_assert(columns >= 4,
                   "only matrices of size 4x4 and over are supported");
@@ -530,27 +536,13 @@ struct StreamingQRD {
 
 
 
+        //--------------------------------------------------------------------
+        //-------  Matrix multiplication for R@Q and QQ@Q --------------------
+        //--------------------------------------------------------------------
 
-
-
-        // PRINTF("R matrix is: \n");
-        // for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-        //   fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-        //       PRINTF("%f ", r_matrix[ik].template get<k>())
-        //     });
-        //   PRINTF("\n");
-        // }
-        // if(matrix_id == 25){
-        //   PRINTF("Q matrix from SYCL is at iteration:%d \n",(int)itr);
-        //   for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-        //     fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-        //         PRINTF("%f ", q_result[ik].template get<k>())
-        //       });
-        //     PRINTF("\n");
-        //   }
-        //   PRINTF("\n");
-        // }
-        
+        // R matrix is organized row-wise 
+        // Q matrix is organized coloumn-wise 
+        // QQ matrix is organized row-wise 
 
         // Eigen vector QQ computation
         row_tuple QQ_write;
@@ -561,20 +553,16 @@ struct StreamingQRD {
         column_tuple colA_write;
         // const float threshold = 1e-4;
         bool converged = 1;
-        // TT R_shift_tmp = 0;
-        // TT R_shift_1BF = 0;
 
         accError = 0;
-
         TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
-
         column_tuple Q_load_ii;
         [[intel::loop_coalesce(2)]]
         for(ac_int<kIBitSize , false> i_ll = 0; i_ll < columns; i_ll++){
           for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
-            ///////////////////////////////////////////////////////
-            // QQ computation 
-            ///////////////////////////////////////////////////////
+            //-------------------------------------------------------
+            //------------- QQ@Q matrix multiplication-------------- 
+            //-------------------------------------------------------
             if(j_ll == 0){          
               QQ_load = QQ_matrix[i_ll];
             }
@@ -585,7 +573,10 @@ struct StreamingQRD {
                 Q_load.template get<k>() = (k >= kDM_size || j_ll >= kDM_size ? Ival : Q_load.template get<k>());
             });
 
-            // -------------------------------------------------------
+            // ---------Detecting the QR decomposition falure ----------
+            // This part checks the orthogonality of the unit vectors after the
+            // QR decomposition. Dot product of two differnet vectors 
+            // should be close to zero. Here we are applying 10-4 threshold 
             
             if(i_ll == j_ll){
               Q_load_ii = Q_load;
@@ -594,10 +585,6 @@ struct StreamingQRD {
             fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
             });
-
-            // if(matrix_id == 25){
-            //   PRINTF("chk_ortho:%f ", chk_ortho);
-            // }
 
             if(i_ll < j_ll && accError < fabs(chk_ortho)){
               accError = fabs(chk_ortho);
@@ -608,7 +595,7 @@ struct StreamingQRD {
               QRD_failed = 1;
             }
 
-            //------------------------------------------------------------
+            //--------End Detecting the QR decomposition falure-------
 
 
             TT sum_QQ = 0;
@@ -637,9 +624,9 @@ struct StreamingQRD {
               });
             }
 
-            ////////////////////////////////////////////////////////
-            // RQ computation 
-            ////////////////////////////////////////////////////////
+            //---------------------------------------------------------
+            //---------------RQ computation---------------------------- 
+            //--------------------------------------------------------
             if(j_ll == i_ll+1){
               Q_load_RQ_tmp = Q_load;
             }
@@ -656,10 +643,15 @@ struct StreamingQRD {
               sum_RQ += r_load.template get<k>() * Q_load_RQ.template get<k>();
             });
 
+
+            // It is assumed as convered if all bottom row elements except diagonal one
+            // of the deflated matrix is within certain zero threshold 
             converged = (j_ll == kDM_size-1 && i_ll < kDM_size-1 && fabs(sum_RQ) > KTHRESHOLD) ? 0 : converged;
             sum_RQ = (j_ll == i_ll) ? sum_RQ + R_shift : sum_RQ;
 
             // updatig the shift value 
+            // values required for Rayleigh shift and wilkinson shift are stored in 
+            // registers 
             if(j_ll == i_ll && i_ll == kDM_size-3){
               d_wilk = sum_RQ;
             }
@@ -688,28 +680,12 @@ struct StreamingQRD {
               bool cmp = (k==j_ll && j_ll < kDM_size && i_ll < kDM_size);
               if(cmp && QR_iteration_done == 0){
                 a_load2[i_ll].template get<k>() = sum_RQ;
-                // rq_matrix[i_ll].template get<k>() = sum_RQ;
               }
             });
           }
         }
 
-        // if(matrix_id == 25){
-        //   PRINTF("Q matrix from SYCL is at iteration:%d, kDM_size:%d \n",(int)itr, (int)kDM_size);
-        //   for(ac_int<kIBitSize , false> ik = 0; ik < columns; ik++){
-        //     fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-        //         PRINTF("%f ", q_result[ik].template get<k>())
-        //       });
-        //     PRINTF("\n");
-        //   }
-        //   PRINTF("\n");
-        // }
-
-
-        // if(matrix_id == 25){
-        //     PRINTF("accError:%f at itr:%d\n", accError, (int)itr);
-        // }
-
+      
 
         TT lamda = (a_wilk-c_wilk)/2.0;
         TT sign_lamda = (lamda > 0) - (lamda < 0);
@@ -719,7 +695,6 @@ struct StreamingQRD {
 
         if(converged && kDM_size == KDEFLIM){
           QR_iteration_done = 1;
-          // PRINTF("It took %d iteration, accError:%f \n", (int)itr, accError);
           break;
         }  
         
@@ -741,13 +716,20 @@ struct StreamingQRD {
 
       } // End iterative loop
 
+
+
+
       //--------------------------------------------------------------------------
       // sorting Eigen Values 
       //--------------------------------------------------------------------------
+      // Naive sorting using nested loop as this module is not in critical path 
+      // A register vector(Nsorted) is used to mask already sorted elements 
       T max; 
       int indexArray[rows];
       [[intel::fpga_register]] bool Nsorted[rows];
       int index = -1;
+
+      // Initializing the mask 
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
           Nsorted[i_ll] = 1;
       }
@@ -758,24 +740,23 @@ struct StreamingQRD {
       [[intel::loop_coalesce(2)]]
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
         for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
+
+          // setting the intial comparator value to possible minimum
             if(j_ll == 0){
-              max = -1e35;
+              max = -1 * FLT_MAX;
             }
 
-
-
             TT load_val = eArrray[j_ll];
-            // PRINTF("load_val value is: %d\n", load_val);
             if(load_val > max && Nsorted[j_ll]){
               max = load_val;
               index = j_ll;
             }
 
             if(j_ll == rows -1){
-              // PRINTF("Index value is: %d\n", index);
               Nsorted[index] = 0;
               indexArray[i_ll] = index;
             }
+
 
             fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
               if(j_ll == rows -1 && k == i_ll % pipe_size){
@@ -783,8 +764,10 @@ struct StreamingQRD {
               }
             });
 
+
+            // appending the QRD faied flag if there is space in 
+            // pipe_writeEigen block
             if(j_ll == rows -1 && (i_ll % pipe_size == pipe_size -1 || i_ll == rows-1)){
-              // EigOut::write(pipe_writeEigen);
               if(i_ll == rows-1 && rows % pipe_size != 0){
                 fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
                   if(k == (i_ll+1) % pipe_size){
@@ -796,28 +779,16 @@ struct StreamingQRD {
                 EigOut::write(pipe_writeEigen);
               }
             }
-        }
-      }
+        } // end of j_ll
+      } // end of i_ll
 
+      // adding QRD_failed flag new stream packet 
+      // if it was not sent previously   
       if(rows % pipe_size == 0){
         pipe_writeEigen.template get<0>() = QRD_failed;
         EigOut::write(pipe_writeEigen);
       }
       
-      
-
-      // PRINTF("Completed sending the eigen values\n");
-
-      //-------------------------------------------------------------------------
-      //END Eigen value sort
-      //-------------------------------------------------------------------------
-
-
-      // PRINTF("\nIndex Array is: \n");
-      // for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
-      //     PRINTF("%d ", indexArray[i_ll]);
-      // }
-      // PRINTF("\n");
 
       // writing out eigen vector matrix QQ row by row 
       // Eigen vectors are the columns of this matrix 
@@ -847,32 +818,6 @@ struct StreamingQRD {
       }
       
 
-      // // Wrriting out the computer RQ to streaming interface
-      // // RQ is stored back in a_load matrix
-      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      // for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-      //   int column_iter = li % kLoopIterPerColumn;
-      //   bool get[kLoopIterPerColumn];
-      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-      //     get[k] = column_iter == k;
-      //     column_iter = sycl::ext::intel::fpga_reg(column_iter);
-      //   });
-
-      //   fpga_tools::NTuple<TT, pipe_size> pipe_write;
-      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-      //     fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-      //       if constexpr (t * pipe_size + k < rows) {
-      //         pipe_write.template get<k>() =
-      //             get[t] ? rq_matrix[li / kLoopIterPerColumn]
-      //                          .template get<t * pipe_size + k>()
-      //                    : sycl::ext::intel::fpga_reg(
-      //                          pipe_write.template get<k>());
-      //       }
-      //     });
-      //   });
-      //   // if(li == 0){pipe_write.template get<0> () = converge_itr;}
-      //   RQOut::write(pipe_write);
-      // }
 
     }  // end of while(1)
   }    // end of operator
