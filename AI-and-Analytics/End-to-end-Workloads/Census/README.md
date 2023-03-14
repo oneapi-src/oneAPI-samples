@@ -82,8 +82,9 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    conda activate modin-hdk
    ```
-3. Install Intel® Extension for Scikit-learn* and related libraries.
+3. Install modin-hdk, Intel® Extension for Scikit-learn* and related libraries.
    ```
+   conda install modin-hdk -c conda-forge -y
    pip install scikit-learn-intelex
    pip install matplotlib
    ```
