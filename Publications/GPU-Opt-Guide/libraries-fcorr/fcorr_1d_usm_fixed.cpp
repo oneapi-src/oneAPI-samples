@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <mkl.h>
@@ -101,3 +103,4 @@ int main(int argc, char **argv) {
   sycl::free(sig2, sycl_context);
   sycl::free(corr, sycl_context);
 }
+// Snippet end

@@ -22,7 +22,7 @@ int main() {
     h.parallel_for(
         sycl::nd_range(sycl::range{N}, sycl::range{32}),
         [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
-          sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+          auto sg = it.get_sub_group();
           int x;
 
           using global_ptr =

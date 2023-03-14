@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <mkl.h>
@@ -108,3 +110,4 @@ int main(int argc, char **argv) {
                "normalized correlation score of "
             << max_corr / N << "." << std::endl;
 }
+// Snippet end

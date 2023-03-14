@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2022 Intel Corporation
+// Copyright © 203 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -9,6 +9,9 @@
 
 double * make_array(int n, double value) {
   double* array = static_cast<double*>(malloc(n * sizeof(double)));
+  if (array == NULL)
+    return NULL;
+
   for (int i = 0; i < n; i++) {
     array[i] = value / (100.0 + i);
   }
@@ -23,6 +26,8 @@ int main() {
   double* A = make_array(N, 0.8);
   double* B = make_array(N, 0.65);
   double* C = make_array(N*N, 2.5);
+  if ((A == NULL) || (B == NULL) || (C == NULL))
+    exit(1);
 
   int i, j;
   double val = 0.0;
@@ -38,7 +43,7 @@ int main() {
     }
   }
 
-  printf("Reduced val[%f10.3]", val);
+  printf("val = %f10.3\n", val);
 
   free(A);
   free(B);

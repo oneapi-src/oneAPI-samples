@@ -6,11 +6,12 @@
 // Compile:
 // dpcpp -D{HOST|CPU|GPU} -std=c++17 -fsycl external_rand.cpp -o external_rand
 
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 
-#define N 5
+constexpr int N = 5;
 
 extern SYCL_EXTERNAL int rand(void);
 
@@ -41,3 +42,4 @@ int main(void) {
   // Cleanup
   sycl::free(test1, Q.get_context());
 }
+// Snippet end

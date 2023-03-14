@@ -72,9 +72,9 @@ int main() {
   auto e = q.submit([&](auto &h) {
     sycl::stream out(65536, 128, h);
     h.parallel_for(sycl::nd_range<1>(7, 7),
-                   [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(8)]] {
+                   [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
                      int i = it.get_global_linear_id();
-                     sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+                     auto sg = it.get_sub_group();
                      int sgSize = sg.get_local_range()[0];
                      int sgMaxSize = sg.get_max_local_range()[0];
                      int sId = sg.get_local_id()[0];
