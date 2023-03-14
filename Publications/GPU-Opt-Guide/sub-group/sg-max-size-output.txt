@@ -1,7 +1,7 @@
-globalId = 0 sgMaxSize = 8 sgSize = 7 sId = 0 j = 0 k = 7
-globalId = 1 sgMaxSize = 8 sgSize = 7 sId = 1 j = 1 k = 8
-globalId = 2 sgMaxSize = 8 sgSize = 7 sId = 2 j = 2 k = 9
-globalId = 3 sgMaxSize = 8 sgSize = 7 sId = 3 j = 3 k = 10
-globalId = 4 sgMaxSize = 8 sgSize = 7 sId = 4 j = 4 k = 11
-globalId = 5 sgMaxSize = 8 sgSize = 7 sId = 5 j = 5 k = 12
-globalId = 6 sgMaxSize = 8 sgSize = 7 sId = 6 j = 6 k = 13
+globalId = 0 sgMaxSize = 16 sgSize = 7 sId = 0 j = 0 k = 7
+globalId = 1 sgMaxSize = 16 sgSize = 7 sId = 1 j = 1 k = 8
+globalId = 2 sgMaxSize = 16 sgSize = 7 sId = 2 j = 2 k = 9
+globalId = 3 sgMaxSize = 16 sgSize = 7 sId = 3 j = 3 k = 10
+globalId = 4 sgMaxSize = 16 sgSize = 7 sId = 4 j = 4 k = 11
+globalId = 5 sgMaxSize = 16 sgSize = 7 sId = 5 j = 5 k = 12
+globalId = 6 sgMaxSize = 16 sgSize = 7 sId = 6 j = 6 k = 13

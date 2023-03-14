@@ -32,7 +32,7 @@ int main() {
 
   // Snippet begin
   constexpr int NUM_BINS = 256;
-  constexpr int blockSize = 256;
+  constexpr int BLOCK_SIZE = 256;
 
   std::vector<unsigned long> hist(NUM_BINS, 0);
   sycl::buffer<unsigned long, 1> mbuf(input.data(), N);
@@ -44,11 +44,11 @@ int main() {
     sycl::local_accessor<unsigned int> local_histogram(sycl::range(NUM_BINS),
                                                        h);
     h.parallel_for(
-        sycl::nd_range(sycl::range{N / blockSize}, sycl::range{64}),
+        sycl::nd_range(sycl::range{N / BLOCK_SIZE}, sycl::range{64}),
         [=](sycl::nd_item<1> it) {
           int group = it.get_group()[0];
           int gSize = it.get_local_range()[0];
-          sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+          auto sg = it.get_sub_group();
           int sgSize = sg.get_local_range()[0];
           int sgGroup = sg.get_group_id()[0];
 
@@ -71,10 +71,10 @@ int main() {
           }
           it.barrier(sycl::access::fence_space::local_space);
 
-          for (int k = 0; k < blockSize; k++) {
+          for (int k = 0; k < BLOCK_SIZE; k++) {
             unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * blockSize +
-                        sgGroup * sgSize * blockSize + sgSize * k);
+                sg.load(macc.get_pointer() + group * gSize * BLOCK_SIZE +
+                        sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
 #pragma unroll
             for (std::uint8_t shift : {0, 8, 16, 24, 32, 40, 48, 56}) {
               constexpr unsigned long mask = 0xFFU;
