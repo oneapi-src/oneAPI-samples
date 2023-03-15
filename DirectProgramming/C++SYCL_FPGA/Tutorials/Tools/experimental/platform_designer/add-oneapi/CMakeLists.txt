@@ -82,6 +82,8 @@ message(STATUS "Additional USER_LIB_PATHS=${USER_LIB_PATHS}")
 link_libraries(${USER_LIBS})
 message(STATUS "Additional USER_LIBS=${USER_LIBS}")
 
+include_directories("/opt/intel/oneapi/compiler/2023.0.0/linux/lib/oclfpga/include")
+
 if(WIN32)
     # add qactypes for Windows
     set(QACTYPES "-Qactypes")
