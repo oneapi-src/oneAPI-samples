@@ -77,7 +77,7 @@ Setup environment variables if using a oneAPI / DPC++ implementation:
     NOTE: If you do not have oneDPL installed, you can disable compilation of those tests with the option `NODPL`
 
     ```sh
-    cmake -G Ninja -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    cmake -G "Unix Makefiles" -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
     ```
 
 2. Build with the generated build files:
