@@ -15,7 +15,7 @@ The Second Edition of the DPC++ book, likely to release in 2023, will be based o
 
 Many of the samples in the book are snips from the more complete files in this repository.  The full files contain supporting code, such as header inclusions, which are not shown in every listing within the book.  The complete listings are intended to compile and be modifiable for experimentation.
 
-> :warning: Samples in this repository are updated to align with the most recent changes to the language and
+Samples in this repository are updated to align with the most recent changes to the language and
 toolchains, and are more current than captured in the book text due to lag between finalization and actual
 publication of a print book.  If experimenting with the code samples, start with the versions in this
 repository.  DPC++ and SYCL are evolving to be more powerful and easier to use, and updates to the sample code
@@ -25,15 +25,15 @@ Download the files as a zip using the green button, or clone the repository to y
 
 ## How to Build the Samples
 
-> :warning: The samples in this repository are intended to compile with the open source project toolchain linked below, or
+The samples in this repository are intended to compile with the open source project toolchain linked below, or
 with the 2023.0 release or newer of the DPC++ toolchain.  If you have an older toolchain installed, you may encounter
 compilation errors due to evolution of the features and extensions.
 
 ### Prerequisites
 
 1. An installed SYCL toolchain.  See below for details on the tested DPC++ toolchain
-1. CMake 3.14 or newer
-1. Ninja - to use the build system described below
+1. CMake 3.10 or newer
+1. Ninja or Make - to use the build steps described below
 
 To build and use these examples, you will need an installed DPC++ toolchain.  For one such toolchain, please visit:
 
@@ -47,10 +47,9 @@ Some of the Chapter 18 examples require an installation of oneDPL, which is avai
 
 https://github.com/oneapi-src/oneDPL
 
+### Setting up an environment in which to build the samples
 
-To build the samples:
-
-1. Setup oneAPI environment variables:
+Setup environment variables if using a oneAPI / DPC++ implementation:
 
     On Windows:
 
@@ -64,7 +63,32 @@ To build the samples:
     source /path/to/inteloneapi/setvars.sh
     ```
 
-2. Create build files using CMake, specifying the DPC++ toolchain.  For example:
+### Building the samples using Makefiles:
+
+> :warning: Makefiles have only been tested on Linux builds, not Windows.
+
+1. Create build files using CMake, specifying the DPC++ toolchain.  For example:
+
+    ```sh
+    mkdir build && cd build
+    cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    ```
+
+    NOTE: If you do not have oneDPL installed, you can disable compilation of those tests with the option `NODPL`
+
+    ```sh
+    cmake -G Ninja -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    ```
+
+2. Build with the generated build files:
+
+    ```sh
+    make install -j8
+    ```
+
+### Building the samples using cmake:
+
+1. Create build files using CMake, specifying the DPC++ toolchain.  For example:
 
     ```sh
     mkdir build && cd build
@@ -79,7 +103,7 @@ To build the samples:
     cmake -G Ninja -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
     ```
 
-3. Build with the generated build files:
+2. Build with the generated build files:
 
     ```sh
     ninja install
