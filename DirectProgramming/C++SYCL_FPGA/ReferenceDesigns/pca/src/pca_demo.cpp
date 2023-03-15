@@ -17,12 +17,13 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #define KTHRESHOLD 1e-5
 #define KDEFLIM 2
-#define KETHRESHOLD 1e-2
+#define KETHRESHOLD 1e-3
 #define KETHRESHOLD_Eigen 1e-3
 #define RELSHIFT 0
 #define SHIFT_NOISE 1e-3
 #define SHIFT_NOISE_CPU 1e-3
 #define ITER_PER_EIGEN 100
+#define NO_SHIFT_ITER 10
 #define SAMPE_SIZE 50000
 
 #define DEBUGEN 0
@@ -145,7 +146,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 4;
+  constexpr size_t kMatricesToDecompose = 400;
 
   try {
     // SYCL boilerplate
@@ -362,7 +363,7 @@ int main(int argc, char *argv[]) {
         T shift = RELSHIFT ? c_wilk : c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
 
         shift -= shift*SHIFT_NOISE;
-        shift = (li < 10) ? 0 : shift;
+        shift = (li < NO_SHIFT_ITER) ? 0 : shift;
 
         if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
         for(int i = 0; i < kP; i++){

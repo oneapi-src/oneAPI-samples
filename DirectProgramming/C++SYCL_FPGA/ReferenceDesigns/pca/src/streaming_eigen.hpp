@@ -76,8 +76,8 @@ struct StreamingEig {
     const int columns = MatrixSize;
     const int rows = MatrixSize;
 
-    static_assert(columns >= 4,
-                  "only matrices of size 4x4 and over are supported");
+    // static_assert(columns >= 4,
+    //               "only matrices of size 4x4 and over are supported");
 
     /*
       QR Decomposition implementation is based on following algorithm 
@@ -271,7 +271,7 @@ struct StreamingEig {
 
       R_shift = RELSHIFT ? c_wilk : l_shift;
       R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
-      R_shift = 0;
+      R_shift = NO_SHIFT_ITER > 0 ? 0 : R_shift;
   
 
       // variable to track the deflated matrix size 
@@ -709,7 +709,7 @@ struct StreamingEig {
         }
 
         R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
-        if(itr < 9){
+        if(itr < NO_SHIFT_ITER-1){
           R_shift = 0;
         }
 

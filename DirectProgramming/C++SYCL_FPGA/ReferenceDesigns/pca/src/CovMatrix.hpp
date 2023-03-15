@@ -1,6 +1,16 @@
 #ifndef __STREAMING_CovMM_HPP__
 #define __STREAMING_CovMM_HPP__
 
+
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 namespace fpga_linalg {
 
 template <typename T,        // The datatype for the computation
@@ -71,11 +81,11 @@ struct StreamingMM{
       // storing in a internal matrix 
 
         // NO-FORMAT: Attribute
-      TT MatrixC[rows][rows], MatrixCW[rows][rows];
-      row_tuple  Avg_G;
-      TT Avg[rows];
+      double MatrixC[rows][rows], MatrixCW[rows][rows];
+      // row_tuple  Avg_G;
+      double Avg[rows];
       pipe_tuple pipe_read;
-      TT digValM[rows];
+      double digValM[rows];
 
 
 
@@ -143,8 +153,8 @@ struct StreamingMM{
             avg += row1[j_ll];
 
             T sum_a = rowSum;
-            T sum_b = blk == 0 ? 0 : MatrixC[i_ll][j_ll];
-            T sum = sum_a + sum_b; 
+            double sum_b = blk == 0 ? 0 : MatrixC[i_ll][j_ll];
+            double sum = sum_a + sum_b; 
 
             MatrixC[i_ll][j_ll] = sum;
             MatrixCW[i_ll][j_ll] = sum;
@@ -166,8 +176,8 @@ struct StreamingMM{
       // mean[i] = sum(Dot(A[i][])/N
       // var[i] = sqrt((Dot(A[i][], A[j][]) - N* mean[i]*mean[j])/N)
       pipe_tuple pipe_write;
-      TT avg1, avg2, avg_temp;
-      TT digVal1, digVal2, dig_temp; 
+      double avg1, avg2, avg_temp;
+      double digVal1, digVal2, dig_temp; 
       for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
         for(ac_int<kRowBitSize, false> j_ll = 0; j_ll < rows; j_ll++){
           T loadVal;
@@ -202,6 +212,9 @@ struct StreamingMM{
 
           T cov_i_j_tmp = loadVal - columns * avg1 * avg2;
           T cov_i_j = cov_i_j_tmp/sqrt(cov_i_i*cov_j_j);
+
+
+
 
 
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {

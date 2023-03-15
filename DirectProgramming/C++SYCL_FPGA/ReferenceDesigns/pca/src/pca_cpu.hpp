@@ -45,6 +45,9 @@ template <typename T> class PCA {
     // n - number of samples, p - number of features 
     int n, p, matrixCount, debug;
     std::vector<T> matA, matUA, matC;
+    std::vector<T> eigVal, eigVec;
+    T *Q, *R;
+
 
 
 
@@ -54,6 +57,7 @@ template <typename T> class PCA {
     void populate_A();
     void normalizeSamples();
     void calculate_covariance();
+    void QR_iteration();
 
 };
 
@@ -63,9 +67,17 @@ template<typename T> PCA<T>::PCA(int n,int p, int count,  int debug){
     this->p = p;
     this->matrixCount = count;
     this->debug = debug;
+
     this->matA.resize(n*p*this->matrixCount);
     this->matUA.resize(n*p*this->matrixCount);
     this->matC.resize(p*p*this->matrixCount);
+
+    this->eigVal.resize(p*p*this->matrixCount);
+    this->eigVec.resize(p*p*this->matrixCount);
+
+    // initialising the eigen vector to identical matrix 
+    // for()
+
 
 }
 
@@ -245,4 +257,127 @@ template<typename T> void PCA<T>::calculate_covariance(){
     }
 }
 
+
+// template<typename T> void PCA<T>::QR_iteration(){
+//   // QR decomposition on CPU 
+
+//     for(int m_id  =0; m_id < this->matrixCount; m_id++){
+//         int offsetC = m_id * this->p * this->p;
+
+//         QR_Decmp<DTypeCPU> qrd_cpu(this->matC, this->p, 0);
+//         int kP = kRows;
+//         int iter = kRows*ITER_PER_EIGEN;
+
+//         for(int li = 0; li < iter; li++){
+//             // convergence test 
+//             bool close2zero = 1;
+
+//             // Wilkinson shift computation 
+//             T a_wilk = this->matC[(kP-2)*kRows+kP-2];
+//             T b_wilk = this->matC[(kP-1)*kRows+kP-2];
+//             T c_wilk = this->matC[(kP-1)*kRows+kP-1];
+
+//             T lamda = (a_wilk - c_wilk)/2.0;
+//             T sign_lamda = (lamda > 0) ? 1.0 : -1.0;
+//             T shift = RELSHIFT ? c_wilk : c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
+
+//             // adjustment for better accuracy when using floating point operations 
+//             shift -= shift*SHIFT_NOISE;
+//             shift = (li < NO_SHIFT_ITER) ? 0 : shift;
+
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";}
+//             // for(int i = 0; i < kP; i++){
+//             //   for(int j = 0; j < kP; j++){
+//             //       if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+//             //   }
+//             //   if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
+//             // }
+
+//             for(int i = 0; i < kP; i++){
+//               this->matC[i*kRows+i] -= shift;
+//             }
+
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) {dAMat << "\n\nA Matrix after shift at iteration: " << li << "\n";}
+//             // for(int i = 0; i < kP; i++){
+//             //   for(int j = 0; j < kP; j++){
+//             //       if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << a_matrix_cpu[matrix_offset+i*kRows+j]  << " ";
+//             //   }
+//             //   if(DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
+//             // }
+
+//             qrd_cpu.QR_decompose(kP);
+//             R = qrd_cpu.get_R();
+//             Q = qrd_cpu.get_Q();
+//             // RQ computation and updating A 
+            
+//             for(int i = 0; i < kP; i++){
+//               for(int j = 0; j < kP; j++){
+//                 this->matC[i*kRows+j] = 0;
+//                 for(int k = 0; k < kP; k++){
+//                   this->matC[i*kRows+j] += R[i*kRows+k]*Q[k*kRows+j];
+//                 } 
+//               }
+//             }
+
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) {dQMat << "\n\nQ Matrix at iteration: " << li << "\n";}
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRMat << "\n\nR Matrix at iteration: " << li << "\n";}
+//             // for(int i = 0; i < kP; i++){
+//             //   for(int j = 0; j < kP; j++){
+//             //       if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << Q[i*kRows+j] << " ";
+//             //       if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << R[i*kRows+j] << " ";
+//             //   }
+//             //   if(DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << "\n";
+//             //   if(DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << "\n";
+//             // }
+
+//             // adding back the shift from the matrix
+//             for(int i = 0; i < kP; i++){
+//               this->matC[i*kRows+i] += shift;
+//             }
+
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n\nRQ Matrix at iteration: " << li << "\n";}
+//             // for(int i = 0; i < kRows; i++){
+//             //   for(int j = 0; j < kRows; j++){
+//             //     if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << a_matrix_cpu[matrix_offset+i*kRows+j] << " ";}
+//             //   }
+//             //   if(DEBUGEN && matrix_index == DEBUGMINDEX) {dRQ << "\n";}
+//             // }
+
+//             // Eigen vector accumulation 
+//             // if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "QQ Matrix at iteration: " << li << "\n";
+//             for(int i = 0; i < kRows; i++){
+//               std::fill(TmpRow.begin(), TmpRow.end(), 0);
+//               for(int j = 0; j < kRows; j++){
+//                 for(int k = 0; k < kRows; k++){
+//                   T I_val = (k==j) ? 1 : 0;
+//                   T q_val = (j >= kP || k >= kP) ? I_val : Q[k*kRows+j];
+//                   TmpRow[j] += eigen_vectors_cpu[matrix_offset+i*kRows+k]*q_val;
+//                 }
+//               }
+//               for(int k = 0; k < kRows; k++) {
+//                 eigen_vectors_cpu[matrix_offset+i*kRows+k] = TmpRow[k];
+//                 if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << eigen_vectors_cpu[matrix_offset+i*kRows+k] << " ";
+//               }
+//               if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+//             }
+//             if(DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+
+//             for(int j = 0; j < kP-1; j++){
+//               if(std::fabs(a_matrix_cpu[matrix_offset + (kP-1)*kRows+j]) > KTHRESHOLD){
+//                 close2zero = 0;
+//                 break;
+//               }
+//             }
+
+//             if(close2zero && kP == KDEFLIM){
+//               // total_iteration += li+1;
+//               break;
+//             } else if(close2zero){
+//               kP -= 1;
+//             }
+          
+//           }
+//     }
+
+// }
 
