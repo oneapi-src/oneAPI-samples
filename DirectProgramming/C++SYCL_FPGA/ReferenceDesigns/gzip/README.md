@@ -239,7 +239,7 @@ Performance results are based on testing as of October 27, 2020.
 
 | Argument             | Description
 |:---                  |:---
-| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant.
+| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant. <br> Use a smaller file such as an 100 B file if the simulator flow is taking too long. 
 | `-o=<output_file>`   | Specifies the name of the output file. The default name of the output file is `<input_file>.gz`. <br> When using two engines, the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
 
 ### On Linux
@@ -253,7 +253,10 @@ Performance results are based on testing as of October 27, 2020.
     ```
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim <input_file> -o=<output_file>
     ```
-
+    For the smaller file option.
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim ../data/100b.txt -o=<output_file>
+    ```
  3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    aocl initialize acl0 pac_s10_usm
@@ -269,6 +272,12 @@ Performance results are based on testing as of October 27, 2020.
     ```
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
     gzip.fpga_sim.exe <input_file> -o=<output_file>
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+    For the smaller file option.
+    ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    gzip.fpga_sim.exe ../data/100b.txt -o=<output_file>
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
  3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
