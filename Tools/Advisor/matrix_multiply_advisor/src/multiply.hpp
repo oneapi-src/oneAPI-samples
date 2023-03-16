@@ -9,7 +9,7 @@ constexpr int NUM=1024;
 constexpr int MATRIXTILESIZE=16;
 constexpr int WPT=8;
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 // exception handler
 /*
 The exception_list parameter is an iterable list of std::exception_ptr objects.

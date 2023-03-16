@@ -10,7 +10,7 @@
 // The linear system is solved via Jacobi iteration.
 // The algorithm converges, as the matrix A is strictly diagonally dominant.
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <cmath>
 // Location of file: <oneapi-root>/dev-utilities/<version>/include
