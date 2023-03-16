@@ -1,0 +1,2451 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          1655
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          1675
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          1708
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          1804
+    Length:          37
+    ReplacementText: '#include "sortingNetworks_common.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2083
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2275
+    Length:          0
+    ReplacementText: ",\n                                  const sycl::nd_item<3> &item_ct1, uint *s_key,\n                                  uint *s_val"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2315
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2338
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2422
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2466
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2578
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2611
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2638
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2671
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2698
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2731
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2758
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2791
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2812
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2852
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2892
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          2982
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3165
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3260
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:6: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3266
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3302
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3317
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3591
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:7: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3597
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3633
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3648
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3802
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3804
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3841
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3881
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          3949
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4039
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4563
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4695
+    Length:          0
+    ReplacementText: ",\n                                   const sycl::nd_item<3> &item_ct1, uint *s_key,\n                                   uint *s_val"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4735
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4758
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4833
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4877
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          4989
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5022
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5049
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5082
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5109
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5142
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5169
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5202
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5223
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5263
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5303
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5393
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5575
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5669
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:9: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5675
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5711
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5726
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          5981
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6075
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:10: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6081
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6117
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6132
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6286
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:8: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6288
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6325
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6365
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6433
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6523
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6625
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6879
+    Length:          0
+    ReplacementText: ', const sycl::nd_item<3> &item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6911
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6924
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          6937
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7583
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7789
+    Length:          0
+    ReplacementText: ",\n                                   const sycl::nd_item<3> &item_ct1, uint *s_key,\n                                   uint *s_val"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7829
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7852
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7927
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          7971
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8028
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8061
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8088
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8121
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8148
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8181
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8208
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8241
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8262
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8302
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8342
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8432
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8566
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8578
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8590
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8757
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:12: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8761
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8795
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8810
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8954
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:11: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8956
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          8993
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          9033
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          9101
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          9191
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          9854
+    Length:          0
+    ReplacementText: "\n  dpct::device_ext &dev_ct1 = dpct::get_current_device();\n  sycl::queue &q_ct1 = dev_ct1.default_queue();"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10065
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:38: Migration of __assert_fail is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10278
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:39: Migration of __assert_fail is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10342
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10346
+    Length:          155
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:50: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:51: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            bitonicSortShared(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, arrayLength, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10501
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10514
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10518
+    Length:          139
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:52: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:53: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            bitonicSortShared1(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10657
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          10855
+    Length:          161
+    ReplacementText: "dpct::get_default_queue().parallel_for(\n            sycl::nd_range<3>(sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) * sycl::range<3>(1, 1, 256), sycl::range<3>(1, 1, 256)), \n            [=](sycl::nd_item<3> item_ct1) {\n              bitonicMergeGlobal(d_DstKey, d_DstVal, d_DstKey, d_DstVal, arrayLength, size, stride, dir, item_ct1);\n            });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          11016
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          11035
+    Length:          0
+    ReplacementText: "          /*\n          DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n          */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          11045
+    Length:          126
+    ReplacementText: "dpct::get_default_queue().submit(\n            [&](sycl::handler &cgh) {\n              /*\n              DPCT1101:54: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n              */\n              sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n              /*\n              DPCT1101:55: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n              */\n              sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n                [=](sycl::nd_item<3> item_ct1) {\n                  bitonicMergeShared(d_DstKey, d_DstVal, d_DstKey, d_DstVal, arrayLength, size, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n                });\n            });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Offset:          11171
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2124
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2482
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2486
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3393
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3403
+    Length:          50
+    ReplacementText: '(d_InputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3481
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:41: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3491
+    Length:          50
+    ReplacementText: '(d_InputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3569
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:42: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3579
+    Length:          51
+    ReplacementText: '(d_OutputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3658
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3668
+    Length:          51
+    ReplacementText: '(d_OutputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3747
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3757
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3808
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3854
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3882
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3892
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3943
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3989
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4305
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4317
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4650
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4662
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5310
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5322
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5378
+    Length:          47
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5426
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5456
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5468
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5524
+    Length:          47
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5572
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6026
+    Length:          21
+    ReplacementText: 'sycl::free(d_OutputVal, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6051
+    Length:          21
+    ReplacementText: 'sycl::free(d_OutputKey, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6076
+    Length:          20
+    ReplacementText: 'sycl::free(d_InputVal, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6100
+    Length:          20
+    ReplacementText: 'sycl::free(d_InputKey, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6256
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1653
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1673
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1706
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1803
+    Length:          37
+    ReplacementText: '#include "sortingNetworks_common.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2084
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2291
+    Length:          0
+    ReplacementText: ",\n                                       const sycl::nd_item<3> &item_ct1,\n                                       uint *s_key, uint *s_val"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2331
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2354
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2438
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2482
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2594
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2627
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2654
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2687
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2714
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2747
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2774
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2807
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2828
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2868
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2908
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2998
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3184
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3219
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3225
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3261
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3276
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3485
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3491
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3527
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3542
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3729
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3731
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3768
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3808
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3876
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3966
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4264
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4518
+    Length:          0
+    ReplacementText: ', const sycl::nd_item<3> &item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4550
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4563
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4576
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          5958
+    Length:          0
+    ReplacementText: "\n  dpct::device_ext &dev_ct1 = dpct::get_current_device();\n  sycl::queue &q_ct1 = dev_ct1.default_queue();"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6167
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:36: Migration of __assert_fail is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6382
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:37: Migration of __assert_fail is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6432
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6436
+    Length:          118
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:56: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:57: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, arrayLength, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6554
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6567
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:4: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6571
+    Length:          124
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:58: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:59: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(1024/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, SHARED_SIZE_LIMIT, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6695
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          7103
+    Length:          157
+    ReplacementText: "dpct::get_default_queue().parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) * sycl::range<3>(1, 1, 256), sycl::range<3>(1, 1, 256)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeGlobal(d_DstKey, d_DstVal, d_DstKey, d_DstVal, arrayLength, size, stride, dir, item_ct1);\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          7260
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+    Digest:          b8f73051ca5933553e4e7aa0b1f727e6
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Digest:          d20222b38259c1e6710ed93781e74581
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Digest:          91b6f4710ff7d8e912b32d71aa45d912
+DpctVersion:     16.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     dev_mgr
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'dev_mgr::check_id'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'dev_mgr::current_device'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::select_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     device_ext
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'device_ext::create_queue'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_get_default_property_list_for_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     device_ext_get_default_property_list_for_queue
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_version'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          FeatureName:     'device_ext::queues_wait_and_throw'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_integrated'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_global_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_host_unified_memory'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_local_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_major_version'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_nd_range_size'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info_set_max_register_size_per_work_group
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_sub_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_item_sizes'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_items_per_compute_unit'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_minor_version'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_name'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info_set_memory_bus_width
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info_set_memory_clock_rate
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     exception_handler
+      SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     get_tid
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      FeatureName:     ''
+      SubFeatureMap:   {}
+  memory.hpp:
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_get_copy_range_detail
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_get_offset_detail
+      SubFeatureMap:   {}
+    dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     get_memcpy_direction
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     get_pointer_attribute
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          FeatureName:     'pitched_data::get_data_ptr'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          FeatureName:     'pitched_data::get_pitch'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          FeatureName:     'pitched_data::get_y'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     pointer_access_attribute
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     err_types
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/rkris11/test/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
