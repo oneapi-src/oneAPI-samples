@@ -4,7 +4,7 @@
 
 // The contents of this file are identical to
 // fig_19_7_avoid_data_race_with_atomics.cpp.
-// The figures is reproduced in the book for readability,
+// The figure is reproduced in the book for readability,
 // and duplicated here to avoid confusion.
 
 #include <sycl/sycl.hpp>
