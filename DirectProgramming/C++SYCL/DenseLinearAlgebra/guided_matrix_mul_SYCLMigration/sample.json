@@ -10,16 +10,17 @@
   "os": [ "linux" ],
   "builder": [ "cmake" ],
   "ciTests": {
-	"linux": [{
-		"steps": [
-			"mkdir build",
-      "cd build",
-      "cmake ..",
-      "make",
-			"make run_matrix_mul"
-		 ]
-	}]
-
-  }
+	  "linux": [
+      {
+		    "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run_matrix_mul"
+		    ]
+	    }
+    ]
+  },
   "expertise": "Code Optimization"
 }
