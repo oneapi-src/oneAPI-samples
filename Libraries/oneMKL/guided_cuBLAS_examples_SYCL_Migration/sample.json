@@ -1,5 +1,5 @@
 {
-  "guid": "473A43D4-CAA2-4852-AC20-3653EC7CCA16",	
+  "guid": "473A43D4-CAA2-4852-AC20-3653EC7CCA16",
   "name": "cuBLAS Migration",
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
   "description": "This sample shows the execution of cuBLAS function migrated to SYCL.",
@@ -19,7 +19,6 @@
 			"make run_amax"
 		 ]
 	}]
-
-  }
+  },
   "expertise": "Code Optimization"
 }
