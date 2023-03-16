@@ -2,7 +2,6 @@
 
 // SPDX-License-Identifier: MIT
 
-// TODO: Following example is already CPU selector.  Decide what to do with this one
 #include <sycl/sycl.hpp>
 #include <iostream>
 using namespace sycl;
