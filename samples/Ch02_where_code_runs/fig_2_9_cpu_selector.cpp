@@ -7,7 +7,7 @@
 using namespace sycl;
 
 int main() {
-  // Create queue to use the host device explicitly
+  // Create queue to use the CPU device explicitly
   queue Q{ cpu_selector_v };
 
   std::cout << "Selected device: " <<
