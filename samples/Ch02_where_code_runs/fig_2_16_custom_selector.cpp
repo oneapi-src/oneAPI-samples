@@ -9,7 +9,7 @@ using namespace sycl;
 // START CODE SNIP
 
 int my_selector(const device &dev) {
-  if (dev.get_info<info::device::name>().find("Arria") != std::string::npos &&
+  if (dev.get_info<info::device::name>().find("pac_a10") != std::string::npos &&
       dev.get_info<info::device::vendor>().find("Intel") != std::string::npos) {
     return 1;
   }

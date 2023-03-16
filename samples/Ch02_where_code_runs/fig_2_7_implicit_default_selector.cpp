@@ -8,7 +8,7 @@ using namespace sycl;
 
 int main() {
   // Create queue on whatever default device that the implementation
-  // chooses. Implicit use of the default_selector. 
+  // chooses. Implicit use of default_selector_v
   queue Q;
 
   std::cout << "Selected device: " <<

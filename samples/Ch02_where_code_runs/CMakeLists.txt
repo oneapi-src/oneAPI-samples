@@ -14,13 +14,13 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_2_9_host_selector
-    SOURCES fig_2_9_host_selector.cpp)
+    TARGET fig_2_9_cpu_selector
+    SOURCES fig_2_9_cpu_selector.cpp)
 
 add_book_sample(
     TEST
-    TARGET fig_2_10_cpu_selector
-    SOURCES fig_2_10_cpu_selector.cpp)
+    TARGET fig_2_10_gpu_selector
+    SOURCES fig_2_10_gpu_selector.cpp)
 
 add_book_sample(
     TARGET fig_2_12_multiple_selectors
@@ -30,9 +30,14 @@ add_book_sample(
     TARGET fig_2_13_gpu_plus_fpga
     SOURCES fig_2_13_gpu_plus_fpga.cpp)
 
+# Currently not compiling - missing aspect selector implementation
+#add_book_sample(
+#    TARGET fig_2_15_aspect_selector
+#    SOURCES fig_2_15_aspect_selector.cpp)
+
 add_book_sample(
-    TARGET fig_2_15_custom_selector
-    SOURCES fig_2_15_custom_selector.cpp)
+    TARGET fig_2_16_custom_selector
+    SOURCES fig_2_16_custom_selector.cpp)
 
 add_book_sample(
     TEST
@@ -43,8 +48,3 @@ add_book_sample(
     TEST
     TARGET fig_2_22_simple_device_code_2
     SOURCES fig_2_22_simple_device_code_2.cpp)
-
-add_book_sample(
-    TEST
-    TARGET fig_2_23_fallback
-    SOURCES fig_2_23_fallback.cpp)
