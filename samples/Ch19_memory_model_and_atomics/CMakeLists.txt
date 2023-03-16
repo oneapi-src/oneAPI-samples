@@ -28,6 +28,11 @@ add_book_sample(
 
 add_book_sample(
     TEST
+    TARGET fig_19_17_usm_and_atomic_ref
+    SOURCES fig_19_17_usm_and_atomic_ref.cpp)
+
+add_book_sample(
+    TEST
     TARGET fig_19_18_histogram
     SOURCES fig_19_18_histogram.cpp)
 
