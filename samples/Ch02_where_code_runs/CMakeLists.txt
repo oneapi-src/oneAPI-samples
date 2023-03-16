@@ -40,10 +40,10 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_2_19_simple_device_code
-    SOURCES fig_2_19_simple_device_code.cpp)
+    TARGET fig_2_18_simple_device_code
+    SOURCES fig_2_18_simple_device_code.cpp)
 
 add_book_sample(
     TEST
-    TARGET fig_2_23_simple_device_code_2
-    SOURCES fig_2_23_simple_device_code_2.cpp)
+    TARGET fig_2_22_simple_device_code_2
+    SOURCES fig_2_22_simple_device_code_2.cpp)
