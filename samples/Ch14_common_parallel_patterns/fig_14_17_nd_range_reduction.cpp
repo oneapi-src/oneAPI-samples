@@ -20,8 +20,9 @@ int main() {
 
   Q.parallel_for(nd_range<1>{N, B}, [=](nd_item<1> it) {
      int i = it.get_global_id(0);
-     int group_sum = reduce_over_group(it.get_group(), data[i], plus<>());
-     if (it.get_local_id(0) == 0) {
+     auto grp = it.get_group();
+     int group_sum = reduce_over_group(grp, data[i], plus<>());
+     if (grp.leader()) {
        atomic_ref<
            int,
            memory_order::relaxed,

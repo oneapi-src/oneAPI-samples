@@ -13,10 +13,11 @@ struct device_latch {
 
   template <int Dimensions>
   void arrive_and_wait(nd_item<Dimensions>& it) {
-    group_barrier(it.get_group());
+    auto grp = it.get_group();
+    group_barrier(grp);
     // Elect one work-item per work-group to be involved in the synchronization
     // All other work-items wait at the barrier after the branch
-    if (it.get_local_linear_id() == 0) {
+    if (grp.leader()) {
       atomic_ref<
           size_t,
           memory_order::acq_rel,
@@ -31,7 +32,7 @@ struct device_latch {
       // Synchronize with previous releases by all work-items on the device
       while (atomic_counter.load() != expected) {}
     }
-    group_barrier(it.get_group());
+    group_barrier(grp);
   }
 
   size_t counter;
