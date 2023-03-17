@@ -46,7 +46,7 @@
         "id": "fpga_emu",
         "steps": [
           "icpx --version",
-          "cd ../../..",
+          "cd ../../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/latency_control",
@@ -58,7 +58,7 @@
         "id": "report",
         "steps": [
           "icpx --version",
-          "cd ../../..",
+          "cd ../../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/latency_control",
