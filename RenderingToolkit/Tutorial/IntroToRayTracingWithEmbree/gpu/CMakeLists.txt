@@ -16,8 +16,6 @@ endif(DEFINED ENV{ONEAPI_ROOT})
 
 find_package(embree 4.0 REQUIRED PATHS ${ONEAPI_ROOT})
 
-#rkcommon objects for rendering are used in this example
-
 find_package(IntelDPCPP REQUIRED)
 
 #Required for SYCL implementation support
@@ -32,7 +30,6 @@ GET_FILENAME_COMPONENT(SYCL_COMPILER_DIR ${CMAKE_CXX_COMPILER} PATH)
 
 # Place holder for any needed compiler workarounds for std c++ version
 # if(MSVC)
-set(CMAKE_CXX_STANDARD 17)
 #  set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #  set(CMAKE_CXX_EXTENSIONS OFF)
 #else()

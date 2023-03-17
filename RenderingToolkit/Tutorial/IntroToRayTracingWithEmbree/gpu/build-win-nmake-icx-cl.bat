@@ -3,7 +3,7 @@ call "C:\Program Files (x86)\Intel\oneapi\setvars.bat"
 
 set CXX_COMPILER=icx-cl
 
-set "BUILD_COMMAND=cmake -G\"NMake Makefiles\" -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_COMPILER=%CXX_COMPILER% -D CMAKE_INSTALL_PREFIX=.. .."
+set "BUILD_COMMAND=cmake -G\"NMake Makefiles\" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=%CXX_COMPILER% -DCMAKE_INSTALL_PREFIX=.. .."
 echo %BUILD_COMMAND:\=% > build-command.txt
 echo "CXX_COMPILER:" >> build-command.txt
 %CXX_COMPILER% --version >> build-command.txt

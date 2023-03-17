@@ -8,7 +8,7 @@ fi
 
 CXX_COMPILER=icpx
 
-BUILD_COMMAND="cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_COMPILER=${CXX_COMPILER} -D CMAKE_INSTALL_PREFIX=.. .."
+BUILD_COMMAND="cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_INSTALL_PREFIX=.. .."
 echo "Build Command: ${BUILD_COMMAND}" > build-command.txt
 echo "CXX_COMPILER ${CXX_COMPILER}" >> build-command.txt
 echo "CXX_COMPILER VERSION: $(${CXX_COMPILER} --version)" >> build-command.txt
