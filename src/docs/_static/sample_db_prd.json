@@ -1,0 +1,2388 @@
+[
+    {
+        "name": "1D Heat Transfer",
+        "description": "The 1D Heat Transfer sample simulates 1D Heat Transfer problem using SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/StructuredGrids\/1d_HeatTransfer",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "AC Fixed",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the Algorithmic C Fixed Point Data Type (AC Fixed) ",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/ac_fixed",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "AC Int",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the Algorithmic C Integer (AC Int) ",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/ac_int",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Adaptive Noise Reduction",
+        "description": "A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/anr",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "All Pairs Shortest Paths",
+        "description": "All Pairs Shortest Paths finds the shortest paths between pairs of vertices in a graph using a parallel blocked algorithm that enables the application to efficiently offload compute intensive work to the GPU.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/GraphAlgorithms\/all-pairs-shortest-paths",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Autorun kernels",
+        "description": "Intel\u00ae FPGA tutorial demonstrating autorun kernels",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/autorun",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "AWS Pub Sub",
+        "description": "This sample uses the Message Broker for AWS* IoT to send and receive messages through an MQTT connection",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/IoTConnectionTools\/aws-pub-sub",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Azure IoTHub Telemetry",
+        "description": "Demonstrate how to send messages from a single device to Microsoft Azure IoT Hub via chosen protocol",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/IoTConnectionTools\/azure-iothub-telemetry",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Base: Vector Add",
+        "description": "This simple sample adds two large vectors in parallel. Provides a \u2018Hello World!\u2019 like sample to ensure your environment is setup correctly using simple C++ with SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/vector-add",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU",
+            "FPGA"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Bitonic Sort",
+        "description": "Bitonic Sort using C++ with SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/GraphTraversal\/bitonic-sort",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Black Scholes",
+        "description": "Black Scholes formula calculation using Intel\u00ae oneMKL Vector Math and Random Number Generators",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/black_scholes",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Block Cholesky Decomposition",
+        "description": "Block Cholesky Decomposition using Intel\u00ae oneMKL BLAS and LAPACK",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/block_cholesky_decomposition",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Block LU Decomposition",
+        "description": "Block LU Decomposition using Intel\u00ae oneMKL BLAS and LAPACK",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/block_lu_decomposition",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Board Test",
+        "description": "An Intel\u00ae FPGA test to check board interfaces and some of the oneAPI shim\/BSP metrics like memory bandwidth, kernel clock frequency and kernel latency",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/board_test",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Buffered Host-Device Streaming",
+        "description": "An FPGA tutorial demonstrating how to stream data between the host and device with multiple buffers",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/buffered_host_streaming",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Census",
+        "description": "This sample illustrates the use of Intel\u00ae Distribution of Modin* and Intel Extension for Scikit-learn to build and run an end-to-end machine learning workload",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/End-to-end-Workloads\/Census",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Cholesky decomposition",
+        "description": "Reference design demonstrating high-performance Cholesky decomposition of real and complex matrices on an Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/cholesky",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Cholesky-based matrix inversion",
+        "description": "Reference design demonstrating high-performance Cholesky-based inversion of real and complex matrices on an Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/cholesky_inversion",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Complex Mult",
+        "description": "This sample computes Complex Number Multiplication",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/complex_mult",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Compute Units",
+        "description": "Intel\u00ae FPGA tutorial showcasing a design pattern to enable the creation of compute units",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/compute_units",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Computed Tomography",
+        "description": "Reconstruct an image from simulated CT data with Intel\u00ae oneMKL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/computed_tomography",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "CRR Binomial Tree",
+        "description": "This sample shows a Binomial Tree Model for Option Pricing using a FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) Binomial Tree Model with Greeks for American exercise options",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/crr",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "DB",
+        "description": "An FPGA reference design that demonstrates high-performance Database Query Acceleration on Intel\u00ae FPGAs",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/db",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Debugger: Array Transform",
+        "description": "A small Data Parallel C++ (DPC++) example that is used in the \"Get Started Guide\" of the Application Debugger to exercise major debugger functionality",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/ApplicationDebugger\/array-transform",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Decompression",
+        "description": "Optimized implementations of GZIP and SNAPPY decompression on an FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/decompress",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Discrete Cosine Transform",
+        "description": "An image processing algorithm as seen in the JPEG compression standard",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/SpectralMethods\/DiscreteCosineTransform",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Double Buffering",
+        "description": "Intel\u00ae FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/double_buffering",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "DPC Reduce",
+        "description": "This sample models transform Reduce in different ways showing capability of Intel\u00ae oneAPI",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/ParallelPatterns\/dpc_reduce",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "DPCPP Blur",
+        "description": "Shows how to use Intel\u00ae Video Processing Library (VPL) and Data Parallel C++ (DPC++) to convert I420 raw video file in to BGRA and blur each frame",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneVPL\/dpcpp-blur",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "DSP Control",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the DSP control feature",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/dsp_control",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Dynamic Profiler",
+        "description": "An tutorial demonstrating how to use the Intel\u00ae FPGA Dynamic Profiler for Data Parallel C++ (DPC++) to dynamically collect performance data and reveal areas for optimization",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Tools\/dynamic_profiler",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Enable Auto-Mixed Precision for Transfer Learning with TensorFlow",
+        "description": "This tutorial guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow*",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelTensorFlow_Enabling_Auto_Mixed_Precision_for_TransferLearning",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Explicit Data Movement",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/explicit_data_movement",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Fast Recompile",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to separate the compilation of host and device code to save development time",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/GettingStarted\/fast_recompile",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Folder Options DPCT",
+        "description": "Multi-folder project that illustrates migration of a CUDA project that has files located in multiple folders in a directory tree. Uses the `--in-root` and `--out-root` options to tell the Intel\u00ae DPC++ Compatibility Tool where to locate source code to be migrated",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Migration\/folder-options-dpct",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Fourier Correlation",
+        "description": "Compute Fourier correlation with oneAPI",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/fourier_correlation",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "FPGA Compile",
+        "description": "Intel\u00ae FPGA tutorial introducing how to SYCL for Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/GettingStarted\/fpga_compile",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "FPGA Reg",
+        "description": "An Intel\u00ae FPGA advanced tutorial demonstrating how to apply the SYCL extension ext::intel::fpga_reg",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/fpga_reg",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Gamma Correction",
+        "description": "Gamma Correction - a nonlinear operation used to encode and decode the luminance of each image pixel",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneDPL\/gamma-correction",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Getting Started",
+        "description": "Basic Intel\u00ae oneDNN programming model for both Intel\u00ae CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneDNN\/getting_started",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Guided iso3dfd GPU optimization",
+        "description": "Step-by-step GPU optimization guide with Intel Advisor and ISO3DFD sample",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/StructuredGrids\/guided_iso3dfd_GPUOptimization",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "GZIP",
+        "description": "Reference design demonstrating high-performance GZIP compression on Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/gzip",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Hello Decode",
+        "description": "Shows how to use the Intel\u00ae oneAPI Video Processing Library (VPL) to perform a simple video decode",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneVPL\/hello-decode",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Hello Encode",
+        "description": "Shows how to use the Intel\u00ae oneAPI Video Processing Library (VPL) to perform a simple video encode",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneVPL\/hello-encode",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Hello VPP",
+        "description": "Shows how to use the Intel\u00ae oneAPI Video Processing Library (VPL) to perform simple video processing",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneVPL\/hello-vpp",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Hidden Markov Models",
+        "description": "Hidden Markov Models using Data Parallel C++",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/GraphTraversal\/hidden-markov-models",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Histogram",
+        "description": "This sample demonstrates Histogram using Dpstd APIs",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/ParallelPatterns\/histogram",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Host-Device Streaming using USM",
+        "description": "An FPGA tutorial demonstrating how to stream data between the host and device with low latency and high throughput",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/simple_host_streaming",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "IBM Device",
+        "description": "This project shows how-to develop a device code using Watson IoT Platform iot-c device client library, connect and interact with Watson IoT Platform Service",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/IoTConnectionTools\/ibm-device",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Intel(R) Extension for Scikit-learn: SVC for Adult dataset",
+        "description": "Use Intel(R) Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel(R) Extension for Scikit-learn against original Scikit-learn.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/Intel_Extension_For_SKLearn_Performance_SVC_Adult",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "IntelAIKitContainer_GettingStarted",
+        "description": "This sample illustrates how to utilize the oneAPI AI Kit container.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelAIKitContainer_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "Intel\u00ae Extension for PyTorch* Getting Started",
+        "description": "This sample illustrates how to train a PyTorch model and run inference with Intel\u00ae Extension for PyTorch*",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/Intel_Extension_For_PyTorch_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Modin Getting Started",
+        "description": "This sample illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelModin_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Modin Vs. Pandas Performance",
+        "description": "This sample code illustrates how Intel\u00ae Modin accelerates the performance of Pandas for computational operations on a dataframe.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelModin_Vs_Pandas",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Intel\u00ae Neural Compressor Tensorflow Getting Started",
+        "description": "This sample illustrates how to run Intel\u00ae Neural Compressor to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/INC-Sample-for-Tensorflow",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Python Daal4py Distributed K-Means",
+        "description": "This sample code illustrates how to train and predict with a distributed K-Means model with the Intel\u00ae Distribution of Python using the Python API package Daal4py powered by Intel\u00ae oneDAL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPython_daal4py_DistributedKMeans",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Intel\u00ae Python Daal4py Distributed Linear Regression",
+        "description": "This sample code illustrates how to train and predict with a Distributed Linear Regression model with the Intel\u00ae Distribution of Python using the Python API package Daal4py powered by Intel\u00ae oneDAL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPython_daal4py_DistributedLinearRegression",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Intel\u00ae Python Daal4py Getting Started",
+        "description": "This sample illustrates how to do Batch Linear Regression using the Python API package Daal4py powered by Intel\u00ae oneDAL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelPython_daal4py_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Python NumPy vs Numba_dpex",
+        "description": "This sample shows how to achieve the same accuracy of the k-NN model classification while using numpy, numba and numba_dpex.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPython_Numpy_Numba_dpex_kNN",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Intel\u00ae Python Scikit-learn Extension Getting Started",
+        "description": "This sample illustrates how to do Image classification using SVM classifier from Python API package SKlearnex with the use of Intel\u00ae oneAPI Data Analytics Library (oneDAL).",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/Intel_Extension_For_SKLearn_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Python XGBoost Daal4py Prediction",
+        "description": "This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPython_XGBoost_daal4pyPrediction",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Intel\u00ae Python XGBoost Getting Started",
+        "description": "The sample illustrates how to setup and train an XGBoost model on datasets for prediction",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelPython_XGBoost_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae Python XGBoost Performance",
+        "description": "This sample code illustrates how to analyze the performance benefit from using Intel training optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81 ",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPython_XGBoost_Performance",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Intel\u00ae Tensorflow Getting Started",
+        "description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/IntelTensorFlow_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Intel\u00ae TensorFlow Model Zoo Inference With FP32 Int8",
+        "description": "This code example illustrates how to run FP32 and Int8 inference on Resnet50 with TensorFlow using Intel\u00ae Model Zoo",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/Intel_Extension_For_TensorFlow_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Intel\u00ae TensorFlow Model Zoo Inference With FP32 Int8",
+        "description": "This code example illustrates how to run FP32 and Int8 inference on Resnet50 with TensorFlow using Intel\u00ae Model Zoo",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Getting-Started-Samples\/Intel_Extension_For_TensorFlow_GettingStarted",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Intrinsics",
+        "description": "Demonstrates the Intrinsic functions of the Intel\u00ae oneAPI C++ Compiler Classic",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/CompilerInfrastructure\/Intrinsics",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Introduction to Machine Learning",
+        "description": "The Jupyter Notebooks in these samples are intended to give professors and students an accesible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms which are used daily to address machine learning challenges. It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the Intel AI Analytics Toolkit powered by oneAPI. This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Jupyter\/Introduction_to_Machine_Learning",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "IO streaming with SYCL IO pipes",
+        "description": "An FPGA tutorial describing how to stream data to and from SYCL IO pipes.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/io_streaming",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "ISO2DFD DPCPP",
+        "description": "The ISO2DFD sample illustrates SYCL Basics using 2D Finite Difference Wave Propagation",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/StructuredGrids\/iso2dfd_dpcpp",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "ISO3DFD",
+        "description": "The ISO3DFD Sample illustrates SYCL using Finite Difference Stencil Kernel for solving 3D Acoustic Isotropic Wave Equation",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/StructuredGrids\/iso3dfd_dpcpp",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "ISO3DFD OMP Offload",
+        "description": "A Finite Difference Stencil Kernel for solving 3D Acoustic Isotropic Wave Equation using OpenMP* (OMP)",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/StructuredGrids\/iso3dfd_omp_offload",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Jacobi",
+        "description": "A small Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/ApplicationDebugger\/jacobi",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Jacobi Iterative",
+        "description": "Calculates the number of iterations needed to solve system of linear equations using Jacobi Iterative method",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/guided_jacobi_SYCLMigration",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Jacobi Iterative Solver",
+        "description": "Jacobi Iterative Solver provides step by step instructions for CPU, GPU and multiple GPU offload",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/guided_jacobi_iterative_gpu_optimization",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Kernel Args Restrict",
+        "description": "Explain the kernel_args_restrict attribute and its effect on the performance of Intel\u00ae FPGA kernels",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/kernel_args_restrict",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Latency Control",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the Latency control feature",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/experimental\/latency_control",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Lidar Object Detection using PointPillars",
+        "description": "Object detection using a LIDAR point cloud as input. This implementation is based on the paper 'PointPillars: Fast Encoders for Object Detection from Point Clouds'",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/End-to-end-Workloads\/LidarObjectDetection-PointPillars",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Loop Coalesce",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the loop_coalesce attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_coalesce",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Loop Fusion",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the usage of the loop_fusion attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_fusion",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Loop Initiation Interval",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the usage of the initiation_interval attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_initiation_interval",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Loop IVDEP",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the usage of the loop_ivdep attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_ivdep",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Loop Unroll",
+        "description": "Demonstrates the use of loop unrolling as a simple optimization technique to speed up compute and increase memory access throughput.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_unroll",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Loop Unroll",
+        "description": "An Intel\u00ae FPGA tutorial design demonstrating the loop_unroll attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/loop_unroll",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "LSU Control",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to configure the load-store units (LSU) in a SYCL program using the LSU controls extension",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/lsu_control",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Mandelbrot",
+        "description": "The Mandelbrot Set - a fractal\u00a0example in\u00a0mathematics",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/CombinationalLogic\/mandelbrot",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Mandelbrot OMP",
+        "description": "Calculates the Mandelbrot Set and outputs a BMP image representation using OpenMP* (OMP)",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/CombinationalLogic\/MandelbrotOMP",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Matrix Multiply",
+        "description": "This sample Multiplies two large Matrices in parallel using SYCL and OpenMP* (OMP)",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/matrix_mul",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Matrix Multiply Advisor",
+        "description": "Simple program that shows how to improve the Intel&reg; oneAPI Data Parallel C++ (DPC++) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Advisor\/matrix_multiply_advisor",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Matrix Multiply MKL",
+        "description": "Accelerate Matrix Multiplication with Intel\u00ae oneMKL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/matrix_mul_mkl",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Matrix Multiply VTune\u2122 Profiler",
+        "description": "Simple program that shows how to improve the Data Parallel C++ (DPC++) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/VTuneProfiler\/matrix_multiply_vtune",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Max Interleaving",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the usage of the loop max_interleaving attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/max_interleaving",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Maxloc Reductions in oneAPI",
+        "description": "Perform maxloc reductions with oneAPI",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneDPL\/maxloc_reductions",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Mem Channels",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the mem_channel buffer property and the -Xsno-interleaving flag",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/mem_channel",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Memory Attributes",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a SYCL program",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/memory_attributes",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Merge Sort",
+        "description": "A Reference design demonstrating merge sort on an Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/merge_sort",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Merge SPMV",
+        "description": "The Sparse Matrix Vector sample provides a parallel implementation of a Merge based Sparse Matrix and Vector Multiplication Algorithm using SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/SparseLinearAlgebra\/merge-spmv",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "MergeSort OMP",
+        "description": "Classic OpenMP* (OMP) Mergesort algorithm",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/GraphTraversal\/MergesortOMP",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Monte Carlo European Opt",
+        "description": "Monte Carlo Simulation of European Options pricing with Intel\u00ae oneMKL random number generators",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/monte_carlo_european_opt",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Monte Carlo Pi",
+        "description": "Estimating Pi with Intel\u00ae oneMKL random number generators",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/monte_carlo_pi",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Monte Carlo Pi",
+        "description": "Monte Carlo procedure for estimating Pi",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/monte_carlo_pi",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "MVDR Beamforming",
+        "description": "A reference design demonstrating a high-performance streaming MVDR beamformer",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/mvdr_beamforming",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "N-Body",
+        "description": "An N-Body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This N-Body sample code is implemented using SYCL for CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/N-BodyMethods\/Nbody",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "N-Way Buffering",
+        "description": "Intel\u00ae FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and multi-threaded host-processing to improve system performance",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/n_way_buffering",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Numba DPPY Essentials training",
+        "description": "Numba DPPY Essentials Tutorials using Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Jupyter\/Numba_dpex_Essentials_training",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "odd-even-merge-sort",
+        "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/GraphTraversal\/guided_odd_even_merge_sort_SYCLMigration",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "On-Chip Memory Cache",
+        "description": "Intel\u00ae FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/onchip_memory_cache",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "oneCCL Getting Started",
+        "description": "Basic Intel\u00ae oneCCL programming model for both Intel\u00ae CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneCCL\/oneCCL_Getting_Started",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "OpenMP Offload",
+        "description": "Demonstration of the new OpenMP offload features supported by the Intel(r) oneAPI DPC++\/C++ Compiler",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/CompilerInfrastructure\/OpenMP_Offload_Features",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "OpenMP Offload C++ Tutorials",
+        "description": "C++ OpenMP Offload Basics using Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/Jupyter\/OpenMP-offload-training",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "OpenMP Offload Fortran Tutorials",
+        "description": "Fortran OpenMP Offload Basics using Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Fortran\/Jupyter\/OpenMP-offload-training",
+        "languages": [
+            {
+                "fortran": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "OpenMP* Primes",
+        "description": "Fortran Tutorial - Using OpenMP* (OMP)",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Fortran\/CombinationalLogic\/openmp-primes",
+        "languages": [
+            {
+                "fortran": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "OpenMP* Reduction",
+        "description": "This sample models OpenMP* (OMP) Reduction in different ways showing capability of Intel\u00ae oneAPI",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++\/ParallelPatterns\/openmp_reduction",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Optimize Inner Loop",
+        "description": "An Intel\u00ae FPGA tutorial design demonstrating how to optimize the throughput of inner loops with low trip counts",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/optimize_inner_loop",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Optimize Integral",
+        "description": "Fortran Sample - Simple Compiler Optimizations",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Fortran\/DenseLinearAlgebra\/optimize-integral",
+        "languages": [
+            {
+                "fortran": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Optimize PyTorch Models using Intel\u00ae Extension for PyTorch* (IPEX)",
+        "description": "Applying IPEX Optimizations to a PyTorch workload in a step-by-step manner to gain performance boost.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPyTorch_Extensions_Inference_Optimization",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Optimize PyTorch Models using Intel\u00ae Extension for PyTorch* (IPEX) Quantization",
+        "description": "Applying IPEX Quantization Optimizations to a PyTorch workload in a step-by-step manner to gain performance boost in inference.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPytorch_Quantization",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Optimize TensorFlow pre-trained model for inference",
+        "description": "This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also analyze the model pb files before and after the inference optimizations.",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelTensorFlow_InferenceOptimization",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Particle Diffusion",
+        "description": "The Particle Diffusion code sample illustrates SYCL using a simple (non-optimized) implementation of a Monte Carlo Simulation of the Diffusion of Water Molecules in Tissue",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/StructuredGrids\/particle-diffusion",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Pipe Array",
+        "description": "An Intel\u00ae FPGA tutorial showcasing a design pattern to enables the creation of arrays of pipes",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/pipe_array",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Pipes",
+        "description": "How to use Pipes to transfer data between kernels on an Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/pipes",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Predictive Modeling Training",
+        "description": "Predictive Modeling using Decision Trees, Bagging, and XGBoost using Intel AI Kit and Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Jupyter\/Predictive_Modeling_Training",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Prefix Sum",
+        "description": "Compute Prefix Sum using SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/ParallelPatterns\/PrefixSum",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Printf",
+        "description": "This FPGA tutorial explains how to use the printf() to print in a SYCL FPGA program",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/printf",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Private Copies",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a SYCL FPGA program",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/private_copies",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "PyTorch Training Optimizations with Advanced Matrix Extensions Bfloat16",
+        "description": "This sample illustrates how to train a PyTorch model using Advanced Matrix Extensions Bfloat16",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelPyTorch_TrainingOptimizations_AMX_BF16",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "QRD",
+        "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of real and complex matrices on a Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/qrd",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "QRI",
+        "description": "Reference design demonstrating high-performance QR-based matrix inversion (QRI) of real and complex matrices on a Intel\u00ae FPGA",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/ReferenceDesigns\/qri",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Reference Designs and End to End"
+    },
+    {
+        "name": "Random Sampling Without Replacement",
+        "description": "Multiple simple random sampling without replacement with Intel\u00ae oneMKL random number generators",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/random_sampling_without_replacement",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Read-Only Cache",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the read-only cache feature to boost the throughput of a SYCL FPGA program",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/read_only_cache",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Remove Loop Carried Dependency",
+        "description": "An Intel\u00ae FPGA tutorial design demonstrating performance optimization by removing loop carried dependencies",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/loop_carried_dependency",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Rodinia NW DPCT",
+        "description": "Migrate a CUDA project using the Intel\u00ae DPCT intercept-build feature to create a compilation database. The compilation database provides compilation options, settings, macro definitions and include paths that the Intel\u00ae DPC++ Compatibility Tool (DPCT) will use during migration of the project",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Migration\/rodinia-nw-dpct",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Scheduler Target FMAX",
+        "description": "Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel\u00ae FPGA kernels",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/scheduler_target_fmax",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Sepia Filter",
+        "description": "A program that converts an image to Sepia Tone",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/CombinationalLogic\/sepia-filter",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Shannonization",
+        "description": "An Intel\u00ae FPGA tutorial design that demonstrates an optimization for removing computation from the critical path and improves Fmax\/II",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/shannonization",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Simple Add",
+        "description": "This simple sample adds two large vectors in parallel and provides a \u2018Hello World!\u2019 like sample to ensure your environment is setup correctly using C++ with SYCL",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/DenseLinearAlgebra\/simple-add",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU",
+            "FPGA"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Sparse Conjugate Gradient",
+        "description": "Solve Sparse linear systems with the Conjugate Gradient method using Intel\u00ae oneMKL sparse BLAS",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/sparse_conjugate_gradient",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Speculated Iterations",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the speculated_iterations attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/speculated_iterations",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Stable Sort By Key",
+        "description": "This sample models Stable Sort By Key during the sorting of 2 sequences (keys and values) only keys are compared but both keys and values are swapped",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneDPL\/stable_sort_by_key",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Stall Enable",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating the use_stall_enable_clusters attribute",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Features\/stall_enable",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "STREAM",
+        "description": "The STREAM is a program that measures memory transfer rates in MB\/s for simple computational kernels coded in C",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Benchmarks\/STREAM",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Student's T-test",
+        "description": "Performing Student's T-test with Intel\u00ae oneMKL Vector Statistics functionality",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneMKL\/student_t_test",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "SYCL Essentials Tutorials",
+        "description": "SYCL Essentials Tutorials using Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/Jupyter\/oneapi-essentials-training",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "SYCL OpenCL Interoperability Samples",
+        "description": "Samples showing SYCL and OpenCL Interoperability",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/OpenCLInterop",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "SYCL Performance Portability",
+        "description": "SYCL Performance Portability using Jupyter Notebooks",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL\/Jupyter\/sycl-performance-portability-training",
+        "languages": [
+            {
+                "cpp": {
+                    "properties": {
+                        "projectOptions": [
+                            {
+                                "projectType": "makefile"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Tutorial"
+    },
+    {
+        "name": "System Profiling",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating how to use the OpenCL* Intercept Layer to improve a design with the double buffering optimization",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/Tools\/system_profiling",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "TBB ASYNC SYCL",
+        "description": "This sample illustrates how computational kernel can be split for execution between CPU and GPU using Intel\u00ae oneTBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement calculations on GPU while the functional node does CPU part of calculations. This TBB ASYNC SYCL sample code is implemented using C++ and SYCL language for Intel\u00ae CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneTBB\/tbb-async-sycl",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "TBB Resumable Tasks SYCL",
+        "description": "This sample illustrates how computational kernel can be split for execution between CPU and GPU using Intel\u00ae oneTBB Resumable Task and parallel_for. The Intel\u00ae oneTBB resumable task uses SYCL to implement calculations on GPU while the parallel_for algorithm does CPU part of calculations. This TBB Resumable Tasks SYCL sample code is implemented using C++ and SYCL language for Intel\u00ae CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneTBB\/tbb-resumable-tasks-sycl",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "TBB Task SYCL",
+        "description": "This sample illustrates how 2 Intel\u00ae oneTBB tasks can execute similar computational kernels with one task executing SYCL code and another one executing the Intel\u00ae oneTBB code. This TBB Task SYCL sample code is implemented using C++ and SYCL language for Intel\u00ae CPU and GPU",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/oneTBB\/tbb-task-sycl",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU",
+            "GPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "TensorFlow Training Optimizations with Advanced Matrix Extensions Bfloat16",
+        "description": "This sample illustrates how to train a TensorFlow model using Advanced Matrix Extensions Bfloat16",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelTensorFlow_AMX_BF16_Training",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "TensorFlow Transformer with Advanced Matrix Extensions bfloat16 Mixed Precision Learning",
+        "description": "This sample code demonstrates optimizing a TensorFlow model with Intel\u00ae Advanced Matrix Extensions (Intel\u00ae AMX) using bfloat16 (Brain Floating Point) on Sapphire Rapids",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Features-and-Functionality\/IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision",
+        "languages": [
+            {
+                "python": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Triangular Loop",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating an advanced optimization technique for triangular loops",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/triangular_loop",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    },
+    {
+        "name": "Vector Add DPCT",
+        "description": "Simple project to illustrate the basic migration of CUDA code. Use this sample to ensure your environment is configured correctly and to understand the basics of migrating existing CUDA projects to Data Parallel C++ (DPC++)",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Migration\/vector-add-dpct",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Getting Started"
+    },
+    {
+        "name": "Vectorize VecMatMult",
+        "description": "Fortran Tutorial - Using Auto Vectorization",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/Fortran\/DenseLinearAlgebra\/vectorize-vecmatmult",
+        "languages": [
+            {
+                "fortran": {}
+            }
+        ],
+        "targetDevice": [
+            "CPU"
+        ],
+        "expertise": "Concepts and Functionality"
+    },
+    {
+        "name": "Zero Copy Data Transfer",
+        "description": "An Intel\u00ae FPGA tutorial demonstrating zero-copy host memory using the SYCL restricted Unified Shared Memory (USM) model",
+        "url": "https:\/\/github.com\/oneapi-src\/oneAPI-samples\/tree\/master\/C++SYCL_FPGA\/Tutorials\/DesignPatterns\/zero_copy_data_transfer",
+        "languages": [
+            {
+                "cpp": {}
+            }
+        ],
+        "targetDevice": [
+            "FPGA"
+        ],
+        "expertise": "Code Optimization"
+    }
+]
