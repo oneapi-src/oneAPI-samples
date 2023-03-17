@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Intel{% endblock %}
+{% block head %}
+    {{ super() }}
+<script src="_static/script.js"></script>
+{% endblock %}
+{% block content %}
+<div class="toolkit-cards" data-toolkit-cards-container> </div>
+    <template data-toolkit-template >
+        <li class="card grid" style="--grid-min: 15ch">
+            
+            <div class="card-title" data-header></div>
+                
+                <div class="body" data-body></div>
+
+                    <div class="flex-badges"> 
+                        <p class="expertise badge1" data-expertise></p>
+                        <p class="expertise badge2" data-languages></p>
+                        <p class="flex-device" data-targetDevice></p>
+                        <div url></div>
+                    </div> 
+        </li>
+    </template>
+{% endblock %}
