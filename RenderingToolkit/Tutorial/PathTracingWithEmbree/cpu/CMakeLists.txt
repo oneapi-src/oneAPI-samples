@@ -17,10 +17,10 @@ endif(DEFINED ENV{ONEAPI_ROOT})
 #tbb is used for tasking in this example
 find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
 
-find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT}/embree/latest/lib/cmake/embree NO_DEFAULT_PATH)
+find_package(embree 4.0 REQUIRED PATHS ${ONEAPI_ROOT}/embree/latest/lib/cmake NO_DEFAULT_PATH)
 
 #rkcommon objects for rendering are used in this example
-find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT})
+find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT}/rkcommon/latest/lib/cmake NO_DEFAULT_PATH)
 
 if(MSVC)
   set(CMAKE_CXX_STANDARD 11)

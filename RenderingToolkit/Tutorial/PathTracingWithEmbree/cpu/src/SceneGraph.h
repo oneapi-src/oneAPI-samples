@@ -1,47 +1,39 @@
 #pragma once
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include "CornellBox.h"
 #include "DefaultCubeAndPlane.h"
 #include "Geometry.h"
 #include "Lights.h"
 #include "Pool.h"
-#include "Sphere.h"
 #include "RandomSampler.h"
+#include "Sphere.h"
 
 /* Added for geometry selection in pathtracer */
 enum class SceneSelector { SHOW_CUBE_AND_PLANE, SHOW_CORNELL_BOX, SHOW_POOL };
 
 /* The most basic scene graph possible for exploratory code... please consider
- * the scene graph from ospray studio or embree tutorials themselves as better production
- * references */
+ * the scene graph from ospray studio or embree tutorials themselves as better
+ * production references */
 struct SceneGraph {
  public:
   SceneGraph(RTCDevice device, SceneSelector SELECT_SCENE, unsigned int width,
              unsigned int height);
 
-  void init_embree_scene(const RTCDevice device,
-                                     SceneSelector SELECT_SCENE,
-                                     const unsigned int width,
-                                     const unsigned int height);
+  void init_embree_scene(const RTCDevice device, SceneSelector SELECT_SCENE,
+                         const unsigned int width, const unsigned int height);
 
-  void init_embree_context();
+  bool intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& rayhit,
+                                DifferentialGeometry& dg, bool bCoherent);
 
-  bool intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
-                                            RTCRayHit& rayhit,
-                                            DifferentialGeometry& dg);
+  void cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo,
+                        MaterialType materialType, const Vec3fa& Lw,
+                        const Vec3fa& wo, const Medium& medium, float time,
+                        Vec3fa& L, RandomSampler& randomSampler,
+                        bool bCoherent);
 
-  void cast_shadow_rays(
-      DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
-      const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-      Vec3fa& L, RandomSampler& randomSampler);
-
-  float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
-                                    float tnear, float tfar, float _time);
-
-  void set_intersect_context_coherent();
-
-  void set_intersect_context_incoherent();
+  float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir, float tnear,
+                        float tfar, float _time, bool bCoherent);
 
   Vec3fa get_camera_origin();
 
@@ -59,26 +51,22 @@ struct SceneGraph {
    */
   std::map<unsigned int, MatAndPrimColorTable> m_mapGeomToPrim;
 
- protected:
-  // nothing here yet
  private:
   RTCScene m_scene;
   SceneSelector m_sceneSelector;
   rkcommon::math::AffineSpace3fa m_camera;
 
-  RTCIntersectContext m_context;
   std::map<unsigned int, size_t> m_mapGeomToLightIdx;
   void scene_cleanup();
 
-  // We'll use this 'geometries' container to automatically clean up the data
-  // arrays created that are used to create embree geometries //
+  /* We'll use this 'geometries' container to automatically clean up the data
+   * arrays created that are used to create embree geometries */
   std::vector<std::unique_ptr<Geometry>> geometries;
 };
 
 SceneGraph::SceneGraph(const RTCDevice device, SceneSelector SELECT_SCENE,
                        const unsigned int width, const unsigned int height) {
   init_embree_scene(device, SELECT_SCENE, width, height);
-  init_embree_context();
 }
 
 void SceneGraph::init_embree_scene(const RTCDevice device,
@@ -93,7 +81,6 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
   switch (m_sceneSelector) {
     case SceneSelector::SHOW_CUBE_AND_PLANE:
       /* add cube, add ground plane, and light */
-
       geometries.push_back(std::make_unique<CubeAndPlane>(
           m_scene, device, m_mapGeomToPrim, m_mapGeomToLightIdx, m_lights,
           m_camera, width, height));
@@ -101,15 +88,14 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
       /* The sphere can be used in the cube and plane scene with a corresponding
        * position for that scene */
 
-      /* geometries.push_back(std::make_unique<Sphere>(m_scene, device,
+      /*
+       * geometries.push_back(std::make_unique<Sphere>(m_scene, device,
        m_mapGeomToPrim, MaterialType::MATERIAL_MIRROR, Vec3fa(2.5f, 0.f, 2.5f),
        Vec3fa(0.8f, 0.8f, 0.8f), 1.0f, m_mapGeomToLightIdx, m_lights, m_camera,
        width, height));
       */
-
       break;
     case SceneSelector::SHOW_POOL:
-
       geometries.push_back(std::make_unique<Pool>(
           m_scene, device, m_mapGeomToPrim, m_mapGeomToLightIdx, m_lights,
           m_camera, width, height));
@@ -120,13 +106,13 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
       geometries.push_back(std::make_unique<CornellBoxGeometry>(
           m_scene, device, m_mapGeomToPrim, m_mapGeomToLightIdx, m_lights,
           m_camera, width, height));
-
       /* If you would like to add an Intel Embree sphere see below for an
        * example... Remember to look for materials properties
-       * set in our header files */
+       * set in the Sphere source */
       Vec3fa pos = {0.6f, -0.8f, -0.6f};
       Vec3fa color = {1.f, 1.f, 1.f};
       float radius = 0.2f;
+
       geometries.push_back(std::make_unique<Sphere>(
           m_scene, device, m_mapGeomToPrim, MaterialType::MATERIAL_GLASS, pos,
           color, radius, m_mapGeomToLightIdx, m_lights, m_camera, width,
@@ -139,27 +125,23 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
   rtcCommitScene(m_scene);
 }
 
-void SceneGraph::init_embree_context() { rtcInitIntersectContext(&m_context); }
-
-void SceneGraph::set_intersect_context_coherent() {
-  m_context.flags =
-      RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_COHERENT;
-}
-
-void SceneGraph::set_intersect_context_incoherent() {
-  m_context.flags =
-      RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
-}
-
 bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
                                           RTCRayHit& rayhit,
-                                          DifferentialGeometry& dg) {
+                                          DifferentialGeometry& dg,
+                                          bool bCoherent) {
+  /* New with Embree 4... RTCIntersectArguments to set ray coherency */
+  /* Only primary rays are set as coherent in this example program */
+  RTCIntersectArguments iargs;
+  rtcInitIntersectArguments(&iargs);
+  iargs.flags =
+      (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT : RTC_RAY_QUERY_FLAG_INCOHERENT;
+
   /* intersect ray with scene */
 
-  rtcIntersect1(m_scene, &m_context, &rayhit);
+  rtcIntersect1(m_scene, &rayhit, &iargs);
 
-  /* if nothing hit the path is terminated, this could be an light lookup
-   * insteead */
+  /* if nothing hit the path is terminated, this could be an environment light
+   * lookup instead */
   if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID) return false;
 
   Vec3fa Ng = Vec3fa(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z);
@@ -189,14 +171,25 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
   return true;
 }
 
-void SceneGraph::cast_shadow_rays(
-    DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
-    const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-    Vec3fa& L, RandomSampler& randomSampler) {
+void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo,
+                                  MaterialType materialType, const Vec3fa& Lw,
+                                  const Vec3fa& wo, const Medium& medium,
+                                  float time, Vec3fa& L,
+                                  RandomSampler& randomSampler,
+                                  bool bCoherent) {
   Vec3fa ret;
 
+  RTCOccludedArguments oargs;
+  rtcInitOccludedArguments(&oargs);
+  /* In this program Occluded rays are never coherent so this is hard coded. */
+  oargs.flags = RTC_RAY_QUERY_FLAG_INCOHERENT;
+  /* Otherwise, the assignment commented below would apply */
+  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT :
+   * RTC_RAY_QUERY_FLAG_INCOHERENT; */
+
   for (std::shared_ptr<Light> light : m_lights) {
-    Vec2f randomLightSample(randomSampler.get_float(), randomSampler.get_float());
+    Vec2f randomLightSample(randomSampler.get_float(),
+                            randomSampler.get_float());
     Light_SampleRes ls = light->sample(dg, randomLightSample);
 
     /* If the sample probability density evaluation is 0 then no need to
@@ -205,7 +198,7 @@ void SceneGraph::cast_shadow_rays(
 
     RTCRayHit shadow;
     init_RayHit(shadow, dg.P, ls.dir, dg.eps, ls.dist, time);
-    rtcOccluded1(m_scene, &m_context, &shadow.ray);
+    rtcOccluded1(m_scene, &shadow.ray, &oargs);
     if (shadow.ray.tfar >= 0.0f) {
       L = L + Lw * ls.weight *
                   Material_eval(albedo, materialType, Lw, wo, dg, ls.dir,
@@ -215,10 +208,20 @@ void SceneGraph::cast_shadow_rays(
 }
 
 float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
-                                  float tnear, float tfar, float _time) {
+                                  float tnear, float tfar, float _time,
+                                  bool bCoherent) {
   RTCRayHit shadow;
   init_RayHit(shadow, org, dir, tnear, tfar, _time);
-  rtcOccluded1(m_scene, &m_context, &shadow.ray);
+
+  RTCOccludedArguments oargs;
+  rtcInitOccludedArguments(&oargs);
+  /* In this program Occluded rays are assumed coherent so this is hard coded. */
+  oargs.flags = RTC_RAY_QUERY_FLAG_INCOHERENT;
+  /* Otherwise, the assignment commented below would apply */
+  /* oargs.flags = (bCoherent) ? RTC_RAY_QUERY_FLAG_COHERENT :
+   * RTC_RAY_QUERY_FLAG_INCOHERENT; */
+
+  rtcOccluded1(m_scene, &shadow.ray, &oargs);
   return shadow.ray.tfar;
 }
 

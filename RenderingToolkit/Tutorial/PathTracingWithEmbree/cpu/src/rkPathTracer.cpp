@@ -55,8 +55,8 @@ int write_image_first_accumulation(SceneSelector sceneSelector,
   string singleFilename = prefix + strscene + suffix;
 
   /* Write a single accumulation image (useful for comparison) */
-  if (ret = stbi_write_png(singleFilename.c_str(), width, height, channels,
-                           pixels, width * channels))
+  if ((ret = stbi_write_png(singleFilename.c_str(), width, height, channels,
+                           pixels, width * channels)))
     std::cout << "Output image: '" << singleFilename
               << "'... written to disk\n";
 
@@ -99,8 +99,8 @@ int write_image_all_accumulations(SceneSelector sceneSelector,
   string accumFilename = prefix + strscene + suffix;
 
   /* Write the accumulated image output */
-  if (ret = stbi_write_png(accumFilename.c_str(), width, height, channels,
-                           pixels, width * channels))
+  if ((ret = stbi_write_png(accumFilename.c_str(), width, height, channels,
+                           pixels, width * channels)))
     std::cout << "Output image: '" << accumFilename << "'... written to disk\n";
   return ret;
 }

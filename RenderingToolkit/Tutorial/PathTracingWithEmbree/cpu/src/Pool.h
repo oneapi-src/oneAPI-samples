@@ -2,7 +2,7 @@
 #ifndef FILE_POOL_SEEN
 #define FILE_POOL_SEEN
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 
 #include <vector>
 

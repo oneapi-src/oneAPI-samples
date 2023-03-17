@@ -6,7 +6,7 @@
  * functions. Embree repository tutorial sources often place these into an
  * optics.h or sampling.g */
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 #include <rkcommon/math/vec.h>
 
 #include <utility>
