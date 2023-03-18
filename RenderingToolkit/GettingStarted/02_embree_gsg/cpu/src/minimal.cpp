@@ -1,11 +1,9 @@
-// Copyright 2009-2021 Intel Corporation
+// Copyright 2009-2023 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
-#include <embree3/rtcore.h>
+#include <embree4/rtcore.h>
 #include <math.h>
 #include <stdio.h>
-
-#include <limits>
 
 #if defined(_WIN32)
 #include <conio.h>
@@ -28,7 +26,7 @@
  *       -o minimal \
  *       minimal.c \
  *       -L<PATH>/<TO>/<EMBREE>/lib \
- *       -lembree3
+ *       -lembree4
  *
  * You should be able to compile this using a C or C++ compiler.
  */
@@ -47,7 +45,7 @@ RTC_NAMESPACE_USE
  * This is extremely helpful for finding bugs in your code, prevents you
  * from having to add explicit error checking to each Embree API call.
  */
-void errorFunction(void* userPtr, enum RTCError error, const char* str) {
+void errorFunction(void *userPtr, enum RTCError error, const char *str) {
   printf("error %d: %s\n", error, str);
 }
 
@@ -93,10 +91,10 @@ RTCScene initializeScene(RTCDevice device) {
    * more detail in the API documentation.
    */
   RTCGeometry geom = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
-  float* vertices = (float*)rtcSetNewGeometryBuffer(
+  float *vertices = (float *)rtcSetNewGeometryBuffer(
       geom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, 3 * sizeof(float), 3);
 
-  unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(
+  unsigned *indices = (unsigned *)rtcSetNewGeometryBuffer(
       geom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, 3 * sizeof(unsigned),
       1);
 
@@ -150,12 +148,14 @@ RTCScene initializeScene(RTCDevice device) {
 void castRay(RTCScene scene, float ox, float oy, float oz, float dx, float dy,
              float dz) {
   /*
-   * The intersect context can be used to set intersection
+   * The intersect arguments can be used to set intersection
    * filters or flags, and it also contains the instance ID stack
-   * used in multi-level instancing.
+   * used in multi-level instancing. RTCIntersectArguments from Embree 4
+   * replaces RTCIntersectContext from Embree 3.
    */
-  struct RTCIntersectContext context;
-  rtcInitIntersectContext(&context);
+  struct RTCIntersectArguments args;
+  rtcInitIntersectArguments(&args);
+  args.feature_mask = RTC_FEATURE_FLAG_TRIANGLE;
 
   /*
    * The ray hit structure holds both the ray and the hit.
@@ -170,7 +170,7 @@ void castRay(RTCScene scene, float ox, float oy, float oz, float dx, float dy,
   rayhit.ray.dir_y = dy;
   rayhit.ray.dir_z = dz;
   rayhit.ray.tnear = 0;
-  rayhit.ray.tfar = std::numeric_limits<float>::infinity();
+  rayhit.ray.tfar = INFINITY;
   rayhit.ray.mask = -1;
   rayhit.ray.flags = 0;
   rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
@@ -178,9 +178,10 @@ void castRay(RTCScene scene, float ox, float oy, float oz, float dx, float dy,
 
   /*
    * There are multiple variants of rtcIntersect. This one
-   * intersects a single ray with the scene.
+   * intersects a single ray with the scene. The rtcIntersect1 function
+   * signature was updated with Embree 4.0.0.
    */
-  rtcIntersect1(scene, &context, &rayhit);
+  rtcIntersect1(scene, &rayhit, &args);
 
   printf("%f, %f, %f: ", ox, oy, oz);
   if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
