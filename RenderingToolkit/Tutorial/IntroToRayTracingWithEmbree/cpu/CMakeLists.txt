@@ -17,10 +17,10 @@ endif(DEFINED ENV{ONEAPI_ROOT})
 #tbb is used for tasking in this example
 find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
 
-find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT})
+find_package(embree 4.0 REQUIRED PATHS ${ONEAPI_ROOT})
 
 #rkcommon objects for rendering are used in this example
-find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT})
+find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT}/rkcommon/latest/lib/cmake)
 
 if(MSVC)
   set(CMAKE_CXX_STANDARD 11)
@@ -51,6 +51,10 @@ if(MSVC)
     )
 endif(MSVC)
 target_link_libraries(rkRayTracer PRIVATE embree TBB::tbb rkcommon::rkcommon)
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
+endif()
 
 install(TARGETS rkRayTracer
   DESTINATION ${CMAKE_INSTALL_BINDIR}
