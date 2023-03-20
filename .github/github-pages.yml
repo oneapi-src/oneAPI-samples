@@ -1,0 +1,79 @@
+name: github-pages
+
+# on:
+#   schedule:
+#     # https://cron.help/#0/30_*_*_*_*
+#     - cron: '0 6 * * *'
+  # push:
+  #   branches: 
+  #   - app/dev
+  
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - synchronize
+  #   branches:
+  #     - master
+  #   paths:
+      # TRIGGER only on pull request that changes these file-paths... 
+  # 
+  #     - "src/db.py
+  #     - "src/requirements.txt"
+  #     - "src/docs/conf.py"
+  #     - "src/docs/Makefile"
+  #     - "src/docs/_static/styles.css"
+  #     - "src/docs/_static/intel.css"
+  #     - "src/docs/_static/assets/logo-energyblue-white.svg"
+  #     - "src/docs/_templates/script.js"
+  #     - "src/docs/_templates/base.html"
+  #     - "src/docs/_templates/index.html"
+
+defaults:
+  run:
+    working-directory: src
+
+jobs:
+  pages:
+    name: Build GitHub Pages
+    runs-on: ubtuntu-latest 
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+
+    - name: Build JSON DB
+      uses: actions/checkout@v3
+      run: |
+        python3 -m pip install -r requirements.txt   
+        python3 db.py
+
+    - name: Remove JSON pre-prod  
+      run: |       
+        rm -rf docs/sample_db_pre.json
+
+    - name: Build Sphinx
+      run: |
+        python3 -m pip install -r requirements.txt        
+        python3 -m sphinx -W -b html . docs/_build/
+        echo ${{ github.ref }}
+
+    - name: Push docs
+      if: ${{ github.ref == 'refs/heads/master' }}
+      env:
+        GITHUB_USER: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_REPO: ${{github.repository}} 
+      run: |
+        cd docs/_build/
+        touch .nojekyll
+        git init
+        git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
+        git add -A
+        git status
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git commit -sm "$(date)"
+        git branch -M gh-pages
+        git push -u origin -f gh-pages
