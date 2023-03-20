@@ -22,7 +22,6 @@ project = 'oneAPI Samples'
 copyright = '2023, Intel'
 author = 'Intel'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
