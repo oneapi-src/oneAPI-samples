@@ -57,7 +57,7 @@ def make_url_dict(branch:str,file_paths:list):
         print("An error occurred. Ensure file_paths are generated.")
 
 def df_sort_filter():
-    '''Import JSON to DF; sort by name col; filter only records w/ expertise; drop unused columns; add url col.'''
+    '''Import JSON to DF; sort by name col; filter only records w/ expertise; drop unused columns; add url column.'''
     raw_data = pd.read_json("sample_db_pre.json")
     df = pd.DataFrame(raw_data)
     df = df.sort_values(by=['name'], ignore_index=True,key=lambda x: x.str.lower())
