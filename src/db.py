@@ -43,7 +43,7 @@ def make_url_dict(branch:str,file_paths:list):
         for f in file_paths:
             path_base = pathlib.PurePath(f)
             # TODO: Revise filepath path SLICE => [1:-1] after migration => oneAPI-samples
-            path_slice = '/'.join(path_base.parts[2:-1])
+            path_slice = '/'.join(path_base.parts[1:-1])
             full_url = os.path.join(baseurl,path_slice)
             list_urls.append(str(full_url))
             with open(f) as file:
