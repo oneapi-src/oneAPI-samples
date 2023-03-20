@@ -10,7 +10,7 @@ This reference design demonstrates high-performance general matrix multiplicatio
 
 ## Purpose
 
-This FPGA reference design demonstrates the multiplication of matrices, a common operation employed in linear algebra.
+This FPGA reference design demonstrates the multiplication of matrices, a common operation employed in linear algebra. Matrices *A* and *B* (inputs) are multiplied to produce matrix C. The matrix multiplication algorithm is implemented using a systolic array, and has been optimized for performance on FPGAs.
 
 ## Prerequisites
 
@@ -38,56 +38,65 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex™, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ### Performance
 
-Performance results are based on testing as of ???.
+Performance results are based on testing as of March 6, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | ???
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | ???
+| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for matrices of size 64 * 64
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for matrices of size 64 * 64
 
 
 ## Key Implementation Details
 
-This algorithm multiplies a *m* × *n* matrix with a *n* × *p* matrix using a systolic array. The systolic array consists of a two-dimensional grid of *m* × *p* processing elements (PEs). Each PE is responsible for computing one element of the output matrix. Every cycle, it consumes data from neighboring PEs, and performs a multiply-accumulate. Specifically, on iteration *k*, we load column *k* of matrix A and row *k* of matrix B, and each PE[i][j] multiplies A[i][k] by B[j][k].  In our FPGA implementation, this is achieved by fully unrolling the loop over the PEs. In total, *mp* multiply-accumulates are performed in parallel on the FPGA.
+The matrix multiplication algorithm multiplies two single-precision floating-point matrices *A* (*m × n*) and *B* (*n × p*) to produce matrix *C* (*m × p*). The algorithm is implemented using a systolic array approach, employing an array of *m<sub>PE</sub> × p<sub>PE</sub>* processing elements (PEs), each of which is responsible for computing a dot product corresponding to an element of the output matrix. As a result, this implementation computes the matrix multiplication in tiles of *m<sub>PE</sub> × p<sub>PE</sub>* at a time.
 
-![systolic matmul overview](assets/overview.png)
+<p align="center">
+  <img src=assets/overview.png />
+</p>
 
-The multiply-accumulate arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware. Our FPGA implementation requires *mp* DSPs to compute the multiply-accumulate over all PEs in one cycle. Thus, the matrix size is constrained by the total FPGA DSP resources available.
+Each iteration, a PE consumes inputs from previous PEs in the same row or column and uses these data to compute a multiply-accumulate. It then passes the inputs along to the next PE. We orchestrate the flow of data through the systolic array such that each PE is responsible for computing one element of the output matrix. Using this approach, it takes a total of *n* iterations to compute one matrix product, where every iteration, we compute a partial sum for each of the elements of the output matrix.
 
-The design uses the `fpga_reg` attribute to insert additional pipelining registers along the path to each PE. This allows values to be passed from one PE to the next, which reduces the fanout caused by distributing the same value to all PEs in one row or column.
+<p align="center">
+  <img src=assets/systolic_array.png />
+</p>
 
-![systolic matmul use of fpga_reg](assets/fpga_reg.png)
+Here, a single PE consists of logic to compute a floating-point multiply-accumulate and registers for storage of intermediate results. 
 
-For larger matrices, where it is infeasible to generate a systolic array to compute the full matrix, we split the matrix into smaller tiles, each of which is computed sequentially using a systolic array corresponding to the size of the tile.
+<p align="center">
+  <img src=assets/PE.png />
+</p>
 
-![systolic matmul tiling](assets/tiling.png)
+In our FPGA implementation, the multiply-accumulate operations are computed in a nested loop over the PEs. The loop is fully unrolled to replicate the hardware for each PE. As a result, *m<sub>PE</sub> × p<sub>PE</sub>* multiply-accumulate operations are performed in parallel on the FPGA. The multiply-accumulate arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware. When set to FP accum mode, we can perform this operation with an II of 1. With this optimization, our FPGA implementation requires *m<sub>PE</sub> × p<sub>PE</sub>* DSPs to compute all the floating-point multiply-accumulate operations. Thus, the matrix tile size is constrained by the total FPGA DSP resources available.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
 - **Explicit Pipelining with `fpga_reg`** (fpga_register)
+- **Loop `ivdep` Attribute** (loop_ivdep)
 - **Unrolling Loops** (loop_unroll)
 
 The key optimization techniques used are as follows:
 
-1. Fully unrolling the loop over the matrix product to instantiate a two-dimensional systolic array of PEs
+1. Fully unrolling the loop over the matrix product to instantiate a systolic array of PEs
 2. Using an efficient memory banking scheme to generate high performance hardware.
-3. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+3. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design. This allows us to specify registers to pass inputs from one PE to the next. 
 
 ### Compiler Flags Used
 
@@ -101,13 +110,13 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | cmake option              | Description
 |:---                       |:---
-| `-DSET_ROWS_A` | Specifies the number of rows of matrix A
-| `-DSET_COMMON` | Specifies the number of columns of matrix A / rows of matrix B (these values are equal)
-| `-DSET_COLS_B` | Specifies the number of columns of matrix B
-| `-DSET_TILE_A` | Specifies the tile size used on matrix A
-| `-DSET_TILE_B` | Specifies the tile size used on matrix B
-| `-DSET_TILE_COMMON` | Specifies the tile size used on the common dimension between matrices A and B
-| `-DSET_DEBUG` | Used to turn on/off debug information (printing out matrices)
+| `-DSET_ROWS_A` | Specifies *m*, the number of rows of matrix A
+| `-DSET_COMMON` | Specifies *n*, the number of columns of matrix A / rows of matrix B (these values are equal)
+| `-DSET_COLS_B` | Specifies *p*, the number of columns of matrix B
+| `-DSET_TILE_A` | Specifies *m<sub>PE</sub>*, the tile size used on matrix A
+| `-DSET_TILE_B` | Specifies *p<sub>PE</sub>*, the tile size used on matrix B
+
+>**Note**: The values for `seed`, `-DSET_ROWS_A`, `-DSET_COMMON`, `-DSET_COLS_B`, `-DSET_TILE_A` and `-DSET_TILE_B` depend on the board being targeted.
 
 ## Build the `Matrix multiply` Design
 
@@ -129,17 +138,26 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
 
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -163,23 +181,27 @@ Additionaly, the cmake build system can be configured using the following parame
       make fpga
       ```
 
-   <!-- (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/matmul.fpga.tar.gz). -->
-
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex™ device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -210,7 +232,7 @@ Additionaly, the cmake build system can be configured using the following parame
 
 | Argument  | Description
 |:---       |:---
-| `<num>`   | (Optional) Specifies the number of times to repeat the multiplication of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation and simulation flows, and **819200** for the FPGA flow.
+| `<num>`   | (Optional) Specifies the number of times to repeat the multiplication of a set of 8 matrices (only 1 matrix when running simulation). Its default value is **16** for the emulation flow, **1** for the simulation flow and **819200** for the FPGA flow.
 
 You can perform the multiplication of the set of matrices repeatedly. This step performs the following:
 - Generates the set of random matrices.
@@ -235,7 +257,7 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 #### Run on FPGA
 
-1. Run the sample on the FPGA device.
+1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./matmul.fpga
    ```
@@ -259,7 +281,7 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
    ```
 #### Run on FPGA
 
-1. Run the sample on the FPGA device.
+1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    matmul.fpga.exe
    ```
@@ -269,13 +291,13 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 Example output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
+Running on device: pac_a10 : Intel PAC Platform (pac_f100000)
  Matrix A size: 64 x 64 (tile: 8 x 64)
  Matrix B size: 64 x 64 (tile: 64 x 8)
  Systolic array size: 8 x 8 PEs
-Running matrix multiplication of 8 matrices 819200 times
- Total duration: ??? s
-Throughput: ???k matrices/s
+Running matrix multiplication of 2 matrices 819200 times
+   Total duration:   21.8446 s
+Throughput: 75.0025k matrices/s
 
 PASSED
 ```
@@ -283,13 +305,13 @@ PASSED
 Example output when running on **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
 
 ```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
+Running on device: pac_s10 : Intel PAC Platform (pac_f100000)
  Matrix A size: 64 x 64 (tile: 8 x 64)
  Matrix B size: 64 x 64 (tile: 64 x 8)
  Systolic array size: 8 x 8 PEs
-Running matrix multiplication of 8 matrices 819200 times
- Total duration: ??? s
-Throughput: ???k matrices/s
+Running matrix multiplication of 2 matrices 819200 times
+   Total duration:   18.1147 s
+Throughput: 90.4456k matrices/s
 
 PASSED
 ```
