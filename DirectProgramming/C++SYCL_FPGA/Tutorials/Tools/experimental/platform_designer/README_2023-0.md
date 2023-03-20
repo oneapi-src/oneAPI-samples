@@ -15,6 +15,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 > To use the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
+> - Questa* Advanced Simulator
 > - ModelSim® SE
 >
 > To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
@@ -54,7 +55,7 @@ This example is intended for users interested in creating standalone modules tha
 
 ### Board-specific Considerations
 
-This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. The board-specific configurations that you should specify in Intel® Quartus® Prime are as follows:
+This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. These board-specific configurations are not guaranteed to work with different boards:
 1. Choose `10AS066N3F40E2SG` device to match the devkit
 2. Choose pin `PIN_AM10` to drive the `i_clk` signal
 3. Choose pin `PIN_AR23` to drive the `fpga_led` signal
@@ -101,7 +102,7 @@ Follow these steps to compile and test the design:
    > nmake fpga_ip_export
    ```
 
-2. **From the same terminal**, launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard. 
+2. **From the same terminal**, prepare a project directory for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `add-quartus-sln` into it. Then launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
 > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
 
@@ -110,6 +111,8 @@ Follow these steps to compile and test the design:
    ```
    $> cd ../../
    $> mkdir add-quartus
+   $> cp add-quartus-sln/add.sv add-quartus
+   $> cp add-quartus-sln/jtag.sdc add-quartus
    $> cd add-quartus
    $> quartus
    ```
@@ -119,27 +122,29 @@ Follow these steps to compile and test the design:
    ```
    > cd ..\..\
    > mkdir add-quartus
+   > xcopy add-quartus-sln\add.sv add-quartus
+   > xcopy add-quartus-sln\jtag.sdc add-quartus
    > cd add-quartus
    > quartus.exe
    ```
 
-   1. Set the project directory to be the `add-quartus` directory of this code sample.
+   1. Set the project directory to be the `add-quartus` directory.
 
    2. Set the top-level entity to be `add` to make project management easier.
 
       ![](assets/quartus_new_project.png)
 
-   3. Choose **Empty Project** when prompted to select a project type.
+   3. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
 
-   4. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `add-quartus-sln`.
+   4. Choose **Empty Project** when prompted to select a project type.
+
+   5. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `add-quartus-sln`.
 
       ![](assets/add-files.png)
 
-   5. Make sure you choose an appropriate device. See **Board-specific Considerations** above.
-
 3. Copy the generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_ip_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels have their own reports and associated RTL. You must locate the the `.prj_X` directory that contains the IP you want to use in your design.
 
-   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add_xample.fpga_ip.prj_1` is the correct `.prj_x` directory, because `add_example_fpga_ip_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
+   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add.fpga_ip_export.prj_1` is the correct `.prj_x` directory, because `add_fpga_ip_export_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
    
    ```verilog
    add_fpga_ip_export_1_di add_fpga_ip_export_1_di_inst (
@@ -211,19 +216,25 @@ Follow these steps to compile and test the design:
 
       ![](assets/add-ip-platform-designer.png)
 
+      > **Note**: If you cannot see the oneAPI IP component, refresh Platform Designer by clicking `File` > `Refresh System`
+      >
+      > ![](assets/refresh-system.png)
+
    3. Connect the modules as shown:
 
-      ![](assets/complete-system_platform-designer.png)
+      ![](assets/complete-system_platform-designer_2023-0.png)
 
       Don't forget to export the `irq_add` and `exception_add` signals. The provided top-level RTL file (`add.sv`) uses the generated IP. Following these naming conventions allows the IP to connect to this handwritten RTL.
 
    4. Save the system by clicking `File` > `Save`
 
-   5. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
+   5. Make sure there are no errors in the 'System Messages' panel.
+
+   6. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
       ![](assets/generate-hdl.png)
    
-   6. Close Platform Designer. 
+   7. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
@@ -242,6 +253,12 @@ Follow these steps to compile and test the design:
       *Final pin planner configuration:*
 
       ![](assets/pins-from-design.png)
+
+      > **Note**: If you cannot see the pin details, click the `All Pins` button in the bottom left corner of the Pin Planner GUI.
+      > 
+      > ![](assets/all-pins.png)
+
+      > **Note**: Make sure you choose 'LVDS' for the I/O standard of `i_clk`, the pin location will be automatically populated for `i_clk(n)`.
 
 8. Add the timing constraints. 
 
@@ -267,6 +284,18 @@ Follow these steps to compile and test the design:
       ![](assets/start-compilation-quartus.png)
 
 10. Copy the generated `add.sof` file to the `system_console` directory.
+
+   Linux:
+
+   ```
+   $> cp add-quartus/output_files/add.sof system_console
+   ```
+
+   Windows:
+
+   ```
+   > xcopy add-quartus\output_files\add.sof system_console
+   ```
 
 ### Additional Documentation
 - [Intel® Arria® 10 SoC Golden System Reference Design](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD) describes a reference design you can use with your Intel® Arria® 10 SX SoC Developer kit.
