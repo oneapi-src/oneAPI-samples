@@ -13,6 +13,8 @@
 #include "memory_transfers.hpp"
 #include "streaming_matmul.hpp"
 
+using sycl::ext::intel::experimental::property::usm::buffer_location;
+
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class FeederA;
@@ -43,7 +45,7 @@ template <typename TT,          // Datatype of the elements of the matrix
           int k_tile_a,         // Tile size for matrix A
           int k_tile_b,         // Tile size for matrix B
           int k_num_matrices>   // Number of pairs of matrices to multiply
-void MatmulImpl(sycl::queue &q, // Device queue
+void MatmulImpl(sycl::queue &q,            // Device queue
                 std::vector<TT> &a_matrix, // Input matrix A
                 std::vector<TT> &b_matrix, // Input matrix B
                 std::vector<TT> &c_matrix, // Output matrix C = A * B
@@ -58,6 +60,11 @@ void MatmulImpl(sycl::queue &q, // Device queue
   constexpr int kMatsizeB = k_cols_b * k_common;
   constexpr int kMatsizeC = k_rows_a * k_cols_b;
 
+  // Buffer locations for mmhost interfaces
+  constexpr int kBL1 = 0;
+  constexpr int kBL2 = 1;
+  constexpr int kBL3 = 2;
+
   // Allocate FPGA DDR memory
 #if defined(IS_BSP)
   TT *a = sycl::malloc_device<TT>(kMatsizeA * k_num_matrices, q);
@@ -65,9 +72,12 @@ void MatmulImpl(sycl::queue &q, // Device queue
   TT *c = sycl::malloc_device<TT>(kMatsizeC * k_num_matrices, q);
 #else
   // malloc_device are not supported when targetting an FPGA part/family
-  TT *a = sycl::malloc_shared<TT>(kMatsizeA * k_num_matrices, q);
-  TT *b = sycl::malloc_shared<TT>(kMatsizeB * k_num_matrices, q);
-  TT *c = sycl::malloc_shared<TT>(kMatsizeC * k_num_matrices, q);
+  TT *a = sycl::malloc_shared<TT>(kMatsizeA * k_num_matrices, q,
+      sycl::property_list{buffer_location(kBL1)});
+  TT *b = sycl::malloc_shared<TT>(kMatsizeB * k_num_matrices, q,
+      sycl::property_list{buffer_location(kBL2)});
+  TT *c = sycl::malloc_shared<TT>(kMatsizeC * k_num_matrices, q,
+      sycl::property_list{buffer_location(kBL3)});
 #endif
 
   // Copy matrices over
@@ -84,33 +94,24 @@ void MatmulImpl(sycl::queue &q, // Device queue
   using PipeC = sycl::ext::intel::pipe<CPipe, PipeDataC, 64>;
 
   // Producer kernel for matrix A
-  auto feeder_a_event = q.single_task<FeederA>([=
-  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
-    MatrixReadFromDDRToPipeA<TT, k_rows_a, k_common, k_cols_b, k_tile_a,
-                             k_tile_b, kElemsPerDDRAccess, k_num_matrices,
-                             PipeA>(a, repetitions);
-  });
+  auto feeder_a_event = q.single_task<FeederA>(
+      MatrixReadFromDDRToPipeA<TT, kBL1, k_rows_a, k_common, k_cols_b, k_tile_a,
+          k_tile_b, kElemsPerDDRAccess, k_num_matrices, PipeA>{a, repetitions});
 
   // Producer kernel for matrix B
-  q.single_task<FeederB>([=
-  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
-    MatrixReadFromDDRToPipeB<TT, k_rows_a, k_common, k_cols_b, k_tile_a,
-                             k_tile_b, kElemsPerDDRAccess, k_num_matrices,
-                             PipeB>(b, repetitions);
-  });
+  q.single_task<FeederB>(
+      MatrixReadFromDDRToPipeB<TT, kBL2, k_rows_a, k_common, k_cols_b, k_tile_a,
+          k_tile_b, kElemsPerDDRAccess, k_num_matrices, PipeB>{b, repetitions});
 
   // Matrix multiply kernel
   q.single_task<Matmul>(
       fpga_linalg::StreamingMatmul<TT, k_common, k_tile_a, k_tile_b, PipeA,
-                                   PipeB, PipeC>{});
+          PipeB, PipeC>{});
 
   // Consumer kernel for matrix C
-  auto drain_event = q.single_task<Drain>([=
-  ]() [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
-    MatrixReadPipeToDDR<TT, k_rows_a, k_cols_b, k_tile_a, k_tile_b,
-                        kElemsPerDDRAccess, k_num_matrices, PipeC>(c,
-                                                                   repetitions);
-  });
+  auto drain_event = q.single_task<Drain>(
+      MatrixReadPipeToDDR<TT, kBL3, k_rows_a, k_cols_b, k_tile_a, k_tile_b,
+          kElemsPerDDRAccess, k_num_matrices, PipeC>{c, repetitions});
 
   drain_event.wait();
 

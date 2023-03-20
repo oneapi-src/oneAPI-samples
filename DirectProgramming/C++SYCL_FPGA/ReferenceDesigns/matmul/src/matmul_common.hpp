@@ -1,7 +1,8 @@
 #ifndef __MATMUL_COMMON_HPP__
 #define __MATMUL_COMMON_HPP__
 
-template <typename TT> struct FeederAData {
+template<typename TT>
+struct FeederAData {
   TT data;
   bool flush;
 };

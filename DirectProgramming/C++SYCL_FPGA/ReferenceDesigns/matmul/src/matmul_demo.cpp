@@ -35,9 +35,10 @@ bool EqualMat(std::vector<float> &c_matrix, std::vector<float> &c_reference,
         if (abs(c_matrix[idx] - c_reference[idx]) > kEpsilon) {
           passed = false;
 #if DEBUG
-          std::cout << "Error: C[" << col << "][" << row
-                    << "] = " << c_matrix[idx] << " but REF[" << col << "]["
-                    << row << "] = " << c_reference[idx] << std::endl;
+          std::cout << "Error: C[" << col << "][" << row << "] = "
+                    << c_matrix[idx]
+                    << " but REF[" << col << "][" << row << "] = "
+                    << c_reference[idx] << std::endl;
 #endif
         }
         if (!std::isfinite(c_matrix[idx])) {
@@ -191,9 +192,9 @@ int main(int argc, char *argv[]) {
     std::cout << std::endl << matrix_idx << std::endl;
 
     std::cout << std::endl << "Matrix A" << std::endl;
-    std::vector<float> a_vector = {a_matrix.begin() + matrix_idx * kMatsizeA,
-                                   a_matrix.begin() +
-                                       (matrix_idx + 1) * kMatsizeA};
+    std::vector<float> a_vector = {
+        a_matrix.begin() + matrix_idx * kMatsizeA,
+        a_matrix.begin() + (matrix_idx + 1) * kMatsizeA};
     PrintMat(a_vector, kRowsA, kCommon);
 
     std::cout << std::endl << "Matrix B" << std::endl;
@@ -209,9 +210,9 @@ int main(int argc, char *argv[]) {
     PrintMat(c_ref_vector, kRowsA, kColsB);
 
     std::cout << std::endl << "Matrix C calculated" << std::endl;
-    std::vector<float> c_vector = {c_matrix.begin() + matrix_idx * kMatsizeC,
-                                   c_matrix.begin() +
-                                       (matrix_idx + 1) * kMatsizeC};
+    std::vector<float> c_vector = {
+        c_matrix.begin() + matrix_idx * kMatsizeC,
+        c_matrix.begin() + (matrix_idx + 1) * kMatsizeC};
     PrintMat(c_vector, kRowsA, kColsB);
   }
 #endif
