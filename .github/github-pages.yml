@@ -1,12 +1,12 @@
 name: github-pages
 
-# on:
+on:
 #   schedule:
 #     # https://cron.help/#0/30_*_*_*_*
 #     - cron: '0 6 * * *'
-  # push:
-  #   branches: 
-  #   - app/dev
+  push:
+    branches: 
+    - app/dev
   
   # pull_request:
   #   types:
