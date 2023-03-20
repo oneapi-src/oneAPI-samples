@@ -1,12 +1,12 @@
 name: github-pages
 
-on:
+# on:
 #   schedule:
 #     # https://cron.help/#0/30_*_*_*_*
 #     - cron: '0 6 * * *'
-  push:
-    branches: 
-    - app/dev
+  # push:
+  #   branches: 
+  #   - app/dev
   
   # pull_request:
   #   types:
@@ -38,7 +38,6 @@ jobs:
     runs-on: ubtuntu-latest 
 
     steps:
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -47,7 +46,8 @@ jobs:
     - name: Build JSON DB
       uses: actions/checkout@v3
       run: |
-        python3 docs/db.py
+        python3 -m pip install -r requirements.txt   
+        python3 db.py
 
     - name: Remove JSON pre-prod  
       run: |       
@@ -55,7 +55,7 @@ jobs:
 
     - name: Build Sphinx
       run: |
-        python3 -m pip install -r docs/requirements.txt        
+        python3 -m pip install -r requirements.txt        
         python3 -m sphinx -W -b html . docs/_build/
         echo ${{ github.ref }}
 
@@ -75,6 +75,5 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git commit -sm "$(date)"
-        # test-only: change base branch to github-pages
         git branch -M gh-pages
         git push -u origin -f gh-pages

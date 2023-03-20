@@ -52,7 +52,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_static_path = ['_static']
 
-master_doc = "index"
+# master_doc = "index"
 
 root_doc = 'contents'
 

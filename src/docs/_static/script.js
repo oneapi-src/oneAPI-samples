@@ -42,7 +42,7 @@ function renderCards(data) {
         expertise.textContent = toolkit.expertise
         languages.innerHTML = Object.keys(toolkit.languages[0])
         targetDevice.innerHTML = '<p class="expertise badge3">' + toolkit.targetDevice.join('</p><p class="expertise badge3" >') + '</p>'
-        url.innerHTML = '<a href="' + toolkit.url + '"></a>'
+        url.innerHTML = '<a href="' + toolkit.url + '">Hyperlink</a>'
 
         toolkitCardContainer.append(card)
 
