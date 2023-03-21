@@ -1,4 +1,4 @@
-# QR Decomposition of Matrices
+# PCA Principal Component Analysis of Samples
 This reference design demonstrates high performance QR decomposition of complex/real matrices on FPGA.
 
 | Optimized for                     | Description
@@ -16,11 +16,22 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA        | 24k matrices/s for complex matrices of size 128 * 128
-| Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)      | 7k matrices/s for complex matrices of size 256 * 256
+| Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA        | ?? matrices/s for complex matrices of size 128 * 128
+| Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)      | ?? matrices/s for complex matrices of size 256 * 256
 
 
 ## Purpose
+
+
+Real world samples often comes of multiple features/dimensions. Not all the features in the samples carries significant information, some features are more or less same over the samples. Reducing the number of features while preserving the most of the information will help in analysis, visualization and storage of samples. Principal Component analysis aims to list new features(often combination of original features) in decending order according to their contribution on information in the samples.     
+
+## Algorithm
+This FPGA reference design demonstrates Principal Component Analysis(PCA) of input samples with certain number of features, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into Pricipal Components in decending order and also output the variance accounted by each components.
+
+This design is based on following algorithm to compute principal components, here input matrix is two dimesional array with following size A\[\#Samples\]\[\#Features\] 
+* Computing mean feature of the samples <br />  $F_{\mu}\[i\] = mean(A\[\]\[i\]) $
+* Adjusitng the sample mean to zero $A_{mean}\[i\]\[\] = A\[i\]\[\] -  F_{mu}\[\] $
+* Standerdize data such that variance of sample will be one <br /> $A_{std} = A - h F_{mu}^T $
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
