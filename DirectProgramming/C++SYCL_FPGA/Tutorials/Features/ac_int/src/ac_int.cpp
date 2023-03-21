@@ -113,18 +113,24 @@ MyInt14 TestBitAccess(queue &q, const MyInt14 &a) {
 }
 
 int main() {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   bool passed = true;
 
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     constexpr int kVal1 = 1000, kVal2 = 2;
 

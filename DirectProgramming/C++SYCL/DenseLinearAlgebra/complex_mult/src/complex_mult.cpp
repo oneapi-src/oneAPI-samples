@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <vector>
 // dpc_common.hpp can be found in the dev-utilities include folder.

@@ -18,6 +18,8 @@
 #include "common/common.hpp"
 #include "exception_handler.hpp"
 
+using namespace sycl;
+
 // ensure only one of GZIP and SNAPPY is defined
 #if defined(GZIP) and defined(SNAPPY)
 static_assert(false, "Only one of GZIP and SNAPPY can be defined!");
@@ -66,8 +68,6 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
                    const std::string test_dir);
 std::string decompressor_name = "SNAPPY";
 #endif
-
-using namespace sycl;
 
 // Prints the usage for the executable command line args
 void PrintUsage(std::string exe_name) {
@@ -124,17 +124,22 @@ int main(int argc, char* argv[]) {
   std::cout << "Using " << decompressor_name << " decompression\n";
   std::cout << std::endl;
 
-  // the device selector
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  sycl::ext::intel::fpga_simulator_selector selector;
-#else
-  sycl::ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   // create the device queue
   queue q(selector, fpga_tools::exception_handler);
+
+  device device = q.get_device();
+
+  std::cout << "Running on device: "
+            << device.get_info<info::device::name>().c_str() 
+            << std::endl;
 
   // create the decompressor based on which decompression version we are using
 #if defined(GZIP)
@@ -179,6 +184,20 @@ void PrintTestResults(std::string test_name, bool passed) {
 #if defined(GZIP)
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
                  const std::string test_dir) {
+
+
+#ifdef FPGA_SIMULATOR
+  // the name of the file for the simulator is fixed
+  std::string small_filename = test_dir + "/small.gz";
+  
+  std::cout << ">>>>> Small File Test <<<<<" << std::endl;
+  bool small_test_pass = decompressor.DecompressFile(
+      q, small_filename, "", 1, false, false);
+  PrintTestResults("Small File Test", small_test_pass);
+  std::cout << std::endl;
+
+  return small_test_pass;
+#else
   // the name of the files for the default test are fixed
   std::string uncompressed_filename = test_dir + "/uncompressed.gz";
   std::string static_compress_filename = test_dir + "/static_compressed.gz";
@@ -211,13 +230,16 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
   std::cout << std::endl;
 
   return uncompressed_test_pass && static_test_pass && dynamic_test_pass &&
-         tp_test_pass;
+         tp_test_pass;    
+#endif
+
 }
 #endif
 
 #if defined(SNAPPY)
 bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
                    const std::string test_dir) {
+
   std::cout << ">>>>> Alice In Wonderland Test <<<<<" << std::endl;
   std::string alice_in_file = test_dir + "/alice29.txt.sz";
   auto in_bytes = ReadInputFile(alice_in_file);
@@ -230,6 +252,10 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
 
   PrintTestResults("Alice In Wonderland Test", alice_test_pass);
   std::cout << std::endl;
+
+#ifdef FPGA_SIMULATOR
+  return alice_test_pass;
+#else
 
   std::cout << ">>>>> Only Literal Strings Test <<<<<" << std::endl;
   auto test1_bytes = GenerateSnappyCompressedData(333, 3, 0, 0, 3);
@@ -265,6 +291,9 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
   PrintTestResults("Throughput Test", test_tp_pass);
   std::cout << std::endl;
 
-  return test1_pass && test2_pass && test3_pass && test_tp_pass;
+  return alice_test_pass && test1_pass && test2_pass && test3_pass &&
+         test_tp_pass;
+#endif
+
 }
 #endif

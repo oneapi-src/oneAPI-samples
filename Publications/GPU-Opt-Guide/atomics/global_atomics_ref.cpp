@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 int main() {
   constexpr int N = 256 * 256;
@@ -20,10 +20,9 @@ int main() {
     sycl::accessor acc_a(bufa, h, sycl::read_only);
     h.parallel_for(sycl::nd_range<1>(N, M), [=](auto it) {
       auto i = it.get_global_id();
-      sycl::ext::oneapi::atomic_ref<int,
-                                    sycl::ext::oneapi::memory_order_relaxed,
-                                    sycl::ext::oneapi::memory_scope_device,
-                                    sycl::access::address_space::global_space>
+      sycl::atomic_ref<int, sycl::memory_order_relaxed,
+                       sycl::memory_scope_device,
+                       sycl::access::address_space::global_space>
           atomic_op(acc[0]);
       atomic_op += acc_a[i];
     });

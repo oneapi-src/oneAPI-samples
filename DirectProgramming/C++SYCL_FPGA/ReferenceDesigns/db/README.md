@@ -10,7 +10,9 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 
 ## Purpose
 
-The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+
+Note that this design uses a lot of resources and is designed with Intel® Stratix® 10 FPGA capabilities in mind.
 
 ## Prerequisites
 
@@ -38,19 +40,21 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX).
+> **Note**: You'll need a large FPGA part to be able to fit the query 9 variant of this design 
 
 ### Performance
 
@@ -76,11 +80,17 @@ This design leverages concepts discussed in the [FPGA tutorials](/DirectProgramm
 
 ### Query Implementations
 
-The following sections describe at a high level how queries 1, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The following sections describe at a high level how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
 
 Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
+
+#### Query 9
+
+Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin`, and `FifoSort`). The block diagram of the design is shown below.
+
+![](assets/q9.png)
 
 #### Query 11
 
@@ -101,6 +111,8 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 |`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
 |`dbdata.hpp`                           | Definitions of database related data structures and parsing functions
 |`query1/query1_kernel.cpp`             | Contains the kernel for Query 1
+|`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
+|`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
 |`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
 |`query11/pipe_types.cpp`               | All data types and instantiations for pipes used in query 11
 |`query12/query12_kernel.cpp`           | Contains the kernel for Query 12
@@ -136,65 +148,98 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux*
 1. Change to the sample directory.
-2. Configure the build system for query number 1.
+2. Configure the build system for the default target (the Agilex® device family).
    ```
    mkdir build
    cd build
    cmake .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       make report
-       ```
-       The report resides at `db_report.prj/reports/report.html`.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `db_report.prj/reports/report.html`.
 
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
-       ```
-       make fpga
-       ```
-       When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
-   (Optional) The hardware compile may take several hours to complete. You can download a pre-compiled binary (compatible with Linux* Ubuntu* 18.04) for an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz).
+      ```
+      make fpga
+      ```
+      When building for hardware, the default scale factor is **1**. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=11 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
+
 
 ### On Windows*
 
->**Note**: The FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) does not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for query number 1.
+2. Configure the build system for the default target (the Agilex® device family).
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" -DQUERY=1
+   cmake -G "NMake Makefiles" .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `db_report.prj/reports/report.html` directory.
 
-       ```
-       nmake fpga_emu
-       ```
-    2. Generate HTML performance report.
-       ```
-       nmake report
-       ```
-       The report resides at `db_report.prj/reports/report.html` directory.
+      >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
-    3. Compile for FPGA hardware (longer compile time, targets FPGA device):
-       ```
-       nmake fpga
-       ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
+
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `DB` Reference Design
@@ -212,26 +257,34 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux
 
- 1. Run the design on the FPGA emulator (the kernel executes on the CPU).
-    ```
-    ./db.fpga_emu --dbroot=../data/sf0.01 --test
-    ```
-    (Optional) Run the design for queries `11` and `12`.
-
-2. Run the design on an FPGA device.
+1. Run the design on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./db.fpga_emu --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `9`, `11` and `12`.
+2. Run the sample on the FPGA simulator device.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
+   ```
+3. Run the design on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./db.fpga --dbroot=../data/sf1 --test
    ```
 
 ### On Windows
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-     ```
-     db.fpga_emu.exe --dbroot=../data/sf0.01 --test
-     ```
-    (Optional) Run the design for queries `11` and `12`.
-
-2. Run the sample on an FPGA device.
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   db.fpga_emu.exe --dbroot=../data/sf0.01 --test
+   ```
+   (Optional) Run the design for queries `9`, `11` and `12`.
+2. Run the sample on the FPGA simulator device.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   db.fpga_sim.exe --dbroot=../data/sf0.01 --test
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    db.fpga.exe --dbroot=../data/sf1 --test
    ```

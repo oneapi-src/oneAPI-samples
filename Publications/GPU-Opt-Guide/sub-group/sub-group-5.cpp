@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
 
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
@@ -23,7 +23,7 @@ int main() {
     h.parallel_for(sycl::nd_range(sycl::range{N / 16}, sycl::range{32}),
                    [=](sycl::nd_item<1> it) {
                      int i = it.get_global_linear_id();
-                     sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+                     auto sg = it.get_sub_group();
                      int sgSize = sg.get_local_range()[0];
                      i = (i / sgSize) * sgSize * 16 + (i % sgSize);
                      for (int j = 0; j < sgSize * 16; j += sgSize) {

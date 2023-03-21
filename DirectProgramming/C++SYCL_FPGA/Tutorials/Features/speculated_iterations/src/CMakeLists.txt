@@ -7,26 +7,27 @@ set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
-    set(DEVICE_FLAG "-DA10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    if(FPGA_DEVICE MATCHES ".*a10*")
-        set(DEVICE_FLAG "-DA10")
-    elseif(FPGA_DEVICE MATCHES ".*s10*")
-        set(DEVICE_FLAG "-DS10")
-    elseif(FPGA_DEVICE MATCHES ".*agilex*")
-        set(DEVICE_FLAG "-DAgilex")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
     endif()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=-DA10, -DDEVICE_FLAG=-DS10 or \
-                         -DDEVICE_FLAG=-DAgilex.")
+                         Please make sure you have set -DDEVICE_FLAG=-A10, -DDEVICE_FLAG=-S10 or \
+                         -DDEVICE_FLAG=-Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -38,12 +39,12 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR -D${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_SIMULATOR -D${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -D${DEVICE_FLAG} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

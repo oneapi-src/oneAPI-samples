@@ -3,12 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
 #include <unistd.h>
-sycl::default_selector d_selector;
 
 // Array type and data size for this example.
 constexpr size_t array_size = (1 << 15);
@@ -92,7 +91,7 @@ IntArray a, b;
 
 int main() {
 
-  sycl::queue q(d_selector);
+  sycl::queue q(sycl::default_selector_v);
 
   InitializeArray(a);
   InitializeArray(b);
@@ -104,7 +103,7 @@ int main() {
   // begin in-order submission
   sycl::property_list q_prop{sycl::property::queue::in_order()};
   std::cout << "In order queue: Jitting+Execution time\n";
-  sycl::queue q1(d_selector, q_prop);
+  sycl::queue q1(sycl::default_selector_v, q_prop);
   multi_queue(q1, a, b);
   usleep(500 * 1000);
   std::cout << "In order queue: Execution time\n";
@@ -112,7 +111,7 @@ int main() {
   // end in-order submission
 
   // begin out-of-order submission
-  sycl::queue q2(d_selector);
+  sycl::queue q2(sycl::default_selector_v);
   std::cout << "Out of order queue: Jitting+Execution time\n";
   multi_queue(q2, a, b);
   usleep(500 * 1000);

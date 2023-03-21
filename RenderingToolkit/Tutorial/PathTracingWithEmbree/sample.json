@@ -13,9 +13,10 @@
                 {
                 "id": "Intel_Embree_pathtracer_oneapi_lin",
                 "steps": [
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
-                    "cmake ..",
+                    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi ..",
                     "cmake --build . ",
                     "./rkPathTracer"
                  ]
@@ -26,6 +27,7 @@
                 "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
                 "id": "Intel_Embree_pathtracer_oneapi_win",
                 "steps":[
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
                     "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
@@ -40,9 +42,10 @@
                 {
                 "id": "Intel_Embree_pathrtracer_oneapi_mac",
                 "steps": [
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
-                    "cmake ..",
+                    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/rkcommon/latest/lib/cmake/rkcommon ..",
                     "cmake --build . ",
                     "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./rkPathTracer"
                  ]

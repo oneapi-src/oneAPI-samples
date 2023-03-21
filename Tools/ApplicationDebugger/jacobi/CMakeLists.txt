@@ -31,8 +31,9 @@ endif ()
 set (PROJECT_NAME_BUGGED "${PROJECT_NAME}-bugged")
 set (PROJECT_NAME_FIXED "${PROJECT_NAME}-fixed")
 
-add_executable (${PROJECT_NAME_BUGGED} src/jacobi-bugged.cpp)
-add_executable (${PROJECT_NAME_FIXED} src/jacobi-fixed.cpp)
+add_executable (${PROJECT_NAME_BUGGED} src/jacobi.cpp)
+add_executable (${PROJECT_NAME_FIXED} src/jacobi.cpp)
+target_compile_definitions (${PROJECT_NAME_FIXED} PRIVATE FIXED)
 
 # Add custom target for starting a debug session
 add_custom_target (debug-session
@@ -40,20 +41,20 @@ add_custom_target (debug-session
   DEPENDS ${PROJECT_NAME_BUGGED})
 
 # Add custom target for running
-add_custom_target(run ./${PROJECT_NAME_BUGGED} cpu
+add_custom_target(run ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-cpu-fixed ./${PROJECT_NAME_FIXED} cpu
+add_custom_target(run-cpu-fixed ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-cpu ./${PROJECT_NAME_BUGGED} cpu
+add_custom_target(run-cpu ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-gpu-fixed ./${PROJECT_NAME_FIXED} gpu
+add_custom_target(run-gpu-fixed ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-gpu ./${PROJECT_NAME_BUGGED} gpu
+add_custom_target(run-gpu ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})
 
-add_custom_target(run-fpga-fixed ./${PROJECT_NAME_FIXED} accelerator
+add_custom_target(run-fpga-fixed ONEAPI_DEVICE_SELECTOR=*:fpga ./${PROJECT_NAME_FIXED}
   DEPENDS ${PROJECT_NAME_FIXED})
-add_custom_target(run-fpga ./${PROJECT_NAME_BUGGED} accelerator
+add_custom_target(run-fpga ONEAPI_DEVICE_SELECTOR=*:fpga ./${PROJECT_NAME_BUGGED}
   DEPENDS ${PROJECT_NAME_BUGGED})

@@ -21,12 +21,37 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    set(FPGA_DEVICE "Agilex")
+    set(DEVICE_FLAG "Agilex")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
+
+    set(IS_BSP "0")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+        set(IS_BSP "1")
+    else()
+        set(IS_BSP "0")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so USM will be enabled by default.")
+        message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
+    endif()
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -35,7 +60,7 @@ if(WIN32)
 endif()
 
 # Set design parameters according to the selected chip
-if(FPGA_DEVICE MATCHES ".*a10.*")
+if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
     set(NUM_ENGINES 1)
     if(DEFINED LOW_LATENCY)
@@ -45,19 +70,19 @@ if(FPGA_DEVICE MATCHES ".*a10.*")
         set(SEED "-Xsseed=4")
         set(NUM_REORDER "")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*s10.*")
+elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
-        set(SEED "-Xsseed=16")
+        set(SEED "-Xsseed=2")
         set(NUM_REORDER "")
     else()
-        set(SEED "-Xsseed=4")
+        set(SEED "-Xsseed=10")
         # For the High Bandwidth variant, specify 6 reordering units to improve global memory read bandwidth across 4 channels of DDR.
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+elseif(DEVICE_FLAG MATCHES "Agilex")
     # Agilex™
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
@@ -79,11 +104,10 @@ if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-
 # Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
 # looking at the name of the BSP, or manually by the user when running CMake.
 # E.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1
-if(LOW_LATENCY AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+if((IS_BSP STREQUAL "1") AND LOW_LATENCY AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
     # Low latency design requires USM, so error out
     message(FATAL_ERROR "Error: The Low Latency variant of the design requires USM host allocations")
 endif()
@@ -100,11 +124,11 @@ message(STATUS "NUM_REORDER=${NUM_REORDER}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -Xssimulation -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_SIMULATOR")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
