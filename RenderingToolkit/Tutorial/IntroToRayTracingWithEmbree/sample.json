@@ -67,7 +67,7 @@
 			"cd cpu",
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_BUILD_TYPE=Release ..",
+                    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/rkcommon/latest/lib/cmake/rkcommon ..",
                     "cmake --build .",
 		    "cmake --install .",
 		    "cd ../bin",
