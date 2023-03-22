@@ -7,7 +7,7 @@ on:
   push:
     branches: 
     - app/dev
-  
+
   # pull_request:
   #   types:
   #     - opened
@@ -15,7 +15,7 @@ on:
   #   branches:
   #     - master
   #   paths:
-      # TRIGGER only on pull request that changes these file-paths... 
+  # TRIGGER only on pull request that changes these file-paths... 
   # 
   #     - "src/db.py
   #     - "src/requirements.txt"
