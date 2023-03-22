@@ -1,0 +1,176 @@
+:root {
+    --bs-black: #000000;
+    --bs-white: #ffffff;
+    --bs-classic-blue: #0068b5;
+    --bs-classic-blue-tint2: #76ceff;
+    --bs-classic-blue-tint1: #00a3f6;
+    --bs-classic-blue-shade1: rgb(0, 74, 134);
+    --bs-classic-blue-shade2: #00285a;
+    --bs-energy-blue: #00c7fd;
+    --bs-energy-blue-tint2: #b4f0ff;
+    --bs-energy-blue-tint1: #7bdeff;
+    --bs-energy-blue-shade1: #0095ca;
+    --bs-energy-blue-shade2: #005b85;
+    --bs-carbon: #808080;
+    --bs-carbon-tint2: #e9e9e9;
+    --bs-carbon-tint1: rgb(174, 174, 174);
+    --bs-carbon-shade1: #525252;
+    --bs-carbon-shade2: #262626;
+    --bs-blue-steel: #548fad;
+    --bs-blue-steel-tint2: #b9d6e5;
+    --bs-blue-steel-tint1: #86b3ca;
+    --bs-blue-steel-shade1: #41728a;
+    --bs-blue-steel-shade2: #183544;
+    --bs-geode: #8f5da2;
+    --bs-geode-tint2: #eec3f7;
+    --bs-geode-tint1: #cc94da;
+    --bs-geode-shade1: #653171;
+    --bs-rust: #e96115;
+    --bs-rust-tint2: #ffc599;
+    --bs-rust-tint1: #ff8f51;
+    --bs-rust-shade1: #b24501;
+    --bs-moss: #8bae46;
+    --bs-moss-tint2: #d7f3a2;
+    --bs-moss-tint1: #b1d272;
+    --bs-moss-shade1: #708541;
+    --bs-moss-shade2: #515a3d;
+    --bs-cobalt: #1e2eb8;
+    --bs-cobalt-tint2: #98a1ff;
+    --bs-cobalt-tint1: #5b69ff;
+    --bs-cobalt-shade1: #000f8a;
+    --bs-cobalt-shade2: #000864;
+    --bs-coral: #ff5662;
+    --bs-coral-tint2: #ffb6b9;
+    --bs-coral-tint1: #ff848a;
+    --bs-coral-shade1: #c81326;
+    --bs-daisy: #fec91b;
+    --bs-daisy-tint1: #ffe17a;
+    --bs-daisy-shade1: #edb200;
+    --bs-daisy-shade2: #c98f00;
+    --bs-status-error: #ce0000;
+    --bs-status-success: #008a00;
+    --bs-status-warning: #ffd100;
+    --bs-primary: #0068b5;
+    --bs-secondary: #ffffff;
+    --bs-success: #008a00;
+    --bs-info: #00c7fd;
+    --bs-warning: #ffd100;
+    --bs-danger: #ce0000;
+    --bs-light: #e9e9e9;
+    --bs-dark: #262626;
+    --bs-body-font-family: IntelOneText, system-ui, Segoe UI, Helvetica, sans-serif;
+    --bs-body-font-size: 1rem;
+    --bs-body-font-weight: 400;
+    --bs-font-weight-bold: 600;
+    --bs-body-line-height: 1.5;
+    --bs-font-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+      'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --bs-header-font-family: 'IntelOneDisplay';
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+  }
+  
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--bs-body-font-family);
+  }
+  
+  div,
+  p {
+    font-family: var(--bs-body-font-family);
+  }
+  
+  main {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5em;
+    margin-top: 2em;
+  }
+  
+  header,
+  footer {
+    padding: 10px 10px;
+  }
+  
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bs-carbon-tint2);
+  }
+  
+  nav {
+    margin-left: 3em;
+    margin-top: 7px;
+  }
+  nav ul {
+    display: flex;
+    gap: 15px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  footer a,
+  nav ul li a,
+  td a {
+    text-decoration: none;
+    color: var(--bs-classic-blue);
+  }
+  
+  nav ul li a:hover {
+    color: var(--bs-energy-blue);
+  }
+  
+  li {
+    /* margin-bottom: 10px; override bc <li> used for all*/
+    line-height: 1.5;
+  }
+  
+  h1 {
+    font-family: var(--bs-header-font-family);
+    font-size: 46px;
+    font-weight: 300;
+  }
+  
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--bs-header-font-family);
+  }
+  
+  pre {
+    border: 2px var(--bs-carbon-shade1) solid;
+    padding: 15px 15px;
+    border-radius: 10px;
+    font-size: 85%;
+    background-color: rgba(174, 174, 174, 0.2);
+  }
+  
+  pre code {
+    font-family: var(--bs-font-monospace);
+    white-space: pre-wrap;
+    tab-size: 4;
+    background-color: none;
+  }
