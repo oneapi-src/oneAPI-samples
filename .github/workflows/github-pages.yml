@@ -43,8 +43,8 @@ jobs:
       with:
         python-version: "3.8"
 
+    - uses: actions/checkout@v3
     - name: Build JSON DB
-      uses: actions/checkout@v3
       run: |
         python3 -m pip install -r requirements.txt   
         python3 db.py
