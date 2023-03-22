@@ -35,7 +35,7 @@ defaults:
 jobs:
   pages:
     name: Build GitHub Pages
-    runs-on: ubtuntu-latest 
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Set up Python
