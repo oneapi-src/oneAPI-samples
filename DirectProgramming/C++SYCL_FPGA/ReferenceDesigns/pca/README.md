@@ -28,10 +28,25 @@ Real world samples often comes of multiple features/dimensions. Not all the feat
 ## Algorithm
 This FPGA reference design demonstrates Principal Component Analysis(PCA) of input samples with certain number of features, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into Pricipal Components in decending order and also output the variance accounted by each components.
 
-This design is based on following algorithm to compute principal components, here input matrix is two dimesional array with following size A\[\#Samples\]\[\#Features\] 
-* Computing mean feature of the samples <br />  $F_{\mu}\[i\] = mean(A\[\]\[i\]) $
-* Adjusitng the sample mean to zero $A_{mean}\[i\]\[\] = A\[i\]\[\] -  F_{mu}\[\] $
-* Standerdize data such that variance of sample will be one <br /> $A_{std} = A - h F_{mu}^T $
+This design is based on following algorithm to compute principal components, here input matrix is two dimesional array with following size A\[N\]\[P\], here $N$ is number of samples and $p$ is number of features
+<!-- <br />  -->
+1. Computing mean feature of the samples $$F_{\mu}\[i\] = \frac{1}{N} \sum_{j = 0}^{N} A\[j\]\[i\]$$
+2. Adjusitng the sample mean to zero  $$A_{\mu}\[i\]\[j\] = A\[i\]\[j\] -  F_{\mu}\[j\] $$
+3. Standardize data such that variance of sample will be one $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N} {(A_{\mu}\[j\]\[i\])}^2$$ $$A_{std}\[i\]\[j\] = \frac{A_{\mu}\[i\]\[j\]}{\sqrt{F_{var}\[i\]}}$$
+4. Computing the Covariance Matrix of size $p \times p$,  $$A_{cov}\[i\]\[j\] = \sum_{k = 0}^{N}{A_{std}\[i\]\[k\] \times A_{std}\[j\]\[k\] }$$
+5. Computing the Eigen values and corresponding eigen vectors of the covariance matrix, $A_{cov}$ and sorting eigen vectors such that corresponding eigen values are in decending order. Eigen vectors will be the principal components and correspoding eigan values will give the variance contributed by that component.  
+
+## Reference Design 
+This design executes the PCA analysis through two kernels 
+* First kernel does the preprocessing steps, essentially steps 1 to 4
+* Second kernel impements the step 5 
+
+## Pre-Processing kenrel design 
+Executing the steps 1-4, one after another is not efficent as it is impossible to store the whole input samples in onchip memory if sample size is huge. 
+steps 1-4 are modified and reordered such that covariance matrix in the step 4 can be computed for inputs given through the stream.  
+
+* Step 4 can be re-written as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} \sum_{k = 0}^{N}{(A\[k\]\[i\] - F_{\mu}\[i\]) \times (A\[k\]\[j\] - F_{\mu}\[j\]) }$$
+* It can be expanded as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N}{A\[k\]\[i\] \times A\[k\]\[j\]  - F_{\mu}\[i\] \sum_{k = 0}^{N} A\[k\]\[j\] - F_{\mu}\[j\] \sum_{k = 0}^{N} A\[k\]\[i\]  + N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
