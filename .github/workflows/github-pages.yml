@@ -56,7 +56,7 @@ jobs:
     - name: Build Sphinx
       run: |
         python3 -m pip install -r requirements.txt        
-        python3 -m sphinx -W -b html . docs/_build/
+        python3 -m sphinx -W -b html docs/ docs/_build/
         echo ${{ github.ref }}
 
     - name: Push docs
