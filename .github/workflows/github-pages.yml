@@ -60,7 +60,7 @@ jobs:
         echo ${{ github.ref }}
 
     - name: Push docs
-      if: ${{ github.ref == 'refs/heads/master' }}
+      if: ${{ github.ref == 'refs/heads/app/dev' }}
       env:
         GITHUB_USER: ${{ github.actor }}
         GITHUB_TOKEN: ${{ github.token }}
