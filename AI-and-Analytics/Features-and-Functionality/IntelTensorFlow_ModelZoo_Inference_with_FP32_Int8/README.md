@@ -34,7 +34,7 @@ You will need to download and install the following toolkits, tools, and compone
 
   You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
 
-  TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit (AI Kit).
+  TensorFlow* or Pytorch* are ready for use once you finish installing and configuring the Intel® AI Analytics Toolkit (AI Kit).
 
 ### For Intel® DevCloud
 
