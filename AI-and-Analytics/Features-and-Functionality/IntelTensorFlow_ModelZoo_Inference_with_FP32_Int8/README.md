@@ -87,7 +87,7 @@ Navigate to the Model Zoo for Intel® Architecture source directory. By default,
    ls /opt/intel/oneapi/modelzoo
    2.11.0  latest
    ```
-2. Navigate to the [Model Zoo Scripts](https://github.com/IntelAI/models/tree/master/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
+2. Navigate to the [Model Zoo Scripts](https://github.com/IntelAI/models/tree/v2.11.0/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
    ```
    cd /opt/intel/oneapi/modelzoo/latest
    ```
