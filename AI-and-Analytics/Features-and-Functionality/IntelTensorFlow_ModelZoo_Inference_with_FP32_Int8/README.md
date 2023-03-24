@@ -12,7 +12,7 @@ The `Intel® TensorFlow* Model Zoo Inference With FP32 Int8` sample demonstrates
 
 The sample intends to help you understand some key concepts:
 
-  - Providing a demonstration of the AI workloads and deep learning models Intel has optimized and validated to run on Intel hardware.
+  - What AI workloads and deep learning models Intel has optimized and validated to run on Intel hardware.
   - Show how to execute, train, and deploy Intel-optimized models.
   - Allow you to start running Intel-optimized models on Intel hardware in the cloud or on bare metal.
 
