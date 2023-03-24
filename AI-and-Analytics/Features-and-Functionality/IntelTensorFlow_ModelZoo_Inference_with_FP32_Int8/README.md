@@ -10,7 +10,7 @@ The `Intel® TensorFlow* Model Zoo Inference With FP32 Int8` sample demonstrates
 
 ## Purpose
 
-The sample intends to help you understand some key concepts.
+The sample intends to help you understand some key concepts:
 
   - Providing a demonstration of the AI workloads and deep learning models Intel has optimized and validated to run on Intel hardware.
   - Show how to execute, train, and deploy Intel-optimized models.
