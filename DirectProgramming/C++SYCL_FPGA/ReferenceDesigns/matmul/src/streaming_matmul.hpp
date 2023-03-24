@@ -5,8 +5,6 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
-#include "matmul_common.hpp"
-
 namespace fpga_linalg {
 
 /**
@@ -22,7 +20,8 @@ template <typename TT,     // Datatype of the elements of the matrix
           int k_tile_b,    // Tile size for matrix B
           typename PipeA,  // Input pipe for matrix A
           typename PipeB,  // Input pipe for matrix B
-          typename PipeC>  // Output pipe for matrix C
+          typename PipeC,  // Output pipe for matrix C
+          typename PipeD>
 class StreamingMatmul {
 public:
   void operator()() const {
@@ -63,10 +62,10 @@ public:
       // Read matrices A and B from the two input pipes; feeder A will send a
       // signal when there are no more matrices to compute, at which point we
       // should stop reading inputs
-      FeederAData<fpga_tools::NTuple<TT, k_tile_a>> pipe_read_a;
+      fpga_tools::NTuple<TT, k_tile_a> pipe_read_a;
       fpga_tools::NTuple<TT, k_tile_b> pipe_read_b;
       fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
-        pipe_read_a.data.template get<row>() = 0;
+        pipe_read_a.template get<row>() = 0;
       });
       fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
         pipe_read_b.template get<col>() = 0;
@@ -74,18 +73,19 @@ public:
       if (read_flag) {
         pipe_read_a = PipeA::read();
         pipe_read_b = PipeB::read();
-        read_flag = read_flag & !pipe_read_a.flush;
+        bool last_pipe_read = PipeD::read();
+        read_flag = read_flag & !last_pipe_read;
       }
 
       // Compute the matrix product; fully unrolled loop to describe an array of
       // processing elements
       fpga_tools::UnrolledLoop<k_tile_a>([&](auto row) {
         fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
-          pipe_read_a.data.template get<row>() =
-              sycl::ext::intel::fpga_reg(pipe_read_a.data.template get<row>());
+          pipe_read_a.template get<row>() =
+              sycl::ext::intel::fpga_reg(pipe_read_a.template get<row>());
           pipe_read_b.template get<col>() =
               sycl::ext::intel::fpga_reg(pipe_read_b.template get<col>());
-          TT result = pipe_read_a.data.template get<row>() *
+          TT result = pipe_read_a.template get<row>() *
                       pipe_read_b.template get<col>() + accum[row][col];
           accum[row][col] = result;
           // Flush matrix to results array if finished computing
