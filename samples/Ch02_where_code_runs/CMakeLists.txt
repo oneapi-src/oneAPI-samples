@@ -48,3 +48,8 @@ add_book_sample(
     TEST
     TARGET fig_2_22_simple_device_code_2
     SOURCES fig_2_22_simple_device_code_2.cpp)
+
+add_book_sample(
+    TEST
+    TARGET fig_2_23_host_task
+    SOURCES fig_2_23_host_task.cpp)
