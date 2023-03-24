@@ -14,7 +14,7 @@ The sample intends to help you understand some key concepts:
 
   - What AI workloads and deep learning models Intel has optimized and validated to run on Intel hardware.
   - How to train and deploy Intel-optimized models.
-  - Allow you to start running Intel-optimized models on Intel hardware in the cloud or on bare metal.
+  - How to start running Intel-optimized models on Intel hardware in the cloud or on bare metal.
 
 > **Disclaimer**: The sample and supplied scripts are not intended for benchmarking Intel platforms. For any performance and/or benchmarking information on specific Intel platforms, visit [https://www.intel.ai/blog](https://www.intel.ai/blog).
 
