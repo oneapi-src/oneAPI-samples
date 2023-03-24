@@ -46,9 +46,9 @@
         "id": "fpga_emu",
         "steps": [
           "icx-cl --version",
-          "cd ../../..",
-          "mkdir add-oneapi/build",
-          "cd add-oneapi/build",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
           "nmake fpga_emu",
           "add.fpga_emu.exe"
@@ -58,9 +58,9 @@
         "id": "report",
         "steps": [
           "icx-cl --version",
-          "cd ../../..",
-          "mkdir add-oneapi/build",
-          "cd add-oneapi/build",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
           "nmake report"
         ]
