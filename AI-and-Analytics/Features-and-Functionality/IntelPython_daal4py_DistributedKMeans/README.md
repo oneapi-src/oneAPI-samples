@@ -1,143 +1,154 @@
-# `Intel Python daal4py Distributed K-Means` Sample
-This sample code shows how to train and predict with a distributed k-means model using the python API package daal4py powered by the oneAPI Data Analytics Library. It assumes you have a working version of the Intel MPI library installed, and it demonstrates how to use software products that are powered by [oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and found in [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+# `Intel® Python Daal4py Distributed K-Means` Sample
 
-| Optimized for                     | Description
-| :---                              | :---
-| OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable  processor family
-| Software                          | Intel® AI Analytics Toolkit
-| What you will learn               | distributed K-Means daal4py programming model for Intel CPU
-| Time to complete                  | 5 minutes
+This sample code shows how to train and predict with a distributed k-means model using the Python API package Daal4py powered by the Intel® oneAPI Data Analytics Library (oneDAL).
+
+| Area                  | Description
+|:---                   |:---
+| What you will learn   | How to use distributed K-Means Daal4py programming model for CPUs
+| Time to complete      | 5 minutes
+| Category              | Code Optimization
 
 ## Purpose
 
-daal4py is a simplified API to Intel® oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to Intel® oneDAL for direct usage or integration into one's own framework.
+Daal4py is a simplified API to oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning developers. The sample is intended to provide an abstraction to oneDAL for direct usage or integration into your development framework.
 
-In this sample, you will run a distributed K-Means model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
+In this sample, you will run a distributed K-Means model with oneDAL Daal4py library memory objects. You will also learn how to train a model and save the information to a file.
+
+## Prerequisites
+
+| Optimized for   | Description
+|:---             |:---
+| OS              | Ubuntu* 18.04 or higher
+| Hardware        | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
+| Software        | Intel® AI Analytics Toolkit (AI Kit)
+
+The sample assumes you have a working version of the Intel® MPI Library, Daal4py, and scikit-learn installed inside a conda environment (similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the AI Kit.)
 
 ## Key Implementation Details
-This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+This distributed K-means sample code is designed to run on **CPUs**, and is written in Python.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+The sample demonstrates how to use software products that are powered by [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/en-us/oneapi/ai-kit).
 
-## Running Samples on the Intel&reg; DevCloud
-If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
+## Set Environment Variables
 
-## Building daal4py for CPU
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-The Intel(R) oneAPI Data Analytics Library is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+## Build the `Intel® Python Daal4py Distributed K-Means` Sample
+
+The Intel® oneAPI Data Analytics Library is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html) for post-installation steps and scripts.
 
+### On Linux*
+
 > **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-### Activate conda environment With Root Access
+#### Activate Conda with Root Access
 
-Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command:
+By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
 
-#### On a Linux* System
-```
-source activate base
-```
+   ```
+   source activate base
+   ```
 
-### Activate conda environment Without Root Access (Optional)
+#### Activate Conda without Root Access (Optional)
 
-By default, the Intel® AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
 
-#### On a Linux* System
 ```
 conda create --name usr_intelpython --clone base
-```
-
-Then activate your conda environment with the following command:
-
-```
 source activate usr_intelpython
 ```
 
-### Install Jupyter Notebook
+#### Run the Python Script
+
+When using Daal4py for distributed memory systems, you must execute the program in a bash shell.
+
+1. Run the script with a command similar to the following command. (The number **4** is an example and indicates that the script will run on **4 processes**.)
+   ```
+   mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py
+   ```
+   >**Note**: This code sample uses Daal4py to perform distributed ML computations on chunks of data. The `mpirun` command above will only run on a single local node. To launch on a cluster, you will need to create a host file on the primary node, among other steps. The **TensorFlow_Multinode_Training_with_Horovod** code sample explains this process well.
+
+   When it completes, the script output will be in the included **/models** and **/results** directories.
+
+#### Jupyter Notebook (Optional)
+
+>**Note**: This sample cannot be launched from the Jupyter Notebook version; however, you can still view inside the notebook to follow the included write-up and description.
+
+1. If you have not already done so, install Jupyter Notebook.
+   ```
+   conda install jupyter nb_conda_kernels
+   ```
+
+2. Launch Jupyter Notebook.
+   ```
+   jupyter notebook
+   ```
+
+3. Locate and select the Notebook.
+   ```
+   IntelPython_daal4py_Distributed_Kmeans.ipynb
+   ```
+
+#### Troubleshooting
+
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
+
+### Build and Run the Sample on Intel® DevCloud (Optional)
+
+>**Note**: For more information on using Intel® DevCloud, see the Intel® oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started/) page.
+
+1. Open a terminal on a Linux* system.
+2. Log in to the Intel® DevCloud.
+   ```
+   ssh devcloud
+   ```
+3. If the sample is not already available, download the samples from GitHub.
+   ```
+   git clone https://github.com/oneapi-src/oneAPI-samples.git
+   ```
+4. Change to the sample directory.
+5. Configure the sample for the appropriate node.
+
+   The following example is for a CPU node. (This is a single line script.)
+	```
+	qsub  -I  -l nodes=1:cpu:ppn=2 -d .
+	```
+   - `-I` (upper case I) requests an interactive session.
+   - `-l nodes=1:cpu:ppn=2` (lower case L) assigns one full GPU node.
+   - `-d .` makes the current folder as the working directory for the task.
+
+     >**Note**: For more information about the node properties, execute the `pbsnodes` command.
+
+6. Perform build steps you would on Linux.
+7. Run the sample.
+
+> **Note**: To inspect job progress if you are using a script, use the qstat utility.
+>   ```
+>   watch -n 1 qstat -n -1
+>   ```
+>  The command displays the results every second. The job is complete when no new results display.
+
+8. Review the output.
+9. Disconnect from Intel® DevCloud.
+	```
+	exit
+	```
+
+## Example Output
+
 ```
-conda install jupyter nb_conda_kernels
-```
-
-
-#### View in Jupyter Notebook
-
-_Note: This distributed execution cannot be launched from the jupyter notebook version, but you can still view inside the notebook to follow the included write-up and description._
-
-Launch Jupyter Notebook in the directory housing the code example
-
-```
-jupyter notebook
-```
-
-### Running the Sample as a Python File<a name="running-the-sample"></a>
-
-When using daal4py for distributed memory systems, the command needed to execute the program should be executed in a bash shell. To execute this example, run the following command, where the number **4** is chosen as an example and means that it will run on **4 processes**:
-
-Run the Program
-
-`mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py`
-
-The output of the script will be saved in the included models and result directories.
-
-_Note: This code samples focus on using daal4py to do distributed ML computations on chunks of data. The `mpirun` command above will only run on a single local node. To launch on a cluster, you will need to create a host file on the master node, among other steps. The **TensorFlow_Multinode_Training_with_Horovod** code sample explains this process well._
-
-### Using Visual Studio Code* (VS Code)
-
-You can use VS Code extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
-
-## Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
-
-<!---Include the next paragraph ONLY if the sample runs in batch mode-->
-### Run in Batch Mode
-This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
-
-### Request a Compute Node
-In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
- This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
-
-<!---Mark each compatible Node in BOLD-->
-| Node              | Command                                                 |
-| ----------------- | ------------------------------------------------------- |
-| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| __CPU__           | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__      |
-| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
-| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
-
-
-##### Expected Printed Output (with similar numbers, printed 4 times):
-```
-
-
 Here our centroids:
-
 
  [[ 5.46000000e+02 -3.26170648e+00 -6.15922494e+00]
  [ 1.80000000e+01 -1.00432059e+01 -8.38198798e+00]
@@ -148,6 +159,7 @@ Here is our centroids loaded from file:
  [[ 5.46000000e+02 -3.26170648e+00 -6.15922494e+00]
  [ 1.80000000e+01 -1.00432059e+01 -8.38198798e+00]
  [ 4.10000000e+02  3.78330964e-01  8.29073839e+00]]
+
 Here is our cluster assignments for first 5 datapoints:
 
  [[1]
@@ -156,7 +168,11 @@ Here is our cluster assignments for first 5 datapoints:
  [1]
  [1]]
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
-
 ```
 
+## License
 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
