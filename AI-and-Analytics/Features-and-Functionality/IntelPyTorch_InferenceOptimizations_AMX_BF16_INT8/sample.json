@@ -11,15 +11,16 @@
   "targetDevice": ["CPU"],
   "cpuInstructionSets": ["AVX512", "AMX"],
   "ciTests": {
-	  "linux": [{
-		  "id": "intel amx bf16 int8 inference",
-      "steps": [
-			  "source activate pytorch",
-			  "python IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.py",
-			  "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
-			  "python ci_test.py"
-      ]
+    "linux": [{
+    "id": "intel amx bf16 int8 inference",
+    "steps": [
+      "source activate pytorch",
+      "python IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.py",
+      "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
+      "python ci_test.py"
+    ]
     }]
   },
   "expertise": "Code Optimization"
 }
+
