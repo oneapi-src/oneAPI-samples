@@ -22,7 +22,7 @@ The sample intends to help you understand some key concepts:
 
 | Optimized for   | Description
 |:---             |:---
-| OS              | Ubuntu* 18.04 or higher
+| OS              | Ubuntu* 20.04 or higher
 | Hardware        | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
 | Software        | Intel® AI Analytics Toolkit (AI Kit)
 
