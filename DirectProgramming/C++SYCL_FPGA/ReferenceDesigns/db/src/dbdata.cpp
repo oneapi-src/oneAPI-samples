@@ -820,8 +820,14 @@ void Database::PrintQ1(std::array<DBDecimal, 3 * 2>& sum_qty,
   std::cout << "l|l|sum_qty|sum_base_price|sum_disc_price|"
                "sum_charge|avg_qty|avg_price|avg_disc|count_order\n";
 
-  // print the results
+  // Copy old state of cout
+  std::ios oldState(nullptr);
+  oldState.copyfmt(std::cout);
+
+  // Edit the output format of cout
   std::cout << std::fixed << std::setprecision(2);
+
+  // print the results
   for (int ls_idx = 0; ls_idx < 2; ls_idx++) {
     for (int rf_idx = 0; rf_idx < 3; rf_idx++) {
       int i = ls_idx * 3 + rf_idx;
@@ -833,6 +839,9 @@ void Database::PrintQ1(std::array<DBDecimal, 3 * 2>& sum_qty,
                 << (double)(avg_discount[i]) / 100.0 << "|" << count[i] << "\n";
     }
   }
+
+  // Restore the output format of cout
+  std::cout.copyfmt(oldState);
 }
 
 //
@@ -878,11 +887,21 @@ void Database::PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit) {
   // print the header
   std::cout << "nation|o_year|sum_profit\n";
 
-  // print the results
+  // Copy old state of cout
+  std::ios oldState(nullptr);
+  oldState.copyfmt(std::cout);
+
+  // Edit the output format of cout
   std::cout << std::fixed << std::setprecision(2);
+
+  // print the results
   for (int i = 0; i < outrows.size(); i++) {
     outrows[i].print();
   }
+
+  // Restore the output format of cout
+  std::cout.copyfmt(oldState);
+
 }
 
 //
@@ -893,12 +912,22 @@ void Database::PrintQ11(std::vector<DBIdentifier>& partkeys,
   // print the header
   std::cout << "ps_partkey|value\n";
 
-  // print the results
+  // Copy old state of cout
+  std::ios oldState(nullptr);
+  oldState.copyfmt(std::cout);
+
+  // Edit the output format of cout
   std::cout << std::fixed << std::setprecision(2);
+
+  // print the results
   for (int i = 0; i < partkeys.size(); i++) {
     std::cout << partkeys[i] << "|" << (double)(partkey_values[i]) / (100.00)
               << "\n";
   }
+
+  // Restore the output format of cout
+  std::cout.copyfmt(oldState);
+
 }
 
 //
@@ -910,10 +939,20 @@ void Database::PrintQ12(std::string& SM1, std::string& SM2,
   // print the header
   std::cout << "l_shipmode|high_line_count|low_line_count\n";
 
-  // print the results
+  // Copy old state of cout
+  std::ios oldState(nullptr);
+  oldState.copyfmt(std::cout);
+
+  // Edit the output format of cout
   std::cout << std::fixed;
+
+  // print the results
   std::cout << SM1 << "|" << high_line_count[0] << "|" << low_line_count[0]
             << "\n";
   std::cout << SM2 << "|" << high_line_count[1] << "|" << low_line_count[1]
             << "\n";
+
+  // Restore the output format of cout
+  std::cout.copyfmt(oldState);
+
 }
