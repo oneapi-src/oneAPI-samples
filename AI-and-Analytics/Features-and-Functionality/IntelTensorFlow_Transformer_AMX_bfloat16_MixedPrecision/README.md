@@ -1,14 +1,14 @@
-# `TensorFlow (TF) Transformer with Intel® Advanced Matrix Extensions (Intel® AMX) bfloat16 Mixed Precision Learning` 
+# `TensorFlow* Transformer with Advanced Matrix Extensions bfloat16 Mixed Precision Learning` Sample 
 
-This sample code demonstrates optimizing a TensorFlow model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on  4th Gen Intel® Xeon® Scalable Processors (Sapphire Rapids).
+The `TensorFlow* Transformer with Advanced Matrix Extensions bfloat16 Mixed Precision Learning` sample code demonstrates optimizing a TensorFlow* model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on 4th Gen Intel® Xeon® processors (formerly Sapphire Rapids).
 
 | Area                  | Description
 |:---                   |:--
- What you will learn    | How to use AMX bfloat16 mixed precision learning on a TensorFlow model
+ What you will learn    | How to use Intel® AMX bfloat16 mixed precision learning on a TensorFlow* model
 | Time to complete      | 15 minutes
+| Category              | Getting Started
 
 > **Note**: The sample is based on the [*Text classification with Transformer*](https://keras.io/examples/nlp/text_classification_with_transformer/) Keras sample.
-
 
 ## Purpose
 
@@ -16,15 +16,15 @@ In this sample, you will run a transformer classification model with bfloat16 mi
 
 ## Prerequisites
 
-This sample code work on **Sapphire Rapids** only.
+>**Note**: The code in the sample works on 4th Gen Intel® Xeon® processors (formerly Sapphire Rapids) only.
 
 | Optimized for             | Description
 |:---                       |:---
 | OS                        | Ubuntu* 20.04
-| Hardware                  | Sapphire Rapids
+| Hardware                  | 4th Gen Intel® Xeon® processors
 | Software                  | Intel® AI Analytics Toolkit (AI Kit)
 
-The sample assumes Intel® Optimization for TensorFlow is installed. (See the [Intel® Optimization for TensorFlow* Installation Guide](https://www.intel.com/content/www/us/en/developer/articles/guide/optimization-for-TensorFlow-installation-guide.html) for more information.)
+The sample assumes Intel® Optimization for TensorFlow* is installed. (See the [Intel® Optimization for TensorFlow* Installation Guide](https://www.intel.com/content/www/us/en/developer/articles/guide/optimization-for-TensorFlow-installation-guide.html) for more information.)
 
 ### For Local Development Environments
 
@@ -39,7 +39,7 @@ You will need to download and install the following toolkits, tools, and compone
   Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
 
 
-- **Intel® oneAPI Data Analytics Library**
+- **Intel® oneAPI Data Analytics Library (oneDAL)**
 
   You might need some parts of the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html).
 
@@ -51,8 +51,11 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-The sample code is written in Python and targets Sapphire Rapids only.
+The sample code is written in Python and targets 4th Gen Intel® Xeon® processors (formerly Sapphire Rapids) only.
 
+## Set Environment Variables
+
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 ## Run the Sample
 
@@ -71,11 +74,9 @@ The sample code is written in Python and targets Sapphire Rapids only.
 #### Activate Conda
 
 1. Activate the Conda environment.
-
     ```
     conda activate tensorflow
     ```
-
    By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
@@ -85,7 +86,7 @@ The sample code is written in Python and targets Sapphire Rapids only.
    conda activate usr_tensorflow
    ```
 
-#### Run the NoteBook
+#### Run Jupyter NoteBook
 
 1. Launch Jupyter Notebook.
    ```
@@ -98,11 +99,9 @@ The sample code is written in Python and targets Sapphire Rapids only.
    ```
 4. Run every cell in the Notebook in sequence.
 
-
 #### Troubleshooting
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
 ### Run the Sample on Intel® DevCloud
 
@@ -112,7 +111,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    ssh DevCloud
    ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
+   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI *[Get Started](https://devcloud.intel.com/oneapi/get_started)*.
 
 4. Locate and select the Notebook.
    ```
@@ -131,7 +130,7 @@ The following image shows a typical example of JIT Kernel Time breakdown file an
 
 ## Further Reading
 
-Explore [Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html) to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
+Explore *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
 
 ## License
 
