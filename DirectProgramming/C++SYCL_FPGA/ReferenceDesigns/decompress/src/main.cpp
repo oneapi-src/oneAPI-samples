@@ -240,6 +240,24 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
 bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
                    const std::string test_dir) {
 
+
+#ifdef FPGA_SIMULATOR
+  std::cout << ">>>>> Alice In Wonderland Test <<<<<" << std::endl;
+  std::string alice_in_file = test_dir + "/alice29_small.txt.sz";
+  auto in_bytes = ReadInputFile(alice_in_file);
+  auto result = decompressor.DecompressBytes(q, in_bytes, 1, false);
+
+  std::string alice_ref_file = test_dir + "/alice29_small_ref.txt";
+  auto ref_bytes = ReadInputFile(alice_ref_file);
+  bool alice_test_pass =
+      (result != std::nullopt) && (result.value() == ref_bytes);
+
+  PrintTestResults("Alice In Wonderland Test", alice_test_pass);
+  std::cout << std::endl;
+
+  return alice_test_pass;
+#else
+
   std::cout << ">>>>> Alice In Wonderland Test <<<<<" << std::endl;
   std::string alice_in_file = test_dir + "/alice29.txt.sz";
   auto in_bytes = ReadInputFile(alice_in_file);
@@ -252,10 +270,6 @@ bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
 
   PrintTestResults("Alice In Wonderland Test", alice_test_pass);
   std::cout << std::endl;
-
-#ifdef FPGA_SIMULATOR
-  return alice_test_pass;
-#else
 
   std::cout << ">>>>> Only Literal Strings Test <<<<<" << std::endl;
   auto test1_bytes = GenerateSnappyCompressedData(333, 3, 0, 0, 3);
