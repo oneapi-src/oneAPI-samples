@@ -4,7 +4,7 @@ The `Intel® TensorFlow* Model Zoo Inference With FP32 Int8` sample demonstrates
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to perform TensorFlow* ResNet50 inference on a synthetic data implementing FP32 and Int8 pre-trained model.
+| What you will learn   | How to perform TensorFlow* ResNet50 inference on synthetic data using FP32 and Int8 pre-trained models.
 | Time to complete      | 30 minutes
 | Category              | Code Optimization
 
