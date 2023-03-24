@@ -85,7 +85,7 @@ Navigate to the Model Zoo for Intel® Architecture source directory. By default,
 1. View the available Model Zoo release versions for the AI Kit:
    ```
    ls /opt/intel/oneapi/modelzoo
-   1.8.0  latest
+   2.11.0  latest
    ```
 2. Navigate to the [Model Zoo Scripts](https://github.com/IntelAI/models/tree/master/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
    ```
