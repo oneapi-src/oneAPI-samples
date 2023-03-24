@@ -149,6 +149,7 @@ conda install jupyter nb_conda_kernels
      |CPU	            |`qsub -l nodes=1:xeon:ppn=2 -d .`
 
 5. Activate conda. 
+` $ conda activate`
 6. Follow the instructions to open the URL with the token in your browser.
 7. Locate and select the Notebook.
    ```
