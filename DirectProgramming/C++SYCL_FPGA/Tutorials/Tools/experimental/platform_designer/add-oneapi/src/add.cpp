@@ -40,9 +40,10 @@ int main() {
   bool passed = false;
 
   try {
-// This design is tested with 2023.0, but also accounts for a syntax change in
-// 2023.1
-#if __INTEL_CLANG_COMPILER >= 20230100
+// Use compile-time macros to select either:
+//  - the FPGA emulator device (CPU emulation of the FPGA)
+//  - the FPGA device (a real FPGA)
+//  - the simulator device
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -50,18 +51,8 @@ int main() {
 #else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
-#elif __INTEL_CLANG_COMPILER >= 20230000
-#if FPGA_SIMULATOR
-    auto selector = sycl::ext::intel::fpga_simulator_selector{};
-#elif FPGA_HARDWARE
-    auto selector = sycl::ext::intel::fpga_selector{};
-#else  // #if FPGA_EMULATOR
-    auto selector = sycl::ext::intel::fpga_emulator_selector{};
-#endif
-#else
-    assert(false) && "this design requires oneAPI 2023.0 or 2023.1!"
-#endif
 
+    // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
