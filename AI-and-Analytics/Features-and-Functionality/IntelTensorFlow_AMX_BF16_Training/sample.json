@@ -9,8 +9,7 @@
   "targetDevice": ["CPU"],
   "cpuInstructionSets": ["AVX512", "AMX"],
   "ciTests": {
-    "linux": [
-    {
+    "linux": [{
       "id": "intel amx bf16 training",
       "steps": [
         "source activate tensorflow",
