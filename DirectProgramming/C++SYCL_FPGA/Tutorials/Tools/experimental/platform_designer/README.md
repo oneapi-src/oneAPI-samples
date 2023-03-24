@@ -179,7 +179,8 @@ Follow these steps to compile and test the design:
 
    ```
    > cd .. # navigate to project root if not there already
-   > xcopy add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1 /e /s /i
+   > ROBOCOPY add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1\ /S
+
    ```
 
 4. Create the Platform Designer system.
