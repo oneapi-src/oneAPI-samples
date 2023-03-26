@@ -62,8 +62,23 @@ It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[
 ## Eigen Vector and Eigen Value computation
  As $A_{cov}\[i\]\[j\]=A_{cov}\[j\]\[i\]$, $A_{StdCov}$ is a symmetric matrix. A symmetric matrix will have real eigen values and eigen vectors, those can be calculated using iterative QR decomposition.   
  
-header-includes:
-  - \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+ **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
+ **do** <br /> 
+    &emsp; **Compute** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($A$ converges)
+<br /><br />
+Once $C$ is converged, diagonal values of $C$ will be the eigen values. Drawback of this naive algorithm is it requires huge number of iteration to converge. Convergence is improved through shifts and deflation of matrix as follows  
+
+ **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
+ **do** <br /> 
+   &emsp; **Compute** $\mu$ <br />  
+   &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
+   &emsp;**Compute** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+   &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
+   &emsp;  $k = k+1$ <br /> 
+**while** ($A$ converges)
 
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
