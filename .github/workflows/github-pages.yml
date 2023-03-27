@@ -57,11 +57,13 @@ jobs:
       run: |
         python3 -m pip install -r requirements.txt        
         python3 -m sphinx -W -b html docs/ docs/_build/
-        
+        echo ${{ github.ref }}
+
+    - name: Add GPU-Occupancy-Calculator
+      run: |
         mkdir -p docs/_build/Tools/GPU-Occupancy-Calculator/        
         cd docs/_build/Tools/GPU-Occupancy-Calculator/
         wget https://raw.githubusercontent.com/oneapi-src/oneAPI-samples/master/Tools/GPU-Occupancy-Calculator/index.html
-        echo ${{ github.ref }}
 
     - name: Push docs
       if: ${{ github.ref == 'refs/heads/app/dev' }}
@@ -81,5 +83,3 @@ jobs:
         git commit -sm "$(date)"
         git branch -M gh-pages
         git push -u origin -f gh-pages
-
-#cp Tools/GPU-Occupancy-Calculator/index.html docs/_build/html/Tools/GPU-Occupancy-Calculator/index.html
