@@ -1,6 +1,10 @@
 name: github-pages
 
 on:
+
+  # schedule:
+  #   -cron: 0 7 * * 1-5
+    
 #   schedule:
 #     # https://cron.help/#0/30_*_*_*_*
 #     - cron: '0 6 * * *'
