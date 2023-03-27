@@ -115,9 +115,10 @@ ACC_{3,0} & ACC_{3,1} & ACC_{3,2} & ACC_{3,3}
 * Its designed such that it can process any number of input matrices 
 
 ### Latency Model
-* Number of blocks 
-$$N_{blks} = \lceil{\frac{N}{p}} \rceil$$
-
+* Total Number of blocks in $T$ input matrices 
+$$N_{blks} = \lceil{\frac{N}{p}} \rceil \times T$$
+* Block Matrix multiplier is in the critical path and latency to process all blocks is 
+$$N_{blks} = \lceil{\frac{N}{p}} \rceil \times T$$
 
 ## Eigen Value and Eigen Vector computation
 ### Eigen Value compuation 
