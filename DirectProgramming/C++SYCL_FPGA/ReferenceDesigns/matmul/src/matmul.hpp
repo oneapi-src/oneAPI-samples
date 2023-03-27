@@ -12,7 +12,9 @@
 #include "memory_transfers.hpp"
 #include "streaming_matmul.hpp"
 
+#if not defined(IS_BSP)
 using sycl::ext::intel::experimental::property::usm::buffer_location;
+#endif
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
