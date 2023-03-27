@@ -60,8 +60,8 @@ Performance results are based on testing as of March 6, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an 8 * 8 PE array (64 DSPs)
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an 8 * 8 PE array (64 DSPs)
+| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an array of 8 * 8 PEs (64 DSPs)
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an array of 8 * 8 PEs (64 DSPs)
 
 
 ## Key Implementation Details
