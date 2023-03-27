@@ -118,8 +118,9 @@ In the version that does shift and deflation, $Q$ will be made to $p \times p$ s
 
 
 $$ \begin{bmatrix}
-x_{k} \\
-x'_{k}
+Q_{0,0} & Q_{0,1} & Q_{0,2} \\
+Q_{1,0} & Q_{1,1} & Q_{1,2} \\
+Q_{2,0} & Q_{2,1} & Q_{2,2}
 \end{bmatrix} -> \begin{bmatrix}
 x_{k-1} + x'_{k-1}\Delta t + \frac{x''_{k-1}(\Delta t^2)}{2} \\
 x'_{k-1} + x''_{k-1}t \\
