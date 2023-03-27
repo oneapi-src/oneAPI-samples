@@ -132,6 +132,8 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
      The host program for this tutorial shows the accuracy differences between the result provided by floating point math library and the result provided by the `ac_fixed` math library functions, where the `float` version generates a more accurate result than the smaller-sized `ac_fixed` version.
 
+     Note: the program is compiled with fp-model set to "precise", so the accuracy of the floating-point math functions conform to the IEEE standard.
+
   - Emulation vs FPGA Hardware for fixed point math operations
 
      Due to the differences in the internal math implementations, the results from `ac_fixed` math functions in emulation and FPGA hardware might not always be bit-accurate. This tutorial shows how to build and run the sample for emulation and FPGA hardware so you can observe the difference.
