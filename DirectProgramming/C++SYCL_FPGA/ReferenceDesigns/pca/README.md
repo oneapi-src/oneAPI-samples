@@ -33,10 +33,10 @@ The present FPGA reference design showcases the application of Principal Compone
 The current design utilizes the subsequent algorithm to compute Principal Components. The input matrix comprises a two-dimensional array with the dimensions A\[N\]\[P\] . In this context, $N$ represents the number of samples, and $P$ corresponds to the number of features.
 
 <!-- <br />  -->
-1. Computing mean feature of the samples $$F_{\mu}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} A\[j\]\[i\]$$
-2. Adjusitng the sample mean to zero  $$A_{\mu}\[i\]\[j\] = A\[i\]\[j\] -  F_{\mu}\[j\] $$
-3. Standardize data such that variance of sample will be one $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A_{\mu}\[j\]\[i\])}^2$$ $$A_{std}\[i\]\[j\] = \frac{A_{\mu}\[i\]\[j\]}{\sqrt{F_{var}\[i\]}}$$
-4. Computing the Covariance Matrix of size $p \times p$,  $$A_{StdCov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A_{std}\[i\]\[k\] \times A_{std}\[j\]\[k\] }$$
+1. Computing mean feature of the samples $$F_{\mu}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} A\[j\]\[i\] \tag{1}$$
+2. Adjusitng the sample mean to zero  $$A_{\mu}\[i\]\[j\] = A\[i\]\[j\] -  F_{\mu}\[j\] \tag{2}$$
+3. Standardize data such that variance of sample will be one $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A_{\mu}\[j\]\[i\])}^2 \tag{3}$$ $$A_{std}\[i\]\[j\] = \frac{A_{\mu}\[i\]\[j\]}{\sqrt{F_{var}\[i\]}} \tag{4}$$
+4. Computing the Covariance Matrix of size $p \times p$,  $$A_{StdCov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A_{std}\[i\]\[k\] \times A_{std}\[j\]\[k\] } \tag{5}$$
 5. The next procedure involves computing the Eigenvalues and their corresponding Eigenvectors of the covariance matrix, denoted as $A_{cov}$. The Eigenvectors are then sorted in a descending order based on their corresponding Eigenvalues. The Eigenvectors are identified as Principal Components, whereas the corresponding Eigenvalues reveal the variance attributed to each Principal Component.
 
 ## Reference Design 
@@ -48,17 +48,17 @@ This design executes the PCA analysis through two kernels
 Executing the steps 1-4, one after another is not efficent as it is impossible to store the whole input samples in onchip memory if sample size is huge. 
 steps 1-4 are modified and reordered such that covariance matrix in the step 4 can be computed for inputs given through the stream.  
 ### Modified Variance Computation 
-* Standard way to compute variance  $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A\[j\]\[i\] -  F_{\mu}\[i\])}^2$$
-* Expanding the sum expression $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} - 2 \times F_{\mu}\[i\] \sum_{j = 0}^{N-1} {A\[j\]\[i\]} + N \times F_{\mu}\[i\] \times  F_{\mu}\[i\])$$
-* Reducing it to $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\])$$
+* Standard way to compute variance  $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A\[j\]\[i\] -  F_{\mu}\[i\])}^2 \tag{6}$$
+* Expanding the sum expression $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} - 2 \times F_{\mu}\[i\] \sum_{j = 0}^{N-1} {A\[j\]\[i\]} + N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) \tag{7}$$
+* Reducing it to $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) \tag{8}$$
 
 ### Modified Co-variance Matrix Computation 
-* Step 4 can be re-written as follows $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} \sum_{k = 0}^{N-1}{(A\[k\]\[i\] - F_{\mu}\[i\]) \times (A\[k\]\[j\] - F_{\mu}\[j\]) }$$
-* It can be expanded as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - F_{\mu}\[i\] \sum_{k = 0}^{N-1} A\[k\]\[j\] - F_{\mu}\[j\] \sum_{k = 0}^{N-1} A\[k\]\[i\]  + N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
+* Step 4 can be re-written as follows $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} \sum_{k = 0}^{N-1}{(A\[k\]\[i\] - F_{\mu}\[i\]) \times (A\[k\]\[j\] - F_{\mu}\[j\]) } \tag{9}$$
+* It can be expanded as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - F_{\mu}\[i\] \sum_{k = 0}^{N-1} A\[k\]\[j\] - F_{\mu}\[j\] \sum_{k = 0}^{N-1} A\[k\]\[i\]  + N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) } \tag{10}$$
 * Reduced to $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
-* Lets Assume $$A_{Cov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]}$$
-* Variance can be re-written as $$F_{var}\[i\] = \frac{1}{N} (A_{Cov}\[i\]\[i\] -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) $$
-* Covariance Matrix after standardisation $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (A_{Cov}\[i\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) $$
+* Lets Assume $$A_{Cov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]} \tag{11}$$
+* Variance can be re-written as $$F_{var}\[i\] = \frac{1}{N} (A_{Cov}\[i\]\[i\] -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) \tag{12}$$
+* Covariance Matrix after standardisation $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (A_{Cov}\[i\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) \tag{13}$$
 
 It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[i\]\[j\]$ and $F_{\mu}\[i\]$. This reference design employs blocked covariance matrix computation to support larger sample sizes. 
 
@@ -92,8 +92,10 @@ Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signif
 Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
 
 $$  \begin{bmatrix}
-    a & b \\
-    b & c \\
+x & x & x & x \\
+x & x & x & x \\
+x & x & a & b \\
+x & x & b & c \\
     \end{bmatrix} $$ 
 
 Wilkinson shift is given by following equation 
