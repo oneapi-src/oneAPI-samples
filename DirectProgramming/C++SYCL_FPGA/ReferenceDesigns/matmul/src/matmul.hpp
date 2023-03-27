@@ -1,7 +1,6 @@
 #ifndef __MATMUL_HPP__
 #define __MATMUL_HPP__
 
-#include <chrono>
 #include <iostream>
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>

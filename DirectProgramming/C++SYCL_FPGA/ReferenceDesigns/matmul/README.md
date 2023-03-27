@@ -1,16 +1,16 @@
 # `Matrix Multiply` Sample
 
-This reference design demonstrates high-performance general matrix multiplication on an FPGA.
+This reference design demonstrates a systolic-array-based high-performance general matrix multiplication on an FPGA.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to implement a high performance FPGA version of a general matrix multiplication algorithm.
+| What you will learn   | How to implement a systolic-array-based high-performance FPGA version of a general matrix multiplication algorithm.
 | Time to complete      | 1 hr (not including compile time)
 | Category              | Reference Designs and End to End
 
 ## Purpose
 
-This FPGA reference design demonstrates the multiplication of matrices, a common operation employed in linear algebra. Matrices *A* and *B* (inputs) are multiplied to produce matrix C. The matrix multiplication algorithm is implemented using a systolic array, and has been optimized for performance on FPGAs.
+This FPGA reference design demonstrates the multiplication of matrices, a common operation employed in linear algebra. Matrices *A* and *B* (inputs) are multiplied to produce matrix C. The matrix multiplication algorithm is implemented using a systolic array of Processing Elements (PEs), and has been optimized for performance on FPGAs.
 
 ## Prerequisites
 
@@ -60,13 +60,13 @@ Performance results are based on testing as of March 6, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for matrices of size 64 * 64
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for matrices of size 64 * 64
+| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an 8 * 8 PE array (64 DSPs)
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using an 8 * 8 PE array (64 DSPs)
 
 
 ## Key Implementation Details
 
-The matrix multiplication algorithm multiplies two single-precision floating-point matrices *A* (*m × n*) and *B* (*n × p*) to produce matrix *C* (*m × p*). The algorithm is implemented using a systolic array approach, employing an array of *m<sub>PE</sub> × p<sub>PE</sub>* processing elements (PEs), each of which is responsible for computing a dot product corresponding to an element of the output matrix. As a result, this implementation computes the matrix multiplication in tiles of *m<sub>PE</sub> × p<sub>PE</sub>* at a time.
+The matrix multiplication algorithm multiplies two single-precision floating-point matrices *A* (*m × n*) and *B* (*n × p*) to produce matrix *C* (*m × p*). The algorithm is implemented using a systolic array approach, employing an array of *m<sub>PE</sub> × p<sub>PE</sub>* PEs, each of which is responsible for computing a dot product corresponding to an element of the output matrix. As a result, this implementation computes the matrix multiplication in tiles of *m<sub>PE</sub> × p<sub>PE</sub>* at a time.
 
 <p align="center">
   <img src=assets/overview.png />
@@ -94,22 +94,22 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 
 The key optimization techniques used are as follows:
 
-1. Fully unrolling the loop over the matrix product to instantiate a systolic array of PEs
-2. Using an efficient memory banking scheme to generate high performance hardware.
-3. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design. This allows us to specify registers to pass inputs from one PE to the next. 
+1. Fully unrolling the loop over the matrix product to instantiate an array of individual PEs in hardware.
+2. Using the `fpga_reg` attribute to insert additional pipelining registers, a crucial step in the implementation of the systolic array structure of this design, which allows data to be passed from one PE to the next. The use of these registers both in the systolic array and in various other parts of the design improves the overall achievable frequency.
+3. Using an efficient memory banking scheme to generate high performance hardware.
 
 ### Compiler Flags Used
 
-| Flag                  | Description
-|:---                   |:---
-| `-Xshardware`         | Target FPGA hardware (as opposed to FPGA emulator)
-| `-Xsclock=360MHz`     | The FPGA backend attempts to achieve 360 MHz
-| `-Xsseed`             | Specifies the Intel® Quartus® compile seed, to yield slightly higher fmax
+| Flag              | Description
+|:---               |:---
+| `-Xshardware`     | Target FPGA hardware (as opposed to FPGA emulator)
+| `-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
+| `-Xsseed`         | Specifies the Intel® Quartus® compile seed, to yield slightly higher fmax
 
 Additionaly, the cmake build system can be configured using the following parameters:
 
-| cmake option              | Description
-|:---                       |:---
+| cmake option   | Description
+|:---            |:---
 | `-DSET_ROWS_A` | Specifies *m*, the number of rows of matrix A
 | `-DSET_COMMON` | Specifies *n*, the number of columns of matrix A / rows of matrix B (these values are equal)
 | `-DSET_COLS_B` | Specifies *p*, the number of columns of matrix B
