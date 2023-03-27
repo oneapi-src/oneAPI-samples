@@ -29,7 +29,8 @@ template <typename TT,                // Datatype of the elements of the matrix
           int k_elems_per_ddr_access, // Number of elements per DDR access
           int k_num_matrices,         // Number of pairs of matrices to multiply
           typename PipeA,             // Input pipe for matrix
-          typename PipeD,
+          typename PipeDone, // Pipe to notify compute kernel when to stop
+                             // reading inputs
           int k_dwidth = k_elems_per_ddr_access * sizeof(TT) * 8>
 class MatrixReadFromDDRToPipeA {
 public:
@@ -152,7 +153,7 @@ public:
                                  (mat == k_num_matrices - 1) &
                                  (i == kItersToPipe - 1);
           PipeA::write(pipe_write);
-          PipeD::write(last_pipe_write);
+          PipeDone::write(last_pipe_write);
         } // end of i
       }   // end of mat
     }     // end of rep

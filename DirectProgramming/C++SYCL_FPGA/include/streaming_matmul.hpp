@@ -14,14 +14,14 @@ namespace fpga_linalg {
  * using a systolic array of PEs. Writes result matrix tile of C to output pipe.
  *
  */
-template <typename TT,     // Datatype of the elements of the matrix
-          int k_common,    // Columns of matrix A / rows of matrix B
-          int k_tile_a,    // Tile size for matrix A
-          int k_tile_b,    // Tile size for matrix B
-          typename PipeA,  // Input pipe for matrix A
-          typename PipeB,  // Input pipe for matrix B
-          typename PipeC,  // Output pipe for matrix C
-          typename PipeD>
+template <typename TT,        // Datatype of the elements of the matrix
+          int k_common,       // Columns of matrix A / rows of matrix B
+          int k_tile_a,       // Tile size for matrix A
+          int k_tile_b,       // Tile size for matrix B
+          typename PipeA,     // Input pipe for matrix A
+          typename PipeB,     // Input pipe for matrix B
+          typename PipeC,     // Output pipe for matrix C
+          typename PipeDone>  // Pipe to receive signal to stop reading inputs
 class StreamingMatmul {
 public:
   void operator()() const {
@@ -44,8 +44,8 @@ public:
 
     constexpr int kCommonBitSize = fpga_tools::BitsForMaxValue<k_common + 1>();
     ac_int<kCommonBitSize, false> counter = 0;
-    bool read_flag = true;
     bool write_flag = false;
+    bool last_pipe_read = false;
 
     // Compute matrix multiplications as long as matrices are given as inputs
     [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
@@ -70,11 +70,10 @@ public:
       fpga_tools::UnrolledLoop<k_tile_b>([&](auto col) {
         pipe_read_b.template get<col>() = 0;
       });
-      if (read_flag) {
+      if (!last_pipe_read) {
         pipe_read_a = PipeA::read();
         pipe_read_b = PipeB::read();
-        bool last_pipe_read = PipeD::read();
-        read_flag = read_flag & !last_pipe_read;
+        last_pipe_read = PipeDone::read();
       }
 
       // Compute the matrix product; fully unrolled loop to describe an array of
