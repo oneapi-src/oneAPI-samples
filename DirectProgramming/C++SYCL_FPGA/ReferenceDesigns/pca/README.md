@@ -23,25 +23,28 @@ Please refer to the performance disclaimer at the end of this README.
 ## Purpose
 
 
-Real world samples often comes of multiple features/dimensions. Not all the features in the samples carries significant information, some features are more or less same over the samples. Reducing the number of features while preserving the most of the information will help in analysis, visualization and storage of samples. Principal Component analysis aims to list new features(often combination of original features) in decending order according to their contribution on information in the samples.     
+Real-world datasets typically consist of multiple features or dimensions. However, not all features within the samples contain significant information, and some may be nearly identical across the dataset. In order to facilitate analysis, visualization, and storage of the data, reducing the number of features while maintaining the majority of the information is crucial. The Principal Component Analysis (PCA) approach identifies such principal features, often combinations of the original features, in descending order based on their contribution to the information within the samples.     
 
 ## Algorithm
-This FPGA reference design demonstrates Principal Component Analysis(PCA) of input samples with certain number of features, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into Pricipal Components in decending order and also output the variance accounted by each components.
+The present FPGA reference design showcases the application of Principal Component Analysis (PCA), a fundamental operation in linear algebra, on input samples comprising a specified number of features. The design decomposes the input matrix, denoted as _A_, into Principal Components in a descending order and further provides the variance explained by each component.
 
-This design is based on following algorithm to compute principal components, here input matrix is two dimesional array with following size A\[N\]\[P\], here $N$ is number of samples and $p$ is number of features
+
+
+The current design utilizes the subsequent algorithm to compute Principal Components. The input matrix comprises a two-dimensional array with the dimensions A\[N\]\[P\] . In this context, $N$ represents the number of samples, and $P$ corresponds to the number of features.
+
 <!-- <br />  -->
 1. Computing mean feature of the samples $$F_{\mu}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} A\[j\]\[i\]$$
 2. Adjusitng the sample mean to zero  $$A_{\mu}\[i\]\[j\] = A\[i\]\[j\] -  F_{\mu}\[j\] $$
 3. Standardize data such that variance of sample will be one $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A_{\mu}\[j\]\[i\])}^2$$ $$A_{std}\[i\]\[j\] = \frac{A_{\mu}\[i\]\[j\]}{\sqrt{F_{var}\[i\]}}$$
 4. Computing the Covariance Matrix of size $p \times p$,  $$A_{StdCov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A_{std}\[i\]\[k\] \times A_{std}\[j\]\[k\] }$$
-5. Computing the Eigen values and corresponding eigen vectors of the covariance matrix, $A_{cov}$ and sorting eigen vectors such that corresponding eigen values are in decending order. Eigen vectors will be the principal components and correspoding eigan values will give the variance contributed by that component.  
+5. The next procedure involves computing the Eigenvalues and their corresponding Eigenvectors of the covariance matrix, denoted as $A_{cov}$. The Eigenvectors are then sorted in a descending order based on their corresponding Eigenvalues. The Eigenvectors are identified as Principal Components, whereas the corresponding Eigenvalues reveal the variance attributed to each Principal Component.
 
 ## Reference Design 
 This design executes the PCA analysis through two kernels 
-* First kernel does the preprocessing steps, essentially steps 1 to 4
-* Second kernel impements the step 5 
+* kernel:1 does the preprocessing steps, essentially steps 1 to 4
+* kernel:2 impements the step 5, computing eigen values and eigen vectors then sorting  
 
-## Pre-Processing kenrel design 
+## kenrel:1 design 
 Executing the steps 1-4, one after another is not efficent as it is impossible to store the whole input samples in onchip memory if sample size is huge. 
 steps 1-4 are modified and reordered such that covariance matrix in the step 4 can be computed for inputs given through the stream.  
 ### Modified Variance Computation 
@@ -64,21 +67,20 @@ It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[
  
  **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
  **do** <br /> 
-    &emsp; **Compute** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
     &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
     &emsp;  $k = k+1$ <br /> 
- **while** ($A$ converges)
+ **while** ($C$ converges)
 <br /><br />
-Once $C$ is converged, diagonal values of $C$ will be the eigen values. Drawback of this naive algorithm is it requires huge number of iteration to converge. Convergence is improved through shifts and deflation of matrix as follows  
+Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signify the Eigenvalues. However, the primary limitation of this unsophisticated algorithm is that it necessitates an enormous number of iterations to attain convergence. To enhance convergence, the algorithm employs matrix shifts and deflation according to the following procedure:
 
  **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
  **do** <br /> 
-   &emsp; **Compute** $\mu$ <br />  
    &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
-   &emsp;**Compute** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+   &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
    &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
-   &emsp;  $k = k+1$ <br /> 
-**while** ($A$ converges)
+   &emsp; $k = k+1$ <br /> 
+**while** ($C$ converges)
 
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
