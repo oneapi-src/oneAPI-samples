@@ -56,11 +56,37 @@ steps 1-4 are modified and reordered such that covariance matrix in the step 4 c
 * Step 4 can be re-written as follows $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} \sum_{k = 0}^{N-1}{(A\[k\]\[i\] - F_{\mu}\[i\]) \times (A\[k\]\[j\] - F_{\mu}\[j\]) } \tag{9}$$
 * It can be expanded as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - F_{\mu}\[i\] \sum_{k = 0}^{N-1} A\[k\]\[j\] - F_{\mu}\[j\] \sum_{k = 0}^{N-1} A\[k\]\[i\]  + N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) } \tag{10}$$
 * Reduced to $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
-* Lets Assume $$A_{Cov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]} \tag{11}$$
-* Variance can be re-written as $$F_{var}\[i\] = \frac{1}{N} (A_{Cov}\[i\]\[i\] -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) \tag{12}$$
+* Lets Assume $$B\[i\]\[j\] = \sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]} \tag{11}$$
+* Variance can be re-written as $$F_{var}\[i\] = \frac{1}{N} (B\[i\]\[i\] -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) \tag{12}$$
 * Covariance Matrix after standardisation $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (A_{Cov}\[i\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) \tag{13}$$
 
-It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[i\]\[j\]$ and $F_{\mu}\[i\]$. This reference design employs blocked covariance matrix computation to support larger sample sizes. 
+### Architecture 
+It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $B\[i\]\[j\]$ and $F_{\mu}\[i\]$. $A_{cov}\[i\]\[j\]$ can be computed as follows for 8 samples with 4 features.
+
+$$ \begin{bmatrix}
+A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & A_{4,0} & A_{5,0} & A_{6,0} & A_{7,0} \\
+A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & A_{4,1} & A_{5,1} & A_{6,1} & A_{7,1} \\
+A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & A_{4,2} & A_{5,2} & A_{6,2} & A_{7,2} \\
+A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & A_{4,3} & A_{5,3} & A_{6,3} & A_{7,3} 
+\end{bmatrix} \times \begin{bmatrix}
+A_{0,0} & A_{0,1} & A_{0,2} & A_{0,3} \\
+A_{1,0} & A_{1,1} & A_{1,2} & A_{1,3} \\
+A_{2,0} & A_{2,1} & A_{2,2} & A_{2,3} \\
+A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
+A_{4,0} & A_{4,1} & A_{4,2} & A_{4,3} \\
+A_{5,0} & A_{5,1} & A_{5,2} & A_{5,3} \\
+A_{6,0} & A_{6,1} & A_{6,2} & A_{6,3} \\
+A_{7,0} & A_{7,1} & A_{7,2} & A_{7,3} 
+\end{bmatrix} = \begin{bmatrix}
+B_{0,0} & B_{0,1} & B_{0,2} & B_{0,3} \\
+B_{1,0} & B_{1,1} & B_{1,2} & B_{1,3} \\
+B_{2,0} & B_{2,1} & B_{2,2} & B_{2,3} \\
+B_{3,0} & B_{3,1} & B_{3,2} & B_{3,3} \\
+\end{bmatrix} $$
+
+
+This reference design employs blocked covariance matrix computation to support larger sample sizes. 
+
 
 ## Eigen Value and Eigen Vector computation
 ### Eigen Value compuation 
