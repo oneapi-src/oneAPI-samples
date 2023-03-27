@@ -118,13 +118,16 @@ In the version that does shift and deflation, $Q$ will be made to $p \times p$ s
 
 
 $$ \begin{bmatrix}
-Q_{0,0} \\
-x'_{k}
+Q_{0,0} & Q_{0,1} & Q_{0,2} \\
+Q_{1,0} & Q_{1,1} & Q_{1,2} \\
+Q_{2,0} & Q_{2,1} & Q_{2,2}
 \end{bmatrix} -> \begin{bmatrix}
-x_{k-1} + x'_{k-1}\Delta t + \frac{x''_{k-1}(\Delta t^2)}{2} \\
-x'_{k-1} + x''_{k-1}t \\
-A
-\end{bmatrix} \tag{15}$$
+Q_{0,0} & Q_{0,1} & Q_{0,2} & 0 & 0 \\
+Q_{1,0} & Q_{1,1} & Q_{1,2} & 0 & 0 \\
+Q_{2,0} & Q_{2,1} & Q_{2,2} & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 1
+\end{bmatrix}
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
