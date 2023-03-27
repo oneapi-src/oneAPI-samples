@@ -116,7 +116,7 @@ Additionaly, the cmake build system can be configured using the following parame
 | `-DSET_TILE_A` | Specifies *m<sub>PE</sub>*, the tile size used on matrix A
 | `-DSET_TILE_B` | Specifies *p<sub>PE</sub>*, the tile size used on matrix B
 
->**Note**: The values for `seed`, `-DSET_ROWS_A`, `-DSET_COMMON`, `-DSET_COLS_B`, `-DSET_TILE_A` and `-DSET_TILE_B` depend on the board being targeted.
+>**Note**: The default values for `-Xsseed`, `-DSET_ROWS_A`, `-DSET_COMMON`, `-DSET_COLS_B`, `-DSET_TILE_A` and `-DSET_TILE_B` depend on the board being targeted.
 
 ## Build the `Matrix multiply` Design
 
