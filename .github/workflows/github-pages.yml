@@ -58,7 +58,8 @@ jobs:
         python3 -m pip install -r requirements.txt        
         python3 -m sphinx -W -b html docs/ docs/_build/
         echo ${{ github.ref }}
-        cp /Tools/GPU-Occupancy-Calculator/index.html /src/docs/_build/html/Tools/GPU-Occupancy-Calculator/index.html
+        mkdir -p docs/_build/html/Tools/GPU-Occupancy-Calculator/
+        cp Tools/GPU-Occupancy-Calculator/index.html docs/_build/html/Tools/GPU-Occupancy-Calculator/index.html
 
     - name: Push docs
       if: ${{ github.ref == 'refs/heads/app/dev' }}
