@@ -26,7 +26,7 @@ int main() {
   // Use a host task to output values on the host as part of
   // task graph.  depends_on is used to define a dependence on
   // previous device code having completed.
-  // Here the host task is defined as a lambda.
+  // Here the host task is defined as a lambda expression.
   Q.submit([&](handler& h) {
       h.depends_on( eA );
       h.host_task( [&](){
