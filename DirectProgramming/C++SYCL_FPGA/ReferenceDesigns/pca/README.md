@@ -127,7 +127,7 @@ Q_{1,0} & Q_{1,1} & Q_{1,2} & 0 & 0 \\
 Q_{2,0} & Q_{2,1} & Q_{2,2} & 0 & 0 \\
 0 & 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 0 & 1
-\end{bmatrix}
+\end{bmatrix} $$
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
