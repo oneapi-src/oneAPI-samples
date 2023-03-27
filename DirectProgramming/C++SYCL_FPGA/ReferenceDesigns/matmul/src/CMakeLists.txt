@@ -125,11 +125,6 @@ message(STATUS "Additional USER_FLAGS=${USER_FLAGS}")
 include_directories(${USER_INCLUDE_PATHS})
 message(STATUS "Additional USER_INCLUDE_PATHS=${USER_INCLUDE_PATHS}")
 
-link_directories(${USER_LIB_PATHS})
-message(STATUS "Additional USER_LIB_PATHS=${USER_LIB_PATHS}")
-
-link_libraries(${USER_LIBS})
-message(STATUS "Additional USER_LIBS=${USER_LIBS}")
 
 if(WIN32)
     # add qactypes for Windows
