@@ -1,4 +1,4 @@
-# QR Decomposition of Matrices
+# PCA Principal Component Analysis of Samples
 This reference design demonstrates high performance QR decomposition of complex/real matrices on FPGA.
 
 | Optimized for                     | Description
@@ -16,11 +16,115 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA        | 24k matrices/s for complex matrices of size 128 * 128
-| Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)      | 7k matrices/s for complex matrices of size 256 * 256
+| Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA        | ?? matrices/s for complex matrices of size 128 * 128
+| Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)      | ?? matrices/s for complex matrices of size 256 * 256
 
 
 ## Purpose
+
+
+Real-world datasets typically consist of multiple features or dimensions. However, not all features within the samples contain significant information, and some may be nearly identical across the dataset. In order to facilitate analysis, visualization, and storage of the data, reducing the number of features while maintaining the majority of the information is crucial. The Principal Component Analysis (PCA) approach identifies such principal features, often combinations of the original features, in descending order based on their contribution to the information within the samples.     
+
+## Algorithm
+The present FPGA reference design showcases the application of Principal Component Analysis (PCA), a fundamental operation in linear algebra, on input samples comprising a specified number of features. The design decomposes the input matrix, denoted as _A_, into Principal Components in a descending order and further provides the variance explained by each component.
+
+
+
+The current design utilizes the subsequent algorithm to compute Principal Components. The input matrix comprises a two-dimensional array with the dimensions A\[N\]\[P\] . In this context, $N$ represents the number of samples, and $P$ corresponds to the number of features.
+
+<!-- <br />  -->
+1. Computing mean feature of the samples $$F_{\mu}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} A\[j\]\[i\]$$
+2. Adjusitng the sample mean to zero  $$A_{\mu}\[i\]\[j\] = A\[i\]\[j\] -  F_{\mu}\[j\] $$
+3. Standardize data such that variance of sample will be one $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A_{\mu}\[j\]\[i\])}^2$$ $$A_{std}\[i\]\[j\] = \frac{A_{\mu}\[i\]\[j\]}{\sqrt{F_{var}\[i\]}}$$
+4. Computing the Covariance Matrix of size $p \times p$,  $$A_{StdCov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A_{std}\[i\]\[k\] \times A_{std}\[j\]\[k\] }$$
+5. The next procedure involves computing the Eigenvalues and their corresponding Eigenvectors of the covariance matrix, denoted as $A_{cov}$. The Eigenvectors are then sorted in a descending order based on their corresponding Eigenvalues. The Eigenvectors are identified as Principal Components, whereas the corresponding Eigenvalues reveal the variance attributed to each Principal Component.
+
+## Reference Design 
+This design executes the PCA analysis through two kernels 
+* kernel:1 does the preprocessing steps, essentially steps 1 to 4
+* kernel:2 impements the step 5, computing eigen values and eigen vectors then sorting  
+
+## kenrel:1 design 
+Executing the steps 1-4, one after another is not efficent as it is impossible to store the whole input samples in onchip memory if sample size is huge. 
+steps 1-4 are modified and reordered such that covariance matrix in the step 4 can be computed for inputs given through the stream.  
+### Modified Variance Computation 
+* Standard way to compute variance  $$F_{var}\[i\] = \frac{1}{N} \sum_{j = 0}^{N-1} {(A\[j\]\[i\] -  F_{\mu}\[i\])}^2$$
+* Expanding the sum expression $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} - 2 \times F_{\mu}\[i\] \sum_{j = 0}^{N-1} {A\[j\]\[i\]} + N \times F_{\mu}\[i\] \times  F_{\mu}\[i\])$$
+* Reducing it to $$F_{var}\[i\] = \frac{1}{N} (\sum_{j = 0}^{N-1} {(A\[j\]\[i\])^2} -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\])$$
+
+### Modified Co-variance Matrix Computation 
+* Step 4 can be re-written as follows $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} \sum_{k = 0}^{N-1}{(A\[k\]\[i\] - F_{\mu}\[i\]) \times (A\[k\]\[j\] - F_{\mu}\[j\]) }$$
+* It can be expanded as follows $$A_{cov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - F_{\mu}\[i\] \sum_{k = 0}^{N-1} A\[k\]\[j\] - F_{\mu}\[j\] \sum_{k = 0}^{N-1} A\[k\]\[i\]  + N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
+* Reduced to $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (\sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) }$$
+* Lets Assume $$A_{Cov}\[i\]\[j\] = \sum_{k = 0}^{N-1}{A\[k\]\[i\] \times A\[k\]\[j\]}$$
+* Variance can be re-written as $$F_{var}\[i\] = \frac{1}{N} (A_{Cov}\[i\]\[i\] -  N \times F_{\mu}\[i\] \times  F_{\mu}\[i\]) $$
+* Covariance Matrix after standardisation $$A_{StdCov}\[i\]\[j\] = \frac{1}{\sqrt{F_{var}\[i\] \times F_{var}\[j\]}} (A_{Cov}\[i\]\[j\]  - N \times F_{\mu}\[i\] \times F_{\mu}\[j\]) $$
+
+It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[i\]\[j\]$ and $F_{\mu}\[i\]$. This reference design employs blocked covariance matrix computation to support larger sample sizes. 
+
+## Eigen Value and Eigen Vector computation
+### Eigen Value compuation 
+ As $A_{cov}\[i\]\[j\]=A_{cov}\[j\]\[i\]$, $A_{StdCov}$ is a symmetric square matrix. A symmetric matrix will have real eigen values and eigen vectors, those can be calculated using iterative QR decomposition.   
+ 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
+ **do** <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($C$ converges)
+<br /><br />
+Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signify the Eigenvalues. However, the primary limitation of this unsophisticated algorithm is that it necessitates an enormous number of iterations to attain convergence. To enhance convergence, the algorithm employs matrix shifts and deflation according to the following procedure:
+
+ **Set** $C^{F}=A_{StdCov}$ <br /> 
+**for** ($size_{C} = p$; $size_{C}  > 1$; $size_{C} =size_{C} -1$) **do** <br />
+&emsp; **Set** $C_{0}\[i\]\[j\]=C^{F}\[i\]\[j\]$ &emsp; $i < size_{C} $, $j < size_{C}$ <br /> 
+&emsp; **Set** $k=0$ <br /> 
+ &emsp; **do** <br /> 
+   &emsp; &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
+   &emsp; &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+   &emsp; &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
+   &emsp; &emsp; $k = k+1$ <br /> 
+&emsp; **while** ($C$ converges) <br />
+&emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
+**endfor** <br /> 
+
+Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
+
+$$  \begin{bmatrix}
+    a & b \\
+    b & c \\
+    \end{bmatrix} $$ 
+
+Wilkinson shift is given by following equation 
+$$\mu = c - \frac{sign(\delta) \times b^{2}}{|\delta| + \sqrt{\delta^{2} + b^{2}}}$$
+
+Rayleigh quotient shifts based QR iteration is not always stable but Wilkinson shift is highly stable, when using double preession arithmetic. Downside is Wilkinson shift requires costly hardware IPs such as divider, sqrt and reguires many pipeline stages, leads to higher latency. This reference design target to use floating point arithmetic (It supports anytype throgh SYCL template). It is observed that above agorithm will become numerically unstable when floating point arithmetic is used (due to floating point cancellation and errors propagate from divider in QR decomposition). In order to improve the the numerical accuaracy, we assign 99% of Rayleigh quotient shifts as $\mu$. This avoids the diagonal values become zero even other elements becomes zero during QR iterations. 
+
+### Eigen vector computation 
+The Eigen vectors ($E_{vec}$) computed by compounding the $Q$ matrix computed from the QR decomposition in each QR iteration as follows. <br /> 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
+  **Set** $E_{vec}=I$ <br /> 
+ **do** <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp;  $E_{vec} = E_{vec} Q$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($C$ converges)
+<br /><br />
+
+In the version that does shift and deflation, $Q$ will be made to $p \times p$ size by making rest of the diagonals to one and other elements left to zero as follows. 
+
+
+$$ \begin{bmatrix}
+x_{k} \\
+x'_{k}
+\end{bmatrix} -> \begin{bmatrix}
+x_{k-1} + x'_{k-1}\Delta t + \frac{x''_{k-1}(\Delta t^2)}{2} \\
+x'_{k-1} + x''_{k-1}t \\
+A
+\end{bmatrix} \tag{15}$$
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
