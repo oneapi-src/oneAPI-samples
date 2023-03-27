@@ -58,8 +58,6 @@ jobs:
         python3 -m pip install -r requirements.txt        
         python3 -m sphinx -W -b html docs/ docs/_build/
         echo ${{ github.ref }}
-        mkdir -p docs/_build/html/Tools/GPU-Occupancy-Calculator/
-        cp Tools/GPU-Occupancy-Calculator/index.html docs/_build/html/Tools/GPU-Occupancy-Calculator/index.html
 
     - name: Push docs
       if: ${{ github.ref == 'refs/heads/app/dev' }}
@@ -70,7 +68,11 @@ jobs:
       run: |
         cd docs/_build/
         touch .nojekyll
+
         # use cp and curl to download Tools/GPU-Occupancy-Calculator/index.html
+        mkdir -p Tools/GPU-Occupancy-Calculator/
+        cp /Tools/GPU-Occupancy-Calculator/index.html Tools/GPU-Occupancy-Calculator/index.html
+        
         git init
         git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
         git add -A
