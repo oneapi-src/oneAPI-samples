@@ -62,10 +62,12 @@ steps 1-4 are modified and reordered such that covariance matrix in the step 4 c
 
 It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[i\]\[j\]$ and $F_{\mu}\[i\]$. This reference design employs blocked covariance matrix computation to support larger sample sizes. 
 
-## Eigen Vector and Eigen Value computation
- As $A_{cov}\[i\]\[j\]=A_{cov}\[j\]\[i\]$, $A_{StdCov}$ is a symmetric matrix. A symmetric matrix will have real eigen values and eigen vectors, those can be calculated using iterative QR decomposition.   
+## Eigen Value and Eigen Vector computation
+### Eigen Value compuation 
+ As $A_{cov}\[i\]\[j\]=A_{cov}\[j\]\[i\]$, $A_{StdCov}$ is a symmetric square matrix. A symmetric matrix will have real eigen values and eigen vectors, those can be calculated using iterative QR decomposition.   
  
- **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
  **do** <br /> 
     &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
     &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
@@ -74,14 +76,55 @@ It is clear that, $A_{StdCov}\[i\]\[j\]$ can be computed by computing $A_{cov}\[
 <br /><br />
 Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signify the Eigenvalues. However, the primary limitation of this unsophisticated algorithm is that it necessitates an enormous number of iterations to attain convergence. To enhance convergence, the algorithm employs matrix shifts and deflation according to the following procedure:
 
- **Set** $C_{0}=A_{StdCov}$, $k=0$ <br /> 
- **do** <br /> 
-   &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
-   &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
-   &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
-   &emsp; $k = k+1$ <br /> 
-**while** ($C$ converges)
+ **Set** $C^{F}=A_{StdCov}$ <br /> 
+**for** ($size_{C} = p$; $size_{C}  > 1$; $size_{C} =size_{C} -1$) **do** <br />
+&emsp; **Set** $C_{0}\[i\]\[j\]=C^{F}\[i\]\[j\]$ &emsp; $i < size_{C} $, $j < size_{C}$ <br /> 
+&emsp; **Set** $k=0$ <br /> 
+ &emsp; **do** <br /> 
+   &emsp; &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
+   &emsp; &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+   &emsp; &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
+   &emsp; &emsp; $k = k+1$ <br /> 
+&emsp; **while** ($C$ converges) <br />
+&emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
+**endfor** <br /> 
 
+Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
+
+$$  \begin{bmatrix}
+    a & b \\
+    b & c \\
+    \end{bmatrix} $$ 
+
+Wilkinson shift is given by following equation 
+$$\mu = c - \frac{sign(\delta) \times b^{2}}{|\delta| + \sqrt{\delta^{2} + b^{2}}}$$
+
+Rayleigh quotient shifts based QR iteration is not always stable but Wilkinson shift is highly stable, when using double preession arithmetic. Downside is Wilkinson shift requires costly hardware IPs such as divider, sqrt and reguires many pipeline stages, leads to higher latency. This reference design target to use floating point arithmetic (It supports anytype throgh SYCL template). It is observed that above agorithm will become numerically unstable when floating point arithmetic is used (due to floating point cancellation and errors propagate from divider in QR decomposition). In order to improve the the numerical accuaracy, we assign 99% of Rayleigh quotient shifts as $\mu$. This avoids the diagonal values become zero even other elements becomes zero during QR iterations. 
+
+### Eigen vector computation 
+The Eigen vectors ($E_{vec}$) computed by compounding the $Q$ matrix computed from the QR decomposition in each QR iteration as follows. <br /> 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
+  **Set** $E_{vec}=I$ <br /> 
+ **do** <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp;  $E_{vec} = E_{vec} Q$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($C$ converges)
+<br /><br />
+
+In the version that does shift and deflation, $Q$ will be made to $p \times p$ size by making rest of the diagonals to one and other elements left to zero as follows. 
+
+
+$$ \begin{bmatrix}
+x_{k} \\
+x'_{k}
+\end{bmatrix} -> \begin{bmatrix}
+x_{k-1} + x'_{k-1}\Delta t + \frac{x''_{k-1}(\Delta t^2)}{2} \\
+x'_{k-1} + x''_{k-1}t \\
+A
+\end{bmatrix} \tag{15}$$
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
