@@ -85,7 +85,38 @@ B_{3,0} & B_{3,1} & B_{3,2} & B_{3,3} \\
 \end{bmatrix} $$
 
 
-This reference design employs blocked covariance matrix computation to support larger sample sizes. 
+This reference design employs blocked covariance matrix computation to support larger sample sizes. $p \times p$ block from input ( _A_) is multiplied with it's transpose and added to accumulator block. In this way this design is scalable to any sample size. 
+
+$$ \begin{bmatrix}
+A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & \- & \- & \- & \- \\
+A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & \- & \- & \- & \- \\
+A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & \- & \- & \- & \- \\
+A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & \- & \- & \- & \-
+\end{bmatrix} \times \begin{bmatrix}
+A_{0,0} & A_{0,1} & A_{0,2} & A_{0,3} \\
+A_{1,0} & A_{1,1} & A_{1,2} & A_{1,3} \\
+A_{2,0} & A_{2,1} & A_{2,2} & A_{2,3} \\
+A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- 
+\end{bmatrix} + \begin{bmatrix}
+ACC_{0,0} & ACC_{0,1} & ACC_{0,2} & ACC_{0,3} \\
+ACC_{1,0} & ACC_{1,1} & ACC_{1,2} & ACC_{1,3} \\
+ACC_{2,0} & ACC_{2,1} & ACC_{2,2} & ACC_{2,3} \\
+ACC_{3,0} & ACC_{3,1} & ACC_{3,2} & ACC_{3,3}
+\end{bmatrix} $$
+
+* double buffering/ ping pong buffering is employed to hide the time to load $p \times p$ block from input stream 
+* Storage for $p \times $p$ block is partioned $p$ times to enable one full dot product 
+* $F_{\mu}$ is computed by computing average sum of features while computing the block matrix multiplication 
+* $A_{StdCov}\[i\]\[j\]$ using  $ACC\[i\]\[j\]$ and $F_{\mu}\[j\]$
+* Its designed such that it can process any number of input matrices 
+
+### Latency Model
+* Number of blocks 
+$$N_{blks} = \lceil{\frac{N}{p}} \rceil$$
 
 
 ## Eigen Value and Eigen Vector computation
