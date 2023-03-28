@@ -53,14 +53,13 @@ jobs:
       with: 
         ref: 'refs/heads/master'
         path: ${{ github.workspace }}/master
-      run: |
-        echo ${{ github.workspace }}/master
 
     # Note - Revise following if on 'master' and rm ${{github.workspace}}/master as dir
     - uses: actions/checkout@v3
     - name: Build JSON DB
       run: |
-        python3 -m pip install -r requirements.txt   
+        python3 -m pip install -r requirements.txt
+        echo ${{ github.workspace }}/master
         python3 db.py ${{ github.workspace }}/master
 
     # - name: Remove JSON pre-prod  
