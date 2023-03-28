@@ -46,7 +46,10 @@ jobs:
       with:
         python-version: "3.8"
 
-    # Note - rm following if on 'master'
+    - run: find | sort 
+
+    - uses: actions/checkout@v3      
+    
     - uses: actions/checkout@v3
       name: Check out master
       with: 
@@ -55,12 +58,12 @@ jobs:
         # path: '${{ github.workspace }}/master'
         
     # Note - Revise following if on 'master' and rm ${{github.workspace}}/master as dir
-    - uses: actions/checkout@v3
+    # - uses: actions/checkout@v3
     - name: Build JSON DB
       run: |
         find master | sort 
         python3 -m pip install -r src/requirements.txt
-        echo '${{ github.workspace }}/master'
+        echo master
         python3 src/db.py master
 
     # - name: Remove JSON pre-prod  
