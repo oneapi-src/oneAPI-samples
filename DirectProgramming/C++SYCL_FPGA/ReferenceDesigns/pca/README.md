@@ -149,7 +149,17 @@ Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signif
 &emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
 **endfor** <br /> 
 
-Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
+Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. It is assumed that matrix is converged if values indicated by \* is less than zero threshold, then $C_{3,3}$ will be eigen a value. 
+
+$$ \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & C_{3,0} \\
+C_{0,1} & C_{1,1} & C_{2,1} & C_{3,1} \\
+C_{0,2} & C_{1,2} & C_{2,2} & C_{3,2} \\
+\*      & \*      & \*      & C_{3,3}
+    \end{bmatrix} $$
+
+
+There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
 
 $$  \begin{bmatrix}
 x & x & x & x \\
