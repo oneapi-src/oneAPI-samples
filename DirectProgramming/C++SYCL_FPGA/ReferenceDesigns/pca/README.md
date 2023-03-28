@@ -1,12 +1,12 @@
 # PCA Principal Component Analysis of Samples
-This reference design demonstrates high performance QR decomposition of complex/real matrices on FPGA.
+This reference design demonstrates PCA imlementation for real matrices on FPGA.
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br>RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
+| What you will learn               | Implementing a FPGA version of the PCA using iterative QRD algorithm.
 | Time to complete                  | 1 hr (not including compile time)
 
 
@@ -118,9 +118,11 @@ ACC_{3,0} & ACC_{3,1} & ACC_{3,2} & ACC_{3,3}
 * Total Number of blocks in $T$ input matrices 
 $$N_{blks} = \lceil{\frac{N}{p}} \rceil \times T$$
 * Block Matrix multiplier is in the critical path and latency to process all blocks is 
-$$N_{blks} = \lceil{\frac{N}{p}} \rceil \times T$$
+$$Clks_{bmm} = \lceil{\frac{N}{p}} \rceil \times T \times p^{2}$$
+* Total latency of kernel1 adding first loading of block from stream and outputting final covariance matrix, $V$ is nuber of elements streamed per clock, ignoring the pipeline latency/ flush time of each hardware modules  
+$$Clks_{kernel1} = \frac{p}{V} \times p + \lceil{\frac{N}{p}} \rceil \times T \times p^{2} + p^{2}$$
 
-## Eigen Value and Eigen Vector computation
+## Kernel2: Eigen Value and Eigen Vector computation and sorting
 ### Eigen Value compuation 
  As $A_{cov}\[i\]\[j\]=A_{cov}\[j\]\[i\]$, $A_{StdCov}$ is a symmetric square matrix. A symmetric matrix will have real eigen values and eigen vectors, those can be calculated using iterative QR decomposition.   
  
@@ -128,7 +130,7 @@ $$N_{blks} = \lceil{\frac{N}{p}} \rceil \times T$$
  **Set** $k=0$ <br /> 
  **do** <br /> 
     &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
-    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q_{k}$ <br /> 
     &emsp;  $k = k+1$ <br /> 
  **while** ($C$ converges)
 <br /><br />
@@ -141,7 +143,7 @@ Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signif
  &emsp; **do** <br /> 
    &emsp; &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
    &emsp; &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
-   &emsp; &emsp; Set $C_{k}=R_{k}Q{k} + \mu I$ <br /> 
+   &emsp; &emsp; Set $C_{k}=R_{k}Q_{k} + \mu I$ <br /> 
    &emsp; &emsp; $k = k+1$ <br /> 
 &emsp; **while** ($C$ converges) <br />
 &emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
@@ -188,6 +190,29 @@ Q_{2,0} & Q_{2,1} & Q_{2,2} & 0 & 0 \\
 0 & 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 0 & 1
 \end{bmatrix} $$
+
+### Implementation 
+There are two main components in iterative QR loop, based on data dependency 
+* $QR$ Matrix decomposition 
+* $RQ$ Matrix multiplication and $E_{vec} Q$ Matrix multiplication 
+
+#### Modified QR decomposition 
+This design utlize the oneAPI sample source [QRD](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/ReferenceDesigns/qrd) and modify it to support QR decomposition of deflated matrices during the QR decomposition. The static design is made such that it can process big input matrix using one full dot product in modified gram schimdt algorithm. 
+
+$$ \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & C_{3,0} \\
+C_{0,1} & C_{1,1} & C_{2,1} & C_{3,1} \\
+C_{0,2} & C_{1,2} & C_{2,2} & C_{3,2} \\
+C_{0,3} & C_{1,3} & C_{2,3} & C_{3,3}
+\end{bmatrix} -> \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & 0 \\
+C_{0,1} & C_{1,1} & C_{2,1} & 0 \\
+C_{0,2} & C_{1,2} & C_{2,2} & 0 \\
+0 & 0 & 0 & 0
+\end{bmatrix} $$
+ 
+Above example illustrate when deflating 4x4 matrix into 3x3, when doing QR decomposision, elements outside 3x3 matrix will be re-interpreted as zero and only 3x3 matrix element will be updated after QR decomposition. Shift value is subtracted when loading the diagonal values on the go. 
+
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
