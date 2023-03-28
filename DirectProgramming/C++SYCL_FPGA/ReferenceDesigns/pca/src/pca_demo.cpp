@@ -36,8 +36,6 @@
 #include "pca.hpp"
 #include "qr_MGS.hpp"
 #include "pca_cpu.hpp"
-// #include "qr_decom.hpp"
-#include "hessenberg_qrd.hpp"
 
 
 typedef double DTypeCPU;
@@ -146,7 +144,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kMatricesToDecompose = 400;
+  constexpr size_t kMatricesToDecompose = 4;
 
   try {
     // SYCL boilerplate
