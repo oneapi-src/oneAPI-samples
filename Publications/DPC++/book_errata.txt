@@ -2,9 +2,30 @@ The following are known errors in the book Data Parallel C++: Mastering DPC++ fo
 Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
 James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
+p.35 - Fig 2-7 - Output of code:
+       Device: SYCL host device
+       should read
+       Selected device: SYCL host device
+
+p.37 - Fig 2-9 - Output of code:
+       Device: SYCL host device
+       should read
+       Selected device: SYCL host device
+
+p.106 - Fig 4-11 - Comment in code:
+// Return the offset of this item (if with_offset == true)
+should read:
+// Return the offset of this item (if WithOffset == true)
+
 p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
                    therefore "Write" should be "write"
                    and "read_Write" should be "read_write"
+
+p.187 - Instead, we use the default access mode, which is read-write -> read_write
+
+p.233 - Figure 9-14: defines the template parameter T outside of the code snippet without explanation, reader is left unaware what is T.
+
+p.266 - Figure 11-3: mult_ptr -> multi_ptr (two occurrences)
 
 p.284 - The line "if (dev.is_host()) score += 100;" will need
         deleting when implementations drop support for a host_device (see
@@ -13,7 +34,68 @@ p.284 - The line "if (dev.is_host()) score += 100;" will need
 	consider the implications of such a change: without it, it is possible
 	that this device selector will fail to find a device.
 
+p.294 - Mistakenly have wrong definitions for preferred_work_group_size_multiple (we repeated the prior definiton of preferred_work_group_size).  The correct definition for preferred_work_group_size_multiple is:
+Work-group size should be a multiple of this value (preferred_work_group_size_multiple) for executing a kernel on a particular device for best performance. The value must not be greater than work_group_size.
+
+p.319 - translational unit -> translation unit
+
+p.330 - A scan is said to be exclusive... the range [0, i] -> range [0, i)
+
+p.368 - Figure 15-13: the rightmost "Op" box should be moved to the right since it cannot overlap the bottommost "Long Operation" box
+
+p.373 - it may preferable to save transfer costs -> it may be preferable...
+p.375 - our somewhat-parallel matrix multiplication kernel in Figure 15-15 -> Figure 15-5
+
+p.414 - Figure 16-17: get_globalid(0) -> get_global_id(0)
+
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
+
+p.436 - Fig 17-10 - The text "Valdation" should be "Validation"
+
+p.437 - last paragraph... "which" is incorrectly in monospace font
+
+p.438 - Figure 17-11: one "include" filename is red, the other black
+
+p.474 - std:complex -> std::complex
+
+p.475 - Figure 18-2: description of "fmax" overran "fmin" (fmin should be "Return y if y < x, otherwise it returns x")
+p.475 - Figure 18-2: Square root of x2 + y2 -> x^2 + y^2
+p.475   Figure 18-2: "trunc" should be in bold
+
+p.476 - Figure 18-3: "abs_diff" should be in bold
+p.476 - Figure 18-3: "popcount" should be in bold
+
+p.508 - Figure 19-9: scq_rel -> acq_rel (two occurrences)
+p.508 - The memory model exposes different memory orders through six values -> five
+        (because C++'s "consume" is excluded from SYCL)
+
+
+
+Some code changes have been needed to keep up with tool updates, and notably final SYCL 2020.
+The code affected has been updated in this github.  The affected code is as follows:
+
+fig_14_8_one_reduction.cpp:
+	dropped 'using namespace sycl::ONEAPI'
+	  this allows reduction to use the sycl::reduction,
+	added sycl::ONEAPI:: to plus
+
+fig_14_11_user_defined_reduction.cpp:
+	dropped 'using namespace sycl::ONEAPI'
+	  this allows reduction to use the sycl::reduction,
+	added sycl::ONEAPI:: to minimum.
+
+fig_18_11_std_fill.cpp:
+	old naming dpstd:: is now oneapi::dpl::
+
+fig_18_13_binary_search.cpp:
+	dpstd:: is now
+	  oneapi::dpl::
+	dpstd::execution::default_policy is now
+	  oneapi::dpl::execution::dpcpp_default
+
+fig_18_15_pstl_usm.cpp:
+	old naming dpstd:: is now oneapi::dpl::
+
 
 
 SYCL 2020 was finalized after the book went to press.  The largest
@@ -126,3 +208,35 @@ This is a very good thing, and makes vec better.
      
      So, we hope to write more about that in the future.  Stay tuned, we'll
      add a note here is we expand upon this in a future blog.
+     
+     
+Code samples from Figures -
+Error of omission: code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository.
+This does not affect the accuracy of the book, but it means we failed to supply the code,
+and we do not currently include it to test compilation.
+
+Some general comments:
+
+(1) use DPC++ (dpcpp) to compile SYCL code and for the final program linking
+While any compiler can be used to compile host code (such as g++), dpcpp must be used for kernel
+code and to invoke the final linkage. This is because only dpcpp knows that this is a SYCL program.
+Using another compiler to do the final linkage will not result in a functional SYCL program.
+There are probably several places in the book that we could have pointed this out - and we did not.
+
+	Mixing use of compilers with DPC++
+	Four simple rules exist for using multiple compilers with DPC++:
+	1. Host code can be compiled with any compiler.
+	2. main() needs to be compiled with DPC++ or a C++ compiler.
+	3. Any source files containing device code should be compiled with DPC++.
+	4. The linkage of the final program needs to be done with the DPC++ compiler.
+	Mixing the use of another SYCL compiler with DPC++, is not currently supported. As SYCL compilers evolve, this might change.
+
+	A simple example of mixing compilers could be:
+	dpcpp -c michigan.cpp	# may have host and device code
+	g++ -c erie.cpp		# host code only
+	ifx -c ontario.f90	# host code only
+	icx -c huron.cpp		# host code only
+	dpcpp -c superior.cpp	# may have host and device code
+	# final linkage must be using DPC++
+	dpcpp 
+
