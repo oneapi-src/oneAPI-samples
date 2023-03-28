@@ -84,7 +84,7 @@ def df_to_db(file_paths:list):
 
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
-    rootdir = sys.argv[-1]
+    rootdir = os.getcwd()
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths, rootdir)
     json_db = df_to_db(file_paths)
