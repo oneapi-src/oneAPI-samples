@@ -33,7 +33,7 @@
         "id": "matrix_mul_sycl",
         "steps": [
           "nmake -f Makefile.win build_sycl",
-          "nmake -f Makefile.win run_dsycl"
+          "nmake -f Makefile.win run_sycl"
         ]
       }
     ]
