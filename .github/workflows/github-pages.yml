@@ -52,7 +52,8 @@ jobs:
       name: Check out master
       with: 
         ref: 'refs/heads/master'
-        path: ${{ github.workspace }}
+        path: '.'
+        # path: ${{ github.workspace }}
         
     # Note - Revise following if on 'master' and rm ${{github.workspace}}/master as dir
     - uses: actions/checkout@v3
@@ -61,7 +62,7 @@ jobs:
         python3 -m pip install -r src/requirements.txt
         echo ${{ github.workspace }}
         echo $PWD 
-        python3 src/db.py ${{ github.workspace }}
+        python3 src/db.py .
 
     # - name: Remove JSON pre-prod  
     #   run: |       
