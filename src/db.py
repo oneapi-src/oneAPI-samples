@@ -24,7 +24,7 @@ def make_json_list(basedir:str):
             pp.pprint(f"\n Test {filtered_list}")
             return filtered_list
     except Exception as e:
-        print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
+        print(f"Error. Ensure root directory is oneAPI-samples repo. \n: {e}")
 
 def merge_json_files(filepaths:list):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
@@ -90,7 +90,9 @@ def df_to_db(file_paths:list):
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     # rootdir = sys.argv[-1]
-    file_paths = make_json_list("oneAPI-samples")
+    # TESTING
+    basedir = Path("./oneAPI-samples")
+    file_paths = make_json_list(basedir)
     print("OBJ:",file_paths)
     # merge_json_files(file_paths)
     # print("Check complete...?")
