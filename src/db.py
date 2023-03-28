@@ -22,7 +22,7 @@ def make_json_list(rootdir:str):
     except Exception as e:
         print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
 
-def merge_json_files(filepaths:list, rootdir:str):
+def merge_json_files(filepaths:list):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
     try:
