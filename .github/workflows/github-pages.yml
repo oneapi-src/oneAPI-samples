@@ -58,6 +58,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build JSON DB
       run: |
+        cd src
         python3 -m pip install -r requirements.txt
         echo ${{ github.workspace }}/master
         python3 db.py ${{ github.workspace }}/master
