@@ -22,12 +22,13 @@ def make_json_list(rootdir:str):
     except Exception as e:
         print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
 
-def merge_json_files(filepaths:list):
+def merge_json_files(filepaths:list, rootdir:str):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
     try:
         for f in filepaths:
             with open(f, 'r') as infile:
+                print(f)
                 results_list.append(json.load(infile))
         with open('sample_db_pre.json', 'w') as output_file:
             json.dump(results_list, output_file)
