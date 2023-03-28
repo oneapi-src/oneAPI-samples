@@ -5,13 +5,14 @@ from collections import OrderedDict
 from pathlib import Path
 import pandas as pd
 import pathlib
+import sys
 
-def make_json_list():
+def make_json_list(rootdir:str):
     ''' Walk root dir and create list of all filepaths to JSON code samples.'''
     json_file_paths = []
     try:
-        if os.path.isdir("../"):
-            for root, dirs, files in os.walk("../"):
+        if os.path.isdir(rootdir):
+            for root, dirs, files in os.walk(rootdir):
                 for file in files:
                     if file.endswith("sample.json"):
                         filepath = os.path.join(root,file)
@@ -81,7 +82,8 @@ def df_to_db(file_paths:list):
 
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
-    file_paths = make_json_list()
+    rootdir = sys.argv[-1]
+    file_paths = make_json_list(rootdir)
     merge_json_files(file_paths) 
     json_db = df_to_db(file_paths)   
     return json_db     

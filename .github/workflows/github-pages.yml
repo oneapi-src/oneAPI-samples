@@ -3,7 +3,7 @@ name: github-pages
 on:
 
   # schedule:
-  #   -cron: 0 7 * * 1-5
+  #   - cron: '0 7 * * 1-5'
     
 #   schedule:
 #     # https://cron.help/#0/30_*_*_*_*
@@ -47,11 +47,19 @@ jobs:
       with:
         python-version: "3.8"
 
+# Note - rm following if on 'master'
+    - uses: actions/checkout@v3
+      name: Check out master
+      with: 
+        ref: 'refs/heads/master'
+        path: ${{ github.workspace }}/master
+
+# Note - Revise following if on 'master' and rm '../master' as default dir
     - uses: actions/checkout@v3
     - name: Build JSON DB
       run: |
         python3 -m pip install -r requirements.txt   
-        python3 db.py
+        python3 db.py ${{ github.workspace }}/master
 
     - name: Remove JSON pre-prod  
       run: |       
@@ -64,9 +72,11 @@ jobs:
         echo ${{ github.ref }}
 
     - name: Add GPU-Occupancy-Calculator
+      env: 
+        GPU_OCC_CALC: docs/_build/Tools/GPU-Occupancy-Calculator/
       run: |
-        mkdir -p docs/_build/Tools/GPU-Occupancy-Calculator/        
-        cd docs/_build/Tools/GPU-Occupancy-Calculator/
+        mkdir -p ${GPU_OCC_CALC}   
+        cd ${GPU_OCC_CALC}
         wget https://raw.githubusercontent.com/oneapi-src/oneAPI-samples/master/Tools/GPU-Occupancy-Calculator/index.html
 
     - name: Push docs
