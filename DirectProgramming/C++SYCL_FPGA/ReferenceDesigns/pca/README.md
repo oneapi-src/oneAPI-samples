@@ -240,7 +240,7 @@ C_{0,2} & C_{1,2} & C_{2,2} & 0 \\
  
 Above example illustrate when deflating 4x4 matrix into 3x3, when doing QR decomposision, elements outside 3x3 matrix will be re-interpreted as zero and only 3x3 matrix element will be updated after QR decomposition. Shift value is subtracted when loading the diagonal values on the go. 
 
-- QR Decompostion latency model 
+- QR Decompostion latency model
 
 $$ VecDepth = 8 + (4 + 3 \lceil log_{2}(p) \rceil) + 15 $$
 
@@ -252,16 +252,18 @@ In HLS, each loops is scheduled one after another, computing the $RQ$ and $E_{ve
 
 While computing the $RQ$, subtracted shift is added back and the new shift value for next iteration is stored in a register. Logic to check the convergence is also implemented in this loop and boolen outcome of convergence is stored in register. This register is checked at the end of the iteration to deflate the matrix or exist the computation if 1x1 defalted matrix is reached. Further, a debug logic to detect the $QR$ decomposition failure by inspecting the orthogonolity of $Q$ matrix is implemented in this nested loop. This also require a full dot prduct to check all possible combination of vectors. 
 
+- Fused Matrix multiplication latency model ignoring small pipeline latency
+
+$$ Clks_{FMM} = p^{2} $$
+
 #### Sorting 
 After the QRD iteration, eigen values and eigen vectors need to be sorted. This reference design implements the selection sort, searching through all the elements and finding the next maimum element. A new memory is used to store the indexes of sorted elements, in order to elminate the latency for swapping elements. Additionally a register block is used as mask avoid checking the already sorted elements. 
 
+- Sorting latency model ignoring small pipeline latency
+
+$$ Clks_{Sort} = p^{2} $$
 
 
-This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
-
-The algorithms employed by the reference design are the Gram-Schmidt QR decomposition algorithm and the thin QR factorization method. Background information on these algorithms can be found in Wikipedia's [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) article. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
-
-QR decomposition is used extensively in signal processing applications such as beamforming, multiple-input multiple-output (MIMO) processing, and Space Time Adaptive Processing (STAP).
 
 
 ### Additional Documentation
@@ -271,32 +273,23 @@ QR decomposition is used extensively in signal processing applications such as b
 
 ### Matrix dimensions and FPGA resources
 
-The QR decomposition algorithm factors a complex _m_ × _n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
-
-We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
-
-With this optimization, our FPGA implementation requires 4*_m_ DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
-
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), a larger device. However, the design can process matrices from 4 x 4 to 512 x 512.
+This design was tested on matrices upto 64 feature size on Arria 10 and design can support any number of sample size. 
 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| QRD               | Implements a modified Gram-Schmidt QR decomposition algorithm.
+| PCA               | Implements PCA through shift based iterative QRD algorithm.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
-* **Triangular Loop Optimization** (triangular_loop)
+* **Triangular Loop Optimization**
 * **Explicit Pipelining with `fpga_reg`** (fpga_register)
 * **Loop `ivdep` Attribute** (loop_ivdep)
 * **Unrolling Loops** (loop_unroll)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the original Gram-Schmidt algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
-   2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
-   3. Fully vectorizing the dot products using loop unrolling.
-   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-   5. Using an efficient memory banking scheme to generate high performance hardware.
-   6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+   1. Blocked Covariance matrix computation and out of order evaluation to support any sample size 
+   2. QR decomposition on variable matrix sizes through masking 
+   3. Fusing two matrix multilication in single nested loop
 
 ## Building the Reference Design
 
@@ -428,9 +421,9 @@ dependencies and permissions errors.
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Running the Reference Design
-You can perform the QR decomposition of 8 matrices repeatedly, as shown below. This step performs the following:
-* Generates 8 random matrices.
-* Computes the QR decomposition of the 8 matrices.
+You can perform the PCA on matrices repeatedly, as shown below. This step performs the following:
+* Generates 8 random sample matrices.
+* Computes the PCA of the 8 matrices.
 * Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 
@@ -438,7 +431,7 @@ You can perform the QR decomposition of 8 matrices repeatedly, as shown below. T
  Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
-     ./qrd.fpga_emu           (Linux)
+     ./pca.fpga_emu           (Linux)
 
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      qrd.fpga_emu.exe         (Windows)
@@ -446,64 +439,31 @@ You can perform the QR decomposition of 8 matrices repeatedly, as shown below. T
 
 2. Run the sample on the FPGA device.
      ```
-     ./qrd.fpga         (Linux)
-     qrd.fpga.exe       (Windows)
+     ./pca.fpga         (Linux)
+     pca.fpga.exe       (Windows)
      ```
 ### Application Parameters
 
 | Argument | Description
 ---        |---
-| `<num>`  | Optional argument that specifies the number of times to repeat the decomposition of 8 matrices. Its default value is `16` for the emulation flow and '819200' for the FPGA flow.
+| `<num>`  | Optional argument that specifies the number of times to repeat the PCA decomposition of 8 matrices. Its default value is `16` for the emulation flow and '819200' for the FPGA flow.
 
-### Example of Output
-
-Example output when running on Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA for 8 matrices 819200 times (each matrix consisting of 128*128 complex numbers):
-
-```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 8 random complex matrices of size 128x128 
-Running QR decomposition of 8 matrices 819200 times
- Total duration:   268.733 s
-Throughput: 24.387k matrices/s
-Verifying results...
-PASSED
-```
-
-Example output when running on Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) for the decomposition of 8 matrices 819200 times (each matrix consisting of 256*256 complex numbers):
-
-```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 256x256 
-Running QR decomposition of 8 matrices 819200 times
- Total duration:   888.077 s
-Throughput: 7.37954k matrices/s
-Verifying results...
-PASSED
-```
 
 ## Additional Design Information
 
-### Compiler Flags Used
+### Design Parameters 
 
 | Flag | Description
 ---    |---
-`-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
-`-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
-`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
-`-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
-`-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
-`-DROWS_COMPONENT` | Specifies the number of rows of the matrix
-`-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
-`-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
-`-DCOMPLEX` | Used to select between the complex and real QR decomposition (complex is the default)
+`-RELSHIFT` | Switching between Rayleigh shift and Wilkinson shift
+`-SHIFT_NOISE` | Percentage of shift value that is not subtracted from diagonals 
+
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
 ### Performance disclaimers
 
 Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
-
-Performance results are based on testing as of July 29, 2020 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
 
