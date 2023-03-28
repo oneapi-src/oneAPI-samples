@@ -25,8 +25,8 @@ def make_json_list(rootdir:str):
 def merge_json_files(filepaths:list):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
-    rootdir = sys.argv[-1]
-    print(rootdir)
+    rootdir = os.getcwd()
+    print("CURR DIR:",rootdir)
     try:
         for f1 in filepaths:
             f2 = os.path.join(rootdir,f1) 
@@ -89,9 +89,9 @@ def main():
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths) 
-    # json_db = df_to_db(file_paths)   
-    # return json_db 
-    return    
+    json_db = df_to_db(file_paths)   
+    return json_db 
+    # return    
 
 if __name__ == "__main__":
     main()
