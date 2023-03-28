@@ -21,7 +21,7 @@ def make_json_list(basedir:str):
                         filepath = os.path.join(root,file)
                         json_file_paths.append(filepath) 
             filtered_list = [j for j in json_file_paths if not j.startswith("./oneAPI-samples/Publications")]
-            pp.pprint(f"\n Test {filtered_list}")
+            print(f"\n Test {filtered_list}")
             return filtered_list
     except Exception as e:
         print(f"Error. Ensure root directory is oneAPI-samples repo. \n: {e}")
@@ -91,7 +91,8 @@ def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
-    print("OBJ:",file_paths)
+    print(file_paths)
+    print("OBJ:",type(file_paths))
     # merge_json_files(file_paths)
     # print("Check complete...?")
     # json_db = df_to_db(file_paths)
