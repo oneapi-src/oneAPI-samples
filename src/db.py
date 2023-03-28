@@ -89,10 +89,8 @@ def df_to_db(file_paths:list):
 
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
-    # rootdir = sys.argv[-1]
-    # TESTING
-    basedir = Path("./oneAPI-samples")
-    file_paths = make_json_list(basedir)
+    rootdir = sys.argv[-1]
+    file_paths = make_json_list(rootdir)
     print("OBJ:",file_paths)
     # merge_json_files(file_paths)
     # print("Check complete...?")
