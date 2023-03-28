@@ -6,6 +6,9 @@ from pathlib import Path
 import pandas as pd
 import pathlib
 import sys
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint
 
 def make_json_list(rootdir:str):
     ''' Walk root dir and create list of all filepaths to JSON code samples.'''
@@ -18,6 +21,7 @@ def make_json_list(rootdir:str):
                         filepath = os.path.join(root,file)
                         json_file_paths.append(filepath) 
             filtered_list = [j for j in json_file_paths if not j.startswith("./oneAPI-samples/Publications")]
+            pp.pprint(f"\n Test {filtered_list}")
             return filtered_list
     except Exception as e:
         print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
@@ -27,10 +31,9 @@ def merge_json_files(filepaths:list, rootdir:str):
     results_list = []
     try:
         for f in filepaths:
-            print("CHECK: ",f)
-            g = os.path.join(rootdir,f) 
-            with open(g, 'r') as infile:
+            with open(os.path.join(rootdir,f), 'r') as infile:
                 results_list.append(json.load(infile))
+                # print(results_list)
         with open('sample_db_pre.json', 'w') as output_file:
             json.dump(results_list, output_file)
         return
@@ -79,7 +82,7 @@ def df_add_urls(file_paths:list):
 def df_to_db(file_paths:list):
     '''Create prod database, combining df_add_urls(); output for frontend display'''
     df = df_add_urls(file_paths)
-    db = df.to_json(r'./docs/_static/sample_db_prd.json', orient='records')    
+    db = df.to_json(r'./src/docs/_static/sample_db_prd.json', orient='records')    
     return db
 
 def main():
@@ -87,6 +90,7 @@ def main():
     rootdir = os.getcwd()
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths, rootdir)
+    print("Check complete...?")
     json_db = df_to_db(file_paths)
     return json_db
 
