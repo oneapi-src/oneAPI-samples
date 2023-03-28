@@ -22,16 +22,14 @@ def make_json_list(rootdir:str):
     except Exception as e:
         print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
 
-def merge_json_files(filepaths:list):
+def merge_json_files(filepaths:list, rootdir:str):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
-    rootdir = os.getcwd()
-    print("CURR DIR:",rootdir)
     try:
-        for f1 in filepaths:
-            f2 = os.path.join(rootdir,f1) 
-            print("CHECK: ",f2)
-            with open(f2, 'r') as infile:
+        for f in filepaths:
+            print("CHECK: ",f)
+            g = os.path.join(rootdir,f) 
+            with open(g, 'r') as infile:
                 results_list.append(json.load(infile))
         with open('sample_db_pre.json', 'w') as output_file:
             json.dump(results_list, output_file)
@@ -88,10 +86,9 @@ def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
-    merge_json_files(file_paths) 
-    json_db = df_to_db(file_paths)   
-    return json_db 
-    # return    
+    merge_json_files(file_paths, rootdir)
+    json_db = df_to_db(file_paths)
+    return json_db
 
 if __name__ == "__main__":
     main()
