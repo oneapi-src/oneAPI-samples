@@ -44,7 +44,7 @@ This design executes the PCA analysis through two kernels
 * kernel:1 does the preprocessing steps, essentially steps 1 to 4
 * kernel:2 impements the step 5, computing eigen values and eigen vectors then sorting  
 
-## kenrel:1 design 
+## kenrel:1 preprocessing and Covariance Matrix Computation
 Executing the steps 1-4, one after another is not efficent as it is impossible to store the whole input samples in onchip memory if sample size is huge. 
 steps 1-4 are modified and reordered such that covariance matrix in the step 4 can be computed for inputs given through the stream.  
 ### Modified Variance Computation 
