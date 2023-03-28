@@ -11,7 +11,7 @@ pp = pprint.PrettyPrinter(indent=4)
 pp.pprint
 
 def make_json_list(basedir:str):
-    ''' Walk root dir and create list of all filepaths to JSON code samples.'''
+    ''' Walk basedir and create list of all filepaths to JSON code samples.'''
     json_file_paths = []
     try:
         if os.path.isdir(basedir):
@@ -26,12 +26,13 @@ def make_json_list(basedir:str):
     except Exception as e:
         print(f"Error. Ensure source repo exists and references correct directory. \n: {e}")
 
-def merge_json_files(filepaths:list, rootdir:str):
+def merge_json_files(filepaths:list):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
     try:
         for f in filepaths:
-            with open(os.path.join(rootdir,f), 'r') as infile:
+            print(f)
+            with open(f, 'r') as infile:
                 results_list.append(json.load(infile))
                 # print(results_list)
         with open('sample_db_pre.json', 'w') as output_file:
@@ -82,16 +83,16 @@ def df_add_urls(file_paths:list):
 def df_to_db(file_paths:list):
     '''Create prod database, combining df_add_urls(); output for frontend display'''
     df = df_add_urls(file_paths)
-    db = df.to_json(r'./src/docs/_static/sample_db_prd.json', orient='records')    
+    rev_json = Path('src/docs/_static/sample_db_prd.json')
+    db = df.to_json(rev_json, orient='records')    
     return db
 
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     # rootdir = sys.argv[-1]
-    basedir = "./oneAPI-samples"
-    file_paths = make_json_list(basedir)
+    file_paths = make_json_list("oneAPI-samples")
     print("OBJ:",file_paths)
-    # merge_json_files(file_paths, rootdir)
+    # merge_json_files(file_paths)
     # print("Check complete...?")
     # json_db = df_to_db(file_paths)
     return file_paths
