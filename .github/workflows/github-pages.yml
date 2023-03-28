@@ -3,7 +3,7 @@ name: github-pages
 on:
 
   # schedule:
-  #   - cron: '0 7 * * 1-5'
+  #   - cron: '0 7 * * 1-4'
     
 #   schedule:
 #     # https://cron.help/#0/30_*_*_*_*
@@ -32,9 +32,9 @@ on:
   #     - "src/docs/_templates/base.html"
   #     - "src/docs/_templates/index.html"
 
-defaults:
-  run:
-    working-directory: src
+# defaults:
+#   run:
+#     working-directory: src
 
 jobs:
   pages:
@@ -66,17 +66,17 @@ jobs:
 
     # - name: Remove JSON pre-prod  
     #   run: |       
-    #     rm -rf docs/sample_db_pre.json
+    #     rm -rf src/docs/sample_db_pre.json
 
     - name: Build Sphinx
       run: |
         python3 -m pip install -r requirements.txt        
-        python3 -m sphinx -W -b html docs/ docs/_build/
+        python3 -m sphinx -W -b html src/docs/ src/docs/_build/
         echo ${{ github.ref }}
 
     - name: Add GPU-Occupancy-Calculator
       env: 
-        GPU_OCC_CALC: docs/_build/Tools/GPU-Occupancy-Calculator/
+        GPU_OCC_CALC: src/docs/_build/Tools/GPU-Occupancy-Calculator/
       run: |
         mkdir -p ${GPU_OCC_CALC}   
         cd ${GPU_OCC_CALC}
@@ -89,7 +89,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         GITHUB_REPO: ${{ github.repository }} 
       run: |
-        cd docs/_build/
+        cd src/docs/_build/
         touch .nojekyll       
         git init
         git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
