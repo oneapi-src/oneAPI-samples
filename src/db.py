@@ -92,11 +92,12 @@ def main():
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
     print(file_paths)
-    print("OBJ:",type(file_paths))
-    # merge_json_files(file_paths)
+    # print("OBJ:",type(file_paths))
+    merge_json_files(file_paths)
     # print("Check complete...?")
-    # json_db = df_to_db(file_paths)
-    return file_paths
+    json_db = df_to_db(file_paths)
+
+    return json_db
 
 if __name__ == "__main__":
     main()

@@ -48,8 +48,10 @@ jobs:
 
     - run: find | sort 
 
-    - uses: actions/checkout@v3      
-    
+    - uses: actions/checkout@v3 
+      with:
+        # path: app/dev 
+
     - uses: actions/checkout@v3
       name: Check out master
       with: 
@@ -57,18 +59,18 @@ jobs:
         path: master
         # path: '${{ github.workspace }}/master'
         
-    # Note - Revise following if on 'master' and rm ${{github.workspace}}/master as dir
-    # - uses: actions/checkout@v3
+  
+    # TODO: mv 'python3 app/dev/src/db.py master'
     - name: Build JSON DB
       run: |
-        find master | sort 
         python3 -m pip install -r src/requirements.txt
         echo master
         python3 src/db.py master
 
-    # - name: Remove JSON pre-prod  
-    #   run: |       
-    #     rm -rf src/docs/sample_db_pre.json
+    # 
+    - name: Remove JSON pre-prod  
+      run: |       
+        rm -rf src/docs/sample_db_pre.json
 
     - name: Build Sphinx
       run: |
