@@ -10,12 +10,12 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 pp.pprint
 
-def make_json_list(rootdir:str):
+def make_json_list(basedir:str):
     ''' Walk root dir and create list of all filepaths to JSON code samples.'''
     json_file_paths = []
     try:
-        if os.path.isdir(rootdir):
-            for root, dirs, files in os.walk(rootdir):
+        if os.path.isdir(basedir):
+            for root, dirs, files in os.walk(basedir):
                 for file in files:
                     if file.endswith("sample.json"):
                         filepath = os.path.join(root,file)
@@ -87,8 +87,9 @@ def df_to_db(file_paths:list):
 
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
-    rootdir = sys.argv[-1]
-    file_paths = make_json_list(rootdir)
+    # rootdir = sys.argv[-1]
+    basedir = pathlib.PurePath("./oneAPI-samples")
+    file_paths = make_json_list(basedir)
     print("OBJ:",file_paths)
     # merge_json_files(file_paths, rootdir)
     # print("Check complete...?")
