@@ -206,6 +206,23 @@ There are two main components in iterative QR loop, based on data dependency
 * $QR$ Matrix decomposition 
 * $RQ$ Matrix multiplication and $E_{vec} Q$ Matrix multiplication 
 
+In order to facilitate one full dot product computation in the above operations, memory for matrices are patitioned as follows 
+* Input to and output from, QR decomposition is organized column wise and partioned column wise. An entire column can be loaded each clock cycle
+
+$$ \begin{bmatrix}
+\* & X & \. \\
+\* & X & \. \\
+\* & X & \.
+\end{bmatrix} $$
+
+* $R$ and $E_{vec}$ memories are partitioned row wise. An entire row can be loaded each clock cycle
+
+$$ \begin{bmatrix}
+\* & \* & \* \\
+X & X & X \\
+\. & \. & \.
+\end{bmatrix} $$
+
 #### Modified QR decomposition 
 This design utlize the oneAPI sample source [QRD](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/ReferenceDesigns/qrd) and modify it to support QR decomposition of deflated matrices during the QR decomposition. The static design is made such that it can process big input matrix using one full dot product in modified gram schimdt algorithm. 
 
@@ -222,6 +239,22 @@ C_{0,2} & C_{1,2} & C_{2,2} & 0 \\
 \end{bmatrix} $$
  
 Above example illustrate when deflating 4x4 matrix into 3x3, when doing QR decomposision, elements outside 3x3 matrix will be re-interpreted as zero and only 3x3 matrix element will be updated after QR decomposition. Shift value is subtracted when loading the diagonal values on the go. 
+
+- QR Decompostion latency model 
+
+$$ VecDepth = 8 + (4 + 3 \lceil log_{2}(p) \rceil) + 15 $$
+
+$$ Clks_{QRD} = \sum_{i=1}^{p}{max(i,vecDepth)} $$
+
+
+#### Fused $RQ$ and $E_{vec} Q$ computation 
+In HLS, each loops is scheduled one after another, computing the $RQ$ and $E_{vec} Q$  matrix multiplication in separate loops will increase the latency. In this implementation both $RQ$ and $E_{vec} Q$ are computed in a single nested loop, using one full dot product for each operation. Similar to QR decompostion, masking is applied when computing $RQ$ in deflated matrices. 
+
+While computing the $RQ$, subtracted shift is added back and the new shift value for next iteration is stored in a register. Logic to check the convergence is also implemented in this loop and boolen outcome of convergence is stored in register. This register is checked at the end of the iteration to deflate the matrix or exist the computation if 1x1 defalted matrix is reached. Further, a debug logic to detect the $QR$ decomposition failure by inspecting the orthogonolity of $Q$ matrix is implemented in this nested loop. This also require a full dot prduct to check all possible combination of vectors. 
+
+#### Sorting 
+After the QRD iteration, eigen values and eigen vectors need to be sorted. This reference design implements the selection sort, searching through all the elements and finding the next maimum element. A new memory is used to store the indexes of sorted elements, in order to elminate the latency for swapping elements. Additionally a register block is used as mask avoid checking the already sorted elements. 
+
 
 
 This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
