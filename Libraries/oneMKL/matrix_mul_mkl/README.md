@@ -16,7 +16,7 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 Matrix Multiplication uses oneMKL to multiply two large matrices.
 
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
+These samples perform their computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
 
 ## Key Implementation Details
@@ -77,6 +77,11 @@ Problem size:  A (600x1200) * B (1200x2400)  -->  C (600x2400)
 Launching oneMKL GEMM calculation...
 Performing reference calculation...
 Results are accurate.
+
+./matrix_mul_mkl_bf16
+C = [ 0, 0, ... ]
+    [ 0, 0,  ... ]
+    [ ... ]
 ```
 
 ### Troubleshooting
