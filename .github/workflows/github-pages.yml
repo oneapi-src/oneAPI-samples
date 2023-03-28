@@ -61,7 +61,7 @@ jobs:
         python3 -m pip install -r src/requirements.txt
         echo ${{ github.workspace }}/master
         echo $PWD 
-        python3 db.py ${{ github.workspace }}/master
+        python3 src/db.py ${{ github.workspace }}/master
 
     # - name: Remove JSON pre-prod  
     #   run: |       
