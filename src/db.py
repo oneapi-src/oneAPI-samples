@@ -25,10 +25,12 @@ def make_json_list(rootdir:str):
 def merge_json_files(filepaths:list):
     '''Create pre-prod database from merged sample.json files from list of filenames'''
     results_list = []
+    rootdir = sys.argv[-1]
     try:
-        for f in filepaths:
-            with open(f, 'r') as infile:
-                print(f)
+        for f1 in filepaths:
+            f2 = os.path.join(rootdir,f1) 
+            print("CHECK: ",f2)
+            with open(f2, 'r') as infile:
                 results_list.append(json.load(infile))
         with open('sample_db_pre.json', 'w') as output_file:
             json.dump(results_list, output_file)
