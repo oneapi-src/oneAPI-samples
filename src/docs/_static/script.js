@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchData().then((data) => { /* */
         renderUi(data); /* */
         console.log(data)
-        getDateTime() 
+        setInterval()
     });
 });
 
