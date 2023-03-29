@@ -58,9 +58,18 @@ bool EqualMat(std::vector<float> &c_matrix, std::vector<float> &c_reference,
 void PrintMat(std::vector<float> &m_matrix, int rows, int cols) {
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
-      std::cout << std::fixed;
-      std::cout << std::setprecision(2);
+      // Copy old state of cout
+      std::ios oldState(nullptr);
+      oldState.copyfmt(std::cout);
+
+      // Edit the output format of cout
+      std::cout << std::fixed << std::setprecision(2);
+
+      // Print the results
       std::cout << std::setw(8) << m_matrix[col * rows + row] << " ";
+
+      // Restore the output format of cout
+      std::cout.copyfmt(oldState);
     }
     std::cout << std::endl;
   }
