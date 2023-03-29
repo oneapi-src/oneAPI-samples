@@ -114,7 +114,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" -DUSM=1 ..",
           "nmake fpga_emu",
           "simple-add-usm.fpga_emu.exe",
           "nmake clean"
