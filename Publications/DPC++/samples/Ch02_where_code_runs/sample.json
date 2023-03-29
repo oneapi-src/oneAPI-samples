@@ -34,7 +34,7 @@
           "make fig_2_10_gpu_selector",
           "make fig_2_12_multiple_selectors",
           "make fig_2_13_gpu_plus_fpga",
-          "make fig_2_15_aspect_selector",          
+          "make fig_2_15_aspect_selector",
           "make fig_2_16_custom_selector",
           "make fig_2_18_simple_device_code",
           "make fig_2_22_simple_device_code_2",
@@ -46,7 +46,7 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",

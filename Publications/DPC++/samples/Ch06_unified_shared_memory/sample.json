@@ -40,14 +40,14 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
           "nmake fig_6_5_allocation_styles",
           "nmake fig_6_6_usm_explicit_data_movement",
           "nmake fig_6_7_usm_implicit_data_movement",
-          "nmake fig_6_8_prefetch_memadvise",   
+          "nmake fig_6_8_prefetch_memadvise",
           "nmake fig_6_9_queries"
         ]
       }

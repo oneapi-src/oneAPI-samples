@@ -41,9 +41,9 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force b4 >nul 2>nul || echo remove",
-          "mkdir b4",
-          "cd b4",
+          "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
           "cmake -G \"NMake Makefiles\" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
           "nmake fig_4_5_vector_add",
           "nmake fig_4_6_matrix_add",
