@@ -46,28 +46,25 @@ jobs:
       with:
         python-version: "3.8"
 
-    - run: find | sort 
-
+    # - run: find | sort 
     - uses: actions/checkout@v3 
       # with:
-        # path: app/dev 
+        # path: app/dev
+        # Adding above forces pre-pending filepaths below w/ 'app/dev/filepath' 
 
     - uses: actions/checkout@v3
       name: Check out master
       with: 
         ref: 'refs/heads/master'
-        path: master
-        # path: '${{ github.workspace }}/master'
-        
+        path: master        
   
-    # TODO: mv 'python3 app/dev/src/db.py master'
+    # TODO: change to 'python3 app/dev/src/db.py master' per actions/checkout@3
     - name: Build JSON DB
       run: |
         python3 -m pip install -r src/requirements.txt
         echo master
         python3 src/db.py master
 
-    # 
     - name: Remove JSON pre-prod  
       run: |       
         rm -rf src/docs/sample_db_pre.json

@@ -7,8 +7,9 @@ import pandas as pd
 import pathlib
 import sys
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint
+from datetime import datetime
+# pp = pprint.PrettyPrinter(indent=4)
+# pp.pprint
 
 def make_json_list(basedir:str):
     ''' Walk basedir and create list of all filepaths to JSON code samples.'''
