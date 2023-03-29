@@ -905,6 +905,56 @@ void Database::PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit) {
 }
 
 //
+// print the results of Query 9
+//
+void Database::PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit) {
+  // row of Q9 output for local sorting
+  struct Row {
+    Row(std::string& nation, int year, DBDecimal sum_profit)
+        : nation(nation), year(year), sum_profit(sum_profit) {}
+    std::string nation;
+    int year;
+    DBDecimal sum_profit;
+
+    void print() {
+      std::cout << nation << "|" << year << "|"
+                << (double)(sum_profit) / (100.0 * 100.0) << "\n";
+    }
+  };
+
+  // create the rows
+  std::vector<Row> outrows;
+  for (unsigned char nat = 0; nat < kNationTableSize; nat++) {
+    std::string nation_name = n.key_name_map[nat];
+    for (int y = 1992; y <= 1998; y++) {
+      outrows.push_back(Row(nation_name, y, sum_profit[y * 25 + nat]));
+    }
+  }
+
+  // sort rows by year
+  std::sort(outrows.begin(), outrows.end(),
+    [](const Row& a, const Row& b) -> bool {
+      return a.year > b.year;
+  });
+
+  // sort rows by nation
+  // stable_sort() preserves the order of the previous sort
+  std::stable_sort(outrows.begin(), outrows.end(),
+    [](const Row& a, const Row& b) -> bool {
+      return a.nation < b.nation;
+  });
+
+  // print the header
+  std::cout << "nation|o_year|sum_profit\n";
+
+  // print the results
+  std::cout << std::fixed << std::setprecision(2);
+  for (int i = 0; i < outrows.size(); i++) {
+    outrows[i].print();
+  }
+}
+
+//
 // print the results of Query 11
 //
 void Database::PrintQ11(std::vector<DBIdentifier>& partkeys,
