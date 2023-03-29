@@ -265,7 +265,7 @@ $$ Clks_{Sort} = 2 \times p^{2} $$
 
 
 ## Hessenberg based Eigen Vector and Eigen value computation 
-The standard QR iteration is $O(n^{3})$ complexity and it is reduced to $O(n^{2})$ complexity through one full dot product oneAPI qrd implementation. The time complexit can be further reduced to $O(n)$ for QR iteration and resources coule be saved as through the Hessenberg transform. It is noted that Hessenberg transform comes with $O(n^{3})$ complexity but it is required only once. QR iteration is done around $3 \times n$ for a shift based QR iteration. Hessenberg QR iteration could potentially save the number of clock cycles for QR iteration for reasonably larger matrices. 
+The standard QR iteration is $O(n^{3})$ complexity and it is reduced to $O(n^{2})$ complexity through one full dot product oneAPI qrd implementation. The time complexit can be further reduced to $O(n)$ QR iteration and resources coule be saved as through the Hessenberg transform. It is noted that Hessenberg transform comes with $O(n^{3})$ complexity but it is required only once. QR iteration is done around $3 \times n$ for a shift based QR iteration. Hessenberg QR iteration could potentially save the number of clock cycles for QR iteration for reasonably larger matrices. 
 
 
 Hessenberg transform preserves eigen values, eigen vectors and symmetry of the input matrix. As such, it can be proven, hessenberg transform of symmetric matrix will be tridiagonal matrix, requires significantly less storage 
@@ -294,52 +294,117 @@ H_{0,1} & H_{1,1} & H_{1,2} & 0 \\
 0 & H_{1,2} & H_{2,2} & H_{2,3} \\
 0 & 0 & H_{2,3} & H_{3,3}
 \end{bmatrix} -> \begin{bmatrix}
-h^{1}{0,0} & h^{1}{1,0} & h^{1}{2,0} & 0 \\
-0 & h^{1}{1,1} & h^{1}{2,1} & 0 \\
-0 & h^{1}{1,2} & h^{1}{2,2} & h^{1}{3,2} \\
-0 & 0 & h^{1}{2,3} & h^{1}{3,3}
+h_{0,0}^{1} & h_{1,0}^{1} & h_{2,0}^{1} & 0 \\
+0 & h_{1,1}^{1} & h_{2,1}^{1} & 0 \\
+0 & h_{1,2}^{1} & h_{2,2}^{1} & h_{3,2}^{1} \\
+0 & 0 & h_{2,3}^{1} & h_{3,3}^{1}
 \end{bmatrix} -> \begin{bmatrix}
-b_{0,0} & b_{1,0} & b_{2,0} & 0 \\
-0 & b_{1,1} & b_{2,1} & b_{3,1} \\
-0 & 0 & b_{2,2} & b_{3,2} \\
-0 & 0 & b_{2,3} & b_{3,3}
+h_{0,0}^{2} & h_{1,0}^{2} & h_{2,0}^{2} & 0 \\
+0 & h_{1,1}^{2} & h_{2,1}^{2} & h_{3,1}^{2} \\
+0 & 0 & h_{2,2}^{2} & h_{3,2}^{2} \\
+0 & 0 & h_{2,3}^{2} & h_{3,3}^{2}
 \end{bmatrix} -> \begin{bmatrix}
-c_{0,0} & c_{1,0} & c_{2,0} & 0 \\
-0 & c_{1,1} & c_{2,1} & c_{3,1} \\
-0 & 0 & c_{2,2} & c_{3,2} \\
-0 & 0 & 0 & c_{3,3}
+h_{0,0}^{3} & h_{1,0}^{3} & h_{2,0}^{3} & 0 \\
+0 & h_{1,1}^{3} & h_{2,1}^{3} & h_{3,1}^{3} \\
+0 & 0 & h_{2,2}^{3} & h_{3,2}^{3} \\
+0 & 0 & 0 & h_{3,3}^{3}
 \end{bmatrix} $$
 
 After the forward iteration, lower diagonal part will become zero. This is done through given rotations as follows 
 
 $$ \begin{bmatrix}
-c & s & 0 & 0 \\
--s & c & 0 & 0 \\
+c_{1} & s_{1} & 0 & 0 \\
+-s_{1} & c_{1} & 0 & 0 \\
 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1
 \end{bmatrix} \times \begin{bmatrix}
-H_{0,0} & H_{0,1} & 0 & 0 \\
+h_{0,0} & H_{0,1} & 0 & 0 \\
 H_{0,1} & H_{1,1} & H_{1,2} & 0 \\
 0 & H_{1,2} & H_{2,2} & H_{2,3} \\
 0 & 0 & H_{2,3} & H_{3,3}
 \end{bmatrix} = \begin{bmatrix}
-\* & \* & \* & 0 \\
-0 & \* & \* & 0 \\
-0 & \* & \* & \* \\
-0 & 0 & \* & \*
+h_{0,0}^{1} & h_{1,0}^{1} & h_{2,0}^{1} & 0 \\
+0 & h_{1,1}^{1} & h_{2,1}^{1} & 0 \\
+0 & h_{1,2}^{1} & h_{2,2}^{1} & h_{3,2}^{1} \\
+0 & 0 & h_{2,3}^{1} & h_{3,3}^{1}
 \end{bmatrix} $$
 
 Here 
 
-$$ c = \frac{H_{0,0}}{\sqrt{H_{0,0}^{2} + H_{0,1}^{2}}} $$ 
+$$ c_{1} = \frac{H_{0,0}}{\sqrt{H_{0,0} \times H_{0,0}  + H_{0,1} \times H_{0,1}}} $$ 
 
-$$ s = \frac{H_{0,1}}{\sqrt{H_{0,0}^{2} + H_{0,1}^{2}}} $$ 
+$$ s_{1} = \frac{H_{0,1}}{\sqrt{H_{0,0} \times H_{0,0}  + H_{0,1} \times H_{0,1}}} $$ 
 
-for the next step, $c$ and $s$ values will be computed from new comuted matrix
+Similarly, 
+
+$$ \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & c_{2} & s_{2} & 0 \\
+0 & -s_{2} & c_{2} & 0  \\
+0 & 0 & 0 & 1
+\end{bmatrix} \times \begin{bmatrix}
+h_{0,0}^{1} & h_{1,0}^{1} & h_{2,0}^{1} & 0 \\
+0 & h_{1,1}^{1} & h_{2,1}^{1} & 0 \\
+0 & h_{1,2}^{1} & h_{2,2}^{1} & h_{3,2}^{1} \\
+0 & 0 & h_{2,3}^{1} & h_{3,3}^{1}
+\end{bmatrix} = \begin{bmatrix}
+h_{0,0}^{2} & h_{1,0}^{2} & h_{2,0}^{2} & 0 \\
+0 & h_{1,1}^{2} & h_{2,1}^{2} & h_{3,1}^{2} \\
+0 & 0 & h_{2,2}^{2} & h_{3,2}^{2} \\
+0 & 0 & h_{2,3}^{2} & h_{3,3}^{2}
+\end{bmatrix} $$
+
+Here 
+
+$$ c_{2} = \frac{h_{1,1}^{1}}{\sqrt{h_{1,1}^{1} \times h_{1,1}^{1}  + h_{1,2}^{1} \times h_{1,2}^{1}}} $$ 
+
+$$ s_{2} = \frac{h_{1,2}^{1}}{\sqrt{h_{1,1}^{1} \times h_{1,1}^{1}  + h_{1,2}^{1} \times h_{1,2}^{1}}}  $$ 
 
 
+Coressponding Q matrix will be 
+
+$$ Q = \begin{bmatrix}
+c_{1} & -s_{1} & 0 & 0 \\
+s_{1} & c_{1} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix} \times \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & c_{2} & -s_{2} & 0 \\
+0 & s_{2} & c_{2} & 0  \\
+0 & 0 & 0 & 1
+\end{bmatrix} \times \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & c_{3} & -s_{3} \\
+0 & 0 & s_{3} & c_{3}  \\
+\end{bmatrix} $$
 
 
+### Backward Iteration 
+Backward Iteration computed the $RQ$ matrix, hence it can be written as 
+
+$$ \begin{bmatrix}
+h_{0,0}^{3} & h_{1,0}^{3} & h_{2,0}^{3} & 0 \\
+0 & h_{1,1}^{3} & h_{2,1}^{3} & h_{3,1}^{3} \\
+0 & 0 & h_{2,2}^{3} & h_{3,2}^{3} \\
+0 & 0 & 0 & h_{3,3}^{3}
+\end{bmatrix} \times \begin{bmatrix}
+c_{1} & -s_{1} & 0 & 0 \\
+s_{1} & c_{1} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix} \times \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & c_{2} & -s_{2} & 0 \\
+0 & s_{2} & c_{2} & 0  \\
+0 & 0 & 0 & 1
+\end{bmatrix} \times \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & c_{3} & -s_{3} \\
+0 & 0 & s_{3} & c_{3}  \\
+\end{bmatrix} $$
 
 
 ### Additional Documentation
