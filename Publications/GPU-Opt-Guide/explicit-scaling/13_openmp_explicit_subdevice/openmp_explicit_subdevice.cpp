@@ -15,7 +15,9 @@
 #define DEVKIND 0
 #endif
 
-template <int num_subdevices> struct mptr { float *p[num_subdevices]; };
+template <int num_subdevices> struct mptr {
+  float *p[num_subdevices];
+};
 
 int main(int argc, char **argv) {
   constexpr int SIZE = 8e6;

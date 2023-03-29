@@ -1,0 +1,24 @@
+{
+  "guid": "473A43D4-CAA2-4852-AC20-3653EC7CCA16",
+  "name": "cuBLAS Migration",
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "This sample shows the execution of cuBLAS function migrated to SYCL.",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      "cd build",
+      "cmake ..",
+      "make",
+			"make run_amax"
+		 ]
+	}]
+  },
+  "expertise": "Code Optimization"
+}

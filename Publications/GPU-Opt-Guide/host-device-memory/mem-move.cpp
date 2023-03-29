@@ -7,7 +7,7 @@
 #include <chrono>
 #include <iostream>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 #include "align.hpp"
 

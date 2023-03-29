@@ -42,9 +42,12 @@ int main(int argc, char* argv[]) {
   // reading and validating the command line arguments
   std::string data_dir = "../test_data";
   bool passed = true;
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   int runs = 2;
   int frames = 2;
+#elif defined(FPGA_SIMULATOR)
+  int runs = 2;
+  int frames = 1;
 #else
   int runs = 2;
   int frames = 8;
@@ -78,11 +81,12 @@ int main(int argc, char* argv[]) {
   }
   /////////////////////////////////////////////////////////////
 
-  // the device selector
-#ifdef FPGA_EMULATOR
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   // create the device queue
@@ -96,6 +100,13 @@ int main(int argc, char* argv[]) {
     std::terminate();
   }
 
+  auto device = q.get_device();
+
+  std::cout << "Running on device: "
+            << device.get_info<info::device::name>().c_str() 
+            << std::endl;
+
+
   // parse the input files
   int cols, rows, pixel_count;
   ANRParams params;
@@ -106,6 +117,7 @@ int main(int argc, char* argv[]) {
   // create the output pixels (initialize to all 0s)
   std::vector<PixelT> out_pixels(in_pixels.size(), 0);
 
+#if defined (IS_BSP)
   // allocate memory on the device for the input and output
   PixelT *in, *out;
   if ((in = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
@@ -116,18 +128,31 @@ int main(int argc, char* argv[]) {
     std::cerr << "ERROR: could not allocate space for 'out'\n";
     std::terminate();
   }
+#else 
+  // allocate memory on the host for the input and output
+  PixelT *in, *out;
+  if ((in = malloc_shared<PixelT>(pixel_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate space for 'in'\n";
+    std::terminate();
+  }
+  if ((out = malloc_shared<PixelT>(pixel_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate space for 'out'\n";
+    std::terminate();
+  }
+#endif   
+
 
   // copy the input data to the device memory and wait for the copy to finish
   q.memcpy(in, in_pixels.data(), pixel_count * sizeof(PixelT)).wait();
 
   // allocate space for the intensity sigma LUT
-  float* sig_i_lut_data_ptr = IntensitySigmaLUT::AllocateDevice(q);
+  float* sig_i_lut_data_ptr = IntensitySigmaLUT::Allocate(q);
 
   // create the intensity sigma LUT data locally on the host
   IntensitySigmaLUT sig_i_lut_host(params);
 
   // copy the intensity sigma LUT to the device
-  sig_i_lut_host.CopyDataToDevice(q, sig_i_lut_data_ptr).wait();
+  sig_i_lut_host.CopyData(q, sig_i_lut_data_ptr).wait();
   //////////////////////////////////////////////////////////////////////////////
 
   // track timing information in ms
@@ -321,9 +346,17 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
                 ANRParams& params) {
   // parse the pixel data files
   int noisy_w, noisy_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_input_noisy.data", in_pixels, noisy_w, noisy_h);
+#else
   ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
+#endif
   int ref_w, ref_h;
+#if FPGA_SIMULATOR
+  ParseDataFile(data_dir + "/small_output_ref.data", ref_pixels, ref_w, ref_h);
+#else
   ParseDataFile(data_dir + "/output_ref.data", ref_pixels, ref_w, ref_h);
+#endif
 
   // ensure the dimensions match
   if (noisy_w != ref_w) {

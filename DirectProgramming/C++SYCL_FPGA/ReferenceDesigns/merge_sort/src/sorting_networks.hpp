@@ -104,7 +104,17 @@ event SortNetworkKernel(queue& q, ValueT* out_ptr, IndexT total_count,
   const IndexT iterations = total_count / k_width;
 
   return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+    // Creating a device_ptr tells the compiler that this pointer is in
+    // device memory, not host memory, and avoids creating extra connections
+    // to host memory
+    // This is only done in the case where we target a BSP as device 
+    // pointers are not supported when targeting an FPGA family/part
+#if defined(IS_BSP)
     device_ptr<ValueT> out(out_ptr);
+#else
+    ValueT* out(out_ptr);
+#endif
+
     for (IndexT i = 0; i < iterations; i++) {
       // read the input data from the pipe
       sycl::vec<ValueT, k_width> data = InPipe::read();

@@ -16,6 +16,7 @@ class IntensitySigmaLUT {
   // default constructor
   IntensitySigmaLUT() {}
 
+#if defined (IS_BSP)
   // construct from a device_ptr (for constructing from device memory)
   IntensitySigmaLUT(device_ptr<float> ptr) {
     // use a pipelined LSU to load from device memory since we don't
@@ -25,6 +26,14 @@ class IntensitySigmaLUT {
       data_[i] = PipelinedLSU::load(ptr + i);
     }
   }
+#else 
+  // construct from a regular pointer
+  IntensitySigmaLUT(float* ptr) {
+    for (int i = 0; i < lut_depth; i++) {
+      data_[i] = ptr[i];
+    }
+  }
+#endif
 
   // construct from the ANR parameters (actually builds the LUT)
   IntensitySigmaLUT(ANRParams params) {
@@ -39,8 +48,12 @@ class IntensitySigmaLUT {
   }
 
   // helper static method to allocate enough memory to hold the LUT
-  static float* AllocateDevice(sycl::queue& q) {
+  static float* Allocate(sycl::queue& q) {
+#if defined (IS_BSP)
     float* ptr = sycl::malloc_device<float>(lut_depth, q);
+#else 
+    float* ptr = sycl::malloc_shared<float>(lut_depth, q);
+#endif   
     if (ptr == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'ptr'\n";
       std::terminate();
@@ -49,7 +62,7 @@ class IntensitySigmaLUT {
   }
 
   // helper method to copy the data to the device
-  sycl::event CopyDataToDevice(sycl::queue& q, float* ptr) {
+  sycl::event CopyData(sycl::queue& q, float* ptr) {
     return q.memcpy(ptr, data_, lut_depth * sizeof(float));
   }
 

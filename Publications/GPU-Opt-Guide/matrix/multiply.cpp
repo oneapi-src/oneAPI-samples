@@ -6,7 +6,7 @@
 // matrix multiply routines
 #include "multiply.hpp"
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 
 using namespace std;
@@ -23,8 +23,7 @@ void multiply1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
   int i, j, k;
 
   // Declare a deviceQueue
-  sycl::default_selector device;
-  sycl::queue q(device, exception_handler);
+  sycl::queue q(sycl::default_selector_v, exception_handler);
   cout << "Running on " << q.get_device().get_info<sycl::info::device::name>()
        << "\n";
   // Declare a 2 dimensional range
@@ -62,8 +61,7 @@ void multiply1_1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
   int i, j, k;
 
   // Declare a deviceQueue
-  sycl::default_selector device;
-  sycl::queue q(device, exception_handler);
+  sycl::queue q(sycl::default_selector_v, exception_handler);
   cout << "Running on " << q.get_device().get_info<sycl::info::device::name>()
        << "\n";
 
@@ -103,8 +101,7 @@ void multiply1_2(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
   int i, j, k;
 
   // Declare a deviceQueue
-  sycl::default_selector device;
-  sycl::queue q(device, exception_handler);
+  sycl::queue q(sycl::default_selector_v, exception_handler);
   cout << "Running on " << q.get_device().get_info<sycl::info::device::name>()
        << "\n";
 
@@ -126,12 +123,10 @@ void multiply1_2(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
      sycl::accessor accessorC(bufferC, h);
 
      // Create matrix tiles
-     sycl::accessor<TYPE, 2, sycl::access::mode::read_write,
-                    sycl::access::target::local>
-         aTile(sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);
-     sycl::accessor<TYPE, 2, sycl::access::mode::read_write,
-                    sycl::access::target::local>
-         bTile(sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);
+     sycl::local_accessor<TYPE, 2> aTile(
+         sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);
+     sycl::local_accessor<TYPE, 2> bTile(
+         sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);
      // Execute matrix multiply in parallel over our matrix_range
      // ind is an index into this range
      h.parallel_for(sycl::nd_range<2>(matrix_range, tile_range),

@@ -36,6 +36,10 @@ int main(int argc, char* argv[]) {
   size_t reps = 20;
   size_t buffer_count = 1 << 12;  // 4096
   size_t iterations = 2;
+#elif defined(FPGA_SIMULATOR)
+  size_t reps = 2;
+  size_t buffer_count = 1 << 8;  // 256
+  size_t iterations = 2;
 #else
   size_t reps = 200;
   size_t buffer_count = 1 << 19;  // 524388
@@ -123,11 +127,12 @@ int main(int argc, char* argv[]) {
   bool passed = true;
 
   try {
-    // device selector
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // queue properties to enable profiling
@@ -137,12 +142,16 @@ int main(int argc, char* argv[]) {
     queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // make sure the device supports USM host allocations
-    device d = q.get_device();
-    if (!d.get_info<info::device::usm_host_allocations>()) {
+    auto device = q.get_device();
+    if (!device.get_info<info::device::usm_host_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations\n";
       std::terminate();
     }
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     ///////////////////////////////////////////////////////////////////////////
     // find the bandwidth of each processing component in our design

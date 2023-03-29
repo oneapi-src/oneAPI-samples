@@ -250,8 +250,8 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
             // Update optval[] -- calculate each level of the binomial tree.
             // reg[] helps to achieve updating INNER_UNROLL elements in optval[]
             // simultaneously.
-            [[intel::disable_loop_pipelining]] for (short t = 0;
-                                                        t <= steps - 1; ++t) {
+            [[intel::disable_loop_pipelining]] // NO-FORMAT: Attribute
+            for (short t = 0; t <= steps - 1; ++t) {
               [[intel::fpga_register]] double reg[INNER_UNROLL + 1][OUTER_UNROLL];
 
               double val_1, val_2;
@@ -264,8 +264,8 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               // L4:
               // Calculate all the elements in optval[] -- all the tree nodes
               // for one level of the tree
-              [[intel::ivdep]] for (int n = 0; n <= steps - 1 - t;
-                                        n += INNER_UNROLL) {
+              [[intel::ivdep]] // NO-FORMAT: Attribute
+              for (int n = 0; n <= steps - 1 - t; n += INNER_UNROLL) {
 
                 #pragma unroll
                 for (short ic = 0; ic < OUTER_UNROLL; ++ic) {
@@ -732,20 +732,22 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector device_selector;
-#else
-    ext::intel::fpga_selector device_selector;
+
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
-    queue q(device_selector, fpga_tools::exception_handler);
-
-    std::cout << "Running on device:  "
-              << q.get_device().get_info<info::device::name>().c_str() << "\n";
+    queue q(selector, fpga_tools::exception_handler);
 
     device device = q.get_device();
-    std::cout << "Device name: "
-              << device.get_info<info::device::name>().c_str() << "\n \n \n";
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     vector<InputData> inp;
 
@@ -820,17 +822,19 @@ int main(int argc, char *argv[]) {
     vector<CRRMeta> in_buff_params(n_crrs * 3);
     vector<CRRPerStepMeta> in_buff2_params(n_crrs * 3);
 
-    vector<CRRResParams> res_params(n_crrs * 3);
-    vector<CRRResParams> res_params_dummy(n_crrs * 3);
-
     // Prepare metadata as input to kernel
     PrepareKernelData(in_params, array_params, in_buff_params, in_buff2_params,
                       n_crrs);
 
+#ifdef FPGA_HARDWARE
     // warmup run - use this run to warmup accelerator
+    vector<CRRResParams> res_params_dummy(n_crrs * 3);
     CrrSolver(n_crrs, in_buff_params, res_params_dummy, in_buff2_params,
                q);
+#endif
+
     // Timed run - profile performance
+    vector<CRRResParams> res_params(n_crrs * 3);
     double time = CrrSolver(n_crrs, in_buff_params, res_params,
                              in_buff2_params, q);
     bool pass = true;

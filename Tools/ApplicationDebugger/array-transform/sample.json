@@ -2,8 +2,8 @@
   "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
   "name": "Debugger: Array Transform",
   "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Tools/Application Debugger"],
-  "description": "A small Data Parallel C++ (DPC++) example that is used in the \"Get Started Guide\" of the Application Debugger to exercise major debugger functionality",
-  "toolchain": ["dpcpp"],
+  "description": "A small SYCL (C++)  example that is used in the \"Get Started Guide\" of the Application Debugger to exercise major debugger functionality",
+  "toolchain": ["icpx"],
   "dependencies": ["debugger"],
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU", "GPU"],
@@ -16,16 +16,16 @@
         "steps": [
           "mkdir -p build_cpu; cd build_cpu; cmake ..",
           "make",
-          "./array-transform cpu",
+	  "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
           "make clean"
         ]
       },
       {
         "id": "cpu-aot",
         "steps": [
-          "mkdir -p build_cpu_aot; cd build_cpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=cpu",
+          "mkdir -p build_cpu_aot; cd build_cpu_aot; cmake .. -DSYCL_COMPILE_TARGET=cpu",
           "make",
-          "./array-transform cpu",
+	  "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
           "make clean"
         ]
       },
@@ -34,16 +34,16 @@
         "steps": [
           "mkdir -p build_gpu; cd build_gpu; cmake ..",
           "make",
-          "./array-transform gpu",
+	  "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
           "make clean"
         ]
       },
       {
         "id": "gpu-aot",
         "steps": [
-          "mkdir -p build_gpu_aot; cd build_gpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=gen9,gen12LP",
+          "mkdir -p build_gpu_aot; cd build_gpu_aot; cmake .. -DSYCL_COMPILE_TARGET=gen9,gen12LP",
           "make",
-          "./array-transform gpu",
+	  "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
           "make clean"
         ]
       },
@@ -52,16 +52,16 @@
         "steps": [
           "mkdir -p build_acc; cd build_acc; cmake ..",
           "make",
-          "./array-transform accelerator",
+          "ONEAPI_DEVICE_SELECTOR=*:fpga ./array-transform",
           "make clean"
         ]
       },
       {
         "id": "fpga-emu-aot",
         "steps": [
-          "mkdir -p build_acc_aot; cd build_acc_aot; cmake .. -DDPCPP_COMPILE_TARGET=fpga-emu",
+          "mkdir -p build_acc_aot; cd build_acc_aot; cmake .. -DSYCL_COMPILE_TARGET=fpga-emu",
           "make",
-          "./array-transform accelerator",
+          "ONEAPI_DEVICE_SELECTOR=*:fpga ./array-transform",
           "make clean"
         ]
       }
@@ -69,26 +69,35 @@
     "windows": [
       {
         "id": "cpu",
+	"env": [
+          "set ONEAPI_DEVICE_SELECTOR=*:cpu"
+        ],
         "steps": [
           "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
           "cd x64\\Debug",
-          "array-transform.exe cpu"
+          "array-transform.exe"
         ]
       },
       {
         "id": "gpu",
+	"env": [
+          "set ONEAPI_DEVICE_SELECTOR=level_zero:gpu"
+        ],
         "steps": [
           "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
           "cd x64\\Debug",
-          "array-transform.exe gpu"
+          "array-transform.exe"
         ]
       },
       {
         "id": "fpga-emu",
+        "env": [
+          "set ONEAPI_DEVICE_SELECTOR=*:fpga"
+        ],
         "steps": [
           "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
           "cd x64\\Debug",
-          "array-transform.exe accelerator"
+          "array-transform.exe"
         ]
       }
     ]

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -24,13 +24,13 @@ int main() {
     input[i] |= ((long)rand() % 256) << 56;
   }
 
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << "\n";
 
   // Snippet begin
-  constexpr int blockSize = 256;
+  constexpr int BLOCK_SIZE = 256;
   constexpr int NUM_BINS = 32;
 
   std::vector<unsigned long> hist(NUM_BINS, 0);
@@ -42,11 +42,11 @@ int main() {
     sycl::accessor macc(mbuf, h, sycl::read_only);
     auto hacc = hbuf.get_access<sycl::access::mode::atomic>(h);
     h.parallel_for(
-        sycl::nd_range(sycl::range{N / blockSize}, sycl::range{64}),
+        sycl::nd_range(sycl::range{N / BLOCK_SIZE}, sycl::range{64}),
         [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
           int group = it.get_group()[0];
           int gSize = it.get_local_range()[0];
-          sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+          auto sg = it.get_sub_group();
           int sgSize = sg.get_local_range()[0];
           int sgGroup = sg.get_group_id()[0];
 
@@ -55,10 +55,10 @@ int main() {
           for (int k = 0; k < NUM_BINS; k++) {
             histogram[k] = 0;
           }
-          for (int k = 0; k < blockSize; k++) {
+          for (int k = 0; k < BLOCK_SIZE; k++) {
             unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * blockSize +
-                        sgGroup * sgSize * blockSize + sgSize * k);
+                sg.load(macc.get_pointer() + group * gSize * BLOCK_SIZE +
+                        sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
 #pragma unroll
             for (int i = 0; i < 8; i++) {
               unsigned int c = x & 0x1FU;

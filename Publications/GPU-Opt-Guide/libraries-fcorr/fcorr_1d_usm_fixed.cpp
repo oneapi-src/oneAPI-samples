@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+
+// Snippet begin
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <mkl.h>
 #include <oneapi/mkl/dfti.hpp>
@@ -18,7 +20,7 @@ int main(int argc, char **argv) {
     N = 32;
 
   // Initialize SYCL queue
-  sycl::queue Q(sycl::default_selector{});
+  sycl::queue Q(sycl::default_selector_v);
   auto sycl_device = Q.get_device();
   auto sycl_context = Q.get_context();
   std::cout << "Running on: "
@@ -101,3 +103,4 @@ int main(int argc, char **argv) {
   sycl::free(sig2, sycl_context);
   sycl::free(corr, sycl_context);
 }
+// Snippet end

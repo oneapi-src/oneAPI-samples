@@ -284,9 +284,22 @@ sycl::event SubmitGzipMetadataReader(sycl::queue& q, int in_count,
                                      GzipHeaderData* hdr_data_ptr, int* crc_ptr,
                                      int* out_count_ptr) {
   return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+
+#if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
     sycl::device_ptr<GzipHeaderData> hdr_data(hdr_data_ptr);
     sycl::device_ptr<int> crc(crc_ptr);
     sycl::device_ptr<int> out_count(out_count_ptr);
+#else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
+    GzipHeaderData* hdr_data(hdr_data_ptr);
+    int* crc(crc_ptr);
+    int* out_count(out_count_ptr);
+#endif    
 
     // local copies of the output data
     GzipHeaderData hdr_data_loc;

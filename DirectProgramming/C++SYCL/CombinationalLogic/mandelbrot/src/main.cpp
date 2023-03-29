@@ -7,12 +7,10 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
-#include <CL/sycl.hpp>
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "mandel.hpp"
-
 
 using namespace std;
 using namespace sycl;

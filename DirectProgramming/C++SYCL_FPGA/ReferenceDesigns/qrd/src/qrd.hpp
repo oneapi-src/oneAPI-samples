@@ -61,9 +61,16 @@ void QRDecompositionImpl(
                                                   kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
+#if defined (IS_BSP)
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *q_device = sycl::malloc_device<TT>(kQMatrixSize * matrix_count, q);
   TT *r_device = sycl::malloc_device<TT>(kRMatrixSize * matrix_count, q);
+#else
+  // malloc_device are not supported when targetting an FPGA part/family
+  TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
+  TT *q_device = sycl::malloc_shared<TT>(kQMatrixSize * matrix_count, q);
+  TT *r_device = sycl::malloc_shared<TT>(kRMatrixSize * matrix_count, q);
+#endif  
 
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
                                                           * sizeof(TT)).wait();
@@ -96,7 +103,18 @@ void QRDecompositionImpl(
                                     ]() [[intel::kernel_args_restrict]] {
     // Read the R matrix from the RMatrixPipe pipe and copy it to the
     // FPGA DDR
-    sycl::device_ptr<TT> vector_ptr_device(r_device);
+
+#if defined (IS_BSP)
+    // When targeting a BSP, we instruct the compiler that this pointer
+    // lives on the device.
+    // Knowing this, the compiler won't generate hardware to
+    // potentially get data from the host.
+    sycl::device_ptr<TT> vector_ptr_located(r_device);
+#else
+    // Device pointers are not supported when targeting an FPGA 
+    // family/part
+    TT* vector_ptr_located(r_device);
+#endif  
 
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
@@ -106,7 +124,7 @@ void QRDecompositionImpl(
       [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
       for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
         for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
-          vector_ptr_device[matrix_index * kRMatrixSize + r_idx] =
+          vector_ptr_located[matrix_index * kRMatrixSize + r_idx] =
               RMatrixPipe::read();
         }  // end of r_idx
       }    // end of repetition_index

@@ -68,18 +68,24 @@ double GetExecutionTime(const event &e) {
 }
 
 void RunKernel(std::vector<int> &in, std::vector<int> &out) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   try {
     // create the SYCL device queue
     queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     buffer in_buf(in);
     buffer out_buf(out);
@@ -105,8 +111,8 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // default heuristic of finding the minimum II * (1/fMAX) Relaxing the
           // II on a short loop with a long feedback path will remove the
           // bottleneck the loop had on the maximum achievable fMAX of the
-          // design The default targeted fMAX is 240MHz for Arria® 10 and 480MHz
-          // for Stratix® 10, so different IIs need to be specified so the
+          // design. The default targeted fMAX is target dependent,
+          // so different IIs need to be specified so the
           // compiler can schedule the loop such that it does not restrict the
           // maximum fMAX
 #if defined(ENABLE_II)

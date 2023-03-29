@@ -56,6 +56,7 @@ flowchart LR
 |:---                                                       |:---                                                  |:---
 | [fpga_compile](Tutorials/GettingStarted/fpga_compile)     | [Tutorials/GettingStarted](Tutorials/GettingStarted) | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> FPGA device image types and when to use them. <br> The compile options used to target FPGA
 | [fast_recompile](Tutorials/GettingStarted/fast_recompile) | [Tutorials/GettingStarted](Tutorials/GettingStarted) | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link. <br> Which method to choose for your project
+| [fpga_template](Tutorials/GettingStarted/fpga_template) | [Tutorials/GettingStarted](Tutorials/GettingStarted) | Showcases the CMake build system that is used in other code samples, and serves as a template that you can re-use in your own designs.
 
 #### Tier 2: Explore the Fundamentals
 
@@ -74,25 +75,29 @@ flowchart LR
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-| Sample                                                                    | Category                                             | Description
-|:---                                                                       |:---                                                  |:---
-| [ac_fixed](Tutorials/Features/ac_fixed)                                   | [Tutorials/Features](Tutorials/Features)             | How different methods of `ac_fixed` number construction affect hardware resource utilization <br> Recommended method for constructing `ac_fixed` numbers in your kernel <br> Accessing and using the `ac_fixed` math library functions <br> Trading off accuracy of results for reduced resource usage on the FPGA
-| [ac_int](Tutorials/Features/ac_int)                                       | [Tutorials/Features](Tutorials/Features)             | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
-| [double_buffering](Tutorials/DesignPatterns/double_buffering)             | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the double buffering optimization technique
-| [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement) | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to explicitly manage the movement of data for the FPGA
-| [hostpipes (experimental)](Tutorials/Features/experimental/hostpipes)     | [Tutorials/Features](Tutorials/Features)             | How to use host pipes to send and receive data between a host and the FPGA 
-| [kernel_args_restrict](Tutorials/Features/kernel_args_restrict)           | [Tutorials/Features](Tutorials/Features)             | The problem of pointer aliasing and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel <br> The effect this attribute can have on kernel performance on FPGA
-| [loop_coalesce](Tutorials/Features/loop_coalesce)                         | [Tutorials/Features](Tutorials/Features)             | What the `loop_coalesce` attribute does <br> How `loop_coalesce` attribute affects resource usage and loop throughput <br> How to apply the `loop_coalesce` attribute to loops in your program <br> Which loops make good candidates for coalescing
-| [loop_fusion](Tutorials/Features/loop_fusion)                             | [Tutorials/Features](Tutorials/Features)             | Basics of loop fusion <br> The reasons for loop fusion<br/>How to use loop fusion to increase performance <br> Understanding safe application of loop fusion
-| [loop_initiation_interval](Tutorials/Features/loop_initiation_interval)   | [Tutorials/Features](Tutorials/Features)             | The f<sub>MAX</sub>-II tradeoff <br> Default behavior of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
-| [loop_ivdep](Tutorials/Features/loop_ivdep)                               | [Tutorials/Features](Tutorials/Features)             | Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a safe dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
-| [loop_unroll](Tutorials/Features/loop_unroll)                             | [Tutorials/Features](Tutorials/Features)             | Basics of loop unrolling. <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
-| [max_interleaving](Tutorials/Features/max_interleaving)                   | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `max_interleaving` attribute <br> How the `max_interleaving` attribute affects loop resource use <br> How to apply the `max_interleaving` attribute to loops in your program
-| [memory_attributes](Tutorials/Features/memory_attributes)                 | [Tutorials/Features](Tutorials/Features)             | The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes
-| [pipes](Tutorials/Features/pipes)                                         | [Tutorials/Features](Tutorials/Features)             | The basics of using SYCL*-compliant pipes extension for FPGA <br> How to declare and use pipes
-| [printf](Tutorials/Features/printf)                                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to declare and use `printf` in program
 
-#### Tier 3: Explore the Advances Techniques
+| Sample                                                                                                                        | Category                                             | Description
+|:---                                                                                                                           |:---                                                  |:---
+| [ac_fixed](Tutorials/Features/ac_fixed)                                                                                       | [Tutorials/Features](Tutorials/Features)             | How different methods of `ac_fixed` number construction affect hardware resource utilization <br> Recommended method for constructing `ac_fixed` numbers in your kernel <br> Accessing and using the `ac_fixed` math library functions <br> Trading off accuracy of results for reduced resource usage on the FPGA
+| [ac_int](Tutorials/Features/ac_int)                                                                                           | [Tutorials/Features](Tutorials/Features)             | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
+| [device_global (experimental)](Tutorials/Features/experimental/device_global)                                                 | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `device_global` class <br> How to initialize a `device_global` to non-zero values
+| [double_buffering](Tutorials/DesignPatterns/double_buffering)                                                                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the double buffering optimization technique
+| [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement)                                                     | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to explicitly manage the movement of data for the FPGA
+| [hostpipes (experimental)](Tutorials/Features/experimental/hostpipes)                                                         | [Tutorials/Features](Tutorials/Features)             | How to use host pipes to send and receive data between a host and the FPGA 
+| [kernel_args_restrict](Tutorials/Features/kernel_args_restrict)                                                               | [Tutorials/Features](Tutorials/Features)             | The problem of pointer aliasing and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel <br> The effect this attribute can have on kernel performance on FPGA
+| [loop_coalesce](Tutorials/Features/loop_coalesce)                                                                             | [Tutorials/Features](Tutorials/Features)             | What the `loop_coalesce` attribute does <br> How `loop_coalesce` attribute affects resource usage and loop throughput <br> How to apply the `loop_coalesce` attribute to loops in your program <br> Which loops make good candidates for coalescing
+| [loop_fusion](Tutorials/Features/loop_fusion)                                                                                 | [Tutorials/Features](Tutorials/Features)             | Basics of loop fusion <br> The reasons for loop fusion<br/>How to use loop fusion to increase performance <br> Understanding safe application of loop fusion
+| [loop_initiation_interval](Tutorials/Features/loop_initiation_interval)                                                       | [Tutorials/Features](Tutorials/Features)             | The f<sub>MAX</sub>-II tradeoff <br> Default behavior of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
+| [loop_ivdep](Tutorials/Features/loop_ivdep)                                                                                   | [Tutorials/Features](Tutorials/Features)             | Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a safe dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
+| [loop_unroll](Tutorials/Features/loop_unroll)                                                                                 | [Tutorials/Features](Tutorials/Features)             | Basics of loop unrolling. <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
+| [max_interleaving](Tutorials/Features/max_interleaving)                                                                       | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `max_interleaving` attribute <br> How the `max_interleaving` attribute affects loop resource use <br> How to apply the `max_interleaving` attribute to loops in your program
+| [memory_attributes](Tutorials/Features/memory_attributes)                                                                     | [Tutorials/Features](Tutorials/Features)             | The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes
+| [pipes](Tutorials/Features/pipes)                                                                                             | [Tutorials/Features](Tutorials/Features)             | The basics of using SYCL*-compliant pipes extension for FPGA <br> How to declare and use pipes
+| [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to declare and use `printf` in program
+| [register_map_and_streaming_interfaces (experimental)](Tutorials/Features/experimental/register_map_and_streaming_interfaces) | [Tutorials/Features](Tutorials/Features)             | How to specify the kernel invocation interface and kernel argument interfaces
+
+
+#### Tier 3: Explore the Advanced Techniques
 
 ```mermaid
 flowchart LR
@@ -122,9 +127,11 @@ flowchart LR
 | [loop_carried_dependency](Tutorials/DesignPatterns/loop_carried_dependency)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A technique to remove loop carried dependencies from your FPGA device code, and when to apply it
 | [lsu_control](Tutorials/Features/lsu_control)                                     | [Tutorials/Features](Tutorials/Features)             | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
 | [mem_channel](Tutorials/Features/mem_channel)                                     | [Tutorials/Features](Tutorials/Features)             | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
+| [minimum_latency](Tutorials/Features/optimization_levels/minimum_latency)         | [Tutorials/Features](Tutorials/Features)             | How to use the minimum latency flow to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency flow
 | [n_way_buffering](Tutorials/DesignPatterns/n_way_buffering)                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to apply the N-way buffering optimization technique
 | [onchip_memory_cache](Tutorials/DesignPatterns/onchip_memory_cache)               | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the on-chip memory cache optimization
 | [optimize_inner_loop](Tutorials/DesignPatterns/optimize_inner_loop)               | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimize the throughput of an inner loop with a low trip
+| [platform_designer](Tutorials/Tools/experimental/platform_designer)               | [Tutorials/Tools](Tutorials/Tools)                   | How to use an IP Component with Intel® Quartus® Prime Pro Edition software suite and Platform Designer
 | [pipe_array](Tutorials/DesignPatterns/pipe_array)                                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
 | [private_copies](Tutorials/Features/private_copies)                               | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program
 | [read_only_cache](Tutorials/Features/read_only_cache)                             | [Tutorials/Features](Tutorials/Features)             | How and when to use the read-only cache feature
@@ -219,7 +226,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 ### Use Integrated Development Environments (IDEs)
 
-You can compile and run the sample using the Eclipse* IDE (Linux*) and Microsoft Visual Studio* (Windows*). For  on using the IDE integration, see [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
+You can compile and run the sample using the Eclipse* IDE (Linux*) and Microsoft Visual Studio* (Windows*). For  on using the IDE integration, see [FPGA Workflows on Third-Party IDEs for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 
 ### Troubleshooting
@@ -269,16 +276,16 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
 
 Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
 
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
-
 Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
 
 >**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.
 
 ## Documentation
 
-- The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of SYCL for FPGA.
-- The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
+- The [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
 - The [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
-- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL by suggesting a series of samples.
 - The [Intel® oneAPI DPC++/C++ Compiler Release Notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
+- The [Migrating OpenCL™ FPGA Designs to SYCL*](https://www.intel.com/content/www/us/en/develop/documentation/migrate-opencl-fpga-designs-to-dpcpp/top.html) guide.
+- [Additional FPGA-specific Resources](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/additional-information.html).
+- The [Intel® Quartus® Prime Pro and Standard Software User Guides](https://www.intel.com/content/www/us/en/support/programmable/support-resources/design-software/user-guides.html).
+

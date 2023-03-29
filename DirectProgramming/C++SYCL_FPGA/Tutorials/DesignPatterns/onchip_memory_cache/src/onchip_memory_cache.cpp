@@ -73,35 +73,35 @@ int main() {
   double time_kernel;
 
 // Create queue, get platform and device
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector device_selector;
-  std::cout << "\nEmulator output does not demonstrate true hardware "
-               "performance. The design may need to run on actual hardware "
-               "to observe the performance benefit of the optimization "
-               "exemplified in this tutorial.\n\n";
-#elif defined(FPGA_SIMULATOR)
-  sycl::ext::intel::fpga_simulator_selector device_selector;
-  std::cout << "\nSimulator output does not demonstrate true hardware "
-               "performance. The design may need to run on actual hardware "
-               "to observe the performance benefit of the optimization "
-               "exemplified in this tutorial.\n\n";
-#else
-  sycl::ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
+
+#ifndef FPGA_HARDWARE
+  std::cout << "\nEmulator and simulator outputs do not demonstrate "
+               "true hardware performance. The design may need to run "
+               "on actual hardware to observe the performance benefit "
+               "of the optimization exemplified in this tutorial.\n\n";
+#endif
+
   try {
     auto prop_list =
         sycl::property_list{sycl::property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
+    sycl::queue q(selector, fpga_tools::exception_handler, prop_list);
 
     sycl::platform platform = q.get_context().get_platform();
     sycl::device device = q.get_device();
     std::cout << "Platform name: "
               << platform.get_info<sycl::info::platform::name>().c_str() 
               << "\n";
-    std::cout << "Device name: "
-              << device.get_info<sycl::info::device::name>().c_str() 
-              << "\n\n\n";
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     std::cout << "\nNumber of inputs: " << kInitNumInputs << "\n";
     std::cout << "Number of outputs: " << kNumOutputs << "\n\n";

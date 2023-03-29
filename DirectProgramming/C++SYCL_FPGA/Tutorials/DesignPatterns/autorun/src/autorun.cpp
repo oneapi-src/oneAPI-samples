@@ -13,12 +13,12 @@ using namespace sycl;
 
 // choose the device selector based on emulation or actual hardware
 // we make this a global variable so it can be used by the autorun kernels
-#if defined(FPGA_EMULATOR)
-ext::intel::fpga_emulator_selector ds;
-#elif defined(FPGA_SIMULATOR)
-ext::intel::fpga_simulator_selector ds;
-#else
-ext::intel::fpga_selector ds;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
 // declare the kernel names globally to reduce name mangling
@@ -55,7 +55,7 @@ struct MyAutorun {
 
 // declaring a global instance of this class causes the constructor to be called
 // before main() starts, and the constructor launches the kernel.
-fpga_tools::Autorun<ARKernelID> ar_kernel{ds, MyAutorun{}};
+fpga_tools::Autorun<ARKernelID> ar_kernel{selector, MyAutorun{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ struct MyAutorunForever {
 // declaring a global instance of this class causes the constructor to be called
 // before main() starts, and the constructor launches the kernel.
 fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{
-    ds, MyAutorunForever{}};
+    selector, MyAutorunForever{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 //
@@ -120,7 +120,13 @@ int main() {
 
   try {
     // create the queue
-    queue q(ds, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
+
+    sycl::device device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // stream data through the Autorun kernel
     std::cout << "Running the Autorun kernel test\n";

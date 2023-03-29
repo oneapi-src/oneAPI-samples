@@ -34,20 +34,29 @@ using namespace sycl;
 // This FPGA best practice reduces name mangling in the optimization reports.
 template <int N> class KernelCompute;
 
-template <int spec_iter>
+template <int spec_iter, bool first_call = false>
 void ComplexExit(float bound, int &res) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
+
   double kernel_time_ms = 0.0;
   try {
     // create the device queue with profiling enabled
     auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(selector, fpga_tools::exception_handler, prop_list);
+
+    if constexpr (first_call){
+      auto device = q.get_device();
+
+      std::cout << "Running on device: "
+                << device.get_info<sycl::info::device::name>().c_str()
+                << std::endl;
+    }
 
     // The scalar inputs are passed to the kernel using the lambda capture,
     // but a SYCL buffer must be used to return a scalar from the kernel.
@@ -120,15 +129,15 @@ int main(int argc, char *argv[]) {
 // This reflects compute latency differences on different hardware
 // architectures, and is a low-level optimization.
 #if defined(A10)
-  ComplexExit<0>(bound, r0);
+  ComplexExit<0, true>(bound, r0);
   ComplexExit<10>(bound, r1);
   ComplexExit<27>(bound, r2);
 #elif defined(S10)
-  ComplexExit<0>(bound, r0);
+  ComplexExit<0, true>(bound, r0);
   ComplexExit<10>(bound, r1);
   ComplexExit<54>(bound, r2);
 #elif defined(Agilex)
-  ComplexExit<0>(bound, r0);
+  ComplexExit<0, true>(bound, r0);
   ComplexExit<10>(bound, r1);
   ComplexExit<50>(bound, r2);
 #else

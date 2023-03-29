@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // SYCL
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 // SYCL oneAPI extension
 #include <sycl/ext/oneapi/backend/level_zero.hpp>

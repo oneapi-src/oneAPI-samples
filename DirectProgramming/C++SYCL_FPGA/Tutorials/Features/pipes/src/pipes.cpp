@@ -104,12 +104,12 @@ int main(int argc, char *argv[]) {
     producer_input[i] = rand() % max_val;
   }
 
-#if defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector;
-#elif defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   event producer_event, consumer_event;
@@ -119,7 +119,13 @@ int main(int argc, char *argv[]) {
     auto props = property_list{property::queue::enable_profiling()};
 
     // create the device queue with SYCL profiling enabled
-    queue q(device_selector, fpga_tools::exception_handler, props);
+    queue q(selector, fpga_tools::exception_handler, props);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // create the producer and consumer buffers
     buffer producer_buffer(producer_input);

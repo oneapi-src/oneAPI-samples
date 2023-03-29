@@ -10,7 +10,7 @@
 #include <random>
 #include <vector>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 constexpr int N = 7;
 
@@ -27,7 +27,7 @@ static auto exception_handler = [](sycl::exception_list eList) {
 };
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{}, exception_handler,
+  sycl::queue q{sycl::gpu_selector_v, exception_handler,
                 sycl::property::queue::enable_profiling{}};
 
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
@@ -36,14 +36,16 @@ int main() {
   std::cout << "Max Compute Units: "
             << q.get_device().get_info<sycl::info::device::max_compute_units>()
             << std::endl;
-  std::cout
-      << "Max Work Item Size: "
-      << q.get_device().get_info<sycl::info::device::max_work_item_sizes>()[0]
-      << " "
-      << q.get_device().get_info<sycl::info::device::max_work_item_sizes>()[1]
-      << " "
-      << q.get_device().get_info<sycl::info::device::max_work_item_sizes>()[2]
-      << std::endl;
+  std::cout << "Max Work Item Size: "
+            << q.get_device()
+                   .get_info<sycl::info::device::max_work_item_sizes<3>>()[0]
+            << " "
+            << q.get_device()
+                   .get_info<sycl::info::device::max_work_item_sizes<3>>()[1]
+            << " "
+            << q.get_device()
+                   .get_info<sycl::info::device::max_work_item_sizes<3>>()[2]
+            << std::endl;
   std::cout
       << "Max Work Group Size: "
       << q.get_device().get_info<sycl::info::device::max_work_group_size>()
@@ -70,9 +72,9 @@ int main() {
   auto e = q.submit([&](auto &h) {
     sycl::stream out(65536, 128, h);
     h.parallel_for(sycl::nd_range<1>(7, 7),
-                   [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(8)]] {
+                   [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
                      int i = it.get_global_linear_id();
-                     sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+                     auto sg = it.get_sub_group();
                      int sgSize = sg.get_local_range()[0];
                      int sgMaxSize = sg.get_max_local_range()[0];
                      int sId = sg.get_local_id()[0];
