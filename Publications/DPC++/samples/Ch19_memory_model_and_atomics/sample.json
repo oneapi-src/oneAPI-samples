@@ -42,9 +42,9 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force b19 >nul 2>nul || echo remove",
-          "mkdir b19",
-          "cd b19",
+          "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
           "cmake -G \"NMake Makefiles\" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
           "nmake fig_19_3_data_race",
           "nmake fig_19_6_avoid_data_race_with_barrier",
