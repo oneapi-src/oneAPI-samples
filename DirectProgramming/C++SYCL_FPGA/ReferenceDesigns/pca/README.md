@@ -109,7 +109,7 @@ ACC_{3,0} & ACC_{3,1} & ACC_{3,2} & ACC_{3,3}
 \end{bmatrix} $$
 
 * double buffering/ ping pong buffering is employed to hide the time to load $p \times p$ block from input stream 
-* Storage for $p \times $p$ block is partioned $p$ times to enable one full dot product 
+* Storage for $p \times p$ block is partioned $p$ times to enable one full dot product 
 * $F_{\mu}$ is computed by computing average sum of features while computing the block matrix multiplication 
 * $A_{StdCov}\[i\]\[j\]$ using  $ACC\[i\]\[j\]$ and $F_{\mu}\[j\]$
 * Its designed such that it can process any number of input matrices 
@@ -171,7 +171,7 @@ x & x & b & c \\
 Wilkinson shift is given by following equation 
 $$\mu = c - \frac{sign(\delta) \times b^{2}}{|\delta| + \sqrt{\delta^{2} + b^{2}}}$$
 
-Rayleigh quotient shifts based QR iteration is not always stable but Wilkinson shift is highly stable, when using double preession arithmetic. Downside is Wilkinson shift requires costly hardware IPs such as divider, sqrt and reguires many pipeline stages, leads to higher latency. This reference design target to use floating point arithmetic (It supports anytype throgh SYCL template). It is observed that above agorithm will become numerically unstable when floating point arithmetic is used (due to floating point cancellation and errors propagate from divider in QR decomposition). In order to improve the the numerical accuaracy, we assign 99% of Rayleigh quotient shifts as $\mu$. This avoids the diagonal values become zero even other elements becomes zero during QR iterations. 
+Rayleigh quotient shifts based QR iteration is not always stable but Wilkinson shift is highly stable, when using double preession arithmetic. Downside is Wilkinson shift requires costly hardware IPs such as divider, sqrt and reguires many pipeline stages, leads to higher latency. This reference design target to use floating point arithmetic (It supports anytype throgh SYCL template). It is observed that above agorithm will become numerically unstable when floating point arithmetic is used (due to floating point cancellation and errors propagate from divider in QR decomposition). In order to improve the the numerical accuaracy, we assign 99.9% of Rayleigh quotient shifts as $\mu$. This avoids the diagonal values become zero even other column elements becomes zero during QR iterations.  
 
 ### Eigen vector computation 
 The Eigen vectors ($E_{vec}$) computed by compounding the $Q$ matrix computed from the QR decomposition in each QR iteration as follows. <br /> 
@@ -250,7 +250,7 @@ $$ Clks_{QRD} = \sum_{i=1}^{p}{max(i,vecDepth)} $$
 #### Fused $RQ$ and $E_{vec} Q$ computation 
 In HLS, each loops is scheduled one after another, computing the $RQ$ and $E_{vec} Q$  matrix multiplication in separate loops will increase the latency. In this implementation both $RQ$ and $E_{vec} Q$ are computed in a single nested loop, using one full dot product for each operation. Similar to QR decompostion, masking is applied when computing $RQ$ in deflated matrices. 
 
-While computing the $RQ$, subtracted shift is added back and the new shift value for next iteration is stored in a register. Logic to check the convergence is also implemented in this loop and boolen outcome of convergence is stored in register. This register is checked at the end of the iteration to deflate the matrix or exist the computation if 1x1 defalted matrix is reached. Further, a debug logic to detect the $QR$ decomposition failure by inspecting the orthogonolity of $Q$ matrix is implemented in this nested loop. This also require a full dot prduct to check all possible combination of vectors. 
+While computing the $RQ$, subtracted shift is added back and the new shift value for next iteration is stored in a register. Logic to check the convergence is also implemented in this loop and boolen outcome of convergence is stored in register. This register is checked at the end of the iteration to deflate the matrix or exist the computation if 1x1 deflated matrix is reached. Further, a debug logic to detect the $QR$ decomposition failure by inspecting the orthogonolity of $Q$ matrix is implemented in this nested loop. This also require a full dot prduct to check all possible combination of vectors. 
 
 - Fused Matrix multiplication latency model ignoring small pipeline latency
 
