@@ -41,7 +41,7 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+	  "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
