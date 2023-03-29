@@ -1,0 +1,37 @@
+{
+  "guid": "b50d9507-afad-46d2-8961-b69f58afc636",
+  "name": "Chapter 20 - Epilogue Future Direction",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "Epilogue source code examples: Future Direction of DPC++ * fig_ep_1_mdspan.cpp - Attaching accessor-like indexing to a USM pointer using mdspan * fig_ep_2-4_generic_space.cpp - Storing pointers to a specific address space in a class - Figure EP-3. Storing pointers to the generic address space in a class - Figure EP-4. Storing pointers with an optional address space in a class * fig_ep_5_extension_mechanism.cpp - Checking for Intel sub-group extension compiler support with #ifdef * fig_ep_6_device_constexpr.cpp - Specializing kernel code based on device aspects at kernel compile time * fig_ep_7_hierarchical_reduction.cpp - Using hierarchical parallelism for a hierarchical reduction",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Epilogue_future_direction",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+        ]
+      }
+    ]
+  }
+}
