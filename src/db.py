@@ -6,10 +6,8 @@ from pathlib import Path
 import pandas as pd
 import pathlib
 import sys
-import pprint
-from datetime import datetime
+# import pprint
 # pp = pprint.PrettyPrinter(indent=4)
-# pp.pprint
 
 def make_json_list(basedir:str):
     ''' Walk basedir and create list of all filepaths to JSON code samples.'''
@@ -22,7 +20,6 @@ def make_json_list(basedir:str):
                         filepath = os.path.join(root,file)
                         json_file_paths.append(filepath) 
             filtered_list = [j for j in json_file_paths if not j.startswith("./oneAPI-samples/Publications")]
-            print(f"\n Test {filtered_list}")
             return filtered_list
     except Exception as e:
         print(f"Error. Ensure root directory is oneAPI-samples repo. \n: {e}")
@@ -50,7 +47,6 @@ def make_url_dict(branch:str,file_paths:list):
     if file_paths is not None:
         for f in file_paths:
             path_base = pathlib.PurePath(f)
-            # TODO: Revise filepath path SLICE => [1:-1] after migration => oneAPI-samples
             path_slice = '/'.join(path_base.parts[1:-1])
             full_url = os.path.join(baseurl,path_slice)
             list_urls.append(str(full_url))
@@ -92,10 +88,7 @@ def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
-    print(file_paths)
-    # print("OBJ:",type(file_paths))
     merge_json_files(file_paths)
-    # print("Check complete...?")
     json_db = df_to_db(file_paths)
 
     return json_db

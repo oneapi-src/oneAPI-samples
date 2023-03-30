@@ -18,9 +18,10 @@ import json
 
 # -- Project information -----------------------------------------------------
 
-project = 'oneAPI Samples'
+project = 'oneAPI Samples Catalog'
 copyright = '2023, Intel'
 author = 'Intel'
+
 
 # -- General configuration ---------------------------------------------------
 
@@ -47,13 +48,13 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 
-# html_theme = "" # pydata_sphinx_theme
-
 html_static_path = ['_static']
 
-# master_doc = "index"
+master_doc = "index"
 
 root_doc = 'contents'
+
+# html_theme_path = ["_themes", ]
 
 html_additional_pages = {'index': 'index.html'}
 
@@ -67,4 +68,4 @@ html_context = {
 
 def setup(app):
     app.add_js_file('script.js', loading_method="async")
-    
+

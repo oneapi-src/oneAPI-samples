@@ -238,7 +238,7 @@ input[type=checkbox] label{
   font-family: var(--bs-body-font-family);
   font-weight: 400;
   font-size: medium;
-  color: #0068B5;
+  color: #0054AE;
   flex-basis: calc(100%/3);
   margin-bottom: 1em;
   align-items: flex-start;
@@ -293,21 +293,19 @@ input[type=checkbox] label{
   justify-content: left;
 }
 
-.flex-badges {
+.badges-container {
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
-  justify-content:space-evenly;
-  gap: .25rem;
-  margin-top: 1rem;
+  justify-content:flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.flex-device{
+.badges-devices{
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content:space-evenly;
-  gap: .50rem;
+  gap: 0.5rem;
 }
 
 .secondrow{
@@ -333,10 +331,13 @@ input[type=checkbox] label{
 }
 
 .badge1 {
-  background-color: #A0EBFF;
+  background-color: rgba(160, 235, 255, 0.80);
+  border: 1px solid rgb(160, 235, 255);
+  /* background-color: rgba(233, 233, 233);
+  border: 1px solid rgb(233, 233, 233); */  
+  color: rgba(0, 84, 174, 1) !important;
   inline-size: 100px; 
   overflow-wrap: anywhere; /* word-break: break-all;  */
-  color: #0054AE !important;
   text-align: center;
   font-size: 13px !important;
   border-radius: 10px;
@@ -344,24 +345,26 @@ input[type=checkbox] label{
   max-width:125px;
   height: 45px;
   cursor: pointer; 
-  box-shadow: 2px 2px 2px #F9F9F9;
+  box-shadow: 2px 2px 2px #F9F9 F9;
   }
 
 .badge2 {
-  background-color: #0068B5 !important;
-  color: #E9E9E9 !important;
+  background-color:rgba(0, 199, 253, 0.80);
+  border: 1px solid rgb(0, 199, 253); 
+  color: rgba(255, 255, 255, 1) !important;
   font-size: 13px !important;
   border-radius: 10px;
   width: auto;
   min-width:60px;
   height: 45px;
   cursor: pointer; 
-    box-shadow: 2px 2px 2px #F9F9F9;
+  box-shadow: 2px 2px 2px #F9F9F9;
  }
 
 .badge3 {
-  background-color: #00C7FD;
-  color: #E9E9E9 !important;
+  background-color:rgba(0, 84, 174, 0.80);
+  border: 1px solid rgb(0, 84, 174);
+  color: rgba(255, 255, 255, 1) !important;
   font-size: 13px !important;
   border-radius: 10px;
   width: auto;
@@ -372,24 +375,44 @@ input[type=checkbox] label{
 }
 
 .badge1:hover, .badge2:hover, .badge3:hover{
-  color: #0068B5 !important;
+  color: #0054AE !important;
   background-color: white;
   border: 1px solid #00C7FD;
 }
 
 
 .app-title {
-  font-family: var(--bs-header-font-family);
-  font-size: 28px;
+  font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
+  font-size: 20px;
   font-weight: normal; 
   font-weight: 400;
   color: #FFFFFF;
-  /* padding-top:  15px; */
+  padding:  10px 0px 15px 20px;
+
   /* padding-bottom: -5px; */
 }
 
-.app-title:hover{
-    color:#00C7FD;
+/* input[type=button] > #nobutton {
+  /* outline: none !important; */
+
+.app-title button{
+  padding: 0;
+  border: none;
+  background: none;
+  color: #FFFFFF;
+}
+
+.app-title button:hover{
+  color: #00C7FD;
+}
+
+#total-records{
+  font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
+  font-size: 18px;
+  font-weight: normal; 
+  font-weight: 400;
+  color: #FFFFFF;
+  padding:  10px 20px 15px 0px;
 }
 
 .logo {
@@ -400,10 +423,10 @@ input[type=checkbox] label{
   display: flex;
   /* flex-grow: 1; */
   grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
-  background-color: #0068B5;
+  background-color: #0054AE;
   width: 100%;
   text-align: center;
-  padding: 0px 0px 0px 0px;
+  padding: 6px 0px 4px 0px;
 }
 
 .col {
@@ -414,7 +437,8 @@ input[type=checkbox] label{
   align-items: center;
   text-align: center;
   vertical-align: middle;
-  margin-bottom: auto;
+  /* margin-top: 6px;
+  margin-bottom: 4px; */
   /* min-height: 20px; */
   /* flex-grow: 1; */
   /* padding: 10px; */
@@ -426,14 +450,29 @@ input[type=checkbox] label{
 
 }
 .col:nth-child(2) {
+  align-items: flex-start;
+}
+
+.col:nth-child(3) {
   align-items: center;
 }
-.col:nth-child(3) {
+
+.col:nth-child(4) {
+  align-items: flex-start;
+}
+
+.col:nth-child(5) {
   align-items: flex-end;
   flex-wrap: nowrap;
-  margin-top: 14px;
   margin-right: 12px;
 }
+
+.col-nav-left{
+  display: flex;
+  direction: row;
+  overflow: hidden;
+} 
+
 
 .col-nav-rght{
   display: flex;
@@ -446,10 +485,10 @@ input[type=checkbox] label{
 } */
 
 .fa-github{
-  color: #AEAEAE;
-  position: relative ;
+  color: #FFFFFF;
+  position: relative;
   /* background-color: transparent; */
-  /* background-color: #0068B5; */
+  /* background-color: #0054AE; */
   background-color: transparent;
   /* background: transparent; */
   position: relative;
@@ -463,12 +502,12 @@ input[type=checkbox] label{
   background-color: transparent;
   border: none;
   outline: none;
-  align-items: left;
-  padding-bottom: 10px; */
+  align-items: left;*/
+  padding-bottom: 10px;
 }
 
 .fa-github:hover{
-  color:#FFFFFF;
+  color:#AEAEAE;
 }
 
 .search-container{
@@ -480,16 +519,17 @@ input[type=checkbox] label{
   display: flex;
   justify-content: center;
   padding-left: 4%; /* offset to right; treat searchbar + X as one*/
-  margin-top: 4px;
-  margin-bottom: 4px; 
+  /* padding-bottom: 2%; */
+  margin-top: 2px;
+  margin-bottom: 6px; 
   position: relative;
 }
 
 
 .search-widget .fa-search { 
   position: relative;
-  top: 16px; /* Set vert pos from top of search icon */
-  left: 8px; /* Set horiz pos from left of search icon*/
+  top: 8px; /* Set vert pos from top of search icon */
+  left: 6px; /* Set horiz pos from left of search icon*/
   z-index: 20;
 
 }
@@ -497,8 +537,8 @@ input[type=checkbox] label{
 .search-widget .fa-remove { 
   color: #FFFFFF;
   position: relative;
-  top: 8px;
-  left: 2px; 
+  top: 2px;
+  left: 4px; 
   outline: none;
   border: none;
   z-index: 25;
@@ -568,7 +608,7 @@ input[type=text]{
   height: 40px;
   box-sizing: border-box;
   border: 2px solid #ccc;
-  font-size:21px;
+  font-size: 22px;
   z-index: 35;
 }
 
@@ -591,14 +631,12 @@ input::placeholder {
   width: 396px;
   max-width: 100%;
   background-color: #E9E9E9;
-  /* border: .20rem solid #0068B5; */
   border-radius: 9px;
   outline: none;
-  /* box-shadow: 0 0 0.10em #E9E9E9, 0 0 0 0.10em #00C7FD inset; /* blurred radius: 0.05em */ 
-  padding-left: 50px; /* left-indent the input text */
+  border: none;
+  padding-left: 48px; /* left-indent the input text */
   margin-right: -2px; /* pull to left .fa-remove button closer to searchBox */
-  margin-top: 8px;
-  /* margin-bottom: 3px;  */
+  /* margin-top: 8px; */
   z-index: 10;
 }
 
@@ -617,17 +655,6 @@ input::placeholder {
   z-index: 5;
 }
 
-input[type=reset] {
-  width: 40px;
-  height: 48px;
-  background-image: url('refresh-left-sqr-grey.svg');
-  background-position: right center; 
-  background-size: 10%;
-  opacity: 0.65;
-  background-repeat: no-repeat;
-  outline: none;
-}
-
 input:hover {
   /* offset: offset-x | offset-y | blur-radius; */
   box-shadow:  0px 1px 3px #AEAEAE;
@@ -636,29 +663,32 @@ input:hover {
 .all-wrapper{
   display: flex;
   flex-direction: column;
-  /* height: auto; */
   text-align: center; 
   justify-content: center;
 }
    
 .toolkit-cards{
-  margin: 0 auto; /* center in the viewport */
+  margin: 0 auto; /* center card-grid in viewport */
   display: grid;
   grid-template-columns: minmax(360px, 480px) minmax(360px, 480px) minmax(360px, 480px);
   grid-gap: .50rem;
   margin-top: 1rem;
 }
-  
+
 .card {
-  /* position: relative; */
-  display: flex;
-  flex-grow: 1;
+  position: relative;
+  display: block;
+  font-family: var(--bs-body-font-family);
+  font-style: normal;
+  font-weight: 400;
+  font-size:  16px;
   border: 1px solid #808080;
   background-color: #FFFFFF;
   border-radius: 7px;
-  padding: 1rem;
   box-shadow: 2px 2px 2px #F9F9F9;
   min-height: 20vh;
+  text-align: left;
+  padding: 15px 25px 15px 25px;
 }
 
 /* Method for using <li class="card ..."> as HYPERLINK */
@@ -671,21 +701,6 @@ input:hover {
   left: 0px;
 }
 
-.card > .header {
-  margin-bottom: .25rem;
-}
-  
-.card > .body {
-  font-family: var(--bs-body-font-family);
-  font-style: normal;
-  font-weight: 400;
-  font-size:  16px;
-}
-
-.card > .body > .expertise {
-  font-size: 18px;
-}
-
 #hide {
     display: none;
   }
@@ -696,7 +711,7 @@ input:hover {
   grid-gap: 1rem;
 } 
 
-.expertise {
+.badges {
   font-family: var(--bs-body-font-family);
   font-weight: 400;
   font-style: normal;
@@ -706,9 +721,12 @@ input:hover {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2px 6px 6px 6px; /* applies to all badges */
-  line-height: 1.25em; /* adjust leading */
-  color: #A0EBFF;
+  padding: 2px 6px 6px 6px;
+  line-height: 1.25em; /* adjust leading*/
+}
+
+.card-desc{
+  padding-bottom: 25px;
 }
 
 .card-title {
@@ -716,8 +734,8 @@ input:hover {
   font-weight: bold;
   font-weight: 800;
   color: #0054AE;
-  padding: 5px;
-  font-size: 20px;
+  font-size: 18px;
+  padding-bottom: 10px;
 }
 
 .card:hover{
@@ -752,7 +770,7 @@ input:hover {
   height: 40px;
   background: #E9E9E9;
   border-radius: 7px ;
-  color: #0068B5;
+  color: #0054AE;
 }
 
 .pg-rng {
@@ -766,7 +784,7 @@ input:hover {
   height: 40px;
   background: #E9E9E9;
   border-radius: 7px ;
-  color: #0068B5;
+  color: #0054AE;
 }
 
 .arrow {
@@ -806,9 +824,9 @@ input:hover {
   border-radius: 50%;
 }
 .circle-icon {
-  width: 30px;
-  height: 30px;
-  background: #0068B5;
+  width: 40px;
+  height: 40px;
+  background: #0054AE;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -823,11 +841,11 @@ input:hover {
 }
 
 .badge2-circle { 
-  background-color: #0068B5;
+  background-color: #00C7FD;
 }
 
 .badge3-circle { 
-  background-color: #00C7FD;
+  background-color: #0054AE;
 }
 
 /* FILTER INPUT CHECKBOXES */
@@ -897,13 +915,13 @@ input[type=checkbox]:hover {
 }
 
 .language-checkboxes input[type="checkbox"]:checked {
-  background-color: #0068B5;
-  border: 2px solid #0068B5;
+  background-color: #00C7FD;
+  border: 2px solid #00C7FD;
 }
 
 .device-checkboxes input[type="checkbox"]:checked {
-  background-color: #00C7FD;
-  border: 2px solid #00C7FD;
+  background-color: #0054AE;
+  border: 2px solid #0054AE;
 }
 
 
@@ -956,7 +974,7 @@ input[type=checkbox]:after {
 .mid-col.help-msg{
   min-height: 200px;
   background-color: #A0EBFF;
-  color: #0068B5;
+  color: #0054AE;
 }
 
 .rgt-col {
@@ -1012,7 +1030,7 @@ ul.help li {
   border-radius: 7px;
   outline: none;
   height: 48px;
-  color: #0068B5;
+  color: #0054AE;
   background-color: #A0EBFF;
   box-shadow: 0 0 0.10em #E9E9E9, 0 0 0 0.10em #00C7FD inset; /* blurred radius: 0.05em */ 
 }
@@ -1024,7 +1042,7 @@ ul.help li {
   left: 0px; 
   z-index: 300;
   position: absolute;
-  color: #0068B5;
+  color: #0054AE;
   background-color: #A0EBFF;
   border-radius: 7px;
   margin-bottom: 5px;
@@ -1056,6 +1074,9 @@ ul.help li {
 
 #results-container{
   display: flex;
+  justify-content: flex-start;
+  /* align-items: flex-start;
+  align-self: flex-start; */
 }
 
 #qty-show-results{
@@ -1075,11 +1096,11 @@ ul.help li {
   height: 48px;
   min-width: 96px;
   width: 100px;
-  color: #0068B5;
+  color: #0054AE;
   background-color: #A0EBFF;
   box-shadow: 0 0 0.10em #E9E9E9, 0 0 0 0.10em #00C7FD inset; /* blurred radius: 0.05em */ 
   padding: 10px 8px 10px 6px;
-  margin-top: 8px;
+  margin-top: 2px;
   margin-left: 8px;
 }
 
