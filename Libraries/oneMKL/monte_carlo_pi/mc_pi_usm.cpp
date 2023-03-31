@@ -34,10 +34,10 @@ static const auto n_samples = 120000000;
 // Test Iterations
 constexpr int num_iterations = 10;
 
-template<typename T>
+template <typename T>
 double estimate_pi(sycl::queue& q, std::size_t n_points, T* rng_ptr) {
-    double estimated_pi;         // Estimated value of Pi
-    std::size_t n_under_curve = 0;    // Number of points fallen under the curve
+    double estimated_pi; // Estimated value of Pi
+    std::size_t n_under_curve = 0; // Number of points fallen under the curve
 
     // Step 1. Generate n_points * 2 random numbers
     // 1.1. Generator initialization
@@ -50,8 +50,10 @@ double estimate_pi(sycl::queue& q, std::size_t n_points, T* rng_ptr) {
     auto event = mkl::rng::generate(distr, engine, n_points * 2, rng_ptr);
 
     // Step 2. Count points under curve (x ^ 2 + y ^ 2 < 1.0f)
-    std::size_t wg_size = std::min(q.get_device().get_info<sycl::info::device::max_work_group_size>(), n_points);
-    std::size_t max_compute_units = q.get_device().get_info<sycl::info::device::max_compute_units>();
+    std::size_t wg_size =
+        std::min(q.get_device().get_info<sycl::info::device::max_work_group_size>(), n_points);
+    std::size_t max_compute_units =
+        q.get_device().get_info<sycl::info::device::max_compute_units>();
     std::size_t wg_num = (n_points > wg_size * max_compute_units) ? max_compute_units : 1;
 
     std::size_t count_per_thread = n_points / (wg_size * wg_num);
@@ -61,18 +63,19 @@ double estimate_pi(sycl::queue& q, std::size_t n_points, T* rng_ptr) {
     // Make sure, that generation is finished
     event.wait_and_throw();
 
-    event = q.submit([&] (sycl::handler& h) {
-        h.parallel_for(sycl::nd_range<1>(wg_size * wg_num, wg_size),
-            [=](sycl::nd_item<1> item) {
+    event = q.submit([&](sycl::handler& h) {
+        h.parallel_for(sycl::nd_range<1>(wg_size * wg_num, wg_size), [=](sycl::nd_item<1> item) {
             sycl::vec<T, 2> r;
             std::size_t count = 0;
-            for(int i = 0; i < count_per_thread; i++) {
-                r.load(i + item.get_global_linear_id() * count_per_thread, sycl::global_ptr<float>(rng_ptr));
-                if(sycl::length(r) <= 1.0f) {
+            for (int i = 0; i < count_per_thread; i++) {
+                r.load(i + item.get_global_linear_id() * count_per_thread,
+                       sycl::global_ptr<float>(rng_ptr));
+                if (sycl::length(r) <= 1.0f) {
                     count += 1;
                 }
             }
-            count_ptr[item.get_group_linear_id()] = reduce_over_group(item.get_group(), count, std::plus<std::size_t>());
+            count_ptr[item.get_group_linear_id()] =
+                reduce_over_group(item.get_group(), count, std::plus<std::size_t>());
         });
     });
 
@@ -86,11 +89,9 @@ double estimate_pi(sycl::queue& q, std::size_t n_points, T* rng_ptr) {
     sycl::free(count_ptr, q);
 
     return estimated_pi;
-
 }
 
-int main(int argc, char ** argv) {
-
+int main(int argc, char** argv) {
     std::cout << std::endl;
     std::cout << "Monte Carlo pi Calculation Simulation" << std::endl;
     std::cout << "Unified Shared Memory Api" << std::endl;
@@ -99,9 +100,9 @@ int main(int argc, char ** argv) {
     double time = 0.0;
     double estimated_pi;
     std::size_t n_points = n_samples;
-    if(argc >= 2) {
+    if (argc >= 2) {
         n_points = atol(argv[1]);
-        if(n_points == 0) {
+        if (n_points == 0) {
             n_points = n_samples;
         }
     }
@@ -109,10 +110,11 @@ int main(int argc, char ** argv) {
 
     // This exception handler with catch async exceptions
     auto exception_handler = [&](sycl::exception_list exceptions) {
-        for(std::exception_ptr const& e : exceptions) {
+        for (std::exception_ptr const& e : exceptions) {
             try {
                 std::rethrow_exception(e);
-            } catch (sycl::exception const& e) {
+            }
+            catch (sycl::exception const& e) {
                 std::cout << "Caught asynchronous SYCL exception:\n" << e.what() << std::endl;
                 std::terminate();
             }
@@ -122,7 +124,7 @@ int main(int argc, char ** argv) {
     try {
         // Queue constructor passed exception handler
         sycl::queue q(sycl::default_selector_v, exception_handler);
-        
+
         float* rng_ptr = sycl::malloc_device<float>(n_points * 2, q);
 
         // Launch Pi number calculation
@@ -132,11 +134,12 @@ int main(int argc, char ** argv) {
             auto start = std::chrono::steady_clock::now();
             estimated_pi = estimate_pi(q, n_points, rng_ptr);
             auto end = std::chrono::steady_clock::now();
-            time +=  std::chrono::duration<double>(end - start).count();
+            time += std::chrono::duration<double>(end - start).count();
         }
 
         sycl::free(rng_ptr, q);
-    } catch (...) {
+    }
+    catch (...) {
         // Some other exception detected
         std::cout << "Failure" << std::endl;
         std::terminate();
@@ -145,7 +148,7 @@ int main(int argc, char ** argv) {
     // Printing results
     std::cout << "Estimated value of Pi = " << estimated_pi << std::endl;
     std::cout << "Exact value of Pi = " << pi << std::endl;
-    std::cout << "Absolute error = " << fabs(pi-estimated_pi) << std::endl;
+    std::cout << "Absolute error = " << fabs(pi - estimated_pi) << std::endl;
     std::cout << "Completed in " << time / num_iterations << " seconds" << std::endl;
     std::cout << std::endl;
 
