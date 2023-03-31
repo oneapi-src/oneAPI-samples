@@ -73,35 +73,27 @@ Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 ### Example of Output
 If everything is working correctly, after building you will see step-by-step output from each of the three example programs, providing the generated estimate of &pi;.
 ```
-./mc_pi
-
-Monte Carlo pi Calculation Simulation
-Buffer API
--------------------------------------
-Number of points = 120000000
-Estimated value of Pi = 3.14139
-Exact value of Pi = 3.14159
-Absolute error = 0.000207487
-
 ./mc_pi_usm
 
 Monte Carlo pi Calculation Simulation
-Unified Shared Memory API
+Unified Shared Memory Api
 -------------------------------------
 Number of points = 120000000
-Estimated value of Pi = 3.14139
+Estimated value of Pi = 3.14106
 Exact value of Pi = 3.14159
-Absolute error = 0.000207487
+Absolute error = 0.000530387
+Completed in 0.0539306 seconds
 
 ./mc_pi_device_api
 
 Monte Carlo pi Calculation Simulation
-Device API
+Device Api
 -------------------------------------
 Number of points = 120000000
-Estimated value of Pi = 3.14139
+Estimated value of Pi = 3.14106
 Exact value of Pi = 3.14159
-Absolute error = 0.000207487
+Absolute error = 0.000530387
+Completed in 0.129741 seconds
 ```
 
 ### Troubleshooting
