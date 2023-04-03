@@ -1,35 +1,35 @@
 name: github-pages
 
 on:
-  # schedule:
-  #   - cron: '0 7 * * 1-4'
-    
-#   schedule:
-#     # https://cron.help/#0/30_*_*_*_*
-#     - cron: '0 6 * * *'
+  schedule:
+    - cron: '0 7 * * *'  
+    # https://cron.help/#0/30_*_*_*_*
+  
   push:
     branches: 
     - app/dev
 
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #   branches:
-  #     - master
-  #   paths:
-  # TRIGGER only on pull request that changes these file-paths... 
-  # 
-  #     - "src/db.py
-  #     - "src/requirements.txt"
-  #     - "src/docs/conf.py"
-  #     - "src/docs/Makefile"
-  #     - "src/docs/_static/styles.css"
-  #     - "src/docs/_static/intel.css"
-  #     - "src/docs/_static/assets/logo-energyblue-white.svg"
-  #     - "src/docs/_templates/script.js"
-  #     - "src/docs/_templates/base.html"
-  #     - "src/docs/_templates/index.html"
+  #TRIGGER on pull request if changes to below file-paths. 
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths: 
+      - "src/db.py"
+      - "src/requirements.txt"
+      - "src/docs/conf.py"
+      - "src/docs/Makefile"
+      - "src/docs/make.bat"
+      - "src/docs/_static/styles.css"
+      - "src/docs/_static/intel.css"
+      - "src/docs/_static/assets/logo-energyblue-white.svg"
+      - "src/docs/_static/sample_db_prd.json"
+      - "src/docs/_static/assets/favicon.ico"
+      - "src/docs/_static/script.js"
+      - "src/docs/_templates/base.html"
+      - "src/docs/_templates/index.html"
 
 # defaults:
 #   run:
