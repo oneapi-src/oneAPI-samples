@@ -9,7 +9,7 @@ on:
     branches: 
     - app/dev
 
-  #TRIGGER on pull request if changes to below file-paths. 
+  #TRIGGER on PR if changes made to below file-paths. 
   pull_request:
     types:
       - opened
@@ -17,19 +17,19 @@ on:
     branches:
       - master
     paths: 
-      - "src/db.py"
-      - "src/requirements.txt"
-      - "src/docs/conf.py"
-      - "src/docs/Makefile"
-      - "src/docs/make.bat"
-      - "src/docs/_static/styles.css"
-      - "src/docs/_static/intel.css"
-      - "src/docs/_static/assets/logo-energyblue-white.svg"
-      - "src/docs/_static/sample_db_prd.json"
-      - "src/docs/_static/assets/favicon.ico"
-      - "src/docs/_static/script.js"
-      - "src/docs/_templates/base.html"
-      - "src/docs/_templates/index.html"
+      - "app/dev/src/db.py"
+      - "app/dev/src/requirements.txt"
+      - "app/dev/src/docs/conf.py"
+      - "app/dev/src/docs/Makefile"
+      - "app/dev/src/docs/make.bat"
+      - "app/dev/src/docs/_static/styles.css"
+      - "app/dev/src/docs/_static/intel.css"
+      - "app/dev/src/docs/_static/assets/logo-energyblue-white.svg"
+      - "app/dev/src/docs/_static/sample_db_prd.json"
+      - "app/dev/src/docs/_static/assets/favicon.ico"
+      - "app/dev/src/docs/_static/script.js"
+      - "app/dev/src/docs/_templates/base.html"
+      - "app/dev/src/docs/_templates/index.html"
 
 # defaults:
 #   run:
@@ -48,9 +48,9 @@ jobs:
 
     # - run: find | sort 
     - uses: actions/checkout@v3 
-      # with:
-        # path: app/dev
-        # Adding above forces pre-pending filepaths below w/ 'app/dev/filepath' 
+      with:
+        path: app/dev
+        # Adding above 2 lines forces pre-pending filepaths below w/ 'app/dev/filepath' 
 
     - uses: actions/checkout@v3
       name: Check out master
@@ -61,24 +61,24 @@ jobs:
     # TODO: change to 'python3 app/dev/src/db.py master' per actions/checkout@3
     - name: Build JSON DB
       run: |
-        python3 -m pip install -r src/requirements.txt
+        python3 -m pip install -r app/dev/src/requirements.txt
         echo master
-        python3 src/db.py master
+        python3 app/dev/src/db.py master
 
     - name: Remove JSON pre-prod  
       run: |       
-        rm -rf src/docs/sample_db_pre.json
+        rm -rf app/dev/src/docs/sample_db_pre.json
 
     - name: Build Sphinx
       run: |
-        python3 -m pip install -r src/requirements.txt        
-        python3 -m sphinx -W -b html src/docs/ src/docs/_build/
+        python3 -m pip install -r app/dev/src/requirements.txt        
+        python3 -m sphinx -W -b html app/dev/src/docs/ app/dev/src/docs/_build/
         echo $PWD
         echo ${{ github.ref }}
 
     - name: Add GPU-Occupancy-Calculator
       env: 
-        GPU_OCC_CALC: src/docs/_build/Tools/GPU-Occupancy-Calculator/
+        GPU_OCC_CALC: app/dev/src/docs/_build/Tools/GPU-Occupancy-Calculator/
       run: |
         mkdir -p ${GPU_OCC_CALC}   
         cd ${GPU_OCC_CALC}
@@ -91,7 +91,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         GITHUB_REPO: ${{ github.repository }} 
       run: |
-        cd src/docs/_build/
+        cd app/dev/src/docs/_build/
         touch .nojekyll       
         git init
         git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
