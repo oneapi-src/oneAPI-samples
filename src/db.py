@@ -81,7 +81,7 @@ def df_to_db(file_paths:list):
     '''Create prod database, combining df_add_urls(); output for frontend display'''
     df = df_add_urls(file_paths)
     # filepath below must match steps in assoc CI Job, 'with: path: app/dev'
-    rev_json = Path('app/dev/src/docs/_static/sample_db_prd.json')
+    rev_json = Path('src/docs/_static/sample_db_prd.json')
     db = df.to_json(rev_json, orient='records')    
     return db
 
