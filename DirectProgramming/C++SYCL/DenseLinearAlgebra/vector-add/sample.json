@@ -282,7 +282,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" -DUSM=1 ..",
           "nmake fpga_emu",
           "vector-add-usm.fpga_emu.exe",
           "nmake clean"

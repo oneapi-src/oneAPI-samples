@@ -192,7 +192,7 @@ var targets = [
 	}
 },
 {
-	"name": "Discrete GPU (Xe HPG / Arc™)",
+	"name": "Discrete GPU (Xe HPG / Arc™ Graphics)",
 	"code": "xe_hpg_dg2_arc",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
@@ -210,7 +210,7 @@ var targets = [
 	}
 },
 {
-	"name": "Discrete GPU (Xe HPG / Flex)",
+	"name": "Discrete GPU (Xe HPG / Data Center Flex)",
 	"code": "xe_hpg_dg2_flex",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
@@ -224,6 +224,24 @@ var targets = [
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPC / Data Center Max)",
+	"code": "xe_hpc_pvc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 8,
+		"Threads_Per_EU": 8,
+		"EU_Count": [448, 896, 1024],
+		"Max_Threads_Per_Sub_Slice": 64,
+		"Large_GRF_Mode": true,
+		"Subgroup_Sizes": [32, 16],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 128,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 48, 64, 96, 128],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 64,
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
@@ -899,7 +917,7 @@ function print_gpu_info(){
 		grf_mode = '<input type="hidden" id="large_grf" value="0" />';
 	}
 
-	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: ' + gpu.Threads_Per_EU + '<br>+ EU Count: ' + eu_count + grf_mode;
+	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>+ EU Count: ' + eu_count + grf_mode;
 }
 
 // If url param exists load gpu info
@@ -1036,6 +1054,12 @@ function cal_occupancy(){
 	var large_grf = parseInt(document.getElementById("large_grf").value);
 	var num_ss = num_eu / gpu.EU_Per_Sub_Slice;
 
+	// Update UI if large_grf mode
+	if(large_grf){
+		document.querySelector("#teu").innerHTML = gpu.Threads_Per_EU/2;
+	} else {
+		document.querySelector("#teu").innerHTML = gpu.Threads_Per_EU;
+	}
 	// Check if Global Size is valid and calculate size
 	var global_size = document.getElementById("global_size").value.split(",");
 	if (global_size.length === 1){

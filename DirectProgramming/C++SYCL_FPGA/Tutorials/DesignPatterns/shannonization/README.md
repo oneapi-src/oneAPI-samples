@@ -351,8 +351,8 @@ The following table explains the command-line arguments that can be passed to th
 
 | Argument name | Description               | Default
 |:---           |:---                       |:---
-|`--A`          | Set the size of array A   | 128 for emulation, 131072 for FPGA
-|`--B`          | Set the size of array B   | 256 for emulation, 262144 for FPGA
+|`--A`          | Set the size of array A   | 128 for emulation, 16384 for FPGA
+|`--B`          | Set the size of array B   | 256 for emulation, 32768 for FPGA
 |`--help`       | Print the help message    | N/A
 
 ### On Linux

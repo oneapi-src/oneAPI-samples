@@ -1,0 +1,5 @@
+add_compile_options(-g -mcmodel=medium)
+add_definitions(-DPREFETCH)
+add_subdirectory(c)
+add_subdirectory(fortran)
+add_subdirectory(c_simd)

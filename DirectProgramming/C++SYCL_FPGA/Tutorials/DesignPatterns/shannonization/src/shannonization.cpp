@@ -191,8 +191,8 @@ int main(int argc, char** argv) {
   unsigned int a_size = 128;
   unsigned int b_size = 256;
 #else
-  unsigned int a_size = 131072;
-  unsigned int b_size = 262144;
+  unsigned int a_size = 16384;
+  unsigned int b_size = 32768;
 #endif
   bool need_help = false;
 

@@ -19,9 +19,9 @@ endif()
 # 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-    set(AC_TYPES_FLAG "/Qactypes")
+    set(AC_TYPES_FLAG "/Qactypes /fp:precise")
 else()
-    set(AC_TYPES_FLAG "-qactypes")
+    set(AC_TYPES_FLAG "-qactypes -fp-model=precise")
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

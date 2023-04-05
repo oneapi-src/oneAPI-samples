@@ -55,8 +55,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
-> - Questa*-Intel® FPGA Edition
-> - Questa*-Intel® FPGA Starter Edition
+> - Questa*-Intel® FPGA Edition (Simulator flow can have a long run time)
+> - Questa*-Intel® FPGA Starter Edition (Simulator flow can have a long run time)
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.

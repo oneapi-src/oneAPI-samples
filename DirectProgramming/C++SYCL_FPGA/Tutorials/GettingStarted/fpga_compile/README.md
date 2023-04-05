@@ -145,21 +145,21 @@ int main() {
 ```
 
 ### Compiler Options
-This section includes a helpful list of commands and options to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.\
+This section includes a helpful list of commands and options to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 >**Note**: In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
 
 FPGA Emulator 
 
 ```bash
 # FPGA emulator image
-icpx -fsycl -fintelfpga -DFPGA_EMULATOR fpga_design.cpp -o fpga_design.fpga_emu
+icpx -fsycl -fintelfpga -DFPGA_EMULATOR -I../../../../include vector_add.cpp -o vector_add.fpga_emu
 ```
 
 Optimization Report
 
 ```bash
 # FPGA early image (with optimization report):
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE fpga_design.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex -o fpga_design_report.a
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex -o vector_add_report.a
 ```
 Use the`-Xstarget` flag to target a supported board, a device family, or a specific FPGA part number.
 
@@ -167,7 +167,7 @@ Simulator
 
 ```bash
 # FPGA simulator image:
-icpx -fsycl -fintelfpga -DFPGA_SIMULATOR fpga_design.cpp -Xssimulation -Xstarget=Agilex -Xsghdl -o fpga_design_sim.a
+icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex -Xsghdl -o vector_add_sim.a
 ```
 Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 
@@ -175,7 +175,7 @@ Hardware
 
 ```bash
 # FPGA hardware image:
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE fpga_design.cpp -Xshardware -Xstarget=Agilex -o fpga_design.fpga
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex -o vector_add.fpga
 ```
 Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 

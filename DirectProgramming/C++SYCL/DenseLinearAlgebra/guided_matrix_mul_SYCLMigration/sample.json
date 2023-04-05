@@ -1,0 +1,24 @@
+{
+  "guid": "244EEBAA-F3A0-46FD-9305-26DEDAA48C90",
+  "name": "Matrix Multiplication cuBLAS Migrated",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "description": "This sample shows the migration of a more complex matrix multiplication sample from cuBLAS to SYCL.",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      "cd build",
+      "cmake ..",
+      "make",
+			"make run_matrix_mul"
+		 ]
+	}]
+  },
+  "expertise": "Code Optimization"
+}

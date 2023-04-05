@@ -18,7 +18,7 @@
 #define MAX 100
 #define scaled_rand() ((rand() % MAX) / (1.0 * MAX))
 
-#define IDX2(i, j) (i * P + j)
+#define IDX2(i, j) (i * j)
 #define IDX4(b, i, j, k) (b * P * P * P + i * P * P + j * P + k)
 
 int main(void) {
@@ -42,7 +42,7 @@ int main(void) {
     dx[i] = scaled_rand();
 
   /* map data to device */
-  #pragma omp target enter data map(to: u[0:SIZE], dx[0:P * P])
+  #pragma omp target enter data map(to: u[0:SIZE], dx[0:P*P])
 
   start = omp_get_wtime();
 
@@ -57,7 +57,7 @@ int main(void) {
           double us = 0.;
           double ut = 0.;
 
-          double s1 = dx[IDX4(b, 0, 0, k)];
+          double s1 = dx[IDX2(b, k)];
           double s2 = u[IDX4(b, 0, 0, k)] + BLOCKS;
           double s3 = 0.145;
 

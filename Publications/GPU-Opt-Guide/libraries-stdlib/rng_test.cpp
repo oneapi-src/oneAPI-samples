@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <oneapi/dpl/random>
@@ -71,3 +73,4 @@ int main(int argc, char **argv) {
   sycl::free(test1, Q.get_context());
   sycl::free(test2, Q.get_context());
 }
+// Snippet end
