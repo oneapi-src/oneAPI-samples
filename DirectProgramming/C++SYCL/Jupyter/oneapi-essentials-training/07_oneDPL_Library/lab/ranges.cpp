@@ -21,7 +21,7 @@ int main()
         buffer A(v);
         auto view = iota_view(0, 20);
         auto rev_view = views::reverse(view);
-        auto range_res = all_view<int, cl::sycl::access::mode::write>(A);
+        auto range_res = all_view<int, sycl::access::mode::write>(A);
 
         copy(oneapi::dpl::execution::dpcpp_default, rev_view, range_res);
     }
