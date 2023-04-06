@@ -1,0 +1,36 @@
+Config,MTL,DG1GT2
+BaseArch,gen12,gen12
+TargetFreq(MHz),1000,1600
+Tiles,1,1
+SliceCount,1,1
+DssCount,6,6
+EUPerDSS,16,16
+EUCountTotal,96,96
+DPAS-Depth,4,1
+DPAS-BF/FP16 TOPS,12.29,4.92
+DPAS-int8 TOPS,24.58,9.83
+DPAS-int4/2 TOPS,49.15,19.66
+FMAD-Fp32 TOPS,1.54,2.46
+FMAD-Fp64 TOPS,0.77,1.23
+ThreadsPerEU,8,7
+256-RegMode,yes,No
+GTIsPerTile,2,2
+L3CacheSizePerTile(MB),8,16
+SLMSizePerDSS,128,128
+L1CahceSizePerDSS,64,64
+GTIBWRd(B/Clk/Tile),128,128
+GTIBWWr(B/Clk/Tile),128,128
+L3BWRd(B/Clk/DSS),64,64
+L3BWWr(B/Clk/DSS),32,32
+L1BWRd(B/Clk/DSS),64,64
+L1BWWr(B/Clk/DSS),64,64
+SLMBWRd(B/Clk/DSS),256,128
+SLMBWWr(B/Clk/DSS),256,128
+LLC(MB),none,none
+Memory,LP5-7600,LP4-4267
+MemoryBW(GBps),121.6,68.272
+MemBWEffForMLWorkloads,0.6,0.7
+ThreadRampPenalty,3000,5000
+EU-Efficiency,0.6,0.5
+Use-SLM,TRUE,TRUE
+Enable-Tiling,TRUE,TRUE

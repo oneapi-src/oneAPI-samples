@@ -1,0 +1,91 @@
+stages:
+    - format
+    - build
+    - test
+    - benchmark
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_NAME
+
+before_script:
+- whoami
+- export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/build/third-party/lib:$(pwd)/build/lib
+- export CMAKE_COMPILER_FLAGS="-DCMAKE_CXX_COMPILER=clang++-10 -DCMAKE_C_COMPILER=clang-10 -DSEAL_BUILD_TESTS=ON -DSEAL_BUILD_BENCH=ON -DSEAL_USE_INTEL_LATTICE=ON -DSEAL_BUILD_SEAL_C=ON -DSEAL_USE_ADDRESS_SANITIZER=ON -DCMAKE_INSTALL_PREFIX=../"
+- cmake --version
+
+format:
+    stage: format
+    only:
+        refs:
+        - master
+        - merge_requests
+        - intel-master
+    script:
+        - pre-commit run --all-files
+
+build:
+    stage: build
+    only:
+        refs:
+        - merge_requests
+        - intel-master
+    script:
+    - whoami
+    - mkdir -p build
+    - cd build
+    - cmake .. ${CMAKE_COMPILER_FLAGS}
+    - make -j $(nproc) all
+    artifacts:
+        paths:
+            - build/bin
+            - build/lib
+        expire_in: 1 day
+    dependencies: []
+
+build-c++14:
+    stage: build
+    only:
+        refs:
+        - merge_requests
+        - intel-master
+    script:
+    - whoami
+    - mkdir -p build
+    - cd build
+    - cmake .. ${CMAKE_COMPILER_FLAGS} -DSEAL_USE_CXX17=OFF
+    - make -j $(nproc) all
+    artifacts:
+        paths:
+            - build/bin
+            - build/lib
+        expire_in: 1 day
+    dependencies: []
+
+test:
+    stage: test
+    only:
+        refs:
+        - master
+        - merge_requests
+        - intel-master
+    script:
+        - build/bin/sealtest --gtest_output=xml
+    artifacts:
+        paths:
+        - test_detail.xml
+        expire_in: 2 days
+    dependencies:
+    - build
+
+benchmark:
+    stage: benchmark
+    only:
+        refs:
+        - master
+        - merge_requests
+        - intel-master
+    script:
+        - build/bin/sealbench
+    dependencies:
+    - build

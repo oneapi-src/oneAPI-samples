@@ -1,0 +1,17 @@
+*.swp
+*.tmp
+*.csproj
+build/
+*.idea/
+*.vscode/
+cmake-build-*/
+external/SEAL/dotnet/examples/SEALNetExamples.csproj
+external/SEAL/dotnet/src/SEALNet.csproj
+external/SEAL/dotnet/tests/SEALNetTest.csproj
+*.vcxproj.user
+*.vcxproj.filters
+*.vs
+*/x64/*
+*.o
+*.d
+*.a
