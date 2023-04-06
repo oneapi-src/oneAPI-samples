@@ -1,0 +1,2777 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1595
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1663
+    Length:          0
+    ReplacementText: "\n#include <chrono>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1665
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1854
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1971
+    Length:          0
+    ReplacementText: ", sycl::nd_item<3> item_ct1,\n                       double *tmp"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          1977
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2022
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2045
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2091
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2104
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2117
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2202
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2214
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2275
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2307
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2309
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2327
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2362
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2450
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2495
+    Length:          20
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2540
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2594
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2627
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:2: Consider replacing sycl::sub_group::barrier() with sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2631
+    Length:          16
+    ReplacementText: 'item_ct1.get_sub_group().barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2653
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2655
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2677
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2703
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2750
+    Length:          0
+    ReplacementText: "/*\n    DPCT1007:3: Migration of size is not supported.\n    */\n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2787
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2846
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2873
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2979
+    Length:          0
+    ReplacementText: ", sycl::nd_item<3> item_ct1,\n                            double *tmp"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          2985
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3030
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3053
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3099
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3112
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3125
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3210
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3222
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3283
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3315
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3317
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3335
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3370
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3440
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3463
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3499
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3546
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3577
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3579
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3602
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3625
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3661
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3708
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3739
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:6: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3741
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3764
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3787
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3822
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3869
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3899
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:7: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3901
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          3923
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4007
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4041
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4127
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4179
+    Length:          0
+    ReplacementText: "/*\n      DPCT1007:8: Migration of shfl_down is not supported.\n      */\n      "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4290
+    Length:          17
+    ReplacementText: 'item_ct1.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          4466
+    Length:          10
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5019
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5198
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5216
+    Length:          33
+    ReplacementText: '(streamForGraph = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5297
+    Length:          1
+    ReplacementText: 'sycl::range<3>(1, 1, 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5302
+    Length:          37
+    ReplacementText: "dpct::pitched_data memcpyParams_from_data_ct1, memcpyParams_to_data_ct1;\n  sycl::id<3> memcpyParams_from_pos_ct1(0, 0, 0), memcpyParams_to_pos_ct1(0, 0, 0);\n  sycl::range<3> memcpyParams_size_ct1(1, 1, 1);\n  dpct::memcpy_direction memcpyParams_direction_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5382
+    Length:          21
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5410
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5414
+    Length:          19
+    ReplacementText: memcpyParams_from_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5436
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5461
+    Length:          19
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5489
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5565
+    Length:          21
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5593
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5597
+    Length:          19
+    ReplacementText: memcpyParams_to_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5619
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5644
+    Length:          19
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5672
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5748
+    Length:          19
+    ReplacementText: memcpyParams_size_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5770
+    Length:          15
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5822
+    Length:          17
+    ReplacementText: memcpyParams_direction_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          5842
+    Length:          22
+    ReplacementText: 'dpct::host_to_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6108
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:32: Migration of cudaGraphCreate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6155
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:33: Migration of cudaGraphAddMemcpyNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6249
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:34: Migration of cudaGraphAddMemsetNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6621
+    Length:          23
+    ReplacementText: 'sycl::range<3>(1, 1, numOfBlocks)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6676
+    Length:          29
+    ReplacementText: 'sycl::range<3>(1, 1, THREADS_PER_BLOCK)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          6835
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:35: Migration of cudaGraphAddKernelNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          7279
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:36: Migration of cudaGraphAddMemsetNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          7551
+    Length:          13
+    ReplacementText: 'sycl::range<3>(1, 1, 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          7596
+    Length:          29
+    ReplacementText: 'sycl::range<3>(1, 1, THREADS_PER_BLOCK)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          7855
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:37: Migration of cudaGraphAddKernelNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8147
+    Length:          21
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8175
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8179
+    Length:          19
+    ReplacementText: memcpyParams_from_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8201
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8226
+    Length:          19
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8248
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8303
+    Length:          21
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8331
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8335
+    Length:          19
+    ReplacementText: memcpyParams_to_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8357
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8382
+    Length:          19
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8404
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8460
+    Length:          19
+    ReplacementText: memcpyParams_size_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8482
+    Length:          15
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8523
+    Length:          17
+    ReplacementText: memcpyParams_direction_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8543
+    Length:          22
+    ReplacementText: 'dpct::device_to_host'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          8567
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:38: Migration of cudaGraphAddMemcpyNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9048
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:39: Migration of cudaGraphAddHostNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9305
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:40: Migration of cudaGraphGetNodes is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9474
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:41: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9612
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:42: Migration of cudaGraphClone is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9668
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:43: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9817
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:44: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9887
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          9905
+    Length:          37
+    ReplacementText: '(streamForGraph->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10038
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:46: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10113
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10131
+    Length:          37
+    ReplacementText: '(streamForGraph->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10172
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:48: Migration of cudaGraphExecDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10224
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:49: Migration of cudaGraphExecDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10282
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:50: Migration of cudaGraphDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10326
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:51: Migration of cudaGraphDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10376
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:52: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10394
+    Length:          33
+    ReplacementText: '(dpct::get_current_device().destroy_queue(streamForGraph), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10654
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10712
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10768
+    Length:          0
+    ReplacementText: "\n  std::chrono::time_point<std::chrono::steady_clock> forkStreamEvent_ct1;\n  std::chrono::time_point<std::chrono::steady_clock> memsetEvent1_ct1;\n  std::chrono::time_point<std::chrono::steady_clock> memsetEvent2_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10816
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10834
+    Length:          26
+    ReplacementText: '(stream1 = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10863
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:54: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10881
+    Length:          26
+    ReplacementText: '(stream2 = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10910
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:55: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10928
+    Length:          26
+    ReplacementText: '(stream3 = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10957
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:56: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          10975
+    Length:          33
+    ReplacementText: '(streamForGraph = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11012
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:57: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11030
+    Length:          33
+    ReplacementText: '(forkStreamEvent = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11066
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:58: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11084
+    Length:          30
+    ReplacementText: '(memsetEvent1 = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11117
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:59: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11135
+    Length:          30
+    ReplacementText: '(memsetEvent2 = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11169
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:60: The call to cudaStreamBeginCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11187
+    Length:          60
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11251
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1012:61: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n  */\n  /*\n  DPCT1024:62: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11253
+    Length:          0
+    ReplacementText: "forkStreamEvent_ct1 = std::chrono::steady_clock::now(); \n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11269
+    Length:          41
+    ReplacementText: '(*forkStreamEvent = stream1->ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11313
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11331
+    Length:          48
+    ReplacementText: '(stream2->ext_oneapi_submit_barrier({*forkStreamEvent}), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11382
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11400
+    Length:          48
+    ReplacementText: '(stream3->ext_oneapi_submit_barrier({*forkStreamEvent}), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11452
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11470
+    Length:          15
+    ReplacementText: '(stream1->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11569
+    Length:          19
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11588
+    Length:          43
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11632
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11636
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11661
+    Length:          15
+    ReplacementText: '(stream2->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11721
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11731
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11735
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1012:67: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n  */\n  /*\n  DPCT1024:68: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11737
+    Length:          0
+    ReplacementText: "memsetEvent1_ct1 = std::chrono::steady_clock::now(); \n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11753
+    Length:          38
+    ReplacementText: '(*memsetEvent1 = stream2->ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11795
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11813
+    Length:          15
+    ReplacementText: '(stream3->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11856
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11866
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11869
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1012:70: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n  */\n  /*\n  DPCT1024:71: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11871
+    Length:          0
+    ReplacementText: "memsetEvent2_ct1 = std::chrono::steady_clock::now(); \n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11887
+    Length:          38
+    ReplacementText: '(*memsetEvent2 = stream3->ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11929
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11947
+    Length:          45
+    ReplacementText: '(stream1->ext_oneapi_submit_barrier({*memsetEvent1}), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11996
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          11998
+    Length:          110
+    ReplacementText: "stream1->submit(\n    [&](sycl::handler &cgh) {\n      sycl::local_accessor<double, 1> tmp_acc_ct1(sycl::range<1>(512/*512*/), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, numOfBlocks) * sycl::range<3>(1, 1, THREADS_PER_BLOCK), sycl::range<3>(1, 1, THREADS_PER_BLOCK)), \n        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n          reduce(inputVec_d, outputVec_d, inputSize, numOfBlocks, item_ct1, tmp_acc_ct1.get_pointer());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12108
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12111
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12129
+    Length:          45
+    ReplacementText: '(stream1->ext_oneapi_submit_barrier({*memsetEvent2}), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12178
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12180
+    Length:          137
+    ReplacementText: "stream1->submit(\n    [&](sycl::handler &cgh) {\n      sycl::local_accessor<double, 1> tmp_acc_ct1(sycl::range<1>(512/*512*/), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, THREADS_PER_BLOCK), sycl::range<3>(1, 1, THREADS_PER_BLOCK)), \n        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n          reduceFinal(outputVec_d, result_d, numOfBlocks, item_ct1, tmp_acc_ct1.get_pointer());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12317
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12319
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12337
+    Length:          15
+    ReplacementText: '(stream1->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12388
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12441
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12451
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12616
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:75: Migration of cudaLaunchHostFunc is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12681
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:76: The call to cudaStreamEndCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12699
+    Length:          37
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12796
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:77: Migration of cudaGraphGetNodes is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          12990
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:78: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13128
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:79: Migration of cudaGraphClone is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13184
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:80: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13333
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:81: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13403
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:82: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13421
+    Length:          37
+    ReplacementText: '(streamForGraph->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13554
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:83: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13630
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:84: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13648
+    Length:          37
+    ReplacementText: '(streamForGraph->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13689
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:85: Migration of cudaGraphExecDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13741
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:86: Migration of cudaGraphExecDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13799
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:87: Migration of cudaGraphDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13843
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:88: Migration of cudaGraphDestroy is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13893
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:89: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13911
+    Length:          26
+    ReplacementText: '(dpct::get_current_device().destroy_queue(stream1), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13940
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:90: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13958
+    Length:          26
+    ReplacementText: '(dpct::get_current_device().destroy_queue(stream2), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          13987
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:91: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14005
+    Length:          33
+    ReplacementText: '(dpct::get_current_device().destroy_queue(streamForGraph), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14531
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:92: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14549
+    Length:          49
+    ReplacementText: '(inputVec_h = sycl::malloc_host<float>(size, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14601
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:93: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14619
+    Length:          45
+    ReplacementText: '(inputVec_d = sycl::malloc_device<float>(size, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14667
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:94: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14685
+    Length:          52
+    ReplacementText: '(outputVec_d = sycl::malloc_device<double>(maxBlocks, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14740
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:95: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          14758
+    Length:          37
+    ReplacementText: '(result_d = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15063
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:96: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15081
+    Length:          20
+    ReplacementText: '(sycl::free(inputVec_d, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15101
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15104
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:97: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15122
+    Length:          21
+    ReplacementText: '(sycl::free(outputVec_d, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15143
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15146
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:98: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15164
+    Length:          18
+    ReplacementText: '(sycl::free(result_d, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15182
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15185
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:99: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15203
+    Length:          24
+    ReplacementText: '(sycl::free(inputVec_h, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Offset:          15227
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+    Digest:          1174e4a886d757d2b83598878f022f58
+DpctVersion:     2023.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dev_mgr
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'dev_mgr::check_id'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'dev_mgr::current_device'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::select_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     device_ext
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'device_ext::create_queue'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_destroy_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'device_ext::destroy_queue'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_version'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_integrated'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_global_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_host_unified_memory'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_local_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_major_version'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_nd_range_size'
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_sub_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_item_sizes'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_items_per_compute_unit'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_minor_version'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_name'
+          SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     exception_handler
+      SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     get_tid
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+    typedef_event_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     typedef_event_ptr
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     queue_ptr
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      FeatureName:     ''
+      SubFeatureMap:   {}
+  image.hpp:
+    image_channel:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     image_channel
+      SubFeatureMap:
+        image_channel_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_get_total_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_channel::get_total_size'
+          SubFeatureMap:   {}
+        image_channel_set_channel_num:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_channel::set_channel_num'
+          SubFeatureMap:   {}
+        image_channel_set_channel_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_channel::set_channel_size'
+          SubFeatureMap:   {}
+        image_channel_set_channel_type:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_channel::set_channel_type'
+          SubFeatureMap:   {}
+    image_channel_data_type:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     image_channel_data_type
+      SubFeatureMap:   {}
+    image_matrix:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     image_matrix
+      SubFeatureMap:
+        image_matrix_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     image_matrix
+          SubFeatureMap:   {}
+        image_matrix_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     image_matrix
+          SubFeatureMap:   {}
+        image_matrix_set_range:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_matrix::set_range'
+          SubFeatureMap:   {}
+        image_matrix_to_pitched_data:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'image_matrix::to_pitched_data'
+          SubFeatureMap:   {}
+  memory.hpp:
+    async_dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memset:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    async_dpct_memset_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    async_dpct_memset_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_get_copy_range_detail
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_get_offset_detail
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memset_2d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    dpct_memset_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    dpct_memset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     get_memcpy_direction
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     get_pointer_attribute
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     pitched_data
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'pitched_data::get_data_ptr'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'pitched_data::get_pitch'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+          FeatureName:     'pitched_data::get_y'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     pitched_data
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu'
+      FeatureName:     pointer_access_attribute
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs/Manjula_workspace/Shwetha/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs/Manjula_workspace/Shwetha/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '16'
+    Specified:       true
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
