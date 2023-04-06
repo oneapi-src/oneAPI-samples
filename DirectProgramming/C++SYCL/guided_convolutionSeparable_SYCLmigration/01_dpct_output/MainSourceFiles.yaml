@@ -1,0 +1,1421 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          1641
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          1910
+    Length:          43
+    ReplacementText: 'dpct::constant_memory<float, 1> c_Kernel(KERNEL_LENGTH);'
+    ConstantFlag:    DeviceConstant
+    ConstantOffset:  1910
+    InitStr:         ''
+    NewHostVarName:  c_Kernel_host_ct1
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2013
+    Length:          18
+    ReplacementText: 'dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2032
+    Length:          8
+    ReplacementText: 'c_Kernel.get_ptr()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2082
+    Length:          0
+    ReplacementText: '.wait()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2383
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2520
+    Length:          0
+    ReplacementText: ",\n                                      sycl::nd_item<3> item_ct1, float *c_Kernel,\n                                      sycl::local_accessor<float, 2> s_Data"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2560
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2583
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2610
+    Length:          138
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2811
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2887
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2920
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          2951
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3159
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3172
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3342
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3355
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3643
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3656
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3811
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          3813
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4083
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4096
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4483
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4495
+    Length:          86
+    ReplacementText: '1, imageH / ROWS_BLOCKDIM_Y, imageW / (ROWS_RESULT_STEPS * ROWS_BLOCKDIM_X)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4586
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4599
+    Length:          32
+    ReplacementText: 1, ROWS_BLOCKDIM_Y, ROWS_BLOCKDIM_X
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4635
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:1: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4637
+    Length:          125
+    ReplacementText: "dpct::get_default_queue().submit(\n    [&](sycl::handler &cgh) {\n      c_Kernel.init();\n\n      auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();\n\n      sycl::local_accessor<float, 2> s_Data_acc_ct1(sycl::range<2>(4/*4*/, 160/*(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *\n                              ROWS_BLOCKDIM_X*/), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(blocks * threads, threads), \n        [=](sycl::nd_item<3> item_ct1) {\n          convolutionRowsKernel(d_Dst, d_Src, imageW, imageH, imageW, item_ct1, c_Kernel_ptr_ct1, s_Data_acc_ct1);\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          4762
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5144
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5287
+    Length:          0
+    ReplacementText: ",\n                                         sycl::nd_item<3> item_ct1,\n                                         float *c_Kernel,\n                                         sycl::local_accessor<float, 2> s_Data"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5327
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5350
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5377
+    Length:          261
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5695
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5729
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5763
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          5886
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6104
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6117
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6300
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6313
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6659
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6672
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6867
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          6869
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7154
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7167
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7590
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7602
+    Length:          95
+    ReplacementText: '1, imageH / (COLUMNS_RESULT_STEPS * COLUMNS_BLOCKDIM_Y), imageW / COLUMNS_BLOCKDIM_X'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7702
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7715
+    Length:          38
+    ReplacementText: 1, COLUMNS_BLOCKDIM_Y, COLUMNS_BLOCKDIM_X
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7757
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7759
+    Length:          131
+    ReplacementText: "dpct::get_default_queue().submit(\n    [&](sycl::handler &cgh) {\n      c_Kernel.init();\n\n      auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();\n\n      sycl::local_accessor<float, 2> s_Data_acc_ct1(sycl::range<2>(16/*16*/, 81/*(COLUMNS_RESULT_STEPS +\n                                               2 * COLUMNS_HALO_STEPS) *\n                                                  COLUMNS_BLOCKDIM_Y +\n                                              1*/), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(blocks * threads, threads), \n        [=](sycl::nd_item<3> item_ct1) {\n          convolutionColumnsKernel(d_Dst, d_Src, imageW, imageH, imageW, item_ct1, c_Kernel_ptr_ct1, s_Data_acc_ct1);\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Offset:          7890
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          1684
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          1840
+    Length:          0
+    ReplacementText: "\n#include <cmath>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          3799
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:24: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          3824
+    Length:          62
+    ReplacementText: '(d_Input = sycl::malloc_device<float>(imageW * imageH, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          3889
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          3914
+    Length:          63
+    ReplacementText: '(d_Output = sycl::malloc_device<float>(imageW * imageH, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          3980
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4005
+    Length:          63
+    ReplacementText: '(d_Buffer = sycl::malloc_device<float>(imageW * imageH, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4106
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:27: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4124
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4184
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4238
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4429
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4451
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4672
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          4690
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          5108
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          5126
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          5220
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          5274
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          5991
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6009
+    Length:          18
+    ReplacementText: '(sycl::free(d_Buffer, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6027
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6030
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6048
+    Length:          18
+    ReplacementText: '(sycl::free(d_Output, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6066
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6069
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6087
+    Length:          17
+    ReplacementText: '(sycl::free(d_Input, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Offset:          6104
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+    Digest:          a415e6d147e03637b5e283e388bc2d95
+  - MainSourceFile:  '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+    Digest:          701666f627dc80bcbb7d7e3ae2f7bf55
+DpctVersion:     2023.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dev_mgr
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'dev_mgr::check_id'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'dev_mgr::current_device'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::select_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     device_ext
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_version'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'device_ext::queues_wait_and_throw'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_integrated'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_global_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_host_unified_memory'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_local_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_major_version'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_nd_range_size'
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_sub_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_item_sizes'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_items_per_compute_unit'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_minor_version'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_name'
+          SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     exception_handler
+      SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     get_tid
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      FeatureName:     ''
+      SubFeatureMap:   {}
+  memory.hpp:
+    constant_memory_alias:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     constant_memory
+      SubFeatureMap:   {}
+    device_memory:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     device_memory
+      SubFeatureMap:
+        device_memory_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_5:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_6:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     device_memory
+          SubFeatureMap:   {}
+        device_memory_allocate_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::allocate_device'
+          SubFeatureMap:   {}
+        device_memory_get_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::get_ptr'
+          SubFeatureMap:   {}
+        device_memory_get_ptr_q:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::get_ptr'
+          SubFeatureMap:   {}
+        device_memory_init:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::init'
+          SubFeatureMap:   {}
+        device_memory_init_q:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::init'
+          SubFeatureMap:   {}
+        device_memory_value_t_alias:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     'device_memory::value_t'
+          SubFeatureMap:   {}
+    dpct_free:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     dpct_free
+      SubFeatureMap:   {}
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_get_copy_range_detail
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_get_offset_detail
+      SubFeatureMap:   {}
+    dpct_malloc_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     dpct_malloc
+      SubFeatureMap:   {}
+    dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     get_memcpy_direction
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     get_pointer_attribute
+      SubFeatureMap:   {}
+    mem_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     mem_mgr
+      SubFeatureMap:
+        mem_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     mem_mgr
+          SubFeatureMap:   {}
+        mem_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+          FeatureName:     mem_mgr
+          SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+    memory_region:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     memory_region
+      SubFeatureMap:   {}
+    memory_traits:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     memory_traits
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'pitched_data::get_data_ptr'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'pitched_data::get_pitch'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+          FeatureName:     'pitched_data::get_y'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp'
+      FeatureName:     pointer_access_attribute
+      SubFeatureMap:   {}
+    typedef_buffer_t:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     buffer_t
+      SubFeatureMap:   {}
+    typedef_byte_t:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu'
+      FeatureName:     byte_t
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs/Manjula_workspace/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs/Manjula_workspace/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
