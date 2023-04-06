@@ -420,7 +420,6 @@ public:
     // Copy all matrices from on-chip memory "mem" to FPGA DDR
     for (int mat = 0; mat < k_num_matrices; mat++) {
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-      [[intel::ivdep]]                  // NO-FORMAT: Attribute
       for (ac_int<kItersFromMemBitSize, false> i = 0; i < kItersFromMem; i++) {
         int write_idx = i % kItersPerRowCol;
         bool get[kItersPerRowCol];

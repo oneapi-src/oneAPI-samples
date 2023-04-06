@@ -89,7 +89,6 @@ In our FPGA implementation, the multiply-accumulate operations are computed in a
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
 - **Explicit Pipelining with `fpga_reg`** (fpga_register)
-- **Loop `ivdep` Attribute** (loop_ivdep)
 - **Unrolling Loops** (loop_unroll)
 
 The key optimization techniques used are as follows:
