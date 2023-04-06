@@ -1,2 +1,0 @@
-add_subdirectory(07_explicit_subdevice)
-add_subdirectory(13_openmp_explicit_subdevice)

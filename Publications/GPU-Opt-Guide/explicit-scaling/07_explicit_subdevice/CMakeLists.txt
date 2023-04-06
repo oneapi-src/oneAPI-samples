@@ -1,1 +1,0 @@
-add_example(explicit_subdevice)

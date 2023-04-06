@@ -1,2 +1,0 @@
-add_example(test_no_num_teams)
-add_example(test_num_teams)

@@ -1,2 +1,0 @@
-Device: Intel(R) Gen12HP
-Subgroup Sizes: 8 16 32

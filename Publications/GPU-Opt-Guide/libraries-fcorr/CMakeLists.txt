@@ -1,3 +1,0 @@
-add_example_with_mkl(fcorr_1d_buffers)
-add_example_with_mkl(fcorr_1d_usm)
-add_example_with_mkl(fcorr_1d_usm_fixed)

@@ -1,7 +1,0 @@
-add_example(histogram-slm-256)
-add_example(histogram-slm-1024)
-add_example(slm-bank-s1)
-add_example(slm-bank-s16)
-add_example(slm-size)
-add_example(convolution-slm-cache)
-add_example(convolution-global)

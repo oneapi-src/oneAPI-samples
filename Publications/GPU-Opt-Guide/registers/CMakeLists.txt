@@ -1,6 +1,0 @@
-add_example(histogram256-int)
-add_example(histogram256-int-shared-private)
-add_example(histogram32-int)
-add_example(histogram32-long)
-add_example(block-load-store)
-add_example(non-block-load-store)
