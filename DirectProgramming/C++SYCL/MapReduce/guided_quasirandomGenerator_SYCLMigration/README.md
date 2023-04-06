@@ -58,7 +58,7 @@ This sample demonstrates the migration of the following prominent CUDA feature:
 
 ## Tool assisted migration – SYCLomatic 
 
-For this sample, the Intel® SYCLomatic Compatibility tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
+For this sample, the Intel® SYCLomatic Compatibility tool automatically migrates 100% of the CUDA runtime API's to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
 
 1. git clone https://github.com/NVIDIA/cuda-samples.git
 2. cd cuda-samples/Samples/5_Domain_Specific/quasirandomGenerator/
