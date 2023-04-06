@@ -1,4 +1,0 @@
-add_example(c_is_device_ptr_01)
-add_example(c_use_device_ptr_01)
-add_fortran_example(f_has_device_addr_01)
-add_fortran_example(f_use_device_addr_01)

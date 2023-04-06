@@ -1,2 +1,0 @@
-add_example(test_no_teams_distribute)
-add_example(test_teams_distribute)

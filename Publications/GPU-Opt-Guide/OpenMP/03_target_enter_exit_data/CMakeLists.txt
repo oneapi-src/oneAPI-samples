@@ -1,2 +1,0 @@
-add_example(test_no_target_enter_exit_data)
-add_example(test_target_enter_exit_data)

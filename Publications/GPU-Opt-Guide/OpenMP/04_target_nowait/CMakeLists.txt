@@ -1,3 +1,0 @@
-add_example(test_target_no_nowait)
-add_example(test_target_nowait)
-add_fortran_example(test_target_nowait_f)

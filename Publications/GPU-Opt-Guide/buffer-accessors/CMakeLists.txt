@@ -1,5 +1,0 @@
-add_example(kern1)
-add_example(kern2)
-add_example(kern3)
-add_example(kern4)
-add_example(kern5)

@@ -1,1 +1,0 @@
-Local Memory Size: 65536
