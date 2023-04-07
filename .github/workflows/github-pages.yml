@@ -18,17 +18,17 @@ jobs:
         python-version: "3.8"
 
     - uses: actions/checkout@v3
-      name: Check out app/dev  
-      with:
-        path: app/dev
-        # Adding above 2 lines forces pre-pending filepaths below w/ 'app/dev/' 
-
-    - uses: actions/checkout@v3
       name: Check out master
       with: 
         ref: 'refs/heads/master'
-        path: master        
-  
+        path: master   
+
+    - uses: actions/checkout@v3
+      name: Check out app/dev  
+      with:
+        path: app/dev
+        # Adding above 2 lines forces pre-pending filepaths below w/ 'app/dev/'      
+        
     # TODO: change to 'python3 app/dev/src/db.py master' per actions/checkout@3
     - name: Build JSON DB
       run: |
