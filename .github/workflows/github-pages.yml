@@ -1,8 +1,8 @@
 name: github-pages
 
-on:
-  schedule:
-    - cron: '5 * * * *'  
+#on:
+#  schedule:
+#    - cron: '5 * * * *'  
     # If above is successful, revise to: '59 6 * * *'
     # At 6:59am every day, run db.py and build app
   
