@@ -1,0 +1,74 @@
+name: github-pages
+
+on:
+  schedule:
+    - cron: '5 * * * *'  
+    # If above is successful, revise to: '59 6 * * *'
+    # At 6:59am every day, run db.py and build app
+  
+jobs:
+  pages:
+    name: Build GitHub Pages
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+
+    - uses: actions/checkout@v3
+      name: Check out app/dev  
+      with:
+        path: app/dev
+        # Adding above 2 lines forces pre-pending filepaths below w/ 'app/dev/' 
+
+    - uses: actions/checkout@v3
+      name: Check out master
+      with: 
+        ref: 'refs/heads/master'
+        path: master        
+  
+    # TODO: change to 'python3 app/dev/src/db.py master' per actions/checkout@3
+    - name: Build JSON DB
+      run: |
+        python3 -m pip install -r app/dev/src/requirements.txt
+        echo master
+        python3 app/dev/src/db.py master
+
+    - name: Remove JSON pre-prod  
+      run: |       
+        rm -rf app/dev/src/docs/sample_db_pre.json
+
+    - name: Build Sphinx
+      run: |    
+        python3 -m sphinx -W -b html app/dev/src/docs/ app/dev/src/docs/_build/
+        echo $PWD
+        echo ${{ github.ref }}
+
+    - name: Add GPU-Occupancy-Calculator
+      env: 
+        GPU_OCC_CALC: app/dev/src/docs/_build/Tools/GPU-Occupancy-Calculator/
+      run: |
+        mkdir -p ${GPU_OCC_CALC}   
+        cd ${GPU_OCC_CALC}
+        wget https://raw.githubusercontent.com/oneapi-src/oneAPI-samples/master/Tools/GPU-Occupancy-Calculator/index.html
+
+    - name: Push docs
+      if: ${{ github.ref == 'refs/heads/app/dev' }}
+      env:
+        GITHUB_USER: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_REPO: ${{ github.repository }} 
+      run: |
+        cd app/dev/src/docs/_build/
+        touch .nojekyll       
+        git init
+        git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
+        git add -A
+        git status
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git commit -sm "$(date)"
+        git branch -M gh-pages
+        git push -u origin -f gh-pages
