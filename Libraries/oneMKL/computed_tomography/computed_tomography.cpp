@@ -140,7 +140,7 @@ int main(int argc, char **argv)
     };
 
     // create execution queue with asynchronous error handling
-    sycl::queue main_queue(sycl::device{sycl::default_selector{}}, exception_handler);
+    sycl::queue main_queue(sycl::device{sycl::default_selector_v}, exception_handler);
 
     std::cout << "Reading original image from " << original_bmpname << std::endl;
     matrix_r original_image(main_queue);

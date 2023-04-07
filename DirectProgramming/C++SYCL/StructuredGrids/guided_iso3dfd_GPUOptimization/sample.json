@@ -20,7 +20,7 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild StepByStep.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "MSBuild guided_iso3dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
                           "cd x64/Release",
                           "1.exe 256 256 256 10",
                           "2.exe 256 256 256 10",
