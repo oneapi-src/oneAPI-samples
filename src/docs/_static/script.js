@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         showTotalRecords();
         attachSearch();
         filterPaginatedData();
-
+        lastUpdated()
     });
 
 });
@@ -29,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
 function reloadData() {
     const reload = new Event('DOMContentLoaded');
         document.dispatchEvent(reload)
+}
+
+function lastUpdated() {
+    let updated = document.lastModified;
+    document.getElementById("lastmodified").innerHTML = updated;
 }
 
 function fetchData() {

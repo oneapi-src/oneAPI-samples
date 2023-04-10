@@ -1109,3 +1109,12 @@ ul.help li {
   background-clip: padding-box;
 }
 
+#footer-container{
+    text-align: left;
+}
+
+#footer-blk-1, #footer-blk-2{
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+}
