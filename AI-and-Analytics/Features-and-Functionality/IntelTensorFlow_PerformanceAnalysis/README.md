@@ -1,6 +1,6 @@
 # `TensorFlow* Performance Analysis Using Model Zoo for Intel® Architecture` Sample
 
-The `TensorFlow* Performance Analysis Using Model Zoo for Intel® Architecture` sample contains two Jupyter Notebooks from the Model Zoo for Intel® Architecture to help users analyze the performance difference between Stock TensorFlow*and Intel® Optimization for TensorFlow*.
+The `TensorFlow* Performance Analysis Using Model Zoo for Intel® Architecture` sample contains one Jupyter notebook from this GitHub Repo and four Jupyter Notebooks from the Model Zoo for Intel® Architecture to help users analyze the performance difference among different Tensorflow enviroments such as Stock vs Intel.
 
 | Area                     | Description
 |:---                      |:---
@@ -11,7 +11,8 @@ The `TensorFlow* Performance Analysis Using Model Zoo for Intel® Architecture` 
 
 The [Model Zoo for Intel® Architecture](https://github.com/IntelAI/models) GitHub contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
 
-This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the TensorFlow* Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and Intel® oneAPI Deep Neural Network Library (oneDNN) among different layers to execute, train, and deploy Intel-optimized models.
+This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the TensorFlow* Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and Intel® oneAPI Deep Neural Network Library (oneDNN) among different layers to execute, train, and deploy Intel-optimized models.  
+This sample also provide an Analysis script to give users a quick performance analysis over their TensorFlow Profiling results.  
 
 ## Prerequisites
 
@@ -40,6 +41,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
+### Jupyter Notebooks  
 Jupyter Notebooks help users analyze the performance benefit from using Intel® Optimization for TensorFlow* with the oneDNN library.
 
 >**Note**: The notebooks are released with the Intel® AI Analytics Toolkit (AI Kit), and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.
@@ -48,10 +50,17 @@ You can find the Jupyter Notebooks in Model Zoo for Intel® Architecture GitHub 
 
 | Analysis Type                   | Notebook | Notes
 |:---                             |:--- |:---
+| Analysis on a Kera model | [TensorFlow Profiler Analysis](TF_PerfAnalysis.ipynb) | Guides auidences how to generate trace.json file by using TensorFlow Profiler, and then analyze it accordingly. |
 |Stock vs. Intel TensorFlow*      | 1. [benchmark_perf_comparison](https://github.com/IntelAI/models/blob/master/docs/notebooks/perf_analysis/benchmark_perf_comparison.ipynb) | Compare performance between Stock and Intel® Optimization for TensorFlow* among different models  |
 |Stock vs. Intel TensorFlow*      | 2. [benchmark_perf_timeline_analysis](https://github.com/IntelAI/models/blob/master/docs/notebooks/perf_analysis/benchmark_perf_comparison.ipynb) | Analyze the performance benefit from oneDNN among different layers by using TensorFlow*Timeline |
 |FP32 vs. BF16 vs. INT8           | 1. [benchmark_data_types_perf_comparison](https://github.com/IntelAI/models/blob/master/docs/notebooks/perf_analysis/benchmark_data_types_perf_comparison.ipynb) | Compare Model Zoo for Intel® Architecture benchmark performance among different data types on Intel® Optimization for TensorFlow* 
 |FP32 vs. BF16 vs. INT8           | 2.[benchmark_data_types_perf_timeline_analysis](https://github.com/IntelAI/models/blob/master/docs/notebooks/perf_analysis/benchmark_data_types_perf_timeline_analysis.ipynb) | Analyze the bf16/int8 data type performance benefit from oneDNN among different layers by using TensorFlow*Timeline |
+
+### TensorFlow Timeline Analyze Scripts
+
+We aslo provide a analyze tool which helps users to analyze TensorFlow Trace Json with a HTML output.  
+The HTML report contains some statistic charts and a timeline chart.  
+Users could refer to [README](Analyze/README.md) for more details.
 
 ## Set Environment Variables
 
@@ -60,8 +69,9 @@ When working with the command-line interface (CLI), you should configure the one
 ## Create the Conda Environments
 
 ### Intel® DevCloud
+<details>
+<summary>Stock TensorFlow*</summary>
 
-#### Stock TensorFlow*Conda Creation
 
 1. Create and activate the Conda environment.
    ```
@@ -70,7 +80,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 2. Install stock TensorFlow*with a specific version.
    ```
-   (stock-tensorflow) $pip install tensorflow==2.6.0
+   (stock-tensorflow) $pip install tensorflow
    ```
 3. Install extra packages.
    ```
@@ -90,8 +100,11 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    $jupyter kernelspec uninstall stock-tensorflow
    ```
+</details>
 
-#### Intel® Optimization for TensorFlow* Conda Creation
+<details>
+<summary>Intel® Optimization for TensorFlow*</summary>
+
 
 >**Note**: Intel® Optimization for TensorFlow* is on DevClou; however, users do not have the access necessary to install extra packages. You must clone Intel® Optimization for TensorFlow* into your home directory to install extra packages.
 
@@ -121,21 +134,16 @@ When working with the command-line interface (CLI), you should configure the one
 6. After profiling, you can remove the kernel from the Jupyter Notebook.
    ```
    $jupyter kernelspec uninstall intel-tensorflow
+ 
    ```
+</details>
 
-### On Linux*
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-#### Stock TensorFlow*
+### On Linux
+
+<details>
+<summary>Stock TensorFlow*</summary>
 
 1. Create and activate Conda environment.
    ```
@@ -144,7 +152,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 2. Install stock TensorFlow* with a specific version.
    ```
-   (stock-tensorflow) $pip install tensorflow==2.6.0
+   (stock-tensorflow) $pip install tensorflow
    ```
 3. Install extra packages.
    ```
@@ -164,13 +172,16 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    $jupyter kernelspec uninstall stock-tensorflow
    ```
+</details>
 
-#### Intel® Optimization for TensorFlow*
+<details>
+<summary>Intel® Optimization for TensorFlow*</summary>
 
 1. Source oneAPI environment variables.
    ```
    $source /opt/intel/oneapi/setvars.sh
    ```
+   For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.  
 2. Create and activate the Conda environment.
    ```
    $conda create --name intel-tensorflow --clone tensorflow
@@ -193,13 +204,29 @@ When working with the command-line interface (CLI), you should configure the one
 6. After profiling, you can remove the kernel from the Jupyter Notebook.
    ```
    $jupyter kernelspec uninstall intel-tensorflow
-   ```
+   ```  
+ </details>  
 
 #### Troubleshooting
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 ### Run the Sample
+
+<details>
+<summary> Run the TensorFlow Profiler Analysis notebook </summary>
+
+1. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`  
+2. Follow the instructions to open the URL with the token in your browser  
+3. Click the `TF_PerfAnalysis.ipynb` file  
+4. Change your Jupyter notebook kernel to either "stock-tensorflow" or "intel-tensorflow" (highlighted in the diagram below)  
+    <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>  
+5. Run through every cell of the notebook one by one  
+
+</details>
+
+<details>
+<summary> Run Benchmark Notebooks from Model Zoo </summary>
 
 >**Note**: Run the Jupyter Notebooks on the login node of the Intel® DevCloud.
 
@@ -228,6 +255,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 9. Run every cell of the notebook in sequence.
 10. Run all cells before the comparison section with both **stock-tensorflow** and **intel-tensorflow **kernels to compare stock TensorFlow* and Intel® Optimization for TensorFlow* results in the section "Analyze TF Timeline results among Stock and Intel TensorFlow*".
 
+</details>
 
 ## Example Output
 
