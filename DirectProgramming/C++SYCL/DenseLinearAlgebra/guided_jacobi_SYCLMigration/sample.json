@@ -6,7 +6,6 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "GPURequired": ["gen11"],
   "os": [ "linux" ],
   "builder": [ "cmake" ],
   "ciTests": {
