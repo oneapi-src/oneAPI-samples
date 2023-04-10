@@ -45,7 +45,7 @@ For both training and inference, you can run the sample and scripts in Jupyter N
 
 Download the CommonVoice dataset for languages of interest from [https://commonvoice.mozilla.org/en/datasets](https://commonvoice.mozilla.org/en/datasets). 
 
-For this sample, you will need to download the following languages: **Japanese** and **Swedish**.
+For this sample, you will need to download the following languages: **Japanese** and **Swedish**. Follow Steps 1-6 below or you can execute the code.  
 
 1. On the CommonVoice website, select the Version and Language.
 2. Enter your email.
@@ -58,6 +58,26 @@ For this sample, you will need to download the following languages: **Japanese**
 6. Extract the compressed folder, and rename the folder with the language (for example, English).
 
    The file structure **must match** the `LANGUAGE_PATHS` defined in `prepareAllCommonVoice.py` in the `Training` folder for the script to run properly.
+
+These commands illustrate Steps 1-6. Notice that it downloads Japanese and Swedish from CommonVoice version 11.0.  
+```
+# Create the commonVoice directory under 'data'
+sudo chmod 777 -R /data
+cd /data
+mkdir commonVoice
+cd commonVoice
+
+# Download the CommonVoice data
+wget \
+https://mozilla-common-voice-datasets.s3.dualstack.us-west-2.amazonaws.com/cv-corpus-11.0-2022-09-21/cv-corpus-11.0-2022-09-21-ja.tar.gz \
+https://mozilla-common-voice-datasets.s3.dualstack.us-west-2.amazonaws.com/cv-corpus-11.0-2022-09-21/cv-corpus-11.0-2022-09-21-sv-SE.tar.gz
+
+# Extract and organize the CommonVoice data into respective folders by language 
+tar -xf cv-corpus-11.0-2022-09-21-ja.tar.gz
+mv cv-corpus-11.0-2022-09-21 japanese
+tar -xf cv-corpus-11.0-2022-09-21-sv-SE.tar.gz
+mv cv-corpus-11.0-2022-09-21 swedish
+```
 
 ### Configuring the Container
 
@@ -95,7 +115,7 @@ This section explains how to train a model for language identification using the
    ```
 2. Launch Jupyter Notebook.
    ```
-   jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root &
+   jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
    ```
 3. Follow the instructions to open the URL with the token in your browser.
 4. Locate and select the Training Notebook.
@@ -225,7 +245,7 @@ To run inference, you must have already run all of the training scripts, generat
    ```
 2. Launch Jupyter Notebook.
    ```
-   jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root &
+   jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
    ```
 3. Follow the instructions to open the URL with the token in your browser.
 4. Locate and select the inference Notebook.

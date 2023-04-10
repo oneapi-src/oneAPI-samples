@@ -18,7 +18,7 @@ pip install webdataset==0.1.96
 
 # Install PyTorch and Intel Extension for PyTorch (IPEX)
 pip install torch==1.13.1 torchaudio
-pip intall --no-deps torchvision==0.14.0
+pip install --no-deps torchvision==0.14.0
 pip install intel_extension_for_pytorch==1.13.100
 
 # Install libraries for MP3 to WAV conversion
