@@ -30,7 +30,6 @@ on:
       - "src/docs/_static/script.js"
       - "src/docs/_templates/base.html"
       - "src/docs/_templates/index.html"
-
 # defaults:
 #   run:
 #     working-directory: src
