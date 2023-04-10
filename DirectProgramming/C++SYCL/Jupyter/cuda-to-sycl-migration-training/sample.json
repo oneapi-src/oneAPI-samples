@@ -6,7 +6,6 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "os": [ "linux" ],
-  "GPURequired": ["gen11"],
   "builder": [ "ide", "make" ],
   "targetDevice": [ "CPU", "GPU" ],
   "ciTests": {

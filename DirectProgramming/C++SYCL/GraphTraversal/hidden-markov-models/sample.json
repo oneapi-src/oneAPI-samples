@@ -7,7 +7,6 @@
   "targetDevice": [ "CPU", "GPU" ],
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
-  "GPURequired": ["gen11"],
   "builder": [ "ide", "cmake" ],
   "ciTests": {
         "linux": [{
