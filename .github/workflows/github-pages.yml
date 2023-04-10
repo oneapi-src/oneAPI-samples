@@ -1,12 +1,13 @@
-name: github-pages
+name: github-pages-master
 
 on:
  schedule:
-   - cron: '*/5 * * * *' 
+   - cron: '55 13 * * *' 
 
  workflow_dispatch: 
-    # If above is successful, revise to: '59 6 * * *'
-    # At 6:59am every day, run db.py and build app
+    # Revise to: '55 13 * * *'
+    # the latter time reflects UTC -> PST conversion
+    # At 6:55 am (PST) every day, run this CI job
   
 jobs:
   pages:
