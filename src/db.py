@@ -25,11 +25,10 @@ def make_json_list(basedir:str):
         print(f"Error. Ensure root directory is oneAPI-samples repo. \n: {e}")
 
 def merge_json_files(filepaths:list):
-    '''Create pre-prod database from merged sample.json files from list of filenames'''
+    '''From a list of filenames, output as json a pre-prod database of all sample.json files'''
     results_list = []
     try:
         for f in filepaths:
-            print(f)
             with open(f, 'r') as infile:
                 results_list.append(json.load(infile))
                 # print(results_list)
@@ -85,13 +84,21 @@ def df_to_db(file_paths:list):
     db = df.to_json(rev_json, orient='records')    
     return db
 
+def count_json_recs(filename:str):
+    try:
+        with open(filename) as f:
+            db = json.load(f)
+        print("TOTAL RECORDS:",len(db))
+    except Exception as e:
+        print(f"{filename} not found. \n{e}")
+
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     rootdir = sys.argv[-1]
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths)
     json_db = df_to_db(file_paths)
-
+    count_json_recs("docs/_static/sample_db_prd.json")
     return json_db
 
 if __name__ == "__main__":
