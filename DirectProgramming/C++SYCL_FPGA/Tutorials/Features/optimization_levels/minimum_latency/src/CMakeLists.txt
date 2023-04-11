@@ -19,8 +19,8 @@ set(FPGA_TARGET_MANUAL_REVERT ${TARGET_NAME_MANUAL_REVERT}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
-    set(DEVICE_FLAG "Agilex")
+    set(FPGA_DEVICE "Agilex 7")
+    set(DEVICE_FLAG "Agilex 7")
     set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
@@ -34,7 +34,7 @@ else()
         set(DEVICE_FLAG "S10")
         set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex*")
-        set(DEVICE_FLAG "Agilex")
+        set(DEVICE_FLAG "Agilex 7")
         set(MANUAL_REVERT_FLAGS "-Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
@@ -43,7 +43,7 @@ endif()
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
                          Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
-                         -DDEVICE_FLAG=Agilex.")
+                         -DDEVICE_FLAG=Agilex 7.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code

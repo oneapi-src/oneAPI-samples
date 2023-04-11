@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates how to specify the kernel invocation interfaces 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of specifying kernel invocation interfaces and kernel argument interfaces
 | Time to complete                  | 30 minutes
@@ -33,9 +33,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -198,7 +198,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
 
 ## Building the `invocation_interfaces` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
@@ -220,14 +220,14 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex® device family), run `cmake` using the following command:
+   To compile for the default target (the Agilex 7® device family), run `cmake` using the following command:
    ```
    cmake ..
    ```
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -243,7 +243,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
      ```
      make report
      ```
-   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates  
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
    :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
      make fpga
@@ -256,14 +256,14 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex® device family), run `cmake` using the command:
+   To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. 
+   cmake -G "NMake Makefiles" ..
    ```
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -279,7 +279,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
      ```
      nmake report
      ```
-   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates  
+   * Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates
    :warning: The FPGA executables generated in this tutorial is ***not*** supported to be run on FPGA devices directly.
      ```
      nmake fpga

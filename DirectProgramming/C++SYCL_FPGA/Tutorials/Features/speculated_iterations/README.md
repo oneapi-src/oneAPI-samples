@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates applying the `speculated_iterations` attribute t
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | What the `speculated_iterations` attribute does <br> How to apply the `speculated_iterations` attribute to loops in your program <br> How to determine the optimal number of speculated iterations
 | Time to complete                  | 15 minutes
@@ -32,9 +32,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -80,7 +80,7 @@ In both increasing and decreasing cases, some experimentation is usually necessa
 ### Tutorial example
 In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```.
 
-The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on an Intel® Arria® 10 FPGA. Different numbers are chosen for the Intel® Stratix® 10 and Intel Agilex® targets accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on an Intel® Arria® 10 FPGA. Different numbers are chosen for the Intel® Stratix® 10 and Intel Agilex 7® targets accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute.
@@ -89,8 +89,8 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 
 ## Building the `speculated_iterations` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -111,7 +111,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -119,12 +119,12 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -154,19 +154,19 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
