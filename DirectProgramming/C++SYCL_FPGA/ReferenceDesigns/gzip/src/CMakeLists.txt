@@ -83,7 +83,7 @@ elseif(DEVICE_FLAG MATCHES "S10")
         set(NUM_REORDER "-Xsnum-reorder=6")
     endif()
 elseif(DEVICE_FLAG MATCHES "Agilex7")
-    # Agilex7™
+    # Agilex 7
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
         set(SEED "-Xsseed=1")

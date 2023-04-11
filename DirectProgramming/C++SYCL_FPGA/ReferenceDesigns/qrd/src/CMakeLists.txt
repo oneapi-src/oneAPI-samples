@@ -74,7 +74,7 @@ elseif(DEVICE_FLAG MATCHES "S10")
     set(CLOCK_TARGET "-Xsclock=480MHz")
     set(SEED "-Xsseed=3")
 elseif(DEVICE_FLAG MATCHES "Agilex7")
-    # Agilex7™ parameters
+    # Agilex 7 parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
     set(FIXED_ITERATIONS 110)
