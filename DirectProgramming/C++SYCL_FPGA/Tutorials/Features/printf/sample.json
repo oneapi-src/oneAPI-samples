@@ -29,16 +29,6 @@
           "make fpga_emu",
           "./printf.fpga_emu"
         ]
-      },
-      {
-        "id": "report",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make report"
-        ]
       }
     ],
     "windows": [
@@ -52,17 +42,6 @@
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/printf",
           "nmake fpga_emu",
           "printf.fpga_emu.exe"
-        ]
-      },
-      {
-        "id": "report",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/printf",
-          "nmake report"
         ]
       }
     ]
