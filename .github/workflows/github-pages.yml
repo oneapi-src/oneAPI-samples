@@ -3,12 +3,11 @@ name: github-pages-master
 on:
  schedule:
    - cron: '55 13 * * *' 
+    # Above time reflects UTC -> PST conversion
+    # At 6:55 am (PST/PDT) every day, run this CI job
 
  workflow_dispatch: 
-    # Revise to: '55 13 * * *'
-    # the latter time reflects UTC -> PST conversion
-    # At 6:55 am (PST) every day, run this CI job
-  
+
 jobs:
   pages:
     name: Build GitHub Pages
@@ -21,17 +20,16 @@ jobs:
         python-version: "3.8"
 
     - uses: actions/checkout@v3
-      name: Check out app/dev  # checks out to the top-level dir
-      with: 
+      name: Check out app/dev  # checks out app/dev in top-level dir
+      with:
         ref: 'refs/heads/app/dev'
 
     - uses: actions/checkout@v3
-      name: Check out master
-      with: 
+      name: Check out master # checks out master in subdirectory
+      with:
         ref: 'refs/heads/master'
-        path: master   # subdirectory
+        path: master
         
-    # TODO: change to 'python3 app/dev/src/db.py master' per actions/checkout@3
     - name: Build JSON DB
       run: |
         python3 -m pip install -r src/requirements.txt
@@ -57,7 +55,7 @@ jobs:
         wget https://raw.githubusercontent.com/oneapi-src/oneAPI-samples/master/Tools/GPU-Occupancy-Calculator/index.html
 
     - name: Push docs
-      if: ${{ github.ref == 'refs/heads/master' }}
+      if: ${{ github.ref == 'refs/heads/master' }} # only if this workflow is run from the master branch, push docs
       env:
         GITHUB_USER: ${{ github.actor }}
         GITHUB_TOKEN: ${{ github.token }}
