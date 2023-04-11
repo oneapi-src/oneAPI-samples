@@ -98,7 +98,7 @@ def main():
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths)
     json_db = df_to_db(file_paths)
-    count_json_recs("docs/_static/sample_db_prd.json")
+    count_json_recs("src/docs/_static/sample_db_prd.json")
     return json_db
 
 if __name__ == "__main__":
