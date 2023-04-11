@@ -49,7 +49,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -121,7 +121,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex 7® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -165,7 +165,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex 7® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build

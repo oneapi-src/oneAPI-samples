@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates applying the `speculated_iterations` attribute t
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | What the `speculated_iterations` attribute does <br> How to apply the `speculated_iterations` attribute to loops in your program <br> How to determine the optimal number of speculated iterations
 | Time to complete                  | 15 minutes
@@ -80,7 +80,7 @@ In both increasing and decreasing cases, some experimentation is usually necessa
 ### Tutorial example
 In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```.
 
-The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on an Intel® Arria® 10 FPGA. Different numbers are chosen for the Intel® Stratix® 10 and Intel Agilex 7® targets accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on an Intel® Arria® 10 FPGA. Different numbers are chosen for the Intel® Stratix® 10 and Intel Agilex® 7 targets accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute.
@@ -111,7 +111,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -154,7 +154,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

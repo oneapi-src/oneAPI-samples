@@ -4,7 +4,7 @@ This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGAs thro
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> The compile options used to target FPGA devices
 | Time to complete                  | 60 minutes
@@ -159,7 +159,7 @@ Optimization Report
 
 ```bash
 # FPGA early image (with optimization report):
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex 7 -o vector_add_report.a
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex7 -o vector_add_report.a
 ```
 Use the`-Xstarget` flag to target a supported board, a device family, or a specific FPGA part number.
 
@@ -167,7 +167,7 @@ Simulator
 
 ```bash
 # FPGA simulator image:
-icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex 7 -Xsghdl -o vector_add_sim.a
+icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex7 -Xsghdl -o vector_add_sim.a
 ```
 Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 
@@ -175,7 +175,7 @@ Hardware
 
 ```bash
 # FPGA hardware image:
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex 7 -o vector_add.fpga
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex7 -o vector_add.fpga
 ```
 Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 
@@ -237,7 +237,7 @@ Generate the `Makefile` by running `cmake`.
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -269,7 +269,7 @@ Generate the `Makefile` by running `cmake`.
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

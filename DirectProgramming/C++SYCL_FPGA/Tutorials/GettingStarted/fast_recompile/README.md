@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to separate the compilation of a program's h
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link methods <br> Which method to choose for your project
 | Time to complete                  | 15 minutes
@@ -168,7 +168,7 @@ For larger and more complex projects, the device link method has the advantage o
     mkdir build
     cd build
     ```
-    To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+    To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
     ```
     cmake ..
     ```
@@ -208,7 +208,7 @@ For larger and more complex projects, the device link method has the advantage o
     mkdir build
     cd build
     ```
-    To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+    To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
     ```

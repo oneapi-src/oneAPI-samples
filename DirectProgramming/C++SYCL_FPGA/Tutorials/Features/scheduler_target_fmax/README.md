@@ -5,7 +5,7 @@ This tutorial explains the `scheduler_target_fmax_mhz` attribute and its effect 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it. <br> The effect this attribute can have on kernel performance on FPGA.
 | Time to complete                  | 15 minutes
@@ -108,7 +108,7 @@ In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attri
   cd build
   ```
 
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -160,7 +160,7 @@ In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attri
   cd build
   ```
 
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

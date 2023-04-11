@@ -25,7 +25,7 @@ This tutorial includes three designs:
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 
@@ -144,7 +144,7 @@ We are currently working on an API and tutorial to address both of these drawbac
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for Intel® Agilex 7® device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -186,7 +186,7 @@ We are currently working on an API and tutorial to address both of these drawbac
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Intel® Agilex 7® device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build

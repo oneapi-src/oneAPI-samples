@@ -23,7 +23,7 @@ This FPGA tutorial demonstrates how to compile your design with the minimum late
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 This sample is part of the FPGA code samples.
@@ -54,7 +54,7 @@ This FPGA tutorial demonstrates how to use the minimum latency flow to compile l
 To compile your design with the minimum latency flow, pass the `-Xsoptimize=latency` flag to the `icpx` command.
 
 The minimum latency flow implies the following compiler controls:
-- Disable hyper-optimized handshaking on Intel Stratix® 10 and Intel Agilex 7&trade; devices
+- Disable hyper-optimized handshaking on Intel Stratix® 10 and Intel Agilex® 7 devices
 - Use zero-latency stall-free clusters exit FIFO
 - Disable loop speculation
 - Remove the 1-cycle delay on the pipelined loop limiter
@@ -108,7 +108,7 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
    ```
    cmake ..
    ```
@@ -159,7 +159,7 @@ Part 3 also compiles the design with the minimum latency flow, as well as manual
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" ..
    ```
@@ -271,7 +271,7 @@ PASSED: all kernel results are correct
 
 ### Discussion of Results
 
-Comparing to Intel Arria® 10 GX FPGA, it is more notable on Intel Stratix® 10 SX FPGA that the minimum latency flow significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency flow disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix® 10 and Intel Agilex 7&trade; devices, see [Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html).
+Comparing to Intel Arria® 10 GX FPGA, it is more notable on Intel Stratix® 10 SX FPGA that the minimum latency flow significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency flow disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix® 10 and Intel Agilex® 7 devices, see [Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html).
 
 ## License
 

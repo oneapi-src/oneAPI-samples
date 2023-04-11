@@ -4,7 +4,7 @@ This tutorial demonstrates a simple example of unrolling loops to improve throug
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  Basics of loop unrolling. <br> How to unroll loops in your program. <br> Determining the optimal unroll factor for your program.
 | Time to complete                  | 15 minutes
@@ -138,7 +138,7 @@ On an Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA, it i
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -181,7 +181,7 @@ On an Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA, it i
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

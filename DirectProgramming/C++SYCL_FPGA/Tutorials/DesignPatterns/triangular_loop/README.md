@@ -18,7 +18,7 @@ This FPGA sample introduces an advanced optimization technique to improve the pe
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -216,7 +216,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for Intel® Agilex 7® device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -261,7 +261,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Intel® Agilex 7® device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build

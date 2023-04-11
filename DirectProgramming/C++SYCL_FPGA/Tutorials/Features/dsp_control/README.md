@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to set the implementation preference for cer
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               |  How to apply global DSP control in command-line interface. <br> How to apply local DSP control in source code. <br> Scope of datatypes and math operations that support DSP control.
 | Time to complete                  | 15 minutes
@@ -120,7 +120,7 @@ The second template argument `Propagate::<option>` is an enum that determines wh
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -171,7 +171,7 @@ The second template argument `Propagate::<option>` is an enum that determines wh
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```

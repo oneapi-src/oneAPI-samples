@@ -289,9 +289,9 @@ int main(int argc, char** argv) {
     // can be seen in the "Block Scheduled Fmax" columns in the
     // "Loop Analysis" tab of the HTML reports.
     //
-    // On Stratix® 10 and Agilex 7™, the same discussion applies, but version 0
+    // On Stratix® 10 and Agilex® 7, the same discussion applies, but version 0
     // can only achieve an II of 3 while versions 1 and 2 can only achieve
-    // an II of 2. On Stratix® 10 and Agilex 7™, we can achieve an II of 1 if we use
+    // an II of 2. On Stratix® 10 and Agilex® 7, we can achieve an II of 1 if we use
     // non-blocking pipe reads in the IntersectionKernel, which is shown in
     // version 3 of the kernel.
     //
@@ -305,7 +305,7 @@ int main(int argc, char** argv) {
     success &= Intersection<1,2>(q, a, b, golden_n);
     success &= Intersection<2,2>(q, a, b, golden_n);
     success &= Intersection<3,1>(q, a, b, golden_n);
-#elif defined(Agilex 7)
+#elif defined(Agilex7)
     success &= Intersection<0,3>(q, a, b, golden_n);
     success &= Intersection<1,2>(q, a, b, golden_n);
     success &= Intersection<2,2>(q, a, b, golden_n);

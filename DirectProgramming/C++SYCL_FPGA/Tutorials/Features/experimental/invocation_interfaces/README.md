@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates how to specify the kernel invocation interfaces 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of specifying kernel invocation interfaces and kernel argument interfaces
 | Time to complete                  | 30 minutes
@@ -220,7 +220,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex 7® device family), run `cmake` using the following command:
+   To compile for the default target (the Agilex® 7 device family), run `cmake` using the following command:
    ```
    cmake ..
    ```
@@ -256,7 +256,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t c
    mkdir build
    cd build
    ```
-   To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+   To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" ..
    ```

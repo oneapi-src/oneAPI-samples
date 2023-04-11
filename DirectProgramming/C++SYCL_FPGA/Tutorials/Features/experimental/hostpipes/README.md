@@ -5,7 +5,7 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Agilex 7®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Basics of host pipe declaration and usage
 | Time to complete                  | 30 minutes
@@ -292,7 +292,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -335,7 +335,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex 7® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
