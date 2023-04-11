@@ -1,5 +1,9 @@
 # XeHE - Intel GPU-accelerated Privacy Protecting Computing project
+Homomorphic encryption (HE) allows to perform computations in the encrypted space without decrypting the operands.
+It is increadibly compute-intensive and benefits from data-parallel acceleration with GPUs.
+This sample demonstrates how to program HE functions on the GPUs, as well as it demonstrates how effectively leverage existing C++ code.
 
+For comprehensive information in oneAPI programming, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information.)
 
 # Project structure
 `cmake/`   - cmake functionality (such as findSYCL, etc.)
@@ -41,9 +45,6 @@ oneAPI also needs a reasonably fresh GFX driver (if targetting GPU with DPC++).
 sudo apt remove cmake && pip install cmake --upgrade
 sudo cp /$HOME/$USER/miniconda3/cmake /usr/bin/
 ```
-#### WINDOWS
-MSVC19
-latest cmake
 
 # Build 
 
@@ -59,7 +60,7 @@ mkdir -p build
 cd build
 cmake .. && make -j
 ```
-To enable building with DPC++ for GPUs or other accelerators, run instead:
+To enable building with DPC++ for GPUs or other accelerators, in `build` run instead:
 ```bash
 cmake -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DBUILD_WITH_IGPU=ON ..
 make -j
@@ -82,7 +83,7 @@ HEAAN is not built by default. To switch it `on`, turn `cmake -DBUILD_WITH_HEAAN
 Note that, at this time, SEAL targets will be placed in `external/SEAL/native/lib`.
 
 Notes on **GPU_DEFAULT** flag.
-The flag is meaningful only when SEAL_USE_INTEL_GPU is ON.
+The flag is meaningful only when `SEAL_USE_INTEL_GPU` is ON.
 When **GPU_DEFAULT=ON**: Every Ciphertext object participated in CKKS HE ops is processed on GPU *by default*.
 When **GPU_DEFAULT=OFF**: To make any Ciphertext object to be processed on gpu it *has to be touched* with ct.gpu() call.
 
@@ -91,12 +92,12 @@ Current build line with GPU back-end:
 
 ### Release version
 ```bash
-CXXFLAGS=-isystem\ /opt/intel/oneapi/compiler/2021.3.0/linux/compiler/include/ cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOpenMP_C_FLAGS="-qopenmp" -DOpenMP_C_LIB_NAMES="libiomp5" -DOpenMP_CXX_FLAGS="-qopenmp" -DOpenMP_CXX_LIB_NAMES="libiomp5" -DOpenMP_libiomp5_LIBRARY=/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin/libiomp5.so -DBUILD_WITH_IGPU=ON -DSEAL_USE_INTEL_GPU=ON -DSEAL_BUILD_TESTS=ON -DSEAL_BUILD_EXAMPLES=ON -DGPU_DEFAULT=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_HEAAN=OFF -DSEAL_USE_INTEL_LATTICE=OFF -DCMAKE_BUILD_TYPE=Release ..
+CXXFLAGS=-isystem\ /opt/intel/oneapi/compiler/latest/linux/compiler/include/ cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOpenMP_C_FLAGS="-qopenmp" -DOpenMP_C_LIB_NAMES="libiomp5" -DOpenMP_CXX_FLAGS="-qopenmp" -DOpenMP_CXX_LIB_NAMES="libiomp5" -DOpenMP_libiomp5_LIBRARY=/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin/libiomp5.so -DBUILD_WITH_IGPU=ON -DSEAL_USE_INTEL_GPU=ON -DSEAL_BUILD_TESTS=ON -DSEAL_BUILD_EXAMPLES=ON -DGPU_DEFAULT=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_HEAAN=OFF -DSEAL_USE_INTEL_LATTICE=OFF -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 ### Debug version
 ```bash
-CXXFLAGS=-isystem\ /opt/intel/oneapi/compiler/2021.3.0/linux/compiler/include/ cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOpenMP_C_FLAGS="-qopenmp" -DOpenMP_C_LIB_NAMES="libiomp5" -DOpenMP_CXX_FLAGS="-qopenmp" -DOpenMP_CXX_LIB_NAMES="libiomp5" -DOpenMP_libiomp5_LIBRARY=/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin/libiomp5.so -DBUILD_WITH_IGPU=ON -DSEAL_USE_INTEL_GPU=ON -DSEAL_BUILD_TESTS=ON -DSEAL_BUILD_EXAMPLES=ON -DGPU_DEFAULT=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_HEAAN=OFF -DSEAL_USE_INTEL_LATTICE=OFF -DCMAKE_BUILD_TYPE=Debug ..
+CXXFLAGS=-isystem\ /opt/intel/oneapi/compiler/latest/linux/compiler/include/ cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DOpenMP_C_FLAGS="-qopenmp" -DOpenMP_C_LIB_NAMES="libiomp5" -DOpenMP_CXX_FLAGS="-qopenmp" -DOpenMP_CXX_LIB_NAMES="libiomp5" -DOpenMP_libiomp5_LIBRARY=/opt/intel/oneapi/compiler/2021.3.0/linux/compiler/lib/intel64_lin/libiomp5.so -DBUILD_WITH_IGPU=ON -DSEAL_USE_INTEL_GPU=ON -DSEAL_BUILD_TESTS=ON -DSEAL_BUILD_EXAMPLES=ON -DGPU_DEFAULT=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_HEAAN=OFF -DSEAL_USE_INTEL_LATTICE=OFF -DCMAKE_BUILD_TYPE=Debug ..
 ```
 
 To remove GPU back-end
