@@ -196,7 +196,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
   >
   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -238,7 +238,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
   >
   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -327,7 +327,7 @@ There are often many ways to generate a stall-free memory system. As a programme
     memory_attributes.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP`):
   ```
   ./memory_attributes.fpga         (Linux)
   memory_attributes.fpga.exe       (Windows)
