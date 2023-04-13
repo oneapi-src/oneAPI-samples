@@ -29,9 +29,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -44,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware           | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -125,8 +125,8 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
 
 ## Build the `Cholesky Decomposition` Reference Design
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -143,7 +143,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -154,12 +154,12 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -187,7 +187,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -197,12 +197,12 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -279,7 +279,7 @@ These examples show output when running decomposition of 8 matrices 819,200 time
 
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32 
+Generating 8 random real matrices of size 32x32
 Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   29.6193 s
 Throughput: 221.261k matrices/s
@@ -292,7 +292,7 @@ PASSED
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32 
+Generating 8 random real matrices of size 32x32
 Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   30.58 s
 Throughput: 214.31k matrices/s

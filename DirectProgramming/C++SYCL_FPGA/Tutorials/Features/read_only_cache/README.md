@@ -6,7 +6,7 @@ memory in a non-contiguous manner.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and when to use the read-only cache feature
 | Time to complete                  | 30 minutes
@@ -33,9 +33,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -93,8 +93,8 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
 
 ## Building the `read_only_cache` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -115,7 +115,7 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake ..
   ```
@@ -123,12 +123,12 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -159,19 +159,19 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
   ```
   cmake -G "NMake Makefiles" ..
   ```
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -232,10 +232,10 @@ cache has been created.
     read_only_cache.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-    
-    Note although the circuit for the read-only cache is implemented in 
-    simulation, one cannot see consistent performance increase with the cache 
-    enabled as each clock cycle in the simulator doesn't have a consistent 
+
+    Note although the circuit for the read-only cache is implemented in
+    simulation, one cannot see consistent performance increase with the cache
+    enabled as each clock cycle in the simulator doesn't have a consistent
     latency, as it does in the hardware. For this reason there is just a single
     executable for this flow.
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):

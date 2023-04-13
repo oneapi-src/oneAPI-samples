@@ -7,8 +7,8 @@ set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
-    set(DEVICE_FLAG "Agilex")
+    set(FPGA_DEVICE "Agilex7")
+    set(DEVICE_FLAG "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -19,15 +19,15 @@ else()
     elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
       set(DEVICE_FLAG "S10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "Agilex")
+      set(DEVICE_FLAG "Agilex7")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=-A10, -DDEVICE_FLAG=-S10 or \
-                         -DDEVICE_FLAG=-Agilex.")
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -35,8 +35,8 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# Allow disabling of hyper-optimization for S10 and Agilex
-if((DEVICE_FLAG MATCHES "S10") OR (DEVICE_FLAG MATCHES "Agilex") OR (DEFINED ${NO_HYPER_OPTIMIZATION}))
+# Allow disabling of hyper-optimization for S10 and Agilex7
+if((DEVICE_FLAG MATCHES "S10") OR (DEVICE_FLAG MATCHES "Agilex7") OR (DEFINED ${NO_HYPER_OPTIMIZATION}))
     set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif()
 

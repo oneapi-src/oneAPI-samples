@@ -1,5 +1,5 @@
 # Select between the USM and buffer variant of the
-# code to compile, depending on the value of USM 
+# code to compile, depending on the value of USM
 # given to cmake
 # e.g. if cmake is called with -DUSM=1, the USM
 # source code will be compiled
@@ -7,7 +7,7 @@ if(DEFINED USM AND (NOT(USM EQUAL 0)))
     message(STATUS "Using the USM variant.")
     set(SOURCE_FILE vector-add-usm.cpp)
     set(TARGET_NAME vector-add-usm)
-else()    
+else()
     set(SOURCE_FILE vector-add-buffers.cpp)
     set(TARGET_NAME vector-add-buffers)
 endif()
@@ -17,7 +17,7 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# 
+#
 # SECTION 1
 # This section defines rules to create a cpu-gpu make target
 # This can safely be removed if your project is only targetting FPGAs
@@ -36,21 +36,21 @@ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS}"
 set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS}")
 add_custom_target(cpu-gpu DEPENDS ${TARGET_NAME})
 
-# 
+#
 # End of SECTION 1
 #
 
 #
-# SECTION 2 
+# SECTION 2
 # This section defines rules to create the fpga_emu, report and fpga make targets
 # This can safely be removed if your project is only targetting CPUs/GPUs
 #
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
-                \nConfiguring the design to target the default FPGA family (Intel Agilex®). \
+                \nConfiguring the design to target the default FPGA family (Intel Agilex® 7). \
                 \nPlease refer to the README for information on board selection.")
 else()
     message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
@@ -125,7 +125,7 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS}")
 
-# 
+#
 # End of SECTION 2
 #
 

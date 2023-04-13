@@ -22,7 +22,7 @@ This sample demonstrates how to take advantage of zero-copy host memory for the 
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -46,9 +46,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -96,7 +96,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for Intel® Agilex® device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -138,7 +138,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Intel® Agilex® device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build

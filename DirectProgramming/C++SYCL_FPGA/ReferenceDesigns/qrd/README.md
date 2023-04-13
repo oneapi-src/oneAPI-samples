@@ -29,9 +29,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -44,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -76,7 +76,7 @@ The QR decomposition algorithm factors a complex _m_ × _n_ matrix, where _m_ �
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. The matrix size is constrained by the total FPGA DSP resources available.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex® FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
+By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex® 7 FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -115,8 +115,8 @@ Additionaly, the cmake build system can be configured using the following parame
 
 ## Build the `QRD` Design
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -133,7 +133,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -144,12 +144,12 @@ Additionaly, the cmake build system can be configured using the following parame
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -177,7 +177,7 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -187,12 +187,12 @@ Additionaly, the cmake build system can be configured using the following parame
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -266,7 +266,7 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    qrd.fpga_emu.exe
    ```
-   
+
 #### Run on FPGA Simulator
 
 1. Run the sample on the FPGA simulator.
@@ -289,7 +289,7 @@ Example Output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** f
 
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 8 random complex matrices of size 128x128 
+Generating 8 random complex matrices of size 128x128
 Running QR decomposition of 8 matrices 819200 times
  Total duration:   268.733 s
 Throughput: 24.387k matrices/s
@@ -301,7 +301,7 @@ Example output when running on **Intel® FPGA PAC D5005 (with Intel Stratix® 10
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 256x256 
+Generating 8 random complex matrices of size 256x256
 Running QR decomposition of 8 matrices 819200 times
  Total duration:   888.077 s
 Throughput: 7.37954k matrices/s
