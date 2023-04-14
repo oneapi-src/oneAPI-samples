@@ -1,24 +1,26 @@
-# Tutorial: Getting started with Intel® Neural Compressor for Quantization
-The provided Jupyter notebook is a getting started guide for Intel® Neural Compressor to do INT8 quantization on a Huggingface BERT model. This allows us to achieve performance boosts on Intel® hardware.
+# `Getting Started with Intel® Neural Compressor for Quantization` Sample
+
+The sample is a getting started tutorial for the Intel® Neural Compressor (INC), and demonstrates how to perform INT8 quantization on a Hugging Face BERT model. This sample shows how to achieve performance boosts using Intel hardware.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Best practices to quantize a BERT model using Intel® Neural Compressor  
+| What you will learn   | How to quantize a BERT model using Intel® Neural Compressor
 | Time to complete      | 20 minutes
+| Category              | Code Optimization
 
 ## Purpose
 
-Intel® Neural Compressor comes with many options for deep learning model compression, one of them being INT8 Quantization. Quantization helps with reducing the size of the model thereby enabling faster inference. But this comes at a cost of some accuracy loss. Intel® Neural Compressor provides automated accuracy-driven tuning recipes that will allow you to quantize your model with your model accuracy goals.
+Intel® Neural Compressor comes with many options for deep learning model compression, one of them being INT8 Quantization. Quantization help to reduce the size of the model, which enables faster inference. The approach requires a trade-off in reduced accuracy for the reduced size; however, Intel® Neural Compressor provides automated accuracy-driven tuning recipes that will allow you to quantize your model and maintain your model accuracy goals.
 
-The sample starts by loading a **BERT** model from Huggingface. After loading the model, we set up an evaluation function that we care about using PyTorch's Dataset and DataLoader classes. Using this evaluation function Intel® Neural Compressor can perform both post training static and dynamic quantization to provide speedups.
+The sample starts by loading a BERT model from Hugging Face. After loading the model, we set up an evaluation function that we care about using PyTorch* Dataset and DataLoader classes. Using this evaluation function, Intel® Neural Compressor can perform both post training static and dynamic quantization to achieve the speedups.
 
 ## Prerequisites
 
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 18.04 or newer
-| Hardware                | Second Generation Intel® Xeon® Scalable processor or newer
-| Software                | Intel® AI Analytics Toolkit (AI Kit) 2023.1.1 or above
+| OS                      | Ubuntu* 20.04 (or newer)
+| Hardware                | Intel® Xeon® Scalable processor family
+| Software                | Intel® AI Analytics Toolkit (AI Kit)
 
 ### For Local Development Environments
 
@@ -45,22 +47,22 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This sample tutorial contains one Jupyter Notebook and one Python script.
+The sample contains one Jupyter Notebook and one Python script.
 
 ### Jupyter Notebook
 
-|Notebook                                    |Description
-|:---                                        |:---
-|`quantize_with_inc.ipynb` |Get started with INC for PyTorch
+|Notebook                  |Description
+|:---                      |:---
+|`quantize_with_inc.ipynb` | Get started tutorial for using Intel® Neural Compressor for PyTorch*
 
 ### Python Script
 
-|Script                                    |Description
-|:---                                      |:---
-|`dataset.py`                          |The script provides a PyTorch Dataset class that tokenizes text data 
+|Script                    |Description
+|:---                      |:---
+|`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
 
-## Run the Sample on Linux*
+## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -104,7 +106,7 @@ This sample tutorial contains one Jupyter Notebook and one Python script.
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
-### Run the Sample on Intel® DevCloud
+### Run the Sample on Intel® DevCloud (Optional)
 
 1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 2. On a Linux* system, open a terminal.
@@ -113,6 +115,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ssh DevCloud
    ```
    > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
+
 4. Follow the instructions to open the URL with the token in your browser.
 3. Locate and select the Notebook.
    ```
@@ -123,11 +126,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-Users should be able to see some diagrams for performance comparison and analysis.
-An example of performance comparison for inference speedup obtained by quantization.
+You should see an image showing the performance comparison and analysis between FP32 and INT8.
+
+>**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
-
 
 ## License
 
