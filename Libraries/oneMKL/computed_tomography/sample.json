@@ -7,7 +7,7 @@
   "dependencies": [ "mkl" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "GPURequired": ["gen11"],
+  "gpuRequired": ["gen11"],
   "os": [ "linux", "windows" ],
   "builder": [ "make" ],
   "ciTests": {
