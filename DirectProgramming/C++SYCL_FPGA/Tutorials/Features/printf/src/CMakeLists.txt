@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -59,7 +59,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_CO
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
-# The HW related targets are only supported if an BSP is being targeted 
+# The HW related targets are only supported if an BSP is being targeted
 if(IS_BSP STREQUAL "1")
 ###############################################################################
 ### FPGA Simulator

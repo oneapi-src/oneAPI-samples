@@ -14,8 +14,8 @@ endif()
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
-    set(DEVICE_FLAG "Agilex")
+    set(FPGA_DEVICE "Agilex7")
+    set(DEVICE_FLAG "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -26,7 +26,7 @@ else()
     elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
       set(DEVICE_FLAG "S10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "Agilex")
+      set(DEVICE_FLAG "Agilex7")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
@@ -34,7 +34,7 @@ endif()
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
                          Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
-                         -DDEVICE_FLAG=Agilex.")
+                         -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -73,7 +73,7 @@ if(NOT DEFINED SEED)
         elseif(${QUERY} EQUAL 12)
             set(SEED "-Xsseed=2")
         endif()
-    elseif(DEVICE_FLAG MATCHES "Agilex")
+    elseif(DEVICE_FLAG MATCHES "Agilex7")
         if(${QUERY} EQUAL 1)
             set(SEED "-Xsseed=2")
         elseif(${QUERY} EQUAL 9)

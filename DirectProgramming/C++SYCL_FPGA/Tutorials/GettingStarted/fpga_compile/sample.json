@@ -20,48 +20,159 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part1_cpp",
           "make fpga_emu",
-          "./fpga_compile.fpga_emu"
+          "./vector_add.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part2_dpcpp_functor_usm",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part2_dpcpp_functor_usm",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part3_dpcpp_lambda_usm",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part3_dpcpp_lambda_usm",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part4_dpcpp_lambda_buffers",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part4_dpcpp_lambda_buffers",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part1_cpp",
           "nmake fpga_emu",
-          "fpga_compile.fpga_emu.exe"
+          "vector_add.fpga_emu.exe"
         ]
       },
       {
-        "id": "report",
+        "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part2_dpcpp_functor_usm",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part2_dpcpp_functor_usm",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part3_dpcpp_lambda_usm",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part3_dpcpp_lambda_usm",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part4_dpcpp_lambda_buffers",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part4_dpcpp_lambda_buffers",
           "nmake report"
         ]
       }

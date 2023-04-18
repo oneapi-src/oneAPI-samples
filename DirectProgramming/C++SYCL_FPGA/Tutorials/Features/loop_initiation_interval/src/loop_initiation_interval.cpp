@@ -120,7 +120,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           [[intel::initiation_interval(3)]]
 #elif defined(S10)
           [[intel::initiation_interval(5)]]
-#elif defined(Agilex)
+#elif defined(Agilex7)
           [[intel::initiation_interval(5)]]
 #else
           static_assert(false, "Unknown FPGA Architecture!");
@@ -156,7 +156,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 
           // The intel::initiation_interval attribute is added here to "assert"
           // that II=1 for this loop. Even though we fully expect the compiler
-          // to achieve II=1 here by default, some developers find it helful to
+          // to achieve II=1 here by default, some developers find it helpful to
           // include the attribute to "document" this expectation. If a future
           // code change causes an unexpected II regression, the compiler will
           // error out. Without the intel::initiation_interval attribute, an II
