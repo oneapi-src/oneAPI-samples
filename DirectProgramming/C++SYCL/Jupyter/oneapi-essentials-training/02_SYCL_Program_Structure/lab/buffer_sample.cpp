@@ -22,8 +22,8 @@ using namespace sycl;
       out[idx] = idx[0]; }); });
   //Submit Kernel 2
   Q.submit([&](handler& h) {
-    //This task will wait till the first queue is complete
-    accessor out(A,h,write_only);
+    //This task will wait till the first queue is complete. Default access mode is read_write
+    accessor out(A,h);
     h.parallel_for(R, [=](auto idx) {
       out[idx] += idx[0]; }); });
   //Submit Kernel 3
