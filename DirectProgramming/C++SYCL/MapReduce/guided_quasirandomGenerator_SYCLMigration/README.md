@@ -11,7 +11,7 @@ The `QuasirandomGenerator` sample implements Niederreiter Quasirandom Sequence G
 
 The sample is based on the Niederreiter sequence, which is a type of low-discrepancy sequence that has better properties than pseudorandom sequences for certain applications, such as Monte Carlo integration.
 
-> **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use Intel® DPC++ Compatibility Tool which comes along with the Intel® oneAPI Base Toolkit.
+> **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
 
 This sample contains two versions in the following folders:
 
@@ -39,6 +39,8 @@ This sample is migrated from NVIDIA CUDA sample. See the [quasirandomGenerator](
 | Hardware                   | Intel® Gen9, Gen11
 | Software                   | SYCLomatic version 2023.0, Intel oneAPI Base Toolkit version 2023.0
 
+For more information on how to install SYCLomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v3584e).
+
 ## Key Implementation Details
 
 This sample demonstrates the migration of the following prominent CUDA feature: 
@@ -58,7 +60,7 @@ This sample demonstrates the migration of the following prominent CUDA feature:
 
 ## Tool assisted migration – SYCLomatic 
 
-For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
+For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
 
 1. git clone https://github.com/NVIDIA/cuda-samples.git
 2. cd cuda-samples/Samples/5_Domain_Specific/quasirandomGenerator/
