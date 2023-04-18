@@ -18,7 +18,7 @@ This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
 |:---                           |:---
-| `01_dpct_output`              | Contains output of Intel® SYCLomatic Compatibility Tool which is fully migrated version of CUDA code.
+| `01_dpct_output`              | Contains output of SYCLomatic Tool which is fully migrated version of CUDA code.
 | `02_sycl_migrated_optimized`            | Contains the optimized sycl code
 
 ## Workflow For CUDA to SYCL migration
@@ -39,6 +39,7 @@ This sample is migrated from NVIDIA CUDA sample. See the sample [convolutionSepa
 | Hardware              | Intel® Gen9, Gen11 and Xeon CPU 
 | Software              | SYCLomatic version 2023.0, Intel oneAPI Base Toolkit version 2023.0
 
+For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy).
 
 ## Key Implementation Details
 
@@ -62,7 +63,7 @@ This sample demonstrates the migration of the following CUDA features:
 
 ### Tool assisted migration – SYCLomatic 
 
-For this sample, the Intel® SYCLomatic Compatibility tool automatically migrates 100% of the CUDA runtime API's to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
+For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA runtime API's to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
 
 1. git clone https://github.com/NVIDIA/cuda-samples.git
 2. cd cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/
@@ -71,7 +72,7 @@ For this sample, the Intel® SYCLomatic Compatibility tool automatically migrate
    intercept-build make
    ```
 4. The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
-5. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated.
+5. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated.
    ```
    c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api
    ```
