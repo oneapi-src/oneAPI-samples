@@ -8,6 +8,7 @@
     "toolchain": ["dpcpp"],
     "guid": "393622C0-7D69-4ECC-B9B1-4077316A135B",
     "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["gen11"],
     "ciTests": {
         "linux": [
             {
