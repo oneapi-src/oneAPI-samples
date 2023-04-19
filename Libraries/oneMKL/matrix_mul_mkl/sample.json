@@ -18,10 +18,24 @@
           "make"
         ]
       }
+      {
+        "id": "matrix_mul_mkl_bf16",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
     ],
     "windows": [
       {
         "id": "matrix_mul_mkl",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+      {
+        "id": "matrix_mul_mkl_bf16",
         "steps": [
           "nmake clean",
           "nmake"
