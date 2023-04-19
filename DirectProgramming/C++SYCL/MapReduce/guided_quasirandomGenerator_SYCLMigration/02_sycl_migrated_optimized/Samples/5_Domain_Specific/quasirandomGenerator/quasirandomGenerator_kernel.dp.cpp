@@ -37,10 +37,7 @@ using namespace sycl;
 #include "quasirandomGenerator_common.h"
 
 // Fast integer multiplication
-/*
-DPCT1064:31: Migrated __umul24 call is used in a macro definition and is not
-valid for all macro uses. Adjust the code.
-*/
+
 #define MUL(a, b) sycl::mul24((unsigned int)a, (unsigned int)b)
 
 ////////////////////////////////////////////////////////////////////////////////
