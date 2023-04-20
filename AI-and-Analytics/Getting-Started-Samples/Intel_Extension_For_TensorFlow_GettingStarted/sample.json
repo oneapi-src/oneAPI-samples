@@ -1,6 +1,6 @@
 {
 	"guid": "B213F6A5-E0C3-4267-8D0B-DDA5073A3F23",
-	"name": "Intel® TensorFlow Model Zoo Inference With FP32 Int8",
+	"name": "Intel® Extension for TensorFlow* Getting Started",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
 	"description": "This code example illustrates how to run FP32 and Int8 inference on Resnet50 with TensorFlow using Intel® Model Zoo",
 	"builder": ["cli"],
