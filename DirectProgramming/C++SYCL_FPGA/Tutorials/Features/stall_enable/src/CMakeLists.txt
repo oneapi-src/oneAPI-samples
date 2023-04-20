@@ -12,7 +12,7 @@ set(FPGA_TARGET_STALL_FREE ${STALL_FREE_TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -20,7 +20,7 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
-# Allow disabling of hyper-optimization for S10 and Agilex
+# Allow disabling of hyper-optimization for S10 and Agilex7
 if (${NO_HYPER_OPTIMIZATION})
     set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif(${NO_HYPER_OPTIMIZATION})

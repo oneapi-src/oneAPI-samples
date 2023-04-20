@@ -21,8 +21,8 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
-    set(DEVICE_FLAG "Agilex")
+    set(FPGA_DEVICE "Agilex7")
+    set(DEVICE_FLAG "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -35,7 +35,7 @@ else()
     elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
       set(DEVICE_FLAG "S10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "Agilex")
+      set(DEVICE_FLAG "Agilex7")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
@@ -51,7 +51,7 @@ endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex.")
+                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -82,8 +82,8 @@ elseif(DEVICE_FLAG MATCHES "S10")
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
     endif()
-elseif(DEVICE_FLAG MATCHES "Agilex")
-    # Agilex™
+elseif(DEVICE_FLAG MATCHES "Agilex7")
+    # Agilex 7
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
         set(SEED "-Xsseed=1")
@@ -145,7 +145,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE} ${DEVICE_SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include) 
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})

@@ -24,9 +24,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -39,7 +39,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -57,7 +57,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The GZIP DEFLATE algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman, and CRC).
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex® FPGAs, which are a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex® 7 FPGAs, which are a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 
@@ -123,8 +123,8 @@ Performance results are based on testing as of October 27, 2020.
 
 ## Build the `GZIP` Design
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -142,7 +142,7 @@ Performance results are based on testing as of October 27, 2020.
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -155,12 +155,12 @@ Performance results are based on testing as of October 27, 2020.
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -189,7 +189,7 @@ Performance results are based on testing as of October 27, 2020.
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -201,12 +201,12 @@ Performance results are based on testing as of October 27, 2020.
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
+  >  ```
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-  >  ``` 
+  >  ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -239,7 +239,7 @@ Performance results are based on testing as of October 27, 2020.
 
 | Argument             | Description
 |:---                  |:---
-| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant. <br> Use a smaller file such as an 100 B file if the simulator flow is taking too long. 
+| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant. <br> Use a smaller file such as an 100 B file if the simulator flow is taking too long.
 | `-o=<output_file>`   | Specifies the name of the output file. The default name of the output file is `<input_file>.gz`. <br> When using two engines, the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
 
 ### On Linux
@@ -248,7 +248,7 @@ Performance results are based on testing as of October 27, 2020.
     ```
     ./gzip.fpga_emu <input_file> -o=<output_file>
     ```
-    
+
  2. Run the sample on the FPGA simulator.
     ```
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim <input_file> -o=<output_file>

@@ -5,6 +5,7 @@
   "description": "The ISO2DFD sample illustrates SYCL Basics using 2D Finite Difference Wave Propagation",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["gen11"],
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows"],
   "builder": [ "ide", "cmake" ],

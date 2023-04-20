@@ -1,28 +1,26 @@
 {
- "guid": "C56209D9-5CF1-4EEC-AE95-596D81640AEB",
- "name": "oneCCL Getting Started",
- "categories": ["Toolkit/oneAPI Libraries/oneCCL"],
- "description": "Basic Intel® oneCCL programming model for both Intel® CPU and GPU",
- "toolchain": ["dpcpp"],
- "languages": [{"cpp":{}}],
- "dependencies": ["ccl"],
- "os": ["linux"],
- "builder": ["cli","cmake"],
- "targetDevice": ["CPU", "GPU"],
- "ciTests": {
-	"linux": [{
-		"env": ["source activate base",
-			"source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
-		"id": "gsg",
-		"steps": [
-			"mkdir build",
-      		        "cd build",
-           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp_level_zero",
-           		"make",
-			"mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
-			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
-		 ]
-	}]
- },
- "expertise": "Getting Started"
+  "guid": "C56209D9-5CF1-4EEC-AE95-596D81640AEB",
+  "name": "oneCCL Getting Started",
+  "categories": ["Toolkit/oneAPI Libraries/oneCCL"],
+  "description": "Basic Intel® oneCCL programming model for both Intel® CPU and GPU",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["ccl"],
+  "os": ["linux"],
+  "builder": ["cli","cmake"],
+  "targetDevice": ["CPU", "GPU"],
+  "ciTests": {
+    "linux": [{
+      "id": "gsg",
+      "steps": [
+        "mkdir build",
+        "cd build",
+        "cmake ..",
+        "make",
+        "mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
+        "mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
+      ]
+    }]
+  },
+  "expertise": "Getting Started"
 }

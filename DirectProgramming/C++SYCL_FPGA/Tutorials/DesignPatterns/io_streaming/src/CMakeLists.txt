@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -29,7 +29,7 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# Use USM host allocations if the BSP supports them or if we target an FPGA part 
+# Use USM host allocations if the BSP supports them or if we target an FPGA part
 if((IS_BSP STREQUAL "0") OR FPGA_DEVICE MATCHES ".usm.*")
   set(USM_HOST_ALLOCATIONS "-DUSM_HOST_ALLOCATIONS")
   message(STATUS "USM host allocations are enabled")
