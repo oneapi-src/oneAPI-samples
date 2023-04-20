@@ -145,7 +145,7 @@ int main() {
     std::cout.setf(std::ios::fixed);
 
     // Input size in MB
-    constexpr double num_mb = (vector_size * sizeof(uint32_t)) / (1024 * 1024);
+    constexpr double num_mb = (vector_size * 1.0 * sizeof(uint32_t)) / (1024 * 1024);
 
     // Report kernel execution time and throughput
     std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
