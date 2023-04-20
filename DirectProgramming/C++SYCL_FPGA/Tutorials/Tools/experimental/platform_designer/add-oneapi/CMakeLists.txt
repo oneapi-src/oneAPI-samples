@@ -61,7 +61,6 @@ set(EMULATOR_TARGET fpga_emu)
 set(SIMULATOR_TARGET fpga_sim)
 set(REPORT_TARGET report)
 set(FPGA_TARGET fpga)
-set(IP_EXPORT_TARGET fpga_ip_export)
 
 # Set the names of the generated files per makefile target
 set(EMULATOR_OUTPUT_NAME ${TARGET_NAME}.${EMULATOR_TARGET})
@@ -108,9 +107,6 @@ set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
 set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
-# get rid of this once host pipes work properly
-set(IP_EXPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(IP_EXPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early -fsycl-device-code-split=per_kernel)
 
 ###############################################################################
 ### FPGA Emulator
@@ -156,21 +152,6 @@ target_compile_options(${FPGA_TARGET} PRIVATE ${FPGA_COMPILE_FLAGS})
 target_link_libraries(${FPGA_TARGET} ${COMMON_LINK_FLAGS})
 target_link_libraries(${FPGA_TARGET} ${FPGA_LINK_FLAGS})
 set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
-
-###############################################################################
-### FPGA IP Export (only necessary until native host pipes)
-###############################################################################
-add_executable(${IP_EXPORT_TARGET} ${SOURCE_FILES})
-target_compile_options(${IP_EXPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
-target_compile_options(${IP_EXPORT_TARGET} PRIVATE ${IP_EXPORT_COMPILE_FLAGS})
-
-# The ip export target does not need the QACTYPES flag at link stage
-set(MODIFIED_COMMON_LINK_FLAGS_EXPORT ${COMMON_LINK_FLAGS})
-list(REMOVE_ITEM MODIFIED_COMMON_LINK_FLAGS_EXPORT ${QACTYPES})
-
-target_link_libraries(${IP_EXPORT_TARGET} ${MODIFIED_COMMON_LINK_FLAGS_EXPORT})
-target_link_libraries(${IP_EXPORT_TARGET} ${IP_EXPORT_LINK_FLAGS})
-set_target_properties(${IP_EXPORT_TARGET} PROPERTIES OUTPUT_NAME ${IP_EXPORT_OUTPUT_NAME})
 
 ###############################################################################
 ### This part only manipulates cmake variables to print the commands to the user
