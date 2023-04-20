@@ -1,6 +1,6 @@
 {
   "guid": "ED2952EA-04CB-4353-9FE6-80E0F7DCA098",
-  "name": "Intel® Python Daal4py Distributed Linear Regression",
+  "name": "Intel® Distribution for Python* Distributed Linear regression",
   "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
   "description": "This sample code illustrates how to train and predict with a Distributed Linear Regression model with the Intel® Distribution of Python using the Python API package Daal4py powered by Intel® oneDAL",
   "builder": ["cli"],
