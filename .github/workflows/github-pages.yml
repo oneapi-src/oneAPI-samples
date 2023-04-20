@@ -50,9 +50,8 @@ jobs:
       env: 
         GPU_OCC_CALC: src/docs/_build/Tools/GPU-Occupancy-Calculator/
       run: |
-        mkdir -p ${GPU_OCC_CALC}   
-        cd ${GPU_OCC_CALC}
-        wget https://raw.githubusercontent.com/oneapi-src/oneAPI-samples/master/Tools/GPU-Occupancy-Calculator/index.html
+        mkdir -p ${GPU_OCC_CALC}
+        cp -v ${{ github.workspace }}/master/Tools/GPU-Occupancy-Calculator/index.html ${GPU_OCC_CALC}/index.html
 
     - name: Push docs
       if: ${{ github.ref == 'refs/heads/master' }} # only if this workflow is run from the master branch, push docs
