@@ -174,7 +174,7 @@ var targets = [
 	}
 },
 {
-	"name": "Discrete GPU (Xe LP)",
+	"name": "Discrete GPU (Xe LP / Iris® Xe MAX)",
 	"code": "xe_dg1",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
@@ -191,9 +191,64 @@ var targets = [
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
+{
+	"name": "Discrete GPU (Xe HPG / Arc™ Graphics)",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": [96, 128, 256, 384, 448, 512],
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPG / Data Center Flex)",
+	"code": "xe_hpg_dg2_flex",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": [128, 512],
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPC / Data Center Max)",
+	"code": "xe_hpc_pvc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 8,
+		"Threads_Per_EU": 8,
+		"EU_Count": [448, 896, 1024],
+		"Max_Threads_Per_Sub_Slice": 64,
+		"Large_GRF_Mode": true,
+		"Subgroup_Sizes": [32, 16],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 128,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 48, 64, 96, 128],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 64,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
 ];
 /*List IMCOMPLETE*/
 var pci_targets=[
+//SKL, CFL, KBL
 {
 	"pci_id": ["3E90", "3E93", "3E99", "3E9C", "5902", "590B", "590A", "5908", "590E", "3185", "1902", "1906", "190B", "190A", "190E"],
 	"name": "Integrated GPU (Gen9)",
@@ -294,6 +349,7 @@ var pci_targets=[
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
+//ICL
 {
 	"pci_id": ["8A56", "8A58", "8A5B", "8A5D"],
 	"name": "Integrated GPU (Gen11)",
@@ -354,6 +410,7 @@ var pci_targets=[
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
+//TGL
 {
 	"pci_id": ["9A60","9A70"],
 	"name": "Integrated GPU (Xe LP)",
@@ -414,6 +471,209 @@ var pci_targets=[
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
+//RKL
+{
+	"pci_id": ["4C8C"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 16,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["4C8B"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 24,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["4C8A","4C90", "4C9A"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 32,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+//ADL
+{
+	"pci_id": ["4693", "46D2"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 16,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["4682", "468A", "4692", "46D1"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 24,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["4680","4688", "4690", "46D0"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 32,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["46A3", "46B3", "46C3"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 48,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["46A2", "46B2", "46C2"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 64,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["46A1", "46B1", "46C1"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 80,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["4626", "4628", "462A", "46A0", "46A8", "46B0", "46C0"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 96,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+//DG1
 {
 	"pci_id": ["4905"],
 	"name": "Discrete GPU (Xe LP)",
@@ -431,6 +691,168 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+//ARC
+{
+	"pci_id": ["56A5", "5694"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A310/350 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 96,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["56A6", "5693"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A370/380 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 128,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["5692"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A550 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 256,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["5691"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A730 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 384,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["56A1"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A750 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 448,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["5690", "56A0"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Arc™ A770 Graphics",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 512,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+//FLEX
+{
+	"pci_id": ["56C1"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Data Center GPU Flex 140",
+	"code": "xe_hpg_dg2_flex",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 128,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["56C0"],
+	"name": "Discrete GPU (Xe HPG)",
+	"product_name": "Intel® Data Center GPU Flex 170",
+	"code": "xe_hpg_dg2_flex",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 512,
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
@@ -495,7 +917,7 @@ function print_gpu_info(){
 		grf_mode = '<input type="hidden" id="large_grf" value="0" />';
 	}
 
-	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: ' + gpu.Threads_Per_EU + '<br>+ EU Count: ' + eu_count + grf_mode;
+	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>+ EU Count: ' + eu_count + grf_mode;
 }
 
 // If url param exists load gpu info
@@ -632,6 +1054,12 @@ function cal_occupancy(){
 	var large_grf = parseInt(document.getElementById("large_grf").value);
 	var num_ss = num_eu / gpu.EU_Per_Sub_Slice;
 
+	// Update UI if large_grf mode
+	if(large_grf){
+		document.querySelector("#teu").innerHTML = gpu.Threads_Per_EU/2;
+	} else {
+		document.querySelector("#teu").innerHTML = gpu.Threads_Per_EU;
+	}
 	// Check if Global Size is valid and calculate size
 	var global_size = document.getElementById("global_size").value.split(",");
 	if (global_size.length === 1){

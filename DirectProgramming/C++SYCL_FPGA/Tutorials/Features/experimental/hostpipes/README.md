@@ -5,9 +5,9 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | Basics of host pipe declaration and usage 
+| What you will learn               | Basics of host pipe declaration and usage
 | Time to complete                  | 30 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -18,11 +18,13 @@ This FPGA tutorial demonstrates how to use pipes to send and receive data betwee
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstatres a compiler feature.
+It is categorized as a Tier 2 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR
@@ -30,17 +32,17 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -64,7 +66,7 @@ Each individual host pipe is a function scope class declaration of the templated
 class FirstPipeT;
 class SecondPipeT;
 
-// two host pipes 
+// two host pipes
 using FirstPipeInstance = cl::sycl::ext::intel::prototype::pipe<
     // Usual pipe parameters
     FirstPipeT, // An identifier for the pipe
@@ -104,7 +106,7 @@ Host pipes use additional template parameters beyond the three described earlier
 Host Pipes expose read and write interfaces that allow a single element to be read or written in FIFO order to the pipe. These read and write interfaces are static class methods on the templated classes described in the Declaring a Host Pipe section above, and are described below.
 
 Host pipes expose read and write interfaces that allow a single element to be read or written in FIFO order to the pipe. These read and write interfaces are static class methods on the templated classes that are described in the [Declaring a Host Pipe](#declaring-a-host-pipe) section. The API provides the following interfaces:
-  
+
   - [Blocking write interface](#blocking-write)
   - [Non-blocking write interface](#non-blocking-write)
   - [Blocking read interface](#blocking-read)
@@ -133,8 +135,8 @@ SecondPipeInstance::write(data_element);
 ```
 
 #### Non-blocking Write
- 
-Non-blocking writes add a `bool` argument in both host and device APIs that is passed by reference and returns true in this argument if the write was successful, and false if it was unsuccessful. 
+
+Non-blocking writes add a `bool` argument in both host and device APIs that is passed by reference and returns true in this argument if the write was successful, and false if it was unsuccessful.
 
 On the host:
 
@@ -163,8 +165,8 @@ while (!success) SecondPipeInstance::write(data_element, success);
 ```
 
 #### Blocking Read
- 
-The host pipe read interface reads a single element of given datatype from the host pipe. Similar to write, the read interface on the host takes a SYCL* device queue as a parameter. The device read interface consists of the class method read call with no arguments. 
+
+The host pipe read interface reads a single element of given datatype from the host pipe. Similar to write, the read interface on the host takes a SYCL* device queue as a parameter. The device read interface consists of the class method read call with no arguments.
 
 On the host:
 
@@ -182,7 +184,7 @@ int read_element = FirstPipeInstance::read();
 
 #### Non-blocking Read
 
-Similar to non-blocking writes, non-blocking reads add a `bool` argument in both host and device APIs that is passed by reference and returns true in this argument if the read was successful, and false if it was unsuccessful. 
+Similar to non-blocking writes, non-blocking reads add a `bool` argument in both host and device APIs that is passed by reference and returns true in this argument if the read was successful, and false if it was unsuccessful.
 
 On the host:
 
@@ -268,8 +270,8 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 
 ## Building the `hostpipes` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -286,21 +288,26 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 ### On a Linux* System
 
 1. Generate the Makefile by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the following command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```
-   cmake ..
-   ```
-   
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the following command:
-   
-   ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ```
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ```
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -320,24 +327,29 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
     ```
     make fpga
     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/hostpipes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. 
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ```
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ```
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -357,8 +369,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
     ```
     nmake fpga
     ```
-
->*Note:* The Intel® FPGA PAC D5005 with Intel Stratix® 10 SX does not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 
 >**Tip**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
@@ -385,12 +395,12 @@ using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
    H2DPipeID,         // An identified for the pipe
    ...
    >;
-   
+
 using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
    // Usual pipe parameters
    D2HPipeID,         // An identified for the pipe
    ...
-   >;     
+   >;
 ```
 
 ## Running the Sample
@@ -412,8 +422,8 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
     hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-    
-3. Run the sample on the FPGA device:
+
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
   ```
   ./hostpipes.fpga         (Linux)
   hostpipes.fpga.exe       (Windows)

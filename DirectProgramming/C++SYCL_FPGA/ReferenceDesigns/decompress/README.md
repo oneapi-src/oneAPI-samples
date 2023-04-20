@@ -21,9 +21,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -36,7 +36,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -47,6 +47,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -118,13 +120,13 @@ Once the shortest match length is found, the bit stream is shifted by that many 
 
 ![](assets/huffman_decoder.png)
 
-The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table that the next symbol must be a distance. 
+The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table that the next symbol must be a distance.
 
 The Huffman decoder in this design uses an intelligent method for storing the Huffman tables to significantly reduces area and improves performance. The decoder takes advantage of the fact that codes of the same bit lengths are sequential. For the literal and length table, it stores 4 tables:
    * A 289-element table that holds the symbols in increasing order of code length (`lit_map`), with no gaps. That is, it stores all symbols of length 1, followed directly by all symbols of length 2, and so on.
    * A 15-element table to store the first code for each code length (`first_code`).
    * A 15-element table to store the last code for each code length (`last_code`).
-   * A 15-element table to store the base index of the first element in the `lit_map` table for each code length (`base_idx`). 
+   * A 15-element table to store the base index of the first element in the `lit_map` table for each code length (`base_idx`).
 
 For a code length `L` and the code value `C`, the pseudocode snippet below describes how these tables are used to check for a match and decode the symbol. As described earlier, this pseudocode is done in parallel 15 times for code lengths (`L`) of 1-15 bits.
 
@@ -134,13 +136,13 @@ offset = C - first_code[L];
 symbol = lit_map[base_idx[L] + offset]
 ```
 
-The Huffman decoder decodes a literal in 1 iteration of the main loop, and a {length, distance} pair in 2 iterations. When decoding a {length, distance} pair, the length code can be 1-15 bits and, based on the decoded length, 0-5 extra bits. Similarly, the distance code can be 1-15 bits and 0-15 extra bits. 
+The Huffman decoder decodes a literal in 1 iteration of the main loop, and a {length, distance} pair in 2 iterations. When decoding a {length, distance} pair, the length code can be 1-15 bits and, based on the decoded length, 0-5 extra bits. Similarly, the distance code can be 1-15 bits and 0-15 extra bits.
 
 To decode a {length, distance} in 2 iterations, the Huffman decoder looks at 30 bits in parallel. The first 15 are examined as described earlier. The decoder also examines the 15x5 and 15x15 different possibilities for the extra length and distance bits. For the extra length bits, the shortest matching code can be 1-15 bits, giving 15 possibilities for where the extra bits could start. There can be 1-5 extra bits, giving 5 possibilities, which yields 15x5 possibilities for the extra length bits. Decoding the extra distance bits uses the same approach but with 0-15 extra bits, yielding 15x15 possibilities.
 
 #### LZ77 Decoder Kernel
 
-The input to the LZ77 decoder kernel is a stream of symbols that are either an 8-bit literal or a {length, distance} pair. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32KB *history buffer* which stores the last 32K literals it has streamed to the output. 
+The input to the LZ77 decoder kernel is a stream of symbols that are either an 8-bit literal or a {length, distance} pair. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32KB *history buffer* which stores the last 32K literals it has streamed to the output.
 
 If the incoming command is an 8-bit literal, the LZ77 decoder simply forwards the literal to the output stream and tracks it in the history buffer. For a {length, distance} pair, the decoder goes back `distance` literals in the history buffer and streams `length` of them to the output and back into the history buffer.
 
@@ -161,7 +163,7 @@ Characters:    E T H O M E P H O N E
 Buffer index:  0 1 2 3 0 1 2 3 0 1 2 3
 ```
 
-The `Current History Buffer Index` is 3. That is, the next history buffer to write into is 3. Now, the LZ77 decoder receives a {length, distance} pair of `{4, 9}`, which means copy `H O M E`. To read the `N=4` elements, the LZ77 decoder unconditionally reads from each history buffer in parallel and computes a shuffle vector to reorder the output. 
+The `Current History Buffer Index` is 3. That is, the next history buffer to write into is 3. Now, the LZ77 decoder receives a {length, distance} pair of `{4, 9}`, which means copy `H O M E`. To read the `N=4` elements, the LZ77 decoder unconditionally reads from each history buffer in parallel and computes a shuffle vector to reorder the output.
 
 To compute the shuffle vector, the LZ77 decoder determines which buffer should be read from first: `first_buf_idx = ('Current History Buffer Index' - distance) % N`. In this case `first_buf_idx = (3 - 9) % 4 = 2`. Then, the shuffle vector is computed as: `shuffle_vector = {first_buf_idx, (first_buf_idx + 1) % N, ..., (first_buf_idx + N - 1) % N} = {2, 3, 0, 1}`. The output from the `N=4` history buffers in this case would be `M E H O`, since `M` is in buffer `0`, `E` is in buffer `1`, and so on. Finally, the shuffling happens as follows:
 ```
@@ -193,7 +195,7 @@ Snappy is compression format that aims for high throughput compression and decom
 
 Unlike many compression encodings, like DEFLATE, Snappy encoding is byte oriented. The Snappy format does not use entropy encoding, such as Huffman or range encoding.
 
-Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository.
+Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository. The files being decompressed in this tutorial have been compressed using [python-snappy](https://github.com/andrix/python-snappy) which is a python library for the snappy compression library from Google.
 
 The basic Snappy format is a *preamble* followed by the *compressed data stream*.
 
@@ -284,8 +286,8 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 
 ## Build the `Decompression` Design
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -302,21 +304,31 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
+
    To select between GZIP and Snappy decompression, use `-DGZIP=1` or `-DSNAPPY=1`. If you do not specify the decompression, the code defaults to **Snappy**.
    ```
    cmake .. -DGZIP=1
    cmake .. -DSNAPPY=1
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -339,14 +351,10 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
         make fpga
         ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz).
-
 ### On Windows*
 
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -357,10 +365,19 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
    cmake -G "NMake Makefiles" .. -DGZIP=1
    cmake -G "NMake Makefiles" .. -DSNAPPY=1
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ```
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ```
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
     1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -391,11 +408,11 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
     ```
     ./decompress.fpga_emu
     ```
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
     ```
     CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./decompress.fpga_sim
     ```
-3. Run the sample on the FPGA device.
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     ./decompress.fpga
     ```
@@ -406,13 +423,13 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
     ```
     decompress.fpga_emu.exe
     ```
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
     ```
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
     decompress.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device.
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     decompress.fpga.exe
     ```

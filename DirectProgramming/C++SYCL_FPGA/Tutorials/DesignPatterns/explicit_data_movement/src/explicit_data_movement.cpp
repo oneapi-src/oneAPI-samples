@@ -36,8 +36,24 @@ double SubmitImplicitKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
 
     // launch the computation kernel
     auto kernel_event = q.submit([&](handler& h) {
+
+#if defined (IS_BSP)
       accessor in_a(in_buf, h, read_only);
       accessor out_a(out_buf, h, write_only, no_init);
+#else
+      // When targeting an FPGA family/part, the compiler does not know
+      // if the two kernels accesses the same memory location
+      // With this property, we tell the compiler that these buffers
+      // are in a location "1" whereas the pointers from ExplicitKernel
+      // are in the default location "0"
+      sycl::ext::oneapi::accessor_property_list location_of_buffer{
+          ext::intel::buffer_location<1>};
+      accessor in_a(in_buf, h, read_only, location_of_buffer);
+
+      sycl::ext::oneapi::accessor_property_list location_of_buffer_no_init{
+          no_init, ext::intel::buffer_location<1>};
+      accessor out_a(out_buf, h, write_only, location_of_buffer_no_init);
+#endif
 
       h.single_task<ImplicitKernel>([=]() [[intel::kernel_args_restrict]] {
         for (size_t  i = 0; i < size; i ++) {
@@ -68,9 +84,16 @@ double SubmitImplicitKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
 template<typename T>
 double SubmitExplicitKernel(queue& q, std::vector<T>& in,
                             std::vector<T>& out, size_t size) {
+#if defined (IS_BSP)
   // allocate the device memory
   T* in_ptr = malloc_device<T>(size, q);
   T* out_ptr = malloc_device<T>(size, q);
+#else
+  // allocate the shared memory as device memory allocation is not supported
+  // when targeting an FPGA family/part
+  T* in_ptr = malloc_shared<T>(size, q);
+  T* out_ptr = malloc_shared<T>(size, q);
+#endif
 
   // ensure we successfully allocated the device memory
   if(in_ptr == nullptr) {
@@ -97,9 +120,16 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
     h.single_task<ExplicitKernel>([=]() [[intel::kernel_args_restrict]] {
       // create device pointers to explicitly inform the compiler these
       // pointer reside in the device's address space
+#if defined (IS_BSP)
       device_ptr<T> in_ptr_d(in_ptr);
       device_ptr<T> out_ptr_d(out_ptr);
-
+#else
+      // device pointers are not supported
+      // when targeting an FPGA family/part
+      T* in_ptr_d(in_ptr);
+      T* out_ptr_d(out_ptr);
+#endif
+      
       for (size_t  i = 0; i < size; i ++) {
         out_ptr_d[i] = in_ptr_d[i] * i;
       }

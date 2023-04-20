@@ -147,11 +147,15 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  FLOAT alpha, beta;
+  int niter, verify;
   int HA = atoi(argv[1]);
   int WA = atoi(argv[2]);
   int WB = atoi(argv[3]);
-  FLOAT alpha, beta;
-  int niter, verify;
+
+  if ((HA == 0) || (WA == 0) || (WB == 0))
+    exit(1);
+
   if (argc > 4) {
 
 #if PRECISION == 1

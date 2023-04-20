@@ -9,12 +9,17 @@ set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_s10sx_pac:pac_s10")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Stratix(R) 10 SX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+                    \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+# Check if the target is a BSP
+if(NOT FPGA_DEVICE MATCHES ".*:.*")
+    message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -33,7 +38,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_EMULATOR -Wformat-security -Werror=format-security -Wall")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_HARDWARE")
-# By default oneAPI compiler burst interleaves across same memory type, 
+# By default oneAPI compiler burst interleaves across same memory type,
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsno-interleaving=default -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")

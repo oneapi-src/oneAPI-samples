@@ -1,4 +1,5 @@
 #include "CompareGzip.hpp"
+#include <sys/stat.h>
 
 // returns 0 on success, otherwise failure
 int CompareGzipFiles(
@@ -20,7 +21,9 @@ int CompareGzipFiles(
   // Create temporary output filename for gunzip
 
   char tmp_name[] = "/tmp/gzip_fpga.XXXXXX";
+  mode_t mask = umask(S_IXUSR);
   mkstemp(tmp_name);
+  umask(mask);
   std::string outputfile = tmp_name;
 
   //------------------------------------------------------------------

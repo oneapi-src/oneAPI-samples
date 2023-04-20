@@ -70,11 +70,15 @@ class ProducerConsumerBaseImpl {
                 << " allocations\n";
       std::terminate();
     }
+
+#if defined(IS_BSP)
+    // Device allocations are only used in BSP mode
     if (!q.get_device().has(aspect::usm_device_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM device"
                 << " allocations\n";
       std::terminate();
     }
+#endif
 
     // Allocate the space the user requested. Calling a different malloc
     // based on whether the user wants to use USM host allocations or not.

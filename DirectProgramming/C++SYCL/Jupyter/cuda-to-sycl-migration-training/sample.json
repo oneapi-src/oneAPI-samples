@@ -1,0 +1,25 @@
+{
+  "guid": "f0bf5cb2-59cb-488e-8f55-0752b8f55681",
+  "name": "CUDA_To_SYCL_Migration",
+  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
+  "description": "CUDA_To_SYCL_Migration Tutorials using Jupyter Notebooks",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "gpuRequired": ["gen11"],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      }
+    ]
+  },
+  "expertise": "Tutorial"
+}

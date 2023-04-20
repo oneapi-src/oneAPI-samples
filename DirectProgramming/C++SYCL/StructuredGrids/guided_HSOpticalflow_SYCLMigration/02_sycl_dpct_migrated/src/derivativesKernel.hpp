@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 
 #include "common.h"
@@ -52,13 +52,13 @@ using namespace sycl;
 
 void ComputeDerivativesKernel(
     int width, int height, int stride, float *Ix, float *Iy, float *Iz,
-    accessor<cl::sycl::float4, 2, cl::sycl::access::mode::read,
+    accessor<sycl::float4, 2, sycl::access::mode::read,
              sycl::access::target::image>
         texSource,
-    accessor<cl::sycl::float4, 2, cl::sycl::access::mode::read,
+    accessor<sycl::float4, 2, sycl::access::mode::read,
              sycl::access::target::image>
         texTarget,
-    cl::sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
+    sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
   const int ix = item_ct1.get_local_id(2) +
                  item_ct1.get_group(2) * item_ct1.get_local_range().get(2);
   const int iy = item_ct1.get_local_id(1) +
@@ -132,7 +132,7 @@ static void ComputeDerivatives(const float *I0, const float *I1, int w, int h,
                                queue q) {
   sycl::range<3> threads(1, 6, 32);
   auto max_wg_size =
-      q.get_device().get_info<cl::sycl::info::device::max_work_group_size>();
+      q.get_device().get_info<sycl::info::device::max_work_group_size>();
   if (max_wg_size < 6 * 32) {
     threads[0] = 1;
     threads[2] = 32;
@@ -165,28 +165,28 @@ static void ComputeDerivatives(const float *I0, const float *I1, int w, int h,
     }
   }
 
-  auto texDescr = cl::sycl::sampler(
+  auto texDescr = sycl::sampler(
       sycl::coordinate_normalization_mode::unnormalized,
       sycl::addressing_mode::clamp_to_edge, sycl::filtering_mode::nearest);
 
   auto texSource =
-      cl::sycl::image<2>(I0_p, cl::sycl::image_channel_order::rgba,
-                         cl::sycl::image_channel_type::fp32, range<2>(w, h),
+      sycl::image<2>(I0_p, sycl::image_channel_order::rgba,
+                         sycl::image_channel_type::fp32, range<2>(w, h),
                          range<1>(s * sizeof(sycl::float4)));
 
   auto texTarget =
-      cl::sycl::image<2>(I1_p, cl::sycl::image_channel_order::rgba,
-                         cl::sycl::image_channel_type::fp32, range<2>(w, h),
+      sycl::image<2>(I1_p, sycl::image_channel_order::rgba,
+                         sycl::image_channel_type::fp32, range<2>(w, h),
                          range<1>(s * sizeof(sycl::float4)));
 
   dpct::get_default_queue()
       .submit([&](sycl::handler &cgh) {
         auto texSource_acc =
-            texSource.template get_access<cl::sycl::float4,
-                                          cl::sycl::access::mode::read>(cgh);
+            texSource.template get_access<sycl::float4,
+                                          sycl::access::mode::read>(cgh);
         auto texTarget_acc =
-            texTarget.template get_access<cl::sycl::float4,
-                                          cl::sycl::access::mode::read>(cgh);
+            texTarget.template get_access<sycl::float4,
+                                          sycl::access::mode::read>(cgh);
 
         cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
                          [=](sycl::nd_item<3> item_ct1) {

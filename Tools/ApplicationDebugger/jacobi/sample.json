@@ -2,12 +2,12 @@
   "guid": "CFAC8EF8-E362-4054-ABE3-A04EEBEBCB46",
   "name": "Jacobi",
   "categories": ["Toolkit/oneAPI Tools/Application Debugger"],
-  "description": "A small Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
-  "toolchain": ["dpcpp"],
+  "description": "A small SYCL (C++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
+  "toolchain": ["icpx"],
   "dependencies": ["debugger"],
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU", "GPU"],
-  "os": ["linux", "windows"],
+  "os": ["linux"],
   "builder": ["ide", "cmake"],
   "ciTests": {
     "linux": [
@@ -16,7 +16,7 @@
         "steps": [
           "mkdir -p build_cpu_bugged; cd build_cpu_bugged; cmake ..",
           "make",
-          "./jacobi-bugged cpu",
+          "ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged",
           "make clean"
         ]
       },
@@ -25,7 +25,7 @@
         "steps": [
           "mkdir -p build_gpu_bugged; cd build_gpu_bugged; cmake ..",
           "make",
-          "./jacobi-bugged gpu",
+          "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-bugged",
           "make clean"
         ]
       },
@@ -34,7 +34,7 @@
         "steps": [
           "mkdir -p build_acc_bugged; cd build_acc_bugged; cmake ..",
           "make",
-          "./jacobi-bugged accelerator",
+          "ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged",
           "make clean"
         ]
       },
@@ -43,7 +43,7 @@
         "steps": [
           "mkdir -p build_cpu_fixed; cd build_cpu_fixed; cmake ..",
           "make",
-          "./jacobi-fixed cpu",
+          "ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-fixed",
           "make clean"
         ]
       },
@@ -52,7 +52,7 @@
         "steps": [
           "mkdir -p build_gpu_fixed; cd build_gpu_fixed; cmake ..",
           "make",
-          "./jacobi-fixed gpu",
+          "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-fixed",
           "make clean"
         ]
       },
@@ -61,58 +61,8 @@
         "steps": [
           "mkdir -p build_acc_fixed; cd build_acc_fixed; cmake ..",
           "make",
-          "./jacobi-fixed accelerator",
+          "ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-fixed",
           "make clean"
-        ]
-      }
-    ],
-    "windows": [
-      {
-        "id": "cpu-bugged",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-bugged.exe cpu"
-        ]
-      },
-      {
-        "id": "gpu-bugged",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-bugged.exe gpu"
-        ]
-      },
-      {
-        "id": "fpga-emu-bugged",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-bugged.exe accelerator"
-        ]
-      },
-      {
-        "id": "cpu-fixed",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-fixed.exe cpu"
-        ]
-      },
-      {
-        "id": "gpu-fixed",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-fixed.exe gpu"
-        ]
-      },
-      {
-        "id": "fpga-emu-fixed",
-        "steps": [
-          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
-          "jacobi-fixed.exe accelerator"
         ]
       }
     ]

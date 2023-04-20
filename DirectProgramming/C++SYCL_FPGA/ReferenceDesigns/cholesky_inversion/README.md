@@ -3,7 +3,7 @@
 This `Cholesky-based Matrix Inversion` sample is a reference design that demonstrates the use of Cholesky decomposition and inversion header libraries on 32x32 real matrices:
 
 - `streaming_cholesky.hpp` - linear algebra header library implements the Cholesky decomposition of matrices with pipe interfaces.
-- `streaming_cholesky_inversion.hpp` - linear algebra header library implements the inversion of matrices with pipe interfaces, based on the outputs of the cholesky decomposition implemented in `streaming_cholesky.hpp`. 
+- `streaming_cholesky_inversion.hpp` - linear algebra header library implements the inversion of matrices with pipe interfaces, based on the outputs of the cholesky decomposition implemented in `streaming_cholesky.hpp`.
 
 Both the decomposition and the inversion have template parameters that can be set to decompose/invert custom sized real or complex square matrices.
 
@@ -42,9 +42,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -57,7 +57,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -68,6 +68,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ### Performance
 
@@ -83,8 +85,6 @@ Performance results are based on testing as of April 26, 2022.
 ## Key Implementation Details
 
 In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
-
-We use the compiler option `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
@@ -109,14 +109,13 @@ The design uses the following key optimization techniques:
 2. Using two copies of the compute matrix in order to be able to read a full row and a full column per cycle.
 3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
 4. Fully vectorizing the dot products using loop unrolling.
-5. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
-7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
-8. Using the input matrices properties (hermitian positive matrices) to reduce the number of operations. For example, the (_LI_*) * _LI_ computation only requires to compute half of the output matrix as the result is symmetric.
+5. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
+6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+7. Using the input matrices properties (hermitian positive matrices) to reduce the number of operations. For example, the (_LI_*) * _LI_ computation only requires to compute half of the output matrix as the result is symmetric.
 
 ### Source Code Breakdown
 
-The following source files can be found in the `src/` sub-directory. 
+The following source files can be found in the `src/` sub-directory.
 
 | File                                | Description
 |:---                                 |:---
@@ -132,7 +131,6 @@ For descriptions of `streaming_cholesky.hpp`, `streaming_cholesky_inversion.hpp`
 |:---                               |:---
 |`-Xshardware`                      | Target FPGA hardware (as opposed to FPGA emulator)
 |`-Xsclock=<target fmax>MHz`        | The FPGA backend attempts to achieve <target fmax> MHz
-|`-Xsfp-relaxed`                    | Allows the FPGA backend to re-order floating point arithmetic operations (for example, permit assuming $(a + b + c) == (c + a + b)$)
 |`-Xsparallel=2`                    | Use 2 cores when compiling the bitstream through Quartus
 |`-Xsseed`                          | Specifies the Quartus compile seed to yield slightly higher, possibly, fmax
 
@@ -149,8 +147,8 @@ Additionaly, the cmake build system can be configured using the following parame
 
 ## Build the `Cholesky-based Matrix Inversion` Program
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -167,16 +165,26 @@ Additionaly, the cmake build system can be configured using the following parame
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -198,23 +206,27 @@ Additionaly, the cmake build system can be configured using the following parame
       make fpga
       ```
 
-     (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky_inversion.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky_inversion.fpga.tar.gz).
-
 ### On Windows*
 
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -263,7 +275,7 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky_inversion.fpga_sim
    ```
-3. Run on the FPGA device.
+3. Run on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./cholesky_inversion.fpga
    ```
@@ -280,7 +292,7 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
    cholesky_inversion.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run on the FPGA device.
+3. Run on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    cholesky_inversion.fpga.exe
    ```
@@ -303,7 +315,7 @@ PASSED
 ### Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32 
+Generating 8 random real matrices of size 32x32
 Computing the Cholesky-based inversion of 8 matrices 819200 times
  Total duration:   25.694 s
 Throughput: 255.063k matrices/s

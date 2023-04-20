@@ -111,8 +111,8 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // default heuristic of finding the minimum II * (1/fMAX) Relaxing the
           // II on a short loop with a long feedback path will remove the
           // bottleneck the loop had on the maximum achievable fMAX of the
-          // design The default targeted fMAX is 240MHz for Arria® 10 and 480MHz
-          // for Stratix® 10, so different IIs need to be specified so the
+          // design. The default targeted fMAX is target dependent,
+          // so different IIs need to be specified so the
           // compiler can schedule the loop such that it does not restrict the
           // maximum fMAX
 #if defined(ENABLE_II)
@@ -120,7 +120,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           [[intel::initiation_interval(3)]]
 #elif defined(S10)
           [[intel::initiation_interval(5)]]
-#elif defined(Agilex)
+#elif defined(Agilex7)
           [[intel::initiation_interval(5)]]
 #else
           static_assert(false, "Unknown FPGA Architecture!");
@@ -156,7 +156,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 
           // The intel::initiation_interval attribute is added here to "assert"
           // that II=1 for this loop. Even though we fully expect the compiler
-          // to achieve II=1 here by default, some developers find it helful to
+          // to achieve II=1 here by default, some developers find it helpful to
           // include the attribute to "document" this expectation. If a future
           // code change causes an unexpected II regression, the compiler will
           // error out. Without the intel::initiation_interval attribute, an II

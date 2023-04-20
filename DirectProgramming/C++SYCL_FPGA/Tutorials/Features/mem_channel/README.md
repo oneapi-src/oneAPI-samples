@@ -7,7 +7,7 @@ SYCL*-compliant FPGA design.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
@@ -20,11 +20,13 @@ SYCL*-compliant FPGA design.
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstatres a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR
@@ -32,17 +34,17 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
-Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/DPC++FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/DPC++FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/DPC++FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/DPC++FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/DPC++FPGA/README.md#documentation), etc.
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -60,7 +62,7 @@ without worrying about where each buffer should be allocated. However, this
 configuration can be expensive in terms of FPGA resources because the global
 memory interconnect required to orchestrate the memory accesses across all the
 channels is complex. For more information about burst-interleaving, please
-refer to the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+refer to the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 The compiler allows you to avoid this area overhead by
 disabling burst-interleaving and assigning buffers to individual channels. There
@@ -79,12 +81,12 @@ Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
 To disable burst-interleaving, you need to pass the
-`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. The
-global memory type is indicated in the board specification XML file for the
-Board Support Package (BSP) that you're using. The board specification XML
-file, called `board_spec.xml`, can be found in the root directory of your BSP.
-For example, for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA BSP, the location
-of this file is:
+`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. In the
+case of targeting a BSP, the global memory type is indicated in the board
+specification XML file for the Board Support Package (BSP) that you're using.
+The board specification XML file, called `board_spec.xml`, can be found in the
+root directory of your BSP. For example, for the Intel® PAC with Intel Arria® 10
+GX FPGA BSP, the location of this file is:
 `$INTELFPGAOCLSDKROOT/board/intel_a10gx_pac/hardware/pac_a10/board_spec.xml`.
 Note that this BSP only has a single memory type available as indicated in its
 `board_spec.xml` file: `<global_mem name="DDR"`. The appropriate flag to pass
@@ -135,13 +137,14 @@ created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
 `TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
-defined when the design is compiled for the Intel&reg; PAC with Arria&reg; 10 GX FPGA
-because that board has an external memory with two available channels. In that
-case, the 4 buffers are evenly assigned to the available channels on that
-board. When the design is compiled for the Intel&reg; FPGA PAC D5005 Stratix&reg; 10 SX
-FPGA, the 4 buffers are assigned to the 4 available channels on that board.
-For other devices, please make sure to pass the correct macro (or create your
-own) that clearly matches the number of channels available.
+defined when the design is compiled for an Intel® Arria® GX FPGA as the
+Intel® PAC with Arria® 10 GX FPGA has an external memory with two available
+channels. In that case, the 4 buffers are evenly assigned to the available
+channels on that board. When the design is compiled for an Intel® Stratix® or
+Agilex® 7 FPGA, the 4 buffers are assigned to the 4 available channels.
+This can be parametrize by setting the correct macro (or create your
+own) that clearly matches the number of channels available on your specific
+board.
 
 ## Key Concepts
 * How to disable global memory burst-interleaving using the
@@ -151,8 +154,8 @@ own) that clearly matches the number of channels available.
 
 ## Building the `mem_channel` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -169,27 +172,26 @@ own) that clearly matches the number of channels available.
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
-   using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
-   10 SX), run `cmake` using the command:
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
 
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board
-   support package is installed on your system. Then run `cmake` using the
-   command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ```
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ```
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build
    targets are provided, matching the recommended development flow:
@@ -210,36 +212,29 @@ own) that clearly matches the number of channels available.
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete,
-   FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be
-   downloaded <a
-   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mem_channel.fpga.tar.gz"
-   download>here</a>.
 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
-   using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
-   10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board
-   support package is installed on your system. Then run `cmake` using the
-   command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ```
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ```
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build
    targets are provided, matching the recommended development flow:
@@ -261,11 +256,6 @@ own) that clearly matches the number of channels available.
      nmake fpga
      ```
 
-> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005
-(with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA
-hardware on Windows* requires a third-party or custom Board Support Package
-(BSP) with Windows* support.
-
 > **Note**: If you encounter any issues with long paths when compiling under
 Windows*, you may have to create your ‘build’ directory in a shorter path, for
 example c:\samples\build.  You can then run cmake from that directory, and
@@ -273,7 +263,7 @@ provide cmake with the full path to your sample directory.
 
 ## Examining the Reports
 Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
-and `mem_channel_no_interleaving.prj` directories. Open the reports in 
+and `mem_channel_no_interleaving.prj` directories. Open the reports in
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see
 the table showing the FPGA resources that were allocated for the design. Notice
@@ -305,7 +295,7 @@ significantly lower than the case where burst-interleaving is enabled.
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the simulator which is why we only have a single executable for
     this flow.
-3. Run the sample on the FPGA device (two executables should be generated):
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
      ./mem_channel_interleaving.fpga         (Linux)
      ./mem_channel_no_interleaving.fpga      (Linux)
@@ -336,18 +326,18 @@ Kernel throughput without burst-interleaving: 796.379552 MB/s
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
-Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA. The table
+Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The table
 below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
-|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
+|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:---
 |Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0
 |With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
 
-Similarly, when compiled for the Intel&reg; Programmable Acceleration Card with
-Intel&reg; Stratix&reg; 10 SX FPGA, the tutorial design achieved the following results:
+Similarly, when compiled for the Intel® Programmable Acceleration Card with
+Intel® Stratix® 10 SX FPGA, the tutorial design achieved the following results:
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
-|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
+|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:---
 |Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0
 |With `-Xsno-interleaving` | 2.913 | 1029.77 | 9,564.1 | 28,616 | 11 | 186 | 0
 

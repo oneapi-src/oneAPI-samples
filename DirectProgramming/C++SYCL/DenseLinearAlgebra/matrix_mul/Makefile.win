@@ -1,6 +1,6 @@
 SYCL_CXX = icx-cl
-SYCL_CXXFLAGS = /Zi /EHsc
-SYCL_LDFLAGS = 
+SYCL_CXXFLAGS = -fsycl /Zi /EHsc
+SYCL_LDFLAGS =
 SYCL_EXE_NAME = matrix_mul_sycl.exe
 SYCL_SOURCES = src/matrix_mul_sycl.cpp
 
@@ -17,5 +17,5 @@ run:
 run_sycl:
 	$(SYCL_EXE_NAME)
 
-clean: 
+clean:
 	del -rf $(SYCL_EXE_NAME) *.pdb

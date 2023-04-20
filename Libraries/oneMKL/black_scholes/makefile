@@ -21,7 +21,7 @@ LIBS = OpenCL.lib
 all: black_scholes.run
 
 black_scholes.exe: black_scholes.cpp
-	dpcpp black_scholes.cpp $(CFLAGS) $(LIBS) -o black_scholes.exe
+	icx-cl -fsycl black_scholes.cpp $(CFLAGS) $(LIBS) -o black_scholes.exe
 
 black_scholes.run: black_scholes.exe
 	.\black_scholes.exe $(N)
