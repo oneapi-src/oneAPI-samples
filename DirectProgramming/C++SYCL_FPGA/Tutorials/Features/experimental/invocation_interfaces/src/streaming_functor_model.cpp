@@ -15,7 +15,9 @@ struct FunctorStreamingIP {
   // Use the 'conduit' annotation on a kernel argument to specify it to be
   // a streaming kernel argument.
   conduit ValueT *input;
-  conduit ValueT *output;
+  // A kernel with a streaming invocation interface can also independently
+  // have register map kernel arguments, when annotated by 'register_map'.
+  register_map ValueT *output;
   // Without the annotations, kernel arguments will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
   // vise-versa.
