@@ -135,8 +135,6 @@ This achieves the same objective of increasing throughput, though this design is
 |:---         |:---           |:---       |:---
 | 64x64       | 8x8           | 64        | 452.55 MHz
 | 256x256     | 16x16         | 256       | 380.00 MHz
-| 256x256     | 32x16         | 512       | 346.72 MHz
-| 256x256     | 32x32         | 1024      | 309.12 MHz
 
 *Naïve implementation*
 | Matrix size | Dot product size | DSP usage | Avg. fMAX
