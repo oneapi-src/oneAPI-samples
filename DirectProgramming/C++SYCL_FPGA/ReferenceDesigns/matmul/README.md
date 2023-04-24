@@ -84,7 +84,22 @@ Here, a single PE consists of logic to compute a floating-point multiply-accumul
   <img src=assets/PE.png />
 </p>
 
-In our FPGA implementation, the multiply-accumulate operations are computed in a nested loop over the PEs. The loop is fully unrolled to replicate the hardware for each PE. As a result, *m<sub>PE</sub> × p<sub>PE</sub>* multiply-accumulate operations are performed in parallel on the FPGA. The multiply-accumulate arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware. When set to FP accum mode, we can perform this operation with an II of 1. With this optimization, our FPGA implementation requires *m<sub>PE</sub> × p<sub>PE</sub>* DSPs to compute all the floating-point multiply-accumulate operations. Thus, the matrix tile size is constrained by the total FPGA DSP resources available.
+In our FPGA implementation, the multiply-accumulate operations are computed in a nested loop over the PEs. The loop is fully unrolled to replicate the hardware for each PE. 
+
+```c++
+#pragma unroll
+for (int row = 0; row < m_PE; row++) {
+  #pragma unroll
+  for (int col = 0; col < p_PE; col++) {
+    fed_a[i] = fpga_reg(fed_a[i]);
+    fed_b[j] = fpga_reg(fed_b[j]);
+    accum[i][j] += fed_a[i] * fed_b[j];
+    ...
+  }
+}
+```
+
+As a result, *m<sub>PE</sub> × p<sub>PE</sub>* multiply-accumulate operations are performed in parallel on the FPGA.  The multiply-accumulate arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware. When set to FP accum mode, we can perform this operation with an II of 1. With this optimization, our FPGA implementation requires *m<sub>PE</sub> × p<sub>PE</sub>* DSPs to compute all the floating-point multiply-accumulate operations. Thus, the matrix tile size is constrained by the total FPGA DSP resources available.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -96,6 +111,41 @@ The key optimization techniques used are as follows:
 1. Fully unrolling the loop over the matrix product to instantiate an array of individual PEs in hardware.
 2. Using the `fpga_reg` attribute to insert additional pipelining registers, a crucial step in the implementation of the systolic array structure of this design, which allows data to be passed from one PE to the next. The use of these registers both in the systolic array and in various other parts of the design improves the overall achievable frequency.
 3. Using an efficient memory banking scheme to generate high performance hardware.
+
+### Comparison with a naïve approach
+
+Consider the following naïve implementation of a matrix multiplication kernel, where instead of implementing a systolic array, we unroll the loop computing the dot product. 
+```c++
+for (int row = 0; row < m; row++) {
+  for (int col = 0; col < p; col++) {
+    float dot_prod{0};
+#pragma unroll
+    for (int k = 0; k < n; k++) {
+      dot_prod = fpga_reg(dot_prod) + a_load[row][k] * b_load[col][k];
+    }
+    mm_result[row][col] = dot_prod;
+  }
+}
+```
+
+This achieves the same objective of increasing throughput, though this design is not as scalable as the systolic array approach, as shown in the results below.
+
+*Systolic array implementation*
+| Matrix size | PE array size | DSP usage | Avg. fMAX
+|:---         |:---           |:---       |:---
+| 64x64       | 8x8           | 64        | 452.55 MHz
+| 256x256     | 16x16         | 256       | 380.00 MHz
+| 256x256     | 32x16         | 512       | 346.72 MHz
+| 256x256     | 32x32         | 1024      | 309.12 MHz
+
+*Naïve implementation*
+| Matrix size | Dot product size | DSP usage | Avg. fMAX
+|:---         |:---              |:---       | :---   
+| 64x64       | 64               | 64        | 435.28 MHz   
+| 256x256     | 256              | 256       | 341.08 MHz
+
+
+These results were gathered from targeting the Arria® 10 device family using the IP authoring flow, and the fMAX values were averaged across 6 seeds.
 
 ### Compiler Flags Used
 
