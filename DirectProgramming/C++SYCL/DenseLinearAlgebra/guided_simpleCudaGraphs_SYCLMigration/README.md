@@ -1,4 +1,4 @@
-﻿# `SimpleCudaGraphs` Sample
+﻿# `Simple Cuda Graphs` Sample
  
 The simpleCudaGraphs sample demonstrates the migration of CUDA Graph explicit API calls to SYCL using Taskflow programming model which manages a task dependency graph. This sample is implemented using SYCL* by migrating code from original CUDA source code and offloading computations to a GPU/CPU.
 
