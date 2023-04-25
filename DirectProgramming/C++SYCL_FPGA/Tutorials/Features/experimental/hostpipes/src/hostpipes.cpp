@@ -62,10 +62,12 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
 /////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector selector;
-#else
-  sycl::ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   bool passed = true;
@@ -90,12 +92,17 @@ int main(int argc, char* argv[]) {
                   sycl::property::queue::enable_profiling{});
 
     // make sure the device supports USM device allocations
-    sycl::device d = q.get_device();
-    if (!d.has(sycl::aspect::usm_host_allocations)) {
+    auto device = q.get_device();
+    if (!device.has(sycl::aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations" << std::endl;
       return 1;
     }
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
 
     // create input and golden output data
     std::vector<ValueT> in(count), out(count), golden(count);

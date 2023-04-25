@@ -49,14 +49,14 @@ add_custom_target (debug-session
   DEPENDS ${PROJECT_NAME})
 
 # Add custom target for running
-add_custom_target(run ./${PROJECT_NAME} cpu
+add_custom_target(run ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME}
   DEPENDS ${PROJECT_NAME})
 
-add_custom_target(run-cpu ./${PROJECT_NAME} cpu
+add_custom_target(run-cpu ONEAPI_DEVICE_SELECTOR=*:cpu ./${PROJECT_NAME}
   DEPENDS ${PROJECT_NAME})
 
-add_custom_target(run-gpu ./${PROJECT_NAME} gpu
+add_custom_target(run-gpu ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./${PROJECT_NAME}
   DEPENDS ${PROJECT_NAME})
 
-add_custom_target(run-fpga ./${PROJECT_NAME} accelerator
+add_custom_target(run-fpga ONEAPI_DEVICE_SELECTOR=*:fpga ./${PROJECT_NAME}
   DEPENDS ${PROJECT_NAME})

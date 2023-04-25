@@ -36,17 +36,19 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -193,7 +195,7 @@ Snappy is compression format that aims for high throughput compression and decom
 
 Unlike many compression encodings, like DEFLATE, Snappy encoding is byte oriented. The Snappy format does not use entropy encoding, such as Huffman or range encoding.
 
-Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository.
+Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) Wikipedia article and the [Google Snappy](https://github.com/google/snappy) GitHub repository. The files being decompressed in this tutorial have been compressed using [python-snappy](https://github.com/andrix/python-snappy) which is a python library for the snappy compression library from Google.
 
 The basic Snappy format is a *preamble* followed by the *compressed data stream*.
 
@@ -302,47 +304,57 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
+
    To select between GZIP and Snappy decompression, use `-DGZIP=1` or `-DSNAPPY=1`. If you do not specify the decompression, the code defaults to **Snappy**.
    ```
    cmake .. -DGZIP=1
    cmake .. -DSNAPPY=1
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
-       ```
-       make fpga_emu
-       ```
-   2. Generate the HTML performance report.
-       ```
-       make report
-       ```
-      The report resides at `decompression type>_report.prj/reports/report/report.html`.
+    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+        ```
+        make fpga_emu
+        ```
+    2. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        make fpga_sim
+        ```
+    3. Generate the HTML performance report.
+        ```
+        make report
+        ```
+        The report resides at `decompression type>_report.prj/reports/report/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-       ```
-       make fpga
-       ```
-
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/decompress.fpga.tar.gz).
+    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+        ```
+        make fpga
+        ```
 
 ### On Windows*
 
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
@@ -353,26 +365,39 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
    cmake -G "NMake Makefiles" .. -DGZIP=1
    cmake -G "NMake Makefiles" .. -DSNAPPY=1
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
-      ```
-      nmake fpga_emu
-      ```
-   2. Generate the HTML performance report.
-      ```
-      nmake report
-      ```
-      The report resides at `<decompression type>_report.a.prj/reports/report/report.html`.
+    1. Compile for emulation (fast compile time, targets emulated FPGA device).
+        ```
+        nmake fpga_emu
+        ```
+    2. Compile for simulation (fast compile time, targets simulator FPGA device):
+        ```
+        nmake fpga_sim
+        ```
+    3. Generate the HTML performance report.
+        ```
+        nmake report
+        ```
+        The report resides at `<decompression type>_report.a.prj/reports/report/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
-      ```
-      nmake fpga
-      ```
+    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+        ```
+        nmake fpga
+        ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `Decompression` Program
@@ -380,24 +405,34 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
 ### On Linux
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   ./decompress.fpga_emu
-   ```
-2. Run the sample on the FPGA device.
-   ```
-   ./decompress.fpga
-   ```
+    ```
+    ./decompress.fpga_emu
+    ```
+2. Run the sample on the FPGA simulator device.
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./decompress.fpga_sim
+    ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+    ```
+    ./decompress.fpga
+    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   decompress.fpga_emu.exe
-   ```
-2. Run the sample on the FPGA device.
-   ```
-   decompress.fpga.exe
-   ```
+    ```
+    decompress.fpga_emu.exe
+    ```
+2. Run the sample on the FPGA simulator device.
+    ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    decompress.fpga_sim.exe
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+    ```
+    decompress.fpga.exe
+    ```
 
 ## Example Output
 

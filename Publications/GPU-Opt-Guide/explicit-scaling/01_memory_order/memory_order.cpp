@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>

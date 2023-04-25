@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -129,9 +129,7 @@ int reductionIntBarrier(sycl::queue &q, std::vector<int> &data, int iter) {
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{work_group_size, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
@@ -194,10 +192,10 @@ int reductionIntAtomic(sycl::queue &q, std::vector<int> &data, int iter) {
 
       h.parallel_for(data_size, [=](auto index) {
         size_t glob_id = index[0];
-        auto v = sycl::ext::oneapi::atomic_ref<
-            int, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(sum_acc[0]);
+        auto v = sycl::atomic_ref<int, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            sum_acc[0]);
         v.fetch_add(buf_acc[glob_id]);
       });
     });
@@ -219,7 +217,7 @@ int reductionIntAtomic(sycl::queue &q, std::vector<int> &data, int iter) {
 
 int main(int argc, char *argv[]) {
 
-  sycl::queue q{sycl::default_selector{}, exception_handler};
+  sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";
   std::vector<int> data(N, 1);
   reductionIntSerial(q, data, 1000);

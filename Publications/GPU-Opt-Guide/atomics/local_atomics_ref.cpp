@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 int main() {
   constexpr int N = 256 * 256;
@@ -19,20 +19,17 @@ int main() {
   auto e1 = q.submit([&](sycl::handler &h) {
     sycl::accessor b(global, h);
     sycl::accessor acc_a(bufa, h, sycl::read_only);
-    auto acc = sycl::accessor<int, 1, sycl::access::mode::read_write,
-                              sycl::access::target::local>(NUM_WG, h);
+    auto acc = sycl::local_accessor<int, 1>(NUM_WG, h);
     h.parallel_for(sycl::nd_range<1>(N, M), [=](auto it) {
       auto i = it.get_global_id(0);
       auto group_id = it.get_group(0);
-      sycl::ext::oneapi::atomic_ref<int,
-                                    sycl::ext::oneapi::memory_order_relaxed,
-                                    sycl::ext::oneapi::memory_scope_device,
-                                    sycl::access::address_space::local_space>
+      sycl::atomic_ref<int, sycl::memory_order_relaxed,
+                       sycl::memory_scope_device,
+                       sycl::access::address_space::local_space>
           atomic_op(acc[group_id]);
-      sycl::ext::oneapi::atomic_ref<int,
-                                    sycl::ext::oneapi::memory_order_relaxed,
-                                    sycl::ext::oneapi::memory_scope_device,
-                                    sycl::access::address_space::global_space>
+      sycl::atomic_ref<int, sycl::memory_order_relaxed,
+                       sycl::memory_scope_device,
+                       sycl::access::address_space::global_space>
           atomic_op_global(b[0]);
       atomic_op += acc_a[i];
       it.barrier(sycl::access::fence_space::local_space);

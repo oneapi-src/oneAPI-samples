@@ -1,0 +1,24 @@
+{
+  "guid": "f51eea84-5732-4425-a530-113448519667",
+  "name": "SYCL Essentials Tutorials",
+  "categories": [ "Toolkit/oneAPI Direct Programming/C++SYCL/Tutorials Jupyter Notebooks" ],
+  "description": "SYCL Essentials Tutorials using Jupyter Notebooks",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make Run",
+          "make clean"
+        ]
+      }
+    ]
+  },
+  "expertise": "Tutorial"
+}

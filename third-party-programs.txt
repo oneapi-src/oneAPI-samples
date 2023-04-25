@@ -513,6 +513,27 @@ zlib License
   3. This notice may not be removed or altered from any source distribution.
 
 --------------------------------------------------------------------------------
+11. Google API
+
+   The Google APIs provide fall back support for fonts used in the oneAPI 
+   Samples Catalog. The specific fall back fonts used are: 
+   Open+Sans&family and Roboto.    
+
+   1. The Google APIs Terms of Service are found at: 
+      https://developers.google.com/terms
+
+      1a. The website cited above was accessed on 29 March 2023.
+
+      1b. These Google API endpoints are used for the above-cited fonts, 
+          whose base urls are:
+          - https://fonts.googleapis.com
+	       - https://fonts.gstatic.com
+	       - https://fonts.googleapis.com
+
+   2. The Google Fonts API Terms of Service are found at: 
+      "https://developers.google.com/fonts/terms"
+
+--------------------------------------------------------------------------------
 The following third party programs have their own third party program files as well. These additional third party program files are as follows:
 
 1. Intel® Implicit SPMD Program Compiler (Intel® ISPC)

@@ -6,21 +6,22 @@
 // Compile:
 // dpcpp -D{HOST|CPU|GPU} -std=c++17 -fsycl external_rand.cpp -o external_rand
 
-#include <sycl/sycl.hpp>
+// Snippet begin
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 
-#define N 5
+constexpr int N = 5;
 
 extern SYCL_EXTERNAL int rand(void);
 
 int main(void) {
-#if defined HOST
-  sycl::queue Q(sycl::host_selector{});
-#elif defined CPU
-  sycl::queue Q(sycl::cpu_selector{});
+#if defined CPU
+  sycl::queue Q(sycl::cpu_selector_v);
 #elif defined GPU
-  sycl::queue Q(sycl::gpu_selector{});
+  sycl::queue Q(sycl::gpu_selector_v);
+#else
+  sycl::queue Q(sycl::default_selector_v);
 #endif
 
   std::cout << "Running on: "
@@ -41,3 +42,4 @@ int main(void) {
   // Cleanup
   sycl::free(test1, Q.get_context());
 }
+// Snippet end

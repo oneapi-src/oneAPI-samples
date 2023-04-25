@@ -4,12 +4,10 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include "align.hpp"
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
-
-sycl::default_selector d_selector;
 
 template <typename T> using VectorAllocator = AlignedAllocator<T>;
 
@@ -47,10 +45,10 @@ int VectorInt(sycl::queue &q, int iter) {
       sycl::accessor b_acc(a_buf, h, sycl::read_only);
 
       h.parallel_for(num_items, [=](auto i) {
-        auto v = sycl::ext::oneapi::atomic_ref<
-            int, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(a_acc[0]);
+        auto v = sycl::atomic_ref<int, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            a_acc[0]);
         v += b_acc[i];
       });
     });
@@ -85,10 +83,10 @@ int VectorFloat(sycl::queue &q, int iter) {
       sycl::accessor b_acc(a_buf, h, sycl::read_only);
 
       h.parallel_for(num_items, [=](auto i) {
-        auto v = sycl::ext::oneapi::atomic_ref<
-            float, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(a_acc[0]);
+        auto v = sycl::atomic_ref<float, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            a_acc[0]);
         v += b_acc[i];
       });
     });
@@ -122,10 +120,10 @@ int VectorDouble(sycl::queue &q, int iter) {
       sycl::accessor b_acc(a_buf, h, sycl::read_only);
 
       h.parallel_for(num_items, [=](auto i) {
-        auto v = sycl::ext::oneapi::atomic_ref<
-            double, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(a_acc[0]);
+        auto v = sycl::atomic_ref<double, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            a_acc[0]);
         v += b_acc[i];
       });
     });
@@ -140,7 +138,7 @@ int VectorDouble(sycl::queue &q, int iter) {
 
 int main() {
 
-  sycl::queue q(d_selector);
+  sycl::queue q(sycl::gpu_selector_v);
   VectorAllocator<int> alloc;
   AlignedVector<int> a(array_size, alloc);
   AlignedVector<int> b(array_size, alloc);

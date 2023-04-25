@@ -1,0 +1,4 @@
+--- !ParoptConfig
+Kernels:
+  - Name: __omp_offloading_3a_40c505__Z4main_l2
+    RegisterAllocMode: large

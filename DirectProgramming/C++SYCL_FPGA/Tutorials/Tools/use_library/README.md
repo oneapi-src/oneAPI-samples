@@ -2,23 +2,50 @@
 
 This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design.
 
-
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br>Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br>Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
 | Time to complete                  | 30 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+
+
+> :warning: When targeting an IP-only flow, the RTL library feature will not work when compiling to Quartus and will error out in the late-stage compile. RTL libraries will work in the simulation flow. This will be fixed in a future release. This is documented in the [compiler release notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
+
+## Prerequisites
+
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 ## Purpose
 
@@ -63,43 +90,51 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMU
 icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
 
 # Compile for FPGA hardware
-icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
+icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
 ```
 
 ## Building the `use_library` Tutorial
 
-### Running Samples in DevCloud
-
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
-
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
 
-   ```bash
-   mkdir build
-   cd build
-   ```
+    ```bash
+    mkdir build
+    cd build
+    ```
 
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-
-   ```bash
+    To compile for the default target (the Agilex® device family), run `cmake` using the command:
+    ```
     cmake ..
-   ```
+    ```
 
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -127,34 +162,30 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/use_library.fpga.tar.gz" download>here</a>.
-
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
 
-   ```
-   mkdir build
-   cd build
-   ```
+    ```
+    mkdir build
+    cd build
+    ```
 
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" ..
-   ```
-
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
+    To compile for the default target (the Agilex® device family), run `cmake` using the command:
+    ```
+    cmake -G "NMake Makefiles" ..
+    ```
+    > **Note**: You can change the default target by using the command:
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+    >  ``` 
+    >
+    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+    >  ```
+    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+    >  ``` 
+    >
+    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -182,10 +213,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ```
 
-### In Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
-
 ## Running the Sample
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
@@ -197,12 +224,18 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instr
 
 2. Run the sample on the FPGA simulator device
 
-     ```bash
-     ./use_library.fpga_sim     (Linux)
-     use_library.fpga_sim.exe   (Windows)
-     ```
+    * On Linux
+        ```bash
+        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
+        ```
+    * On Windows
+        ```bash
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+        use_library.fpga_sim.exe
+        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+        ```
 
-3. Run the sample on the FPGA device:
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
 
      ```bash
      ./use_library.fpga         (Linux)

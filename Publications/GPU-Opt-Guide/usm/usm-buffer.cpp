@@ -5,7 +5,7 @@
 // =============================================================
 #include <iomanip>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 #include "utils.hpp"
 

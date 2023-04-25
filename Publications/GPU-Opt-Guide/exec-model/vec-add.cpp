@@ -3,12 +3,12 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
 
-sycl::default_selector d_selector;
+auto d_selector = sycl::default_selector_v;
 
 // Array type and data size for this example.
 constexpr size_t array_size = 3 * 5 * 7 * (1 << 17);
@@ -70,7 +70,7 @@ int VectorAdd2(sycl::queue &q, const IntArray &a, const IntArray &b,
           size_t loc_id = index.get_local_id();
           size_t start = grp_id * mysize;
           size_t end = start + mysize;
-          for (int i = 0; i < iter; i++)
+          for (int j = 0; j < iter; j++)
             for (size_t i = start + loc_id; i < end; i += wg_size) {
               sum_acc[i] = a_acc[i] + b_acc[i];
             }

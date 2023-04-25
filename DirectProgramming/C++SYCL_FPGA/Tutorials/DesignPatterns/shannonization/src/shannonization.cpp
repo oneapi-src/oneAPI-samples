@@ -124,7 +124,7 @@ bool Intersection(queue& q, std::vector<unsigned int>& a,
   // For emulation, just do a single iteration.
   // For hardware, perform multiple iterations for a more
   // accurate throughput measurement
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
   int iterations = 1;
 #else
   int iterations = 5;
@@ -163,7 +163,7 @@ bool Intersection(queue& q, std::vector<unsigned int>& a,
   // The FPGA emulator does not accurately represent the hardware performance
   // so we don't print performance results when running with the emulator
   if (success) {
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
     // Compute the average throughput across all iterations.
     // We use the first iteration as a 'warmup' for the FPGA,
     // so we ignore its results.
@@ -187,7 +187,7 @@ bool Intersection(queue& q, std::vector<unsigned int>& a,
 
 int main(int argc, char** argv) {
   // parse the command line arguments
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
   unsigned int a_size = 128;
   unsigned int b_size = 256;
 #else
@@ -256,14 +256,22 @@ int main(int argc, char** argv) {
     auto props = property_list{property::queue::enable_profiling()};
 
     // the device selector
-#ifdef FPGA_EMULATOR
-    ext::intel::fpga_emulator_selector device_selector;
-#else
-    ext::intel::fpga_selector device_selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // create the device queue
-    queue q(device_selector, props);
+    queue q(selector, props);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     bool success = true;
 

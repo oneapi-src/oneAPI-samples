@@ -49,10 +49,10 @@ int main(int argc, char* argv[]) {
 //  - the FPGA emulator device (CPU emulation of the FPGA) using FPGA_EMULATOR
 //  macro
 //  - the FPGA device (a real FPGA)
-#if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector device_selector;
-#else
-  sycl::ext::intel::fpga_selector device_selector;
+#if FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   // Variable ORed with result of each test
@@ -66,11 +66,14 @@ int main(int argc, char* argv[]) {
 
     // Create a queue bound to the chosen device
     // If the device is unavailable, a SYCL runtime exception is thrown
-    sycl::queue q(device_selector, fpga_tools::exception_handler, q_prop_list);
+    sycl::queue q(selector, fpga_tools::exception_handler, q_prop_list);
+
+    auto device = q.get_device();
 
     // Print out the device information.
     std::cout << "Running on device: "
-              << q.get_device().get_info<sycl::info::device::name>() << "\n";
+              << device.get_info<sycl::info::device::name>() 
+              << std::endl;
 
     // Create a oneAPI Shim object
     ShimMetrics hldshim(q);

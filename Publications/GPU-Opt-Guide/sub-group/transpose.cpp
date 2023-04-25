@@ -7,13 +7,13 @@
 #include <iostream>
 #include <vector>
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 
 constexpr size_t N = 16;
 typedef unsigned int uint;
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << std::endl;
@@ -34,46 +34,44 @@ int main() {
   {
 
     // Snippet begin
-    constexpr size_t blockSize = 16;
+    constexpr size_t BLOCK_SIZE = 16;
     sycl::buffer<uint, 2> m(matrix.data(), sycl::range<2>(N, N));
 
     auto e = q.submit([&](auto &h) {
       sycl::accessor marr(m, h);
-      sycl::accessor<uint, 2, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          barr1(sycl::range<2>(blockSize, blockSize), h);
-      sycl::accessor<uint, 2, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          barr2(sycl::range<2>(blockSize, blockSize), h);
+      sycl::local_accessor<uint, 2> barr1(
+          sycl::range<2>(BLOCK_SIZE, BLOCK_SIZE), h);
+      sycl::local_accessor<uint, 2> barr2(
+          sycl::range<2>(BLOCK_SIZE, BLOCK_SIZE), h);
 
       h.parallel_for(
-          sycl::nd_range<2>(sycl::range<2>(N / blockSize, N),
-                            sycl::range<2>(1, blockSize)),
+          sycl::nd_range<2>(sycl::range<2>(N / BLOCK_SIZE, N),
+                            sycl::range<2>(1, BLOCK_SIZE)),
           [=](sycl::nd_item<2> it) [[intel::reqd_sub_group_size(16)]] {
             int gi = it.get_group(0);
             int gj = it.get_group(1);
 
-            sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+            auto sg = it.get_sub_group();
             uint sgId = sg.get_local_id()[0];
 
-            uint bcol[blockSize];
-            int ai = blockSize * gi;
-            int aj = blockSize * gj;
+            uint bcol[BLOCK_SIZE];
+            int ai = BLOCK_SIZE * gi;
+            int aj = BLOCK_SIZE * gj;
 
-            for (uint k = 0; k < blockSize; k++) {
+            for (uint k = 0; k < BLOCK_SIZE; k++) {
               bcol[k] = sg.load(marr.get_pointer() + (ai + k) * N + aj);
             }
 
-            uint tcol[blockSize];
-            for (uint n = 0; n < blockSize; n++) {
+            uint tcol[BLOCK_SIZE];
+            for (uint n = 0; n < BLOCK_SIZE; n++) {
               if (sgId == n) {
-                for (uint k = 0; k < blockSize; k++) {
+                for (uint k = 0; k < BLOCK_SIZE; k++) {
                   tcol[k] = sg.shuffle(bcol[n], k);
                 }
               }
             }
 
-            for (uint k = 0; k < blockSize; k++) {
+            for (uint k = 0; k < BLOCK_SIZE; k++) {
               sg.store(marr.get_pointer() + (ai + k) * N + aj, tcol[k]);
             }
           });

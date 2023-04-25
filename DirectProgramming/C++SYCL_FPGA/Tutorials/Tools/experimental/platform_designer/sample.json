@@ -1,0 +1,71 @@
+{
+  "guid": "293B78FB-40A3-4F81-A3CB-D2C3ED344AE1",
+  "name": "Platform Designer - Intel® Arria® 10 SX SoC Developer Kit",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools/experimental"],
+  "description": "An Intel® FPGA tutorial demonstrating how to export a reusable IP component to Intel® Quartus® Prime Pro and Platform Designer.",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../../",
+    "include": [
+      "README.md",
+      "Tutorials/Tools/experimental/platform_designer",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir add-oneapi/build",
+          "cd add-oneapi/build",
+          "cmake ..",
+          "make fpga_emu",
+          "./add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir add-oneapi/build",
+          "cd add-oneapi/build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icx-cl --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
+          "nmake fpga_emu",
+          "add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icx-cl --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}
