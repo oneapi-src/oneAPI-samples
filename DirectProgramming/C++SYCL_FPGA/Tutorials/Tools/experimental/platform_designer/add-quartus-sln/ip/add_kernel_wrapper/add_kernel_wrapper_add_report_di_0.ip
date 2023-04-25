@@ -14,16 +14,16 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>Altera Corporation</ipxact:vendor>
-  <ipxact:library>add_kernel_wrapper_add_fpga_ip_export_1_di_0</ipxact:library>
-  <ipxact:name>add_fpga_ip_export_1_di_0</ipxact:name>
+  <ipxact:library>add_kernel_wrapper_add_report_di_0</ipxact:library>
+  <ipxact:name>add_report_di_0</ipxact:name>
   <ipxact:version>1.0</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>clock</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="23.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -57,10 +57,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>resetn</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="23.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -89,10 +89,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>device_exception_bus</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="conduit" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="23.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -126,10 +126,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_irqs</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="23.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -178,10 +178,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>csr_ring_root_avs</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -497,11 +497,10 @@ https://fpgasoftware.intel.com/eula.-->
     <ipxact:instantiations>
       <ipxact:componentInstantiation>
         <ipxact:name>QUARTUS_SYNTH</ipxact:name>
-        <ipxact:moduleName>add_fpga_ip_export_1_di</ipxact:moduleName>
+        <ipxact:moduleName>add_report_di</ipxact:moduleName>
         <ipxact:fileSetRef>
           <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
         </ipxact:fileSetRef>
-        <ipxact:parameters></ipxact:parameters>
       </ipxact:componentInstantiation>
     </ipxact:instantiations>
     <ipxact:ports>
@@ -509,7 +508,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>clock</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -522,7 +520,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>resetn</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -553,7 +550,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_irqs</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -566,7 +562,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>csr_ring_root_avs_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -597,7 +592,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>csr_ring_root_avs_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -610,7 +604,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>csr_ring_root_avs_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -677,7 +670,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>csr_ring_root_avs_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -691,8 +683,8 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendorExtensions>
     <altera:entity_info>
       <ipxact:vendor>Altera Corporation</ipxact:vendor>
-      <ipxact:library>add_kernel_wrapper_add_fpga_ip_export_1_di_0</ipxact:library>
-      <ipxact:name>add_fpga_ip_export_1_di</ipxact:name>
+      <ipxact:library>add_kernel_wrapper_add_report_di_0</ipxact:library>
+      <ipxact:name>add_report_di</ipxact:name>
       <ipxact:version>1.0</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
@@ -730,17 +722,6 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>bonusData</ipxact:displayName>
           <ipxact:value>bonusData 
 {
-   element $system
-   {
-      datum _originalDeviceFamily
-      {
-         value = "Arria 10";
-         type = "String";
-      }
-   }
-   element add_fpga_ip_export_1_di_0
-   {
-   }
 }
 </ipxact:value>
         </ipxact:parameter>
@@ -1201,18 +1182,13 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/connPtSystemInfos&gt;
 &lt;/systemInfosDefinition&gt;</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value>&lt;pinAssignmentListDefinition/&gt;</ipxact:value>
-        </ipxact:parameter>
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="clock" altera:internal="add_fpga_ip_export_1_di_0.clock" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="clock" altera:internal="add_report_di_0.clock" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clock" altera:internal="clock"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="csr_ring_root_avs" altera:internal="add_fpga_ip_export_1_di_0.csr_ring_root_avs" altera:type="avalon" altera:dir="end">
+      <altera:interface_mapping altera:name="csr_ring_root_avs" altera:internal="add_report_di_0.csr_ring_root_avs" altera:type="avalon" altera:dir="end">
         <altera:port_mapping altera:name="csr_ring_root_avs_address" altera:internal="csr_ring_root_avs_address"></altera:port_mapping>
         <altera:port_mapping altera:name="csr_ring_root_avs_byteenable" altera:internal="csr_ring_root_avs_byteenable"></altera:port_mapping>
         <altera:port_mapping altera:name="csr_ring_root_avs_read" altera:internal="csr_ring_root_avs_read"></altera:port_mapping>
@@ -1222,13 +1198,13 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="csr_ring_root_avs_write" altera:internal="csr_ring_root_avs_write"></altera:port_mapping>
         <altera:port_mapping altera:name="csr_ring_root_avs_writedata" altera:internal="csr_ring_root_avs_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="device_exception_bus" altera:internal="add_fpga_ip_export_1_di_0.device_exception_bus" altera:type="conduit" altera:dir="end">
+      <altera:interface_mapping altera:name="device_exception_bus" altera:internal="add_report_di_0.device_exception_bus" altera:type="conduit" altera:dir="end">
         <altera:port_mapping altera:name="device_exception_bus" altera:internal="device_exception_bus"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irqs" altera:internal="add_fpga_ip_export_1_di_0.kernel_irqs" altera:type="interrupt" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_irqs" altera:internal="add_report_di_0.kernel_irqs" altera:type="interrupt" altera:dir="end">
         <altera:port_mapping altera:name="kernel_irqs" altera:internal="kernel_irqs"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="resetn" altera:internal="add_fpga_ip_export_1_di_0.resetn" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="resetn" altera:internal="add_report_di_0.resetn" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="resetn" altera:internal="resetn"></altera:port_mapping>
       </altera:interface_mapping>
     </altera:altera_interface_boundary>

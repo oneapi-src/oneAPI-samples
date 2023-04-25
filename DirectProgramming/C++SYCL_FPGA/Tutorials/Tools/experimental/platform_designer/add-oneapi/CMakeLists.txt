@@ -284,14 +284,6 @@ add_custom_target(  displayReportCompileCommands ALL
                     COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${REPORT_TARGET} displayReportCompileCommands)
 
-# Display the compile instructions in the IP export flow (Remove after native host pipes work properly)
-getCompileCommands("${COMMON_COMPILE_FLAGS}" "${IP_EXPORT_COMPILE_FLAGS}" "${MODIFIED_COMMON_LINK_FLAGS_EXPORT}" "${IP_EXPORT_LINK_FLAGS}" "${IP_EXPORT_TARGET}" "${IP_EXPORT_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
-
-add_custom_target(  displayExportCompileCommands ALL
-                    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
-add_dependencies(${IP_EXPORT_TARGET} displayExportCompileCommands)
-
 # Display the compile instructions in the fpga flow
 getCompileCommands("${COMMON_COMPILE_FLAGS}" "${FPGA_COMPILE_FLAGS}" "${COMMON_LINK_FLAGS}" "${FPGA_LINK_FLAGS}" "${FPGA_TARGET}" "${FPGA_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
 
