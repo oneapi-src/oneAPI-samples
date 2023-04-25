@@ -78,9 +78,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows System
 Run `nmake` to build and run the sample.
 
-Note: To removes temporary files, run `nmake clean`.
-
-*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming oneMKL compiler release.
+Note: To remove temporary files, run `nmake clean`.
 
 ### Example of Output
 If everything is working correctly, the program will generate two artificial 1D signals, cross-correlate them, and report the relative shift that gives the maximum correlation score the output should be similar to this:
