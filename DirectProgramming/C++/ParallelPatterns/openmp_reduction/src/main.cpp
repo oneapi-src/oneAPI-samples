@@ -60,7 +60,7 @@ float openmp_device_calc_pi(int num_steps) {
 #pragma omp target teams distribute parallel for reduction(+ : sum)
   for (int i = 1; i < num_steps; i++) {
     float x = ((float)i - 0.5f) * step;
-    sum = sum + 4.0f / (1.0 + x * x);
+    sum = sum + 4.0f / (1.0f + x * x);
   }
   pi = sum * step;
   return pi;
