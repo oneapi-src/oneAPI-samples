@@ -9,3 +9,8 @@ file(COPY $ENV{ONEAPI_ROOT}/vpl/latest/examples/hello/hello-decode/src DESTINATI
 file(COPY $ENV{ONEAPI_ROOT}/vpl/latest/examples/hello/hello-decode/CMakeLists.txt DESTINATION .)
 file(COPY $ENV{ONEAPI_ROOT}/vpl/latest/examples/hello/hello-decode/PreLoad.cmake DESTINATION .)
 add_subdirectory (${PROJECT_BINARY_DIR}/ bin)
+
+file(COPY $ENV{ONEAPI_ROOT}/vpl/latest/examples/content/cars_128x96.h265 DESTINATION .)
+set(TARGET hello-decode)
+set(RUNARGS -sw -i ./cars_128x96.h265)
+add_custom_target(run ${TARGET} ${RUNARGS})
