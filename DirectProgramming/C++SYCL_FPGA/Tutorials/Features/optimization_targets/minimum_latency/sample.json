@@ -1,8 +1,8 @@
 {
   "guid": "22F00FD4-D485-449F-8612-EDF2C276B1B5",
   "name": "Minimum Latency",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/optimization_levels"],
-  "description": "An Intel® FPGA tutorial demonstrating the minimum latency optimization level",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/optimization_targets"],
+  "description": "An Intel® FPGA tutorial demonstrating the minimum latency optimization target",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/optimization_levels/minimum_latency",
+      "Tutorials/Features/optimization_targets/minimum_latency",
       "include"
     ],
     "exclude": []
@@ -49,7 +49,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_levels/minimum_latency",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets/minimum_latency",
           "nmake fpga_emu",
           "no_control.fpga_emu.exe"
         ]
@@ -61,7 +61,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_levels/minimum_latency",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets/minimum_latency",
           "nmake report"
         ]
       }
