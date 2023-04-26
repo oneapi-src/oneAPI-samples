@@ -18,6 +18,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | --------- | ------------------------------------------------ | -
 | PyTorch | [IntelPyTorch Extensions Inference Optimization](IntelPyTorch_Extensions_Inference_Optimization)   | Applying IPEX Optimizations to a PyTorch workload to gain performance boost.
 | PyTorch | [IntelPyTorch TrainingOptimizations AMX BF16](IntelPyTorch_TrainingOptimizations_AMX_BF16)   | Analyze training performance improvements using Intel® Extension for PyTorch with Advanced Matrix Extensions Bfloat16.
+| PyTorch | [IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8](IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8)   | Analyze inference performance improvements using Intel® Extension for PyTorch with Advanced Matrix Extensions Bfloat16 and Integer8.
 | Numpy, Numba | [IntelPython Numpy Numba dpex kNN](IntelPython_Numpy_Numba_dpex_kNN)   | Optimize k-NN model by numba_dpex operations without sacrificing accuracy.
 | XGBoost | [IntelPython XGBoost Performance](IntelPython_XGBoost_Performance) |  Analyze the performance benefit from using Intel optimized XGBoost compared to un-optimized XGBoost 0.81.
 | XGBoost | [IntelPython XGBoost daal4pyPrediction](IntelPython_XGBoost_daal4pyPrediction) |  Analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction.
@@ -34,4 +35,3 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 # Using Samples in Intel® DevCloud for oneAPI
 To get started using samples in the DevCloud, refer to [Using AI samples in Intel® DevCloud for oneAPI](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
-

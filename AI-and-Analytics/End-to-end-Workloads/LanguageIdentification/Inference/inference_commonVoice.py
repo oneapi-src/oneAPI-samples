@@ -46,33 +46,86 @@ class datafile:
         wavfile.write( newWavPath, self.sampleRate, self.waveData[startSample:endSample])
 
 class speechbrain_inference:
-    def __init__(self, ipex_op=False):
+    def __init__(self, ipex_op=False, bf16=False, int8_model=False):
         source_model_path = "./lang_id_commonvoice_model"
         self.language_id = EncoderClassifier.from_hparams(source=source_model_path, savedir="tmp")
         print("Model: " + source_model_path)
         
-        # Optimize for inference with IPEX
-        if ipex_op:
+        if int8_model:
+            # INT8 model
+            source_model_int8_path = "./lang_id_commonvoice_model_INT8"
+            print("Inference with INT8 model: " + source_model_int8_path)
+            from neural_compressor.utils.pytorch import load
+            self.model_int8 = load(source_model_int8_path, self.language_id)
+            self.model_int8.eval()
+        elif ipex_op:
+            # Optimize for inference with IPEX
             print("Optimizing inference with IPEX")
             self.language_id.eval()
             sampleInput = (torch.load("./sample_input_features.pt"), torch.load("./sample_input_wav_lens.pt"))
-            self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], sample_input=sampleInput)
+            if bf16:
+                print("BF16 enabled")
+                self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"], dtype=torch.bfloat16)
+                self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"], dtype=torch.bfloat16)
+                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], dtype=torch.bfloat16)
+                self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"], dtype=torch.bfloat16)
+            else:
+                self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"])
+                self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"])
+                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"])
+                self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"])
+            
             # Torchscript to resolve performance issues with reorder operations
-            self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
+            with torch.no_grad():
+                I2 = self.language_id.mods["embedding_model"](*sampleInput)
+                if bf16:
+                    with torch.cpu.amp.autocast():
+                        self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
+                        self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
+                        self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
+                        self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                        
+                        self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
+                        self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
+                        self.language_id.mods["embedding_model"] = torch.jit.freeze(self.language_id.mods["embedding_model"])
+                        self.language_id.mods["classifier"] = torch.jit.freeze( self.language_id.mods["classifier"])
+                else:
+                    self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
+                    self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
+                    self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
+                    self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                    
+                    self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
+                    self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
+                    self.language_id.mods["embedding_model"] = torch.jit.freeze(self.language_id.mods["embedding_model"])
+                    self.language_id.mods["classifier"] = torch.jit.freeze( self.language_id.mods["classifier"])
+
         return
 
-    def predict(self, data_path="", verbose=False):
+    def predict(self, data_path="", ipex_op=False, bf16=False, int8_model=False, verbose=False):
         signal = self.language_id.load_audio(data_path)
         inference_start_time = time()
-        prediction =  self.language_id.classify_batch(signal)
+        
+        if int8_model: # INT8 model from INC
+            prediction = self.model_int8(signal)
+        elif ipex_op: # IPEX
+            with torch.no_grad():
+                if bf16:
+                    with torch.cpu.amp.autocast():
+                        prediction =  self.language_id.classify_batch(signal)
+                else:
+                    prediction =  self.language_id.classify_batch(signal)
+        else: # default
+            prediction =  self.language_id.classify_batch(signal)
+
         inference_end_time = time()
         inference_latency = inference_end_time - inference_start_time
         if verbose:
             print(" Inference latency: %.5f seconds" %(inference_latency))
-        
+
         # prediction is a tuple of format (out_prob, score, index) due to modification of speechbrain.pretrained.interfaces.py
         label = self.language_id.hparams.label_encoder.decode_torch(prediction[2])[0]
-        
+
         return label, inference_latency
 
 def main(argv):
@@ -82,6 +135,8 @@ def main(argv):
     parser.add_argument('-d', type=int, default=3, help="Duration of each wave sample in seconds")
     parser.add_argument('-s', type=int, default=5, help="Sample size of waves to be taken from the audio file")
     parser.add_argument('--ipex', action="store_true", default=False, help="Enable Intel Extension for PyTorch (IPEX) optimizations")
+    parser.add_argument('--bf16', action="store_true", default=False, help="Use bfloat16 precision (supported on 4th Gen Xeon Scalable Processors or newer")
+    parser.add_argument('--int8_model', action="store_true", default=False, help="Run inference with INT8 model generated from Intel Neural Compressor (INC)")
     parser.add_argument('--verbose', action="store_true", default=False, help="Print additional debug info")
     args = parser.parse_args()
 
@@ -89,6 +144,8 @@ def main(argv):
     sample_dur = args.d
     sample_size = args.s
     use_ipex = args.ipex
+    use_bf16 = args.bf16
+    use_int8_model = args.int8_model
     verbose = args.verbose
     print("\nTaking %d samples of %d seconds each" %(sample_size, sample_dur))
     
@@ -103,7 +160,7 @@ def main(argv):
         writer = csv.writer(f)
         writer.writerow(["Language", "Total Samples", "Correct Predictions", "Accuracy"])
 
-    speechbrain_inf = speechbrain_inference(ipex_op=use_ipex)
+    speechbrain_inf = speechbrain_inference(ipex_op=use_ipex, bf16=use_bf16, int8_model=use_int8_model)
     for language in languageList:
         print("\nTesting on %s data" %language)
         testDataDirectory = path + "/" + language
@@ -132,7 +189,7 @@ def main(argv):
                         newWavPath = 'trim_tmp.wav'
                         data.trim_wav(newWavPath, start, start + sample_dur)
                     try:
-                        label, inference_latency = speechbrain_inf.predict(data_path=newWavPath, verbose=verbose)
+                        label, inference_latency = speechbrain_inf.predict(data_path=newWavPath, ipex_op=use_ipex, bf16=use_bf16, int8_model=use_int8_model, verbose=verbose)
                         if verbose:
                             print(" start-end : " +  str(start)  + "  " +  str(start + sample_dur) + " prediction : " + label)
                         predict_list.append(label)
