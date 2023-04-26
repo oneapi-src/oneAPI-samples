@@ -18,7 +18,7 @@ int main() {
     std::cout<<"\n";
     buffer buf_data(data, range(N));
 
-    //# STEP 1 : Create 3 sub-buffers for buf_data with length 64, 128 and 64. 
+    //# STEP 1 : Create 3 non-overlapping/disjoint sub-buffers for buf_data with length 64, 128 and 64. 
     buffer<int> buf_data1(buf_data, 0, range{ 64 });
     buffer<int> buf_data2(buf_data, 64, range{ 128 });
     buffer<int> buf_data3(buf_data, 192, range{ 64 });
