@@ -72,7 +72,7 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE}
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o no_control.cpp.o -c optimization_targets.cpp
 #    [link]    icpx -fsycl -fintelfpga no_control.cpp.o -o no_control.fpga_emu
 add_executable(${EMULATOR_TARGET_NO_CONTROL} ${SOURCE_FILE})
-target_include_directories(${EMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
+target_include_directories(${EMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET_NO_CONTROL} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET_NO_CONTROL} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET_NO_CONTROL})
@@ -86,11 +86,11 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET_NO_CONTROL})
 #   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimization_targets.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE_NO_CONTROL} ${SOURCE_FILE})
-target_include_directories(${FPGA_EARLY_IMAGE_NO_CONTROL} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_EARLY_IMAGE_NO_CONTROL} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_MINIMUM_LATENCY} ${SOURCE_FILE})
-target_include_directories(${FPGA_EARLY_IMAGE_MINIMUM_LATENCY} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_EARLY_IMAGE_MINIMUM_LATENCY} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_MANUAL_REVERT} ${SOURCE_FILE})
-target_include_directories(${FPGA_EARLY_IMAGE_MANUAL_REVERT} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_EARLY_IMAGE_MANUAL_REVERT} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE_NO_CONTROL} ${FPGA_EARLY_IMAGE_MINIMUM_LATENCY} ${FPGA_EARLY_IMAGE_MANUAL_REVERT})
 set_target_properties(${FPGA_EARLY_IMAGE_NO_CONTROL} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE_NO_CONTROL} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
@@ -115,11 +115,11 @@ set_target_properties(${FPGA_EARLY_IMAGE_MANUAL_REVERT} PROPERTIES LINK_FLAGS "$
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o manual_revert.cpp.o -c optimization_targets.cpp -DMANUAL_REVERT
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> manual_revert.cpp.o -Xsoptimize=latency -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga_sim
 add_executable(${SIMULATOR_TARGET_NO_CONTROL} ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
+target_include_directories(${SIMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../include)
 add_executable(${SIMULATOR_TARGET_MINIMUM_LATENCY} ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET_MINIMUM_LATENCY} PRIVATE ../../../../../include)
+target_include_directories(${SIMULATOR_TARGET_MINIMUM_LATENCY} PRIVATE ../../../../include)
 add_executable(${SIMULATOR_TARGET_MANUAL_REVERT} ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET_MANUAL_REVERT} PRIVATE ../../../../../include)
+target_include_directories(${SIMULATOR_TARGET_MANUAL_REVERT} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET_NO_CONTROL} ${SIMULATOR_TARGET_MINIMUM_LATENCY} ${SIMULATOR_TARGET_MANUAL_REVERT})
 set_target_properties(${SIMULATOR_TARGET_NO_CONTROL} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET_NO_CONTROL} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
@@ -143,11 +143,11 @@ set_target_properties(${SIMULATOR_TARGET_MANUAL_REVERT} PROPERTIES LINK_FLAGS "$
 #   [compile] icpx -fsycl -fintelfpga -o manual_revert.cpp.o -c optimization_targets.cpp -DMANUAL_REVERT
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> manual_revert.cpp.o -Xsoptimize=latency -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga
 add_executable(${FPGA_TARGET_NO_CONTROL} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-target_include_directories(${FPGA_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_TARGET_NO_CONTROL} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_MINIMUM_LATENCY} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-target_include_directories(${FPGA_TARGET_MINIMUM_LATENCY} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_TARGET_MINIMUM_LATENCY} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_MANUAL_REVERT} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-target_include_directories(${FPGA_TARGET_MANUAL_REVERT} PRIVATE ../../../../../include)
+target_include_directories(${FPGA_TARGET_MANUAL_REVERT} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_NO_CONTROL} ${FPGA_TARGET_MINIMUM_LATENCY} ${FPGA_TARGET_MANUAL_REVERT})
 set_target_properties(${FPGA_TARGET_NO_CONTROL} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_NO_CONTROL} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_NO_CONTROL}")
