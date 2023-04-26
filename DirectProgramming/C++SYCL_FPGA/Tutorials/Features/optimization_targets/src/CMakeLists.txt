@@ -1,4 +1,4 @@
-set(SOURCE_FILE minimum_latency.cpp)
+set(SOURCE_FILE optimization_targets.cpp)
 set(TARGET_NAME_NO_CONTROL no_control)
 set(TARGET_NAME_MINIMUM_LATENCY minimum_latency)
 set(TARGET_NAME_MANUAL_REVERT manual_revert)
@@ -67,9 +67,9 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE}
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR minimum_latency.cpp -o no_control.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR optimization_targets.cpp -o no_control.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o no_control.cpp.o -c minimum_latency.cpp
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o no_control.cpp.o -c optimization_targets.cpp
 #    [link]    icpx -fsycl -fintelfpga no_control.cpp.o -o no_control.fpga_emu
 add_executable(${EMULATOR_TARGET_NO_CONTROL} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
@@ -81,9 +81,9 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET_NO_CONTROL})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early minimum_latency.cpp -o no_control.a
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early minimum_latency.cpp -Xsoptimize=latency -o minimum_latency.a
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early minimum_latency.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimization_targets.cpp -o no_control.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimization_targets.cpp -Xsoptimize=latency -o minimum_latency.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimization_targets.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE_NO_CONTROL} ${SOURCE_FILE})
 target_include_directories(${FPGA_EARLY_IMAGE_NO_CONTROL} PRIVATE ../../../../../include)
@@ -104,15 +104,15 @@ set_target_properties(${FPGA_EARLY_IMAGE_MANUAL_REVERT} PROPERTIES LINK_FLAGS "$
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR minimum_latency.cpp -o no_control.fpga_sim
-#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR minimum_latency.cpp -Xsoptimize=latency -o minimum_latency.fpga_sim
-#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR minimum_latency.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR optimization_targets.cpp -o no_control.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR optimization_targets.cpp -Xsoptimize=latency -o minimum_latency.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR optimization_targets.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga_sim
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o no_control.cpp.o -c minimum_latency.cpp
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o no_control.cpp.o -c optimization_targets.cpp
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> no_control.cpp.o -o no_control.fpga_sim
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o minimum_latency.cpp.o -c minimum_latency.cpp
-#    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> minimum_latency.cpp.o -Xsoptimize=latency -o minimum_latency.fpga_sim
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o manual_revert.cpp.o -c minimum_latency.cpp -DMANUAL_REVERT
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o optimization_targets.cpp.o -c optimization_targets.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> optimization_targets.cpp.o -Xsoptimize=latency -o minimum_latency.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o manual_revert.cpp.o -c optimization_targets.cpp -DMANUAL_REVERT
 #    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> manual_revert.cpp.o -Xsoptimize=latency -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga_sim
 add_executable(${SIMULATOR_TARGET_NO_CONTROL} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
@@ -132,15 +132,15 @@ set_target_properties(${SIMULATOR_TARGET_MANUAL_REVERT} PROPERTIES LINK_FLAGS "$
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> minimum_latency.cpp -o no_control.fpga
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> minimum_latency.cpp -Xsoptimize=latency -o minimum_latency.fpga
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> minimum_latency.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimization_targets.cpp -o no_control.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimization_targets.cpp -Xsoptimize=latency -o minimum_latency.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimization_targets.cpp -Xsoptimize=latency -DMANUAL_REVERT -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o no_control.cpp.o -c minimum_latency.cpp
+#   [compile] icpx -fsycl -fintelfpga -o no_control.cpp.o -c optimization_targets.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> no_control.cpp.o -o no_control.fpga
-#   [compile] icpx -fsycl -fintelfpga -o minimum_latency.cpp.o -c minimum_latency.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> minimum_latency.cpp.o -Xsoptimize=latency -o minimum_latency.fpga
-#   [compile] icpx -fsycl -fintelfpga -o manual_revert.cpp.o -c minimum_latency.cpp -DMANUAL_REVERT
+#   [compile] icpx -fsycl -fintelfpga -o optimization_targets.cpp.o -c optimization_targets.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimization_targets.cpp.o -Xsoptimize=latency -o minimum_latency.fpga
+#   [compile] icpx -fsycl -fintelfpga -o manual_revert.cpp.o -c optimization_targets.cpp -DMANUAL_REVERT
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> manual_revert.cpp.o -Xsoptimize=latency -Xshyper-optimized-handshaking=on -Xssfc-exit-fifo-type=default -o manual_revert.fpga
 add_executable(${FPGA_TARGET_NO_CONTROL} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET_NO_CONTROL} PRIVATE ../../../../../include)
