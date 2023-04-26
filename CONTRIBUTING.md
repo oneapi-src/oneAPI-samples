@@ -2,7 +2,7 @@
 
 The `master` branch contains code samples that work with the latest released version of the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html). Do not commit change to the `master` branch.
 
-All contributions must go into the `development` branch where they will be reviewed before merging into the `master` branch.
+All contributions must go into the `development` branch through a pull request (PR) where they will be reviewed before being merged. At specific dates, corresponding to the releases of the oneapi DPC++/C++ compiler, the `development` branch is merged into the `master` branch.
 
 ## Fork the Repository
 
