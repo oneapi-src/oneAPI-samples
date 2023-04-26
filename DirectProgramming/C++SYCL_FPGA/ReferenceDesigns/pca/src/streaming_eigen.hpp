@@ -43,7 +43,6 @@ namespace fpga_linalg {
   Then input and output matrices are consumed/produced from/to pipes.
 */
 template <typename T,        // The datatype for the computation
-          bool is_complex,   // True if T is ac_complex<X>
           int MatrixSize,    // Input covariance matrices are square matrix 
           int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
@@ -107,15 +106,9 @@ struct StreamingEig {
     */
 
 
-
-    // Set the computation type to T or ac_complex<T> depending on the value
-    // of is_complex, currently Complex eigen vector and eigen value computation is 
-    // not supported 
-    using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
-
     // Type used to store the matrices in the compute loop
-    using column_tuple = fpga_tools::NTuple<TT, rows>;
-    using row_tuple = fpga_tools::NTuple<TT, columns>;
+    using column_tuple = fpga_tools::NTuple<T, rows>;
+    using row_tuple = fpga_tools::NTuple<T, columns>;
 
     // constexpr int kMatrixSize = rows * rows;
     // constexpr int kMatrixBitSize = fpga_tools::BitsForMaxValue<kMatrixSize + 1>()+1;
@@ -169,7 +162,7 @@ struct StreamingEig {
 
 
       // Break memories up to store 4 complex numbers (32 bytes) per bank
-      constexpr short kBankwidth = pipe_size * sizeof(TT);
+      constexpr short kBankwidth = pipe_size * sizeof(T);
       constexpr unsigned short kNumBanks = rows / pipe_size;
 
       // 7 copies of the full matrix, so that each matrix has a single
@@ -205,7 +198,7 @@ struct StreamingEig {
       
 
       // Eigen Value Matrix
-      TT eArrray[rows];
+      T eArrray[rows];
 
 
 
@@ -223,11 +216,11 @@ struct StreamingEig {
 
 
       // plceholder for releigh shift 
-      TT R_shift;
-      TT a_wilk, b_wilk, c_wilk;
+      T R_shift;
+      T a_wilk, b_wilk, c_wilk;
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
+        fpga_tools::NTuple<T, pipe_size> pipe_read = AIn::read();
 
         int write_idx = li % kLoopIterPerColumn;
 
@@ -265,9 +258,9 @@ struct StreamingEig {
 
 
 
-      TT lamda = (a_wilk-c_wilk)/2.0;
-      TT sign_lamda = (lamda > 0) - (lamda < 0);
-      TT l_shift = c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
+      T lamda = (a_wilk-c_wilk)/2.0;
+      T sign_lamda = (lamda > 0) - (lamda < 0);
+      T l_shift = c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
 
       R_shift = RELSHIFT ? c_wilk : l_shift;
       R_shift -= R_shift*SHIFT_NOISE; //SHIFT_NOISE;
@@ -295,7 +288,7 @@ struct StreamingEig {
       // }
 
       // Iterative loop for QR and RQ/QQ coputation
-      TT accError = 0;
+      T accError = 0;
       for(ac_int<kIBitSize_QR_RQ_itr, false> itr = 0; itr < QR_RQ_iterations; itr++){
         // PRINTF("Itr is: %d\n", (int)itr);
 
@@ -303,16 +296,16 @@ struct StreamingEig {
 
         // aconverged local copy of a_{i+1} that is used across multiple j iterations
         // for the computation of pip1 and p
-        TT a_ip1[rows];
+        T a_ip1[rows];
         // a local copy of a_ip1 that is used across multiple j iterations
         // for the computation of a_j
-        TT a_i[rows];
+        T a_i[rows];
         // Depending on the context, will contain:
         // -> -s[j]: for all the iterations to compute a_j
         // -> ir: for one iteration per j iterations to compute Q_i
         [[intel::fpga_memory]]
         [[intel::private_copies(2)]] // NO-FORMAT: Attribute
-        TT s_or_ir[columns];
+        T s_or_ir[columns];
 
         T pip1, ir;
 
@@ -326,13 +319,13 @@ struct StreamingEig {
         [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
         for (int s = 0; s < kIterations; s++) {
           // Two matrix columns for partial results.
-          TT col[rows];
-          TT col_dummy[rows];
-          TT col1[rows];
+          T col[rows];
+          T col_dummy[rows];
+          T col1[rows];
 
           // Current value of s_or_ir depending on the value of j
           // It is replicated kFanoutReduction times to reduce fanout
-          TT s_or_ir_j[kBanksForFanout];
+          T s_or_ir_j[kBanksForFanout];
 
           // All the control signals are precomputed and replicated
           // kFanoutReduction times to reduce fanout
@@ -353,7 +346,7 @@ struct StreamingEig {
           // These are going to be use to compute the dot product of two
           // different columns of the input matrix.
 
-          TT diag_val = 0;
+          T diag_val = 0;
           fpga_tools::UnrolledLoop<rows>([&](auto k) {
             // find which fanout bank this unrolled iteration is going to use
             constexpr auto fanout_bank_idx = k / kFanoutReduction;
@@ -373,9 +366,9 @@ struct StreamingEig {
             // pointer may lead to bad QoR."
             if (!i_gt_0[fanout_bank_idx]) {
               // supporting matrix deflation
-              TT load_val1 = a_load1[j].template get<k>();
-              TT load_val2 = a_load2[j].template get<k>();
-              TT load_val = (itr == 0) ? load_val1 : load_val2;
+              T load_val1 = a_load1[j].template get<k>();
+              T load_val2 = a_load2[j].template get<k>();
+              T load_val = (itr == 0) ? load_val1 : load_val2;
               diag_val = (k == j) ? load_val : diag_val;
               col_dummy[k] =  load_val ; // write_val;
             }
@@ -400,9 +393,9 @@ struct StreamingEig {
 
             if (!i_gt_0[fanout_bank_idx]) {
               // supporting matrix deflation
-              TT load_val = col_dummy[k];
-              TT update_val = (k == j) ? diag_val : load_val;
-              TT write_val = (k >= kDM_size || j >= kDM_size) ? 0 : update_val;
+              T load_val = col_dummy[k];
+              T update_val = (k == j) ? diag_val : load_val;
+              T write_val = (k >= kDM_size || j >= kDM_size) ? 0 : update_val;
               col[k] =  write_val;
             }
 
@@ -426,13 +419,9 @@ struct StreamingEig {
             //    for subsequent iterations
             auto prod_lhs = a_i[k];
             auto prod_rhs = i_lt_0[fanout_bank_idx] ?
-                                            TT{0.0} : s_or_ir_j[fanout_bank_idx];
-            auto add = j_eq_i[fanout_bank_idx] ? TT{0.0} : col[k];
-            if constexpr (is_complex) {
-              col1[k] = prod_lhs * prod_rhs.conj() + add;
-            } else {
-              col1[k] = prod_lhs * prod_rhs + add;
-            }
+                                            T{0.0} : s_or_ir_j[fanout_bank_idx];
+            auto add = j_eq_i[fanout_bank_idx] ? T{0.0} : col[k];
+            col1[k] = prod_lhs * prod_rhs + add;
 
             // making invalid calculation to zero 
             col1[k] = (k >= kDM_size || j >= kDM_size) ? 0 : col1[k];
@@ -460,57 +449,32 @@ struct StreamingEig {
           });
 
           // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
-          TT p_ij{0.0};
+          T p_ij{0.0};
           fpga_tools::UnrolledLoop<rows>([&](auto k) {
-            if constexpr (is_complex) {
-              p_ij = p_ij + col1[k] * a_ip1[k].conj();
-            } else {
-              p_ij = p_ij + col1[k] * a_ip1[k];
-            }
+            p_ij = p_ij + col1[k] * a_ip1[k];
           });
 
           // Compute pip1 and ir based on the results of the dot product
           if (j == i + 1) {
-            if constexpr (is_complex) {
-              pip1 = p_ij.r();
-              ir = sycl::rsqrt(p_ij.r());
-            } else {
-              pip1 = p_ij;
-              ir = sycl::rsqrt(p_ij);
-            }
+            pip1 = p_ij;
+            ir = sycl::rsqrt(p_ij);
           }
 
           // Compute the value of -s[j]
-          TT s_j;
-          if constexpr (is_complex) {
-            s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
-          } else {
-            s_j = -p_ij / pip1;
-          }
+          T s_j = -p_ij / pip1;
 
           // j may be negative if the number of "dummy" iterations is
           // larger than the matrix size
           if (j >= 0) {
-            if constexpr (is_complex) {
-              s_or_ir[j] =
-                  TT{j == i + 1 ? ir : s_j.r(), j == i + 1 ? 0.0f : s_j.i()};
-            } else {
-              s_or_ir[j] = j == i + 1 ? ir : s_j;
-            }
+            s_or_ir[j] = j == i + 1 ? ir : s_j;
           }
 
           // Compute the R_{i+1,i+1} or R_{i+1,j}
-          TT r_ip1j;
-          if constexpr (is_complex) {
-            r_ip1j = j == i + 1 ? TT{sycl::sqrt(pip1), 0.0}
-                                : TT{ir * p_ij.r(), ir * p_ij.i()};
-          } else {
-            r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
-          }
+          T r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
 
           
           fpga_tools::UnrolledLoop<columns>([&](auto t) {
-            TT tra_val = (j >= i + 1 && (i+1) < kDM_size) ? r_ip1j : 0;
+            T tra_val = (j >= i + 1 && (i+1) < kDM_size) ? r_ip1j : 0;
             rowR_write.template get<t>() = 
               ((i + 1 < columns) && t == j) ? tra_val : rowR_write.template get<t>();
           });
@@ -555,7 +519,7 @@ struct StreamingEig {
         bool converged = 1;
 
         accError = 0;
-        TT a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
+        T a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
         column_tuple Q_load_ii;
         [[intel::loop_coalesce(2)]]
         for(ac_int<kIBitSize , false> i_ll = 0; i_ll < columns; i_ll++){
@@ -569,7 +533,7 @@ struct StreamingEig {
 
             column_tuple Q_load = q_result[j_ll];
             fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
-                TT Ival = (j_ll == k) ? 1 : 0; 
+                T Ival = (j_ll == k) ? 1 : 0; 
                 Q_load.template get<k>() = (k >= kDM_size || j_ll >= kDM_size ? Ival : Q_load.template get<k>());
             });
 
@@ -581,7 +545,7 @@ struct StreamingEig {
             if(i_ll == j_ll){
               Q_load_ii = Q_load;
             } 
-            TT chk_ortho = 0;
+            T chk_ortho = 0;
             fpga_tools::UnrolledLoop<rows> ([&] (auto k) {
                 chk_ortho += Q_load.template get<k>() * Q_load_ii.template get<k>();
             });
@@ -598,10 +562,10 @@ struct StreamingEig {
             //--------End Detecting the QR decomposition falure-------
 
 
-            TT sum_QQ = 0;
+            T sum_QQ = 0;
             fpga_tools::UnrolledLoop<rows> ([&] (auto k){
-              TT Ival = (k == i_ll) ? 1 : 0;
-              TT QQ_final_val = (itr == 0) ? Ival : QQ_load.template get<k>();
+              T Ival = (k == i_ll) ? 1 : 0;
+              T QQ_final_val = (itr == 0) ? Ival : QQ_load.template get<k>();
               sum_QQ +=   QQ_final_val * Q_load.template get<k>();
             });
 
@@ -638,7 +602,7 @@ struct StreamingEig {
             }
             row_tuple r_load = r_matrix[j_ll]; 
 
-            TT sum_RQ = 0;
+            T sum_RQ = 0;
             fpga_tools::UnrolledLoop<rows> ([&] (auto k){
               sum_RQ += r_load.template get<k>() * Q_load_RQ.template get<k>();
             });
@@ -687,9 +651,9 @@ struct StreamingEig {
 
       
 
-        TT lamda = (a_wilk-c_wilk)/2.0;
-        TT sign_lamda = (lamda > 0) - (lamda < 0);
-        TT l_shift = c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
+        T lamda = (a_wilk-c_wilk)/2.0;
+        T sign_lamda = (lamda > 0) - (lamda < 0);
+        T l_shift = c_wilk - (sign_lamda*b_wilk*b_wilk)/(fabs(lamda) + sqrt(lamda * lamda + b_wilk*b_wilk));
 
         R_shift = RELSHIFT ? c_wilk : l_shift;
 
@@ -699,9 +663,9 @@ struct StreamingEig {
         }  
         
         if(converged){
-          TT lamda = (d_wilk-a_wilk)/2.0;
-          TT sign_lamda = (lamda > 0) - (lamda < 0);
-          TT h_shift = RELSHIFT ? a_wilk : a_wilk - (sign_lamda*e_wilk*e_wilk)/(fabs(lamda) + sqrt(lamda * lamda + e_wilk*e_wilk));
+          T lamda = (d_wilk-a_wilk)/2.0;
+          T sign_lamda = (lamda > 0) - (lamda < 0);
+          T h_shift = RELSHIFT ? a_wilk : a_wilk - (sign_lamda*e_wilk*e_wilk)/(fabs(lamda) + sqrt(lamda * lamda + e_wilk*e_wilk));
 
 
           R_shift = h_shift;
@@ -736,7 +700,7 @@ struct StreamingEig {
 
 
       // PRINTF("Starting to send the eigen values\n");
-      fpga_tools::NTuple<TT, pipe_size> pipe_writeEigen;
+      fpga_tools::NTuple<T, pipe_size> pipe_writeEigen;
       [[intel::loop_coalesce(2)]]
       for(ac_int<kIBitSize , false> i_ll = 0; i_ll < rows; i_ll++){
         for(ac_int<kIBitSize , false> j_ll = 0; j_ll < rows; j_ll++){
@@ -746,7 +710,7 @@ struct StreamingEig {
               max = -1 * FLT_MAX;
             }
 
-            TT load_val = eArrray[j_ll];
+            T load_val = eArrray[j_ll];
             if(load_val > max && Nsorted[j_ll]){
               max = load_val;
               index = j_ll;
@@ -801,7 +765,7 @@ struct StreamingEig {
           row_iter = sycl::ext::intel::fpga_reg(row_iter);
         });
 
-        fpga_tools::NTuple<TT, pipe_size> pipe_write;
+        fpga_tools::NTuple<T, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {

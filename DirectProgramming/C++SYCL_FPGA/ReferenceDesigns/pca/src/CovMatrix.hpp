@@ -1,6 +1,9 @@
 #ifndef __STREAMING_CovMM_HPP__
 #define __STREAMING_CovMM_HPP__
 
+#include "tuple.hpp"
+#include "constexpr_math.hpp"
+#include "unrolled_loop.hpp"
 
 #ifdef __SYCL_DEVICE_ONLY__
   #define CL_CONSTANT __attribute__((opencl_constant))
@@ -14,7 +17,6 @@
 namespace fpga_linalg {
 
 template <typename T,        // The datatype for the computation
-          bool is_complex,   // True if T is ac_complex<X>
           unsigned rows,          // Number of rows in the A matrices
           unsigned columns,       // Number of columns in the A matrices
 
@@ -60,9 +62,8 @@ template <typename T,        // The datatype for the computation
 struct StreamingMM{
     void operator()() const {
     
-    using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
-    using row_tuple = fpga_tools::NTuple<TT, rows>;
-    using pipe_tuple = fpga_tools::NTuple<TT, pipe_size>;
+    using row_tuple = fpga_tools::NTuple<T, rows>;
+    using pipe_tuple = fpga_tools::NTuple<T, pipe_size>;
 
     constexpr int kColBlocks = (columns+rows-1)/rows;
     constexpr int kRowBlocks = (rows+pipe_size-1)/pipe_size;
@@ -117,7 +118,7 @@ struct StreamingMM{
 
 
         // computing the covariance matrix block wise and accumulating 
-        TT row1[rows], row2[rows], row_temp[rows];
+        T row1[rows], row2[rows], row_temp[rows];
         for(ac_int<kRowBitSize, false> i_ll = 0; i_ll < rows; i_ll++){
 
 
@@ -144,9 +145,9 @@ struct StreamingMM{
               } 
             });
 
-            TT rowSum = 0;
+            T rowSum = 0;
             fpga_tools::UnrolledLoop<rows>([&](auto t) {
-              TT row1Elem = row1[t];
+              T row1Elem = row1[t];
               rowSum += row1Elem * row2[t];
             });
 
