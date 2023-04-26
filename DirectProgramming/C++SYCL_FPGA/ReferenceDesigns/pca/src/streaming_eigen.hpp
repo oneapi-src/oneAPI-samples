@@ -43,7 +43,7 @@ namespace fpga_linalg {
   Then input and output matrices are consumed/produced from/to pipes.
 */
 template <typename T,        // The datatype for the computation
-          int MatrixSize,    // Input covariance matrices are square matrix 
+          int k_size,        // Input covariance matrices are square matrix 
           int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
@@ -72,8 +72,8 @@ struct StreamingEig {
 
     // although colums and rows are same separate identifier is 
     // used to indicate operations are related to colums or rows in QR decomposition 
-    const int columns = MatrixSize;
-    const int rows = MatrixSize;
+    const int columns = k_size;
+    const int rows = k_size;
 
     // static_assert(columns >= 4,
     //               "only matrices of size 4x4 and over are supported");
@@ -110,8 +110,8 @@ struct StreamingEig {
     using column_tuple = fpga_tools::NTuple<T, rows>;
     using row_tuple = fpga_tools::NTuple<T, columns>;
 
-    // constexpr int kMatrixSize = rows * rows;
-    // constexpr int kMatrixBitSize = fpga_tools::BitsForMaxValue<kMatrixSize + 1>()+1;
+    // constexpr int kk_size = rows * rows;
+    // constexpr int kMatrixBitSize = fpga_tools::BitsForMaxValue<kk_size + 1>()+1;
     // Fanout reduction factor for signals that fanout to rows compute cores
     constexpr int kFanoutReduction = 8;
     // Number of signal replication required to cover all the rows compute cores

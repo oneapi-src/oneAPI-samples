@@ -44,8 +44,8 @@ int main(int argc, char *argv[]) {
       kFeaturesCount * ((kSamplesCount + kFeaturesCount - 1) / kFeaturesCount) *
       kFeaturesCount;
   constexpr size_t kDAMatrixSizeHost = kFeaturesCount * kSamplesCount;
-  constexpr size_t kAMatrixSize = kFeaturesCount * kSamplesCount;
-  constexpr size_t kQQMatrixSize = kFeaturesCount * kSamplesCount;
+  constexpr size_t kAMatrixSize = kFeaturesCount * kFeaturesCount;
+  constexpr size_t kQQMatrixSize = kFeaturesCount * kFeaturesCount;
 
   int iter = kFeaturesCount * ITER_PER_EIGEN;
 
@@ -105,6 +105,8 @@ int main(int argc, char *argv[]) {
     pca.populate_A();
     pca.normalizeSamples();
     pca.calculate_covariance();
+
+    // TODO: Restriction on kFeaturesCount % kSamplesCount == 0?
 
     // copying the covariance matrix
     // kFeaturesCount x kFeaturesCount block datalayout on device

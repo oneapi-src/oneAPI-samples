@@ -33,8 +33,8 @@ class QQPipe;
   rectangular matrices.
 */
 template <
-    unsigned k_samples_count,   // Number of k_samples_count in the input matrix
-    unsigned k_features_count,  // Number of k_samples_count in the input matrix
+    unsigned k_samples_count,   // Number of samples in the input matrix
+    unsigned k_features_count,  // Number of features in the input matrix
     unsigned raw_latency,       // RAW latency for triangular loop optimization
     typename T                  // The datatype for the computation
     >
@@ -50,7 +50,7 @@ void PCAsyclImpl(
   constexpr int kAMatrixSize =
       ((k_samples_count + k_features_count - 1) / k_features_count) *
       k_features_count * k_features_count;
-  constexpr int kQQMatrixSize = k_samples_count * k_features_count;
+  constexpr int kQQMatrixSize = k_features_count * k_features_count;
   constexpr int kEigMatrixSize =
       k_features_count + 1;  // additional one for debug data
 
@@ -98,7 +98,7 @@ void PCAsyclImpl(
 
   auto qq_event =
       q.single_task<QRDLocalMemToDDRQ>([=]() [[intel::kernel_args_restrict]] {
-        MatrixReadPipeToDDR<T, k_features_count, k_samples_count,
+        MatrixReadPipeToDDR<T, k_features_count, k_features_count,
                             kNumElementsPerDDRBurst, QQMatrixPipe>(
             qq_device, matrix_count, repetitions);
       });
