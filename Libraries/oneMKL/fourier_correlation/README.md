@@ -131,4 +131,4 @@ normalized correlation score of 4. Treat the images as circularly shifted versio
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2023-1/overview.html)
