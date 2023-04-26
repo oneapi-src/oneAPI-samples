@@ -50,6 +50,8 @@ When submitting a pull request, keep the following guidelines in mind:
 
 - Check the number of files being updated. Ensure that your pull request includes only the files you expected to be changed. (If there are additional files you did not expect included in the commit, troubleshoot before submitting the PR.)
 
+- Never open a pull request to the `master` branch directly, all pull requests must be targeting the `development` branch.
+
 ## Log a Bug or Request a Feature
 
 We use [GitHub Issues](https://github.com/oneapi-src/oneAPI-samples/issues) to track sample development issues, bugs, and feature requests.
