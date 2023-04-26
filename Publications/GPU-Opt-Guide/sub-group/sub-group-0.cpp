@@ -3,11 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <iostream>
 
 int main() {
-  sycl::queue q{sycl::gpu_selector{}};
+  sycl::queue q{sycl::gpu_selector_v};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << "\n";
   // Snippet begin
@@ -17,7 +17,7 @@ int main() {
                    [=](sycl::nd_item<1> it) {
                      int groupId = it.get_group(0);
                      int globalId = it.get_global_linear_id();
-                     sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+                     auto sg = it.get_sub_group();
                      int sgSize = sg.get_local_range()[0];
                      int sgGroupId = sg.get_group_id()[0];
                      int sgId = sg.get_local_id()[0];

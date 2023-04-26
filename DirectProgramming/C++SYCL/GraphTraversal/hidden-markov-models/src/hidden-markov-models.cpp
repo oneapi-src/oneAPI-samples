@@ -24,7 +24,7 @@
 // Note: The implementation uses logarithms of the probabilities to process small numbers correctly
 // and to replace multiplication operations with addition operations.
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 #include <math.h>
@@ -47,19 +47,19 @@ constexpr int M = 20;
 constexpr int T = 20;
 // The parameter for generating the sequence.
 constexpr int seed = 0;
-// Minimal double to initialize  logarithms for Viterbi values equal to 0.
-constexpr double MIN_DOUBLE = -1.0 * std::numeric_limits<double>::max();
+// Minimal float to initialize  logarithms for Viterbi values equal to 0.
+constexpr float MIN_FLOAT = -1.0 * std::numeric_limits<float>::max();
 
-bool ViterbiCondition(double x, double y, double z, double compare);
+bool ViterbiCondition(float x, float y, float z, float compare);
 
 int main() {
     try {
     // Initializing and generating initial probabilities for the hidden states.
-        double(*pi) = new double[N];
+        float(*pi) = new float[N];
         for (int i = 0; i < N; ++i) {
             pi[i] = sycl::log10(1.0f / N);
         }
-        buffer<double, 1> pi_buf(pi, N);
+        buffer<float, 1> pi_buf(pi, N);
 
         //Device initialization.
         queue q(default_selector_v);
@@ -67,17 +67,17 @@ int main() {
             << q.get_device().get_platform().get_info<info::platform::name>() << "\n";
 
         //Buffers initialization.
-        buffer<double, 2> viterbi(range<2>(N, T));
+        buffer<float, 2> viterbi(range<2>(N, T));
         buffer<int, 2> back_pointer(range<2>(N, T));
-        buffer<double, 2> a(range<2>(N, N));
-        buffer<double, 2> b(range<2>(N, M));
+        buffer<float, 2> a(range<2>(N, N));
+        buffer<float, 2> b(range<2>(N, M));
 
         // Generating transition matrix A for the Markov process.
         q.submit([&](handler& h) {
             auto a_acc = a.get_access<access::mode::write>(h);
             h.parallel_for(range<2>(N, N), [=](id<2> index) {
                 // The sum of the probabilities in each row of the matrix A  has to be equal to 1.
-                double prob = 1.0f / N;
+                float prob = 1.0f / N;
                 // The algorithm computes logarithms of the probability values to improve small numbers processing.
                 a_acc[index] = sycl::log10(prob);
             });
@@ -88,9 +88,9 @@ int main() {
             auto b_acc = b.get_access<access::mode::write>(h);
             h.parallel_for(range<2>(N, M), [=](id<2> index) {
                 // The sum of the probabilities in each row of the matrix B has to be equal to 1.
-                double prob = ((index[0] + index[1]) % M) * 2.0f / M / (M - 1);
+                float prob = ((index[0] + index[1]) % M) * 2.0f / M / (M - 1);
                 // The algorithm computes logarithms of the probability values to improve small numbers processing.
-                b_acc[index] = (prob == 0.0f) ? MIN_DOUBLE : sycl::log10(prob);
+                b_acc[index] = (prob == 0.0f) ? MIN_FLOAT : sycl::log10(prob);
             });
         });
 
@@ -113,7 +113,7 @@ int main() {
                 int j = index[1];
                 // At starting point only the first Viterbi values are defined and these Values are substituted 
                 // with logarithms  due to the following equation: log(x*y) = log(x) + log(y).
-                v_acc[index] = (j != 0) ? MIN_DOUBLE : pi_acc[i] + b_acc[i][seq_acc[0]];
+                v_acc[index] = (j != 0) ? MIN_FLOAT : pi_acc[i] + b_acc[i][seq_acc[0]];
                 // Default values of all the back pointers are (-1) to show that they are not determined yet. 
                 b_ptr_acc[index] = -1;
             });
@@ -147,7 +147,7 @@ int main() {
         auto v_acc = viterbi.get_access<access::mode::read>();
         auto b_ptr_acc = back_pointer.get_access<access::mode::read>();
         auto vit_path_acc = vit_path.get_access<access::mode::read_write>();
-        double v_max = MIN_DOUBLE;
+        float v_max = MIN_FLOAT;
         // Constructing the Viterbi path. The last state of this path is the one with 
         // the biggest Viterbi value (the most likely state).
         for (int i = 0; i < N; ++i) {
@@ -180,8 +180,8 @@ int main() {
 }
 
 // The method checks if all three components of the sum are not equivalent to logarithm of zero 
-// (that is incorrect value and is substituted with minimal possible value of double) and that 
+// (that is incorrect value and is substituted with minimal possible value of float) and that 
 // the Viterbi value on the new step exceeds the current one.
-bool ViterbiCondition(double x, double y, double z, double compare) {
-    return (x > MIN_DOUBLE) && (y > MIN_DOUBLE) && (z > MIN_DOUBLE) && (x + y + z > compare);
+bool ViterbiCondition(float x, float y, float z, float compare) {
+    return (x > MIN_FLOAT) && (y > MIN_FLOAT) && (z > MIN_FLOAT) && (x + y + z > compare);
 }

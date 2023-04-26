@@ -1,13 +1,51 @@
-# Compiling SYCL* for FPGA
-This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGA through a simple vector addition example. If you are new to SYCL* for FPGA, start with this sample.
+# `Compiling SYCL* for FPGAs` Sample
+This FPGA tutorial introduces how to compile SYCL*-compliant code for FPGAs through a simple vector addition example. If you are new to SYCL* for FPGAs, start with this sample.
 
 | Optimized for                     | Description
-|:---                                 |:---
+|:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile options used to target FPGA
-| Time to complete                  | 15 minutes
+| What you will learn               | How and why compiling SYCL* code for FPGA differs from CPU or GPU <br> The compile options used to target FPGA devices
+| Time to complete                  | 60 minutes
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For the simulation flow, one of the following simulators must be installed and accessible through your PATH environment variable:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> 
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> 
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+
+> **Note**: SYCL USM allocations, used in `part2` and `part3` of this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
+
+## Prerequisites
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 1 sample that helps you getting started.
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+
+
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -24,269 +62,279 @@ Field-programmable gate arrays (FPGAs) are configurable integrated circuits that
 While SYCL* code can be compiled for CPU, GPU, or FPGA, compiling to FPGA is somewhat different. This tutorial explains these differences and shows how to compile a "Hello World" style vector addition kernel for FPGA, following the recommended workflow.
 
 ### Why is compilation different for FPGA?
-FPGAs differ from CPUs and GPUs in many interesting ways. However, in this tutorial's scope, there is only one difference that matters: compared to CPU or GPU, generating a device image for FPGA hardware is a computationally intensive and time-consuming process. It is usual for an FPGA compile to take several hours to complete.
+FPGAs differ from CPUs and GPUs in many interesting ways. 
 
-For this reason, only ahead-of-time (or "offline") kernel compilation mode is supported for FPGA. The long compile time for FPGA hardware makes just-in-time (or "online") compilation impractical.
+Compared to CPU or GPU, generating a device image for FPGA hardware is a computationally intensive and time-consuming process. It is usual for an FPGA compile to take several hours to complete. For this reason, only ahead-of-time (or "offline") kernel compilation mode is supported for FPGA. The long compile time for FPGA hardware makes just-in-time (or "online") compilation impractical.
 
-Long compile times are detrimental to developer productivity. The Intel® oneAPI DPC++/C++ Compiler provides several mechanisms that enable developers targeting FPGA to iterate quickly on their designs. By circumventing the time-consuming process of full FPGA compilation wherever possible, SYCL for FPGA developers can enjoy the fast compile times familiar to CPU and GPU developers.
+Long compile times are detrimental to developer productivity. The Intel® oneAPI DPC++/C++ Compiler provides several mechanisms that enable developers targeting FPGAs to iterate quickly on their designs. By circumventing the time-consuming process of full FPGA compilation wherever possible, developers can enjoy the fast compile times familiar to CPU and GPU developers.
 
+### Multiarchitecture binary vs IP component
 
-### Three types of SYCL for FPGA compilation
-The three types of FPGA compilation are summarized in the table below.
+In the FPGA multiarchitecture binary generation flow, you can generate an executable host application and accelerator for a PCIe FPGA board if you have a compatible board support package (BSP). Intel provides BSPs for the Intel® PAC with Intel Arria® 10 GX FPGA, and the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX). If you have a different board, check with your vendor to see if they supply a BSP.
 
-| Device Image Type    | Time to Compile | Description
----                    |---              |---
-| FPGA Emulator        | seconds         | The FPGA device code is compiled to the CPU. <br> This is used to verify the code's functional correctness.
-| Optimization Report  | minutes         | The FPGA device code is partially compiled for hardware. <br> The compiler generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization.
-| FPGA Hardware        | hours           | Generates the real FPGA bitstream to execute on the target FPGA platform
+In the FPGA IP component generation flow, you can generate an IP component that you can import into an Intel® Quartus® Prime project. You can generate an IP by targeting your compilation to a supported Intel® FPGA device family or part number (for example, `Agilex` or `AGFA014R24B1E1V`) instead of a named board (for example, `intel_a10gx_pac:pac_a10`). 
 
-The typical FPGA development workflow is to iterate in each of these stages, refining the code using the feedback provided by that stage. Intel® recommends relying on emulation and the optimization report whenever possible.
+The FPGA IP component generation flow does not generate any FPGA accelerated executable, only RTL (Register Transfer Level) IP component files. The host application is treated only as a 'testbench' that exercises and validates your IP component in emulation and simulation.
 
-- Compiling for FPGA emulation or generating the FPGA optimization report requires only the Intel® oneAPI DPC++/C++ Compiler (part of the Intel® oneAPI Base Toolkit).
-- An FPGA hardware compile requires the Intel® FPGA Add-On for oneAPI Base Toolkit.
+### Four compilation options
+The four types of FPGA compilation are summarized in the table below.
+
+   | Target          | Expected Time  | Output                                                                       | Description
+   |:---             |:---            |:---                                                                          |:---
+   |Emulator  | Seconds        | x86-64 binary                                                                | Compiles the FPGA device code to the CPU. Use the Intel® FPGA Emulation Platform for OpenCL™ software to verify your SYCL code’s functional correctness.
+   | Optimization Report | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package.
+   | Simulator | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
+   | FPGA Hardware | Multiple Hours | Quartus Place & Route (Multiarchitecture binary) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime. If you specified a BSP with `FPGA_DEVICE`, this will generate an FPGA image that you can run on the corresponding accelerator board.
+
+The typical FPGA development workflow is to iterate in each of these stages, refining the code using the feedback provided by that stage. You can avoid long compile times by relying on emulation and the optimization report whenever possible.
 
 #### FPGA Emulator
 
-The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes the SYCL* device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device, the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg`.
+The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes the SYCL* device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device, the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg` (although some of these features, such as `fpga_reg` may not affect how your design runs on the emulator).
 
 There are two important caveats to remember when using the FPGA emulator.
-*  **Performance is not representative.** _Never_ draw inferences about FPGA performance from the FPGA emulator. The FPGA emulator's timing behavior is uncorrelated to that of the physical FPGA hardware. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance. It may show an unrelated increase or even a decrease.
-* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code most likely exercises undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
+* **Performance is not representative.** _Never_ draw inferences about FPGA performance from the FPGA emulator. The FPGA emulator's timing behavior is uncorrelated to that of the physical FPGA hardware. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance. It may show an unrelated increase or even a decrease.
+* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code may exercises undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
 
-#### Optimization Report
-A full FPGA compilation occurs in two stages:
-1. **FPGA early image:** The SYCL device code is optimized and converted into an FPGA design specified in Verilog RTL (a low-level, native entry language for FPGAs). This intermediate compilation result is the FPGA early device image, which is *not* executable. This FPGA early image compilation process takes minutes.
-2. **FPGA hardware image:** The Verilog RTL specifying the design's circuit topology is mapped onto the FPGA's sea of primitive hardware resources by the Intel® Quartus® Prime software.  Intel® Quartus® Prime is included in the Intel® FPGA Add-On, which is required for this compilation stage. The result is an FPGA hardware binary (also referred to as a bitstream). This compilation process takes hours.
+#### Optimization Report (Early Image)
 
-Optimization reports are generated after both stages. The optimization report generated after the FPGA early device image, sometimes called the "static report," contains significant information about how the compiler has transformed your device code into an FPGA design. The report includes visualizations of structures generated on the FPGA, performance and expected performance bottleneck information, and estimated resource utilization.
+For this compilation type, your SYCL device code is optimized and converted into an FPGA design specified in Verilog RTL (a low-level, native entry language for FPGAs). This intermediate compilation result is also called the *FPGA early device image*, which is **not** executable. 
 
-The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
+The optimization report contains significant information about how the compiler has transformed your device code into an FPGA design. The report includes visualizations of structures generated on the FPGA, performance and expected performance bottleneck information, and estimated resource utilization. Optimization reports are generated for the "optimization report", "simulator" and "hardware" compilation types. 
 
-#### FPGA Hardware
-This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom device.
+The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter about how to analyze the reports generated after the FPGA early image and FPGA image.
+
+#### FPGA Simulator
+The FPGA simulator allows you to simulate the exact behavior of the synthesized kernel. Like emulation, you can run simulation on a system that does not have a target FPGA board installed. The simulator models a kernel much more accurately than the emulator, but it is much slower than the emulator.
+
+The Intel oneAPI DPC++/C++ Compiler links your design C++ testbench with an RTL-compiled version of your component that runs in an RTL simulator. You do not need to invoke any RTL simulator manually, but you can add the `-Xsghdl` flag to save the simulation waveform for later viewing.
+
+> **Note**: Running the simulation executable can take a long time if your device code is complex or if your test inputs are large. To save simulation time, use the smallest possible input.
+
+#### FPGA Hardware (Hardware Image)
+
+The generated Verilog RTL is mapped onto the FPGA hardware resources by the Intel® Quartus® Prime software. The estimated performance and resource utilization is therefore much more accurate than the estimates obtained in the optimization report compilation type. 
+
+If you compile a multiarchitecture binary, the resulting binary will include an FPGA hardware image (also referred to as a bitstream) that is executable on an FPGA accelerator card with a supported BSP. The compiler will interface your design with the BSP, and your host application will seamlessly make the system calls to launch kernels on the FPGA.
+
+If you compile an IP component, the compilation result is **not** executable. IP components are compiled in isolation and not interfaced with other components on the FPGA. The purpose of this compilation flow is to get accurate resource utilization and performance data for IP components.
+
+This compilation process takes hours, although it may be faster if you generate a re-usable IP component.
 
 ### Device Selectors
 The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
+
+It is recommended to use a preprocessor macro to choose between the emulator and FPGA selectors. This makes it easy to switch between targets using only command-line options. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the `default_selector`) are less useful than explicit selectors when targeting FPGA.
 
 ```c++
 // FPGA device selectors are defined in this utility header
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 int main() {
-  // Select either:
-  //  - the FPGA emulator device (CPU emulation of the FPGA)
-  //  - the FPGA device (a real FPGA)
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
+// choose a selector based on compiler flags.
+#if FPGA_SIMULATOR
+        auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+        auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+        auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
-
-  queue q(device_selector);
-  ...
+        sycl::queue q(selector);
+    ...
 }
 ```
-Notice that the FPGA emulator and the FPGA are different target devices. It is recommended to use a preprocessor define to choose between the emulator and FPGA selectors. This makes it easy to switch between targets using only command-line options. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the default_selector) are less useful than explicit selectors when targeting FPGA.
 
 ### Compiler Options
 This section includes a helpful list of commands and options to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
+>**Note**: In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
 
-**NOTE:** In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
+FPGA Emulator 
 
-**FPGA emulator**
+```bash
+# FPGA emulator image
+icpx -fsycl -fintelfpga -DFPGA_EMULATOR -I../../../../include vector_add.cpp -o vector_add.fpga_emu
+```
 
-`icpx -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`
+Optimization Report
 
-**Optimization report (default FPGA device)**
+```bash
+# FPGA early image (with optimization report):
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex -o vector_add_report.a
+```
+Use the`-Xstarget` flag to target a supported board, a device family, or a specific FPGA part number.
 
-`icpx -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a`
+Simulator
 
-**Optimization report (explicit FPGA device)**
+```bash
+# FPGA simulator image:
+icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex -Xsghdl -o vector_add_sim.a
+```
+Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 
-`icpx -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
+Hardware
 
-**FPGA hardware (default FPGA device)**
+```bash
+# FPGA hardware image:
+icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex -o vector_add.fpga
+```
+Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 
-`icpx -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga`
+`-DFPGA_EMULATOR`, `-DFPGA_SIMULATOR`, `-DFPGA_HARDWARE` are options that adds a preprocessor define that invokes the emulator/simulator/FPGA device selector in this sample (see code snippet above).
 
-**FPGA hardware (explicit FPGA device)**
+The [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/programming-interface/fpga-flow/fpga-compilation-flags.html) contains a chapter explains the compiler options used here.
 
-`icpx -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
+### Source Code
 
+There are 4 parts to this tutorial located in the 3 sub-folders. Together, they demonstrate how you can migrate an algorithm from vanilla C++ code to SYCL for FPGA. Note that you may also choose to use a functor with buffers, or a function with USM.
 
-The compiler options used are explained in the table.
-| Flag               | Explanation
-|:---                  |:---
-| `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
-| `-DFPGA_EMULATOR`  | Adds a preprocessor define that invokes the emulator device selector in this sample (see code snippet above).
-| `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
-| `-Xstarget`         | Optional argument to specify the FPGA target. <br> If omitted, a default FPGA board is chosen.
-| `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
+#### Part 1 C++
+Part 1 demonstrates a vector addition program in vanilla C++. Observe how the `VectorAdd` function is separated from the `main()` function, and the `vec_a`, `vec_b`, and `vec_c` vectors are allocated onto the heap.
 
-Notice that whether you target the FPGA emulator or FPGA hardware must be specified twice: through compiler options for the ahead-of-time compilation and through the runtime device selector.
+#### Part 2 SYCL* (functor and USM)
+Part 2 shows the same vector addition from part 1, but in SYCL* C++ with a 'functor' coding style using a unified shared memory (USM) interface. Compare with the source code in part 1 to see SYCL*-specific code changes. Observe how the `VectorAdd` functor is called using `q.single_task<...>(VectorAdd{...});`. This tells the DPC++ compiler to convert `VectorAdd` into RTL. Also observe how `vec_a`, `vec_b`, and `vec_c` are allocated into a shared memory space using `malloc_shared`; this tells the DPC++ compiler that `vec_a`, `vec_b`, and `vec_c` should be visible both to your kernel and your host code (or if you are creating an IP component, the testbench code).
 
-
-### Additional Documentation
-- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
-
-## Key Concepts
-* How and why compiling SYCL*-compliant code to FPGA differs from CPU or GPU
-* FPGA device image types and when to use them
-* The compile options used to target FPGA
+#### Part 3 SYCL* (lambda function and USM)
+Part 3 demonstrates vector addition in SYCL* C++ with a 'function' coding style using unified shared memory (USM). This code style will be familiar to users who are already experienced with SYCL*. Observe how the `VectorAdd` function is called using a lambda expression:
+```c++
+h.single_task<...>([=]() {
+    VectorAdd(...);
+});
+```
+#### Part 4 SYCL* (lambda function and buffer)
+Part 4 shows the vector addition in SYCL* C++ with a 'function' coding style and buffer & accessor interface. This code style will be familiar to users who are already experienced with SYCL*. Observe how `vec_a`, `vec_b`, and `vec_c` are copied into buffers before the `VectorAdd` function is called.
 
 ## Building the `fpga_compile` Tutorial
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
+### Run CMake to generate the Makefiles
 
-### Running Samples in Intel&reg; DevCloud
-If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+#### On a Linux* System
+For different parts of this tutorial, navigate to the appropriate sub-folder.
+```bash
+cd <partX_XXX>
+```
+`<partX_XXX>` can be:
+- `part1_cpp`
+- `part2_dpcpp_functor_usm`
+- `part3_dpcpp_lambda_usm`
+- `part4_dpcpp_lambda_buffers`
 
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
+Generate the `Makefile` by running `cmake`.
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  ```
+  cmake ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
+#### On a Windows* System
+For different parts of this tutorial, navigate to the appropriate sub-folder.
+```cmd
+cd <partX_XXX>
+```
+`<partX_XXX>` can be:
+- `part1_cpp`
+- `part2_dpcpp_functor_usm`
+- `part3_dpcpp_lambda_usm`
+- `part4_dpcpp_lambda_buffers`
 
-### Using Visual Studio Code*  (Optional)
+Generate the `Makefile` by running `cmake`.
+  ```
+  mkdir build
+  cd build
+  ```
+  To compile for the default target (the Agilex® device family), run `cmake` using the command:
+  ```
+  cmake -G "NMake Makefiles" ..
+  ```
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
+### Build using `make`/`nmake`
+After using CMake to generate build artifacts, you can then build with specific targets. This project can build 4 targets.
 
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+| Compilation Type    | Command (Linux)    | Command (Windows)
+|:---                 |:---                |:---
+| FPGA Emulator       | `make fpga_emu`    | `nmake fpga_emu`
+| Optimization Report | `make report`      | `nmake report`
+| FPGA Simulator      | `make fpga_sim`    | `nmake fpga_sim`
+| FPGA Hardware       | `make fpga`        | `nmake fpga`
 
-To learn more about the extensions, see the
-[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+The `fpga_emu`, `fpga_sim` and `fpga` targets produce binaries that you can run. The executables will be called `vector_add.fpga_emu`, `vector_add.fpga_sim`, and `vector_add.fpga`. The `fpga` target will produce an executable binary if you create a multiarchitecture binary kernel.
 
-
-### On a Linux* System
-
-1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
-   * Generate the [optimization report](#optimization-report):
-     ```
-     make report
-     ```
-   * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
-     ```
-     make fpga
-     ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fpga_compile.fpga.tar.gz" download>here</a>.
-
-### On a Windows* System
-
-1. Generate the `Makefile` by running `cmake`.
-     ```
-   mkdir build
-   cd build
-   ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   ```
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for emulation (compiles quickly, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
-
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
-> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
-### Troubleshooting
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-
-### In Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
-
+For part 1 of this tutorial, only the `fpga_emu` target is available as this regular C++ code only  target a CPU.
 
 ## Examining the Reports
-Locate `report.html` in the `fpga_compile_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
-
-Browse the reports that were generated for the `VectorAdd` kernel's FPGA early image. You may also wish to examine the reports generated by the full FPGA hardware compile and compare their contents.
+In *part2*, *part3* and *part4*, after running the `report` target, the optimization report can be viewed using the `fpga_report` application:
+```
+fpga_report vector_add.report.prj/reports/vector_add_report.zip
+```
+Browse the reports that were generated for the `VectorAdd` kernel's FPGA early image. You may also wish to examine the reports generated by the simulation compile and full FPGA hardware compile and compare their contents.
 
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./fpga_compile.fpga_emu     (Linux)
-     fpga_compile.fpga_emu.exe   (Windows)
+     ./vector_add.fpga_emu     (Linux)
+     vector_add.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device (the kernel executes in a simulator):
+   * On Linux
+      ```
+      CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector_add.fpga_sim
+      ```
+   * On Windows
+      ```
+      set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+      vector_add.fpga_sim.exe
+      set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+      ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
-     ./fpga_compile.fpga         (Linux)
-     fpga_compile.fpga.exe       (Windows)
+     ./vector_add.fpga         (Linux)
+     vector_add.fpga.exe       (Windows)
      ```
 
 ### Example of Output
 ```
-PASSED: results are correct
+using FPGA Simulator.
+add two vectors of size 256
+PASSED
 ```
 
 ## License

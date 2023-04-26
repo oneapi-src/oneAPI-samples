@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -237,9 +237,7 @@ int ComputeTreeReduction1(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor accum_acc(accum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
 
       h.parallel_for(sycl::nd_range<1>(num_work_items, work_group_size),
                      [=](sycl::nd_item<1> item) {
@@ -332,9 +330,7 @@ int ComputeTreeReduction2(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor accum_acc(accum1_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
 
       h.parallel_for(sycl::nd_range<1>(num_work_items1, work_group_size),
                      [=](sycl::nd_item<1> item) {
@@ -361,9 +357,7 @@ int ComputeTreeReduction2(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(accum1_buf, h, sycl::read_only);
       sycl::accessor accum_acc(accum2_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
 
       h.parallel_for(sycl::nd_range<1>(num_work_items2, work_group_size),
                      [=](sycl::nd_item<1> item) {
@@ -560,9 +554,7 @@ int ComputeParallel5(sycl::queue &q, std::vector<int> &data,
     // ComputeParallel5 main begin
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
-      sycl::accessor sum_acc(sum_buf, h, sycl::read_write);
-      auto sumr =
-          sycl::ext::oneapi::reduction(sum_acc, sycl::ext::oneapi::plus<>());
+      auto sumr = sycl::reduction(sum_buf, h, sycl::plus<>());
       h.parallel_for(sycl::nd_range<1>{data_size, 256}, sumr,
                      [=](sycl::nd_item<1> item, auto &sumr_arg) {
                        int glob_id = item.get_global_id(0);
@@ -634,9 +626,7 @@ int ComputeParallel6(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor accum_acc(accum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t glob_id = item.get_global_id(0);
@@ -728,9 +718,7 @@ int ComputeParallel7(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor accum_acc(accum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t glob_id = item.get_global_id(0);
@@ -821,9 +809,7 @@ int ComputeParallel8(sycl::queue &q, std::vector<int> &data,
     // ComputeParallel8 main begin
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
-      sycl::accessor sum_acc(sum_buf, h, sycl::read_write, sycl::no_init);
-      auto sumr =
-          sycl::ext::oneapi::reduction(sum_acc, sycl::ext::oneapi::plus<>());
+      auto sumr = sycl::reduction(sum_buf, h, sycl::plus<>());
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size}, sumr,
                      [=](sycl::nd_item<1> item, auto &sumr_arg) {
                        size_t glob_id = item.get_global_id(0);
@@ -901,15 +887,13 @@ int ComputeParallel9(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       const sycl::accessor buf_acc(buf, h);
       sycl::accessor accum_acc(accum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<sycl::vec<int, 8>, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<sycl::vec<int, 8>, 1l> scratch(work_group_size, h);
       h.parallel_for(
           sycl::nd_range<1>{num_work_items, work_group_size},
           [=](sycl::nd_item<1> item) [[intel::reqd_sub_group_size(16)]] {
             size_t group_id = item.get_group(0);
             size_t loc_id = item.get_local_id(0);
-            sycl::ext::oneapi::sub_group sg = item.get_sub_group();
+            sycl::sub_group sg = item.get_sub_group();
             sycl::vec<int, 8> sum{0, 0, 0, 0, 0, 0, 0, 0};
             using global_ptr =
                 sycl::multi_ptr<int, sycl::access::address_space::global_space>;
@@ -953,7 +937,7 @@ int ComputeParallel9(sycl::queue &q, std::vector<int> &data,
 
 int main(void) {
 
-  sycl::queue q{sycl::default_selector{}, exception_handler};
+  sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
   std::vector<int> data(N, 1);

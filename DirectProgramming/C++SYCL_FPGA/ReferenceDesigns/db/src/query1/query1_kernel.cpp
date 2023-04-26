@@ -9,7 +9,11 @@
 using namespace std::chrono;
 
 // how many elements to compute per cycle
+#if defined(FPGA_SIMULATOR)
+constexpr int kElementsPerCycle = 2;
+#else
 constexpr int kElementsPerCycle = 12;
+#endif
 
 // the kernel name
 class Query1;

@@ -10,7 +10,7 @@ run: sparse_cg.exe
 DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
 sparse_cg.exe: sparse_cg.cpp
-	dpcpp sparse_cg.cpp /Fesparse_cg.exe $(DPCPP_OPTS)
+	icx-cl -fsycl sparse_cg.cpp /Fesparse_cg.exe $(DPCPP_OPTS)
 
 clean:
 	del /q sparse_cg.exe sparse_cg.exp sparse_cg.lib

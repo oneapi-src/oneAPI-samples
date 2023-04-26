@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
   K = std::stoi(argv[2]);
 
   // Initialize SYCL queue
-  sycl::queue Q(sycl::default_selector{});
+  sycl::queue Q(sycl::default_selector_v);
   auto sycl_device = Q.get_device();
   auto sycl_context = Q.get_context();
   std::cout << "Running on: "

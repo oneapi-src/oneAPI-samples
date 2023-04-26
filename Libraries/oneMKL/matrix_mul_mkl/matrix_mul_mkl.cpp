@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © 2020-2023 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -15,8 +15,8 @@
 #include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
-double rand_uniform();
-bool verify_result(int m, int n, int k, int ldc, double *C, double *C_reference);
+float rand_uniform();
+bool verify_result(int m, int n, int k, int ldc, const float *C, const float *C_reference);
 
 int main()
 {
@@ -29,7 +29,7 @@ int main()
         // optional matrix transposition.
         //
         // For this simple matrix multiplication, no transposition is needed.
-        // 
+        //
         // By choosing alpha = 1, beta = 0, GEMM will calculate C = A * B.
         //
         // In this example, matrices are stored in row-major layout.
@@ -38,7 +38,7 @@ int main()
         auto transB = oneapi::mkl::transpose::nontrans;
 
         // Matrix data sizes.
-        // 
+        //
         // A is m x k
         // B is k x n  --> product C is m x n
         int m = 600;
@@ -52,21 +52,21 @@ int main()
         int ldc = n;
 
         // Scaling factors.
-        double alpha = 1.0;
-        double beta = 0.0;
+        float alpha = 1.0f;
+        float beta = 0.0f;
 
         // Create a queue on the default device.
-        sycl::queue device_queue{sycl::default_selector{}};
+        sycl::queue device_queue{sycl::default_selector_v};
 
         std::cout << "Device: "
                   << device_queue.get_device().get_info<sycl::info::device::name>()
                   << std::endl;
 
         // Allocate shared memory for matrices.
-        auto A = sycl::malloc_shared<double>(m * k, device_queue);
-        auto B = sycl::malloc_shared<double>(k * n, device_queue);
-        auto C = sycl::malloc_shared<double>(m * n, device_queue);
-        auto C_reference = (double *) calloc(m * n, sizeof(double));
+        auto A = sycl::malloc_shared<float>(m * k, device_queue);
+        auto B = sycl::malloc_shared<float>(k * n, device_queue);
+        auto C = sycl::malloc_shared<float>(m * n, device_queue);
+        auto C_reference = (float *) calloc(m * n, sizeof(float));
 
         if (!A || !B || !C || !C_reference) {
             std::cerr << "Could not allocate memory for matrices." << std::endl;
@@ -98,7 +98,7 @@ int main()
             for (int h = 0; h < k; h++)
                 for (int j = 0; j < n; j++)
                     C_reference[i * ldc + j] += A[i * lda + h] * B[h * ldb + j];
-        
+
         // Wait for oneMKL computation to complete.
         device_queue.wait_and_throw();
 
@@ -120,14 +120,15 @@ int main()
     }
 }
 
-double rand_uniform()
+float rand_uniform()
 {
-    return double(rand()) / RAND_MAX;
+    return float(rand()) / float(RAND_MAX);
 }
 
-bool verify_result(int m, int n, int k, int ldc, double *C, double *C_reference)
+bool verify_result(int m, int n, int k, int ldc,
+                   const float *C, const float *C_reference)
 {
-    double tolerance = 1e-6;
+    float tolerance = 1e-3;
     bool ok = true;
 
     // Compare host side results with the result buffer from device side: print

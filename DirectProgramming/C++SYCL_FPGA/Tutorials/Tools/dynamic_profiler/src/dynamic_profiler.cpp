@@ -33,9 +33,7 @@ class ProducerAfterKernel;
 class ConsumerAfterKernel;
 
 // kSize = # of floats to process on each kernel execution.
-#if defined(FPGA_EMULATOR)
-constexpr int kSize = 4096;
-#elif defined(FPGA_SIMULATOR)
+#if defined(FPGA_EMULATOR) or defined(FPGA_SIMULATOR)
 constexpr int kSize = 64;
 #else
 constexpr int kSize = 262144;
@@ -43,11 +41,9 @@ constexpr int kSize = 262144;
 
 // Number of iterations performed in the consumer kernels
 // This controls the amount of work done by the Consumer.
-#if defined(FPGA_SIMULATOR)
-constexpr int kComplexity = 2000;
-#else
-constexpr int kComplexity = 32;
-#endif
+// After the optimization, the Producer and Consumer split the work.
+constexpr int kComplexity1 = 1900;
+constexpr int kComplexity2 = 2000;
 
 // Perform two stages of processing on the input data.
 // The output of ConsumerWork1 needs to go to the input
@@ -56,7 +52,7 @@ constexpr int kComplexity = 32;
 // can be replaced with more useful operations.
 float ConsumerWork1(float f) {
   float output = f;
-  for (int j = 0; j < kComplexity; j++) {
+  for (int j = 0; j < kComplexity1; j++) {
     output = 20 * f + j - output;
   }
   return output;
@@ -64,7 +60,7 @@ float ConsumerWork1(float f) {
 
 float ConsumerWork2(float f) {
   auto output = f;
-  for (int j = 0; j < kComplexity; j++) {
+  for (int j = 0; j < kComplexity2; j++) {
     output = output + f * j;
   }
   return output;
@@ -188,19 +184,27 @@ bool ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf) {
 
 int main() {
 // Create queue, get platform and device
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
                "flow. Please compile to FPGA hardware or simulator flow "
                "to collect dynamic profiling data. \n\n";
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector device_selector;
-#else
-  ext::intel::fpga_selector device_selector;
 #endif
 
+
   try {
-    queue q(device_selector, fpga_tools::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     std::vector<float> producer_input(kSize, -1);
     std::vector<float> consumer_output_before(kSize, -1);

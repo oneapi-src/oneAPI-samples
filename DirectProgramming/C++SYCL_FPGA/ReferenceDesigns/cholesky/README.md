@@ -44,17 +44,19 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware           |Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Hardware           | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ### Performance
 
@@ -81,15 +83,12 @@ The following list shows the key optimization techniques included in the referen
 2. Using two copies of the compute matrix to read a full row and a full column per cycle.
 3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This approach enables the ability to generate a design that is pipelined efficiently.
 4. Fully vectorizing the dot products using loop unrolling.
-5. Using the `-Xsfp-relaxed` compiler option to reorder floating point operations and allowing the inference of a specialized dot-product DSP. This option further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
-7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+5. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
+6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ### Matrix Dimensions and FPGA Resources
 
 In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the _n_ elements in the row. The loop is fully unrolled to maximize throughput, so *n* real multiplication operations are performed in parallel on the FPGA and followed by sequential additions to compute the dot product result.
-
-The sample uses the `-fp-relaxed` compiler option, which permits the compiler to reorder floating point additions (for example, to assume that floating point addition is commutative). The compiler reorders the additions so that the dot product arithmetic can be optimally implemented using the specialized floating point Digital Signal Processing (DSP) hardware on the FPGA.
 
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
@@ -99,7 +98,6 @@ With this optimization, our FPGA implementation requires _n_ DSPs to compute the
 |:---                         |:---
 |`-Xshardware`                | Target FPGA hardware (as opposed to FPGA emulator)
 |`-Xsclock=<target fmax>MHz`  | The FPGA backend attempts to achieve <target fmax> MHz
-|`-Xsfp-relaxed`              | Allows the FPGA backend to re-order floating point arithmetic operations (for example, permit assuming $(a + b + c) == (c + a + b)$ )
 |`-Xsparallel=2`              | Use 2 cores when compiling the bitstream through Quartus
 |`-Xsseed`                    | Specifies the Quartus compile seed, to potentially yield slightly higher fmax
 
@@ -145,60 +143,83 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX** FPGA, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following command instead:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
       ```
       make fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       make report
       ```
       The report resides at `cholesky_report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
        make fpga
        ```
 
-   (Optional) The hardware compile may take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky.fpga.tar.gz).
-
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for the Intel® PAC with Intel Arria® 10 GX FPGA, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   For the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), enter the following command instead:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
    1. Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       nmake fpga_emu
       ```
-   2. Generate the HTML performance report.
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate the HTML performance report.
       ```
       nmake report
       ```
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
       ```
@@ -224,7 +245,11 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
    ./cholesky.fpga_emu
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./cholesky.fpga_sim
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./cholesky.fpga
    ```
@@ -235,7 +260,13 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
    ```
    cholesky.fpga_emu.exe
    ```
-2. Run the sample on the FPGA device.
+2. Run the sample on the FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   cholesky.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    cholesky.fpga.exe
    ```

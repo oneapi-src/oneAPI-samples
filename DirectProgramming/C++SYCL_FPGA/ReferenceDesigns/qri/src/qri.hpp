@@ -68,8 +68,15 @@ void QRIImpl(
 
 
   // Create buffers and allocate space for them.
+#if defined (IS_BSP)
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *i_device = sycl::malloc_device<TT>(kInverseMatrixSize * matrix_count, q);
+#else
+  // malloc_device are not supported when targetting an FPGA part/family
+  TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
+  TT *i_device = sycl::malloc_shared<TT>(kInverseMatrixSize * matrix_count, q);
+#endif  
+
 
   q.memcpy(a_device, a_matrix.data(),
                              kAMatrixSize * matrix_count * sizeof(TT)).wait();

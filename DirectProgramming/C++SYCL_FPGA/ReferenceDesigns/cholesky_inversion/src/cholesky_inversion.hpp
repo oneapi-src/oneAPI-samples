@@ -62,8 +62,14 @@ void CholeskyInversionImpl(
       sycl::ext::intel::pipe<IPipe, TT, kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
+#if defined (IS_BSP)
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *i_device = sycl::malloc_device<TT>(kIMatrixSize * matrix_count, q);
+#else
+  // malloc_device are not supported when targetting an FPGA part/family
+  TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
+  TT *i_device = sycl::malloc_shared<TT>(kIMatrixSize * matrix_count, q);
+#endif  
 
   if ((a_device == nullptr) || (i_device == nullptr)) {
     std::cerr << "Error when allocating FPGA DDR" << std::endl;

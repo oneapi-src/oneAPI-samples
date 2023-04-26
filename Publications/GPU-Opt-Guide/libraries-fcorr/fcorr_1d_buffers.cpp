@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+
+// Snippet begin
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <mkl.h>
 #include <oneapi/mkl/dfti.hpp>
@@ -18,7 +20,7 @@ int main(int argc, char **argv) {
     N = 32;
 
   // Initialize SYCL queue
-  sycl::queue Q(sycl::default_selector{});
+  sycl::queue Q(sycl::default_selector_v);
   std::cout << "Running on: "
             << Q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
@@ -108,3 +110,4 @@ int main(int argc, char **argv) {
                "normalized correlation score of "
             << max_corr / N << "." << std::endl;
 }
+// Snippet end

@@ -32,16 +32,20 @@ int main() {
 
 #if defined(FPGA_EMULATOR)
   size_t count = 1 << 12;
+#elif defined(FPGA_SIMULATOR)
+  size_t count = 1 << 5;
 #else
   size_t count = 1 << 24;
 #endif
 
   try {
     // device selector
-#if defined(FPGA_EMULATOR)
-    ext::intel::fpga_emulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // queue properties to enable SYCL profiling of kernels
@@ -49,6 +53,12 @@ int main() {
 
     // create the device queue
     queue q(selector, fpga_tools::exception_handler, prop_list);
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     // run the loopback example system
     // see 'LoopbackTest.hpp'

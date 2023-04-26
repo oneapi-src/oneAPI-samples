@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+
+// Snippet begin
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <oneapi/dpl/random>
 #include <oneapi/mkl/rng.hpp>
@@ -15,7 +17,7 @@ int main(int argc, char **argv) {
 
   // Generate sequences of random numbers between [0.0, 1.0] using oneDPL and
   // oneMKL
-  sycl::queue Q(sycl::gpu_selector{});
+  sycl::queue Q(sycl::gpu_selector_v);
   std::cout << "Running on: "
             << Q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
@@ -71,3 +73,4 @@ int main(int argc, char **argv) {
   sycl::free(test1, Q.get_context());
   sycl::free(test2, Q.get_context());
 }
+// Snippet end

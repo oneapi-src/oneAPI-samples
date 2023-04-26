@@ -42,6 +42,11 @@ using namespace sycl;
 bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
               std::string& args, bool test, bool print, double& kernel_latency,
               double& total_latency);
+#elif (QUERY == 9)
+#include "query9/query9_kernel.hpp"
+bool DoQuery9(queue& q, Database& dbinfo, std::string& db_root_dir,
+              std::string& args, bool test, bool print, double& kernel_latency,
+              double& total_latency);
 #elif (QUERY == 11)
 #include "query11/query11_kernel.hpp"
 bool DoQuery11(queue& q, Database& dbinfo, std::string& db_root_dir,
@@ -119,10 +124,12 @@ int main(int argc, char* argv[]) {
   std::string args = "";
   unsigned int query = QUERY;
   bool test_query = false;
-#ifndef FPGA_EMULATOR
-  unsigned int runs = 5;
-#else
+#if defined(FPGA_EMULATOR)
   unsigned int runs = 1;
+#elif defined(FPGA_SIMULATOR)
+  unsigned int runs = 1;
+#else
+  unsigned int runs = 5;
 #endif
   bool print_result = false;
   bool need_help = false;
@@ -152,7 +159,8 @@ int main(int argc, char* argv[]) {
         // a 'warmup' iteration
         runs = std::max(2, atoi(str_after_equals.c_str()) + 1);
 #else
-        // for emulation, allow a single iteration and don't add a 'warmup' run
+        // for emulation and simulation, allow a single iteration and 
+        // don't add a 'warmup' run
         runs = std::max(1, atoi(str_after_equals.c_str()));
 #endif
       } else {
@@ -168,9 +176,9 @@ int main(int argc, char* argv[]) {
   }
 
   // make sure the query is supported
-  if (!(query == 1 || query == 11 || query == 12)) {
+  if (!(query == 1 || query == 9 || query == 11 || query == 12)) {
     std::cerr << "ERROR: unsupported query (" << query << "). "
-              << "Only queries 1, 11 and 12 are supported\n";
+              << "Only queries 1, 9, 11 and 12 are supported\n";
     return 1;
   }
 
@@ -186,15 +194,22 @@ int main(int argc, char* argv[]) {
     // queue properties to enable profiling
     auto props = property_list{property::queue::enable_profiling()};
 
-    // the device selector
-#ifdef FPGA_EMULATOR
-    ext::intel::fpga_emulator_selector selector;
-#else
-    ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // create the device queue
     queue q(selector, fpga_tools::exception_handler, props);
+
+    device device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<info::device::name>().c_str() 
+              << std::endl;
 
     // parse the database files located in the 'db_root_dir' directory
     bool success = dbinfo.Parse(db_root_dir);
@@ -225,6 +240,13 @@ int main(int argc, char* argv[]) {
                            test_query, print_result,
                            kernel_latency[run], total_latency[run]);
 #endif
+      } else if (query == 9) {
+        // query9
+#if (QUERY == 9)
+        success = DoQuery9(q, dbinfo, db_root_dir, args,
+                           test_query, print_result,
+                           kernel_latency[run], total_latency[run]);
+#endif
       } else if (query == 11) {
         // query11
 #if (QUERY == 11)
@@ -247,7 +269,7 @@ int main(int argc, char* argv[]) {
 
     if (success) {
       // don't analyze the runtime in emulation
-#ifndef FPGA_EMULATOR
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
       // compute the average total latency across all iterations,
       // excluding the first 'warmup' iteration
       double total_latency_avg =
@@ -280,6 +302,8 @@ int main(int argc, char* argv[]) {
                    "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
+      std::cout << "If you are targeting the FPGA simulator, compile with "
+                   "-DFPGA_SIMULATOR.\n";
     }
     std::terminate();
   }
@@ -344,6 +368,51 @@ bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
     if (print) {
       dbinfo.PrintQ1(sum_qty, sum_base_price, sum_disc_price, sum_charge,
                      avg_qty, avg_price, avg_discount, count);
+    }
+  }
+
+  return success;
+}
+#endif
+
+#if (QUERY == 9)
+bool DoQuery9(queue& q, Database& dbinfo, std::string& db_root_dir,
+              std::string& args, bool test, bool print, double& kernel_latency,
+              double& total_latency) {
+  // the default colour regex based on the TPCH documents
+  std::string colour = "GREEN";
+
+  // parse the query arguments
+  if (!test && !args.empty()) {
+    std::stringstream ss(args);
+    std::getline(ss, colour, ',');
+  } else {
+    if (!args.empty()) {
+      std::cout << "Testing query 9, therefore ignoring the '--args' flag\n";
+    }
+  }
+
+  // convert the colour regex to uppercase characters (convention)
+  transform(colour.begin(), colour.end(), colour.begin(), ::toupper);
+
+  std::cout << "Running Q9 with colour regex: " << colour << std::endl;
+
+  // the output of the query
+  std::array<DBDecimal, 25 * 2020> sum_profit;
+
+  // perform the query
+  bool success = SubmitQuery9(q, dbinfo, colour, sum_profit, kernel_latency,
+                              total_latency);
+
+  if (success) {
+    // validate the results of the query, if requested
+    if (test) {
+      success = dbinfo.ValidateQ9(db_root_dir, sum_profit);
+    }
+
+    // print the results of the query, if requested
+    if (print) {
+      dbinfo.PrintQ9(sum_profit);
     }
   }
 

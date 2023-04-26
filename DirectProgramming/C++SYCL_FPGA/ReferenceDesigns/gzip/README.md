@@ -39,29 +39,31 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
 The GZIP DEFLATE algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman, and CRC).
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA). Two engines are created when compiling for Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX), which is a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target an Intel® Arria® 10 FPGA. Two engines are created when compiling for Intel® Stratix® 10 or Agilex® FPGAs, which are a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 
 - The High Bandwidth variant maximizes system throughput without regard for latency. It transfers input/output SYCL Buffers to FPGA-attached DDR. The kernel then operates on these buffers.
 - The Low-Latency variant takes advantage of Universal Shared Memory (USM) to avoid these copy operations, allowing the GZIP engine to access input/output buffers in host-memory directly. This reduces latency, but throughput is also reduced. "Latency" in this context is defined as the duration of time between when the input buffer is available in host memory to when the output buffer (i.e., the compressed result) is available in host memory.
-The Low-Latency variant is only supported on Intel Stratix® 10 SX.
+The Low-Latency variant is only supported on USM capable BSPs, or when targeting an FPGA family/part number.
 
 | Kernel          | Description
 |:---             |:---
@@ -99,14 +101,14 @@ To optimize performance, GZIP leverages techniques discussed in the following FP
 | `-Xshardware`             | Targets FPGA hardware (instead of FPGA emulator).
 | `-Xsparallel=2`           | Uses two cores when compiling the bitstream through Intel® Quartus®.
 | `-Xsseed=<seed_num>`      | Uses a particular seed while running Intel® Quartus®, selected to yield the best Fmax for this design.
-| `-Xsnum-reorder=6`        | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory.
+| `-Xsnum-reorder=6`        | On FPGA boards that have a large memory bandwidth, specify a wider data path for read data from global memory.
 | `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 
 Additionaly, the cmake build system can be configured using the following parameter:
 
 | cmake option              | Description
 |:---                       |:---
-| `-DNUM_ENGINES=<1\|2>`    | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX.
+| `-DNUM_ENGINES=<1\|2>`    | Specifies that the number of GZIP engine that should be compiled.
 
 ### Performance
 
@@ -114,9 +116,9 @@ Performance results are based on testing as of October 27, 2020.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
-| Device                                          | Throughput
-|:---                                             |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA        | 1 engine @ 3.4 GB/s
+| Device                                                                              | Throughput
+|:---                                                                                 |:---
+| Intel® PAC with Intel® Arria® 10 GX FPGA                                            | 1 engine @ 3.4 GB/s
 | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 4.5 GB/s each = 9.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
 
 ## Build the `GZIP` Design
@@ -140,20 +142,28 @@ Performance results are based on testing as of October 27, 2020.
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   For the **low latency** version of the design, add `-DLOW_LATENCY=1`.
-   ```
-   cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm
-   ```
+
+   For the **low latency** version of the design, add `-DLOW_LATENCY=1` to your `cmake` command.
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -175,27 +185,30 @@ Performance results are based on testing as of October 27, 2020.
        ```
        make fpga
        ```
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz).
 
 ### On Windows*
 
-> **Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
-   ```
-   For the **low latency** version of the design, add `-DLOW_LATENCY=1`.
-   ```
-   cmake -G "Nmake Makefiles" .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm
-   ```
+
+   For the **low latency** version of the design, add `-DLOW_LATENCY=1` to your `cmake` command.
+
+  > **Note**: You can change the default target by using the command:
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+  >  ``` 
+  >
+  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+  >  ```
+  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
+  >  ``` 
+  >
+  > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -226,8 +239,8 @@ Performance results are based on testing as of October 27, 2020.
 
 | Argument             | Description
 |:---                  |:---
-| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant.
-| `-o=<output_file>`   | Specifies the name of the output file. The default name of the output file is `<input_file>.gz`. <br> When targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
+| `<input_file>`       | Specifies the file to be compressed. <br> Use an 120+ MB file to achieve peak performance. <br> Use an 80 KB file for Low Latency variant. <br> Use a smaller file such as an 100 B file if the simulator flow is taking too long. 
+| `-o=<output_file>`   | Specifies the name of the output file. The default name of the output file is `<input_file>.gz`. <br> When using two engines, the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
 
 ### On Linux
 
@@ -238,10 +251,13 @@ Performance results are based on testing as of October 27, 2020.
     
  2. Run the sample on the FPGA simulator.
     ```
-    ./gzip.fpga_sim <input_file> -o=<output_file>
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim <input_file> -o=<output_file>
     ```
-
- 3. Run the sample on the FPGA device.
+    For the smaller file option.
+    ```
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./gzip.fpga_sim ../data/100b.txt -o=<output_file>
+    ```
+ 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    aocl initialize acl0 pac_s10_usm
    ./gzip.fpga <input_file> -o=<output_file>
@@ -254,9 +270,17 @@ Performance results are based on testing as of October 27, 2020.
     ```
  2. Run the sample on the FPGA simulator.
     ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
     gzip.fpga_sim.exe <input_file> -o=<output_file>
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
- 3. Run the sample on the FPGA device.
+    For the smaller file option.
+    ```
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    gzip.fpga_sim.exe ../data/100b.txt -o=<output_file>
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
+ 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     aocl initialize acl0 pac_s10_usm
     gzip.fpga.exe <input_file> -o=<output_file>

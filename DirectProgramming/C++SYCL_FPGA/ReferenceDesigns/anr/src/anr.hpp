@@ -347,15 +347,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows,
   // submit the vertical kernel using a column stencil
   auto vertical_kernel = q.single_task<VerticalKernelID>([=] {
     // copy host side intensity sigma LUT to the device
-    // For testing the kernel system as an IP and checking the area and Fmax,
-    // we allow the user to turn off connections to device memory. In this case
-    // (the DISABLE_DEVICE_MEM macro IS defined), the results will be incorrect
-    // since there is no way to get the data to/from the device.
-#if defined(IP_MODE)
-    IntensitySigmaLUT sig_i_lut;
-#else
     IntensitySigmaLUT sig_i_lut(sig_i_lut_data_ptr);
-#endif
 
     // build the constexpr exp() and inverse LUT ROMs
     constexpr ExpLUT exp_lut;

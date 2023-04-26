@@ -212,24 +212,25 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    // SYCL boilerplate
-#if defined(FPGA_EMULATOR)
-    sycl::ext::intel::fpga_emulator_selector device_selector;
-#elif defined(FPGA_SIMULATOR)
-    sycl::ext::intel::fpga_simulator_selector device_selector;
-#else
-    sycl::ext::intel::fpga_selector device_selector;
+
+#if FPGA_SIMULATOR
+    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // Enable the queue profiling to time the execution
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
-    sycl::queue q = sycl::queue(device_selector,
+    sycl::queue q = sycl::queue(selector,
                                 fpga_tools::exception_handler,
                                 queue_properties);
 
     sycl::device device = q.get_device();
-    std::cout << "Device name: "
+
+    std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 

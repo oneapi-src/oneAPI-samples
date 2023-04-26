@@ -24,7 +24,13 @@ event Produce(queue& q, ValueT *in_ptr, IndexT count, IndexT in_block_count,
       // Creating a device_ptr tells the compiler that this pointer is in
       // device memory, not host memory, and avoids creating extra connections
       // to host memory
+      // This is only done in the case where we target a BSP as device 
+      // pointers are not supported when targeting an FPGA family/part
+#if defined(IS_BSP)
       device_ptr<ValueT> in(in_ptr);
+#else
+      ValueT* in(in_ptr);
+#endif
 
       for (IndexT i = 0; i < iterations; i++) {
         // read 'k_width' elements from device memory

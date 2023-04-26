@@ -40,17 +40,21 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                | Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA) <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+
+> :warning: This sample is benchmarking an FPGA board, therefore it should really be used when targeting an FPGA board/BSP.
 
 ## Key Implementation Details
 
@@ -118,21 +122,26 @@ Performance results are based on testing as of Jan 31, 2022.
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
 
    ```
    mkdir build
    cd build
    cmake ..
    ```
-   For **Intel® PAC with Intel Arria® 10 GX FPGA**, enter the following:
-   ```
-   cmake -DFPGA_DEVICE=intel_a10gx_pac:pac_a10 ..
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system, and enter a command similar to the following example:
-   ```
-   cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> ..
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -150,27 +159,28 @@ Performance results are based on testing as of Jan 31, 2022.
       make fpga
       ```
 
-   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/board_test.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/board_test.fpga.tar.gz).
-
 ### On Windows*
 
->**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
 1. Change to the sample directory.
-2. Configure the build system for **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, which is the default.
+2. Configure the build system for the Agilex® device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-   To compile for the **Intel® PAC with Intel Arria® 10 GX FPGA**, enter the following:
-   ```
-   cmake -G "NMake Makefiles" -DFPGA_DEVICE=intel_a10gx_pac:pac_a10 ..
-   ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system, and enter a command similar to the following example:
-   ```
-   cmake -G "NMake Makefiles" -DFPGA_DEVICE=<board-support-package>:<board-variant> ..
-   ```
+
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 3. Compile the design. (The provided targets match the recommended development flow.)
 
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -229,7 +239,7 @@ To view test details and usage information using the binary, use the `-help` opt
     ```
     ./board_test.fpga_emu
     ```
- 2. Run the sample on the FPGA device.
+ 2. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     ./board_test.fpga
     ```
@@ -246,6 +256,14 @@ To view test details and usage information using the binary, use the `-help` opt
     By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
     ```
     board_test.exe -test=<test_number>
+    ```
+ 2. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+    ```
+    ./board_test.fpga.exe
+    ```
+    By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
+    ```
+    ./board_test.fpga.exe -test=<test_number>
     ```
 
 ## Example Output

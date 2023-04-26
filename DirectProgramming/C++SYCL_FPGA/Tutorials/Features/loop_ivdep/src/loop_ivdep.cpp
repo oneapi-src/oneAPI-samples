@@ -28,18 +28,24 @@ template <size_t safe_len> class KernelCompute;
 template <size_t safe_len>
 void TransposeAndFold(const std::array<float, kMatrixSize> &m_input,
                       std::array<float, kMatrixSize> &m_output) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
+#if FPGA_SIMULATOR
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+  auto selector = sycl::ext::intel::fpga_selector_v;
+#else  // #if FPGA_EMULATOR
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
   double kernel_time = 0;
   try {
   queue q(selector, fpga_tools::exception_handler,
           property::queue::enable_profiling{});
+
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
     buffer buffer_input(m_input);
     buffer buffer_output(m_output);

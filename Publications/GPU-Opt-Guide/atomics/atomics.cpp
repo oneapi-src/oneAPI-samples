@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -134,10 +134,10 @@ int reductionInt(sycl::queue &q, std::vector<int> &data,
 
       h.parallel_for(data_size, [=](auto index) {
         size_t glob_id = index[0];
-        auto v = sycl::ext::oneapi::atomic_ref<
-            int, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(sum_acc[0]);
+        auto v = sycl::atomic_ref<int, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            sum_acc[0]);
         v.fetch_add(buf_acc[glob_id]);
       });
     });
@@ -200,10 +200,10 @@ int reductionFloat(sycl::queue &q, std::vector<float> &data,
 
       h.parallel_for(data_size, [=](auto index) {
         size_t glob_id = index[0];
-        auto v = sycl::ext::oneapi::atomic_ref<
-            float, sycl::ext::oneapi::memory_order::relaxed,
-            sycl::ext::oneapi::memory_scope::device,
-            sycl::access::address_space::global_space>(sum_acc[0]);
+        auto v = sycl::atomic_ref<float, sycl::memory_order::relaxed,
+                                  sycl::memory_scope::device,
+                                  sycl::access::address_space::global_space>(
+            sum_acc[0]);
         v.fetch_add(buf_acc[glob_id]);
       });
     });
@@ -225,7 +225,7 @@ int reductionFloat(sycl::queue &q, std::vector<float> &data,
 
 int main(int argc, char *argv[]) {
 
-  sycl::queue q{sycl::default_selector{}, exception_handler};
+  sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";
   {
     std::vector<int> data(N, 1);

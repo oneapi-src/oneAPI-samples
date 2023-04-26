@@ -22,8 +22,19 @@ USM, buffer, accessor, kernel, and command groups.
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 18.04 <br> Windows* 10
-| Hardware           | GEN9 or newer <br> Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA (Intel® PAC with Intel® Arria® 10 GX FPGA)
+| Hardware           | GEN9 or newer <br> Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
+
+
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for CPU, GPU, FPGA emulation, generating FPGA reports and generating RTL for FPGAs, there are extra software requirements for the FPGA simulation flow and FPGA compiles.
+>
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
@@ -94,6 +105,19 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake .. -DUSM=1
    ```
 
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 #### Build for CPU and GPU
     
 1. Build the program.
@@ -111,19 +135,23 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    make fpga_emu
    ```
-2. Generate HTML performance reports.
+2. Compile for simulation (fast compile time, targets simulator FPGA device):
+   ```
+   make fpga_sim
+   ```
+3. Generate HTML performance reports.
    ```
    make report
    ```
    The reports reside at `simple-add_report.prj/reports/report.html`.
 
-3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
 time.)
    ```
    make fpga
    ```
 
-4. Clean the program. (Optional)
+5. Clean the program. (Optional)
    ```
    make clean
    ```
@@ -149,6 +177,19 @@ time.)
    cmake -G "NMake Makefiles" .. -DUSM=1
    ```
 
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ``` 
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ``` 
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
+
 #### Build for CPU and GPU
 
 1. Build the program.
@@ -168,19 +209,23 @@ time.)
    ```
    nmake fpga_emu
    ```
-2. Generate HTML performance reports.
+2. Compile for simulation (fast compile time, targets simulator FPGA device):
+   ```
+   nmake fpga_sim
+   ```
+3. Generate HTML performance reports.
    ```
    nmake report
    ```
 The reports reside at `simple-add_report.prj/reports/report.html`.
 
-3. Compile the program for FPGA hardware. (Compiling for hardware can take a long
+4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
 time.)
    ```
    nmake fpga
    ```
 
-4. Clean the program. (Optional)
+5. Clean the program. (Optional)
    ```
    nmake clean
    ```
@@ -216,7 +261,12 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ./simple-add-buffers.fpga_emu
    ./simple-add-usm.fpga_emu
    ```
-3. Run on FPGA hardware.
+3. Run on FPGA simulator.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./simple-add-buffers.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./simple-add-usm.fpga_sim
+   ```
+4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./simple-add-buffers.fpga
    ./simple-add-usm.fpga
@@ -243,7 +293,14 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    simple-add-buffers.fpga_emu.exe
    simple-add-usm.fpga_emu.exe
    ```
-3. Run on FPGA hardware.
+3. Run on FPGA simulator.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   simple-add-buffers.fpga_sim.exe
+   simple-add-usm.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    simple-add-buffers.fpga.exe
    simple-add-usm.fpga.exe
@@ -269,8 +326,8 @@ qsub  -I  -l nodes=1:gpu:ppn=2 -d .
 
   |Available Nodes           |Command Options
   |:---                      |:---
-  |GPU	                    |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	                    |`qsub -l nodes=1:xeon:ppn=2 -d .`
+  |GPU	                     |`qsub -l nodes=1:gpu:ppn=2 -d .`
+  |CPU	                     |`qsub -l nodes=1:xeon:ppn=2 -d .`
   |FPGA Compile Time         |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
   |FPGA Runtime (Arria 10)   |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
 
