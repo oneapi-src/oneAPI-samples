@@ -32,12 +32,16 @@ class QQPipe;
   Can be configured by datatype, matrix size and works with square or
   rectangular matrices.
 */
-template <
-    unsigned k_samples_count,   // Number of samples in the input matrix
-    unsigned k_features_count,  // Number of features in the input matrix
-    unsigned raw_latency,       // RAW latency for triangular loop optimization
-    typename T                  // The datatype for the computation
-    >
+template <unsigned k_samples_count,   // Number of samples in the input matrix
+          unsigned k_features_count,  // Number of features in the input matrix
+          unsigned k_raw_latency,     // RAW latency for triangular loop
+                                      // optimization
+          bool k_use_rayleigh_shift,  // Use Rayleigh shift rather than
+                                      // Wilkinson shift
+          int k_zero_threshold_1e,     // Threshold from which we consider a
+                                   // floating point value to be 0 (e.g. -4 -> 10e-4)
+          typename T                  // The datatype for the computation
+          >
 void PCAsyclImpl(
     std::vector<T> &a_matrix,    // Input matrix to decompose
     std::vector<T> &eig_matrix,  // Output matrix Q
@@ -87,11 +91,13 @@ void PCAsyclImpl(
                                AMatrixPipe, CMatrixPipe>());
 
   q.single_task<EIGEN>(
-      fpga_linalg::StreamingEig<T, k_features_count, raw_latency,
-                                kNumElementsPerDDRBurst, CMatrixPipe,
-                                EigMatrixPipe, QQMatrixPipe>());
+      fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
+                                  kNumElementsPerDDRBurst, k_zero_threshold_1e,
+                                  CMatrixPipe, EigMatrixPipe, QQMatrixPipe,
+                                  k_use_rayleigh_shift>());
 
-  auto eig_event = q.single_task<QRDLocalMemToDDRR>([=]() [[intel::kernel_args_restrict]] {
+  auto eig_event = q.single_task<QRDLocalMemToDDRR>([=
+  ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count + 1, 1, kNumElementsPerDDRBurst,
                         EigMatrixPipe>(eig_device, matrix_count, repetitions);
   });

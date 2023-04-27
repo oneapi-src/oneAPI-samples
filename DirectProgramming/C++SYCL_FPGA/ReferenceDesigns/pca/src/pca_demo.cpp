@@ -10,26 +10,19 @@
 #include <sycl/sycl.hpp>
 #include <vector>
 
-#define KTHRESHOLD 1e-5
 #define KDEFLIM 2
-#define KETHRESHOLD 1e-3
-#define KETHRESHOLD_Eigen 1e-3
-#define RELSHIFT 0
 #define SHIFT_NOISE 1e-3
-#define SHIFT_NOISE_CPU 1e-3
-#define ITER_PER_EIGEN 100
 #define NO_SHIFT_ITER 10
 
-#define DEBUGEN 0
-#define DEBUGMINDEX 24
 #define DEBUG 0
+#define DEBUG_MATRIX_INDEX 0
 
 #include "exception_handler.hpp"
 #include "pca.hpp"
 #include "pca_cpu.hpp"
 #include "qr_MGS.hpp"
 
-typedef double DTypeCPU;
+typedef double DataTypeCPU;
 
 // Real single precision floating-point PCA
 void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
@@ -40,16 +33,18 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kFeaturesCount = FEATURES_COUNT;
   constexpr size_t kSamplesCount = SAMPLES_COUNT;
-  constexpr size_t kDAMatrixSize =
+  constexpr size_t ka_matrix_size =
       kFeaturesCount * ((kSamplesCount + kFeaturesCount - 1) / kFeaturesCount) *
       kFeaturesCount;
-  constexpr size_t kDAMatrixSizeHost = kFeaturesCount * kSamplesCount;
+  constexpr size_t ka_matrix_size_host = kFeaturesCount * kSamplesCount;
   constexpr size_t kAMatrixSize = kFeaturesCount * kFeaturesCount;
   constexpr size_t kQQMatrixSize = kFeaturesCount * kFeaturesCount;
 
-  int iter = kFeaturesCount * ITER_PER_EIGEN;
+  constexpr bool kUseRayleighShift = false;
+  constexpr int k_zero_threshold_1e = -5;
+  constexpr float k_zero_threshold = 1e-5;
 
-  std::cout << "kDAMatrixSize is: " << kDAMatrixSize << "\n";
+  std::cout << "ka_matrix_size is: " << ka_matrix_size << "\n";
 
   // Get the number of times we want to repeat the decomposition
   // from the command line.
@@ -90,7 +85,7 @@ int main(int argc, char *argv[]) {
     std::vector<float> eig_matrix;
     std::vector<float> qq_matrix;
 
-    a_matrix.resize(kDAMatrixSize * kPCAsToCompute);
+    a_matrix.resize(ka_matrix_size * kPCAsToCompute);
     eig_matrix.resize((kFeaturesCount + 1) * kPCAsToCompute);
     qq_matrix.resize(kQQMatrixSize * kPCAsToCompute);
 
@@ -116,13 +111,13 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < kFeaturesCount; i++) {
           for (int j = 0; j < kFeaturesCount; j++) {
             if ((blk * kFeaturesCount + j) < kSamplesCount) {
-              a_matrix[matrix_index * kDAMatrixSize +
+              a_matrix[matrix_index * ka_matrix_size +
                        blk * kFeaturesCount * kFeaturesCount +
                        i * kFeaturesCount + j] =
-                  pca.matA[matrix_index * kDAMatrixSizeHost +
+                  pca.matA[matrix_index * ka_matrix_size_host +
                            (blk * kFeaturesCount + j) * kFeaturesCount + i];
             } else {
-              a_matrix[matrix_index * kDAMatrixSize +
+              a_matrix[matrix_index * ka_matrix_size +
                        blk * kFeaturesCount * kFeaturesCount +
                        i * kFeaturesCount + j] = 0;
             }
@@ -131,13 +126,13 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (DEBUGEN) {
+    if (DEBUG) {
       for (int matrix_index = 0; matrix_index < kPCAsToCompute;
            matrix_index++) {
         std::cout << "A MATRIX " << matrix_index << std::endl;
         for (size_t i = 0; i < kFeaturesCount; i++) {
           for (size_t j = 0; j < kSamplesCount; j++) {
-            std::cout << a_matrix[matrix_index * kDAMatrixSize +
+            std::cout << a_matrix[matrix_index * ka_matrix_size +
                                   i * kSamplesCount + j]
                       << " ";
           }  // end of col
@@ -150,17 +145,17 @@ int main(int argc, char *argv[]) {
               << " matri" << (kPCAsToCompute > 1 ? "ces " : "x ") << repetitions
               << " times" << std::endl;
 
-    PCAsyclImpl<kSamplesCount, kFeaturesCount, FIXED_ITERATIONS>(
+    PCAsyclImpl<kSamplesCount, kFeaturesCount, FIXED_ITERATIONS, kUseRayleighShift, k_zero_threshold_1e>(
         a_matrix, eig_matrix, qq_matrix, q, kPCAsToCompute, repetitions);
 
     // eigen value & vector computation on CPU for same data
-    std::vector<DTypeCPU> a_matrix_cpu(kAMatrixSize * kPCAsToCompute);
-    std::vector<DTypeCPU> eigen_vectors_cpu(kAMatrixSize * kPCAsToCompute);
-    std::vector<DTypeCPU> TmpRow(kFeaturesCount);
+    std::vector<DataTypeCPU> a_matrix_cpu(kAMatrixSize * kPCAsToCompute);
+    std::vector<DataTypeCPU> eigen_vectors_cpu(kAMatrixSize * kPCAsToCompute);
+    std::vector<DataTypeCPU> TmpRow(kFeaturesCount);
     std::vector<int> sIndex(kFeaturesCount);
     std::vector<int> sIndexSYCL(kFeaturesCount);
 
-    if (DEBUGEN) {
+    if (DEBUG) {
       std::cout << "\n Eigen Values: \n";
       for (int i = 0; i < kFeaturesCount; i++) {
         std::cout << eig_matrix[i] << " ";
@@ -225,137 +220,137 @@ int main(int argc, char *argv[]) {
     ////////  QRD Iteration ////////////////////////////////////////
     ////////////////////////////////////////////////////////////////
 
-    std::ofstream dRQ("Debug_RQ_CPU.txt");
-    std::ofstream dQQ("Debug_QQ_CPU.txt");
-    std::ofstream dQMat("Debug_Q_CPU.txt");
-    std::ofstream dRMat("Debug_R_CPU.txt");
-    std::ofstream dAMat("Debug_A_CPU.txt");
+    std::ofstream rq_matrix_file("Debug_RQ_CPU.txt");
+    std::ofstream qq_matrix_file("Debug_QQ_CPU.txt");
+    std::ofstream q_matrix_file("Debug_Q_CPU.txt");
+    std::ofstream r_matrix_file("Debug_R_CPU.txt");
+    std::ofstream a_matrix_file("Debug_A_CPU.txt");
 
     int total_iteration = 0;  // for the run time prediction on FPGA
-    DTypeCPU *R, *Q;  // pointerfor Q and R matrix after QR decomposition
+    constexpr int kMaxIterationsForConvergence = kFeaturesCount * 100;
+
+    DataTypeCPU *R, *Q;  // pointerfor Q and R matrix after QR decomposition
     for (int matrix_index = 0; matrix_index < kPCAsToCompute; matrix_index++) {
       int matrix_offset = matrix_index * kAMatrixSize;
       // QR decomposition on CPU
-      QR_Decmp<DTypeCPU> qrd_cpu(&a_matrix_cpu[matrix_offset], kFeaturesCount,
+      QR_Decmp<DataTypeCPU> qrd_cpu(&a_matrix_cpu[matrix_offset], kFeaturesCount,
                                  matrix_index);
-      // iter = 10000;
-      int kP = kFeaturesCount;
-      for (int li = 0; li < iter; li++) {
+      int curent_last_row = kFeaturesCount;
+      for (int li = 0; li < kMaxIterationsForConvergence; li++) {
         // convergence test
-        bool close2zero = 1;
+        bool close_to_zero = true;
 
         // check zero thereshold for lower part
 
         // Wilkinson shift computation
         float a_wilk =
-            a_matrix_cpu[matrix_offset + (kP - 2) * kFeaturesCount + kP - 2];
+            a_matrix_cpu[matrix_offset + (curent_last_row - 2) * kFeaturesCount + curent_last_row - 2];
         float b_wilk =
-            a_matrix_cpu[matrix_offset + (kP - 1) * kFeaturesCount + kP - 2];
+            a_matrix_cpu[matrix_offset + (curent_last_row - 1) * kFeaturesCount + curent_last_row - 2];
         float c_wilk =
-            a_matrix_cpu[matrix_offset + (kP - 1) * kFeaturesCount + kP - 1];
+            a_matrix_cpu[matrix_offset + (curent_last_row - 1) * kFeaturesCount + curent_last_row - 1];
 
         float lamda = (a_wilk - c_wilk) / 2.0;
         float sign_lamda = (lamda > 0) ? 1.0 : -1.0;
-        // float sign_lamda = (int)((lamda > 0) - (lamda < 0));
-
-        float shift = RELSHIFT ? c_wilk
-                           : c_wilk - (sign_lamda * b_wilk * b_wilk) /
+        float wilkinson_shift = c_wilk - (sign_lamda * b_wilk * b_wilk) /
                                           (fabs(lamda) + sqrt(lamda * lamda +
                                                               b_wilk * b_wilk));
+
+        float shift = kUseRayleighShift ? c_wilk : wilkinson_shift; 
 
         shift -= shift * SHIFT_NOISE;
         shift = (li < NO_SHIFT_ITER) ? 0 : shift;
 
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-          dAMat << "\n\nA Matrix before shift at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+          a_matrix_file << "\n\nA Matrix before shift at iteration: " << li << "\n";
         }
-        for (int i = 0; i < kP; i++) {
-          for (int j = 0; j < kP; j++) {
-            if (DEBUGEN && matrix_index == DEBUGMINDEX)
-              dAMat << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
+        for (int i = 0; i < curent_last_row; i++) {
+          for (int j = 0; j < curent_last_row; j++) {
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+              a_matrix_file << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
                     << " ";
           }
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) a_matrix_file << "\n";
         }
 
-        for (int i = 0; i < kP; i++) {
+        for (int i = 0; i < curent_last_row; i++) {
           a_matrix_cpu[matrix_offset + i * kFeaturesCount + i] -= shift;
         }
 
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-          dAMat << "\n\nA Matrix after shift at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+          a_matrix_file << "\n\nA Matrix after shift at iteration: " << li << "\n";
         }
-        for (int i = 0; i < kP; i++) {
-          for (int j = 0; j < kP; j++) {
-            if (DEBUGEN && matrix_index == DEBUGMINDEX)
-              dAMat << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
+        for (int i = 0; i < curent_last_row; i++) {
+          for (int j = 0; j < curent_last_row; j++) {
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+              a_matrix_file << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
                     << " ";
           }
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) dAMat << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) a_matrix_file << "\n";
         }
 
-        qrd_cpu.QR_decompose(kP);
+        qrd_cpu.QR_decompose(curent_last_row);
         R = qrd_cpu.get_R();
         Q = qrd_cpu.get_Q();
         // RQ computation and updating A
 
-        for (int i = 0; i < kP; i++) {
-          for (int j = 0; j < kP; j++) {
+        for (int i = 0; i < curent_last_row; i++) {
+          for (int j = 0; j < curent_last_row; j++) {
             a_matrix_cpu[matrix_offset + i * kFeaturesCount + j] = 0;
-            for (int k = 0; k < kP; k++) {
+            for (int k = 0; k < curent_last_row; k++) {
               a_matrix_cpu[matrix_offset + i * kFeaturesCount + j] +=
                   R[i * kFeaturesCount + k] * Q[k * kFeaturesCount + j];
             }
           }
         }
 
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-          dQMat << "\n\nQ Matrix at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+          q_matrix_file << "\n\nQ Matrix at iteration: " << li << "\n";
         }
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-          dRMat << "\n\nR Matrix at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+          r_matrix_file << "\n\nR Matrix at iteration: " << li << "\n";
         }
-        for (int i = 0; i < kP; i++) {
-          for (int j = 0; j < kP; j++) {
-            if (DEBUGEN && matrix_index == DEBUGMINDEX)
-              dQMat << Q[i * kFeaturesCount + j] << " ";
-            if (DEBUGEN && matrix_index == DEBUGMINDEX)
-              dRMat << R[i * kFeaturesCount + j] << " ";
+        for (int i = 0; i < curent_last_row; i++) {
+          for (int j = 0; j < curent_last_row; j++) {
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+              q_matrix_file << Q[i * kFeaturesCount + j] << " ";
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+              r_matrix_file << R[i * kFeaturesCount + j] << " ";
           }
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) dQMat << "\n";
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) dRMat << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) q_matrix_file << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) r_matrix_file << "\n";
         }
 
         // adding back the shift from the matrix
-        for (int i = 0; i < kP; i++) {
+        for (int i = 0; i < curent_last_row; i++) {
           a_matrix_cpu[matrix_offset + i * kFeaturesCount + i] += shift;
         }
 
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-          dRQ << "\n\nRQ Matrix at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+          rq_matrix_file << "\n\nRQ Matrix at iteration: " << li << "\n";
         }
         for (int i = 0; i < kFeaturesCount; i++) {
           for (int j = 0; j < kFeaturesCount; j++) {
-            if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-              dRQ << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+              rq_matrix_file << a_matrix_cpu[matrix_offset + i * kFeaturesCount + j]
                   << " ";
             }
           }
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) {
-            dRQ << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) {
+            rq_matrix_file << "\n";
           }
         }
 
         // Eigen vector accumulation
-        if (DEBUGEN && matrix_index == DEBUGMINDEX)
-          dQQ << "QQ Matrix at iteration: " << li << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+          qq_matrix_file << "QQ Matrix at iteration: " << li << "\n";
         for (int i = 0; i < kFeaturesCount; i++) {
           std::fill(TmpRow.begin(), TmpRow.end(), 0);
           for (int j = 0; j < kFeaturesCount; j++) {
             for (int k = 0; k < kFeaturesCount; k++) {
               float I_val = (k == j) ? 1 : 0;
               float q_val =
-                  (j >= kP || k >= kP) ? I_val : Q[k * kFeaturesCount + j];
+                  (j >= curent_last_row || k >= curent_last_row) ? I_val : Q[k * kFeaturesCount + j];
               TmpRow[j] +=
                   eigen_vectors_cpu[matrix_offset + i * kFeaturesCount + k] *
                   q_val;
@@ -364,35 +359,34 @@ int main(int argc, char *argv[]) {
           for (int k = 0; k < kFeaturesCount; k++) {
             eigen_vectors_cpu[matrix_offset + i * kFeaturesCount + k] =
                 TmpRow[k];
-            if (DEBUGEN && matrix_index == DEBUGMINDEX)
-              dQQ << eigen_vectors_cpu[matrix_offset + i * kFeaturesCount + k]
+            if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX)
+              qq_matrix_file << eigen_vectors_cpu[matrix_offset + i * kFeaturesCount + k]
                   << " ";
           }
-          if (DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+          if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) qq_matrix_file << "\n";
         }
-        if (DEBUGEN && matrix_index == DEBUGMINDEX) dQQ << "\n";
+        if (DEBUG && matrix_index == DEBUG_MATRIX_INDEX) qq_matrix_file << "\n";
 
-        for (int j = 0; j < kP - 1; j++) {
+        for (int j = 0; j < curent_last_row - 1; j++) {
           if (std::fabs(
-                  a_matrix_cpu[matrix_offset + (kP - 1) * kFeaturesCount + j]) >
-              KTHRESHOLD) {
-            close2zero = 0;
+                  a_matrix_cpu[matrix_offset + (curent_last_row - 1) * kFeaturesCount + j]) >
+              k_zero_threshold) {
+            close_to_zero = false;
             break;
           }
         }
 
-        if (close2zero && kP == KDEFLIM) {
+        if (close_to_zero && curent_last_row == KDEFLIM) {
           total_iteration += li + 1;
-          // std::cout << "It took " << li+1 << " iteration to compute\n";
           break;
-        } else if (close2zero) {
-          kP -= 1;
+        } else if (close_to_zero) {
+          curent_last_row -= 1;
         }
       }
     }
-    dRQ.close();
-    dQQ.close();
-    dAMat.close();
+    rq_matrix_file.close();
+    qq_matrix_file.close();
+    a_matrix_file.close();
 
     // exit(0);
 
@@ -434,12 +428,12 @@ int main(int argc, char *argv[]) {
       // Relative error is used in error calculation of eigen values
       // This is beacuse eigen values can come in 1000s
 
-      float diff_threshold = KETHRESHOLD;
+      constexpr float k_diff_threshold = 1e-3;
       int rq_ecount_SYCL = 0;
-      if (DEBUGEN) std::cout << "\nEigen values are:\n";
+      if (DEBUG) std::cout << "\nEigen values are:\n";
       for (int i = 0; i < kFeaturesCount; i++) {
         int sI = sIndex[i];
-        if (DEBUGEN)
+        if (DEBUG)
           std::cout << a_matrix_cpu[matrix_offset + sI * kFeaturesCount + sI]
                     << " ";
 
@@ -447,7 +441,7 @@ int main(int argc, char *argv[]) {
                  fabs(eig_matrix[Eigmatrix_offset + i])) /
                     (fabs(a_matrix_cpu[matrix_offset + sI * kFeaturesCount +
                                        sI])) >
-                KETHRESHOLD_Eigen ||
+                k_diff_threshold ||
             isnan(a_matrix_cpu[matrix_offset + sI * kFeaturesCount + sI]) ||
             isnan(eig_matrix[i + Eigmatrix_offset])) {
           rq_ecount_SYCL++;
@@ -469,10 +463,10 @@ int main(int argc, char *argv[]) {
       if (rq_ecount_SYCL > 0) std::cout << "\n\n\n";
 
       int qq_ecountSYCL = 0;
-      if (DEBUGEN) std::cout << "\n Eigen vector is: \n";
+      if (DEBUG) std::cout << "\n Eigen vector is: \n";
       for (int i = 0; i < kFeaturesCount; i++) {
         for (int j = 0; j < kFeaturesCount; j++) {
-          if (DEBUGEN)
+          if (DEBUG)
             std::cout << eigen_vectors_cpu[matrix_offset + j * kFeaturesCount +
                                            sIndex[i]]
                       << " ";
@@ -480,7 +474,7 @@ int main(int argc, char *argv[]) {
           if (fabs(fabs(eigen_vectors_cpu[matrix_offset + j * kFeaturesCount +
                                           sIndex[i]]) -
                    fabs(qq_matrix[matrix_offset + i * kFeaturesCount +
-                                  sIndexSYCL[j]])) > diff_threshold ||
+                                  sIndexSYCL[j]])) > k_diff_threshold ||
               isnan(qq_matrix[matrix_offset + i * kFeaturesCount +
                               sIndexSYCL[j]]) ||
               isnan(eigen_vectors_cpu[matrix_offset + j * kFeaturesCount +
@@ -497,7 +491,7 @@ int main(int argc, char *argv[]) {
                 << "," << j << "\n";
           }
         }
-        if (DEBUGEN) std::cout << "\n";
+        if (DEBUG) std::cout << "\n";
       }
 
       if (qq_ecountSYCL == 0) {
