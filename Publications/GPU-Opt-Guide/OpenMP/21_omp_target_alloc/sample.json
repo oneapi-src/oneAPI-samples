@@ -1,0 +1,44 @@
+{
+  "guid": "296a7371-8677-45ad-9acd-84205bf65de4",
+  "name": "oneAPI GPU Optimization Guide",
+  "categories": [
+    "Toolkit/Publication: oneAPI GPU Optimization Guide"
+  ],
+  "description": "oneAPI GPU Optimization Guide Examples",
+  "toolchain": [
+    "dpcpp",
+    "ifort"
+  ],
+  "languages": [
+    {
+      "cpp": {}
+    },
+    {
+      "fortran": {}
+    }
+  ],
+  "targetDevice": [
+    "GPU"
+  ],
+  "os": [
+    "linux"
+  ],
+  "builder": [
+    "cmake"
+  ],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make test_omp_target_alloc test_omp_target_alloc_device test_omp_target_alloc_host test_omp_target_alloc_shared test_omp_target_memcpy test_target_map test_target_map2",
+          "make test_omp_target_alloc_device_f test_omp_target_alloc_host_f test_omp_target_alloc_shared_f test_target_map_f test_target_map2_f",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}

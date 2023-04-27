@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <chrono>
 #include <vector>
@@ -84,3 +85,4 @@ int main() {
   }
   std::cout << "execution took - " << (end - start).count() << " nano-secs\n";
 }
+// Snippet end

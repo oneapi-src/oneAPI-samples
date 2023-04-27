@@ -65,9 +65,10 @@ int main() {
   // Level-zero context and device
   sycl::queue sycl_queue{sycl::ext::oneapi::filter_selector(
       "level_zero")}; // { sycl::gpu_selector() }
-  auto ext_level_zero = sycl::backend::ext_oneapi_level_zero;
-  auto ze_context = sycl::get_native<ext_level_zero>(sycl_queue.get_context());
-  auto ze_device = sycl::get_native<ext_level_zero>(sycl_queue.get_device());
+  auto ze_context = sycl::get_native<sycl::backend::ext_oneapi_level_zero>(
+      sycl_queue.get_context());
+  auto ze_device = sycl::get_native<sycl::backend::ext_oneapi_level_zero>(
+      sycl_queue.get_device());
 
   // Create VA-API context (VADisplay)
   VADisplay va_display = vaGetDisplayDRM(open(VAAPI_DEVICE, O_RDWR));

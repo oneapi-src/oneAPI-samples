@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
+// Snippet begin
 #include "mkl.h"
 #include "mkl_omp_offload.h"
 #include <float.h>
@@ -306,3 +307,4 @@ int main(int argc, char **argv) {
 
   return EXIT_SUCCESS;
 }
+// Snippet end
