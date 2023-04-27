@@ -1,5 +1,5 @@
 {
-  "guid": "",
+  "guid": "AF4D3C55-A79D-4A8E-96BD-84888A142502",
   "name": "pipelined kernels",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of kernel pipelining",
@@ -27,10 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./register_map_functor_model.fpga_emu",
-          "./streaming_functor_model.fpga_emu",
-          "./register_map_lambda_model.fpga_emu",
-          "./streaming_lambda_model.fpga_emu"
+          "./pipelined_kernels.fpga_emu",
         ]
       },
       {
@@ -54,10 +51,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/pipelined_kernels",
           "nmake fpga_emu",
-          "register_map_functor_model.fpga_emu.exe",
-          "streaming_functor_model.fpga_emu.exe",
-          "register_map_lambda_model.fpga_emu.exe",
-          "streaming_lambda_model.fpga_emu.exe"
+          "pipelined_kernels.fpga_emu.exe",
         ]
       },
       {
