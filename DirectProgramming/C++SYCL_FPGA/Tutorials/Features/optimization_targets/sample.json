@@ -1,8 +1,8 @@
 {
-  "guid": "8EC73D58-B010-4080-9785-B5D9DB13EF3F",
-  "name": "Mem Channels",
+  "guid": "22F00FD4-D485-449F-8612-EDF2C276B1B5",
+  "name": "Optimization Targets",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating how to use the mem_channel buffer property and the -Xsno-interleaving flag",
+  "description": "An Intel® FPGA tutorial demonstrating setting optimization targets",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/mem_channel",
+      "Tutorials/Features/optimization_targets",
       "include"
     ],
     "exclude": []
@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./mem_channel.fpga_emu"
+          "./no_control.fpga_emu"
         ]
       },
       {
@@ -49,9 +49,9 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets",
           "nmake fpga_emu",
-          "mem_channel.fpga_emu.exe"
+          "no_control.fpga_emu.exe"
         ]
       },
       {
@@ -61,7 +61,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets",
           "nmake report"
         ]
       }
