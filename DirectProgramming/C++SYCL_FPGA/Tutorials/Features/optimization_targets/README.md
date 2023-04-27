@@ -1,10 +1,12 @@
-# `Minimum Latency Flow` Sample
+# `Optimization Targets` Sample
 
-This FPGA tutorial demonstrates how to compile your design with the minimum latency flow to achieve low latency at the cost of reduced f<sub>MAX</sub>.
+This FPGA tutorial demonstrates how to set optimization targets for your compile to target different performance metrics.
+
+As an example, this tutorial shows compiling with the minimum latency optimization target to achieve low latency at the cost of reduced f<sub>MAX</sub>.
 
 | Area                      | Description
 |:---                       |:---
-| What you will learn       | How to use the minimum latency flow to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency flow
+| What you will learn       | How to set optimization targets for your compile</br>How to use the minimum latency optimization target to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency optimization target
 | Time to complete          | 20 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -49,42 +51,35 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-This FPGA tutorial demonstrates how to use the minimum latency flow to compile low-latency designs and how to manually override underlying controls set by the minimum latency flow. By default, the minimum latency flow tries to achieve lower latency at the cost of decreased f<sub>MAX</sub>, so this flow is a good starting point for optimizing latency-sensitive designs.
+This FPGA tutorial demonstrates how to set optimization targets for your compile to target different performance metrics.
 
-To compile your design with the minimum latency flow, pass the `-Xsoptimize=latency` flag to the `icpx` command.
+The `-Xsoptimize=<option>` command-line flag sets optimization targets. It has the following options:
 
-The minimum latency flow implies the following compiler controls:
-- Disable hyper-optimized handshaking on Intel Stratix® 10 and Intel Agilex® 7 devices
-- Use zero-latency stall-free clusters exit FIFO
-- Disable loop speculation
-- Remove the 1-cycle delay on the pipelined loop limiter
+| Option  | Explanation    | Documentation
+| ------- | -------------- | -------------
+|`latency`| Minimum latency| [Minimum Latency Flow](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/minimum-latency-flow.html)
 
-The following table shows how users can manually override these underlying controls:
-|                                        |Control Flags/Attributes                                    |Reference
-|:---                                    |:---                                                        |:---
-|Hyper-optimized handshaking             |`-Xshyper-optimized-handshaking=<auto\|off\|on>`            |[Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html)
-|Exit FIFO latency of stall-free clusters|`-Xssfc-exit-fifo-type=<default\|zero-latency\|low-latency>`|[Global Control of Exit FIFO Latency of Stall-free Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/control-exit-fifo-latency.html)
-|Loop speculation                        |`[[intel::speculated_iterations(N)]]`                       |[`speculated_iterations` Attribute](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/loop-directives/speculated-iterations-attribute.html)
-|Pipelined loop limiter                  |N/A                                                         |N/A
+As an example, this tutorial shows how to use the minimum latency optimization target to compile low-latency designs and how to manually override underlying controls set by the minimum latency optimization target. By default, the minimum latency optimization target tries to achieve lower latency at the cost of decreased f<sub>MAX</sub>, so it is a good starting point for optimizing latency-sensitive designs.
 
-> **Note**: Using these manual controls overrides the underlying controls individually without affecting other underlying controls introduced by the `-Xsoptimize=latency` compiler flag.
+To compile your design with the minimum latency optimization target, use the flag option `-Xsoptimize=latency`.
 
 ### Understanding the Tutorial Design
 
-The basic function performed by the tutorial kernel is an RGB to grayscale algorithm. To see the impact of the minimum latency flow in this tutorial in terms of latency and f<sub>MAX</sub>, and also see how to override the minimum latency flow with specific manual controls, the design needs to be compiled three times.
+The basic function performed by the tutorial kernel is an RGB to grayscale algorithm. To see the impact of the minimum latency optimization target in this tutorial in terms of latency and f<sub>MAX</sub>, and also see how to override underlying controls set by the minimum latency optimization target with specific manual controls, the design needs to be compiled three times.
 
-Part 1 compiles the design without passing the `-Xsoptimize=latency` flag. In this default flow, the compiler targets higher throughput and f<sub>MAX</sub> with the sacrifice of latency and area.
+Part 1 compiles the design without the `-Xsoptimize=latency` flag. In this default flow, the compiler targets higher throughput and f<sub>MAX</sub> with the sacrifice of latency and area.
 
-Part 2 compiles the design with the `-Xsoptimize=latency` flag, so the minimum latency flow is used in this compile. By setting up the underlying compiler controls listed above, the minimum latency flow achieves lower latency by trading off f<sub>MAX</sub>.
+Part 2 compiles the design with the `-Xsoptimize=latency` flag, so the minimum latency optimization target is used in this compile, which lowers latency by trading off f<sub>MAX</sub>.
 
-Part 3 also compiles the design with the minimum latency flow, as well as manual controls that revert minimum latency flow's default underlying controls. Therefore, latency and f<sub>MAX</sub> of this compile are the same as part 1.
+Part 3 also compiles the design with the minimum latency optimization target, as well as manual controls that revert default underlying controls set by the minimum latency optimization target. Therefore, latency and f<sub>MAX</sub> of this compile are the same as part 1.
 
 ## Key Concepts
 
-* How to use the minimum latency flow to compile low-latency designs
-* How to override underlying controls set by the minimum latency flow
+* How to set optimization targets for your compile
+* How to use the minimum latency optimization target to compile low-latency designs
+* How to manually override underlying controls set by the minimum latency optimization target
 
-## Building the `minimum_latency` Tutorial
+## Building the `optimization_targets` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
@@ -205,9 +200,9 @@ Locate the pair of `report.html` files in either:
 
 Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of the compile with the minimum latency flow (part 2) should be smaller than the other two compiles. Also, the latency of the other two compiles (part 1 & 3) should be the same.
+Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of the compile with the minimum latency optimization target (part 2) should be lower than the other two compiles. Also, the latency of the other two compiles (part 1 & 3) should be the same.
 
-Navigate to **Clock Frequency Summary** (**Summary > Clock Frequency Summary**) in `no_control.fpga.prj/reports/report.html`, `minimum_latency.fpga.prj/reports/report.html`, and `manual_revert.fpga.prj/reports/report.html` (after `make fpga` completes). In this table, you can find the actual f<sub>MAX</sub>. The f<sub>MAX</sub> of the compile with the minimum latency flow (part 2) should be smaller than the other two compiles. Also, the f<sub>MAX</sub> of the other two compiles (part 1 & 3) should be the same. Note that only the report generated by the FPGA hardware compile will reflect the true f<sub>MAX</sub> affected by the minimum latency flow. The difference is **not** apparent in the reports generated by `make report` because a design's f<sub>MAX</sub> cannot be predicted.
+Navigate to **Clock Frequency Summary** (**Summary > Clock Frequency Summary**) in `no_control.fpga.prj/reports/report.html`, `minimum_latency.fpga.prj/reports/report.html`, and `manual_revert.fpga.prj/reports/report.html` (after `make fpga` completes). In this table, you can find the actual f<sub>MAX</sub>. The f<sub>MAX</sub> of the compile with the minimum latency optimization target (part 2) should be lower than the other two compiles. Also, the f<sub>MAX</sub> of the other two compiles (part 1 & 3) should be the same. Note that only the report generated by the FPGA hardware compile will reflect the true f<sub>MAX</sub> affected by the minimum latency optimization target. The difference is **not** apparent in the reports generated by `make report` because a design's f<sub>MAX</sub> cannot be predicted.
 
 ## Running the Sample
 
@@ -248,21 +243,21 @@ Navigate to **Clock Frequency Summary** (**Summary > Clock Frequency Summary**) 
 
 ## Example Output
 
-Output of sample without minimum latency flow:
+Output of sample without minimum latency optimization target:
 ```txt
 Kernel Throughput: 195.716MB/s
 Exec Time: 1.9491e-05s, InputMB: 0.0038147MB
 PASSED: all kernel results are correct
 ```
 
-Output of sample with minimum latency flow:
+Output of sample with minimum latency optimization target:
 ```txt
 Kernel Throughput: 137.764MB/s
 Exec Time: 2.769e-05s, InputMB: 0.0038147MB
 PASSED: all kernel results are correct
 ```
 
-Output of sample with minimum latency flow but controls manually reverted:
+Output of sample with minimum latency optimization target but controls manually reverted:
 ```txt
 Kernel Throughput: 192.934MB/s
 Exec Time: 1.9772e-05s, InputMB: 0.0038147MB
@@ -271,7 +266,7 @@ PASSED: all kernel results are correct
 
 ### Discussion of Results
 
-Comparing to Intel Arria® 10 GX FPGA, it is more notable on Intel Stratix® 10 SX FPGA that the minimum latency flow significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency flow disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix® 10 and Intel Agilex® 7 devices, see [Modify the Handshaking Protocol Between Clusters](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/hyper-opt-handshaking.html).
+Comparing to Intel Arria® 10 GX FPGA, it is more notable on Intel Stratix® 10 SX FPGA that the minimum latency optimization target significantly reduces the latency, along with the f<sub>MAX</sub> and the throughput. That is because the minimum latency optimization target disables the hyper-optimized handshaking, which achieves higher f<sub>MAX</sub> at the cost of increased latency. For more information on the hyper-optimized handshaking protocol on Intel Stratix® 10 and Intel Agilex® 7 devices, see [Modify the Handshaking Protocol Between Clusters (-Xshyper-optimized-handshaking)](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/hyper-opt-handshaking.html).
 
 ## License
 
