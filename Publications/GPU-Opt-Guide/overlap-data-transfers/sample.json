@@ -1,0 +1,43 @@
+{
+  "guid": "296a7371-8677-45ad-9acd-84205bf65de4",
+  "name": "oneAPI GPU Optimization Guide",
+  "categories": [
+    "Toolkit/Publication: oneAPI GPU Optimization Guide"
+  ],
+  "description": "oneAPI GPU Optimization Guide Examples",
+  "toolchain": [
+    "dpcpp",
+    "ifort"
+  ],
+  "languages": [
+    {
+      "cpp": {}
+    },
+    {
+      "fortran": {}
+    }
+  ],
+  "targetDevice": [
+    "GPU"
+  ],
+  "os": [
+    "linux"
+  ],
+  "builder": [
+    "cmake"
+  ],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make reduction overlap",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}

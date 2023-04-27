@@ -3,6 +3,7 @@
         !
         ! SPDX-License-Identifier: MIT
         !=============================================================
+        ! Snippet begin
         include "mkl_omp_offload.f90"
 
      ! This subroutine reads command line arguments m1, k1, and n1.
@@ -182,3 +183,4 @@
  112    format(7x, "Time (padded arrays) =", f10.4, " sec")
 
         end
+        ! Snippet end
