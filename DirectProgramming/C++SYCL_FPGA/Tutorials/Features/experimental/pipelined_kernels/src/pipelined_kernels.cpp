@@ -69,10 +69,10 @@ int main(int argc, char *argv[]) {
     std::cout << "\t Done" << std::endl;
 
     for (int i = 0; i < count; i++) {
-      if(input_array[i] != golden[i]){
+      if (input_array[i] != golden[i]) {
         error = true;
-        std::cout << "Error: Expecting " << golden[i] << 
-        " but got " << input_array[i] << " from invocation" << std::endl;
+        std::cout << "Error: Expecting " << golden[i] << " but got "
+                  << input_array[i] << " from invocation" << std::endl;
       }
     }
 
@@ -86,9 +86,9 @@ int main(int argc, char *argv[]) {
 
   if (!error) {
     std::cout << "PASSED: Results are correct\n";
-  return 0;
+    return 0;
   } else {
     std::cout << "FAILED: Results are incorrect\n";
-  return 1;
+    return 1;
   }
 }
