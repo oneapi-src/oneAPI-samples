@@ -84,6 +84,19 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample programs. `nmake clean` removes temporary files.
 
+#### Build a sample using Random Number Generastion on Host
+To use the RNG on host use `init_on_host=1`, e.g.
+```
+make init_on_host=1
+```
+for Linux* system or
+
+```
+nmake init_on_host=1
+```
+
+for Windows* System.
+
 ## Running the Black-Scholes Sample
 If everything is working correctly, the program will run the Black-scholes simulation.
 After the simulation, results will be checked against the known true values
