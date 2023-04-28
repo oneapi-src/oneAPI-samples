@@ -93,7 +93,6 @@ void BlackScholes::check()
         double sum_delta = 0.0,
             sum_ref = 0.0,
             max_delta = 0.0,
-            sumReserve = 0.0,
             errorVal = 0.0;
 
         for (auto i = 0; i < OPT_N; i++) {
@@ -105,7 +104,6 @@ void BlackScholes::check()
             sum_delta += delta;
             sum_ref += std::fabs(ref);
         }
-        sumReserve /= OPT_N;
         if (sum_ref > 1E-5)
             std::printf("L1 norm: %E\n", errorVal = sum_delta / sum_ref);
         else
