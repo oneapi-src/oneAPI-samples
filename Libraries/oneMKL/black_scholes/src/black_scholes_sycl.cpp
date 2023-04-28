@@ -24,7 +24,7 @@ constexpr int wg_size = 256;
 constexpr int block_size = 4;
 #endif
 
-sycl::queue black_scholes_queue{};
+sycl::queue* black_scholes_queue;
 template<typename DataType, int>
 class k_BlackScholes;
 
@@ -68,7 +68,7 @@ void BlackScholes::body() {
     DataType* h_CallResult_local = this->h_CallResult;
     DataType* h_PutResult_local = this->h_PutResult;
 
-    black_scholes_queue.parallel_for<k_BlackScholes<DataType, block_size>>(sycl::nd_range(sycl::range<1>(OPT_N / block_size), sycl::range<1>(wg_size)),
+    black_scholes_queue->parallel_for<k_BlackScholes<DataType, block_size>>(sycl::nd_range(sycl::range<1>(OPT_N / block_size), sycl::range<1>(wg_size)),
                 [=](sycl::nd_item<1> item) [[intel::kernel_args_restrict]] [[intel::reqd_sub_group_size(sg_size)]] {
                         auto local_id = item.get_local_linear_id();
                         auto group_id = item.get_group_linear_id();
@@ -108,20 +108,22 @@ void BlackScholes::body() {
 
 BlackScholes::BlackScholes()
 {
-    h_CallResult = sycl::malloc_shared<DataType>(OPT_N, black_scholes_queue);
-    h_PutResult = sycl::malloc_shared<DataType>(OPT_N, black_scholes_queue);
-    h_StockPrice = sycl::malloc_shared<DataType>(OPT_N, black_scholes_queue);
-    h_OptionStrike = sycl::malloc_shared<DataType>(OPT_N, black_scholes_queue);
-    h_OptionYears = sycl::malloc_shared<DataType>(OPT_N, black_scholes_queue);
+    black_scholes_queue = new sycl::queue;
 
-    black_scholes_queue.fill(h_CallResult, 0.0, OPT_N);
-    black_scholes_queue.fill(h_PutResult, 0.0, OPT_N);
+    h_CallResult = sycl::malloc_shared<DataType>(OPT_N, *black_scholes_queue);
+    h_PutResult = sycl::malloc_shared<DataType>(OPT_N, *black_scholes_queue);
+    h_StockPrice = sycl::malloc_shared<DataType>(OPT_N, *black_scholes_queue);
+    h_OptionStrike = sycl::malloc_shared<DataType>(OPT_N, *black_scholes_queue);
+    h_OptionYears = sycl::malloc_shared<DataType>(OPT_N, *black_scholes_queue);
+
+    black_scholes_queue->fill(h_CallResult, 0.0, OPT_N);
+    black_scholes_queue->fill(h_PutResult, 0.0, OPT_N);
 
     constexpr int rand_seed = 777;
     namespace mkl_rng = oneapi::mkl::rng;
     mkl_rng::philox4x32x10 engine(
 #if !INIT_ON_HOST
-        black_scholes_queue,
+        *black_scholes_queue,
 #else
         sycl::queue{sycl::cpu_selector_v},
 #endif
@@ -135,26 +137,27 @@ BlackScholes::BlackScholes()
 
 BlackScholes::~BlackScholes()
 {
-    sycl::free(h_CallResult, black_scholes_queue);
-    sycl::free(h_PutResult, black_scholes_queue);
-    sycl::free(h_StockPrice, black_scholes_queue);
-    sycl::free(h_OptionStrike, black_scholes_queue);
-    sycl::free(h_OptionYears, black_scholes_queue);
+    sycl::free(h_CallResult, *black_scholes_queue);
+    sycl::free(h_PutResult, *black_scholes_queue);
+    sycl::free(h_StockPrice, *black_scholes_queue);
+    sycl::free(h_OptionStrike, *black_scholes_queue);
+    sycl::free(h_OptionYears, *black_scholes_queue);
+    delete black_scholes_queue;
 }
 
 void BlackScholes::run()
 {
     std::printf("%s Precision Black&Scholes Option Pricing version %d.%d running on %s using DPC++, workgroup size %d, sub-group size %d.\n",
-        sizeof(DataType) > 4 ? "Double" : "Single", MAJOR, MINOR, black_scholes_queue.get_device().get_info<sycl::info::device::name>().c_str(), wg_size, sg_size);
+        sizeof(DataType) > 4 ? "Double" : "Single", MAJOR, MINOR, black_scholes_queue->get_device().get_info<sycl::info::device::name>().c_str(), wg_size, sg_size);
 
     std::printf("Compiler Version: %s, LLVM %d.%d based.\n", __VERSION__, __clang_major__, __clang_minor__);
-    std::printf("Driver Version  : %s\n", black_scholes_queue.get_device().get_info<sycl::info::device::driver_version>().c_str());
+    std::printf("Driver Version  : %s\n", black_scholes_queue->get_device().get_info<sycl::info::device::driver_version>().c_str());
     std::printf("Build Time      : %s %s\n", __DATE__, __TIME__);
     std::printf("Input Dataset   : %zu\n", OPT_N);
     size_t total_options = 2 * OPT_N   /*Pricing Call and Put options at the same time, so 2*num_options*/ * ITER_N;
 
     body();
-    black_scholes_queue.wait();
+    black_scholes_queue->wait();
 
     std::printf("Pricing %zu Options in %d iterations, %zu Options in total.\n", 2 * OPT_N, ITER_N, total_options); fflush(stdout);
     timer t{};
@@ -163,7 +166,7 @@ void BlackScholes::run()
     for (int i = 0; i < ITER_N; i++) {
         body();
     }
-    black_scholes_queue.wait();
+    black_scholes_queue->wait();
 
     t.stop();
 
