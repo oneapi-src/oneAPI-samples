@@ -5,11 +5,11 @@
 
 all: black_scholes_sycl.exe 
 
-!if "$(run_on_host)" == "1"
-        RUN_ON_HOST=/DINIT_ON_HOST=1
+!if "$(init_on_host)" == "1"
+        INIT_ON_HOST=/DINIT_ON_HOST=1
 !endif
 
-DPCPP_OPTS=-O3 /I$(MKLROOT)\include /DMKL_ILP64 /DVERBOSE=1 $(RUN_ON_HOST) -fsycl -qmkl
+DPCPP_OPTS=-O3 /I$(MKLROOT)\include /DMKL_ILP64 /DVERBOSE=1 $(INIT_ON_HOST) -fsycl -qmkl
 
 black_scholes_sycl.exe: src\black_scholes_sycl.cpp
 	icpx $(DPCPP_OPTS) src\black_scholes_sycl.cpp /oblack_scholes_sycl.exe

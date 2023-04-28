@@ -58,7 +58,7 @@ static inline T CNDF_C(T InputX)
     return OutputX;
 }
 
-using DataType = _PRECISION;
+using DataType = PRECISION;
 
 void BlackScholes::body() {
     // this can not be captured to the kernel. So, we need to copy internals of the class to local variables
@@ -120,7 +120,7 @@ BlackScholes::BlackScholes()
     constexpr int rand_seed = 777;
     namespace mkl_rng = oneapi::mkl::rng;
     mkl_rng::philox4x32x10 engine(
-#if !ONEMKL_ON_HOST
+#if !INIT_ON_HOST
         black_scholes_queue,
 #else
         sycl::queue{sycl::cpu_selector_v},
