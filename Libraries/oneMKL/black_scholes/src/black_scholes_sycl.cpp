@@ -58,7 +58,7 @@ static inline T CNDF_C(T InputX)
     return OutputX;
 }
 
-using DataType = PRECISION;
+using DataType = BS_PRECISION;
 
 void BlackScholes::body() {
     // this can not be captured to the kernel. So, we need to copy internals of the class to local variables

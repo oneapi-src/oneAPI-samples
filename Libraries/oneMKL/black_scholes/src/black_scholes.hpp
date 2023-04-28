@@ -15,8 +15,8 @@
 #define MINOR 6
 /******* VERSION *******/
 
-#ifndef PRECISION
-#define PRECISION double
+#ifndef BS_PRECISION
+#define BS_PRECISION double
 #endif
 
 #ifndef VERBOSE
@@ -53,14 +53,14 @@ public:
     ~BlackScholes();
     void run();
     void check();
-    inline bool isDP() { return sizeof(PRECISION) > 4; }
+    inline bool isDP() { return sizeof(BS_PRECISION) > 4; }
 
 private:
-    PRECISION* h_CallResult;
-    PRECISION* h_PutResult;
-    PRECISION* h_StockPrice;
-    PRECISION* h_OptionStrike;
-    PRECISION* h_OptionYears;
+    BS_PRECISION* h_CallResult;
+    BS_PRECISION* h_PutResult;
+    BS_PRECISION* h_StockPrice;
+    BS_PRECISION* h_OptionStrike;
+    BS_PRECISION* h_OptionYears;
     void body();
 };
 
