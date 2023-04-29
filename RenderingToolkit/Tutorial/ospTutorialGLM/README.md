@@ -1,5 +1,5 @@
 # ospTutorialGLM
-
+ This is a small example tutorial how to use OSPRay in an application using GLM instead of rkcommon for math types.
 ## Build and Run
 
 ### Windows
