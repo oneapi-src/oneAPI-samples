@@ -43,3 +43,9 @@ cmake ..
 cmake --build .
 ./ospTutorialGLM
 ```
+
+### Additional Notes
+
+oneAPI Rendering Toolkit 2023.1 version's cmake file contains an errata. The errata will produce an error while building the example. Please apply the following workaround described in the following page. 2023.1.1 version will address the issue.
+
+https://community.intel.com/t5/Intel-oneAPI-Rendering-Toolkit/2023-1-troubleshoot-errata-CMake-Error/m-p/1476040#M98
