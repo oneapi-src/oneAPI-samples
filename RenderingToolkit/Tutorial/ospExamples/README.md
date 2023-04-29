@@ -2,7 +2,7 @@ ospExamples
 -----------
 
 Apart from tutorials, `OSPRay` comes with a C++ app called
-[`ospExamples`](https://github.com/ospray/ospray/tree/master/apps/ospExamples)
+[`ospExamples`](https://github.com/oneapi-src/oneAPI-samples/tree/development/RenderingToolkit/Tutorial/ospExamples)
 which is an elaborate easy-to-use tutorial, with a single interface to
 try various `OSPRay` features. It is aimed at providing users with
 multiple simple scenes composed of basic geometry types, lights, volumes
