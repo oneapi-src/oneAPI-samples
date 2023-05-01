@@ -78,7 +78,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows System
 Run `nmake` to build and run the sample.
 
-Note: To removes temporary files, run `nmake clean`.
+Note: To remove temporary files, run `nmake clean`.
 
 *Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming oneMKL compiler release.
 
@@ -133,4 +133,4 @@ normalized correlation score of 4. Treat the images as circularly shifted versio
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2023-1/overview.html)
