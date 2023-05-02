@@ -11,7 +11,7 @@ endif()
 
 cmake_minimum_required (VERSION 3.4)
 
-project(register_map_and_streaming_interfaces CXX)
+project(pipelined_kernels CXX)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
