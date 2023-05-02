@@ -15,18 +15,18 @@
 #define MINOR 6
 /******* VERSION *******/
 
-#ifndef BS_PRECISION
-#define BS_PRECISION double
+#ifndef DATA_TYPE
+#define DATA_TYPE double
 #endif
 
 #ifndef VERBOSE
 #define VERBOSE 1
 #endif
 
-constexpr float VOLATILITY = 0.30f;
-constexpr float RISKFREE = 0.02f;
+constexpr float volatility = 0.30f;
+constexpr float risk_free = 0.02f;
 
-constexpr size_t OPT_N =
+constexpr size_t opt_n =
 #if SMALL_OPT_N
     480;
 #else
@@ -53,20 +53,19 @@ public:
     ~BlackScholes();
     void run();
     void check();
-    inline bool isDP() { return sizeof(BS_PRECISION) > 4; }
 
 private:
-    BS_PRECISION* h_CallResult;
-    BS_PRECISION* h_PutResult;
-    BS_PRECISION* h_StockPrice;
-    BS_PRECISION* h_OptionStrike;
-    BS_PRECISION* h_OptionYears;
+    DATA_TYPE* h_call_result;
+    DATA_TYPE* h_put_result;
+    DATA_TYPE* h_stock_price;
+    DATA_TYPE* h_option_strike;
+    DATA_TYPE* h_option_years;
     void body();
 };
 
 // Black-Scholes Reference Implementation
 void BlackScholesRefImpl(
-    double& callResult,
+    double& call_result,
     double Sf, //Stock price
     double Xf, //Option strike
     double Tf, //Option years
@@ -78,26 +77,26 @@ void BlackScholesRefImpl(
     double S = Sf, L = Xf, t = Tf, r = Rf, sigma = Vf;
     double N_d1 = 1. / 2. + 1. / 2. * std::erf(((std::log(S / L) + (r + 0.5 * sigma * sigma) * t) / (sigma * std::sqrt(t))) / std::sqrt(2.));
     double N_d2 = 1. / 2. + 1. / 2. * std::erf(((std::log(S / L) + (r - 0.5 * sigma * sigma) * t) / (sigma * std::sqrt(t))) / std::sqrt(2.));
-    callResult = (S * N_d1 - L * std::exp(-r * t) * N_d2);
+    call_result = (S * N_d1 - L * std::exp(-r * t) * N_d2);
 }
 
 void BlackScholes::check()
 {
     if (VERBOSE) {
         std::printf("Creating the reference result...\n");
-        std::vector<double> h_CallResultCPU(OPT_N);
+        std::vector<double> h_CallResultCPU(opt_n);
 
-        for (int opt = 0; opt < OPT_N; opt++)
-            BlackScholesRefImpl(h_CallResultCPU[opt], h_StockPrice[opt], h_OptionStrike[opt], h_OptionYears[opt], RISKFREE, VOLATILITY);
+        for (size_t opt = 0; opt < opt_n; opt++)
+            BlackScholesRefImpl(h_CallResultCPU[opt], h_stock_price[opt], h_option_strike[opt], h_option_years[opt], risk_free, volatility);
 
         double sum_delta = 0.0,
             sum_ref = 0.0,
             max_delta = 0.0,
             errorVal = 0.0;
 
-        for (auto i = 0; i < OPT_N; i++) {
+        for (size_t i = 0; i < opt_n; i++) {
             auto ref = h_CallResultCPU[i];
-            auto delta = std::fabs(h_CallResultCPU[i] - h_CallResult[i]);
+            auto delta = std::fabs(h_CallResultCPU[i] - h_call_result[i]);
             if (delta > max_delta) {
                 max_delta = delta;
             }
@@ -107,7 +106,7 @@ void BlackScholes::check()
         if (sum_ref > 1E-5)
             std::printf("L1 norm: %E\n", errorVal = sum_delta / sum_ref);
         else
-            std::printf("Avg. diff: %E\n", errorVal = sum_delta / OPT_N);
+            std::printf("Avg. diff: %E\n", errorVal = sum_delta / opt_n);
         std::printf((errorVal < 5e-4) ? "TEST PASSED\n" : "TEST FAILED\n");
 
     }
