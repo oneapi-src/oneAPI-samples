@@ -134,7 +134,7 @@ body {
   font-weight: 400;
   margin: 0;
   padding: 0;
-  color: #404040;
+  color: rgba(64,64,64,25);
   }
   
   h1{
@@ -142,7 +142,7 @@ body {
     font-weight: bold;
     font-weight: 600;
     font-size: 28px; 
-    color: #0054AE;
+    color: rgb(0,84,174);
     align-content: center;
     align-self: center;
   }
@@ -151,7 +151,7 @@ body {
     font-family: var(--bs-header-font-family);
     font-weight: normal;
     font-weight: 400;
-    color: #0054AE;
+    color: rgb(0,84,174);
   }
 
 .filter-text {
@@ -159,7 +159,7 @@ body {
   font-weight: normal;
   font-weight: 400;
   font-size: 24px;
-  color: #0054AE;
+  color:rgb(0,84,174);
 }
 
 .filter-input-wrapper {
@@ -181,7 +181,7 @@ body {
 .label-toggle {
   display: inline-block;
   vertical-align: middle;
-  color:#0054AE;
+  color:rgb(0,84,174);
   cursor: pointer;
 } 
 
@@ -238,7 +238,7 @@ input[type=checkbox] label{
   font-family: var(--bs-body-font-family);
   font-weight: 400;
   font-size: medium;
-  color: #0054AE;
+  color: rgb(0,84,174);
   flex-basis: calc(100%/3);
   margin-bottom: 1em;
   align-items: flex-start;
@@ -247,10 +247,10 @@ input[type=checkbox] label{
   max-width: 350px;
   max-height: 300px;
   padding: 10px;
-  background: -webkit-linear-gradient(#F5F5F5,#E9E9E9);  
-  background: -moz-linear-gradient(#F5F5F5,#E9E9E9);   
-  background: -o-linear-gradient(#F5F5F5,#E9E9E9);  
-  background: linear-gradient(#F5F5F5,#E9E9E9);     
+  background: -webkit-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));  
+  background: -moz-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));   
+  background: -o-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));  
+  background: linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));     
   -webkit-transition: background 2s ease-out;  
   -moz-transition: background 2s ease-out;  
   -o-transition: background 2s ease-out;  
@@ -312,7 +312,7 @@ input[type=checkbox] label{
   font-family: var(--bs-body-font-family);
   font-weight: 400;
   font-weight: normal;
-  background: #AEAEAE;
+  background: rgba(174,174,174,68);
   font-size:16px;
   text-align: center;
   margin-bottom: 0.7rem;
@@ -331,53 +331,67 @@ input[type=checkbox] label{
 }
 
 .badge1 {
-  background-color: rgba(160, 235, 255, 0.80);
-  border: 1px solid rgb(160, 235, 255);
+  /* background-color: rgba(160, 235, 255, 0.80); TEST 04-24-23
+  border: 1px solid rgb(160, 235, 255); TEST 04-24-23 */
+  background-color: rgba( 250,250,250,98); /* TEST 04-24-23 */
   /* background-color: rgba(233, 233, 233);
   border: 1px solid rgb(233, 233, 233); */  
-  color: rgba(0, 84, 174, 1) !important;
+  box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
+  color: rgb(0, 0, 0) !important;
   inline-size: 100px; 
   overflow-wrap: anywhere; /* word-break: break-all;  */
   text-align: center;
-  font-size: 13px !important;
+  font-size: 14px !important; 
+  font-family: var(--bs-header-font-family);
+  font-weight: bold;
+  font-weight: 800;
   border-radius: 10px;
   width: auto;
-  max-width:125px;
-  height: 45px;
+  max-width:150px;
+  height: 50px;
   cursor: pointer; 
-  box-shadow: 2px 2px 2px #F9F9 F9;
   }
 
 .badge2 {
-  background-color:rgba(0, 199, 253, 0.80);
-  border: 1px solid rgb(0, 199, 253); 
-  color: rgba(255, 255, 255, 1) !important;
-  font-size: 13px !important;
+  /* background-color:rgba(0, 199, 253, 0.80); /* TEST 04-24-23 */
+  /* border: 1px solid rgb(0, 199, 253);  TEST 04-24-23 */
+  background-color: rgba(233,233,233,91); /* TEST 04-24-23 */
+  /* border: .5px solid rgb(174,174,174); */
+  box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
+  color: rgb(0, 0, 0) !important;
+  font-size: 14px !important; 
+  font-family: var(--bs-header-font-family);
+  font-weight: bold;
+  font-weight: 800;
   border-radius: 10px;
   width: auto;
   min-width:60px;
-  height: 45px;
+  height: 50px;
   cursor: pointer; 
-  box-shadow: 2px 2px 2px #F9F9F9;
  }
 
 .badge3 {
-  background-color:rgba(0, 84, 174, 0.80);
-  border: 1px solid rgb(0, 84, 174);
-  color: rgba(255, 255, 255, 1) !important;
-  font-size: 13px !important;
+  /* background-color:rgba(0, 84, 174, 0.80); TEST 04-24-23
+  border: 1px solid rgb(0, 84, 174); TEST 04-24-23 */
+  background-color: rgba(207,207,207,81); /* TEST 04-24-23 */
+  color: rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
+  /* color: rgb(255, 255, 255) !important; */
+  font-size: 14px !important; 
+  font-family: var(--bs-header-font-family);
+  font-weight: bold;
+  font-weight: 800;
   border-radius: 10px;
   width: auto;
   min-width:60px;
-  height: 45px;
+  height: 50px;
   cursor: pointer; 
-  box-shadow: 2px 2px 2px #F9F9F9;
 }
 
 .badge1:hover, .badge2:hover, .badge3:hover{
-  color: #0054AE !important;
+  color: rgba(0,84,174,68) !important;
   background-color: white;
-  border: 1px solid #00C7FD;
+  border: 1px solid rgb(0,199,253);
 }
 
 
@@ -386,10 +400,8 @@ input[type=checkbox] label{
   font-size: 20px;
   font-weight: normal; 
   font-weight: 400;
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
   padding:  10px 0px 15px 20px;
-
-  /* padding-bottom: -5px; */
 }
 
 /* input[type=button] > #nobutton {
@@ -399,11 +411,11 @@ input[type=checkbox] label{
   padding: 0;
   border: none;
   background: none;
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
 }
 
-.app-title button:hover{
-  color: #00C7FD;
+.app-title button a:hover{
+  color: rgb(0,199,253) !important;
 }
 
 #total-records{
@@ -411,7 +423,7 @@ input[type=checkbox] label{
   font-size: 18px;
   font-weight: normal; 
   font-weight: 400;
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
   padding:  10px 20px 15px 0px;
 }
 
@@ -423,7 +435,7 @@ input[type=checkbox] label{
   display: flex;
   /* flex-grow: 1; */
   grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
-  background-color: #0054AE;
+  background-color: rgb(0,84,174);
   width: 100%;
   text-align: center;
   padding: 6px 0px 4px 0px;
@@ -485,7 +497,7 @@ input[type=checkbox] label{
 } */
 
 .fa-github{
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
   position: relative;
   /* background-color: transparent; */
   /* background-color: #0054AE; */
@@ -507,7 +519,7 @@ input[type=checkbox] label{
 }
 
 .fa-github:hover{
-  color:#AEAEAE;
+  color:rgba(174,174,174,68);
 }
 
 .search-container{
@@ -535,7 +547,7 @@ input[type=checkbox] label{
 }
 
 .search-widget .fa-remove { 
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
   position: relative;
   top: 2px;
   left: 4px; 
@@ -563,8 +575,8 @@ input[type=checkbox] label{
 }
 
 .fa-filter {
-  color: #808080;
-  background-color: #FFFFFF;
+  color: rgba(128,128,128,50);
+  background-color: rgba(255,255,255,100);
   position: relative;
   border: none;
   outline: none;
@@ -573,9 +585,8 @@ input[type=checkbox] label{
 }
 
 .fa-filter-circle-xmark{
-  /* font-size: 48px; */
-  color: #808080;
-  background-color: #FFFFFF;
+  color: rgba(128,128,128,50);
+  background-color: rgba(255,255,255,100);
   position: relative;
   border: none;
   outline: none;
@@ -584,7 +595,7 @@ input[type=checkbox] label{
 }
 
 .fa-search{
-  color: #AEAEAE;
+  color: rgba(174,174,174,68);
   position:absolute;
   top: 50%;
   right: 0;
@@ -607,19 +618,22 @@ input[type=text]{
   width: 120px;
   height: 40px;
   box-sizing: border-box;
-  border: 2px solid #ccc;
+  border: 2px solid rgba(204,204,204.80);
   font-size: 22px;
   z-index: 35;
 }
 
 input::placeholder {
-  color: #808080;
+  color: rgba(128,128,128,0.8);
+  z-index: 12;
 }
 ::-webkit-input-placeholder { /* Edge */
-  color: #808080;
+  color: rgba(128,128,128,0.8);
+  z-index: 12;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #808080;
+  color: rgba(128,128,128,0.8);
+  z-index: 12;
 }
 
 .search-widget .searchBox {
@@ -630,7 +644,7 @@ input::placeholder {
   min-height: 48px;
   width: 396px;
   max-width: 100%;
-  background-color: #E9E9E9;
+  background-color: rgba(233,233,233,91);
   border-radius: 9px;
   outline: none;
   border: none;
@@ -641,8 +655,9 @@ input::placeholder {
 }
 
 .search-widget .searchBox:focus{
-  color: #525252; 
-  background-color: #FFFFFF;
+  color: rgba(82,82,82,32); 
+  /* color:rgba(38,38,38,15); */
+  background-color: rgba(255,255,255,100);
 }
 
 .search-widget .resetSearchButton {
@@ -651,13 +666,13 @@ input::placeholder {
   width: 40px;
   height: 48px;
   background: transparent;
-  color: #FFFFFF;
+  color: rgba(255,255,255,100);
   z-index: 5;
 }
 
 input:hover {
   /* offset: offset-x | offset-y | blur-radius; */
-  box-shadow:  0px 1px 3px #AEAEAE;
+  box-shadow:  0px 1px 3px rgba(174,174,174,68);
 }
 
 .all-wrapper{
@@ -682,10 +697,10 @@ input:hover {
   font-style: normal;
   font-weight: 400;
   font-size:  16px;
-  border: 1px solid #808080;
-  background-color: #FFFFFF;
+  border: 1px solid rgba(128,128,128,50);
+  background-color: rgba(255,255,255,100);
   border-radius: 7px;
-  box-shadow: 2px 2px 2px #F9F9F9;
+  box-shadow: 2px 2px 2px rgba(174,174,174,0.2);
   min-height: 20vh;
   text-align: left;
   padding: 15px 25px 15px 25px;
@@ -733,16 +748,16 @@ input:hover {
   font-family: var(--bs-header-font-family);
   font-weight: bold;
   font-weight: 800;
-  color: #0054AE;
+  color: rgb(0,84,174);
   font-size: 18px;
   padding-bottom: 10px;
 }
 
 .card:hover{
-  background: -webkit-linear-gradient(#F5F5F5,#E9E9E9);  
-  background: -moz-linear-gradient(#F5F5F5,#E9E9E9);   
-  background: -o-linear-gradient(#F5F5F5,#E9E9E9);  
-  background: linear-gradient(#F5F5F5,#E9E9E9);     
+  background: -webkit-linear-gradient(rgba(250,250,250,98),rgba(233,233,233,91));  
+  background: -moz-linear-gradient(rgba(250,250,250,98),rgba(233,233,233,91));   
+  background: -o-linear-gradient(rgba(250,250,250,98),rgba(233,233,233,91));  
+  background: linear-gradient(rgba(250,250,250,98),rgba(233,233,233,91));     
   -webkit-transition: background 2s ease-out;  
   -moz-transition: background 2s ease-out;  
   -o-transition: background 2s ease-out;  
@@ -764,27 +779,29 @@ input:hover {
 
 .pg-first-last {
   flex-grow: 1;
-  line-height: 1em; /* adjust leading */
+  line-height: 0.5em; /* adjust leading */
+  vertical-align: middle;
   border: none;
   max-width: 50px;
   height: 40px;
-  background: #E9E9E9;
+  background: rgba(233,233,233,91);
   border-radius: 7px ;
-  color: #0054AE;
+  color: rgb(0,84,174);
 }
 
 .pg-rng {
   display : flex;
   align-items: center;
+  vertical-align: middle;
   flex-grow: 1;
   padding: .5rem;
-  line-height: 1em; /* adjust leading */
+  line-height: 0.5em; /* adjust leading */
   border: none;
   max-width: 130px;
   height: 40px;
-  background: #E9E9E9;
+  background: rgba(233,233,233,91);
   border-radius: 7px ;
-  color: #0054AE;
+  color: rgb(0,84,174);
 }
 
 .arrow {
@@ -803,7 +820,7 @@ input:hover {
   width: 0;
   height: 0;
   border-top: 18.75px solid transparent;
-  border-right: 31.25px solid #AEAEAE;
+  border-right: 31.25px solid rgba(174,174,174,68);
   border-bottom: 18.75px solid transparent;
   background-color: transparent;
 }
@@ -813,7 +830,7 @@ input:hover {
   width: 0;
   height: 0;
   border-top: 18.75px solid transparent;
-  border-left: 31.25px solid #00C7FD;
+  border-left: 31.25px solid rgb(0,199,253);
   border-bottom: 18.75px solid transparent;
   background-color: transparent;
 }
@@ -826,7 +843,7 @@ input:hover {
 .circle-icon {
   width: 40px;
   height: 40px;
-  background: #0054AE;
+  background: rgb(0,84,174);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -837,19 +854,23 @@ input:hover {
 }
 
 .badge1-circle { 
-  background-color: #A0EBFF;
+  background-color: rgba(250,250,250,98);
+  box-shadow: inset 0px 0px 3px rgba(128,128,128,0.9);
 }
 
 .badge2-circle { 
-  background-color: #00C7FD;
+  background-color: rgba(233,233,233,91);
+  box-shadow: inset 0px 0px 3px rgba(128,128,128,0.9);
 }
 
 .badge3-circle { 
-  background-color: #0054AE;
+  background-color: rgba(207,207,207,81);
+  box-shadow: inset 0px 0px 5px rgba(128,128,128,0.9);
 }
 
 /* FILTER INPUT CHECKBOXES */
 .container-filter {
+  color: rgb(0, 0, 0);
   display: block;
   position: relative;
   padding-left: 35px;
@@ -892,36 +913,36 @@ label{
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
-	background: white;
+	background: rgba(255,255,255,100);
 }
 
 input[type=checkbox] {
   appearance: none;
-  background-color: #fff;
+  background-color: rgba(255,255,255,100);
   width: 25px;
   height: 25px;
   border-radius: 25%; 
-  border: 2px solid #ccc;
+  border: 2px solid rgba(204,204,204,80);
   place-content: center; 
 }
 
 input[type=checkbox]:hover {
-  background-color: #AEAEAE;
+  background-color: rgba(174,174,174,68);
 }
 
 .expertise-checkboxes input[type="checkbox"]:checked {
-  background-color: #A0EBFF;
-  border: 2px solid #A0EBFF;
+  background-color: rgba(174,174,174,68);
+  box-shadow: inset 0px 0px 3px rgba(128,128,128,0.5);
 }
 
 .language-checkboxes input[type="checkbox"]:checked {
-  background-color: #00C7FD;
-  border: 2px solid #00C7FD;
+  background-color: rgba(174,174,174,68);
+  box-shadow: inset 0px 0px 3px rgba(128,128,128,0.5);
 }
 
 .device-checkboxes input[type="checkbox"]:checked {
-  background-color: #0054AE;
-  border: 2px solid #0054AE;
+  background-color: rgba(174,174,174,68);
+  box-shadow: inset 0px 0px 3px rgba(128,128,128,0.5);
 }
 
 
@@ -973,8 +994,8 @@ input[type=checkbox]:after {
 
 .mid-col.help-msg{
   min-height: 200px;
-  background-color: #A0EBFF;
-  color: #0054AE;
+  background-color: rgb(160,235,255);
+  color: rgb(0,84,174);
 }
 
 .rgt-col {
@@ -1030,9 +1051,9 @@ ul.help li {
   border-radius: 7px;
   outline: none;
   height: 48px;
-  color: #0054AE;
-  background-color: #A0EBFF;
-  box-shadow: 0 0 0.10em #E9E9E9, 0 0 0 0.10em #00C7FD inset; /* blurred radius: 0.05em */ 
+  color: rgb(0,84,174);
+  background-color: rgb(160,235,255); 
+  box-shadow: 0 0 0.10em rgba(233,233,233,91), 0 0 0 0.10em rgb(0,199,253) inset; /* blurred radius: 0.05em */ 
 }
 
 #errormsg {
@@ -1042,8 +1063,8 @@ ul.help li {
   left: 0px; 
   z-index: 300;
   position: absolute;
-  color: #0054AE;
-  background-color: #A0EBFF;
+  color: rgb(0,84,174);
+  background-color: rgb(160,235,255);
   border-radius: 7px;
   margin-bottom: 5px;
   padding: 10px 8px 10px 6px;
@@ -1096,25 +1117,33 @@ ul.help li {
   height: 48px;
   min-width: 96px;
   width: 100px;
-  color: #0054AE;
-  background-color: #A0EBFF;
-  box-shadow: 0 0 0.10em #E9E9E9, 0 0 0 0.10em #00C7FD inset; /* blurred radius: 0.05em */ 
+  color: rgb(0,84,174);
+  background-color: rgb(160,235,255);
+  box-shadow: 0 0 0.10em rgba(233,233,233,91), 0 0 0 0.10em rgb(0,199,253) inset; /* blurred radius: 0.05em */ 
   padding: 10px 8px 10px 6px;
   margin-top: 2px;
   margin-left: 8px;
 }
 
 .transparent {
-  border: 10px solid #E9E9E9;
+  border: 10px solid rgba(233,233,233,91);
   background-clip: padding-box;
 }
 
-#footer-container{
-    text-align: left;
+a {
+  text-decoration: none !important;
+  color: rgb(255,255,255) !important;
 }
 
-#footer-blk-1, #footer-blk-2{
-  display: inline;
-  padding-left: 5px;
-  padding-right: 5px;
+#trademarks{
+  color: rgba(0,84,174,68) !important;
+}
+
+#footer-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+#footer-blk-2{
+  padding: 5px 10px;
 }
