@@ -421,6 +421,8 @@ https://app.plan.intel.com/e/er?cid=em&source=elo&campid=satg_WW_satgobmcdn_EMNL
 
 - [Using OpenMP—The Next Step: Affinity, Accelerators, Tasking, and SIMD](https://direct.mit.edu/books/book/4482/Using-OpenMP-The-Next-StepAffinity-Accelerators)
 
+- [OpenMP* Offload Basics](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/openmp-offload.html#gs.wf54fg)
+
 
 
 
