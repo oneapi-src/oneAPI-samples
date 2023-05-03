@@ -46,29 +46,31 @@ constexpr int opt_n =
 #endif
 
 class Binomial {
-public:
-    Binomial();
-    ~Binomial();
+ public:
+  Binomial();
+  ~Binomial();
 
-    void run();
-    void check();
-private:
-    DATA_TYPE* h_call_result;
-    DATA_TYPE* h_stock_price;
-    DATA_TYPE* h_option_strike;
-    DATA_TYPE* h_option_years;
+  void run();
+  void check();
 
-    void body();
+ private:
+  DATA_TYPE* h_call_result;
+  DATA_TYPE* h_stock_price;
+  DATA_TYPE* h_option_strike;
+  DATA_TYPE* h_option_years;
+
+  void body();
 };
 
 class timer {
-public:
-    timer() { start(); }
-    void start() { t1_ = std::chrono::steady_clock::now(); }
-    void stop() { t2_ = std::chrono::steady_clock::now(); }
-    auto duration() { return std::chrono::duration<double>(t2_ - t1_).count(); }
-private:
-    std::chrono::steady_clock::time_point t1_, t2_;
+ public:
+  timer() { start(); }
+  void start() { t1_ = std::chrono::steady_clock::now(); }
+  void stop() { t2_ = std::chrono::steady_clock::now(); }
+  auto duration() { return std::chrono::duration<double>(t2_ - t1_).count(); }
+
+ private:
+  std::chrono::steady_clock::time_point t1_, t2_;
 };
 
-#endif // __Binomial_HPP__
+#endif  // __Binomial_HPP__
