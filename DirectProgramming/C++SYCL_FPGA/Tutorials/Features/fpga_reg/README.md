@@ -120,7 +120,7 @@ In this part, we added two sets of `ext::intel::fpga_reg` within the unrolled lo
 In this version, the adder tree has been transformed into a vine-like structure. This increases latency, but it helps us achieve our goal of reducing the fanout and improving f<sub>MAX</sub>.
 Since the outer loop is pipelined and has a high trip count, the inner loop's increased latency has a negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
 
-## Build the `FPGA Reg` Tutorial
+## Build the `fpga_reg` Tutorial
 
 >**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
