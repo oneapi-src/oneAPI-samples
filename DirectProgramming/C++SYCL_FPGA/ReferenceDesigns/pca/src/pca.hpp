@@ -9,23 +9,23 @@
 #include <type_traits>
 #include <vector>
 
-#include "CovMatrix.hpp"
+#include "streaming_covariance_matrix.hpp"
 #include "memory_transfers.hpp"
 #include "streaming_eigen.hpp"
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
-class QRDDDRToLocalMem;
-class COV;
-class EIGEN;
-class QRDLocalMemToDDRQ;
-class QRDLocalMemToDDRR;
-class CPipe;
-class APipe;
-class CMatrixPipe;
-class RQPipe;
-class QQPipe;
+class InputMatrixFromDDRToLocalMem;
+class CovarianceMatrixComputation;
+class EigenValuesAndVectorsComputation;
+class EigenVectorsFromLocalMemToDDR;
+class EigenValuesFromLocalMemToDDR;
+
+class CMP;
+class IMP;
+class EValP;
+class EVecP;
 
 /*
   Implementation of the QR decomposition using multiple streaming kernels
@@ -38,84 +38,99 @@ template <unsigned k_samples_count,   // Number of samples in the input matrix
                                       // optimization
           bool k_use_rayleigh_shift,  // Use Rayleigh shift rather than
                                       // Wilkinson shift
-          int k_zero_threshold_1e,     // Threshold from which we consider a
-                                   // floating point value to be 0 (e.g. -4 -> 10e-4)
-          typename T                  // The datatype for the computation
+          int k_zero_threshold_1e,    // Threshold from which we consider a
+                                    // floating point value to be 0 (e.g. -4 ->
+                                    // 10e-4)
+          typename T  // The datatype for the computation
           >
 void PCAsyclImpl(
-    std::vector<T> &a_matrix,    // Input matrix to decompose
-    std::vector<T> &eig_matrix,  // Output matrix Q
-    std::vector<T> &qq_matrix,   // Output matrix R
-    sycl::queue &q,              // Device queue
-    int matrix_count,            // Number of matrices to decompose
+    std::vector<T> &input_matrix,          // Input matrix to decompose
+    std::vector<T> &eigen_values_matrix,   // Output matrix of eigen values
+    std::vector<T> &eigen_vectors_matrix,  // Output matrix of eigen vectors
+    sycl::queue &q,                        // Device queue
+    int matrix_count,                      // Number of matrices to decompose
     int repetitions  // Number of repetitions, for performance evaluation
 ) {
+  static_assert(k_samples_count % k_features_count == 0,
+                "The feature count must be  a multiple of the samples count. "
+                "This can be artificially acheived by increasing the number of "
+                "samples with no data.");
+
   constexpr int kNumElementsPerDDRBurst = 8;
-  constexpr int kAMatrixSize =
+  constexpr int kInputMatrixSize =
       ((k_samples_count + k_features_count - 1) / k_features_count) *
       k_features_count * k_features_count;
-  constexpr int kQQMatrixSize = k_features_count * k_features_count;
-  constexpr int kEigMatrixSize =
+  constexpr int kEigenVectorsMatrixSize = k_features_count * k_features_count;
+  constexpr int kEigenValuesMatrixSize =
       k_features_count + 1;  // additional one for debug data
 
   using PipeType = fpga_tools::NTuple<T, kNumElementsPerDDRBurst>;
 
   // Pipes to communicate the A, Q and R matrices between kernels
-  using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
-  using CMatrixPipe = sycl::ext::intel::pipe<CPipe, PipeType, 3>;
-  using EigMatrixPipe = sycl::ext::intel::pipe<RQPipe, PipeType, 3>;
-  using QQMatrixPipe = sycl::ext::intel::pipe<QQPipe, PipeType, 3>;
+  using InputMatrixPipe = sycl::ext::intel::pipe<IMP, PipeType, 3>;
+  using CovarianceMatrixPipe = sycl::ext::intel::pipe<CMP, PipeType, 3>;
+  using EigenValuesPipe = sycl::ext::intel::pipe<EValP, PipeType, 3>;
+  using EigenVectorsPipe = sycl::ext::intel::pipe<EVecP, PipeType, 3>;
 
   // Allocate FPGA DDR memory.
-  T *a_device = sycl::malloc_device<T>(kAMatrixSize * matrix_count, q);
-  T *qq_device = sycl::malloc_device<T>(kQQMatrixSize * matrix_count, q);
-  T *eig_device = sycl::malloc_device<T>(kEigMatrixSize * matrix_count, q);
+  T *input_matrix_device =
+      sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
+  T *eigen_vectors_device =
+      sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
+  T *eigen_values_device =
+      sycl::malloc_device<T>(kEigenValuesMatrixSize * matrix_count, q);
 
-  q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count * sizeof(T))
+  q.memcpy(input_matrix_device, input_matrix.data(),
+           kInputMatrixSize * matrix_count * sizeof(T))
       .wait();
 
-  int matrixBlocks = matrix_count * ((k_samples_count + k_features_count - 1) /
-                                     k_features_count);
+  // The covariance matrix is computed by blocks for k_features_count x
+  // k_features_count Therefore we read the k_features_count x k_samples_count
+  // by blocks of k_features_count x k_features_count. k_samples_count is
+  // expected to be a multiplee of k_features_count
+  int matrix_blocks = matrix_count * (k_samples_count / k_features_count);
 
   auto ddr_write_event = q.submit([&](sycl::handler &h) {
-    h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<InputMatrixFromDDRToLocalMem>([=
+    ]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<T, k_features_count, k_features_count,
-                              kNumElementsPerDDRBurst, AMatrixPipe>(
-          a_device, matrixBlocks, repetitions);
+                              kNumElementsPerDDRBurst, InputMatrixPipe>(
+          input_matrix_device, matrix_blocks, repetitions);
     });
   });
 
-  q.single_task<COV>(
-      fpga_linalg::StreamingMM<T, k_features_count, k_samples_count,
-                               kNumElementsPerDDRBurst, kNumElementsPerDDRBurst,
-                               AMatrixPipe, CMatrixPipe>());
+  q.single_task<CovarianceMatrixComputation>(
+      fpga_linalg::StreamingCovarianceMatrix<
+          T, k_features_count, k_samples_count, kNumElementsPerDDRBurst,
+          InputMatrixPipe, CovarianceMatrixPipe>());
 
-  q.single_task<EIGEN>(
+  q.single_task<EigenValuesAndVectorsComputation>(
       fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
                                   kNumElementsPerDDRBurst, k_zero_threshold_1e,
-                                  CMatrixPipe, EigMatrixPipe, QQMatrixPipe,
-                                  k_use_rayleigh_shift>());
+                                  CovarianceMatrixPipe, EigenValuesPipe,
+                                  EigenVectorsPipe, k_use_rayleigh_shift>());
 
-  auto eig_event = q.single_task<QRDLocalMemToDDRR>([=
+  auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count + 1, 1, kNumElementsPerDDRBurst,
-                        EigMatrixPipe>(eig_device, matrix_count, repetitions);
+                        EigenValuesPipe>(eigen_values_device, matrix_count,
+                                         repetitions);
   });
 
-  auto qq_event =
-      q.single_task<QRDLocalMemToDDRQ>([=]() [[intel::kernel_args_restrict]] {
-        MatrixReadPipeToDDR<T, k_features_count, k_features_count,
-                            kNumElementsPerDDRBurst, QQMatrixPipe>(
-            qq_device, matrix_count, repetitions);
-      });
+  auto eigen_vectors_event = q.single_task<EigenVectorsFromLocalMemToDDR>([=
+  ]() [[intel::kernel_args_restrict]] {
+    MatrixReadPipeToDDR<T, k_features_count, k_features_count,
+                        kNumElementsPerDDRBurst, EigenVectorsPipe>(
+        eigen_vectors_device, matrix_count, repetitions);
+  });
 
-  qq_event.wait();
-  eig_event.wait();
+  eigen_vectors_event.wait();
+  eigen_values_event.wait();
 
   // Compute the total time the execution lasted
   auto start_time = ddr_write_event.template get_profiling_info<
       sycl::info::event_profiling::command_start>();
-  auto end_time = qq_event.template get_profiling_info<
+  auto end_time = eigen_vectors_event.template get_profiling_info<
       sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
   q.throw_asynchronous();
@@ -125,17 +140,17 @@ void PCAsyclImpl(
             << "k matrices/s" << std::endl;
 
   // Copy the Q and R matrices result from the FPGA DDR to the host memory
-  q.memcpy(qq_matrix.data(), qq_device,
-           kQQMatrixSize * matrix_count * sizeof(T))
+  q.memcpy(eigen_vectors_matrix.data(), eigen_vectors_device,
+           kEigenVectorsMatrixSize * matrix_count * sizeof(T))
       .wait();
-  q.memcpy(eig_matrix.data(), eig_device,
-           kEigMatrixSize * matrix_count * sizeof(T))
+  q.memcpy(eigen_values_matrix.data(), eigen_values_device,
+           kEigenValuesMatrixSize * matrix_count * sizeof(T))
       .wait();
 
   // Clean allocated FPGA memory
-  free(a_device, q);
-  free(eig_device, q);
-  free(qq_device, q);
+  free(input_matrix_device, q);
+  free(eigen_values_device, q);
+  free(eigen_vectors_device, q);
 }
 
 #endif /* __QRD_HPP__ */

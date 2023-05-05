@@ -5,33 +5,7 @@
 #include "constexpr_math.hpp"
 #include "unrolled_loop.hpp"
 
-#ifdef __SYCL_DEVICE_ONLY__
-  #define CL_CONSTANT __attribute__((opencl_constant))
-#else
-  #define CL_CONSTANT
-#endif
-#define PRINTF(format, ...) { \
-            static const CL_CONSTANT char _format[] = format; \
-            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
-
 namespace fpga_linalg {
-
-template <typename T,        // The datatype for the computation
-          unsigned rows,          // Number of rows in the A matrices
-          unsigned columns,       // Number of columns in the A matrices
-
-          unsigned blockSize,  // number of parallel mult and add 
-          unsigned pipe_size,     // Number of elements read/write per pipe
-                             // operation
-          typename AIn,      // A matrix input pipe, receive pipe_size
-                             // elements from the pipe with each read
-          typename AOut     // Q matrix output pipe, send pipe_size
-                             // elements to the pipe with each write
-          >
-
-
-
-
 // this is a kernel for preprocessing input samples with multiple features 
 // input is essentially Nxp matrix - A 
 // Preprocessing Algorithm  
@@ -59,7 +33,17 @@ template <typename T,        // The datatype for the computation
 // mean[i] = sum(Dot(A[i][])/N
 // var[i] = sqrt((Dot(A[i][], A[j][]) - N* mean[i]*mean[j])/N)
 
-struct StreamingMM{
+template <typename T,        // The datatype for the computation
+          unsigned rows,          // Number of rows in the A matrices
+          unsigned columns,       // Number of columns in the A matrices
+          unsigned pipe_size,     // Number of elements read/write per pipe
+                             // operation
+          typename AIn,      // A matrix input pipe, receive pipe_size
+                             // elements from the pipe with each read
+          typename AOut     // Q matrix output pipe, send pipe_size
+                             // elements to the pipe with each write
+          >
+struct StreamingCovarianceMatrix{
     void operator()() const {
     
     using row_tuple = fpga_tools::NTuple<T, rows>;
