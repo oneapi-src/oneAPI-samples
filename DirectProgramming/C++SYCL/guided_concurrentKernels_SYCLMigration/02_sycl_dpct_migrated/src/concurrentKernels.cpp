@@ -162,6 +162,7 @@ int main(int argc, char **argv) {
   // queue nkernels in separate streams and record when they are done
   for (int i = 0; i < nkernels; ++i) {
     streams[i]->submit([&](sycl::handler &cgh) {
+      d_a[i] = 0;
       auto d_a_i_ct0 = &d_a[i];
 
       cgh.parallel_for(
