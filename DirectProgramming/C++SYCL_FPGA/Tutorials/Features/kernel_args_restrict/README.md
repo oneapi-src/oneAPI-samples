@@ -1,4 +1,4 @@
-# `Kernel Args Restrict` Sample
+# `kernel_args_restrict` Sample
 
 This sample is an FPGA tutorial that explains the  `kernel_args_restrict` attribute and the effect of the attribute on the performance of FPGA kernels.
 
