@@ -1,5 +1,5 @@
 
-# `Loop Coalesce` Sample
+# `loop_coalesce` Sample
 
 This sample is an FPGA tutorial that demonstrates applying the `loop_coalesce` attribute to a nested loop in a task kernel to reduce the area overhead.
 
