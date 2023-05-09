@@ -1,6 +1,6 @@
-# `Guided Coarray` Sample
+# `Coarray` Sample
 
-The `Guided Coarray` sample provides a guided approach to build and run a serial Fortran application, and then convert it to run in parallel using coarrays. The sample is a simple program that estimates the value of the mathematical constant π (Pi) using a Monte Carlo method.
+The `Coarray` sample provides a guided approach to build and run a serial Fortran application, and then convert it to run in parallel using coarrays. The sample is a simple program that estimates the value of the mathematical constant π (Pi) using a Monte Carlo method.
 
 | Area                      | Description
 |:---                       |:---
@@ -9,7 +9,7 @@ The `Guided Coarray` sample provides a guided approach to build and run a serial
 
 ## Purpose
 
-The `Guided Coarray` sample demonstrates the use of the Fortran coarray feature. The sample program estimates the value of the mathematical constant π (Pi) using a Monte Carlo method (named Monte Carlo after the game that uses random numbers). 
+The `Coarray` sample demonstrates the use of the Fortran coarray feature. The sample program estimates the value of the mathematical constant π (Pi) using a Monte Carlo method (named Monte Carlo after the game that uses random numbers). 
 
 Imagine a square piece of paper two units across (the actual unit doesn’t matter). On this paper draw a circle whose diameter is two units (radius one unit). 
 
