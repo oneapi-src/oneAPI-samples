@@ -1,4 +1,4 @@
-# `Loop Fusion` Sample
+# `loop_fusion` Sample
 
 This sample is an FPGA tutorial that demonstrates how loop fusion is used and how it affects performance.
 
