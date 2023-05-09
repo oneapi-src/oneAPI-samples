@@ -228,11 +228,16 @@ The following warnings in the "DPCT1XXX" format are gentereated by the tool to i
    
 3. Run the program.
    
-   You can run the programs for CPU and GPU. The commands indicate the device target.
+   Run `02_sycl_migrated` on GPU.
    ```
-   $ make run_cpu
-   $ make run_gpu
+   $ make run
    ```   
+   Run `02_sycl_migrated` for CPU.
+    ```
+    export SYCL_DEVICE_FILTER=cpu
+    make run
+    unset SYCL_DEVICE_FILTER
+    ```
 
 #### Troubleshooting
 
