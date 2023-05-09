@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
 
   // stop Device Timer
   sdkStopTimer(&timerGpu);
-  printf("GPU Processing time: %f (ms)\n", sdkGetTimerValue(&timerGpu));
+  printf("Device Processing time: %f (ms)\n", sdkGetTimerValue(&timerGpu));
 
   // Free up allocated memory
   free(d_b, dpct::get_default_queue());

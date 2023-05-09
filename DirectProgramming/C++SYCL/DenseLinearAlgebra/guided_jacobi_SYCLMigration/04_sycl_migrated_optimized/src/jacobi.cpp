@@ -250,9 +250,8 @@ double JacobiMethodGpu(const float *A, const double *b,
 
       q.memcpy(&sum, d_sum, sizeof(double)).wait();
 
-      printf("Parallel Implementation : \n");
-      printf("Iterations : %d\n", k + 1);
-      printf("Error : %.3e\n", sum);
+      printf("Device iterations : %d\n", k + 1);
+      printf("Device error : %.3e\n", sum);
       break;
     }
   }
