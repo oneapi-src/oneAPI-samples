@@ -43,8 +43,8 @@ void matrix_multiply(big_matrix<T1, M, N> &C, big_matrix<T2, M, K> &A,
   sycl::queue q;
   q.submit([&](sycl::handler &cgh) {
      sycl::accessor accC(bufC, cgh, sycl::read_write, sycl::no_init);
-     sycl::accessor accA(bufA, cgh, sycl::read_only, sycl::no_init);
-     sycl::accessor accB(bufB, cgh, sycl::read_only, sycl::no_init);
+     sycl::accessor accA(bufA, cgh, sycl::read_only);
+     sycl::accessor accB(bufB, cgh, sycl::read_only);
 
      cgh.parallel_for(
          sycl::nd_range<2>({NDRangeM, NDRangeN * SG_SZ}, {1, 1 * SG_SZ}),
