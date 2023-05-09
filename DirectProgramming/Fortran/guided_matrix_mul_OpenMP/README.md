@@ -1,6 +1,6 @@
-﻿# `Guided OpenMP Offload of Matrix Multiply` Sample 
+﻿# `Matrix Multiply` Sample 
 
-The `Guided OpenMP Offload of Matrix Multiply` sample provides a guided approach to modify a simple Fortran program to offload computations to an Intel® GPU using OpenMP* with the Intel® Fortran Compiler. The sample program is a simple matrix multiply algorithm.
+The `Matrix Multiply` sample provides a guided approach to modify a simple Fortran program to offload computations to an Intel® GPU using OpenMP* with the Intel® Fortran Compiler. The sample program is a simple matrix multiply algorithm.
 
 | Area                      | Description
 |:---                       |:---
@@ -9,7 +9,7 @@ The `Guided OpenMP Offload of Matrix Multiply` sample provides a guided approach
 
 ## Purpose
 
-The `Guided OpenMP Offload of Matrix Multiply` sample demonstrates the steps to modify a simple Fortran program to use OpenMP* directives to offload the compute kernel from the host to an Intel® GPU using the Intel® Fortran Compiler. 
+The `Matrix Multiply` sample demonstrates the steps to modify a simple Fortran program to use OpenMP* directives to offload the compute kernel from the host to an Intel® GPU using the Intel® Fortran Compiler. 
 
 In the sample program, two matrices are multiplied to produce a result matrix. To do the multiplication the number of columns in the first matrix must be equal to the number of rows in the second matrix. The result matrix has the number of rows of the first matrix and the number of columns of the second matrix. For a deeper refresh on this linear algebra algorithm, refer to the [Wikipedia Matrix multiplication article](https://en.wikipedia.org/wiki/Matrix_multiplication). The example in this tutorial multiplies square matrices; the number of rows equals the number of columns.
 
