@@ -1,4 +1,4 @@
-# `Loop Initiation Interval` Sample
+# Loop `initiation_interval` Sample
 
 This sample is an FPGA tutorial that demonstrates how a user can use the `intel::initiation_interval` attribute to change the initiation interval (II) of a loop in scenarios that this feature improves performance.
 
