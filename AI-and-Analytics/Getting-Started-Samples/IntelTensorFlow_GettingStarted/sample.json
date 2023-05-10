@@ -7,7 +7,7 @@
 	"languages": [{
 		"python": {}
 	}],
-	"os": ["linux", "windows"],
+	"os": ["linux"],
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
