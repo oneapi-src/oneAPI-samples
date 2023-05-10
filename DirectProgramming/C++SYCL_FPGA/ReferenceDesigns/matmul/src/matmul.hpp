@@ -41,12 +41,12 @@ class DonePipe;
  *
  */
 template <typename TT,          // Datatype of the elements of the matrix
-          int k_rows_a,         // Rows of matrix A
-          int k_common,         // Columns of matrix A / rows of matrix B
-          int k_cols_b,         // Columns of matrix B
-          int k_tile_a,         // Tile size for matrix A
-          int k_tile_b,         // Tile size for matrix B
-          int k_num_matrices>   // Number of pairs of matrices to multiply
+          int rows_a,           // Rows of matrix A
+          int common,           // Columns of matrix A / rows of matrix B
+          int cols_b,           // Columns of matrix B
+          int tile_a,           // Tile size for matrix A
+          int tile_b,           // Tile size for matrix B
+          int num_matrices>     // Number of pairs of matrices to multiply
 void MatmulImpl(sycl::queue &q,            // Device queue
                 std::vector<TT> &a_matrix, // Input matrix A
                 std::vector<TT> &b_matrix, // Input matrix B
@@ -58,9 +58,9 @@ void MatmulImpl(sycl::queue &q,            // Device queue
   constexpr int kElemsPerDDRAccess = 8;
 
   // Matrix sizes
-  constexpr int kMatsizeA = k_rows_a * k_common;
-  constexpr int kMatsizeB = k_cols_b * k_common;
-  constexpr int kMatsizeC = k_rows_a * k_cols_b;
+  constexpr int kMatsizeA = rows_a * common;
+  constexpr int kMatsizeB = cols_b * common;
+  constexpr int kMatsizeC = rows_a * cols_b;
 
   // Buffer locations for mmhost interfaces
   constexpr int kBL1 = 0;
@@ -69,22 +69,22 @@ void MatmulImpl(sycl::queue &q,            // Device queue
 
   // Allocate FPGA DDR memory
 #if defined(IS_BSP)
-  TT *a = sycl::malloc_device<TT>(kMatsizeA * k_num_matrices, q);
-  TT *b = sycl::malloc_device<TT>(kMatsizeB * k_num_matrices, q);
-  TT *c = sycl::malloc_device<TT>(kMatsizeC * k_num_matrices, q);
+  TT *a = sycl::malloc_device<TT>(kMatsizeA * num_matrices, q);
+  TT *b = sycl::malloc_device<TT>(kMatsizeB * num_matrices, q);
+  TT *c = sycl::malloc_device<TT>(kMatsizeC * num_matrices, q);
 #else
   // malloc_device are not supported when targetting an FPGA part/family
-  TT *a = sycl::malloc_shared<TT>(kMatsizeA * k_num_matrices, q,
+  TT *a = sycl::malloc_shared<TT>(kMatsizeA * num_matrices, q,
                                   sycl::property_list{buffer_location(kBL1)});
-  TT *b = sycl::malloc_shared<TT>(kMatsizeB * k_num_matrices, q,
+  TT *b = sycl::malloc_shared<TT>(kMatsizeB * num_matrices, q,
                                   sycl::property_list{buffer_location(kBL2)});
-  TT *c = sycl::malloc_shared<TT>(kMatsizeC * k_num_matrices, q,
+  TT *c = sycl::malloc_shared<TT>(kMatsizeC * num_matrices, q,
                                   sycl::property_list{buffer_location(kBL3)});
 #endif
 
   // Copy matrices over
-  q.memcpy(a, a_matrix.data(), kMatsizeA * k_num_matrices * sizeof(TT)).wait();
-  q.memcpy(b, b_matrix.data(), kMatsizeB * k_num_matrices * sizeof(TT)).wait();
+  q.memcpy(a, a_matrix.data(), kMatsizeA * num_matrices * sizeof(TT)).wait();
+  q.memcpy(b, b_matrix.data(), kMatsizeB * num_matrices * sizeof(TT)).wait();
 
   using PipeDataA = fpga_tools::NTuple<TT, TILE_A>;
   using PipeDataB = fpga_tools::NTuple<TT, TILE_B>;
@@ -98,25 +98,25 @@ void MatmulImpl(sycl::queue &q,            // Device queue
 
   // Producer kernel for matrix A
   auto feeder_a_event = q.single_task<FeederA>(
-      MatrixReadFromDDRToPipeA<TT, kBL1, k_rows_a, k_common, k_cols_b, k_tile_a,
-                               k_tile_b, kElemsPerDDRAccess, k_num_matrices,
-                               PipeA, PipeDone>{a, repetitions});
+      MatrixReadFromDDRToPipeA<TT, kBL1, rows_a, common, cols_b, tile_a, tile_b,
+                               kElemsPerDDRAccess, num_matrices, PipeA,
+                               PipeDone>{a, repetitions});
 
   // Producer kernel for matrix B
   q.single_task<FeederB>(
-      MatrixReadFromDDRToPipeB<TT, kBL2, k_rows_a, k_common, k_cols_b, k_tile_a,
-                               k_tile_b, kElemsPerDDRAccess, k_num_matrices,
-                               PipeB>{b, repetitions});
+      MatrixReadFromDDRToPipeB<TT, kBL2, rows_a, common, cols_b, tile_a, tile_b,
+                               kElemsPerDDRAccess, num_matrices, PipeB>{
+          b, repetitions});
 
   // Matrix multiply kernel
   q.single_task<Matmul>(
-      fpga_linalg::StreamingMatmul<TT, k_common, k_tile_a, k_tile_b, PipeA,
-                                   PipeB, PipeC, PipeDone>{});
+      fpga_linalg::StreamingMatmul<TT, common, tile_a, tile_b, PipeA, PipeB,
+                                   PipeC, PipeDone>{});
 
   // Consumer kernel for matrix C
   auto drain_event = q.single_task<Drain>(
-      MatrixReadPipeToDDR<TT, kBL3, k_rows_a, k_cols_b, k_tile_a, k_tile_b,
-                          kElemsPerDDRAccess, k_num_matrices, PipeC>{
+      MatrixReadPipeToDDR<TT, kBL3, rows_a, cols_b, tile_a, tile_b,
+                          kElemsPerDDRAccess, num_matrices, PipeC>{
           c, repetitions});
 
   drain_event.wait();
@@ -128,11 +128,11 @@ void MatmulImpl(sycl::queue &q,            // Device queue
       sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
-  std::cout << "Throughput: " << repetitions * k_num_matrices / diff * 1e-3
+  std::cout << "Throughput: " << repetitions * num_matrices / diff * 1e-3
             << "k matrices/s" << std::endl;
 
   // Copy result matrix back
-  q.memcpy(c_matrix.data(), c, kMatsizeC * k_num_matrices * sizeof(TT)).wait();
+  q.memcpy(c_matrix.data(), c, kMatsizeC * num_matrices * sizeof(TT)).wait();
 
   // Free USM
   sycl::free(a, q);
