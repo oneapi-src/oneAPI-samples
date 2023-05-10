@@ -137,7 +137,7 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
 
   dpct::get_default_queue().wait();
 
-  printf("solverThread() finished - GPU Device %d: %s\n", plan->device,
+  printf("solverThread() finished -  Device %d: %s\n", plan->device,
          deviceProp.get_name());
 
   CUT_THREADEND;
@@ -326,7 +326,7 @@ int main(int argc, char **argv) {
   printf("Parallelization method  = %s\n",
          use_threads ? "threaded" : "streamed");
   printf("Problem scaling         = %s\n", strongScaling ? "strong" : "weak");
-  printf("Number of GPUs          = %d\n", GPU_N);
+  printf("Number of Devices       = %d\n", GPU_N);
   printf("Total number of options = %d\n", OPT_N);
   printf("Number of paths         = %d\n", PATH_N);
 
@@ -375,10 +375,10 @@ int main(int argc, char **argv) {
                                           &optionSolver[gpuIndex]);
     }
 
-    printf("main(): waiting for GPU results...\n");
+    printf("main(): waiting for Device results...\n");
     cutWaitForThreads(threadID, GPU_N);
 
-    printf("main(): GPU statistics, threaded\n");
+    printf("main(): Device statistics, threaded\n");
 
     for (i = 0; i < GPU_N; i++) {
       dpct::device_info deviceProp;
@@ -386,7 +386,7 @@ int main(int argc, char **argv) {
       dpct::dev_mgr::instance()
           .get_device(optionSolver[i].device)
           .get_device_info(deviceProp);
-      printf("GPU Device #%i: %s\n", optionSolver[i].device,
+      printf("Device #%i: %s\n", optionSolver[i].device,
              deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
       printf("Simulation paths: %i\n", optionSolver[i].pathN);
@@ -422,7 +422,7 @@ int main(int argc, char **argv) {
   if (!use_threads || bqatest) {
     multiSolver(optionSolver, GPU_N);
 
-    printf("main(): GPU statistics, streamed\n");
+    printf("main(): Device statistics, streamed\n");
 
     for (i = 0; i < GPU_N; i++) {
       dpct::device_info deviceProp;
@@ -430,7 +430,7 @@ int main(int argc, char **argv) {
       dpct::dev_mgr::instance()
           .get_device(optionSolver[i].device)
           .get_device_info(deviceProp);
-      printf("GPU Device #%i: %s\n", optionSolver[i].device,
+      printf("Device #%i: %s\n", optionSolver[i].device,
              deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
       printf("Simulation paths: %i\n", optionSolver[i].pathN);

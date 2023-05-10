@@ -305,7 +305,7 @@ int main(int argc, char **argv) {
   printf("Parallelization method  = %s\n",
          use_threads ? "threaded" : "streamed");
   printf("Problem scaling         = %s\n", strongScaling ? "strong" : "weak");
-  printf("Number of GPUs          = %d\n", GPU_N);
+  printf("Number of Devices       = %d\n", GPU_N);
   printf("Total number of options = %d\n", OPT_N);
   printf("Number of paths         = %d\n", PATH_N);
 
@@ -354,14 +354,14 @@ int main(int argc, char **argv) {
                                           &optionSolver[gpuIndex]);
     }
 
-    printf("main(): waiting for GPU results...\n");
+    printf("main(): waiting for Device results...\n");
     cutWaitForThreads(threadID, GPU_N);
 
-    printf("main(): GPU statistics, threaded\n");
+    printf("main(): Device statistics, threaded\n");
 
     for (i = 0; i < GPU_N; i++) {
       sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
+      printf("Device #%i: ", optionSolver[i].device);
       std::cout << "\nRunning on "
                 << q_ct1.get_device().get_info<sycl::info::device::name>()
                 << "\n";
@@ -399,11 +399,11 @@ int main(int argc, char **argv) {
   if (!use_threads || bqatest) {
     multiSolver(optionSolver, GPU_N);
 
-    printf("main(): GPU statistics, streamed\n");
+    printf("main(): Device statistics, streamed\n");
 
     for (i = 0; i < GPU_N; i++) {
       sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
+      printf("Device #%i: ", optionSolver[i].device);
       std::cout << q_ct1.get_device().get_info<sycl::info::device::name>()
                 << "\n";
       printf("Options         : %i\n", optionSolver[i].optionCount);
