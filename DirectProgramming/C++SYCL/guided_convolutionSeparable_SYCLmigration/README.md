@@ -135,12 +135,12 @@ We can separate the array and load it into another new array and use it in place
       ```
       Run `sycl_migrated_optimized` on GPU.
       ```
-      make run
+      make run_smo
       ```
       Run `sycl_migrated_optimized` on CPU.
       ```
       export SYCL_DEVICE_FILTER=cpu
-      make run
+      make run_smo
       unset SYCL_DEVICE_FILTER
       ```
 #### Troubleshooting
