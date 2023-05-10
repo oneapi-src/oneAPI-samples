@@ -68,7 +68,7 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 
   // select problem size
   for (int i = 0; i < GPU_N; i++) {
-    sycl::queue q_ct1 = sycl::queue(gpu_selector_v);
+    sycl::queue q_ct1 = sycl::queue(default_selector_v);
     auto device = q_ct1.get_device();
 
     int Cores = device.get_info<cl::sycl::info::device::max_compute_units>();
@@ -82,7 +82,7 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 }
 
 int adjustGridSize(int GPUIndex, int defaultGridSize) {
-  sycl::queue q_ct1 = sycl::queue(gpu_selector_v);
+  sycl::queue q_ct1 = sycl::queue(default_selector_v);
   auto device = q_ct1.get_device();
 
   int maxGridSize =
@@ -113,8 +113,8 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Allocate intermediate memory for MC integrator and initialize
   // RNG states
   sycl::queue stream = sycl::queue(
-      (sycl::platform(sycl::gpu_selector_v)
-           .get_devices(sycl::info::device_type::gpu)[plan->device]));
+      (sycl::platform(sycl::default_selector_v)
+           .get_devices(sycl::info::device_type::all)[plan->device]));
 
   initMonteCarloGPU(plan, &stream);
 
@@ -150,7 +150,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;
 
   auto gpu_devices =
-      cl::sycl::device::get_devices(cl::sycl::info::device_type::gpu);
+      cl::sycl::device::get_devices(cl::sycl::info::device_type::all);
 
   for (int i = 0; i < nPlans; i++) {
     streams[i] = sycl::queue(gpu_devices[plan[i].device], exception_handler,
