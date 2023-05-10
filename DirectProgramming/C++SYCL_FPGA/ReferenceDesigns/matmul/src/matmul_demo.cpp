@@ -116,6 +116,31 @@ void MatmulRef(std::vector<float> &a_matrix, std::vector<float> &b_matrix,
 }
 
 int main(int argc, char *argv[]) {
+  // Matrix paramters specified by build system
+  constexpr int kRowsA = ROWS_A;
+  constexpr int kCommon = COMMON;
+  constexpr int kColsB = COLS_B;
+  constexpr int kTileA = TILE_A;
+  constexpr int kTileB = TILE_B;
+
+  // Matrix sizes
+  constexpr int kMatsizeA = kRowsA * kCommon;
+  constexpr int kMatsizeB = kColsB * kCommon;
+  constexpr int kMatsizeC = kRowsA * kColsB;
+
+  // Repetitions and number of matrices to measure performance
+#if FPGA_SIMULATOR
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
+  constexpr int kNumMatrices = 1;
+#elif FPGA_HARDWARE
+  int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
+  constexpr int kNumMatrices = 2;
+#else // #if FPGA_EMULATOR
+  int repetitions = argc > 1 ? atoi(argv[1]) : 16;
+  constexpr int kNumMatrices = 2;
+#endif
+
+  try {
 
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
@@ -134,30 +159,6 @@ int main(int argc, char *argv[]) {
   std::cout << "Running on device: "
             << q.get_device().get_info<sycl::info::device::name>().c_str()
             << std::endl;
-
-  // Repetitions and number of matrices to measure performance
-#if FPGA_SIMULATOR
-  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
-  constexpr int kNumMatrices = 1;
-#elif FPGA_HARDWARE
-  int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
-  constexpr int kNumMatrices = 2;
-#else // #if FPGA_EMULATOR
-  int repetitions = argc > 1 ? atoi(argv[1]) : 16;
-  constexpr int kNumMatrices = 2;
-#endif
-
-  // Matrix paramters specified by build system
-  constexpr int kRowsA = ROWS_A;
-  constexpr int kCommon = COMMON;
-  constexpr int kColsB = COLS_B;
-  constexpr int kTileA = TILE_A;
-  constexpr int kTileB = TILE_B;
-
-  // Matrix sizes
-  constexpr int kMatsizeA = kRowsA * kCommon;
-  constexpr int kMatsizeB = kColsB * kCommon;
-  constexpr int kMatsizeC = kRowsA * kColsB;
 
   // Create arrays to hold the input and output matrices
   std::vector<float> a_matrix(kMatsizeA * kNumMatrices);
@@ -231,4 +232,18 @@ int main(int argc, char *argv[]) {
   std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
 
   return !passed;
-}
+
+  } catch (sycl::exception const &e) {
+    std::cerr << "Caught a synchronous SYCL exception: " << e.what()
+              << std::endl;
+    std::cerr << "   If you are targeting an FPGA hardware, "
+                 "ensure that your system is plugged to an FPGA board that is "
+                 "set up correctly"
+              << std::endl;
+    std::cerr << "   If you are targeting the FPGA emulator, compile with "
+                 "-DFPGA_EMULATOR"
+              << std::endl;
+
+    std::terminate();
+  }
+} // end of main
