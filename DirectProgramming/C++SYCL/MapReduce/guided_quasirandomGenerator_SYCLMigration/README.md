@@ -114,9 +114,9 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
    ```  
    Run `01_dpct_output` on CPU.
    ```
-   export SYCL_DEVICE_FILTER=cpu
+   export ONEAPI_DEVICE_SELECTOR=cpu
    make run
-   unset SYCL_DEVICE_FILTER
+   unset ONEAPI_DEVICE_SELECTOR 
    ```
  4. Run the program.
    
@@ -126,9 +126,9 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
    ```  
    Run `02_sycl_migrated_optimized` on CPU.
    ```
-   export SYCL_DEVICE_FILTER=cpu
+   export ONEAPI_DEVICE_SELECTOR=cpu
    make run_smo
-   unset SYCL_DEVICE_FILTER
+   unset ONEAPI_DEVICE_SELECTOR 
    ```
    
 #### Troubleshooting
