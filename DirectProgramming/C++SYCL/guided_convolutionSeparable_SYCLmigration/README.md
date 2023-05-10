@@ -123,17 +123,26 @@ We can separate the array and load it into another new array and use it in place
 
    You can run the programs for CPU and GPU. The commands indicate the device target.
 
-     > Run `dpct_output` for CPU and GPU.
+      Run `dpct_output` on GPU.
       ```
-      make run_cpu
-      make run_gpu
+      make run
       ```
-     > Run `sycl_migrated_optimized` for CPU and GPU.
+      Run `dpct_output` on CPU.
       ```
-      make run_cmo_cpu
-      make run_cmo_gpu
+      export SYCL_DEVICE_FILTER=cpu
+      make run
+      unset SYCL_DEVICE_FILTER
       ```
-
+      Run `sycl_migrated_optimized` on GPU.
+      ```
+      make run
+      ```
+      Run `sycl_migrated_optimized` on CPU.
+      ```
+      export SYCL_DEVICE_FILTER=cpu
+      make run
+      unset SYCL_DEVICE_FILTER
+      ```
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
