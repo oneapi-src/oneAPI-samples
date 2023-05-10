@@ -89,19 +89,22 @@ You can run the programs for CPU and GPU. The commands indicate the device targe
 1. Run `02_sycl_dpct_migrated` for CPU and GPU.
      ```
     make run_sdm_cpu
-    make run_sdm_gpu
+    make run_sdm_gpu (runs on Level-Zero Backend)
+    make run_sdm_gpu_opencl (runs on OpenCL Backend)
     ```
     
 2. Run `03_sycl_migrated` for CPU and GPU.
     ```
     make run_cpu
-    make run_gpu
+    make run_gpu (runs on Level-Zero Backend)
+    make run_gpu_opencl (runs on OpenCL Backend)
     ```
     
 3. Run `04_sycl_migrated_optimized` for CPU and GPU.
     ```
     make run_smo_cpu
-    make run_smo_gpu
+    make run_smo_gpu (runs on Level-Zero Backend)
+    make run_smo_gpu_opencl (runs on OpenCL Backend)
     ```
 
 ### Run the `MonteCarloMultiGPU` Sample in Intel&reg; DevCloud
@@ -128,7 +131,6 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 5. Configure the sample for a GPU node using `qsub`and choose the backend needed either OpenCL or Level Zero.
     ```
     qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-    export SYCL_DEVICE_FILTER=level_zero
     ```
     - `-I` (upper case I) requests an interactive session.
     - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
