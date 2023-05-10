@@ -108,12 +108,16 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
 
 3. Run the program.
    
-   You can run the programs for CPU and GPU. The commands indicate the device target.
+   Run `02_sycl_migrated_optimized` on GPU.
    ```
-   $ make run_cpu
-   $ make run_gpu
-   ```   
-   
+   make run
+   ```  
+   Run `02_sycl_migrated_optimized` on CPU.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run
+   unset SYCL_DEVICE_FILTER
+   ```
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
