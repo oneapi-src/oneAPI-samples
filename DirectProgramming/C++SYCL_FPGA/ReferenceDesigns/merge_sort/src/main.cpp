@@ -295,6 +295,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 
   // allocate some memory for the merge sort to use as temporary storage
   ValueT *buf_0, *buf_1;
+#if defined (IS_BSP)
   if ((buf_0 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
     std::terminate();
@@ -303,6 +304,16 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
     std::cerr << "ERROR: could not allocate memory for 'buf_1'\n";
     std::terminate();
   }
+#else
+  if ((buf_0 = malloc_shared<ValueT>(sorter_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
+    std::terminate();
+  }
+  if ((buf_1 = malloc_shared<ValueT>(sorter_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate memory for 'buf_1'\n";
+    std::terminate();
+  }
+#endif
 
   // This is the element we will pad the input with. In the case of this design,
   // we are sorting from smallest to largest and we want the last elements out
