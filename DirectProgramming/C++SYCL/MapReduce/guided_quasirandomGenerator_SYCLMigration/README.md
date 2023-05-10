@@ -104,20 +104,33 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
    $ make
    ```
 
-   By default, this command sequence will build the `02_sycl_migrated_optimized` version of the program.
+   By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated_optimized` version of the program.
 
 3. Run the program.
    
-   Run `02_sycl_migrated_optimized` on GPU.
+   Run `01_dpct_output` on GPU.
    ```
    make run
    ```  
-   Run `02_sycl_migrated_optimized` on CPU.
+   Run `01_dpct_output` on CPU.
    ```
    export SYCL_DEVICE_FILTER=cpu
    make run
    unset SYCL_DEVICE_FILTER
    ```
+ 4. Run the program.
+   
+   Run `02_sycl_migrated_optimized` on GPU.
+   ```
+   make run_smo
+   ```  
+   Run `02_sycl_migrated_optimized` on CPU.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run_smo
+   unset SYCL_DEVICE_FILTER
+   ```
+   
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
