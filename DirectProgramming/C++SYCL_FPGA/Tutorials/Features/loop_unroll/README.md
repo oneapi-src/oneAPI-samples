@@ -1,4 +1,4 @@
-# 'Loop Unroll' Sample
+# `Loop Unroll` Sample
 
 This sample is a tutorial that demonstrates a simple example of unrolling loops to improve throughput for a SYCL*-compliant FPGA program.
 
