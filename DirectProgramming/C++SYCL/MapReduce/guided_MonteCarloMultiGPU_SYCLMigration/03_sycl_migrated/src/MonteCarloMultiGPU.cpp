@@ -68,7 +68,7 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 
   // select problem size
   for (int i = 0; i < GPU_N; i++) {
-    sycl::queue q_ct1 = sycl::queue(gpu_selector_v);
+    sycl::queue q_ct1 = sycl::queue(default_selector_v);
     auto device = q_ct1.get_device();
 
     int Cores =
@@ -83,7 +83,7 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 }
 
 int adjustGridSize(int GPUIndex, int defaultGridSize) {
-  sycl::queue q_ct1 = sycl::queue(gpu_selector_v);
+  sycl::queue q_ct1 = sycl::queue(default_selector_v);
   auto device = q_ct1.get_device();
 
   int maxGridSize =
@@ -114,8 +114,8 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Allocate intermediate memory for MC integrator and initialize
   // RNG states
   sycl::queue stream = sycl::queue(
-      (sycl::platform(sycl::gpu_selector_v)
-           .get_devices(sycl::info::device_type::gpu)[plan->device]));
+      (sycl::platform(sycl::default_selector_v)
+           .get_devices(sycl::info::device_type::all)[plan->device]));
 
   initMonteCarloGPU(plan, &stream);
 
@@ -151,7 +151,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;
 
   auto gpu_devices =
-      cl::sycl::device::get_devices(cl::sycl::info::device_type::gpu);
+      cl::sycl::device::get_devices(cl::sycl::info::device_type::all);
 
   for (int i = 0; i < nPlans; i++) {
     streams[i] = sycl::queue(gpu_devices[plan[i].device], exception_handler,
@@ -306,7 +306,7 @@ int main(int argc, char **argv) {
   printf("Parallelization method  = %s\n",
          use_threads ? "threaded" : "streamed");
   printf("Problem scaling         = %s\n", strongScaling ? "strong" : "weak");
-  printf("Number of GPUs          = %d\n", GPU_N);
+  printf("Number of Devices       = %d\n", GPU_N);
   printf("Total number of options = %d\n", OPT_N);
   printf("Number of paths         = %d\n", PATH_N);
 
@@ -355,14 +355,14 @@ int main(int argc, char **argv) {
                                           &optionSolver[gpuIndex]);
     }
 
-    printf("main(): waiting for GPU results...\n");
+    printf("main(): waiting for Device results...\n");
     cutWaitForThreads(threadID, GPU_N);
 
-    printf("main(): GPU statistics, threaded\n");
+    printf("main(): Device statistics, threaded\n");
 
     for (i = 0; i < GPU_N; i++) {
       sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
+      printf("Device #%i: ", optionSolver[i].device);
       std::cout << "\nRunning on "
                 << q_ct1.get_device().get_info<sycl::info::device::name>()
                 << "\n";
@@ -400,11 +400,11 @@ int main(int argc, char **argv) {
   if (!use_threads || bqatest) {
     multiSolver(optionSolver, GPU_N);
 
-    printf("main(): GPU statistics, streamed\n");
+    printf("main(): Device statistics, streamed\n");
 
     for (i = 0; i < GPU_N; i++) {
       sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
+      printf("Device #%i: ", optionSolver[i].device);
       std::cout << q_ct1.get_device().get_info<sycl::info::device::name>()
                 << "\n";
       printf("Options         : %i\n", optionSolver[i].optionCount);
