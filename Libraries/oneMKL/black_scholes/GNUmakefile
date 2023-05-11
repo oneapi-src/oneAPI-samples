@@ -3,42 +3,17 @@
 #      Black-Scholes formula example makefile
 # ==============================================================================
 
-default: all
+all: black_scholes_sycl 
 
-all: black_scholes.run
+init_on_host ?= 0
 
-N          ?= 10000000
-ACC        ?=
+MKL_COPTS = -DMKL_ILP64 -I"${MKLROOT}/include"
+MKL_LIBS  = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core
 
-mkl_path   := $(MKL)
-acc        := $(strip $(ACC))
-headers    := $(wildcard *.hpp)
-
-cxx_flags  := -O3 -fsycl -DMKL_ILP64 -I$(MKLROOT)/include -fno-sycl-early-optimizations
-ldxx_flags := -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl -fsycl-device-code-split=per_kernel
-cxx        := icpx
-
-ifneq ($(acc),)
-cxx_flags += -DACC_$(acc)
-endif
-
-black_scholes: black_scholes.cpp $(headers)
-	$(cxx) $(cxx_flags) $< $(ldxx_flags) -o $@
-
-black_scholes.run: black_scholes
-	./$< $(N)
-
-.PHONY: clean help black_scholes.run
+black_scholes_sycl: src/black_scholes_sycl.cpp
+	icpx -O3 -g -fsycl $(MKL_COPTS) $(MKL_LIBS) -DVERBOSE=1 -DSMALL_OPT_N=0 -DINIT_ON_HOST=$(init_on_host) -o $@  src/black_scholes_sycl.cpp
 
 clean:
-	rm -f black_scholes
+	@rm -f black_scholes_sycl
 
-help:
-	@echo "Black Scholes oneAPI MKL VM sample"
-	@echo "make [nopt] [ACC=la|ha|ep]"
-	@echo ""
-	@echo "ACC defines the accuracy:"
-	@echo "   ha: high accuracy (most accurate)"
-	@echo "   la: low accuracy"
-	@echo "   ep: extended performance (fastest)"
-
+.PHONY: clean all
