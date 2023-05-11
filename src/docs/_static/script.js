@@ -163,6 +163,7 @@ function attachSearch() {
     searchInput.addEventListener("input", e => {
         const value = e.target.value.replace(/\+/g, "\\+")
         const regex = new RegExp('.*' + saniStrings(value) + '.*', 'ig');
+        // const cleaned = noExtraSpc(regex) /*rm extra empty spcs in search string*/
         search(regex);
     })
 };    
@@ -177,9 +178,12 @@ function noResultsSwitch(data){
 }
 
 function saniStrings(str) {
+    /* remove reg/trademarks and all empty spaces  */
     const reg_no_spcl = /[\u00ae\u2122\u2120\*]/g;
-    return str.replace(reg_no_spcl, "");
+    const result = str.replace(reg_no_spcl, "");
+    return result.trim().replace(/\s+/g, " ");
 }
+
 
 function search(regex) {
     const data = state.data.filter(item => {
