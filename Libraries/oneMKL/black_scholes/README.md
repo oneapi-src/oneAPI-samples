@@ -5,7 +5,7 @@ Black-Scholes shows how to use Vector Math (VM) and Random Number Generator (RNG
 | Optimized for       | Description
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04 <br> Windows 10
-| Hardware            | Skylake with Gen9 or newer
+| Hardware            | Skylake CPU with Gen9 GPU or newer
 | Software            | Intel® oneAPI Math Kernel Library (oneMKL)
 | What you will learn | How to use the vector math and random number generation functionality in oneMKL
 | Time to complete    | 15 minutes
