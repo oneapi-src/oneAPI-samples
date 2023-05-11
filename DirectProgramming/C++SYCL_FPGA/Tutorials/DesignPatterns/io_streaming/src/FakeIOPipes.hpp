@@ -66,16 +66,13 @@ class ProducerConsumerBaseImpl {
     // check for USM support
     device d = q.get_device();
 
-#if defined (IS_BSP)
-    // make sure the device supports USM device allocations in BSP mode
-    if (!d.get_info<info::device::usm_host_allocations>() && use_host_alloc) {
+    if (use_host_alloc && !d.get_info<info::device::usm_host_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations\n";
       std::terminate();
     }
-#endif
 
-    if (!d.get_info<info::device::usm_device_allocations>()) {
+    if (!use_host_alloc && !d.get_info<info::device::usm_device_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM device"
                 << " allocations\n";
       std::terminate();
