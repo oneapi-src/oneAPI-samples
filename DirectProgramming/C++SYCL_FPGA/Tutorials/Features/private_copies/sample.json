@@ -1,6 +1,6 @@
 {
   "guid": "CDC9540F-B89F-499E-BC27-E8EC9EA3B2D7",
-  "name": "Private Copies",
+  "name": "private_copies",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a SYCL FPGA program",
   "toolchain": ["icpx"],
