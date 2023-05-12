@@ -32,8 +32,6 @@ void MatrixReadFromDDRToPipe(
   constexpr int kLoopIterPerColumn = rows / num_elem_per_bank + kExtraIteration;
   // Number of DDR burst reads of num_elem_per_bank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
-  // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
@@ -47,7 +45,7 @@ void MatrixReadFromDDRToPipe(
       int load_index = 0;
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+      for (int li = 0; li < kLoopIter; li++) {
 
         bool last_burst_of_col;
         if constexpr (kIncompleteBurst){
@@ -79,7 +77,7 @@ void MatrixReadFromDDRToPipe(
             // int linInt = (int) li;
             // PRINTF("matrix index: %d li:%d\n", matrix_index, linInt);
             ddr_read.template get<k>() = matrix_ptr
-                [matrix_index * kMatrixSize + (int)(li)*num_elem_per_bank + k];
+                [matrix_index * kMatrixSize + li*num_elem_per_bank + k];
 
           }
         });
@@ -124,8 +122,6 @@ void MatrixReadPipeToDDR(
   constexpr int kLoopIterPerColumn = rows / num_elem_per_bank + kExtraIteration;
   // Number of DDR burst of num_elem_per_bank to write all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
-  // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
   // Size of a full matrix
   constexpr int kMatrixSize = rows * columns;
 
@@ -139,7 +135,7 @@ void MatrixReadPipeToDDR(
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       [[intel::ivdep]]  // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+      for (int li = 0; li < kLoopIter; li++) {
         fpga_tools::NTuple<TT, num_elem_per_bank> pipe_read =
                                                             MatrixPipe::read();
 
@@ -166,7 +162,7 @@ void MatrixReadPipeToDDR(
           }
           else{
             matrix_ptr[matrix_index * kMatrixSize
-              + int(li) * num_elem_per_bank + k] = pipe_read.template get<k>();
+              + li * num_elem_per_bank + k] = pipe_read.template get<k>();
           }
 
         });

@@ -1,5 +1,5 @@
-#ifndef __QRD_HPP__
-#define __QRD_HPP__
+#ifndef __PCA_HPP__
+#define __PCA_HPP__
 
 #include <chrono>
 #include <cstring>
@@ -45,15 +45,15 @@ template <unsigned k_samples_count,   // Number of samples in the input matrix
           >
 void PCAsyclImpl(
     std::vector<T> &input_matrix,          // Input matrix to decompose
-    std::vector<T> &eigen_values_matrix,   // Output matrix of eigen values
-    std::vector<T> &eigen_vectors_matrix,  // Output matrix of eigen vectors
+    std::vector<T> &eigen_values_matrix,   // Output matrix of Eigen values
+    std::vector<T> &eigen_vectors_matrix,  // Output matrix of Eigen vectors
     sycl::queue &q,                        // Device queue
     int matrix_count,                      // Number of matrices to decompose
     int repetitions  // Number of repetitions, for performance evaluation
 ) {
   static_assert(k_samples_count % k_features_count == 0,
                 "The feature count must be  a multiple of the samples count. "
-                "This can be artificially acheived by increasing the number of "
+                "This can be artificially achieved by increasing the number of "
                 "samples with no data.");
 
   constexpr int kNumElementsPerDDRBurst = 8;
@@ -80,6 +80,7 @@ void PCAsyclImpl(
   T *eigen_values_device =
       sycl::malloc_device<T>(kEigenValuesMatrixSize * matrix_count, q);
 
+  // Copy the input matrices from host DDR to FPGA DDR
   q.memcpy(input_matrix_device, input_matrix.data(),
            kInputMatrixSize * matrix_count * sizeof(T))
       .wait();
@@ -87,9 +88,10 @@ void PCAsyclImpl(
   // The covariance matrix is computed by blocks for k_features_count x
   // k_features_count Therefore we read the k_features_count x k_samples_count
   // by blocks of k_features_count x k_features_count. k_samples_count is
-  // expected to be a multiplee of k_features_count
+  // expected to be a multiple of k_features_count
   int matrix_blocks = matrix_count * (k_samples_count / k_features_count);
 
+  // Read the input matrix from FPGA DDR by blocks
   auto ddr_write_event = q.submit([&](sycl::handler &h) {
     h.single_task<InputMatrixFromDDRToLocalMem>([=
     ]() [[intel::kernel_args_restrict]] {
@@ -99,17 +101,21 @@ void PCAsyclImpl(
     });
   });
 
+  // Compute the covariance matrix
   q.single_task<CovarianceMatrixComputation>(
       fpga_linalg::StreamingCovarianceMatrix<
-          T, k_features_count, k_samples_count, kNumElementsPerDDRBurst,
+          T, k_samples_count, k_features_count, kNumElementsPerDDRBurst,
           InputMatrixPipe, CovarianceMatrixPipe>());
 
+  // Compute the eigen values and eigen vectors
   q.single_task<EigenValuesAndVectorsComputation>(
       fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
                                   kNumElementsPerDDRBurst, k_zero_threshold_1e,
                                   CovarianceMatrixPipe, EigenValuesPipe,
                                   EigenVectorsPipe, k_use_rayleigh_shift>());
 
+
+  // Write the Eigen values from local memory to FPGA DDR
   auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count + 1, 1, kNumElementsPerDDRBurst,
@@ -117,6 +123,7 @@ void PCAsyclImpl(
                                          repetitions);
   });
 
+  // Write the Eigen vectors from local memory to FPGA DDR
   auto eigen_vectors_event = q.single_task<EigenVectorsFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count, k_features_count,
@@ -124,6 +131,7 @@ void PCAsyclImpl(
         eigen_vectors_device, matrix_count, repetitions);
   });
 
+  // Wait for the completion of the pipeline
   eigen_vectors_event.wait();
   eigen_values_event.wait();
 
@@ -139,7 +147,7 @@ void PCAsyclImpl(
   std::cout << "Throughput: " << repetitions * matrix_count / diff * 1e-3
             << "k matrices/s" << std::endl;
 
-  // Copy the Q and R matrices result from the FPGA DDR to the host memory
+  // Copy the Eigen values and vectors from the FPGA DDR to the host memory
   q.memcpy(eigen_vectors_matrix.data(), eigen_vectors_device,
            kEigenVectorsMatrixSize * matrix_count * sizeof(T))
       .wait();
@@ -153,4 +161,4 @@ void PCAsyclImpl(
   free(eigen_vectors_device, q);
 }
 
-#endif /* __QRD_HPP__ */
+#endif /* __PCA_HPP__ */

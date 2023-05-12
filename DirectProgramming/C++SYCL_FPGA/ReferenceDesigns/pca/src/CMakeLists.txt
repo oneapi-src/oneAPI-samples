@@ -59,8 +59,8 @@ endif()
 
 if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
-    set(FEATURES_COUNT 32)
-    set(SAMPLES_COUNT 49984)
+    set(FEATURES_COUNT 4)
+    set(SAMPLES_COUNT 8)
     set(FIXED_ITERATIONS 64)
 elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
@@ -69,8 +69,8 @@ elseif(DEVICE_FLAG MATCHES "S10")
     set(FIXED_ITERATIONS 64)
 elseif(DEVICE_FLAG MATCHES "Agilex7")
     # Agilex 7 parameters
-    set(FEATURES_COUNT 32)
-    set(SAMPLES_COUNT 49984)
+    set(FEATURES_COUNT 2)
+    set(SAMPLES_COUNT 4)
     set(FIXED_ITERATIONS 64)
 else()
     message(FATAL_ERROR "Unreachable")

@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kPCAsToCompute = 4;
+  constexpr size_t kPCAsToCompute = 1;
 
   try {
     // SYCL boilerplate
@@ -96,10 +96,10 @@ int main(int argc, char *argv[]) {
     // Generate the random symmetric square matrices
     srand(kRandomSeed);
 
-    PCA<double> pca(kSamplesCount, kFeaturesCount, kPCAsToCompute, 0);
-    pca.populate_A();
-    pca.normalizeSamples();
-    pca.calculate_covariance();
+    PCA<double> pca(kSamplesCount, kFeaturesCount, kPCAsToCompute, 1);
+    pca.populateA();
+    pca.standardizeA();
+    pca.computeCovarianceMatrix();
 
     // TODO: Restriction on kFeaturesCount % kSamplesCount == 0?
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
               a_matrix[matrix_index * ka_matrix_size +
                        blk * kFeaturesCount * kFeaturesCount +
                        i * kFeaturesCount + j] =
-                  pca.matA[matrix_index * ka_matrix_size_host +
+                  pca.matrix_a[matrix_index * ka_matrix_size_host +
                            (blk * kFeaturesCount + j) * kFeaturesCount + i];
             } else {
               a_matrix[matrix_index * ka_matrix_size +
@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
       for (int i = 0; i < kFeaturesCount; i++) {
         for (int j = 0; j < kFeaturesCount; j++) {
           a_matrix_cpu[matrix_offset + i * kFeaturesCount + j] =
-              pca.matC[matrix_offset + i * kFeaturesCount + j];
+              pca.covariance_matrix[matrix_offset + i * kFeaturesCount + j];
         }
       }
 
