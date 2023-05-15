@@ -38,7 +38,7 @@ This sample contains two versions of the program:
 
 Key coarray concepts explained in the code are images, shared variables, codimensions, and cobounds. 
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about features and options mentioned in this sample. 
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/overview.html) for more information about features and options mentioned in this sample. 
 
 ## Set Environment Variables
 
