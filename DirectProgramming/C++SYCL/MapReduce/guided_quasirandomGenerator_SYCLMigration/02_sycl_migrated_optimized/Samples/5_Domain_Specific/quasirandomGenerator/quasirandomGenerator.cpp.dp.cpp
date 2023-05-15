@@ -64,7 +64,8 @@ int main(int argc, char **argv) {
   // Start logs
   sycl::queue q_ct1 = sycl::queue(sycl::default_selector_v);
   printf("%s Starting...\n\n", argv[0]);
-
+  std::cout << "\nRunning on " << q_ct1.get_device().get_info<info::device::name>()
+            << "\n";
   unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION];
 
   float *h_OutputGPU, *d_Output;
@@ -121,7 +122,7 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1.0E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128 * QRNG_DIMENSIONS);
 
-  printf("\nReading GPU results...\n");
+  printf("\nReading Device results...\n");
   
   q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
            .wait();
@@ -166,7 +167,7 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128);
 
-  printf("Reading GPU results...\n");
+  printf("Reading Device results...\n");
   
   q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
            .wait();

@@ -6,5 +6,4 @@ include_directories(${CMAKE_SOURCE_DIR}/01_dpct_output/include/)
 add_executable (01_dpct_output Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator.cpp.dp.cpp Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator_gold.cpp Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator_kernel.dp.cpp)
 target_link_libraries(01_dpct_output sycl)
 
-add_custom_target (run_cpu cd ${CMAKE_SOURCE_DIR}/01_dpct_output/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/01_dpct_output)
-add_custom_target (run_gpu SYCL_DEVICE_FILTER=gpu cd ${CMAKE_SOURCE_DIR}/01_dpct_output/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/01_dpct_output)
+add_custom_target (run cd ${CMAKE_SOURCE_DIR}/01_dpct_output/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/01_dpct_output)

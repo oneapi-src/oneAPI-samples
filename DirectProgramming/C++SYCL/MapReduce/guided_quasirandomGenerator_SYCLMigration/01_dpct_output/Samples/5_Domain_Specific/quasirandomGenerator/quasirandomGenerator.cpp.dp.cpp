@@ -63,7 +63,8 @@ const int N = 1048576;
 int main(int argc, char **argv) {
   // Start logs
   printf("%s Starting...\n\n", argv[0]);
-
+  std::cout << "\nRunning on "
+            << dpct::get_default_queue().get_device().get_info<sycl::info::device::name>() << "\n";
   unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION];
 
   float *h_OutputGPU, *d_Output;
@@ -80,7 +81,7 @@ int main(int argc, char **argv) {
 
   sdkCreateTimer(&hTimer);
 
-  printf("Allocating GPU memory...\n");
+  printf("Allocating Device memory...\n");
   /*
   DPCT1003:21: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
@@ -135,7 +136,7 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1.0E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128 * QRNG_DIMENSIONS);
 
-  printf("\nReading GPU results...\n");
+  printf("\nReading Device results...\n");
   /*
   DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
@@ -197,7 +198,7 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128);
 
-  printf("Reading GPU results...\n");
+  printf("Reading Device results...\n");
   /*
   DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
