@@ -1,4 +1,4 @@
-# `scheduler_target_fmax_mhz` Samples
+# `scheduler_target_fmax_mhz` Sample
 
 This sample is an FPGA tutorial that explains the `scheduler_target_fmax_mhz` attribute and its effect on the performance of Intel® FPGA kernels.
 
