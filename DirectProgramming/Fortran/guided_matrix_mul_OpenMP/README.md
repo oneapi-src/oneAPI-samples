@@ -34,7 +34,7 @@ particular attention:
   - Initialize variables and arrays to zero.
   - OpenMP defines defaults for variables and arrays. Explicitly define SHARED, PRIVATE, and REDUCTION variables and arrays for clarity.
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about features and options mentioned in this sample.
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/overview.html) for more information about features and options mentioned in this sample.
 
 This sample contains three versions of the program:
 
