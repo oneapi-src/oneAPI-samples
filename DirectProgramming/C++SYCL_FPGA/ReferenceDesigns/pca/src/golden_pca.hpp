@@ -32,9 +32,9 @@ class PCA {
   int samples;                           // number of samples
   int features;                          // number of features
   int matrix_count;                      // number of matrices
-  int debug;                             // in debug mode if !=0
-  std::vector<T> matrix_a;               // storage for input matrices
-  std::vector<T> standardized_matrix_a;  // storage for standardized matrices
+  bool debug;                            // print debug information if true
+  std::vector<T> a_matrix;               // storage for input matrices
+  std::vector<T> standardized_a_matrix;  // storage for standardized matrices
   std::vector<T> covariance_matrix;      // storage for covariance matrices
   std::vector<T> eigen_values;           // storage for the Eigen values
   std::vector<T> eigen_vectors;          // storage for the Eigen vectors
@@ -44,14 +44,14 @@ class PCA {
 
  public:
   // Constructor
-  PCA(int n, int p, int count, int d) {
+  PCA(int n, int p, int count, bool d) {
     samples = n;
     features = p;
     matrix_count = count;
     debug = d;
 
-    matrix_a.resize(n * p * matrix_count);
-    standardized_matrix_a.resize(n * p * matrix_count);
+    a_matrix.resize(n * p * matrix_count);
+    standardized_a_matrix.resize(n * p * matrix_count);
     covariance_matrix.resize(p * p * matrix_count);
 
     eigen_values.resize(p * matrix_count);
@@ -65,16 +65,16 @@ class PCA {
 
     std::uniform_real_distribution<float> distribution(kRandomMin, kRandomMax);
 
-    for (int k = 0; k < matrix_a.size(); k++) {
+    for (int k = 0; k < a_matrix.size(); k++) {
       float value = distribution(gen);
-      matrix_a[k] = value;
+      a_matrix[k] = value;
     }
 
     if (debug) {
       std::cout << "A matrix #" << matrix_index << std::endl;
       for (int row = 0; row < samples; row++) {
         for (int column = 0; column < features; column++) {
-          std::cout << matrix_a[matrix_index * (samples * features) +
+          std::cout << a_matrix[matrix_index * (samples * features) +
                                 row * features + column]
                     << " ";
         }
@@ -93,7 +93,7 @@ class PCA {
   // Standardize the A matrix with index matrix_index
   void standardizeIthA(int matrix_index) {
     // The standardized matrix is defined as:
-    // standardized_matrix_a[i][j] = (matrix_a[i][j] - mean[j])/(sd[j])
+    // standardized_a_matrix[i][j] = (a_matrix[i][j] - mean[j])/(sd[j])
     // where mean[j] is the mean value of the column j and sd[j] is
     // the standard deviation of this column.
     // The standard deviation is defined as
@@ -102,7 +102,7 @@ class PCA {
     if (debug)
       std::cout << "\nStandardizing A matrix #" << matrix_index << std::endl;
 
-    // The current matrix offset in matrix_a
+    // The current matrix offset in a_matrix
     int offset = matrix_index * samples * features;
 
     // Compute the mean of each column
@@ -112,7 +112,7 @@ class PCA {
     for (int column = 0; column < features; column++) {
       mean[column] = 0;
       for (int row = 0; row < samples; row++) {
-        mean[column] += matrix_a[offset + row * features + column];
+        mean[column] += a_matrix[offset + row * features + column];
       }
       mean[column] /= samples;
       if (debug) std::cout << mean[column] << " ";
@@ -128,8 +128,8 @@ class PCA {
       standard_deviation[column] = 0;
       for (int row = 0; row < samples; row++) {
         standard_deviation[column] +=
-            (matrix_a[offset + row * features + column] - mean[column]) *
-            (matrix_a[offset + row * features + column] - mean[column]);
+            (a_matrix[offset + row * features + column] - mean[column]) *
+            (a_matrix[offset + row * features + column] - mean[column]);
       }
       standard_deviation[column] /= (samples - 1);
       standard_deviation[column] = sqrt(standard_deviation[column]);
@@ -141,11 +141,11 @@ class PCA {
     if (debug) std::cout << "\nStandardized A matrix: " << std::endl;
     for (int row = 0; row < samples; row++) {
       for (int column = 0; column < features; column++) {
-        standardized_matrix_a[offset + row * features + column] =
-            (matrix_a[offset + row * features + column] - mean[column]) /
+        standardized_a_matrix[offset + row * features + column] =
+            (a_matrix[offset + row * features + column] - mean[column]) /
             standard_deviation[column];
         if (debug)
-          std::cout << standardized_matrix_a[offset + row * features + column]
+          std::cout << standardized_a_matrix[offset + row * features + column]
                     << " ";
       }
       if (debug) std::cout << std::endl;
@@ -168,15 +168,15 @@ class PCA {
 
     if (debug)
       std::cout << "\nCovariance matrix #" << matrix_index << std::endl;
-    int matrix_a_offset = matrix_index * samples * features;
+    int a_matrix_offset = matrix_index * samples * features;
     int matrix_c_offset = matrix_index * features * features;
     for (int row = 0; row < features; row++) {
       for (int column = 0; column < features; column++) {
         double dot_product = 0;
         for (int k = 0; k < samples; k++) {
           dot_product +=
-              standardized_matrix_a[matrix_a_offset + k * features + row] *
-              standardized_matrix_a[matrix_a_offset + k * features + column];
+              standardized_a_matrix[a_matrix_offset + k * features + row] *
+              standardized_a_matrix[a_matrix_offset + k * features + column];
         }
         covariance_matrix[matrix_c_offset + row * features + column] =
             dot_product / (samples - 1);
