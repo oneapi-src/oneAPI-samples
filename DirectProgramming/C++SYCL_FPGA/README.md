@@ -174,6 +174,7 @@ All the Tier 4 samples are in the [ReferenceDesigns](ReferenceDesigns) category.
 | [db](ReferenceDesigns/db)                                 | How to accelerate database queries using an FPGA
 | [decompress](ReferenceDesigns/decompress)                 | How to implement an efficient GZIP and Snappy decompression engine on a FPGA
 | [gzip](ReferenceDesigns/gzip)                             | How to implement a high-performance multi-engine compression algorithm on FPGA
+| [matmul](ReferenceDesigns/matmul)                         | How to implement a systolic-array-based high-performance matrix multiplication algorithm on FPGA
 | [merge_sort](ReferenceDesigns/merge_sort)                 | How to use the spatial compute of the FPGA to create a merge sort design that takes advantage of thread- and SIMD-level parallelism
 | [mvdr_beamforming](ReferenceDesigns/mvdr_beamforming)     | How to create a full, complex system that performs IO streaming using SYCL*-compliant code
 | [qrd](ReferenceDesigns/qrd)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm
