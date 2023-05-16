@@ -100,6 +100,7 @@ int main(int argc, char *argv[]) {
     pca.populateA();
     pca.standardizeA();
     pca.computeCovarianceMatrix();
+    pca.computeEigenValuesAndVectors();
 
     // TODO: Restriction on kFeaturesCount % kSamplesCount == 0?
 

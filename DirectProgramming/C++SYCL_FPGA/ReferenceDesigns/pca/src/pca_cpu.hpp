@@ -19,19 +19,12 @@ The matrix A will contain n samples with p features
 making it an n row, p columns matrix
 
 Here are the steps performed by this file:
-1. Compute the mean of individual features
-   u = (F_0, F_1, ..., F_(p-1))
+1. Generate random matrices
+2. Standardize the matrices
+3. Compute the covariance matrices of these matrices
+4. Compute Eigen vectors and Eigen values of the covariance matrices using the
+QR iteration method
 
-2. Compute the standardized matrix
-   B = (A - u) / s
-   where s is the standard deviation of each feature column
-
-3. Compute the covariance matrix of size pxp
-   C = (1.0/p) * transpose(B) *B
-
-4. Compute Eigen vectors and Eigen values using the QR iteration method
-
-5. Sort the Eigen values and vector based
 */
 template <typename T>
 class PCA {
@@ -46,45 +39,38 @@ class PCA {
   std::vector<T> eigen_values;           // storage for the Eigen values
   std::vector<T> eigen_vectors;          // storage for the Eigen vectors
 
- public:
-  PCA(int n, int p, int count, int debug = 0);
-  void populateA();
-  void standardizeA();
-  void computeCovarianceMatrix();
-  void QRIteration();
-};
-
-template <typename T>
-PCA<T>::PCA(int n, int p, int count, int d) {
-  samples = n;
-  features = p;
-  matrix_count = count;
-  debug = d;
-
-  matrix_a.resize(n * p * matrix_count);
-  standardized_matrix_a.resize(n * p * matrix_count);
-  covariance_matrix.resize(p * p * matrix_count);
-
-  eigen_values.resize(p * p * matrix_count);
-  eigen_vectors.resize(p * matrix_count);
-}
-
-// Generate the input matrices with random numbers
-template <typename T>
-void PCA<T>::populateA() {
-  constexpr float kRandomMin = -5;
-  constexpr float kRandomMax = 5;
-
+ private:
   std::default_random_engine gen;
-  std::uniform_real_distribution<float> distribution(kRandomMin, kRandomMax);
 
-  for (int k = 0; k < matrix_a.size(); k++) {
-    float value = distribution(gen);
-    matrix_a[k] = value;
+ public:
+  // Constructor
+  PCA(int n, int p, int count, int d) {
+    samples = n;
+    features = p;
+    matrix_count = count;
+    debug = d;
+
+    matrix_a.resize(n * p * matrix_count);
+    standardized_matrix_a.resize(n * p * matrix_count);
+    covariance_matrix.resize(p * p * matrix_count);
+
+    eigen_values.resize(p * matrix_count);
+    eigen_vectors.resize(p * p * matrix_count);
   }
 
-  if (debug) {
-    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+  // Generate the input matrix with index matrix_index with random numbers
+  void populateIthA(int matrix_index) {
+    constexpr float kRandomMin = -5;
+    constexpr float kRandomMax = 5;
+
+    std::uniform_real_distribution<float> distribution(kRandomMin, kRandomMax);
+
+    for (int k = 0; k < matrix_a.size(); k++) {
+      float value = distribution(gen);
+      matrix_a[k] = value;
+    }
+
+    if (debug) {
       std::cout << "A matrix #" << matrix_index << std::endl;
       for (int row = 0; row < samples; row++) {
         for (int column = 0; column < features; column++) {
@@ -96,19 +82,23 @@ void PCA<T>::populateA() {
       }
     }
   }
-}
 
-// Standardize the A matrices
-template <typename T>
-void PCA<T>::standardizeA() {
-  // The standardized matrix is defined as:
-  // standardized_matrix_a[i][j] = (matrix_a[i][j] - mean[j])/(sd[j])
-  // where mean[j] is the mean value of the column j and sd[j] is
-  // the standard deviation of this column.
-  // The standard deviation is defined as
-  // sd[j] =  sqrt(sum((a[k][j] - mean[j])^2)/(N-1))
+  // Generate all the input matrices
+  void populateA() {
+    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+      populateIthA(matrix_index);
+    }
+  }
 
-  for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+  // Standardize the A matrix with index matrix_index
+  void standardizeIthA(int matrix_index) {
+    // The standardized matrix is defined as:
+    // standardized_matrix_a[i][j] = (matrix_a[i][j] - mean[j])/(sd[j])
+    // where mean[j] is the mean value of the column j and sd[j] is
+    // the standard deviation of this column.
+    // The standard deviation is defined as
+    // sd[j] =  sqrt(sum((a[k][j] - mean[j])^2)/(N-1))
+
     if (debug)
       std::cout << "\nStandardizing A matrix #" << matrix_index << std::endl;
 
@@ -118,7 +108,7 @@ void PCA<T>::standardizeA() {
     // Compute the mean of each column
     double mean[features];
 
-    if (debug) std::cout << "\nMean of each column: \n";
+    if (debug) std::cout << "\nMean of each column: " << std::endl;
     for (int column = 0; column < features; column++) {
       mean[column] = 0;
       for (int row = 0; row < samples; row++) {
@@ -132,7 +122,8 @@ void PCA<T>::standardizeA() {
     // Compute the standard deviation of each column
     double standard_deviation[features];
 
-    if (debug) std::cout << "\nStandard deviation of each column: \n";
+    if (debug)
+      std::cout << "\nStandard deviation of each column: " << std::endl;
     for (int column = 0; column < features; column++) {
       standard_deviation[column] = 0;
       for (int row = 0; row < samples; row++) {
@@ -147,44 +138,324 @@ void PCA<T>::standardizeA() {
     if (debug) std::cout << std::endl;
 
     // Compute the standardized matrix A
-    if (debug) std::cout << "\nStandardized A matrix: \n";
+    if (debug) std::cout << "\nStandardized A matrix: " << std::endl;
     for (int row = 0; row < samples; row++) {
       for (int column = 0; column < features; column++) {
         standardized_matrix_a[offset + row * features + column] =
-            (matrix_a[offset + row * features + column] -
-             mean[column]) /
+            (matrix_a[offset + row * features + column] - mean[column]) /
             standard_deviation[column];
-        if (debug) std::cout << standardized_matrix_a[offset + row * features + column] << " ";
+        if (debug)
+          std::cout << standardized_matrix_a[offset + row * features + column]
+                    << " ";
       }
       if (debug) std::cout << std::endl;
     }
   }
-}
 
-// Compute the covariance matrix of the standardized A matrix
-template <typename T>
-void PCA<T>::computeCovarianceMatrix() {
-  // covariance matrix matdA^{T} * matdA
-  // this corresponds to matrix order pxp
-  if (debug) std::cout << "\nCovariance matrix is: \n";
-
-  for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
-    int offsetUA = matrix_index * samples * features;
-    int offsetC = matrix_index * features * features;
-    for (int i = 0; i < features; i++) {
-      for (int j = 0; j < features; j++) {
-        covariance_matrix[offsetC + i * features + j] = 0;
-        for (int k = 0; k < samples; k++) {
-          covariance_matrix[offsetC + i * features + j] +=
-              standardized_matrix_a[offsetUA + k * features + i] *
-              standardized_matrix_a[offsetUA + k * features + j];
-        }
-        covariance_matrix[offsetC + i * features + j] =
-            (1.0 / (samples)) * covariance_matrix[offsetC + i * features + j];
-        if (debug)
-          std::cout << covariance_matrix[offsetC + i * features + j] << " ";
-      }
-      if (debug) std::cout << "\n";
+  // Standardize all the A matrices
+  void standardizeA() {
+    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+      standardizeIthA(matrix_index);
     }
   }
-}
+
+  // Compute the covariance matrix of the matrix with index matrix_index
+  void computeCovarianceIthMatrix(int matrix_index) {
+    // The covariance matrix is defined as the product of the
+    // transposition of A by A. This matrix product then needs to be divided
+    // by the number of samples-1.
+    // This will result in a matrix of size features x features
+
+    if (debug)
+      std::cout << "\nCovariance matrix #" << matrix_index << std::endl;
+    int matrix_a_offset = matrix_index * samples * features;
+    int matrix_c_offset = matrix_index * features * features;
+    for (int row = 0; row < features; row++) {
+      for (int column = 0; column < features; column++) {
+        double dot_product = 0;
+        for (int k = 0; k < samples; k++) {
+          dot_product +=
+              standardized_matrix_a[matrix_a_offset + k * features + row] *
+              standardized_matrix_a[matrix_a_offset + k * features + column];
+        }
+        covariance_matrix[matrix_c_offset + row * features + column] =
+            dot_product / (samples - 1);
+        if (debug)
+          std::cout
+              << covariance_matrix[matrix_c_offset + row * features + column]
+              << " ";
+      }
+      if (debug) std::cout << std::endl;
+    }
+  }
+
+  // Compute the covariance matrix of all the standardized A matrices
+  void computeCovarianceMatrix() {
+    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+      computeCovarianceIthMatrix(matrix_index);
+    }
+  }
+
+  // Compute the covariance matrix of the standardized A matrix
+  void computeEigenValuesAndVectors() {
+    // Compute the Eigen values and Eigen vectors using the QR iteration method
+    // This implementation uses the Wilkinson shift to speedup the convergence
+
+    constexpr float kZeroThreshold = 1e-7;
+
+    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+      if (debug)
+        std::cout << "\nComputing Eigen values and vectors of matrix #"
+                  << matrix_index << std::endl;
+
+      int offset = matrix_index * features * features;
+
+      // Compute the QR decomposition of the current matrix
+      std::vector<double> q, r, rq;
+      q.resize(features * features);
+      r.resize(features * features);
+      rq.resize(features * features);
+
+      // Copy the covariance matrix into the input matrix to the QR
+      // decomposition
+      for (int k = 0; k < features * features; k++) {
+        rq[k] = covariance_matrix[offset + k];
+      }
+
+      // Initialize the Eigen vectors matrix to the identity matrix
+      for (int row = 0; row < features; row++) {
+        for (int column = 0; column < features; column++) {
+          eigen_vectors[offset + row * features + column] =
+              row == column ? 1 : 0;
+        }
+      }
+
+      // Count the number of iterations to abort if there is no convergence
+      int iterations = 0;
+      bool converged = false;
+      while (!converged) {
+        // Compute the shift value of the current matrix
+        double shift_value = 0;
+
+        // First find where the shift should be applied
+        // Start from the last submatrix
+        int shift_row = features - 2;
+        for (int row = features - 1; row >= 1; row--) {
+          bool row_is_zero = true;
+          for (int col = 0; col < row; col++) {
+            row_is_zero &= (fabs(rq[row * features + col]) < kZeroThreshold);
+          }
+          if (!row_is_zero) {
+            break;
+          }
+          shift_row--;
+        }
+
+        if (shift_row >= 0) {
+          // Compute the shift value
+          // Take the submatrix:
+          // [a b]
+          // [b c]
+          // and compute the shift such as
+          // mu = c - (sign(d)* b*b)/(abs(d) + sqrt(d*d + b*b))
+          // where d = (a - c)/2
+
+          double a = rq[shift_row + features * shift_row];
+          double b = rq[shift_row + features * (shift_row + 1)];
+          double c = rq[(shift_row + 1) + features * (shift_row + 1)];
+
+          double d = (a - c) / 2;
+          double b_squared = b * b;
+          double d_squared = d * d;
+          double b_squared_signed = d < 0 ? -b_squared : b_squared;
+          shift_value =
+              c - b_squared_signed / (abs(d) + sqrt(d_squared + b_squared));
+        }
+
+        // Use the 90% percentage of the shift value to avoid
+        // massive cancellations in the QRD
+        shift_value *= 0.99;
+
+        // if(debug) std::cout << "Shift value " << shift_value << std::endl;
+
+        // if (debug){
+        //   std::cout << "Before shift" << std::endl;
+        //   for (int row = 0; row < features; row++) {
+        //     for (int col = 0; col < features; col++) {
+        //       std::cout << rq[row * features + col] << " ";
+        //     }
+        //     std::cout << std::endl;
+        //   }
+        //   std::cout << std::endl;
+        // }
+
+        // Subtract the shift value from the diagonal of RQ
+        for (int row = 0; row < features; row++) {
+          rq[row + features * row] -= shift_value;
+        }
+
+        // if (debug){
+        //   std::cout << "Input matrix to QR" << std::endl;
+        //   for (int row = 0; row < features; row++) {
+        //     for (int col = 0; col < features; col++) {
+        //       std::cout << rq[row * features + col] << " ";
+        //     }
+        //     std::cout << std::endl;
+        //   }
+        //   std::cout << std::endl;
+        // }
+
+        // Compute the actual QR decomposition
+        {
+          for (int row = 0; row < features; row++) {
+            for (int column = 0; column < features; column++) {
+              r[row * features + column] = 0;
+              q[row * features + column] = 0;
+            }
+          }
+          for (int i = 0; i < features; i++) {
+            double norm = 0;
+            for (int k = 0; k < features; k++) {
+              norm +=
+                  double(rq[k * features + i]) * double(rq[k * features + i]);
+            }
+            double rii = std::sqrt(norm);
+            r[i * features + i] = rii;  // r_ii = ||a_i||
+
+            for (int k = 0; k < features; k++) {
+              q[k * features + i] = rq[k * features + i] / rii;
+            }
+
+            for (int j = i + 1; j < features; j++) {
+              double dp = 0;
+              for (int k = 0; k < features; k++) {
+                dp += q[k * features + i] * rq[k * features + j];
+              }
+              r[i * features + j] = dp;
+
+              for (int k = 0; k < features; k++) {
+                rq[k * features + j] -= (dp * q[k * features + i]);
+              }
+            }
+          }
+        }
+
+        // if (debug){
+        //   std::cout << "Q matrix" << std::endl;
+        //   for (int row = 0; row < features; row++) {
+        //     for (int col = 0; col < features; col++) {
+        //       std::cout << q[row* features + col] << " ";
+        //     }
+        //     std::cout << std::endl;
+        //   }
+        //   std::cout << std::endl;
+
+        //   std::cout << "R matrix" << std::endl;
+        //   for (int row = 0; row < features; row++) {
+        //     for (int col = 0; col < features; col++) {
+        //       std::cout << r[row* features + col] << " ";
+        //     }
+        //     std::cout << std::endl;
+        //   }
+        //   std::cout << std::endl;
+        // }
+
+        // Compute the updated Eigen vectors
+        std::vector<T> eigen_vectors_q_product;
+        eigen_vectors_q_product.resize(features * features);
+        for (int row = 0; row < features; row++) {
+          for (int col = 0; col < features; col++) {
+            double prod = 0;
+            for (int k = 0; k < features; k++) {
+              prod += eigen_vectors[offset + row + features * k] *
+                      q[k + features * col];
+            }
+            eigen_vectors_q_product[offset + row + features * col] = prod;
+          }
+        }
+        // if (debug) std::cout << "Eigen vectors at iteration " << iterations
+        // << std::endl;
+        for (int row = 0; row < features; row++) {
+          for (int col = 0; col < features; col++) {
+            eigen_vectors[offset + row + features * col] =
+                eigen_vectors_q_product[offset + row + features * col];
+            // if (debug) std::cout << eigen_vectors[offset + row + features *
+            // col] << " ";
+          }
+          // if (debug) std::cout << std::endl;
+        }
+
+        // Compute RQ
+        // if (debug) std::cout << "RQ at iteration " << iterations <<
+        // std::endl;
+        for (int row = 0; row < features; row++) {
+          for (int col = 0; col < features; col++) {
+            double prod = 0;
+            for (int k = 0; k < features; k++) {
+              prod += r[row * features + k] * q[k * features + col];
+            }
+            rq[row * features + col] = prod;
+            // if (debug) std::cout << prod << " ";
+          }
+          // if (debug) std::cout << std::endl;
+        }
+
+        // Add the shift value back to the diagonal of RQ
+        for (int row = 0; row < features; row++) {
+          rq[row + features * row] += shift_value;
+        }
+
+        // Check if we found all Eigen Values
+        bool all_below_threshold = true;
+        for (int row = 1; row < features; row++) {
+          for (int col = 0; col < row; col++) {
+            all_below_threshold &=
+                (std::fabs(rq[row * features + col]) < kZeroThreshold);
+          }
+        }
+        converged = all_below_threshold;
+
+        iterations++;
+        if (iterations > (features * features * features * 4096)) {
+          std::cout << "Number of iterations too high" << std::endl;
+          break;
+        }
+      }
+
+      if (iterations > features * features * features * 4096) {
+        std::cout
+            << "One of the input matrices required too many iterations, we "
+               "should regenerate a new matrix"
+            << std::endl;
+        populateIthA(matrix_index);
+        standardizeIthA(matrix_index);
+        computeCovarianceIthMatrix(matrix_index);
+        matrix_index--;
+      } else {
+        if (debug)
+          std::cout << "QR iteration stopped after " << iterations
+                    << " iterations" << std::endl;
+        if (debug)
+          std::cout << "Eigen values for matrix #" << matrix_index << std::endl;
+        for (int k = 0; k < features; k++) {
+          eigen_values[k + matrix_index * features] = rq[k + features * k];
+          if (debug) std::cout << rq[k + features * k] << " ";
+        }
+        if (debug) std::cout << std::endl;
+
+        if (debug) {
+          std::cout << "Eigen vectors for matrix #" << matrix_index
+                    << std::endl;
+          for (int row = 0; row < features; row++) {
+            for (int col = 0; col < features; col++) {
+              std::cout << eigen_vectors[offset + row + features * col] << " ";
+            }
+            std::cout << std::endl;
+          }
+          std::cout << std::endl;
+        }
+      }
+    }  // end for:matrix_index
+  }
+
+};  // class PCA
