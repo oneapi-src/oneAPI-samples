@@ -12,17 +12,16 @@
 	"linux": [{
 		"steps": [
 			"mkdir build",
-      		        "cd build",
-           		"cmake ..",
-           		"make",
-			"make run"
+			"cd build",
+			"cmake ..",
+			"make"
 		 ]
 	}],
 	"windows": [{
 		"steps": [
 			"MSBuild MandelbrotSDL.sln /t:Rebuild /p:Configuration=\"Release\"",
 			"cd x64/Release",
-            		"MandelbrotSDL.exe"
+			"MandelbrotSDL.exe"
 		]
 	}]
 

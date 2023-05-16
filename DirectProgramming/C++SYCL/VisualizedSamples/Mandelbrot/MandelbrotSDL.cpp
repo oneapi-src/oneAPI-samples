@@ -59,7 +59,11 @@ bool handleEvents(const SDL_Event& event, Mandelbrot& mandel)
 	return false;
 }
 
+#ifdef _WIN32
 int wmain()
+#elif __linux__
+int main()
+#endif
 {
 	// Texture size
 	int width = 1024;
@@ -95,7 +99,7 @@ int wmain()
 		// Lock texture and update the pixels pointer from where SDL will read data.
 		SDL_LockTexture(texture, NULL, (void**)&pixels, &pitch);
 		// Calculate mandelbrot and write pixels to pixel pointer
-		mandelbrot.Evaluate(pixels);
+		mandelbrot.Calculate(pixels);
 		// Unlock the texture.
 		SDL_UnlockTexture(texture);
 		// Copy texture to renderer.

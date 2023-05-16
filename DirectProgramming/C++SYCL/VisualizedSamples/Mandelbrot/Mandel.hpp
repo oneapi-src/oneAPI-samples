@@ -64,7 +64,7 @@ struct MandelParameters {
 class Mandelbrot {
 public:
 	Mandelbrot(int width, int height, int maxIterations, double xmin, double xmax, double ymin, double ymax, queue& q);
-	void Evaluate(uint32_t* pixels);
+	void Calculate(uint32_t* pixels);
 	MandelParameters getParameters() const { return parameters; }
 	void scale(double xoffset, double yoffset, double scale);
 	void pan(double xoffset, double yoffset);
@@ -80,7 +80,7 @@ Mandelbrot::Mandelbrot(int width, int height, int maxIterations, double xmin, do
 {
 }
 
-void Mandelbrot::Evaluate(uint32_t* pixels) {
+void Mandelbrot::Calculate(uint32_t* pixels) {
 
 	MandelParameters p = getParameters();
 	const int width = p.width;
