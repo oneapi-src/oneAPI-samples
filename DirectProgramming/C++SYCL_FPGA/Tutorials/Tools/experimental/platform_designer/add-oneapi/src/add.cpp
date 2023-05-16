@@ -18,7 +18,7 @@ class OutputPipeID;
 // using protocol AVALON_MM allows this host pipe to output to the CSR
 using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
-        sycl::ext::intel::experimental::protocol_name::AVALON_MM>));
+        sycl::ext::intel::experimental::protocol_name::AVALON_MM_USES_READY>));
 using OutputPipe =
     sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
 
