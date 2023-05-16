@@ -1,0 +1,31 @@
+{
+  "guid": "1D753A31-16DD-4C6D-9B21-BE01BC9B80D0",	
+  "name": "Game of Life",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Visual Samples"],
+  "description": "The visualization of Conway's Game of Life",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+           		"make",
+			"make run"
+		 ]
+	}],
+	"windows": [{
+		"steps": [
+			"MSBuild GameOfLife.sln /t:Rebuild /p:Configuration=\"Release\"",
+			"cd x64/Release",
+            		"GameOfLife.exe"
+		]
+	}]
+
+  },
+  "expertise": "Getting Started"
+}
