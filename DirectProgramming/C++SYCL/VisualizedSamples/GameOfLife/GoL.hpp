@@ -6,12 +6,6 @@
 using namespace sycl;
 using namespace std;
 
-std::ostream& operator<<(std::ostream& stream, SDL_Rect rect)
-{
-	stream << "[" << rect.x << "\t" << rect.y << "\t" << rect.w << "\t" << rect.h << "]\n";
-	return stream;
-}
-
 class GameOfLife {
 public:
 	GameOfLife(int width, int height, int probability, queue& q);	
@@ -160,7 +154,6 @@ void GameOfLife::pan(double x, double y)
 	{
 		textureRect.y -= yOffset;
 	}
-	std::cout << textureRect;
 }
 
 

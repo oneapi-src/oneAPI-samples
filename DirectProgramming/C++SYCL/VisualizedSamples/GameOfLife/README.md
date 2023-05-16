@@ -113,11 +113,11 @@ You can modify some parameters in `GameOfLife.cpp`. Adjust the parameters to see
 
 |Parameter |Description
 |:--- |:---
-|`windowWidth` |Window width. Default is 640
-|`windowHeight` |Window height. Default is 480
-|`width` |Texture width. Default is 1024
-|`height` |Texture height. Default is 1024
-|`max_iterations` |Maximum value is 50.
+|`windowWidth` |Window width. Default is 640.
+|`windowHeight` |Window height. Default is 480.
+|`width` |Texture width. Default is 256.
+|`height` |Texture height. Default is 256.
+|`probability` |Alive cell probability. Default is 10.
 
 
 ### Example Output

@@ -26,7 +26,7 @@ void ShowDevice(queue& q) {
 	cout << std::setw(20) << "Max Compute Units: " << max_compute_units << "\n\n";
 }
 
-// Handle SDL events while playing phase
+// Handle SDL events while animation phase
 std::pair<bool, bool> handleEvents(const SDL_Event& event, GameOfLife& gol) {
 	static bool isMousePressed = false;
 	static bool isSpacePressed = false;
