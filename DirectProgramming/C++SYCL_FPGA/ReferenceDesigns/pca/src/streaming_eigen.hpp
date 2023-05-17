@@ -2,6 +2,7 @@
 #define __STREAMING_EIGEN_HPP__
 
 #include <float.h>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 
 #include "constexpr_math.hpp"
 #include "tuple.hpp"

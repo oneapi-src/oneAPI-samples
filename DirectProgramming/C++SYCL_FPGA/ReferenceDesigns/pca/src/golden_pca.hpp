@@ -1,11 +1,6 @@
 #include <math.h>
 
-#include <algorithm>
-#include <cstdlib>
-#include <iostream>
 #include <random>
-
-#include "qr_MGS.hpp"
 
 /*
 This file implements the steps to

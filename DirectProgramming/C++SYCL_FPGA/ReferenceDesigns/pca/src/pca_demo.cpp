@@ -1,11 +1,3 @@
-#include <math.h>
-
-#include <algorithm>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
-#include <list>
-#include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 #include <vector>
@@ -32,7 +24,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kFeaturesCount = FEATURES_COUNT;
   constexpr size_t kSamplesCount = SAMPLES_COUNT;
 
-  constexpr size_t kAMatrixSize = kFeaturesCount * kFeaturesCount;
+  constexpr size_t kAMatrixSize = kSamplesCount * kFeaturesCount;
   constexpr size_t kEigenValuesCount = kFeaturesCount;
   constexpr size_t kEigenVectorsMatrixSize = kFeaturesCount * kFeaturesCount;
 
@@ -101,9 +93,30 @@ int main(int argc, char *argv[]) {
     // Copy all the input matrices to the of the golden implementation to the
     // a_matrix that uses the float datatype, which is going to be used by the
     // hardware implementation
-    for (int k = 0; k < (kAMatrixSize * kPCAsToCompute); k++) {
-      a_matrix[k] = pca.a_matrix[k];  // implicit double to float cast here
+    // for (int k = 0; k < (kAMatrixSize * kPCAsToCompute); k++) {
+    //   a_matrix[k] = pca.a_matrix[k];  // implicit double to float cast here
+    // }
+
+    for (int matrix_index = 0; matrix_index < kPCAsToCompute; matrix_index++) {
+      for (int row = 0; row < kSamplesCount; row++) {
+        for (int column = 0; column < kFeaturesCount; column++) {
+          a_matrix[matrix_index * kFeaturesCount * kSamplesCount +
+                   column * kSamplesCount + row] =
+              pca.a_matrix[matrix_index * kFeaturesCount * kSamplesCount +
+                           row * kFeaturesCount +
+                           column];  // implicit double to float cast here
+        }
+      }
     }
+
+    std::cout << "Transposed input: " << std::endl;
+    for (int row = 0; row < kFeaturesCount; row++) {
+      for (int column = 0; column < kSamplesCount; column++) {
+        std::cout << a_matrix[row * kSamplesCount + column] << " ";
+      }
+      std::cout << std::endl;
+    }
+
 
     std::cout << "Running Principal Component analysis of " << kPCAsToCompute
               << " matri" << (kPCAsToCompute > 1 ? "ces " : "x ") << repetitions

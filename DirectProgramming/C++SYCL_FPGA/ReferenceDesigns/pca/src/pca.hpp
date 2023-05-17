@@ -1,16 +1,12 @@
 #ifndef __PCA_HPP__
 #define __PCA_HPP__
 
-#include <chrono>
-#include <cstring>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-#include <type_traits>
 #include <vector>
 
-#include "streaming_covariance_matrix.hpp"
 #include "memory_transfers.hpp"
+#include "streaming_covariance_matrix.hpp"
 #include "streaming_eigen.hpp"
 #include "tuple.hpp"
 
@@ -28,16 +24,21 @@ class EValP;
 class EVecP;
 
 /*
-  Implementation of the QR decomposition using multiple streaming kernels
-  Can be configured by datatype, matrix size and works with square or
-  rectangular matrices.
+  Implementation of the Principal component analysis using multiple streaming
+  kernels The input matrices are first transformed to their standardized
+  covariance form before the Eigen values and Eigen vectors are computed. This
+  function can be configured by datatype, input matrix size and works with
+  square or rectangular matrices.
 */
 template <unsigned k_samples_count,   // Number of samples in the input matrix
+                                      // (a.k.a rows)
           unsigned k_features_count,  // Number of features in the input matrix
+                                      // (a.k.a columns)
           unsigned k_raw_latency,     // RAW latency for triangular loop
-                                      // optimization
+                                      // optimization in the QR iteration
           bool k_use_rayleigh_shift,  // Use Rayleigh shift rather than
-                                      // Wilkinson shift
+                                      // Wilkinson shift if true in the QR
+                                      // iteration
           int k_zero_threshold_1e,    // Threshold from which we consider a
                                     // floating point value to be 0 (e.g. -4 ->
                                     // 10e-4)
@@ -57,12 +58,9 @@ void PCAsyclImpl(
                 "samples with no data.");
 
   constexpr int kNumElementsPerDDRBurst = 8;
-  constexpr int kInputMatrixSize =
-      ((k_samples_count + k_features_count - 1) / k_features_count) *
-      k_features_count * k_features_count;
+  constexpr int kInputMatrixSize = k_samples_count * k_features_count;
   constexpr int kEigenVectorsMatrixSize = k_features_count * k_features_count;
-  constexpr int kEigenValuesMatrixSize =
-      k_features_count + 1;  // additional one for debug data
+  constexpr int kEigenValuesVectorSize = k_features_count;
 
   using PipeType = fpga_tools::NTuple<T, kNumElementsPerDDRBurst>;
 
@@ -78,7 +76,7 @@ void PCAsyclImpl(
   T *eigen_vectors_device =
       sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
   T *eigen_values_device =
-      sycl::malloc_device<T>(kEigenValuesMatrixSize * matrix_count, q);
+      sycl::malloc_device<T>(kEigenValuesVectorSize * matrix_count, q);
 
   // Copy the input matrices from host DDR to FPGA DDR
   q.memcpy(input_matrix_device, input_matrix.data(),
@@ -89,15 +87,14 @@ void PCAsyclImpl(
   // k_features_count Therefore we read the k_features_count x k_samples_count
   // by blocks of k_features_count x k_features_count. k_samples_count is
   // expected to be a multiple of k_features_count
-  int matrix_blocks = matrix_count * (k_samples_count / k_features_count);
 
   // Read the input matrix from FPGA DDR by blocks
   auto ddr_write_event = q.submit([&](sycl::handler &h) {
     h.single_task<InputMatrixFromDDRToLocalMem>([=
     ]() [[intel::kernel_args_restrict]] {
-      MatrixReadFromDDRToPipe<T, k_features_count, k_features_count,
+      MatrixReadFromDDRToPipeByBlocks<T, k_features_count, k_samples_count,
                               kNumElementsPerDDRBurst, InputMatrixPipe>(
-          input_matrix_device, matrix_blocks, repetitions);
+          input_matrix_device, matrix_count, repetitions);
     });
   });
 
@@ -107,13 +104,12 @@ void PCAsyclImpl(
           T, k_samples_count, k_features_count, kNumElementsPerDDRBurst,
           InputMatrixPipe, CovarianceMatrixPipe>());
 
-  // Compute the eigen values and eigen vectors
+  // Compute the Eigen values and Eigen vectors
   q.single_task<EigenValuesAndVectorsComputation>(
       fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
                                   kNumElementsPerDDRBurst, k_zero_threshold_1e,
                                   CovarianceMatrixPipe, EigenValuesPipe,
                                   EigenVectorsPipe, k_use_rayleigh_shift>());
-
 
   // Write the Eigen values from local memory to FPGA DDR
   auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
@@ -132,8 +128,8 @@ void PCAsyclImpl(
   });
 
   // Wait for the completion of the pipeline
-  eigen_vectors_event.wait();
   eigen_values_event.wait();
+  eigen_vectors_event.wait();
 
   // Compute the total time the execution lasted
   auto start_time = ddr_write_event.template get_profiling_info<
@@ -141,7 +137,6 @@ void PCAsyclImpl(
   auto end_time = eigen_vectors_event.template get_profiling_info<
       sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
-  q.throw_asynchronous();
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
   std::cout << "Throughput: " << repetitions * matrix_count / diff * 1e-3
@@ -152,7 +147,7 @@ void PCAsyclImpl(
            kEigenVectorsMatrixSize * matrix_count * sizeof(T))
       .wait();
   q.memcpy(eigen_values_matrix.data(), eigen_values_device,
-           kEigenValuesMatrixSize * matrix_count * sizeof(T))
+           kEigenValuesVectorSize * matrix_count * sizeof(T))
       .wait();
 
   // Clean allocated FPGA memory
