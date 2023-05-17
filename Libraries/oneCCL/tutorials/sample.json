@@ -14,7 +14,7 @@
 		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
 		"id": "ccl gsg",
 		"steps": [
-			"/opt/intel/oneapi/intelpython/latest/envs/base/bin/python -m ipykernel install --user --name=base",
+			"/opt/intel/oneapi/intelpython/latest/bin/python -m ipykernel install --user --name=base",
 		        "python scripts/ci_test.py"
 		 ]
 	}]

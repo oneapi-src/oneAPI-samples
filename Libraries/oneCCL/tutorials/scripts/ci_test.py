@@ -20,7 +20,7 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         print("Exception!")
         return -1
 
-
+print(__file__)
 runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                 'oneCCL_Getting_Started.ipynb'),
                    'oneCCL_Getting_Started_result.ipynb', 'base')
