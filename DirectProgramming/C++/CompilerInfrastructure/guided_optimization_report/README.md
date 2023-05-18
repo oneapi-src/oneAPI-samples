@@ -171,7 +171,7 @@ LOOP END
  
 ### Generate a Level 3 Optimization Report
 
-Now use `qopt-report=3` to generate a report with medium details. 
+Now use `qopt-report=3` to generate a report with maximum details. 
 
 1. Recompile your project with `qopt-report=3`.
 
