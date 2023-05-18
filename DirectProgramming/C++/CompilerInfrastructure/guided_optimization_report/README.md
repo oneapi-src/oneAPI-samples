@@ -171,7 +171,15 @@ LOOP END
  
 ### Generate a Level 3 Optimization Report
 
-<TODO> Is there anything to show for level 3?
+Now use `qopt-report=3` to generate a report with medium details. 
+
+1. Recompile your project with `qopt-report=3`.
+
+   ```
+   icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=3 Multiply.c Driver.c -o MatVector 
+   ```
+
+The resulting report includes information about **TODO** ...
 
 ## Additional Information
 
