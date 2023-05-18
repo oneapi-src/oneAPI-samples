@@ -70,19 +70,25 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Run the `odd-even merge-sort` Sample
 You can run the programs for CPU or GPU or both. The run commands indicate the device target.
 
-1. Run `sycl_dpct_migrated` for CPU and GPU.
+1. Run `02_sycl_dpct_migrated` on GPU.
    ```
-   make run_sdm_cpu
-   make run_sdm_gpu
+   make run_sdm
    ```
-2. Run sycl_migrated using following commands,
+   Run `02_sycl_dpct_migrated` on CPU.
    ```
-   make run_cpu
-   make run_gpu
+   export SYCL_DEVICE_FILTER=cpu
+   make run_sdm
+   unset SYCL_DEVICE_FILTER
    ```
-3. Optionally, clean the project.
+2. Run `03_sycl_migrated` on GPU.
    ```
-   make clean
+   make run
+   ```
+   Run `03_sycl_migrated` on CPU.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run
+   unset SYCL_DEVICE_FILTER
    ```
 ### Run `odd-even-merge-sort` Sample in Intel® DevCloud (Optional)
 When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).

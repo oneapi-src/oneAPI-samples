@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 
 class SpecializedKernel;
@@ -46,3 +47,4 @@ int main() {
   std::cout << vec[0] << std::endl;
   return 0;
 }
+// Snippet end

@@ -37,7 +37,7 @@ int main() {
 
 
 
-  //# STEP 3 : Write kernel code to update data1 on device with sqrt of value
+  //# STEP 3 : Write kernel code to update data1 on device with square of its value
 
   q.parallel_for(N, [=](auto i) { 
 
@@ -47,7 +47,7 @@ int main() {
 
 
 
-  //# STEP 3 : Write kernel code to update data2 on device with sqrt of value
+  //# STEP 3 : Write kernel code to update data2 on device with square of its value
     
   q.parallel_for(N, [=](auto i) { 
 

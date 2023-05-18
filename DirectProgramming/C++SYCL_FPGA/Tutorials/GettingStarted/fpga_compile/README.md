@@ -167,7 +167,7 @@ Simulator
 
 ```bash
 # FPGA simulator image:
-icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex7 -Xsghdl -o vector_add_sim.a
+icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex7 -Xsghdl -o vector_add_sim.fpga_sim
 ```
 Through `-Xstarget`, you can target an explicit board, a device family or a FPGA part number.
 

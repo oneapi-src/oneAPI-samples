@@ -1,0 +1,1 @@
+add_example(stream_3D)

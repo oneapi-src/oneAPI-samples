@@ -114,7 +114,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
+   > 
+   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
+   > 
+   >     intel_a10gx_pac:pac_a10
    >
+   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
+   >
+   >     intel_s10sx_pac:pac_s10
+   >     intel_s10sx_pac:pac_s10_usm
+   > 
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
@@ -186,7 +196,17 @@ time.)
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
+   > 
+   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
+   > 
+   >     intel_a10gx_pac:pac_a10
    >
+   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
+   >
+   >     intel_s10sx_pac:pac_s10
+   >     intel_s10sx_pac:pac_s10_usm
+   > 
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU

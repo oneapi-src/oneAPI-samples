@@ -99,7 +99,7 @@ class oneDNNLog:
 
         exec_data = data[data['exec'] == 'exec']
         self.data = data
-        self.exec_data = exec_data
+        self.exec_data = exec_data.copy()
 
         if self.with_timestamp is True:
             import io
