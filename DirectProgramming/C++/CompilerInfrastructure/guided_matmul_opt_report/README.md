@@ -1,6 +1,6 @@
-# `Optimization Report` Sample
+# `Matrix Multiply` Sample
 
-The Optimization Report sample shows basic auto-vectorization and how to use the optimization report option to analyze your code and identify potential points of performance improvement.   
+The `Matrix Multiply` sample uses auto-vectorization to improve the performance of the sample matrix multiplication application. An optimization report is used to identify potential points of performance improvement.
 
 | Area                      | Description
 |:---                       |:---
@@ -8,6 +8,8 @@ The Optimization Report sample shows basic auto-vectorization and how to use the
 | Time to complete          | 10 minutes
 
 ## Purpose
+
+The `Matrix Multiply` sample demonstrates how compiler auto-vectorization can improve the performance of a program. The optimization report option is used to identify potential points of performance improvement.
 
 The Intel® oneAPI DPC++/C++ Compiler has an auto-vectorization mechanism that detects operations in the application that can be done in parallel and converts sequential operations to parallel operations by using the Single Instruction Multiple Data (SIMD) instruction set. 
 
@@ -37,9 +39,9 @@ The sample makes use of the following source files:
 
 | File Name                 | Description
 |:---                       |:---
-| Driver.c                  | <TODO>
-| Multiply.c                | <TODO>
-| Multiply.h                | <TODO>
+| Driver.c                  | The main program to run the matrix multiplication program and print out the time spent  
+| Multiply.c                | The matrix multiplication program
+| Multiply.h                | Header file used by Multiply.c 
 
 >**Note**: For comprehensive information about oneAPI programming, refer to the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -83,7 +85,7 @@ Create a performance baseline by compiling the sources from the src directory.
    Sum of result = 195853.999899 
    ```
 
-Record the execution time reported in the output. This is the baseline. 
+Record the execution time reported in the output. This is the baseline without auto-vectorization. 
 
 ## Generate an Optimization Report
 
@@ -93,7 +95,7 @@ For the sample program:
 
 * `qopt-report=1` (minimum) generates a report that identifies the loops in your code that were vectorized 
 * `qopt-report=2` (medium) generates a report that identifies both the loops in your code that were vectorized, and the reason that other loops were not vectorized
-* `qopt-report=3` (maximum) is not used
+* `qopt-report=3` (maximum) generates a report with maximum detail, including loop cost summary
 
 **Note**: If you use `-qopt-report` when vectorization is disabled ([`O1`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/o-001.html)), the compiler will not generate a optimization report.
 
@@ -105,7 +107,7 @@ Generate a level 1 optimization report by compiling your project with the `O2` a
 2. Build the program with `O2` and `qopt-report=1` options.
 
    ```
-   icx -O2 -std=c17 -DNOFUNCCALL -qopt-report=1 Multiply.c Driver.c -o MatVector 
+   icx -O2 -std=c17 -DNOFUNCCALL -qopt-report=1 Multiply.c Driver.c -o vec_report1 
    ```
 
    [`-DNOFUNCCALL`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/d.html) is used to tell the compiler to use the inline equivalent of the `matvec` function (found in `Driver.c`).
@@ -113,7 +115,7 @@ Generate a level 1 optimization report by compiling your project with the `O2` a
 3. Run the program.
 
    ```
-   MatVector 
+   vec_report1 
    ```
 
 4. Record the execution time.
@@ -153,10 +155,10 @@ Now use `qopt-report=2` to generate a report with medium details.
 1. Recompile your project with `qopt-report=2`.
 
    ```
-   icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=2 Multiply.c Driver.c -o MatVector 
+   icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=2 Multiply.c Driver.c -o vec_report2 
    ```
 
-The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The vectorization report `Multiply.optrpt` indicates that the loop at line 37 in `Multiply.c` did not vectorize:  
+The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The optimization report `Multiply.optrpt` indicates that the loop at line 37 in `Multiply.c` did not vectorize:  
 
 ```
 LOOP BEGIN at Multiply.c (37, 5) 
@@ -176,10 +178,44 @@ Now use `qopt-report=3` to generate a report with maximum details.
 1. Recompile your project with `qopt-report=3`.
 
    ```
-   icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=3 Multiply.c Driver.c -o MatVector 
+   icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=3 Multiply.c Driver.c -o vec_report3 
    ```
 
-The resulting report includes information about **TODO** ...
+In addition to information about which loops were vectorized and which were not vectorized, the level 3 report includes information about the cost of performing loops. The optimization report `Driver.optrpt` displays the loop cost summary: 
+
+```
+LOOP BEGIN at Driver.c (102, 13) 
+   remark #15300: LOOP WAS VECTORIZED 
+   remark #15305: vectorization support: vector length 2 
+   remark #15475: --- begin vector loop cost summary --- 
+   remark #15476: scalar cost: 8.000000 
+   remark #15477: vector cost: 7.500000 
+   remark #15478: estimated potential speedup: 1.046875 
+   remark #15309: vectorization support: normalized vectorization overhead 0.390625 
+   remark #15570: using scalar loop trip count: 101 
+   remark #15482: vectorized math library calls: 0 
+   remark #15484: vector function calls: 0 
+   remark #15485: serialized function calls: 0 
+   remark #15488: --- end vector loop cost summary --- 
+   remark #15447: --- begin vector loop memory reference summary --- 
+   remark #15450: unmasked unaligned unit stride loads: 2 
+   remark #15451: unmasked unaligned unit stride stores: 0 
+   remark #15456: masked unaligned unit stride loads: 0 
+   remark #15457: masked unaligned unit stride stores: 0 
+   remark #15458: masked indexed (or gather) loads: 0 
+   remark #15459: masked indexed (or scatter) stores: 0 
+   remark #15462: unmasked indexed (or gather) loads: 0 
+   remark #15463: unmasked indexed (or scatter) stores: 0 
+   remark #15554: Unmasked VLS-optimized loads (each part of the group counted separately): 0 
+   remark #15555: Masked VLS-optimized loads (each part of the group counted separately): 0 
+   remark #15556: Unmasked VLS-optimized stores (each part of the group counted separately): 0 
+   remark #15557: Masked VLS-optimized stores (each part of the group counted separately): 0 
+   remark #15497: vector compress: 0 
+   remark #15498: vector expand: 0 
+   remark #15474: --- end vector loop memory reference summary --- 
+   remark #25587: Loop has reduction 
+LOOP END 
+```
 
 ## Additional Information
 
