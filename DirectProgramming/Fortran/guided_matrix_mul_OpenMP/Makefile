@@ -15,9 +15,6 @@
 ## To compile and run the GPU version type: make gpu
 ##******************************************************************************
 
-
-
-
 FC=ifx
 FCFLAGS_CPU=-xhost
 FCFLAGS_PAR=-xhost -qopenmp
@@ -27,35 +24,35 @@ SEQ=seq
 SEQ_OBJS= mm_CPUsequential.o
 PAR=par
 PAR_OBJS= mm_CPUparallel.o
-GPU=gpu 
+GPU=gpu
 GPU_OBJS= mm_GPU.o
 
 $(SEQ): $(SEQ_OBJS)
-	$(FC) $(FCFLAGS_CPU) $(SEQ_OBJS) -o $@ 
+	$(FC) $(FCFLAGS_CPU) $(SEQ_OBJS) -o $@
 	$(SEQ)
 
 $(PAR): $(PAR_OBJS)
-	$(FC) $(FCFLAGS_PAR) $(PAR_OBJS) -o $@ 
+	$(FC) $(FCFLAGS_PAR) $(PAR_OBJS) -o $@
 	$(PAR)
 
 $(GPU): $(GPU_OBJS)
-	$(FC) $(FCFLAGS_GPU) $(GPU_OBJS) -o $@ 
+	$(FC) $(FCFLAGS_GPU) $(GPU_OBJS) -o $@
 	$(GPU)
 
 all: $(SEQ) $(PAR) $(GPU)
 
-mm_CPUsequential.o: mm_CPUsequential.f90 
+mm_CPUsequential.o: src/mm_CPUsequential.f90
 	$(FC) $(FCFLAGS_CPU) -c $< -o $@
 
-mm_CPUparallel.o: mm_CPUparallel.f90
+mm_CPUparallel.o: src/mm_CPUparallel.f90
 	$(FC) $(FCFLAGS_PAR) -c $< -o $@
 
-mm_GPU.o: mm_GPU.f90
+mm_GPU.o: src/mm_GPU.f90
 	$(FC) $(FCFLAGS_GPU) -c $< -o $@
 
 .DEFAULT_GOAL=$(SEQ)
 
-.PHONY: clean 
+.PHONY: clean
 
 clean:
 	-/bin/rm -f *.o $(SEQ) $(PAR) $(GPU)
