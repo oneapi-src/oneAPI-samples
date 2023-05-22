@@ -158,19 +158,28 @@ Now use `qopt-report=2` to generate a report with medium details.
    icx -std=c17 -O2 -DNOFUNCCALL -qopt-report=2 Multiply.c Driver.c -o vec_report2 
    ```
 
-The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The optimization report `Multiply.optrpt` indicates that the loop at line 37 in `Multiply.c` did not vectorize:  
+The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The optimization report Driver.optrpt indicates that the loop at line 119 in `Driver.c` did not vectorize:
 
 ```
-LOOP BEGIN at Multiply.c (37, 5) 
-<Multiversioned v2> 
-    remark #15319: Loop was not vectorized: novector directive used 
+LOOP BEGIN at Driver.c (119, 5) 
+    remark #15553: loop was not vectorized: outer loop is not an auto-vectorization candidate. 
   
-    LOOP BEGIN at Multiply.c (49, 9) 
-        remark #15319: Loop was not vectorized: novector directive used 
+    LOOP BEGIN at Driver.c (122, 9) 
+        remark #25529: Dead stores eliminated in loop 
+        remark #15553: loop was not vectorized: outer loop is not an auto-vectorization candidate. 
+  
+        LOOP BEGIN at Driver.c (124, 13) 
+            remark #15300: LOOP WAS VECTORIZED 
+            remark #15305: vectorization support: vector length 2 
+        LOOP END 
+  
+        LOOP BEGIN at Driver.c (124, 13) 
+        <Remainder loop for vectorization> 
+        LOOP END 
     LOOP END 
 LOOP END 
 ```
- 
+
 ### Generate a Level 3 Optimization Report
 
 Now use `qopt-report=3` to generate a report with maximum details. 
