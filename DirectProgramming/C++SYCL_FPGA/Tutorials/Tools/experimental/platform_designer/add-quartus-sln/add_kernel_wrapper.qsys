@@ -23,9 +23,8 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:name>$${FILENAME}</altera:name>
       <altera:displayName>$${FILENAME}</altera:displayName>
       <altera:version>1.0</altera:version>
-      <altera:description></altera:description>
       <altera:tags></altera:tags>
-      <altera:categories>System</altera:categories>
+      <altera:categories></altera:categories>
       <altera:tool>QsysPro</altera:tool>
     </altera:catalog_card_info>
     <altera:altera_system_parameters>
@@ -241,7 +240,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;ports&gt;
                     &lt;port&gt;
                         &lt;name&gt;resetn&lt;/name&gt;
-                        &lt;role&gt;reset_n&lt;/role&gt;
+                        &lt;role&gt;reset&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
                         &lt;lowerBound&gt;0&lt;/lowerBound&gt;
@@ -1771,6 +1770,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;writeWaitTime&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
+                            &lt;value&gt;0&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -2156,6 +2159,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
+                        &lt;value&gt;0&lt;/value&gt;
+                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
@@ -2487,6 +2494,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableAllPipelines" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableEccProtection" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableInstrumentation" altera:parameter_value="FALSE"></altera:connection_parameter>
+        <altera:connection_parameter altera:parameter_name="qsys_mm.enableOutOfOrderSupport" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.insertDefaultSlave" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectResetSource" altera:parameter_value="DEFAULT"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectType" altera:parameter_value="STANDARD"></altera:connection_parameter>

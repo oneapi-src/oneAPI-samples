@@ -19,7 +19,7 @@ https://fpgasoftware.intel.com/eula.-->
    version="1.0"
    description=""
    tags=""
-   categories="System"
+   categories=""
    tool="QsysPro" />
  <parameter name="board" value="Unknown" />
  <parameter name="bonusData"><![CDATA[bonusData 
@@ -153,7 +153,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ports>
                     <port>
                         <name>resetn</name>
-                        <role>reset_n</role>
+                        <role>reset</role>
                         <direction>Input</direction>
                         <width>1</width>
                         <lowerBound>0</lowerBound>
@@ -1607,6 +1607,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
+                        <entry>
+                            <key>enableConcurrentSubordinateAccess</key>
+                            <value>0</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -1988,6 +1992,10 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>writeWaitTime</key>
                         <value>0</value>
                     </entry>
+                    <entry>
+                        <key>enableConcurrentSubordinateAccess</key>
+                        <value>0</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -2256,6 +2264,7 @@ https://fpgasoftware.intel.com/eula.-->
   <parameter name="qsys_mm.enableAllPipelines" value="FALSE" />
   <parameter name="qsys_mm.enableEccProtection" value="FALSE" />
   <parameter name="qsys_mm.enableInstrumentation" value="FALSE" />
+  <parameter name="qsys_mm.enableOutOfOrderSupport" value="FALSE" />
   <parameter name="qsys_mm.insertDefaultSlave" value="FALSE" />
   <parameter name="qsys_mm.interconnectResetSource" value="DEFAULT" />
   <parameter name="qsys_mm.interconnectType" value="STANDARD" />

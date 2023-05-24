@@ -89,7 +89,7 @@ Follow these steps to compile and test the design:
    $> mkdir build
    $> cd build
    $> cmake ..
-   $> make fpga_ip_export
+   $> make report
    ```
 
    Windows:
@@ -99,12 +99,12 @@ Follow these steps to compile and test the design:
    > mkdir build
    > cd build
    > cmake -G "NMake Makefiles" ..
-   > nmake fpga_ip_export
+   > nmake report
    ```
 
 2. **From the same terminal**, prepare a project directory for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `add-quartus-sln` into it. Then launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
-> **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
+   > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
 
    Linux:
    
@@ -142,45 +142,20 @@ Follow these steps to compile and test the design:
 
       ![](assets/add-files.png)
 
-3. Copy the generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_ip_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels have their own reports and associated RTL. You must locate the the `.prj_X` directory that contains the IP you want to use in your design.
-
-   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add.fpga_ip_export.prj_1` is the correct `.prj_x` directory, because `add_fpga_ip_export_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
-   
-   ```verilog
-   add_fpga_ip_export_1_di add_fpga_ip_export_1_di_inst (
-      // Interface: clock (clock end)
-      .clock                          ( ), // 1-bit clk input
-      // Interface: resetn (reset end)
-      .resetn                         ( ), // 1-bit reset_n input
-      // Interface: device_exception_bus (conduit end)
-      .device_exception_bus           ( ), // 64-bit data output
-      // Interface: kernel_irqs (interrupt end)
-      .kernel_irqs                    ( ), // 1-bit irq output
-      // Interface: csr_ring_root_avs (avalon end)
-      .csr_ring_root_avs_read         ( ), // 1-bit read input
-      .csr_ring_root_avs_readdata     ( ), // 64-bit readdata output
-      .csr_ring_root_avs_readdatavalid( ), // 1-bit readdatavalid output
-      .csr_ring_root_avs_write        ( ), // 1-bit write input
-      .csr_ring_root_avs_writedata    ( ), // 64-bit writedata input
-      .csr_ring_root_avs_address      ( ), // 5-bit address input
-      .csr_ring_root_avs_byteenable   ( ), // 8-bit byteenable input
-      .csr_ring_root_avs_waitrequest  ( )  // 1-bit waitrequest output
-   );
-   ```
+3. Copy the IP you generated in Step 1 to the Intel Quartus® Prime project. 
 
    Linux:
 
    ```
    $> cd .. # navigate to project root if not there already
-   $> cp -r add-oneapi/build/add.fpga_ip_export.prj_1/ add-quartus/
+   $> cp -r add-oneapi/build/add.report.prj/ add-quartus/
    ```
 
    Windows:
 
    ```
    > cd .. # navigate to project root if not there already
-   > ROBOCOPY add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1\ /S
-
+   > ROBOCOPY add-oneapi\build\add.report.prj\ add-quartus\add.report.prj\ /S
    ```
 
 4. Create the Platform Designer system.
@@ -203,7 +178,7 @@ Follow these steps to compile and test the design:
 
       * Basic Functions > Bridges and Adaptors > Memory Mapped > **JTAG to Avalon Master Bridge Intel® FPGA IP**
 
-      * oneAPI > **add_fpga_ip_export_1_di**
+      * oneAPI > **add_report_di**
 
       ![](assets/add-ip-platform-designer.png)
 
