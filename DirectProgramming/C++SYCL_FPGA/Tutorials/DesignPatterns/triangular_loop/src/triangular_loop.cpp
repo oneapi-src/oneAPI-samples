@@ -123,7 +123,7 @@ int main() {
 
   // Host and kernel profiling
   event e;
-  ulong t1_kernel, t2_kernel;
+  unsigned long t1_kernel, t2_kernel;
   double time_kernel;
 // Create queue, get platform and device
 #if FPGA_SIMULATOR

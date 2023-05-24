@@ -106,10 +106,10 @@ void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
 }
 
 // Returns kernel execution time for a given SYCL event from a queue.
-ulong SyclGetExecTimeNs(event e) {
-  ulong start_time =
+unsigned long SyclGetExecTimeNs(event e) {
+  unsigned long start_time =
       e.get_profiling_info<info::event_profiling::command_start>();
-  ulong end_time = e.get_profiling_info<info::event_profiling::command_end>();
+  unsigned long end_time = e.get_profiling_info<info::event_profiling::command_end>();
   return (end_time - start_time);
 }
 
@@ -129,7 +129,7 @@ float MyPow(float input, int pow) {
 */
 void ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf,
                    int exec_number, event e,
-                   ulong &total_kernel_time_per_slot) {
+                   unsigned long &total_kernel_time_per_slot) {
   host_accessor input_buf_acc(input_buf, read_only);
   host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
@@ -244,10 +244,10 @@ int main() {
     event sycl_events[2];
 
     // In nanoseconds. Total execution time of kernels in a given slot.
-    ulong total_kernel_time_per_slot[2];
+    unsigned long total_kernel_time_per_slot[2];
 
     // Total execution time of all kernels.
-    ulong total_kernel_time = 0;
+    unsigned long total_kernel_time = 0;
 
     // Allocate vectors to store the host-side copies of the input data
     // Create and allocate the SYCL buffers
