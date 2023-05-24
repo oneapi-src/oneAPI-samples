@@ -217,7 +217,7 @@ Follow these steps to compile and test the design:
 
       Don't forget to export the `irq_add` and `exception_add` signals. The provided top-level RTL file (`add.sv`) uses the generated IP. Following these naming conventions allows the IP to connect to this handwritten RTL.
 
-      > **Important**: If you are using the oneAPI Base Toolkit 2023.1, the DCP++/C++ compiler causes the generated IP to be incorrectly documented in its hardware TCL script. You can override this in Platform Designer by changing the signal type of the `resetn` signal to `reset_n`:
+      > **Important**: If you are using the oneAPI Base Toolkit 2023.2, the DCP++/C++ compiler causes the generated IP to be incorrectly documented in its hardware TCL script. You can override this in Platform Designer by changing the signal type of the `resetn` signal to `reset_n`:
       > 
       > ![](assets/fix-reset_n-platform-designer.png)
 
@@ -228,6 +228,10 @@ Follow these steps to compile and test the design:
    9. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
       ![](assets/generate-hdl.png)
+
+      > **Important**: If you are using the oneAPI Base Toolkit 2023.2, you should see a warning due to the compiler bug described in Step 6.
+      > 
+      > ![](assets/platform-designer-warning.png)
    
    10. Close Platform Designer. 
    
@@ -326,22 +330,9 @@ Press any key to continue . . .
 
 <etc.>
 ---------------------------------------
-% source jtag_avmm.tcl
-% source read_outputs.tcl
-Outputs:
-  Data (0x80): 0x00000000 0x00000000
-  Status (0x00): 0x00050000 0x00000000
-  finish (0x30): 0x00000000 0x00000000
-% source load_inputs.tcl
-Store 6 to address 0x94
-Store 3 to address 0x90
-Set 'Start' bit to 1
-% source read_outputs.tcl
-Outputs:
-  Data (0x80): 0x00000009 0x00000000
-  Status (0x00): 0x00050002 0x00000000
-  finish (0x30): 0x00000001 0x00000000
-%
+% source test_add.tcl
+
+TODO: ADD OUTPUT
 ```
 
 ## License

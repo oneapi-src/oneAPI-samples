@@ -20,10 +20,10 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>in_reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.2"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.2"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -52,10 +52,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>out_reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.2"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.2"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -186,7 +186,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="board" type="string">
           <ipxact:name>board</ipxact:name>
           <ipxact:displayName>Board</ipxact:displayName>
-          <ipxact:value>default</ipxact:value>
+          <ipxact:value>Unknown</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="device" type="string">
           <ipxact:name>device</ipxact:name>
@@ -223,11 +223,6 @@ https://fpgasoftware.intel.com/eula.-->
    }
    element reset_in
    {
-      datum _sortIndex
-      {
-         value = "0";
-         type = "int";
-      }
    }
 }
 </ipxact:value>
@@ -317,13 +312,22 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:name>systemInfos</ipxact:name>
           <ipxact:displayName>systemInfos</ipxact:displayName>
           <ipxact:value>&lt;systemInfosDefinition&gt;
-    &lt;connPtSystemInfos/&gt;
+    &lt;connPtSystemInfos&gt;
+        &lt;entry&gt;
+            &lt;key&gt;clk&lt;/key&gt;
+            &lt;value&gt;
+                &lt;connectionPointName&gt;clk&lt;/connectionPointName&gt;
+                &lt;suppliedSystemInfos&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;CLOCK_RATE&lt;/key&gt;
+                        &lt;value&gt;50000000&lt;/value&gt;
+                    &lt;/entry&gt;
+                &lt;/suppliedSystemInfos&gt;
+                &lt;consumedSystemInfos/&gt;
+            &lt;/value&gt;
+        &lt;/entry&gt;
+    &lt;/connPtSystemInfos&gt;
 &lt;/systemInfosDefinition&gt;</ipxact:value>
-        </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value>&lt;pinAssignmentListDefinition/&gt;</ipxact:value>
         </ipxact:parameter>
       </ipxact:parameters>
     </altera:altera_system_parameters>
