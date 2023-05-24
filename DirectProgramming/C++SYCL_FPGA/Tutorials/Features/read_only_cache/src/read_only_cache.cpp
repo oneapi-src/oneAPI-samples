@@ -71,7 +71,7 @@ event runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
 int main() {
   // Host and kernel profiling
   event e;
-  ulong t1_kernel, t2_kernel;
+  unsigned long t1_kernel, t2_kernel;
   double time_kernel;
 
   // Create input and output vectors
