@@ -15,8 +15,6 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-
-
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
@@ -49,23 +47,27 @@ void MatrixReadFromDDRToPipeByBlocks(
   for (int repetition = 0; repetition < repetitions; repetition++) {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       for (int block_index = 0; block_index < kBlockCount; block_index++) {
-        for(int row=0; row<rows; row++){
-          for(int column=0; column<rows; column+=num_elem_per_bank){
+        for (int row = 0; row < rows; row++) {
+          for (int column = 0; column < rows; column += num_elem_per_bank) {
+            // PRINTF("Writing %d elements from %d to %d out of a total of %d\n", num_elem_per_bank, column, column+num_elem_per_bank, rows);
             // Read num_elem_per_bank elements per burst
             fpga_tools::NTuple<TT, num_elem_per_bank> ddr_read;
+            // PRINTF("ddr_read :");
             fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
-              if(column+k < rows){
+              if (column + k < rows) {
                 ddr_read.template get<k>() =
-                    matrix_ptr[matrix_index * kMatrixSize +
-                               block_index * rows + row * columns + k];
+                    matrix_ptr[matrix_index * kMatrixSize + block_index * rows +
+                               row * columns + column + k];
               }
+              // PRINTF("%f ", ddr_read.template get<k>());
             });
+            // PRINTF("\n");
             MatrixPipe::write(ddr_read);
-          } // end of column
-        } // end of row
-      } // end of block_index
-    }  // end of matrix_index
-  }    // end of repetition
+          }  // end of column
+        }    // end of row
+      }      // end of block_index
+    }        // end of matrix_index
+  }          // end of repetition
 }
 
 /*
@@ -144,6 +146,43 @@ void MatrixReadPipeToDDR(
         }
       }  // end of i
     }    // end of matrix_index
+  }      // end of repetition
+}
+
+/*
+  Write vector_count vectors of type TT from a pipe, one element at the time and
+  write them to DDR. Repeat this operations "repetitions" times.
+*/
+template <typename TT,         // Datatype of the elements of the matrix
+          int size,            // Number of rows of the matrix
+          typename VectorPipe  // Input matrix
+          >
+void VectorReadPipeToDDR(
+    TT* vector_ptr,    // Output matrix pointer
+    int vector_count,  // Number of vectors to write to DDR
+    int repetitions    // Number of time to read the same matrix to the pipe
+) {
+#if defined(IS_BSP)
+  // When targeting a BSP, we instruct the compiler that this pointer
+  // lives on the device.
+  // Knowing this, the compiler won't generate hardware to
+  // potentially get data from the host.
+  sycl::device_ptr<TT> vector_ptr_located(vector_ptr);
+#else
+  // Device pointers are not supported when targeting an FPGA
+  // family/part
+  TT* vector_ptr_located(vector_ptr);
+#endif
+
+  // Repeat vector_count complete R matrix pipe reads
+  // for as many repetitions as needed
+  for (int repetition = 0; repetition < repetitions; repetition++) {
+    [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
+    for (int vector_index = 0; vector_index < vector_count; vector_index++) {
+      for (int k = 0; k < size; k++) {
+        vector_ptr_located[vector_index * size + k] = VectorPipe::read();
+      }  // end of k
+    }    // end of vector_index
   }      // end of repetition
 }
 

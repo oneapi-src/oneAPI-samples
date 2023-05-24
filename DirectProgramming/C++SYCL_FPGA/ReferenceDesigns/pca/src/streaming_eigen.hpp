@@ -1,7 +1,6 @@
-#ifndef __STREAMING_EIGEN_HPP__
-#define __STREAMING_EIGEN_HPP__
+#ifndef __STREAMING_QRD_HPP__
+#define __STREAMING_QRD_HPP__
 
-#include <float.h>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 
 #include "constexpr_math.hpp"
@@ -10,185 +9,131 @@
 
 namespace fpga_linalg {
 
-template<typename T, std::size_t ... Is>
-constexpr T negPow10 (std::index_sequence<Is...> const &)
-{
- using unused = std::size_t[];
+/*
+  Computes 1e-Is as a constexpr
+*/
+template <typename T, std::size_t... Is>
+constexpr T negPow10(std::index_sequence<Is...> const &) {
+  using unused = std::size_t[];
 
- T ret { 1 };
+  T ret{1};
 
- (void)unused { 0U, (ret /= 10, Is)... };
+  (void)unused{0U, (ret /= 10, Is)...};
 
- return ret;
+  return ret;
 }
 
 /*
-  Eigen vale and Eigen vector computation for symmetric matrices.
-  Compute QQ matrix and Eig Vector where A QQ[i] = Eig[i] QQ[i]
+  This function implements the QR iteration method to find the Eigen values
+  and vectors of the input square matrices.
+  In order to reduce the number of iterations to perform, the Wilkinson shift
+  is applied at each iteration.
 
-  - A is the input matrix
-  - QQ is a eigen vector matrix
-  - Eig is vector for eigen values
-
-  This function implements Eigen vector and Eigen value comptation
-  based on Iterative QRD with with shift. The High level Algorithm
-  for calculating the first / right bottom eigen value is
-  as follows, @ for matrix matrix multiplication
-
-  QQ = I
-  while(1):
-    mu = A[n-1, n-1]
-    A = A - mu @ I
-    Q, R = qrDecompose(A)
-    QQ = QQ @ Q
-    A = R @ Q + mu @ I
-    if(abs(A[n-1, 0:n-2]) < threshold):
-      break;
-
-  Once first eigen value is computed matrix A is deflated
-  into A[0:n-2, 0:n-2] and abobe loop is executed.
-  deflation will continue until A[0:1, 0:1]
-
-
-  Input matrix A is organized column wise (transposed).
+  Each matrix (input and output) are represented in a column wise (transposed).
 
   Then input and output matrices are consumed/produced from/to pipes.
 */
-template <typename T,         // The datatype for the computation
-          int k_size,         // Input covariance matrices are square matrix
-          int k_raw_latency,  // Read after write latency (in iterations) of
-                              // the triangular loop of this function.
-                              // This value depends on the FPGA target, the
-                              // datatype, the target frequency, etc.
-                              // This value will have to be tuned for optimal
-                              // performance. Refer to the Triangular Loop
-                              // design pattern tutorial.
-                              // In general, find a high value for which the
-                              // compiler is able to achieve an II of 1 and
-                              // go down from there.
-          int k_pipe_size,    // Number of elements read/write per pipe
-                              // operation
-          int k_zero_threshold_1e,  // Threshold from which we consider a
-                                   // floating point value to be 0 (e.g. -4 -> 10e-4)
-          typename AIn,            // A matrix input pipe, receive k_pipe_size
-                                   // elements from the pipe with each read
-          typename EigOut,         // Q matrix output pipe, send k_pipe_size
-                                   // elements to the pipe with each write
-          typename QQOut,          // R matrix output pipe, send k_pipe_size
-                                   // elements to the pipe with each write.
-                                   // Only upper-right elements of R are
-                                   // sent in row order, starting with row 0.
-          bool k_use_rayleigh_shift = false  // Use Rayleigh shift rather than
-                                             // Wilkinson shift.
+template <typename T,       // The datatype for the computation
+          int size,         // Number of rows/columns in the A matrices
+          int raw_latency,  // Read after write latency (in iterations) of
+                            // the triangular loop of this function.
+                            // This value depends on the FPGA target, the
+                            // datatype, the target frequency, etc.
+                            // This value will have to be tuned for optimal
+                            // performance. Refer to the Triangular Loop
+                            // design pattern tutorial.
+                            // In general, find a high value for which the
+                            // compiler is able to achieve an II of 1 and
+                            // go down from there.
+          int pipe_size,    // Number of elements read/write per pipe
+                            // operation
+          int zero_threshold_1e,     // Threshold from which we consider a
+                                     // floating point value to be 0 (e.g. -4 ->
+                                     // 10e-4)
+          typename AIn,              // A matrix input pipe, receive pipe_size
+                                     // elements from the pipe with each read
+          typename EigenValuesOut,   // Eigen values output pipe, send 1
+                                     // element to the pipe with each write
+          typename EigenVectorsOut,  // Eigen vectors output pipe, send
+                                     // pipe_size elements to the pipe with each
+                                     // write.
+          typename RankDeficientOut  // Outputs a 1 bit value per Eigen vector
+                                     // matrix that is 1 if the input matrix
+                                     // is considered rank deficient. In this
+                                     // case, an Eigen value is 0, and the
+                                     // associated Eigen vector is forced to 0.
+
           >
 struct StreamingEigen {
   void operator()() const {
-    // PRINTF("R matrix is: \n");
-
-    static_assert (k_zero_threshold_1e < 0, "k_zero_threshold_1e must be negative");
-
-    constexpr float k_zero_threshold = negPow10<float>(std::make_index_sequence<-k_zero_threshold_1e>{});
-
-    // although colums and rows are same separate identifier is
-    // used to indicate operations are related to colums or rows in QR
-    // decomposition
-    const int columns = k_size;
-    const int rows = k_size;
-
-    // static_assert(columns >= 4,
+    // Functional limitations
+    // static_assert(size >= 4,
     //               "only matrices of size 4x4 and over are supported");
 
-    /*
-      QR Decomposition implementation is based on following algorithm
+    static_assert(zero_threshold_1e < 0,
+                  "k_zero_threshold_1e must be negative");
 
-      for i=0:n
-        for j=max(i,1):n
+    constexpr float k_zero_threshold =
+        negPow10<float>(std::make_index_sequence<-zero_threshold_1e>{});
 
-          if(j==i)
-            Q_i = a_i*ir
-          else
-            if(i>=0)
-              a_j = a_j - s[j]*a_i
+    // Type used to store the matrices in the QR decomposition compute loop
+    using column_tuple = fpga_tools::NTuple<T, size>;
 
-            if j=i+1
-              pip1         = <a_{i+1},a_{i+1}>
-              ir           = 1/sqrt(pip1)
-              R_{i+1,i+1}  = sqrt(pip1)
-            else
-              p            = <a_{i+1}, a_j>
-              s[j]         = p/pip1
-              R_{i+1,j}    = p*ir
-
-
-      Where:
-      -> X_i represents the column i of the matrix X
-      -> <x,y> represents the dot product of the vectors x and y
-    */
-
-    // Type used to store the matrices in the compute loop
-    using column_tuple = fpga_tools::NTuple<T, rows>;
-    using row_tuple = fpga_tools::NTuple<T, columns>;
-
-    // constexpr int kk_size = rows * rows;
-    // constexpr int kMatrixBitSize = fpga_tools::BitsForMaxValue<kk_size +
-    // 1>()+1; Fanout reduction factor for signals that fanout to rows compute
-    // cores
+    // Fanout reduction factor for signals that fanout to size compute cores
     constexpr int kFanoutReduction = 8;
-    // Number of signal replication required to cover all the rows compute cores
+    // Number of signal replication required to cover all the size compute cores
     // given a kFanoutReduction factor
-    constexpr int kBanksForFanout = (rows % kFanoutReduction)
-                                        ? (rows / kFanoutReduction) + 1
-                                        : rows / kFanoutReduction;
+    constexpr int kBanksForFanout = (size % kFanoutReduction)
+                                        ? (size / kFanoutReduction) + 1
+                                        : size / kFanoutReduction;
 
     // Number of iterations performed without any dummy work added for the
     // triangular loop optimization
-    constexpr int kVariableIterations = columns - k_raw_latency;
+    constexpr int kVariableIterations = size - raw_latency;
     // Total number of dummy iterations
     static constexpr int kDummyIterations =
-        k_raw_latency > columns
-            ? (columns - 1) * columns / 2 + (k_raw_latency - columns) * columns
-            : k_raw_latency * (k_raw_latency - 1) / 2;
+        raw_latency > size ? (size - 1) * size / 2 + (raw_latency - size) * size
+                           : raw_latency * (raw_latency - 1) / 2;
     // Total number of iterations (including dummy iterations)
     static constexpr int kIterations =
-        columns + columns * (columns + 1) / 2 + kDummyIterations;
+        size + size * (size + 1) / 2 + kDummyIterations;
 
     // Size in bits of the "i" loop variable in the triangular loop
     // i starts from -1 as we are doing a full copy of the matrix read from the
     // pipe to a "compute" matrix before starting the decomposition
-    constexpr int kIBitSize = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
+    constexpr int kIBitSize = fpga_tools::BitsForMaxValue<size + 1>() + 1;
 
-    // j starts from i, so from -1 and goes up to columns
+    // j starts from i, so from -1 and goes up to size
     // So we need:
-    // -> enough bits to encode columns+1 for the positive iterations and
+    // -> enough bits to encode size+1 for the positive iterations and
     //    the exit condition
     // -> one extra bit for the -1
     // But j may start below -1 if we perform more dummy iterations than the
-    // number of columns in the matrix.
+    // number of size in the matrix.
     // In that case, we need:
-    // -> enough bits to encode columns+1 for the positive iterations and
+    // -> enough bits to encode size+1 for the positive iterations and
     //    the exit condition
     // -> enough bits to encode the maximum number of negative iterations
-
     static constexpr int kJNegativeIterations =
         kVariableIterations < 0 ? -kVariableIterations : 1;
     static constexpr int kJBitSize =
-        fpga_tools::BitsForMaxValue<columns + 1>() +
+        fpga_tools::BitsForMaxValue<size + 1>() +
         fpga_tools::BitsForMaxValue<kJNegativeIterations>();
+    
 
-    // Compute Eigen vectors and Eigen values as long as matrices are given as
-    // inputs
+    int matrix_count = 0;
+
+    T min = 12837847;
+
+    // Compute Eigen values and vectors as long as matrices are given as inputs
     while (1) {
-      // Break memories up to store 4 complex numbers (32 bytes) per bank
-      constexpr short kBankwidth = k_pipe_size * sizeof(T);
-      constexpr unsigned short kNumBanks = rows / k_pipe_size;
+      // ---------------------------------
+      // -------- Load the matrix from DDR
+      //----------------------------------
 
-      // 7 copies of the full matrix, so that each matrix has a single
-      // load and a single store.
-      // a_load1 is the initial matrix received from the pipe
-      // a_load2 is the matrix obtained from RQ computation
-      // rq_matrix is another copy of RQ
-      // a_compute is used and modified during calculations
-      // q_result is a copy of a_compute and is used to send the final output
+      // Break memories up to store 4 complex numbers (32 bytes) per bank
+      constexpr short kBankwidth = pipe_size * sizeof(T);
+      constexpr unsigned short kNumBanks = size / pipe_size;
 
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
@@ -199,63 +144,31 @@ struct StreamingEigen {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      column_tuple a_load1[columns],
-          a_load2[columns], a_compute[columns], q_result[columns];
+      column_tuple a_load[size];
 
-      // Initial Identity Eigen vector matrix
-      row_tuple QQ_matrix[rows], QQ_matrixW[rows];
-
-      // Contains the values of matrix R in a row by row
-      // fashion, starting by row 0
-      row_tuple r_matrix[rows];
-
-      bool QRD_failed = 0;
-
-      // Eigen Value Matrix
-      T eArrray[rows];
-
-      // Number of pipe reads of k_pipe_size required to read a full column
-      constexpr int kExtraIteration = (rows % k_pipe_size) != 0 ? 1 : 0;
-      constexpr int kLoopIterPerColumn = rows / k_pipe_size + kExtraIteration;
-      // Number of pipe reads of k_pipe_size to read all the matrices
-      constexpr int kLoopIter = kLoopIterPerColumn * columns;
+      // Copy a matrix from the pipe to a local memory
+      // Number of pipe reads of pipe_size required to read a full column
+      constexpr int kExtraIteration = (size % pipe_size) != 0 ? 1 : 0;
+      constexpr int kLoopIterPerColumn = size / pipe_size + kExtraIteration;
+      // Number of pipe reads of pipe_size to read all the matrices
+      constexpr int kLoopIter = kLoopIterPerColumn * size;
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize =
           fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
-      // Copy a matrix from the pipe to a local memory
-
-      // plceholder for releigh shift
-      T R_shift;
-      T a_wilk, b_wilk, c_wilk;
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        fpga_tools::NTuple<T, k_pipe_size> pipe_read = AIn::read();
+        fpga_tools::NTuple<T, pipe_size> pipe_read = AIn::read();
 
         int write_idx = li % kLoopIterPerColumn;
+        int a_col_index = li / kLoopIterPerColumn;
 
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          fpga_tools::UnrolledLoop<k_pipe_size>([&](auto t) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
-              if constexpr (k * k_pipe_size + t < rows) {
-                a_load1[li / kLoopIterPerColumn]
-                    .template get<k * k_pipe_size + t>() =
+              if constexpr (k * pipe_size + t < size) {
+                a_load[a_col_index].template get<k * pipe_size + t>() =
                     pipe_read.template get<t>();
-              }
-
-              if (li / kLoopIterPerColumn == columns - 1 &&
-                  k * k_pipe_size + t == rows - 1) {
-                c_wilk = pipe_read.template get<t>();
-              }
-
-              if (li / kLoopIterPerColumn == columns - 2 &&
-                  k * k_pipe_size + t == rows - 2) {
-                a_wilk = pipe_read.template get<t>();
-              }
-
-              if (li / kLoopIterPerColumn == columns - 2 &&
-                  k * k_pipe_size + t == rows - 1) {
-                b_wilk = pipe_read.template get<t>();
               }
             }
 
@@ -269,45 +182,123 @@ struct StreamingEigen {
         });
       }
 
-      T lamda = (a_wilk - c_wilk) / 2.0;
-      T sign_lamda = (lamda > 0) - (lamda < 0);
-      T l_shift =
-          c_wilk - (sign_lamda * b_wilk * b_wilk) /
-                       (fabs(lamda) + sqrt(lamda * lamda + b_wilk * b_wilk));
+      // PRINTF("A matrix in QR iteration kernel\n");
+      // for (int row = 0; row < size; row++) {
+      //   fpga_tools::UnrolledLoop<size>(
+      //       [&](auto t) { PRINTF("%f ", a_load[row].template get<t>()); });
+      //   PRINTF("\n");
+      // }
 
-      R_shift = k_use_rayleigh_shift ? c_wilk : l_shift;
-      R_shift -= R_shift * SHIFT_NOISE;  // SHIFT_NOISE;
-      R_shift = NO_SHIFT_ITER > 0 ? 0 : R_shift;
+      // ------------------------------------------------
+      // -------- Initialize matrices for the iteration
+      //-------------------------------------------------
 
-      // variable to track the deflated matrix size
-      int kDM_size = rows;
+      // Matrices to hold the computed R*Q matrix and the Eigen vectors
+      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+      // // column_tuple rq_matrix[size],
+      // //     eigen_vectors_matrix[size];
+      // column_tuple eigen_vectors_matrix[size],
 
-      bool QR_iteration_done = 0;
-      // this implementation assumes fiding each eigen value
-      // doesn't require no more than iterPerEigen
-      constexpr int k_max_iterations_per_eigen_value = 100;
-      const int QR_RQ_iterations =
-          (rows - 1) * k_max_iterations_per_eigen_value;
+      T rq_matrix[size][size];
+      T eigen_vectors_matrix[size][size];
+      T eigen_vectors_matrix_output[size][size];
 
-      // Iterative loop for QR and RQ/QQ coputation
-      T accError = 0;
-      for (int itr = 0; itr < QR_RQ_iterations; itr++) {
-        // PRINTF("Itr is: %d\n", (int)itr);
+      // Vector to hold the computed Eigen values
+      T eigen_values[size];
 
-        // Compute the QR Decomposition
+      // Initialize shift values
 
-        // aconverged local copy of a_{i+1} that is used across multiple j
-        // iterations for the computation of pip1 and p
-        T a_ip1[rows];
+      // Compute the shift value of the current matrix
+      T shift_value = 0;
+
+      // First find where the shift should be applied
+      // Start from the last submatrix
+      int shift_row = size - 2;
+
+      // At each iteration we are going to compute the shift as follows:
+      // Take the submatrix:
+      // [a b]
+      // [b c]
+      // where a and c are diagonal elements, and [a b] is on row shift_row
+      // and compute the shift such as
+      // mu = c - (sign(d)* b*b)/(abs(d) + sqrt(d*d + b*b))
+      // where d = (a - c)/2
+      T a = 0, b = 0, c = 0;
+
+      // Because we won't know the actual shift_row location at the time of
+      // retrieving these a b and c data, we will also collect the
+      // submatrix one row above
+      T a_above = 0, b_above = 0, c_above = 0;
+
+      // ---------------------------------
+      // -------- Start the QR iteration
+      //----------------------------------
+      bool continue_iterating = true;
+      int iteration_count = 0;
+
+      bool input_matrix_is_rank_deficient = false;
+
+      while (continue_iterating) {
+        // ---------------------------------------
+        // -------- Compute the QR decomposition
+        //----------------------------------------
+        /*
+        This code implements a OneAPI optimized variation of the following
+        algorithm
+
+        for i=0:n
+          for j=max(i,1):n
+
+            if(j==i)
+              Q_i = a_i*ir
+            else
+              if(i>=0)
+                a_j = a_j - s[j]*a_i
+
+              if j=i+1
+                pip1         = <a_{i+1},a_{i+1}>
+                ir           = 1/sqrt(pip1)
+                R_{i+1,i+1}  = sqrt(pip1)
+              else
+                p            = <a_{i+1}, a_j>
+                s[j]         = p/pip1
+                R_{i+1,j}    = p*ir
+
+
+        Where:
+        -> X_i represents the column i of the matrix X
+        -> <x,y> represents the dot product of the vectors x and y
+        */
+
+        // Matrices used by the QR algorithm to:
+        // - store intermediate results
+        // - store the Q matrix
+        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        column_tuple a_compute[size],
+            q_matrix[size];
+
+        // Matrix to hold the R matrix
+        [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
+        T r_matrix[size][size];
+
+        // a local copy of a_{i+1} that is used across multiple j iterations
+        // for the computation of pip1 and p
+        T a_ip1[size];
         // a local copy of a_ip1 that is used across multiple j iterations
         // for the computation of a_j
-        T a_i[rows];
+        T a_i[size];
         // Depending on the context, will contain:
         // -> -s[j]: for all the iterations to compute a_j
         // -> ir: for one iteration per j iterations to compute Q_i
-        [[intel::fpga_memory]] [[intel::private_copies(
-            2)]]  // NO-FORMAT: Attribute
-        T s_or_ir[columns];
+        [[intel::fpga_memory]]        // NO-FORMAT: Attribute
+        [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+        T s_or_ir[size];
 
         T pip1, ir;
 
@@ -315,15 +306,34 @@ struct StreamingEigen {
         ac_int<kIBitSize, true> i = -1;
         ac_int<kJBitSize, true> j = 0;
 
-        row_tuple rowR_write;
+        // We keep track of the value of the current column
+        // If it's a 0 vector, then we need to skip the iteration
+        // This will result in size in Q being set to 0
+        // This occurs when the input matrix have linearly dependent columns
+        bool projection_is_zero = false;
 
-        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-        [[intel::ivdep(k_raw_latency)]]  // NO-FORMAT: Attribute
+        [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        [[intel::ivdep(raw_latency)]]      // NO-FORMAT: Attribute
         for (int s = 0; s < kIterations; s++) {
-          // Two matrix columns for partial results.
-          T col[rows];
-          T col_dummy[rows];
-          T col1[rows];
+          // Pre-compute the next values of i and j
+          ac_int<kIBitSize, true> next_i;
+          ac_int<kJBitSize, true> next_j;
+          if (j == size - 1) {
+            // If i reached an index at which the j inner loop don't have
+            // enough time to write its result for the next i iteration,
+            // some "dummy" iterations are introduced
+            next_j = (kVariableIterations > i)
+                         ? ac_int<kJBitSize, true>{i + 1}
+                         : ac_int<kJBitSize, true>{kVariableIterations};
+            next_i = i + 1;
+          } else {
+            next_j = j + 1;
+            next_i = i;
+          }
+
+          // Two matrix size for partial results.
+          T col[size];
+          T col1[size];
 
           // Current value of s_or_ir depending on the value of j
           // It is replicated kFanoutReduction times to reduce fanout
@@ -333,23 +343,24 @@ struct StreamingEigen {
           // kFanoutReduction times to reduce fanout
           bool j_eq_i[kBanksForFanout], i_gt_0[kBanksForFanout],
               i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
-              i_lt_0[kBanksForFanout];
+              i_lt_0[kBanksForFanout], j_ge_0[kBanksForFanout];
 
           fpga_tools::UnrolledLoop<kBanksForFanout>([&](auto k) {
             i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
             i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
             j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
+            j_ge_0[k] = sycl::ext::intel::fpga_reg(j >= 0);
             i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
             j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
-            s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
+            if (j >= 0) {
+              s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
+            }
           });
 
           // Preload col and a_i with the correct data for the current iteration
           // These are going to be use to compute the dot product of two
-          // different columns of the input matrix.
-
-          T diag_val = 0;
-          fpga_tools::UnrolledLoop<rows>([&](auto k) {
+          // different size of the input matrix.
+          fpga_tools::UnrolledLoop<size>([&](auto k) {
             // find which fanout bank this unrolled iteration is going to use
             constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
@@ -359,51 +370,34 @@ struct StreamingEigen {
             // If no i iteration elapsed, we must read the column of
             // matrix A directly from the a_load; col then contains a_j
 
-            if (i_gt_0[fanout_bank_idx]) {
-              col_dummy[k] = a_compute[j].template get<k>();
+            if (i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
+              col[k] = a_compute[j].template get<k>();
             }
             // Using an else statement makes the compiler throw an
             // inexplicable warning when using non complex types:
             // "Compiler Warning: Memory instruction with unresolved
             // pointer may lead to bad QoR."
-            if (!i_gt_0[fanout_bank_idx]) {
-              // supporting matrix deflation
-              T load_val1 = a_load1[j].template get<k>();
-              T load_val2 = a_load2[j].template get<k>();
-              T load_val = (itr == 0) ? load_val1 : load_val2;
-              diag_val = (k == j) ? load_val : diag_val;
-              col_dummy[k] = load_val;  // write_val;
-            }
-          });
-
-          diag_val = diag_val - R_shift;
-
-          // Preload col and a_i with the correct data for the current iteration
-          // These are going to be use to compute the dot product of two
-          // different columns of the input matrix.
-          fpga_tools::UnrolledLoop<rows>([&](auto k) {
-            // find which fanout bank this unrolled iteration is going to use
-            constexpr auto fanout_bank_idx = k / kFanoutReduction;
-
-            if (i_gt_0[fanout_bank_idx]) {
-              col[k] = col_dummy[k];
-            }
-
-            if (!i_gt_0[fanout_bank_idx]) {
-              // supporting matrix deflation
-              T load_val = col_dummy[k];
-              T update_val = (k == j) ? diag_val : load_val;
-              T write_val = (k >= kDM_size || j >= kDM_size) ? 0 : update_val;
-              col[k] = write_val;
+            if (!i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
+              if (iteration_count == 0) {
+                col[k] = a_load[j].template get<k>();
+              } else {
+                T to_sub = k == j ? shift_value : T{0};
+                // if(k==j){
+                //   PRINTF("diag value %f\n",rq_matrix[j][k]);
+                // }
+                col[k] = rq_matrix[j][k] - to_sub;
+              }
             }
 
             // Load a_i for reuse across j iterations
-            if (j_eq_i[fanout_bank_idx]) {
+            if (i_lt_0[fanout_bank_idx]) {
+              a_i[k] = 0;
+            } else if (j_eq_i[fanout_bank_idx]) {
               a_i[k] = col[k];
             }
           });
 
-          fpga_tools::UnrolledLoop<rows>([&](auto k) {
+          fpga_tools::UnrolledLoop<size>([&](auto k) {
             // find which fanout bank this unrolled iteration is going to use
             constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
@@ -419,23 +413,29 @@ struct StreamingEigen {
                 i_lt_0[fanout_bank_idx] ? T{0.0} : s_or_ir_j[fanout_bank_idx];
             auto add = j_eq_i[fanout_bank_idx] ? T{0.0} : col[k];
             col1[k] = prod_lhs * prod_rhs + add;
+            // if (i >= 0 && j >= i) {
+            //   PRINTF("prod_rhs = s_or_ir[%d] = %f\n", int(j),
+            //          s_or_ir_j[fanout_bank_idx]);
+            //   PRINTF(
+            //       "col1[%d] = prod_lhs (%.10e) * prod_rhs (%.10e) + add "
+            //       "(%.10e) = %.10e\n",
+            //       int(k), prod_lhs, prod_rhs, add, col1[k]);
+            // }
 
-            // making invalid calculation to zero
-            col1[k] = (k >= kDM_size || j >= kDM_size) ? 0 : col1[k];
-
-            // Store Q_i in q_result and the modified a_j in a_compute
-            // To reduce the amount of control, q_result and a_compute
+            // Store Q_i in q_matrix and the modified a_j in a_compute
+            // To reduce the amount of control, q_matrix and a_compute
             // are both written to for each iteration of i>=0 && j>=i
             // In fact:
-            // -> q_result could only be written to at iterations i==j
+            // -> q_matrix could only be written to at iterations i==j
             // -> a_compute could only be written to at iterations
             //    j!=i && i>=0
             // The extra writes are harmless as the locations written to
             // are either going to be:
-            // -> overwritten for the matrix Q (q_result)
+            // -> overwritten for the matrix Q (q_matrix)
             // -> unused for the a_compute
-            if (i_ge_0_j_ge_i[fanout_bank_idx]) {
-              q_result[j].template get<k>() = col1[k];
+            if (i_ge_0_j_ge_i[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
+              // PRINTF("q[%d][%d] = %.10e\n", int(j), int(k), col1[k]);
+              q_matrix[j].template get<k>() = col1[k];
               a_compute[j].template get<k>() = col1[k];
             }
 
@@ -447,40 +447,62 @@ struct StreamingEigen {
 
           // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
           T p_ij{0.0};
-          fpga_tools::UnrolledLoop<rows>(
-              [&](auto k) { p_ij = p_ij + col1[k] * a_ip1[k]; });
+          fpga_tools::UnrolledLoop<size>(
+              [&](auto k) { p_ij += col1[k] * a_ip1[k]; });
+
+          // PRINTF("p_ij %d %d = %f\n", int(i), int(j), p_ij);
 
           // Compute pip1 and ir based on the results of the dot product
           if (j == i + 1) {
+            // Check if the projection of the current size is the 0 vector
+            if(i>=0){
+              projection_is_zero |= (p_ij < k_zero_threshold);
+              if (p_ij < min){
+                min = p_ij;
+              }
+            }
+
             pip1 = p_ij;
-            ir = sycl::rsqrt(p_ij);
+
+            // If the projection is 0, we set ir to 1 to be a no-op in the next
+            // iteration when computing Q_i = a_i*ir
+            if (projection_is_zero) {
+              ir = 1;
+            } else {
+              ir = sycl::rsqrt(p_ij);
+            }
           }
 
           // Compute the value of -s[j]
-          T s_j = -p_ij / pip1;
+          T s_j;
+          if (projection_is_zero) {
+            s_j = T{0};
+          } else {
+            s_j = -p_ij / pip1;
+          }
 
           // j may be negative if the number of "dummy" iterations is
           // larger than the matrix size
           if (j >= 0) {
+            // PRINTF("j = %d, s_or_ir = ir (%f) or s_j (%f)\n", int(j), ir,
+            // s_j);
             s_or_ir[j] = j == i + 1 ? ir : s_j;
+            // if (j == i + 1) {
+            //   PRINTF("ir = %f\n", ir)
+            // }
           }
 
           // Compute the R_{i+1,i+1} or R_{i+1,j}
           T r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
 
-          fpga_tools::UnrolledLoop<columns>([&](auto t) {
-            T tra_val = (j >= i + 1 && (i + 1) < kDM_size) ? r_ip1j : 0;
-            rowR_write.template get<t>() = ((i + 1 < columns) && t == j)
-                                               ? tra_val
-                                               : rowR_write.template get<t>();
-          });
-
-          if (i + 1 < rows) {
-            r_matrix[i + 1] = rowR_write;
+          // Write the computed R value when j is not a "dummy" iteration
+          if ((j >= i + 1) && (i + 1 < size)) {
+            r_matrix[i + 1][j] = r_ip1j;
+            // PRINTF("r_matrix[%d][%d] = %.10e\n", int(i + 1), int(j), r_ip1j);
           }
 
           // Update loop indexes
-          if (j == (columns - 1)) {
+          if (j == (size - 1)) {
             // If i reached an index at which the j inner loop doesn't have
             // enough time to write its result for the next i iteration,
             // some "dummy" iterations are introduced
@@ -492,289 +514,251 @@ struct StreamingEigen {
             j = j + 1;
           }
 
-        }  // end of s
+        }  // end of for:s
 
-        //--------------------------------------------------------------------
-        //-------  Matrix multiplication for R@Q and QQ@Q --------------------
-        //--------------------------------------------------------------------
+        // if (matrix_count == 143){
 
-        // R matrix is organized row-wise
-        // Q matrix is organized coloumn-wise
-        // QQ matrix is organized row-wise
+        //   PRINTF("Q at iteration %d\n", iteration_count);
+        //   fpga_tools::UnrolledLoop<size>([&](auto t) {
+        //     for (int row = 0; row < size; row++) {
+        //       PRINTF("%f ", q_matrix[row].template get<t>());
+        //     }
+        //     PRINTF("\n");
+        //   });
 
-        // Eigen vector QQ computation
-        row_tuple QQ_write;
-        row_tuple QQ_load;
-        column_tuple Q_load_RQ, Q_load_RQ_tmp;
+        //   PRINTF("R at iteration %d\n", iteration_count);
+        //   for (int row = 0; row < size; row++) {
+        //     fpga_tools::UnrolledLoop<size>([&](auto t) {
+        //       if (t < row) {
+        //         PRINTF("0 ");
+        //       } else {
+        //         PRINTF("%f ", r_matrix[row][t]);
+        //       }
+        //     });
+        //     PRINTF("\n");
+        //   }
+        // }
 
-        // RQ computation and writig the results back in a_load
-        column_tuple colA_write;
-        bool converged = 1;
+        // ---------------------------------------------------
+        // -------- Compute R*Q and update the Eigen vectors
+        //----------------------------------------------------
 
-        accError = 0;
-        T a_wilk, b_wilk, c_wilk, d_wilk, e_wilk;
-        column_tuple Q_load_ii;
-        [[intel::loop_coalesce(2)]] for (ac_int<kIBitSize, false> i_ll = 0;
-                                         i_ll < columns; i_ll++) {
-          for (ac_int<kIBitSize, false> j_ll = 0; j_ll < rows; j_ll++) {
-            //-------------------------------------------------------
-            //------------- QQ@Q matrix multiplication--------------
-            //-------------------------------------------------------
-            if (j_ll == 0) {
-              QQ_load = QQ_matrix[i_ll];
-            }
-
-            column_tuple Q_load = q_result[j_ll];
-            fpga_tools::UnrolledLoop<rows>([&](auto k) {
-              T Ival = (j_ll == k) ? 1 : 0;
-              Q_load.template get<k>() = (k >= kDM_size || j_ll >= kDM_size
-                                              ? Ival
-                                              : Q_load.template get<k>());
-            });
-
-            // ---------Detecting the QR decomposition falure ----------
-            // This part checks the orthogonality of the unit vectors after the
-            // QR decomposition. Dot product of two differnet vectors
-            // should be close to zero. Here we are applying 10-4 threshold
-
-            if (i_ll == j_ll) {
-              Q_load_ii = Q_load;
-            }
-            T chk_ortho = 0;
-            fpga_tools::UnrolledLoop<rows>([&](auto k) {
-              chk_ortho +=
-                  Q_load.template get<k>() * Q_load_ii.template get<k>();
-            });
-
-            if (i_ll < j_ll && accError < fabs(chk_ortho)) {
-              accError = fabs(chk_ortho);
-            }
-
-            if (i_ll < j_ll && fabs(chk_ortho) > (1e-4)) {
-              QRD_failed = 1;
-            }
-
-            //--------End Detecting the QR decomposition falure-------
-
-            T sum_QQ = 0;
-            fpga_tools::UnrolledLoop<rows>([&](auto k) {
-              T Ival = (k == i_ll) ? 1 : 0;
-              T QQ_final_val = (itr == 0) ? Ival : QQ_load.template get<k>();
-              sum_QQ += QQ_final_val * Q_load.template get<k>();
-            });
-
-            fpga_tools::UnrolledLoop<rows>([&](auto k) {
-              if (k == j_ll) {
-                QQ_write.template get<k>() = sum_QQ;
-              }
-            });
-
-            if (j_ll == columns - 1 && QR_iteration_done == 0) {
-              QQ_matrix[i_ll] = QQ_write;
-            }
-
-            if (QR_iteration_done == 0) {
-              fpga_tools::UnrolledLoop<rows>([&](auto k) {
-                if (k == i_ll) {
-                  QQ_matrixW[j_ll].template get<k>() = sum_QQ;
-                }
-              });
-            }
-
-            //---------------------------------------------------------
-            //---------------RQ computation----------------------------
-            //--------------------------------------------------------
-            if (j_ll == i_ll + 1) {
-              Q_load_RQ_tmp = Q_load;
-            }
-
-            if (j_ll == 0 && i_ll == 0) {
-              Q_load_RQ = Q_load;
-            } else if (j_ll == 0) {
-              Q_load_RQ = Q_load_RQ_tmp;
-            }
-            row_tuple r_load = r_matrix[j_ll];
-
-            T sum_RQ = 0;
-            fpga_tools::UnrolledLoop<rows>([&](auto k) {
-              sum_RQ += r_load.template get<k>() * Q_load_RQ.template get<k>();
-            });
-
-            // It is assumed as convered if all bottom row elements except
-            // diagonal one of the deflated matrix is within certain zero
-            // threshold
-            converged = (j_ll == kDM_size - 1 && i_ll < kDM_size - 1 &&
-                         fabs(sum_RQ) > k_zero_threshold)
-                            ? 0
-                            : converged;
-            sum_RQ = (j_ll == i_ll) ? sum_RQ + R_shift : sum_RQ;
-
-            // updatig the shift value
-            // values required for Rayleigh shift and wilkinson shift are stored
-            // in registers
-            if (j_ll == i_ll && i_ll == kDM_size - 3) {
-              d_wilk = sum_RQ;
-            }
-
-            if (j_ll == i_ll - 1 && i_ll == kDM_size - 2) {
-              e_wilk = sum_RQ;
-            }
-
-            if (j_ll == i_ll && i_ll == kDM_size - 2) {
-              a_wilk = sum_RQ;
-            }
-
-            if (j_ll == i_ll - 1 && i_ll == kDM_size - 1) {
-              b_wilk = sum_RQ;
-            }
-
-            if (j_ll == i_ll && i_ll == kDM_size - 1) {
-              c_wilk = sum_RQ;
-            }
-
-            if (j_ll == i_ll && j_ll < kDM_size && i_ll < kDM_size) {
-              eArrray[i_ll] = sum_RQ;
-            }
-
-            fpga_tools::UnrolledLoop<columns>([&](auto k) {
-              bool cmp = (k == j_ll && j_ll < kDM_size && i_ll < kDM_size);
-              if (cmp && QR_iteration_done == 0) {
-                a_load2[i_ll].template get<k>() = sum_RQ;
-              }
-            });
-          }
-        }
-
-        T lamda = (a_wilk - c_wilk) / 2.0;
-        T sign_lamda = (lamda > 0) - (lamda < 0);
-        T l_shift =
-            c_wilk - (sign_lamda * b_wilk * b_wilk) /
-                         (fabs(lamda) + sqrt(lamda * lamda + b_wilk * b_wilk));
-
-        R_shift = k_use_rayleigh_shift ? c_wilk : l_shift;
-
-        if (converged && kDM_size == KDEFLIM) {
-          QR_iteration_done = 1;
-          break;
-        }
-
-        if (converged) {
-          T lamda = (d_wilk - a_wilk) / 2.0;
-          T sign_lamda = (lamda > 0) - (lamda < 0);
-          T h_shift = k_use_rayleigh_shift
-                          ? a_wilk
-                          : a_wilk - (sign_lamda * e_wilk * e_wilk) /
-                                         (fabs(lamda) + sqrt(lamda * lamda +
-                                                             e_wilk * e_wilk));
-
-          R_shift = h_shift;
-          kDM_size = kDM_size - 1;
-        }
-
-        R_shift -= R_shift * SHIFT_NOISE;  // SHIFT_NOISE;
-        if (itr < NO_SHIFT_ITER - 1) {
-          R_shift = 0;
-        }
-
-      }  // End iterative loop
-
-      //--------------------------------------------------------------------------
-      // sorting Eigen Values
-      //--------------------------------------------------------------------------
-      // Naive sorting using nested loop as this module is not in critical path
-      // A register vector(Nsorted) is used to mask already sorted elements
-      T max;
-      int indexArray[rows];
-      [[intel::fpga_register]] bool Nsorted[rows];
-      int index = -1;
-
-      // Initializing the mask
-      for (ac_int<kIBitSize, false> i_ll = 0; i_ll < rows; i_ll++) {
-        Nsorted[i_ll] = 1;
-      }
-
-      // PRINTF("Starting to send the eigen values\n");
-      fpga_tools::NTuple<T, k_pipe_size> pipe_writeEigen;
-      [[intel::loop_coalesce(2)]] for (ac_int<kIBitSize, false> i_ll = 0;
-                                       i_ll < rows; i_ll++) {
-        for (ac_int<kIBitSize, false> j_ll = 0; j_ll < rows; j_ll++) {
-          // setting the intial comparator value to possible minimum
-          if (j_ll == 0) {
-            max = -1 * FLT_MAX;
-          }
-
-          T load_val = eArrray[j_ll];
-          if (load_val > max && Nsorted[j_ll]) {
-            max = load_val;
-            index = j_ll;
-          }
-
-          if (j_ll == rows - 1) {
-            Nsorted[index] = 0;
-            indexArray[i_ll] = index;
-          }
-
-          fpga_tools::UnrolledLoop<k_pipe_size>([&](auto k) {
-            if (j_ll == rows - 1 && k == i_ll % k_pipe_size) {
-              pipe_writeEigen.template get<k>() = max;
+        bool row_is_zero = true;
+        for (int row = size-1; row >= 0; row--) {
+          T eigen_vectors_row[size];
+          fpga_tools::UnrolledLoop<size>([&](auto t) {
+            if (iteration_count == 0) {
+              eigen_vectors_row[t] = t == row ? 1 : 0;
+            } else {
+              eigen_vectors_row[t] = eigen_vectors_matrix[row][t];
             }
           });
 
-          // appending the QRD faied flag if there is space in
-          // pipe_writeEigen block
-          if (j_ll == rows - 1 &&
-              (i_ll % k_pipe_size == k_pipe_size - 1 || i_ll == rows - 1)) {
-            if (i_ll == rows - 1 && rows % k_pipe_size != 0) {
-              fpga_tools::UnrolledLoop<k_pipe_size>([&](auto k) {
-                if (k == (i_ll + 1) % k_pipe_size) {
-                  pipe_writeEigen.template get<k>() = QRD_failed;
-                }
-              });
-              EigOut::write(pipe_writeEigen);
-            } else {
-              EigOut::write(pipe_writeEigen);
+          for (int column = 0; column < size; column++) {
+            T dot_product_rq = 0;
+            T dot_product_eigen_vectors = 0;
+            fpga_tools::UnrolledLoop<size>([&](auto t) {
+              T r_elem = r_matrix[row][t];
+              T r = row > t ? T{0} : r_elem;
+              dot_product_rq += r * q_matrix[column].template get<t>();
+              dot_product_eigen_vectors +=
+                  eigen_vectors_row[t] * q_matrix[column].template get<t>();
+            });
+
+            T rq_value =
+                row == column ? dot_product_rq + shift_value : dot_product_rq;
+            if (column > row) {
+              rq_matrix[row][column] = rq_matrix[column][row];
+
+            } else if (row <= (shift_row + 1) && column <= (shift_row + 1)) {
+              rq_matrix[row][column] = rq_value;
+            }
+            eigen_vectors_matrix[row][column] = dot_product_eigen_vectors;
+            eigen_vectors_matrix_output[row][column] =
+                dot_product_eigen_vectors;
+
+            if ((row == shift_row) && (column == shift_row)) {
+              a = rq_value;
+              c_above = rq_value;
+            } else if ((row == shift_row - 1) && (column == (shift_row - 1))) {
+              a_above = rq_value;
+            } else if ((row == shift_row) && (column == (shift_row + 1))) {
+              b = rq_value;
+            } else if ((row == shift_row - 1) && (column == shift_row)) {
+              b_above = rq_value;
+            } else if ((row == shift_row + 1) && (column == shift_row + 1)) {
+              c = rq_value;
+            }
+
+            if ((row > column) && (row == shift_row + 1)) {
+              row_is_zero &= fabs(rq_value) < k_zero_threshold;
+            }
+
+            if (row == column) {
+              eigen_values[row] = rq_value;
             }
           }
-        }  // end of j_ll
-      }    // end of i_ll
+        }
 
-      // adding QRD_failed flag new stream packet
-      // if it was not sent previously
-      if (rows % k_pipe_size == 0) {
-        pipe_writeEigen.template get<0>() = QRD_failed;
-        EigOut::write(pipe_writeEigen);
+        // Compute the shift value
+
+        // PRINTF("a %f\n", a);
+        // PRINTF("b %f\n", b);
+        // PRINTF("c %f\n", c);
+
+        T d = (a - c) / 2;
+        T b_squared = b * b;
+        T d_squared = d * d;
+        T b_squared_signed = d < 0 ? -b_squared : b_squared;
+        T shift_value_current_shift_row =
+            c - b_squared_signed / (abs(d) + sqrt(d_squared + b_squared));
+
+        T d_above = (a_above - c_above) / 2;
+        T b_squared_above = b_above * b_above;
+        T d_squared_above = d_above * d_above;
+        T b_squared_signed_above =
+            d_above < 0 ? -b_squared_above : b_squared_above;
+        T shift_value_above =
+            c_above -
+            b_squared_signed_above /
+                (abs(d_above) + sqrt(d_squared_above + b_squared_above));
+
+        if ((shift_row < 0) || (row_is_zero && (shift_row == 0))) {
+          shift_value = 0;
+        } else {
+          shift_value =
+              row_is_zero ? shift_value_above : shift_value_current_shift_row;
+        }
+
+        shift_value *= 0.99;
+
+
+
+        // if (matrix_count == 143){
+        //   PRINTF("RQ at iteration %d\n", iteration_count);
+        //   for (int row = 0; row < size; row++) {
+        //     fpga_tools::UnrolledLoop<size>(
+        //         [&](auto t) { PRINTF("%f ", rq_matrix[row][t]) });
+        //     PRINTF("\n");
+        //   }
+
+        //   PRINTF("shift value %f\n", shift_value);
+        //   PRINTF("Eigen Vectors at iteration %d\n", iteration_count);
+        //   for (int row = 0; row < size; row++) {
+        //     fpga_tools::UnrolledLoop<size>(
+        //         [&](auto t) { PRINTF("%f ", eigen_vectors_matrix[row][t]) });
+        //     PRINTF("\n");
+        //   }
+        //   PRINTF("shift row %d\n", shift_row);
+        // }
+
+        if (row_is_zero) {
+          shift_row--;
+        }
+
+        input_matrix_is_rank_deficient |= projection_is_zero;
+
+        if (shift_row == -2) {
+          continue_iterating = false;
+        }
+
+
+        // if (iteration_count != 0 && iteration_count % 256==0 ){
+        //     PRINTF("current iteration %d\n", iteration_count);
+        // }
+
+        // if (matrix_count == 144){
+        //   exit(0);
+        // }
+        iteration_count++;
+
+      }  // end if while(continue_iterating)
+      matrix_count++;
+
+      if (iteration_count > (size * 10)){
+        input_matrix_is_rank_deficient = true;
       }
 
-      // writing out eigen vector matrix QQ row by row
-      // Eigen vectors are the columns of this matrix
+
+      // PRINTF("matrix_count %d\n", matrix_count);
+      // PRINTF("iteration_count %d\n", iteration_count);
+
+      // -----------------------------------------------------------------
+      // -------- Sort the Eigen Values/Vectors by weight
+      //------------------------------------------------------------------
+
+      // Instead of sorting the values and vectors, we sort the order in which
+      // we are going to traverse the outputs when writing to the pipe
+      int sorted_indexes[size];
+
+      // We are going to traverse the Eigen values to find the current maximum
+      // value. We use a mask to remember which values have already been used.
+      ac_int<size, false> mask = 0;
+
+      for (int current_index = 0; current_index < size; current_index++) {
+        int sorted_index = 0;
+        T max_value = -1;
+        for (int k = size - 1; k >= 0; k--) {
+          // Make sure the current Eigen value was not used already
+          if (mask[k] == 0) {
+            // Get the Eigen value
+            T eigen_value = eigen_values[k];
+
+            // Get its absolute value
+            T absolute_value = eigen_value < 0 ? -eigen_value : eigen_value;
+
+            // Check if the current Eigen value is larger (in absolute terms)
+            // than the current max
+            if (absolute_value > max_value) {
+              max_value = absolute_value;
+              sorted_index = k;
+            }
+          }
+        }
+
+        sorted_indexes[current_index] = sorted_index;
+        mask[sorted_index] = 0b1;
+      }
+
+      // -----------------------------------------------------------------
+      // -------- Write the Eigen values and vectors to the output pipes
+      //------------------------------------------------------------------
+
+      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      for (int k = 0; k < size; k++) {
+        EigenValuesOut::write(eigen_values[sorted_indexes[k]]);
+      }
+      
+      ac_int<1, false> to_pipe = input_matrix_is_rank_deficient ? 1 : 0;
+      RankDeficientOut::write(to_pipe);
+
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        int row_iter = li % kLoopIterPerColumn;
+        int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          get[k] = row_iter == k;
-          row_iter = sycl::ext::intel::fpga_reg(row_iter);
+          get[k] = column_iter == k;
+          column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
-        fpga_tools::NTuple<T, k_pipe_size> pipe_write;
+        fpga_tools::NTuple<T, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-          fpga_tools::UnrolledLoop<k_pipe_size>([&](auto k) {
-            if constexpr (t * k_pipe_size + k < rows) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+            if constexpr (t * pipe_size + k < size) {
               pipe_write.template get<k>() =
-                  // QQ_matrixW r_matrix
-                  get[t] ? QQ_matrixW[indexArray[li / kLoopIterPerColumn]]
-                               .template get<t * k_pipe_size + k>()
+                  get[t] ? eigen_vectors_matrix_output
+                               [li / kLoopIterPerColumn]
+                               [sorted_indexes[t * pipe_size + k]]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }
           });
         });
-        QQOut::write(pipe_write);
-      }
-
-    }  // end of while(1)
-  }    // end of operator
-};     // end of struct
+        EigenVectorsOut::write(pipe_write);
+      }  // end for:li
+    }    // end of while(1)
+  }      // end of operator
+};       // end of struct
 
 }  // namespace fpga_linalg
 

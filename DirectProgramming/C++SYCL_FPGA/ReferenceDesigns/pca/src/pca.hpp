@@ -1,6 +1,7 @@
 #ifndef __PCA_HPP__
 #define __PCA_HPP__
 
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 #include <vector>
@@ -17,11 +18,13 @@ class CovarianceMatrixComputation;
 class EigenValuesAndVectorsComputation;
 class EigenVectorsFromLocalMemToDDR;
 class EigenValuesFromLocalMemToDDR;
+class RankDeficientFlagFromLocalMemToDDR;
 
 class CMP;
 class IMP;
 class EValP;
 class EVecP;
+class RDFP;
 
 /*
   Implementation of the Principal component analysis using multiple streaming
@@ -36,26 +39,32 @@ template <unsigned k_samples_count,   // Number of samples in the input matrix
                                       // (a.k.a columns)
           unsigned k_raw_latency,     // RAW latency for triangular loop
                                       // optimization in the QR iteration
-          bool k_use_rayleigh_shift,  // Use Rayleigh shift rather than
-                                      // Wilkinson shift if true in the QR
-                                      // iteration
           int k_zero_threshold_1e,    // Threshold from which we consider a
-                                    // floating point value to be 0 (e.g. -4 ->
-                                    // 10e-4)
+                                    // floating point value to be 0 (e.g. -7 ->
+                                    // 10e-7)
           typename T  // The datatype for the computation
           >
-void PCAsyclImpl(
+void PCAKernel(
     std::vector<T> &input_matrix,          // Input matrix to decompose
     std::vector<T> &eigen_values_matrix,   // Output matrix of Eigen values
     std::vector<T> &eigen_vectors_matrix,  // Output matrix of Eigen vectors
-    sycl::queue &q,                        // Device queue
-    int matrix_count,                      // Number of matrices to decompose
+    std::vector<ac_int<1, false>>
+        &rank_deficient_flag,  // Output a flag that is 1 if the input matrix
+                               // is considered rank deficient
+    sycl::queue &q,            // Device queue
+    int matrix_count,          // Number of matrices to decompose
     int repetitions  // Number of repetitions, for performance evaluation
 ) {
   static_assert(k_samples_count % k_features_count == 0,
                 "The feature count must be  a multiple of the samples count. "
                 "This can be artificially achieved by increasing the number of "
                 "samples with no data.");
+
+  static_assert(k_samples_count > k_features_count,
+                "The number of samples must be greater than the number of "
+                "samples. Failing to do so, the standardized covariance matrix "
+                "would be rank deficient. Processing such a matrix from the QR "
+                "iteration kernel is not supported.");
 
   constexpr int kNumElementsPerDDRBurst = 8;
   constexpr int kInputMatrixSize = k_samples_count * k_features_count;
@@ -67,8 +76,10 @@ void PCAsyclImpl(
   // Pipes to communicate the A, Q and R matrices between kernels
   using InputMatrixPipe = sycl::ext::intel::pipe<IMP, PipeType, 3>;
   using CovarianceMatrixPipe = sycl::ext::intel::pipe<CMP, PipeType, 3>;
-  using EigenValuesPipe = sycl::ext::intel::pipe<EValP, PipeType, 3>;
+  using EigenValuesPipe = sycl::ext::intel::pipe<EValP, T, 3>;
   using EigenVectorsPipe = sycl::ext::intel::pipe<EVecP, PipeType, 3>;
+  using RankDeficientFlagPipe =
+      sycl::ext::intel::pipe<RDFP, ac_int<1, false>, 3>;
 
   // Allocate FPGA DDR memory.
   T *input_matrix_device =
@@ -77,6 +88,8 @@ void PCAsyclImpl(
       sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
   T *eigen_values_device =
       sycl::malloc_device<T>(kEigenValuesVectorSize * matrix_count, q);
+  ac_int<1, false> *rank_deficient_flag_device =
+      sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
 
   // Copy the input matrices from host DDR to FPGA DDR
   q.memcpy(input_matrix_device, input_matrix.data(),
@@ -93,7 +106,7 @@ void PCAsyclImpl(
     h.single_task<InputMatrixFromDDRToLocalMem>([=
     ]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipeByBlocks<T, k_features_count, k_samples_count,
-                              kNumElementsPerDDRBurst, InputMatrixPipe>(
+                                      kNumElementsPerDDRBurst, InputMatrixPipe>(
           input_matrix_device, matrix_count, repetitions);
     });
   });
@@ -109,15 +122,22 @@ void PCAsyclImpl(
       fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
                                   kNumElementsPerDDRBurst, k_zero_threshold_1e,
                                   CovarianceMatrixPipe, EigenValuesPipe,
-                                  EigenVectorsPipe, k_use_rayleigh_shift>());
+                                  EigenVectorsPipe, RankDeficientFlagPipe>());
 
   // Write the Eigen values from local memory to FPGA DDR
   auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
-    MatrixReadPipeToDDR<T, k_features_count + 1, 1, kNumElementsPerDDRBurst,
-                        EigenValuesPipe>(eigen_values_device, matrix_count,
-                                         repetitions);
+    VectorReadPipeToDDR<T, k_features_count, EigenValuesPipe>(
+        eigen_values_device, matrix_count, repetitions);
   });
+
+  // Write the rank deficient flag from local memory to FPGA DDR
+  auto rank_deficient_flag_event =
+      q.single_task<RankDeficientFlagFromLocalMemToDDR>([=
+  ]() [[intel::kernel_args_restrict]] {
+        VectorReadPipeToDDR<ac_int<1, false>, 1, RankDeficientFlagPipe>(
+            rank_deficient_flag_device, matrix_count, repetitions);
+      });
 
   // Write the Eigen vectors from local memory to FPGA DDR
   auto eigen_vectors_event = q.single_task<EigenVectorsFromLocalMemToDDR>([=
@@ -130,6 +150,7 @@ void PCAsyclImpl(
   // Wait for the completion of the pipeline
   eigen_values_event.wait();
   eigen_vectors_event.wait();
+  rank_deficient_flag_event.wait();
 
   // Compute the total time the execution lasted
   auto start_time = ddr_write_event.template get_profiling_info<
@@ -149,11 +170,15 @@ void PCAsyclImpl(
   q.memcpy(eigen_values_matrix.data(), eigen_values_device,
            kEigenValuesVectorSize * matrix_count * sizeof(T))
       .wait();
+  q.memcpy(rank_deficient_flag.data(), rank_deficient_flag_device,
+           matrix_count * sizeof(ac_int<1, false>))
+      .wait();
 
   // Clean allocated FPGA memory
   free(input_matrix_device, q);
-  free(eigen_values_device, q);
   free(eigen_vectors_device, q);
+  free(eigen_values_device, q);
+  free(rank_deficient_flag_device, q);
 }
 
 #endif /* __PCA_HPP__ */

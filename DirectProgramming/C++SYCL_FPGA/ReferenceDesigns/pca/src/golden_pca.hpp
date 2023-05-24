@@ -1,5 +1,6 @@
 #include <math.h>
 
+#include <iomanip>
 #include <random>
 
 /*
@@ -22,7 +23,7 @@ QR iteration method
 
 */
 template <typename T>
-class PCA {
+class GoldenPCA {
  public:
   int samples;                           // number of samples
   int features;                          // number of features
@@ -39,7 +40,7 @@ class PCA {
 
  public:
   // Constructor
-  PCA(int n, int p, int count, bool d) {
+  GoldenPCA(int n, int p, int count, bool d) {
     samples = n;
     features = p;
     matrix_count = count;
@@ -60,9 +61,23 @@ class PCA {
 
     std::uniform_real_distribution<float> distribution(kRandomMin, kRandomMax);
 
-    for (int k = 0; k < a_matrix.size(); k++) {
-      float value = distribution(gen);
-      a_matrix[k] = value;
+    for (int k=0; k<229; k++){
+      for (int row = 0; row < samples; row++) {
+        for (int column = 0; column < features; column++) {
+          float value = distribution(gen);
+          a_matrix[matrix_index * (samples * features) +
+                                row * features + column] = value;
+        }
+      }
+    }
+
+
+    for (int row = 0; row < samples; row++) {
+      for (int column = 0; column < features; column++) {
+        float value = distribution(gen);
+        a_matrix[matrix_index * (samples * features) +
+                              row * features + column] = value;
+      }
     }
 
     if (debug) {
@@ -75,6 +90,19 @@ class PCA {
         }
         std::cout << std::endl;
       }
+
+      std::cout << "A=[";
+      for (int row = 0; row < samples; row++) {
+        for (int column = 0; column < features; column++) {
+          std::cout << a_matrix[matrix_index * (samples * features) +
+                                row * features + column]
+                    << " ";
+        }
+        if (row != (samples - 1)) {
+          std::cout << "; ";
+        }
+      }
+      std::cout << "]" << std::endl;
     }
   }
 
@@ -182,6 +210,21 @@ class PCA {
       }
       if (debug) std::cout << std::endl;
     }
+
+    if (debug) {
+      std::cout << "Cov=[";
+      for (int row = 0; row < features; row++) {
+        for (int column = 0; column < features; column++) {
+          std::cout
+              << covariance_matrix[matrix_c_offset + row * features + column]
+              << " ";
+        }
+        if (row != (features - 1)) {
+          std::cout << "; ";
+        }
+      }
+      std::cout << "]" << std::endl;
+    }
   }
 
   // Compute the covariance matrix of all the standardized A matrices
@@ -269,36 +312,16 @@ class PCA {
 
         // Use the 90% percentage of the shift value to avoid
         // massive cancellations in the QRD
-        shift_value *= 0.99;
-
-        // if(debug) std::cout << "Shift value " << shift_value << std::endl;
-
-        // if (debug){
-        //   std::cout << "Before shift" << std::endl;
-        //   for (int row = 0; row < features; row++) {
-        //     for (int col = 0; col < features; col++) {
-        //       std::cout << rq[row * features + col] << " ";
-        //     }
-        //     std::cout << std::endl;
-        //   }
-        //   std::cout << std::endl;
-        // }
+        if (iterations == 0) {
+          shift_value = 0;
+        } else {
+          shift_value *= 0.99;
+        }
 
         // Subtract the shift value from the diagonal of RQ
         for (int row = 0; row < features; row++) {
           rq[row + features * row] -= shift_value;
         }
-
-        // if (debug){
-        //   std::cout << "Input matrix to QR" << std::endl;
-        //   for (int row = 0; row < features; row++) {
-        //     for (int col = 0; col < features; col++) {
-        //       std::cout << rq[row * features + col] << " ";
-        //     }
-        //     std::cout << std::endl;
-        //   }
-        //   std::cout << std::endl;
-        // }
 
         // Compute the actual QR decomposition
         {
@@ -335,11 +358,11 @@ class PCA {
           }
         }
 
-        // if (debug){
+        // if (debug) {
         //   std::cout << "Q matrix" << std::endl;
         //   for (int row = 0; row < features; row++) {
         //     for (int col = 0; col < features; col++) {
-        //       std::cout << q[row* features + col] << " ";
+        //       std::cout << q[row * features + col] << " ";
         //     }
         //     std::cout << std::endl;
         //   }
@@ -348,7 +371,7 @@ class PCA {
         //   std::cout << "R matrix" << std::endl;
         //   for (int row = 0; row < features; row++) {
         //     for (int col = 0; col < features; col++) {
-        //       std::cout << r[row* features + col] << " ";
+        //       std::cout << r[row * features + col] << " ";
         //     }
         //     std::cout << std::endl;
         //   }
@@ -362,27 +385,20 @@ class PCA {
           for (int col = 0; col < features; col++) {
             double prod = 0;
             for (int k = 0; k < features; k++) {
-              prod += eigen_vectors[offset + row + features * k] *
-                      q[k + features * col];
+              prod += eigen_vectors[offset + row * features + k] *
+                      q[k * features + col];
             }
-            eigen_vectors_q_product[offset + row + features * col] = prod;
+            eigen_vectors_q_product[row * features + col] = prod;
           }
-        }
-        // if (debug) std::cout << "Eigen vectors at iteration " << iterations
-        // << std::endl;
-        for (int row = 0; row < features; row++) {
-          for (int col = 0; col < features; col++) {
-            eigen_vectors[offset + row + features * col] =
-                eigen_vectors_q_product[offset + row + features * col];
-            // if (debug) std::cout << eigen_vectors[offset + row + features *
-            // col] << " ";
-          }
-          // if (debug) std::cout << std::endl;
         }
 
-        // Compute RQ
-        // if (debug) std::cout << "RQ at iteration " << iterations <<
-        // std::endl;
+        for (int row = 0; row < features; row++) {
+          for (int col = 0; col < features; col++) {
+            eigen_vectors[offset + row * features + col] =
+                eigen_vectors_q_product[row * features + col];
+          }
+        }
+
         for (int row = 0; row < features; row++) {
           for (int col = 0; col < features; col++) {
             double prod = 0;
@@ -390,15 +406,21 @@ class PCA {
               prod += r[row * features + k] * q[k * features + col];
             }
             rq[row * features + col] = prod;
-            // if (debug) std::cout << prod << " ";
           }
-          // if (debug) std::cout << std::endl;
         }
 
         // Add the shift value back to the diagonal of RQ
         for (int row = 0; row < features; row++) {
           rq[row + features * row] += shift_value;
         }
+
+        // if (debug) std::cout << "RQ at iteration " << iterations << std::endl;
+        // for (int row = 0; row < features; row++) {
+        //   for (int col = 0; col < features; col++) {
+        //     if (debug) std::cout << rq[row * features + col] << " ";
+        //   }
+        //   if (debug) std::cout << std::endl;
+        // }
 
         // Check if we found all Eigen Values
         bool all_below_threshold = true;
@@ -411,17 +433,16 @@ class PCA {
         converged = all_below_threshold;
 
         iterations++;
-        if (iterations > (features * features * features * 4096)) {
+        if (iterations > (features * 8)) {
           std::cout << "Number of iterations too high" << std::endl;
           break;
         }
       }
 
-      if (iterations > features * features * features * 4096) {
-        std::cout
-            << "One of the input matrices required too many iterations, we "
-               "should regenerate a new matrix"
-            << std::endl;
+      if (iterations > (features * 8)) {
+        std::cout << "One of the input matrices required too many iterations, "
+                     "and is being regenerated"
+                  << std::endl;
         populateIthA(matrix_index);
         standardizeIthA(matrix_index);
         computeCovarianceIthMatrix(matrix_index);
@@ -443,7 +464,7 @@ class PCA {
                     << std::endl;
           for (int row = 0; row < features; row++) {
             for (int col = 0; col < features; col++) {
-              std::cout << eigen_vectors[offset + row + features * col] << " ";
+              std::cout << eigen_vectors[offset + row * features + col] << " ";
             }
             std::cout << std::endl;
           }

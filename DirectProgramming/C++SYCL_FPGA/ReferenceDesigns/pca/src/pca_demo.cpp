@@ -1,13 +1,9 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <vector>
 
-#define KDEFLIM 2
-#define SHIFT_NOISE 1e-3
-#define NO_SHIFT_ITER 10
-
-#define DEBUG 1
-#define DEBUG_MATRIX_INDEX 0
+#define DEBUG 0
 
 #include "exception_handler.hpp"
 #include "golden_pca.hpp"
@@ -28,10 +24,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kEigenValuesCount = kFeaturesCount;
   constexpr size_t kEigenVectorsMatrixSize = kFeaturesCount * kFeaturesCount;
 
-  constexpr bool kUseRayleighShift =
-      false;  // Use Rayleigh shift instead of the Wilkinson shift
-
-  constexpr int k_zero_threshold_1e = -5;
+  constexpr int k_zero_threshold_1e = -7;
 
   // Get the number of times we want to repeat the decomposition
   // from the command line.
@@ -44,10 +37,10 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kPCAsToCompute = 1;
+  constexpr size_t kPCAsToCompute = 1000;
 
   try {
-    // SYCL boilerplate
+    // Device selector selection
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -72,19 +65,21 @@ int main(int argc, char *argv[]) {
     std::vector<float> a_matrix;
     std::vector<float> eigen_values_vector;
     std::vector<float> eigen_vectors_matrix;
+    std::vector<ac_int<1, false>> rank_deficient_flag;
 
     a_matrix.resize(kAMatrixSize * kPCAsToCompute);
     eigen_values_vector.resize(kEigenValuesCount * kPCAsToCompute);
     eigen_vectors_matrix.resize(kEigenVectorsMatrixSize * kPCAsToCompute);
+    rank_deficient_flag.resize(kPCAsToCompute);
 
     std::cout << "Generating " << kPCAsToCompute << " random ";
     std::cout << "matri" << (kPCAsToCompute > 1 ? "ces" : "x") << " of size "
               << kSamplesCount << "x" << kFeaturesCount << " " << std::endl;
 
-    constexpr bool print_debug_information = true;
+    constexpr bool print_debug_information = false;
 
-    PCA<double> pca(kSamplesCount, kFeaturesCount, kPCAsToCompute,
-                    print_debug_information);
+    GoldenPCA<double> pca(kSamplesCount, kFeaturesCount, kPCAsToCompute,
+                          print_debug_information);
     pca.populateA();
     pca.standardizeA();
     pca.computeCovarianceMatrix();
@@ -93,10 +88,6 @@ int main(int argc, char *argv[]) {
     // Copy all the input matrices to the of the golden implementation to the
     // a_matrix that uses the float datatype, which is going to be used by the
     // hardware implementation
-    // for (int k = 0; k < (kAMatrixSize * kPCAsToCompute); k++) {
-    //   a_matrix[k] = pca.a_matrix[k];  // implicit double to float cast here
-    // }
-
     for (int matrix_index = 0; matrix_index < kPCAsToCompute; matrix_index++) {
       for (int row = 0; row < kSamplesCount; row++) {
         for (int column = 0; column < kFeaturesCount; column++) {
@@ -109,163 +100,156 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    std::cout << "Transposed input: " << std::endl;
-    for (int row = 0; row < kFeaturesCount; row++) {
-      for (int column = 0; column < kSamplesCount; column++) {
-        std::cout << a_matrix[row * kSamplesCount + column] << " ";
-      }
-      std::cout << std::endl;
-    }
-
-
     std::cout << "Running Principal Component analysis of " << kPCAsToCompute
               << " matri" << (kPCAsToCompute > 1 ? "ces " : "x ") << repetitions
               << " times" << std::endl;
 
-    PCAsyclImpl<kSamplesCount, kFeaturesCount, FIXED_ITERATIONS,
-                kUseRayleighShift, k_zero_threshold_1e>(
-        a_matrix, eigen_values_vector, eigen_vectors_matrix, q, kPCAsToCompute,
-        repetitions);
+    PCAKernel<kSamplesCount, kFeaturesCount, FIXED_ITERATIONS,
+              k_zero_threshold_1e>(
+        a_matrix, eigen_values_vector, eigen_vectors_matrix,
+        rank_deficient_flag, q, kPCAsToCompute, repetitions);
 
     if (DEBUG) {
-      std::cout << "\n Eigen Values: \n";
-      for (int i = 0; i < kFeaturesCount; i++) {
-        std::cout << eigen_values_vector[i] << " ";
-      }
-      std::cout << "\n";
-
-      std::cout << "\n Eigen Vectors: \n";
-      for (int i = 0; i < kFeaturesCount; i++) {
-        for (int j = 0; j < kFeaturesCount; j++) {
-          std::cout << eigen_vectors_matrix[i * kFeaturesCount + j] << " ";
+      for (int matrix_index = 0; matrix_index < kPCAsToCompute;
+           matrix_index++) {
+        std::cout << "\n Results : " << matrix_index << std::endl;
+        std::cout << "\n Eigen Values: \n";
+        for (int i = 0; i < kFeaturesCount; i++) {
+          std::cout << eigen_values_vector[matrix_index * kEigenValuesCount + i]
+                    << " ";
         }
         std::cout << "\n";
+
+        std::cout << "\n Eigen Vectors: \n";
+        for (int i = 0; i < kFeaturesCount; i++) {
+          for (int j = 0; j < kFeaturesCount; j++) {
+            std::cout
+                << eigen_vectors_matrix[matrix_index * kEigenVectorsMatrixSize +
+                                        i * kFeaturesCount + j]
+                << " ";
+          }
+          std::cout << "\n";
+        }
       }
     }
 
     /////////////////////////////////////////////////////////////////////
     /////////  Sorting and matching with golden value ///////////////////
     /////////////////////////////////////////////////////////////////////
-    std::vector<int> s_index(kFeaturesCount);
-    std::vector<int> s_index_SYCL(kFeaturesCount);
+    std::cout << "Verifying results..." << std::endl;
+
+    std::vector<int> sort_index_golden(kFeaturesCount);
     int total_iteration = 0;  // for the run time prediction on FPGA
-    int passsed_matrices = 0;
-    int KernelFlagCount = 0;
+    int passed_matrices = 0;
+    int kernel_innacurate_result_flag_count = 0;
     for (int matrix_index = 0; matrix_index < kPCAsToCompute; matrix_index++) {
-      int matrix_offset = matrix_index * kAMatrixSize;
-      int eigen_vector_offset = matrix_index * kFeaturesCount;
 
-      // Initialize the indexes for sorting the eigen values.
-
-      if (eigen_values_vector[kFeaturesCount + eigen_vector_offset] == 1) {
-        KernelFlagCount++;
+      if (rank_deficient_flag[matrix_index] != 0){
+        // Skip the verification of the current matrix as it was flagged as
+        // rank deficient, which is not supported by the kernel
+        kernel_innacurate_result_flag_count++;
         continue;
       }
 
+      int eigen_vectors_offset = matrix_index * kEigenVectorsMatrixSize;
+      int eigen_values_offset = matrix_index * kEigenValuesCount;
+
+      // Initialize the indexes for sorting the eigen values.
       for (int i = 0; i < kFeaturesCount; i++) {
-        s_index[i] = i;
-        s_index_SYCL[i] = i;
+        sort_index_golden[i] = i;
       }
 
-      // sorting the eigen values
-      std::sort(s_index.begin(), s_index.end(), [=](int a, int b) {
-        return fabs(pca.a_matrix[matrix_offset + a * kFeaturesCount + a]) >
-               fabs(pca.a_matrix[matrix_offset + b * kFeaturesCount + b]);
-      });
+      // Sort the golden Eigen values by reordering the indexes that we are
+      // going to access
+      // The Eigen values and vectors from the kernel are already sorted
+      std::sort(sort_index_golden.begin(), sort_index_golden.end(),
+                [=](int a, int b) {
+                  return fabs(pca.eigen_values[eigen_values_offset + a]) >
+                         fabs(pca.eigen_values[eigen_values_offset + b]);
+                });
 
-      // std::sort(s_index_SYCL.begin(), s_index_SYCL.end(), [=](int a, int b) \
-    //   { return fabs(rq_matrix[matrix_offset+a*kFeaturesCount+a]) > fabs(rq_matrix[matrix_offset+b*kFeaturesCount+b]);});
-
-      // Relative error is used in error calculation of eigen values
-      // This is beacuse eigen values can come in 1000s
-
+      // Absolute threshold at which we consider there is an error
       constexpr float k_diff_threshold = 1e-3;
-      int rq_ecount_SYCL = 0;
-      if (DEBUG) std::cout << "\nEigen values are:\n";
-      for (int i = 0; i < kFeaturesCount; i++) {
-        int sI = s_index[i];
-        if (DEBUG)
-          std::cout << pca.a_matrix[matrix_offset + sI * kFeaturesCount + sI]
-                    << " ";
+      int eigen_values_errors = 0;
 
-        if (fabs(fabs(pca.a_matrix[matrix_offset + sI * kFeaturesCount + sI]) -
-                 fabs(eigen_values_vector[eigen_vector_offset + i])) /
-                    (fabs(pca.a_matrix[matrix_offset + sI * kFeaturesCount +
-                                       sI])) >
+      // Check the Eigen values
+      for (int i = 0; i < kFeaturesCount; i++) {
+        int sorted_index_golden = sort_index_golden[i];
+
+        float golden_eigen_value =
+            pca.eigen_values[eigen_values_offset + sorted_index_golden];
+        float kernel_eigen_value = eigen_values_vector[eigen_values_offset + i];
+
+        if (fabs(fabs(golden_eigen_value) - fabs(kernel_eigen_value)) >
                 k_diff_threshold ||
-            isnan(pca.a_matrix[matrix_offset + sI * kFeaturesCount + sI]) ||
-            isnan(eigen_values_vector[i + eigen_vector_offset])) {
-          rq_ecount_SYCL++;
-          std::cout << "Mis matched CPU and SYCL eigen values are: "
-                    << pca.a_matrix[matrix_offset + sI * kFeaturesCount + sI]
-                    << ", " << eigen_values_vector[i + eigen_vector_offset]
-                    << " at i: " << sI << "\n";
+            isnan(golden_eigen_value) ||
+            isnan(kernel_eigen_value)) {
+          eigen_values_errors++;
+          std::cout << "Mismatch between golden and kernel Eigen value for matrix "
+                    << matrix_index << std::endl
+                    << "golden: " << golden_eigen_value << std::endl
+                    << "kernel: " << kernel_eigen_value << std::endl;
         }
       }
 
-      if (rq_ecount_SYCL == 0) {
-      } else {
-        std::cout << "\nMatrix: " << matrix_index
-                  << " Error is found between kernel and numpy eigen values, "
-                     "Mismatch count: "
-                  << rq_ecount_SYCL << "\n";
+      if (eigen_values_errors != 0) {
+        std::cout << "Matrix: " << matrix_index << std::endl
+                  << "Eigen values mismatch count: " << eigen_values_errors
+                  << std::endl;
       }
 
-      if (rq_ecount_SYCL > 0) std::cout << "\n\n\n";
+      // Check the Eigen vectors
+      int eigen_vectors_errors = 0;
+      for (int row = 0; row < kFeaturesCount; row++) {
+        for (int column = 0; column < kFeaturesCount; column++) {
+          float golden_vector_element =
+              pca.eigen_vectors[eigen_vectors_offset + row * kFeaturesCount +
+                                sort_index_golden[column]];
+          float kernel_vector_element =
+              eigen_vectors_matrix[eigen_vectors_offset + row * kFeaturesCount +
+                                   column];
 
-      int qq_ecountSYCL = 0;
-      if (DEBUG) std::cout << "\n Eigen vector is: \n";
-      for (int i = 0; i < kFeaturesCount; i++) {
-        for (int j = 0; j < kFeaturesCount; j++) {
-          if (DEBUG)
-            std::cout << pca.eigen_vectors[matrix_offset + j * kFeaturesCount +
-                                           s_index[i]]
-                      << " ";
-
-          if (fabs(
-                  fabs(pca.eigen_vectors[matrix_offset + j * kFeaturesCount +
-                                         s_index[i]]) -
-                  fabs(eigen_vectors_matrix[matrix_offset + i * kFeaturesCount +
-                                            s_index_SYCL[j]])) >
+          if (fabs(fabs(golden_vector_element) - fabs(kernel_vector_element)) >
                   k_diff_threshold ||
-              isnan(eigen_vectors_matrix[matrix_offset + i * kFeaturesCount +
-                                         s_index_SYCL[j]]) ||
-              isnan(pca.eigen_vectors[matrix_offset + j * kFeaturesCount +
-                                      s_index[i]])) {
-            qq_ecountSYCL++;
-            std::cout
-                << "Mis matched CPU and SYCL QQ values and corr eigen value "
-                   "are: "
-                << pca.eigen_vectors[matrix_offset + j * kFeaturesCount +
-                                     s_index[i]]
-                << ", "
-                << eigen_vectors_matrix[matrix_offset + i * kFeaturesCount +
-                                        s_index_SYCL[j]]
-                << " " << eigen_values_vector[i + eigen_vector_offset]
-                << " at i,j:" << i << "," << j << "\n";
+              isnan(golden_vector_element) || isnan(kernel_vector_element)) {
+            eigen_vectors_errors++;
+
+            std::cout << "Mismatch between golden and kernel Eigen vector "
+                      << "at index " << row << ", " << column << " in matrix "
+                      << matrix_index << std::endl
+                      << "golden: " << golden_vector_element << std::endl
+                      << "kernel: " << kernel_vector_element << std::endl
+                      << std::endl;
           }
         }
-        if (DEBUG) std::cout << "\n";
       }
 
-      if (qq_ecountSYCL == 0) {
-        passsed_matrices++;
+      if (eigen_vectors_errors != 0) {
+        std::cout << "Matrix: " << matrix_index << std::endl
+                  << "Eigen vector elements mismatch count: "
+                  << eigen_vectors_errors << std::endl;
       } else {
-        std::cout
-            << "Matrix: " << matrix_index
-            << "  Error: Mismatch is found between SYCL and numpy QQ, count: "
-            << qq_ecountSYCL << "\n";
+        passed_matrices++;
       }
 
-      if (qq_ecountSYCL > 0) std::cout << "\n\n\n";
+    }  // end for:matrix_index
+
+    if (kernel_innacurate_result_flag_count > 0) {
+      std::cout << "During the execution, the kernel identified "
+                << kernel_innacurate_result_flag_count
+                << " rank deficient matrices." << std::endl;
+      std::cout << "These matrices were omitted from the data verification." << std::endl;
     }
-    std::cout << "Failed PCA flag count from kernel is: " << KernelFlagCount
-              << "\n";
-    std::cout << "Mis Matched matrix count is "
-              << kPCAsToCompute - passsed_matrices - KernelFlagCount << "\n";
-    std::cout << "Passed matrix percenage is "
-              << (100.0 * passsed_matrices) / (kPCAsToCompute - KernelFlagCount)
-              << "\n";
+
+    if ((passed_matrices + kernel_innacurate_result_flag_count) < kPCAsToCompute){
+      std::cerr << "Errors were identified." << std::endl;
+      std::cerr << "Pass rate: "
+                << (100.0 * (passed_matrices + kernel_innacurate_result_flag_count)) /
+                       (kPCAsToCompute)
+                << "%" << std::endl;
+      std::terminate();
+    }
+
 
     // Runtime Prediction
     const bool is_complex = false;
@@ -302,33 +286,14 @@ int main(int argc, char *argv[]) {
     double predicted_time = clocks / 2.39e8;
     std::cout << "Predicted runtime is: " << predicted_time << " seconds\n";
 
-    return 0;
+
+    std::cout << "All the tests passed." << std::endl;
 
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
               << std::endl;
-    std::cerr << "   If you are targeting an FPGA hardware, "
-                 "ensure that your system is plugged to an FPGA board that is "
-                 "set up correctly"
-              << std::endl;
-    std::cerr << "   If you are targeting the FPGA emulator, compile with "
-                 "-DFPGA_EMULATOR"
-              << std::endl;
-
-    std::terminate();
-  } catch (std::bad_alloc const &e) {
-    std::cerr << "Caught a memory allocation exception on the host: "
-              << e.what() << std::endl;
-    std::cerr << "   You can reduce the memory requirement by reducing the "
-                 "number of matrices generated. Specify a smaller number when "
-                 "running the executable."
-              << std::endl;
-    std::cerr << "   In this run, more than "
-              << ((kAMatrixSize * 3) * 2 * kPCAsToCompute * sizeof(float)) /
-                     pow(2, 30)
-              << " GBs of memory was requested for the decomposition of a "
-              << "matrix of size " << kFeaturesCount << " x " << kSamplesCount
-              << std::endl;
     std::terminate();
   }
+
+  return 0;
 }  // end of main

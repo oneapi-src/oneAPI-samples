@@ -242,6 +242,13 @@ struct StreamingCovarianceMatrix {
             }
           });
         });
+        // PRINTF("Writing to pipe:\n");
+        // fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
+        
+        // PRINTF("%f ", pipe_write.template get<t>());
+        // });
+        // PRINTF("\n");
+
         OutputPipe::write(pipe_write);
       }
     }  // end of while
