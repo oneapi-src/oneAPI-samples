@@ -15,10 +15,10 @@
 // use host pipes to write into registers in the CSR address space
 class OutputPipeID;
 
-// using protocol AVALON_MM or AVALON_MM_USES_READY allows this host pipe to output to the CSR
+// using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to output to the CSR
 using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
-        sycl::ext::intel::experimental::protocol_name::AVALON_MM_USES_READY>));
+        sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>));
 using OutputPipe =
     sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
 
