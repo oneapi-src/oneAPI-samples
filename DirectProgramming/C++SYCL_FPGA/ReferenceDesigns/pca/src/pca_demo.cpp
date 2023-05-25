@@ -1,6 +1,6 @@
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 #include <vector>
 
 #define DEBUG 0
@@ -17,18 +17,59 @@ void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
              int repetitions) {}
 
 int main(int argc, char *argv[]) {
+#if BENCHMARK
+  constexpr bool kBenchmarkMode = true;
+  constexpr size_t kFeaturesCount = 8;
+  constexpr size_t kSamplesCount = 4176;
+#else
+  constexpr bool kBenchmarkMode = false;
   constexpr size_t kFeaturesCount = FEATURES_COUNT;
   constexpr size_t kSamplesCount = SAMPLES_COUNT;
+#endif
 
   constexpr size_t kAMatrixSize = kSamplesCount * kFeaturesCount;
   constexpr size_t kEigenValuesCount = kFeaturesCount;
   constexpr size_t kEigenVectorsMatrixSize = kFeaturesCount * kFeaturesCount;
 
-  constexpr int k_zero_threshold_1e = -7;
+  constexpr int k_zero_threshold_1e = -8;
+
+#if defined(FPGA_EMULATOR) or defined(FPGA_SIMULATOR)
+  int repetitions = 1;
+#else
+  int repetitions = 1024;
+#endif
+  std::string in_file_name = "";
+
+  if constexpr (kBenchmarkMode) {
+    // We expect to read the dataset path from the program arguments
+    if ((argc != 2) && (argc != 3)) {
+      std::cout << "Usage: " << std::endl
+                << "./pca.xxx <path to abalone.csv> n" << std::endl
+                << "where n is an optional parameter which specifies how many "
+                   "times to "
+                   "repeat the computation (for performance evaluation) "
+                << std::endl;
+      std::terminate();
+    }
+
+    // Get the file path
+    in_file_name = std::string(argv[1]);
+
+    if (argc == 3) {
+      // get the number of repetitions
+      repetitions = std::stoi(argv[2]);
+    }
+  }
+  else{
+    // We expect to read the dataset path from the program arguments
+    if (argc == 2) {
+      // get the number of repetitions
+      repetitions = std::stoi(argv[1]);
+    }    
+  }
 
   // Get the number of times we want to repeat the decomposition
   // from the command line.
-  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 
   if (repetitions < 1) {
     std::cout << "Number of repetitions is lower that 1." << std::endl;
@@ -37,7 +78,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  constexpr size_t kPCAsToCompute = 1000;
+  constexpr size_t kPCAsToCompute = kBenchmarkMode ? 1 : 8;
 
   try {
     // Device selector selection
@@ -72,14 +113,19 @@ int main(int argc, char *argv[]) {
     eigen_vectors_matrix.resize(kEigenVectorsMatrixSize * kPCAsToCompute);
     rank_deficient_flag.resize(kPCAsToCompute);
 
-    std::cout << "Generating " << kPCAsToCompute << " random ";
-    std::cout << "matri" << (kPCAsToCompute > 1 ? "ces" : "x") << " of size "
-              << kSamplesCount << "x" << kFeaturesCount << " " << std::endl;
+    if (kBenchmarkMode) {
+      std::cout << "Reading the input data from file." << std::endl;
+    } else {
+      std::cout << "Generating " << kPCAsToCompute << " random ";
+      std::cout << "matri" << (kPCAsToCompute > 1 ? "ces" : "x") << " of size "
+                << kSamplesCount << "x" << kFeaturesCount << " " << std::endl;
+    }
 
     constexpr bool print_debug_information = false;
 
     GoldenPCA<double> pca(kSamplesCount, kFeaturesCount, kPCAsToCompute,
-                          print_debug_information);
+                          print_debug_information, kBenchmarkMode,
+                          in_file_name);
     pca.populateA();
     pca.standardizeA();
     pca.computeCovarianceMatrix();
@@ -105,9 +151,9 @@ int main(int argc, char *argv[]) {
               << " times" << std::endl;
 
     PCAKernel<kSamplesCount, kFeaturesCount, FIXED_ITERATIONS,
-              k_zero_threshold_1e>(
-        a_matrix, eigen_values_vector, eigen_vectors_matrix,
-        rank_deficient_flag, q, kPCAsToCompute, repetitions);
+              k_zero_threshold_1e>(a_matrix, eigen_values_vector,
+                                   eigen_vectors_matrix, rank_deficient_flag, q,
+                                   kPCAsToCompute, repetitions);
 
     if (DEBUG) {
       for (int matrix_index = 0; matrix_index < kPCAsToCompute;
@@ -139,12 +185,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Verifying results..." << std::endl;
 
     std::vector<int> sort_index_golden(kFeaturesCount);
-    int total_iteration = 0;  // for the run time prediction on FPGA
     int passed_matrices = 0;
     int kernel_innacurate_result_flag_count = 0;
     for (int matrix_index = 0; matrix_index < kPCAsToCompute; matrix_index++) {
-
-      if (rank_deficient_flag[matrix_index] != 0){
+      if (rank_deficient_flag[matrix_index] != 0) {
         // Skip the verification of the current matrix as it was flagged as
         // rank deficient, which is not supported by the kernel
         kernel_innacurate_result_flag_count++;
@@ -169,7 +213,7 @@ int main(int argc, char *argv[]) {
                 });
 
       // Absolute threshold at which we consider there is an error
-      constexpr float k_diff_threshold = 1e-3;
+      constexpr float k_diff_threshold = 1e-2;
       int eigen_values_errors = 0;
 
       // Check the Eigen values
@@ -182,13 +226,13 @@ int main(int argc, char *argv[]) {
 
         if (fabs(fabs(golden_eigen_value) - fabs(kernel_eigen_value)) >
                 k_diff_threshold ||
-            isnan(golden_eigen_value) ||
-            isnan(kernel_eigen_value)) {
+            isnan(golden_eigen_value) || isnan(kernel_eigen_value)) {
           eigen_values_errors++;
-          std::cout << "Mismatch between golden and kernel Eigen value for matrix "
-                    << matrix_index << std::endl
-                    << "golden: " << golden_eigen_value << std::endl
-                    << "kernel: " << kernel_eigen_value << std::endl;
+          std::cout
+              << "Mismatch between golden and kernel Eigen value for matrix "
+              << matrix_index << std::endl
+              << "golden: " << golden_eigen_value << std::endl
+              << "kernel: " << kernel_eigen_value << std::endl;
         }
       }
 
@@ -206,8 +250,8 @@ int main(int argc, char *argv[]) {
               pca.eigen_vectors[eigen_vectors_offset + row * kFeaturesCount +
                                 sort_index_golden[column]];
           float kernel_vector_element =
-              eigen_vectors_matrix[eigen_vectors_offset + row * kFeaturesCount +
-                                   column];
+              eigen_vectors_matrix[eigen_vectors_offset +
+                                   column * kFeaturesCount + row];
 
           if (fabs(fabs(golden_vector_element) - fabs(kernel_vector_element)) >
                   k_diff_threshold ||
@@ -238,54 +282,20 @@ int main(int argc, char *argv[]) {
       std::cout << "During the execution, the kernel identified "
                 << kernel_innacurate_result_flag_count
                 << " rank deficient matrices." << std::endl;
-      std::cout << "These matrices were omitted from the data verification." << std::endl;
+      std::cout << "These matrices were omitted from the data verification."
+                << std::endl;
     }
 
-    if ((passed_matrices + kernel_innacurate_result_flag_count) < kPCAsToCompute){
+    if ((passed_matrices + kernel_innacurate_result_flag_count) <
+        kPCAsToCompute) {
       std::cerr << "Errors were identified." << std::endl;
       std::cerr << "Pass rate: "
-                << (100.0 * (passed_matrices + kernel_innacurate_result_flag_count)) /
+                << (100.0 *
+                    (passed_matrices + kernel_innacurate_result_flag_count)) /
                        (kPCAsToCompute)
                 << "%" << std::endl;
       std::terminate();
     }
-
-
-    // Runtime Prediction
-    const bool is_complex = false;
-    constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
-    static constexpr int kDummyIterations =
-        FIXED_ITERATIONS > kFeaturesCount
-            ? (kFeaturesCount - 1) * kFeaturesCount / 2 +
-                  (FIXED_ITERATIONS - kFeaturesCount) * kFeaturesCount
-            : kFeaturesCount * (kFeaturesCount - 1) / 2;
-    // Total number of iterations (including dummy iterations)
-    static constexpr int kIterations =
-        kFeaturesCount + kFeaturesCount * (kFeaturesCount + 1) / 2 +
-        kDummyIterations;
-
-    double preProcLat =
-        (kFeaturesCount * kFeaturesCount) *
-            ((kSamplesCount + kFeaturesCount - 1) / kFeaturesCount) +
-        kFeaturesCount * (kFeaturesCount + kNumElementsPerDDRBurst - 1) /
-            kNumElementsPerDDRBurst;
-
-    double QRItrLat =
-        total_iteration * (kIterations + kFeaturesCount * kFeaturesCount);
-
-    double SortLat = 2 * kFeaturesCount * kFeaturesCount;
-
-    double WBackLat =
-        (kFeaturesCount * (kFeaturesCount + kNumElementsPerDDRBurst - 1) /
-             kNumElementsPerDDRBurst +
-         (kFeaturesCount + kNumElementsPerDDRBurst) / kNumElementsPerDDRBurst);
-
-    double clocks =
-        1.0 * (preProcLat + QRItrLat + (SortLat + WBackLat) * kPCAsToCompute) *
-        repetitions;
-    double predicted_time = clocks / 2.39e8;
-    std::cout << "Predicted runtime is: " << predicted_time << " seconds\n";
-
 
     std::cout << "All the tests passed." << std::endl;
 

@@ -120,11 +120,6 @@ struct StreamingEigen {
         fpga_tools::BitsForMaxValue<size + 1>() +
         fpga_tools::BitsForMaxValue<kJNegativeIterations>();
     
-
-    int matrix_count = 0;
-
-    T min = 12837847;
-
     // Compute Eigen values and vectors as long as matrices are given as inputs
     while (1) {
       // ---------------------------------
@@ -451,31 +446,20 @@ struct StreamingEigen {
               [&](auto k) { p_ij += col1[k] * a_ip1[k]; });
 
           // PRINTF("p_ij %d %d = %f\n", int(i), int(j), p_ij);
+          bool projection_is_zero_local = false;
 
           // Compute pip1 and ir based on the results of the dot product
           if (j == i + 1) {
-            // Check if the projection of the current size is the 0 vector
-            if(i>=0){
-              projection_is_zero |= (p_ij < k_zero_threshold);
-              if (p_ij < min){
-                min = p_ij;
-              }
-            }
-
+            // If the projection is 0, we won't be able to divide by pip1 (=p_ij)
+            projection_is_zero_local = p_ij < k_zero_threshold*k_zero_threshold;
+            projection_is_zero |= projection_is_zero_local;
+            ir = sycl::rsqrt(p_ij);
             pip1 = p_ij;
-
-            // If the projection is 0, we set ir to 1 to be a no-op in the next
-            // iteration when computing Q_i = a_i*ir
-            if (projection_is_zero) {
-              ir = 1;
-            } else {
-              ir = sycl::rsqrt(p_ij);
-            }
           }
 
           // Compute the value of -s[j]
           T s_j;
-          if (projection_is_zero) {
+          if (projection_is_zero_local) {
             s_j = T{0};
           } else {
             s_j = -p_ij / pip1;
@@ -498,7 +482,6 @@ struct StreamingEigen {
           // Write the computed R value when j is not a "dummy" iteration
           if ((j >= i + 1) && (i + 1 < size)) {
             r_matrix[i + 1][j] = r_ip1j;
-            // PRINTF("r_matrix[%d][%d] = %.10e\n", int(i + 1), int(j), r_ip1j);
           }
 
           // Update loop indexes
@@ -516,34 +499,12 @@ struct StreamingEigen {
 
         }  // end of for:s
 
-        // if (matrix_count == 143){
-
-        //   PRINTF("Q at iteration %d\n", iteration_count);
-        //   fpga_tools::UnrolledLoop<size>([&](auto t) {
-        //     for (int row = 0; row < size; row++) {
-        //       PRINTF("%f ", q_matrix[row].template get<t>());
-        //     }
-        //     PRINTF("\n");
-        //   });
-
-        //   PRINTF("R at iteration %d\n", iteration_count);
-        //   for (int row = 0; row < size; row++) {
-        //     fpga_tools::UnrolledLoop<size>([&](auto t) {
-        //       if (t < row) {
-        //         PRINTF("0 ");
-        //       } else {
-        //         PRINTF("%f ", r_matrix[row][t]);
-        //       }
-        //     });
-        //     PRINTF("\n");
-        //   }
-        // }
-
         // ---------------------------------------------------
         // -------- Compute R*Q and update the Eigen vectors
         //----------------------------------------------------
 
         bool row_is_zero = true;
+        T rq_matrix_copy[size][size];
         for (int row = size-1; row >= 0; row--) {
           T eigen_vectors_row[size];
           fpga_tools::UnrolledLoop<size>([&](auto t) {
@@ -568,13 +529,14 @@ struct StreamingEigen {
             T rq_value =
                 row == column ? dot_product_rq + shift_value : dot_product_rq;
             if (column > row) {
-              rq_matrix[row][column] = rq_matrix[column][row];
+              rq_matrix[row][column] = rq_matrix_copy[column][row];
 
             } else if (row <= (shift_row + 1) && column <= (shift_row + 1)) {
               rq_matrix[row][column] = rq_value;
+              rq_matrix_copy[row][column] = rq_value;
             }
             eigen_vectors_matrix[row][column] = dot_product_eigen_vectors;
-            eigen_vectors_matrix_output[row][column] =
+            eigen_vectors_matrix_output[column][row] =
                 dot_product_eigen_vectors;
 
             if ((row == shift_row) && (column == shift_row)) {
@@ -602,10 +564,6 @@ struct StreamingEigen {
 
         // Compute the shift value
 
-        // PRINTF("a %f\n", a);
-        // PRINTF("b %f\n", b);
-        // PRINTF("c %f\n", c);
-
         T d = (a - c) / 2;
         T b_squared = b * b;
         T d_squared = d * d;
@@ -632,26 +590,6 @@ struct StreamingEigen {
 
         shift_value *= 0.99;
 
-
-
-        // if (matrix_count == 143){
-        //   PRINTF("RQ at iteration %d\n", iteration_count);
-        //   for (int row = 0; row < size; row++) {
-        //     fpga_tools::UnrolledLoop<size>(
-        //         [&](auto t) { PRINTF("%f ", rq_matrix[row][t]) });
-        //     PRINTF("\n");
-        //   }
-
-        //   PRINTF("shift value %f\n", shift_value);
-        //   PRINTF("Eigen Vectors at iteration %d\n", iteration_count);
-        //   for (int row = 0; row < size; row++) {
-        //     fpga_tools::UnrolledLoop<size>(
-        //         [&](auto t) { PRINTF("%f ", eigen_vectors_matrix[row][t]) });
-        //     PRINTF("\n");
-        //   }
-        //   PRINTF("shift row %d\n", shift_row);
-        // }
-
         if (row_is_zero) {
           shift_row--;
         }
@@ -662,26 +600,9 @@ struct StreamingEigen {
           continue_iterating = false;
         }
 
-
-        // if (iteration_count != 0 && iteration_count % 256==0 ){
-        //     PRINTF("current iteration %d\n", iteration_count);
-        // }
-
-        // if (matrix_count == 144){
-        //   exit(0);
-        // }
         iteration_count++;
 
       }  // end if while(continue_iterating)
-      matrix_count++;
-
-      if (iteration_count > (size * 10)){
-        input_matrix_is_rank_deficient = true;
-      }
-
-
-      // PRINTF("matrix_count %d\n", matrix_count);
-      // PRINTF("iteration_count %d\n", iteration_count);
 
       // -----------------------------------------------------------------
       // -------- Sort the Eigen Values/Vectors by weight
@@ -747,8 +668,8 @@ struct StreamingEigen {
             if constexpr (t * pipe_size + k < size) {
               pipe_write.template get<k>() =
                   get[t] ? eigen_vectors_matrix_output
-                               [li / kLoopIterPerColumn]
-                               [sorted_indexes[t * pipe_size + k]]
+                               [sorted_indexes[li / kLoopIterPerColumn]]
+                               [t * pipe_size + k]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }

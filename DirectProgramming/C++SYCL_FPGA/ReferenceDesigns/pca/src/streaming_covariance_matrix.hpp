@@ -46,7 +46,6 @@ struct StreamingCovarianceMatrix {
                   "of samples with no data.");
 
     // Type used to store the matrices in the compute loop
-    using column_tuple = fpga_tools::NTuple<T, rows>;
     using row_tuple = fpga_tools::NTuple<T, columns>;
 
     // Number of matrix blocks to read from the pipe
@@ -97,7 +96,7 @@ struct StreamingCovarianceMatrix {
         [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
         [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-        column_tuple a_load[columns];
+        row_tuple a_load[columns];
 
         [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
         for (int li = 0; li < kLoopIterations; li++) {
@@ -129,13 +128,13 @@ struct StreamingCovarianceMatrix {
         for (int row = 0; row < columns; row++) {
           // We are going to reuse the same column of the matrix multiple
           // iterations in a row, so we keep it locally
-          column_tuple current_base_column;
-          column_tuple next_base_column;
+          row_tuple current_base_column;
+          row_tuple next_base_column;
 
           [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
           for (int column = 0; column < columns; column++) {
             // Load the current column of the block
-            column_tuple current_column = a_load[column];
+            row_tuple current_column = a_load[column];
 
             // Keep the current column in the local cache for future reuse
             if (column == 0) {
@@ -244,7 +243,7 @@ struct StreamingCovarianceMatrix {
         });
         // PRINTF("Writing to pipe:\n");
         // fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-        
+
         // PRINTF("%f ", pipe_write.template get<t>());
         // });
         // PRINTF("\n");

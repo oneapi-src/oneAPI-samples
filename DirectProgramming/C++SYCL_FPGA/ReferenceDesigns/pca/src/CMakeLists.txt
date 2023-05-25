@@ -1,5 +1,5 @@
 set(TARGET_NAME pca)
-set(SOURCE_FILE pca_demo.cpp golden_pca.hpp streaming_eigen.hpp)
+set(SOURCE_FILE pca_demo.cpp golden_pca.hpp streaming_eigen.hpp streaming_covariance_matrix.hpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
@@ -57,25 +57,23 @@ else()
 endif()
 
 
+set(BENCHMARK 1)
 if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
-    set(FEATURES_COUNT 4)
-    set(SAMPLES_COUNT 8)
-    set(FIXED_ITERATIONS 64)
+    set(FIXED_ITERATIONS 50)
 elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
-    set(FEATURES_COUNT 32)
-    set(SAMPLES_COUNT 49984)
-    set(FIXED_ITERATIONS 64)
+    set(FIXED_ITERATIONS 55)
 elseif(DEVICE_FLAG MATCHES "Agilex7")
     # Agilex 7 parameters
-    set(FEATURES_COUNT 32)
-    set(SAMPLES_COUNT 64)
-    set(FIXED_ITERATIONS 120)
+    set(FIXED_ITERATIONS 55)
 else()
     message(FATAL_ERROR "Unreachable")
 endif()
 
+if(DEFINED SET_BENCHMARK)
+    set(BENCHMARK ${SET_BENCHMARK})
+endif()
 
 if(DEFINED SET_FEATURES_COUNT)
     set(FEATURES_COUNT ${SET_FEATURES_COUNT})
@@ -89,19 +87,26 @@ if(DEFINED SET_FIXED_ITERATIONS)
     set(FIXED_ITERATIONS ${SET_FIXED_ITERATIONS})
 endif()
 
+message(STATUS "BENCHMARK=${BENCHMARK}")
 message(STATUS "FEATURES_COUNT=${FEATURES_COUNT}")
 message(STATUS "SAMPLES_COUNT=${SAMPLES_COUNT}")
 message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
+
+if (BENCHMARK MATCHES "0" AND ((NOT DEFINED FEATURES_COUNT) OR (NOT DEFINED FEATURES_COUNT)))
+    message(FATAL_ERROR "When running in non benchmark mode, the number of features and samples must be set.\
+                         These can be set by calling cmake with the -DSET_FEATURES_COUNT=... and -DSET_SAMPLES_COUNT=...")
+endif()
+
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} -DFPGA_EMULATOR ${BSP_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} -DBENCHMARK=${BENCHMARK} -DFPGA_EMULATOR ${BSP_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} ${AC_TYPES_LINK_FLAG} ${BSP_FLAG}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} -DBENCHMARK=${BENCHMARK} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} ${STACK_FLAG} -Xssimulation -Xsghdl ${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${AC_TYPES_LINK_FLAG} ${BSP_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} -DFPGA_HARDWARE ${BSP_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} ${AC_TYPES_COMPILE_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DFEATURES_COUNT=${FEATURES_COUNT} -DSAMPLES_COUNT=${SAMPLES_COUNT} -DBENCHMARK=${BENCHMARK} -DFPGA_HARDWARE ${BSP_FLAG}")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PLATFORM_SPECIFIC_LINK_FLAGS} ${CLOCK_TARGET} -Xsparallel=2 -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${AC_TYPES_LINK_FLAG} ${BSP_FLAG}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${STACK_FLAG} ${BSP_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation

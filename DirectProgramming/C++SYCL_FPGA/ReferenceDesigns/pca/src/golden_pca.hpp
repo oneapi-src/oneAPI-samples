@@ -25,11 +25,13 @@ QR iteration method
 template <typename T>
 class GoldenPCA {
  public:
-  int samples;                           // number of samples
-  int features;                          // number of features
-  int matrix_count;                      // number of matrices
-  bool debug;                            // print debug information if true
-  std::vector<T> a_matrix;               // storage for input matrices
+  int samples;                // number of samples
+  int features;               // number of features
+  int matrix_count;           // number of matrices
+  bool debug;                 // print debug information if true
+  bool benchmark_mode;        // pull data from actual dataset
+  std::string csv_file_name;  // path to the CSV file that holds the dataset
+  std::vector<T> a_matrix;    // storage for input matrices
   std::vector<T> standardized_a_matrix;  // storage for standardized matrices
   std::vector<T> covariance_matrix;      // storage for covariance matrices
   std::vector<T> eigen_values;           // storage for the Eigen values
@@ -40,9 +42,12 @@ class GoldenPCA {
 
  public:
   // Constructor
-  GoldenPCA(int n, int p, int count, bool d) {
+  GoldenPCA(int n, int p, int count, bool d, bool benchmark,
+            std::string file_name) {
     samples = n;
     features = p;
+    benchmark_mode = benchmark;
+    csv_file_name = file_name;
     matrix_count = count;
     debug = d;
 
@@ -56,27 +61,16 @@ class GoldenPCA {
 
   // Generate the input matrix with index matrix_index with random numbers
   void populateIthA(int matrix_index) {
-    constexpr float kRandomMin = -5;
-    constexpr float kRandomMax = 5;
+    constexpr float kRandomMin = 0;
+    constexpr float kRandomMax = 1;
 
     std::uniform_real_distribution<float> distribution(kRandomMin, kRandomMax);
-
-    for (int k=0; k<229; k++){
-      for (int row = 0; row < samples; row++) {
-        for (int column = 0; column < features; column++) {
-          float value = distribution(gen);
-          a_matrix[matrix_index * (samples * features) +
-                                row * features + column] = value;
-        }
-      }
-    }
-
 
     for (int row = 0; row < samples; row++) {
       for (int column = 0; column < features; column++) {
         float value = distribution(gen);
-        a_matrix[matrix_index * (samples * features) +
-                              row * features + column] = value;
+        a_matrix[matrix_index * (samples * features) + row * features +
+                 column] = value;
       }
     }
 
@@ -108,8 +102,40 @@ class GoldenPCA {
 
   // Generate all the input matrices
   void populateA() {
-    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
-      populateIthA(matrix_index);
+    if (benchmark_mode) {
+      // File pointer
+      std::ifstream fin;
+
+      // Opens the csv file
+      fin.open(csv_file_name, std::ios::in);
+
+      if (!fin) {
+        std::cerr << "Failed to open the dataset file" << std::endl;
+        std::terminate();
+      }
+
+      // Read the data from the file
+      for (int row = -1; row < samples; row++) {
+        for (int column = -1; column < features; column++) {
+          std::string element;
+          fin >> element;
+          if (column == -1) {
+            // The fisrt element is ignore as it is a string
+            continue;
+          }
+          // The first row contains the labels, so no data
+          if (row >= 0) {
+            a_matrix[row * features + column] = std::stof(element);
+          }
+        }
+      }
+
+      fin.close();
+
+    } else {
+      for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+        populateIthA(matrix_index);
+      }
     }
   }
 
@@ -239,7 +265,7 @@ class GoldenPCA {
     // Compute the Eigen values and Eigen vectors using the QR iteration method
     // This implementation uses the Wilkinson shift to speedup the convergence
 
-    constexpr float kZeroThreshold = 1e-7;
+    constexpr float kZeroThreshold = 1e-8;
 
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       if (debug)
@@ -310,7 +336,7 @@ class GoldenPCA {
               c - b_squared_signed / (abs(d) + sqrt(d_squared + b_squared));
         }
 
-        // Use the 90% percentage of the shift value to avoid
+        // Use the 99% percentage of the shift value to avoid
         // massive cancellations in the QRD
         if (iterations == 0) {
           shift_value = 0;
@@ -358,26 +384,6 @@ class GoldenPCA {
           }
         }
 
-        // if (debug) {
-        //   std::cout << "Q matrix" << std::endl;
-        //   for (int row = 0; row < features; row++) {
-        //     for (int col = 0; col < features; col++) {
-        //       std::cout << q[row * features + col] << " ";
-        //     }
-        //     std::cout << std::endl;
-        //   }
-        //   std::cout << std::endl;
-
-        //   std::cout << "R matrix" << std::endl;
-        //   for (int row = 0; row < features; row++) {
-        //     for (int col = 0; col < features; col++) {
-        //       std::cout << r[row * features + col] << " ";
-        //     }
-        //     std::cout << std::endl;
-        //   }
-        //   std::cout << std::endl;
-        // }
-
         // Compute the updated Eigen vectors
         std::vector<T> eigen_vectors_q_product;
         eigen_vectors_q_product.resize(features * features);
@@ -414,14 +420,6 @@ class GoldenPCA {
           rq[row + features * row] += shift_value;
         }
 
-        // if (debug) std::cout << "RQ at iteration " << iterations << std::endl;
-        // for (int row = 0; row < features; row++) {
-        //   for (int col = 0; col < features; col++) {
-        //     if (debug) std::cout << rq[row * features + col] << " ";
-        //   }
-        //   if (debug) std::cout << std::endl;
-        // }
-
         // Check if we found all Eigen Values
         bool all_below_threshold = true;
         for (int row = 1; row < features; row++) {
@@ -433,15 +431,15 @@ class GoldenPCA {
         converged = all_below_threshold;
 
         iterations++;
-        if (iterations > (features * 8)) {
+        if ((iterations > (features * features * 16)) && !benchmark_mode) {
           std::cout << "Number of iterations too high" << std::endl;
           break;
         }
       }
 
-      if (iterations > (features * 8)) {
-        std::cout << "One of the input matrices required too many iterations, "
-                     "and is being regenerated"
+      if ((iterations > (features * features * 16)) && !benchmark_mode) {
+        std::cout << "Matrix " << matrix_index
+                  << " required too many iterations, and is being regenerated"
                   << std::endl;
         populateIthA(matrix_index);
         standardizeIthA(matrix_index);
