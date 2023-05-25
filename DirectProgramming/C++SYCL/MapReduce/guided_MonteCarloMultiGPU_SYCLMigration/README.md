@@ -6,7 +6,7 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 
 | Property                       | Description
 |:---                               |:---
-| What you will learn               | How to begin migrating CUDA to SYCL*
+| What you will learn               | How to begin migrating CUDA to SYCL
 | Time to complete                  | 15 minutes
 
 
