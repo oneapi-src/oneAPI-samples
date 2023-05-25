@@ -15,8 +15,8 @@
                         "cd build",
                         "cmake ..",
                         "make",
-                        "make run",
-                        "make run_smo"
+                        "make run"
+                     
                  ]
         }]
 
