@@ -1,6 +1,6 @@
 {
   "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
-  "name": "invocation interfaces",
+  "name": "Invocation Interfaces",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of register_map and streaming invocation interfaces",
   "toolchain": ["icpx"],

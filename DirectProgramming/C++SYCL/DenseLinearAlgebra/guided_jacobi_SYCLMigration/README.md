@@ -103,21 +103,36 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Run the `Jacobi Iterative` Sample
 In all cases, you can run the programs for CPU and GPU. The run commands indicate the device target.
 
-1. Run `sycl_dpct_migrated` for CPU and GPU.
+1. Run `02_sycl_dpct_migrated` for GPU.
    ```
-   make run_sdm_cpu
-   make run_sdm_gpu
+   make run_sdm
+   ```
+   Run `02_sycl_dpct_migrated` for CPU.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run_sdm
+   unset SYCL_DEVICE_FILTER
    ```
 
-2. Run `sycl_migrated` for CPU and GPU.
+2. Run `03_sycl_migrated` for GPU.
    ```
-   make run_cpu
-   make run_gpu
+   make run
    ```
-3. Run `sycl_migrated_optimized` for CPU and GPU.
+   Run `03_sycl_migrated` for CPU.
    ```
-   make run_smo_cpu
-   make run_smo_gpu
+   export SYCL_DEVICE_FILTER=cpu
+   make run
+   unset SYCL_DEVICE_FILTER
+   ```
+3. Run `04_sycl_migrated_optimized` for GPU.
+   ```
+   make run_smo
+   ```
+   Run `04_sycl_migrated_optimized` for CPU.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run_smo
+   unset SYCL_DEVICE_FILTER
    ```
 
 ### Run the `Jacobi Iterative` Sample In Intel® DevCloud

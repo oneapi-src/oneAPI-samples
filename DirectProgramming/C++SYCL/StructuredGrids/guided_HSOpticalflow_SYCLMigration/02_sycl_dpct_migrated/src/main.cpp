@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
   auto SYCL_duration =
       std::chrono::duration_cast<float_ms>(stopSYCLTime - startSYCLTime)
           .count();
-  printf("Processing time on GPU: %f (ms)\n", SYCL_duration);
+  printf("Processing time on Device: %f (ms)\n", SYCL_duration);
 
   // compare results (L1 norm)
   bool status =

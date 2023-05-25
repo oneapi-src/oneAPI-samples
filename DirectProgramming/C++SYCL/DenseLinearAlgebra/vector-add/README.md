@@ -25,7 +25,7 @@ This sample provides example implementations of both Unified Shared Memory (USM)
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 <br> Windows* 10
-| Hardware                          | GEN9 or newer <br> Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | GEN9 or newer <br> Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for CPU, GPU, FPGA emulation, generating FPGA reports and generating RTL for FPGAs, there are extra software requirements for the FPGA simulation flow and FPGA compiles.
@@ -80,7 +80,7 @@ The basic steps to build and run a sample using VS Code include:
 3. Open a terminal in VS Code (**Terminal > New Terminal**).
 4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
@@ -88,7 +88,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 #### Configure the build system
 
 1. Change to the sample directory.
-2. 
+2.
    Configure the project to use the buffer-based implementation.
    ```
    mkdir build
@@ -104,25 +104,35 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake .. -DUSM=1
    ```
 
-   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex® 7).
    > You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
+   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
+   > 
+   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
+   > 
+   >     intel_a10gx_pac:pac_a10
    >
+   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
+   >
+   >     intel_s10sx_pac:pac_s10
+   >     intel_s10sx_pac:pac_s10_usm
+   > 
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
-    
+
 1. Build the program.
    ```
    make cpu-gpu
-   ```   
+   ```
 2. Clean the program. (Optional)
    ```
    make clean
@@ -160,7 +170,7 @@ time.)
 #### Configure the build system
 
 1. Change to the sample directory.
-2. 
+2.
    Configure the project to use the buffer-based implementation.
    ```
    mkdir build
@@ -176,17 +186,27 @@ time.)
    cmake -G "NMake Makefiles" .. -DUSM=1
    ```
 
-   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex®).
+   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex® 7).
    > You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
+   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
+   > 
+   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
+   > 
+   >     intel_a10gx_pac:pac_a10
    >
+   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
+   >
+   >     intel_s10sx_pac:pac_s10
+   >     intel_s10sx_pac:pac_s10_usm
+   > 
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
@@ -325,7 +345,7 @@ qsub  -I  -l nodes=1:gpu:ppn=2 -d .
 ```
 
 - `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
+- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
 - `-d .` makes the current folder as the working directory for the task.
 
   |Available Nodes           |Command Options

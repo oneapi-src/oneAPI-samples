@@ -1,0 +1,6 @@
+add_compile_options(-O3 -fiopenmp -fopenmp-targets=spir64)
+add_link_options(-fiopenmp -fopenmp-targets=spir64)
+add_subdirectory(03_stream)
+add_subdirectory(04_stream_3D)
+add_subdirectory(05_stream_cross_stack)
+add_subdirectory(05_stream_cross_tile)

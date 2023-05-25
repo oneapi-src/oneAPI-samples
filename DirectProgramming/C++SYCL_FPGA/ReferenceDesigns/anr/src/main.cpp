@@ -93,14 +93,14 @@ int main(int argc, char* argv[]) {
   queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM device allocations
-  auto d = q.get_device();
-  if (!d.has(aspect::usm_device_allocations)) {
+  auto device = q.get_device();
+#if defined(IS_BSP)
+  if (!device.has(aspect::usm_device_allocations)) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
     std::terminate();
   }
-
-  auto device = q.get_device();
+#endif
 
   std::cout << "Running on device: "
             << device.get_info<info::device::name>().c_str() 

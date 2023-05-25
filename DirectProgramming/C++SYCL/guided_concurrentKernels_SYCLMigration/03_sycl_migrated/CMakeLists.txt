@@ -5,5 +5,4 @@ include_directories(${CMAKE_SOURCE_DIR}/03_sycl_migrated/Common/)
 add_executable (03_sycl_migrated src/concurrentKernels.cpp)
 target_link_libraries(03_sycl_migrated sycl)
 
-add_custom_target (run_cpu cd ${CMAKE_SOURCE_DIR}/03_sycl_migrated/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/03_sycl_migrated)
-add_custom_target (run_gpu SYCL_DEVICE_FILTER=gpu cd ${CMAKE_SOURCE_DIR}/03_sycl_migrated/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/03_sycl_migrated)
+add_custom_target (run cd ${CMAKE_SOURCE_DIR}/03_sycl_migrated/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/03_sycl_migrated)

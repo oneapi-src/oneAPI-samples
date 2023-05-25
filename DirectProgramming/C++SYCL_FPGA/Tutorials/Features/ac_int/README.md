@@ -1,14 +1,28 @@
-# Using the Algorithmic C Integer Data Type `ac_int`
+# `AC Int` Sample
 
-This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_int` and some best practices.
+This sample is an FPGA tutorial that demonstrates how to use the Algorithmic C (AC) integer data type `ac_int` and illustrates some recommended practices.
 
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
-| Time to complete                  | 20 minutes
+| Area                 | Description
+|:--                   |:--
+| What you will learn  | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
+| Time to complete     | 20 minutes
+| Category             | Concepts and Functionality
+
+## Purpose
+
+This FPGA tutorial shows how to use the `ac_int` data type with some simple examples.
+
+This data type can be used in place of native integer types to generate area efficient and optimized designs for the FPGA. When you have a computation that does not require the full dynamic range of a 32-bit integer, you should replace your `int` variables with `ac_int` variables of the correct, reduced width. For example, if you know that a loop will iterate from 0 to 12 only 4 bits are required.
+
+> **Note**: See the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/optimize-your-design/resource-use/data-types-and-operations/var-prec-fp-sup/adv-disadv-ac-dt.html) to see advantages and limitations of `ac_int` data types.
+
+## Prerequisites
+
+| Optimized for       | Description
+|:---                 |:---
+| OS                  | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware            | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Software            | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -18,10 +32,8 @@ This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-## Prerequisites
+> **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 2 sample that demonstrates a compiler feature.
@@ -32,9 +44,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -42,15 +54,15 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), and more.
 
-## Purpose
+## Key Implementation Details
 
-This FPGA tutorial shows how to use the `ac_int` data type with some simple examples.
+The sample illustrates the important concepts.
 
-This data type can be used in place of native integer types to generate area efficient and optimized designs for the FPGA. When you have a computation that does not require the full dynamic range of a 32-bit integer, you should replace your `int` variables with `ac_int` variables of the correct, reduced width. For example, if you know that a loop will iterate from 0 to 12, only 4 bits are required.
-
-Please refer to the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/optimize-your-design/resource-use/data-types-and-operations/var-prec-fp-sup/adv-disadv-ac-dt.html) to see advantages and limitations of `ac_int` data types.
+- The `ac_int` data type can be used to generate hardware for only as many bits as are needed by your application. Native integer types must generate hardware for only 8, 16, 32, or 64 bits.
+- Shift operations in `ac_int` can be implemented more efficiently when the amount to shift by is stored in a minimally sized unsigned `ac_int`.
+- The `ac_int` data type provides several useful operations, including reading and modifying certain bits in an `ac_int`.
 
 ### Simple Code Example
 
@@ -117,17 +129,9 @@ Kernel `ShiftOps` contains an `ac_int` left-shifter and an `ac_int` right-shifte
 
 Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bit slice operations `slc` and `set_slc`.
 
-## Key Concepts
+## Build the `AC Int` Tutorial
 
-- The `ac_int` data type can be used to generate hardware for only as many bits as are needed by your application. Native integer types must generate hardware for only 8, 16, 32, or 64 bits.
-- Shift operations in `ac_int` can be implemented more efficiently when the amount to shift by is stored in a minimally sized unsigned `ac_int`.
-- The `ac_int` data type provides several useful operations, including reading and modifying certain bits in an `ac_int`.
-
-## Building the `ac_int` Tutorial
-
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
-> This practice ensures that your compiler, libraries, and tools are ready for development.
+>**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -140,159 +144,140 @@ Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bi
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### On a Linux* System
+### On Linux*
 
-1. Install the design in `build` directory from the design directory by running `cmake`:
+1. Change to the sample directory.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
-  ```
-  cmake ..
-  ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
+   1. Compile and run for emulation (fast compile time, targets emulates an FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      make report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+      ```
+      make fpga_sim
+      ```
+   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      make fpga
+      ```
 
-2. Compile the design using the generated `Makefile`. The following four build targets are provided that match the recommended development flow:
+### On Windows*
 
-   - Compile and run for emulation (fast compile time, targets emulates an FPGA device) using:
+1. Change to the sample directory.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-     ```bash
-     make fpga_emu
-     ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   - Generate HTML optimization reports using:
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      nmake report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
+      ```
+      nmake fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-     ```bash
-     make report
-     ```
+### Read the Reports
 
-   - Compile for simulation (fast compile time, targets simulated FPGA device)
+Locate `report.html` in the `ac_int_report.prj/reports/` directory.
 
-     ```bash
-     make fpga_sim
-     ```
-
-   - Compile and run on FPGA hardware (longer compile time, targets an FPGA device) using:
-
-     ```bash
-     make fpga
-     ```
-
-### On a Windows* System
-
-1. Generate the `Makefile` by running `cmake`.
-
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
-  ```
-  cmake -G "NMake Makefiles" ..
-  ```
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   - Compile for emulation (fast compile time, targets emulated FPGA device):
-
-     ```
-     nmake fpga_emu
-     ```
-
-   - Generate the optimization report:
-
-     ```
-     nmake report
-     ```
-
-   - Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
-
-     ```
-     nmake fpga_sim
-     ```
-
-   - Compile for FPGA hardware (longer compile time, targets FPGA device):
-
-     ```
-     nmake fpga
-     ```
-
-> **Note**: If you encounter any issues with long
-paths when compiling under Windows*, you may have to create your ‘build’
-directory in a shorter path, for example c:\samples\build. You can then run
-cmake from that directory, and provide cmake with the full path to your sample
-directory.
-
-## Examining the Reports
-
-Locate `report.html` in the `ac_int_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
-
-On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage information of the individual addition, multiplication, and division operations, and you can verify each individual operation consumes fewer resources in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
+On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage information of the individual addition, multiplication, and division operations, and you can verify that each individual operation consumes fewer resources in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
 
 Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOps` that contains the left-shifter node (`<<`) and the right-shifter node (`>>`). Similarly, locate the cluster that contains the left-shifter node and the right-shifter node in kernel `EfficientShiftOps`. Observe that the compiler generates an additional shifter in kernel `ShiftOps` to deal with the signedness of the shift amount `b`. You can verify that kernel `EfficientShiftOps` consumes fewer resources than kernel `ShiftOps` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
 
-## Running the Sample
+## Run the `AC Int` Sample
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+### On Linux
 
-   ```bash
-   ./ac_int.fpga_emu     (Linux)
-   ac_int.fpga_emu.exe   (Windows)
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./ac_int.fpga_emu
+   ```
+2. Run the sample of the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./ac_int.fpga_sim
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   ./ac_int.fpga
    ```
 
-2. Run the sample of the FPGA simulator device (the kernel executes on the CPU):
+### On Windows
 
-    * On Linux
-        ```bash
-        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./ac_int.fpga_sim
-        ```
-    * On Windows
-        ```bash
-        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-        ac_int.fpga_sim.exe
-        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-        ```
-
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-
-   ```bash
-   ./ac_int.fpga         (Linux)
-   ac_int.fpga.exe       (Windows)
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ac_int.fpga_emu.exe
+   ```
+2. Run the sample of the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   ac_int.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   ac_int.fpga.exe
    ```
 
-### Example of Output
+## Example Output
 
-```txt
+You will see the device used. If successful, the program displays output similar to the following:
+
+```
 PASSED: all kernel results are correct.
 ```
 
-### Discussion
+### Understand the Results
 
-`ac_int` can help minimize the generated hardware and achieve the same numerical result as native integer types. This can be very useful when the logic does not need to utilize all the bits provided by the native integer type.
+Using `ac_int` can help minimize the generated hardware and achieve the same numerical result as native integer types. This approach is useful when the logic does not need to use all the bits provided by the native integer type.
 
 ## License
 

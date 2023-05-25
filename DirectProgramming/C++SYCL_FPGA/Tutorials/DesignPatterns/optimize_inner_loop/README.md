@@ -19,7 +19,7 @@ This is an advanced sample (tutorial) that relies on understanding f<sub>MAX</su
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -41,9 +41,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -145,7 +145,7 @@ while (Pipe::read()) {
 ### On Linux*
 
 1. Change to the sample directory.
-2. Build the program for Intel® Agilex® device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -186,7 +186,7 @@ while (Pipe::read()) {
 ### On Windows*
 
 1. Change to the sample directory.
-2. Build the program for the Intel® Agilex® device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -229,7 +229,7 @@ while (Pipe::read()) {
 
 ### Reading the Reports
 
-Open the reports in a browser and look at the *Loop Analysis* pane. 
+Open the reports in a browser and look at the *Loop Analysis* pane.
 
 Examine the loop attributes for the three different versions of the `Producer` kernel (`Producer<0>`, `Producer<1>`, and `Producer<2>`). Note that each has an outer loop with an II of 1 and an inner loop with an II of 1. As discussed earlier in this tutorial, the II of the outer loop will be *dynamic* and depend on the inner loop's execution for each outer loop iteration. Also, note the *Speculated Iterations* column, which should show 2 speculated loop iterations on the inner loop for `Producer<0>` and 0 for `Producer<1>` and `Producer<2>`. There is no information in the reports indicating whether there will be a 1 cycle delay in starting the loop. We are working on improving our reports to help you better debug throughput bottlenecks.
 

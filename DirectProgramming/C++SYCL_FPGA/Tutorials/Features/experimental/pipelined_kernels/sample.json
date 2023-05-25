@@ -1,0 +1,71 @@
+{
+  "guid": "AF4D3C55-A79D-4A8E-96BD-84888A142502",
+  "name": "pipelined kernels",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
+  "description": "An Intel® FPGA tutorial demonstrating the usage of kernel pipelining",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{
+    "cpp": {}
+  }],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/experimental/pipelined_kernels",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [{
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./pipelined_kernels.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [{
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/pipelined_kernels",
+          "nmake fpga_emu",
+          "pipelined_kernels.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/pipelined_kernels",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

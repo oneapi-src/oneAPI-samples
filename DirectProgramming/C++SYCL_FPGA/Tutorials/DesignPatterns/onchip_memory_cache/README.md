@@ -21,7 +21,7 @@ This sample demonstrates the following concepts:
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -43,9 +43,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -106,8 +106,8 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
 
 ### On Linux*
 
-1. Change to the sample directory. 
-2. Build the program for Intel® Agilex® device family, which is the default.
+1. Change to the sample directory.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -116,12 +116,12 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -136,7 +136,7 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
         make report
         ```
        The report resides at `onchip_memory_cache_report.prj/reports/report.html`.
-       
+
        Compare the Loop Analysis reports for kernels with various cache depths, as described in the "When is the on-chip memory cache technique applicable?" section.  This will illustrate that any cache depth > 0 allows a loop II of 1.
 
        Open the Kernel Memory viewer and compare the Load Latency on the loads from kernels with various cache depths, as describe in the "When is the on-chip memory cache technique applicable?" section. This will illustrate that a cache depth of at least 7 is required to achieve a load latency of > 1.
@@ -152,8 +152,8 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
 
 ### On Windows*
 
-1. Change to the sample directory. 
-2. Build the program for the Agilex™ device family, which is the default.
+1. Change to the sample directory.
+2. Build the program for the Agilex 7™ device family, which is the default.
    ```
    mkdir build
    cd build
@@ -162,12 +162,12 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -182,7 +182,7 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
       nmake report
       ```
        The report resides at `onchip_memory_cache_report.prj.a/reports/report.html`.
-       
+
        Compare the Loop Analysis reports for kernels with various cache depths, as described in the "When is the on-chip memory cache technique applicable?" section.  This will illustrate that any cache depth > 0 allows a loop II of 1.
 
        Open the Kernel Memory viewer and compare the Load Latency on the loads from kernels with various cache depths, as describe in the "When is the on-chip memory cache technique applicable?" section. This will illustrate that a cache depth of at least 7 is required to achieve a load latency of > 1.

@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -22,7 +22,7 @@ else()
     set(AC_TYPES_FLAG "-qactypes")
 endif()
 
-# Allow the user to specify the minimum and maximum cache depth, or select a 
+# Allow the user to specify the minimum and maximum cache depth, or select a
 # default value if unspecified
 # e.g. cmake .. -DMAX_CACHE_DEPTH=4
 if(NOT DEFINED MAX_CACHE_DEPTH)

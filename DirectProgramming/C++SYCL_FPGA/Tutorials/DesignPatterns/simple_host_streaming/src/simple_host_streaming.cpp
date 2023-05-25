@@ -24,7 +24,7 @@ using namespace std::chrono;
 // data types and constants
 // NOTE: this tutorial assumes you are using a sycl::vec datatype. Therefore, 
 // 'Type' can only be changed to a different vector datatype (e.g. int16,
-// ulong8, etc...)
+// long8, etc...)
 using Type = long8;
 
 ///////////////////////////////////////////////////////////////////////////////

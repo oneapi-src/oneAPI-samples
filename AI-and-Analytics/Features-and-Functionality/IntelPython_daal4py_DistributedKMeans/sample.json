@@ -1,6 +1,6 @@
 {
   "guid": "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE",
-  "name": "Intel® Python Daal4py Distributed K-Means",
+  "name": "Intel® Distribution for Python* Distributed K- Means Model",
   "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
   "description": "This sample code illustrates how to train and predict with a distributed K-Means model with the Intel® Distribution of Python using the Python API package Daal4py powered by Intel® oneDAL",
   "builder": ["cli"],

@@ -83,7 +83,7 @@ int main(int argc, char **argv) try {
   q_ct1.memcpy(d_InputVal, h_InputVal, N * sizeof(uint)).wait();
 
   int flag = 1;
-  printf("Running GPU oddEvenMerge sort (%u identical iterations)...\n\n",
+  printf("Running Device oddEvenMerge sort (%u identical iterations)...\n\n",
          numIterations);
 
   for (uint arrayLength = 64; arrayLength <= N; arrayLength *= 2) {
@@ -118,7 +118,7 @@ int main(int argc, char **argv) try {
     }
 
     printf("\nValidating the results...\n");
-    printf("...reading back GPU results\n");
+    printf("...reading back Device results\n");
 
     q_ct1.memcpy(h_OutputKeyGPU, d_OutputKey, N * sizeof(uint)).wait();
     q_ct1.memcpy(h_OutputValGPU, d_OutputVal, N * sizeof(uint)).wait();

@@ -20,13 +20,14 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild StepByStep.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "MSBuild guided_iso3dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
                           "cd x64/Release",
-                          "1.exe 256 256 256 10",
-                          "2.exe 256 256 256 10",
-                          "3.exe 256 256 256 10",
-                          "4.exe 256 256 256 10",
-                          "5.exe 256 256 256 10 64 8 8"
+                          "1_CPU_only.exe 256 256 256 10",
+                          "2_GPU_basic.exe 256 256 256 10",
+                          "3_GPU_linear.exe 256 256 256 10",
+                          "4_GPU_private_memory_I.exe 256 256 256 10",
+                          "4_GPU_private_memory_K.exe 256 256 256 10",
+                          "5_GPU_optimized.exe 256 256 256 10 64 8 8"
                   ]
           }]
   

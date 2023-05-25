@@ -97,6 +97,20 @@ nmake generator=mrg
 
 for Windows* System.
 
+#### Build a sample using Random Number Generation on Host
+To have random number generation on host to initialize data use
+`init_on_host=1`, e.g.
+```
+make init_on_host=1
+```
+for Linux* system or
+
+```
+nmake init_on_host=1
+```
+
+for Windows* System.
+
 ## Running the Monte Carlo European Options Sample
 If everything is working correctly, the program will run the Monte Carlo simulation.
 After the simulation, results will be checked against the known true values

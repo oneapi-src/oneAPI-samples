@@ -6,17 +6,32 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
 else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1")
+        set(IS_BSP "1")
+    else()
+        set(IS_BSP "0")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
+        message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1.")
+    endif()
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
+endif()
+
+if ((IS_BSP STREQUAL "1"))
+    set(CLOCK_FLAG "")
+else()
+    set(CLOCK_FLAG "-Xsuse-2xclock")
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
@@ -25,10 +40,10 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE -Xsuse-2xclock")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -Xsuse-2xclock")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR ${CLOCK_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${CLOCK_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

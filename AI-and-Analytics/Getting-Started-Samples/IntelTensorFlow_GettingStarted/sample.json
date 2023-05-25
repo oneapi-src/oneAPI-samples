@@ -1,13 +1,13 @@
 {
 	"guid": "111213A0-C930-45B4-820F-02472BABBF34",
-	"name": "Intel® Tensorflow Getting Started",
+	"name": "Intel® Optimization for TensorFlow* Getting Started",
 	"categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
 	"description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
 	"builder": ["cli"],
 	"languages": [{
 		"python": {}
 	}],
-	"os": ["linux", "windows"],
+	"os": ["linux"],
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{

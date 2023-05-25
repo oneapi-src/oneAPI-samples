@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <stdio.h>
 
@@ -55,3 +56,4 @@ int main() {
 
   return 0;
 }
+// Snippet end
