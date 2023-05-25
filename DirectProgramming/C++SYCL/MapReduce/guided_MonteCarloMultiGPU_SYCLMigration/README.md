@@ -69,7 +69,7 @@ Perform the following steps:
    $ make
    ```
 
-    By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
+    By default, this command sequence will build the `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
     
 #### Troubleshooting
 
@@ -85,22 +85,15 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ### On Linux
 
 You can run the programs for CPU and GPU. The commands indicate the device target.
-
-1. Run `02_sycl_dpct_migrated` for CPU and GPU.
-     ```
-    make run_sdm_cpu
-    make run_sdm_gpu (runs on Level-Zero Backend)
-    make run_sdm_gpu_opencl (runs on OpenCL Backend)
-    ```
     
-2. Run `03_sycl_migrated` for CPU and GPU.
+1. Run `03_sycl_migrated` for CPU and GPU.
     ```
     make run_cpu
     make run_gpu (runs on Level-Zero Backend)
     make run_gpu_opencl (runs on OpenCL Backend)
     ```
     
-3. Run `04_sycl_migrated_optimized` for CPU and GPU.
+2. Run `04_sycl_migrated_optimized` for CPU and GPU.
     ```
     make run_smo_cpu
     make run_smo_gpu (runs on Level-Zero Backend)
