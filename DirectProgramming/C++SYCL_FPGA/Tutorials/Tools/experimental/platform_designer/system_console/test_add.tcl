@@ -1,4 +1,3 @@
-#!/usr/bin/tclsh
 #  Copyright (c) 2022 Intel Corporation
 #  SPDX-License-Identifier: MIT
 
