@@ -148,12 +148,12 @@ https://fpgasoftware.intel.com/eula.-->
             </interface>
             <interface>
                 <name>resetn</name>
-                <type>reset</type>
+                <type>reset_n</type>
                 <isStart>false</isStart>
                 <ports>
                     <port>
                         <name>resetn</name>
-                        <role>reset</role>
+                        <role>reset_n</role>
                         <direction>Input</direction>
                         <width>1</width>
                         <lowerBound>0</lowerBound>
@@ -601,12 +601,12 @@ https://fpgasoftware.intel.com/eula.-->
         </interface>
         <interface>
             <name>resetn</name>
-            <type>reset</type>
+            <type>reset_n</type>
             <isStart>false</isStart>
             <ports>
                 <port>
                     <name>resetn</name>
-                    <role>reset</role>
+                    <role>reset_n</role>
                     <direction>Input</direction>
                     <width>1</width>
                     <lowerBound>0</lowerBound>
