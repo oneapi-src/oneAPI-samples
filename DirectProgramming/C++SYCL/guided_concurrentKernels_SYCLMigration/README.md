@@ -96,7 +96,7 @@ You can run the programs for CPU and GPU. The commands indicate the device targe
 
 2. Run `03_sycl_migrated` for GPU.
     ```
-    make run_gpu
+    make run
     ```
    Run `03_sycl_migrated` for CPU.  
     ```
