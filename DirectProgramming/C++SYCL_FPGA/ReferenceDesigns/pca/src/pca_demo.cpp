@@ -20,7 +20,12 @@ int main(int argc, char *argv[]) {
 #if BENCHMARK
   constexpr bool kBenchmarkMode = true;
   constexpr size_t kFeaturesCount = 8;
+#if defined (FPGA_SIMULATOR)
+  // Only read a few lines of the input data when running the simulator
+  constexpr size_t kSamplesCount = 16;
+#else
   constexpr size_t kSamplesCount = 4176;
+#endif  
 #else
   constexpr bool kBenchmarkMode = false;
   constexpr size_t kFeaturesCount = FEATURES_COUNT;

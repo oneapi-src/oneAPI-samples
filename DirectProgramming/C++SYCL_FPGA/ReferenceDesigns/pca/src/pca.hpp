@@ -81,15 +81,58 @@ void PCAKernel(
   using RankDeficientFlagPipe =
       sycl::ext::intel::pipe<RDFP, ac_int<1, false>, 3>;
 
-  // Allocate FPGA DDR memory.
-  T *input_matrix_device =
-      sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
-  T *eigen_vectors_device =
-      sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
-  T *eigen_values_device =
-      sycl::malloc_device<T>(kEigenValuesVectorSize * matrix_count, q);
-  ac_int<1, false> *rank_deficient_flag_device =
-      sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
+  T *input_matrix_device;
+  T *eigen_vectors_device;
+  T *eigen_values_device;
+  ac_int<1, false> *rank_deficient_flag_device;
+
+  if (q.get_device().has(aspect::usm_device_allocations)) {
+    // Allocate FPGA DDR memory.
+    input_matrix_device =
+        sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
+    eigen_vectors_device =
+        sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
+    eigen_values_device =
+        sycl::malloc_device<T>(kEigenValuesVectorSize * matrix_count, q);
+    rank_deficient_flag_device =
+        sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
+  } else if (q.get_device().has(aspect::usm_shared_allocations)) {
+    // No device allocations means that we are probably in an IP authoring flow
+    input_matrix_device =
+        sycl::malloc_shared<T>(kInputMatrixSize * matrix_count, q);
+    eigen_vectors_device =
+        sycl::malloc_shared<T>(kEigenVectorsMatrixSize * matrix_count, q);
+    eigen_values_device =
+        sycl::malloc_shared<T>(kEigenValuesVectorSize * matrix_count, q);
+    rank_deficient_flag_device =
+        sycl::malloc_shared<ac_int<1, false>>(matrix_count, q);
+  } else {
+    std::cerr << "USM device allocations or USM shared allocations must be "
+                 "supported to run this sample."
+              << std::endl;
+    std::terminate();
+  }
+
+  // Check that the malloc succeeded.
+  if (input_matrix_device == nullptr) {
+    std::cerr << "Error when allocating the input matrix." << std::endl;
+    std::terminate();
+  }
+
+  if (eigen_vectors_device == nullptr) {
+    std::cerr << "Error when allocating the Eigen vectors matrix." << std::endl;
+    std::terminate();
+  }
+
+  if (eigen_values_device == nullptr) {
+    std::cerr << "Error when allocating the Eigen vectors matrix." << std::endl;
+    std::terminate();
+  }
+
+  if (rank_deficient_flag_device == nullptr) {
+    std::cerr << "Error when allocating the Eigen vectors matrix." << std::endl;
+    std::terminate();
+  }
 
   // Copy the input matrices from host DDR to FPGA DDR
   q.memcpy(input_matrix_device, input_matrix.data(),
