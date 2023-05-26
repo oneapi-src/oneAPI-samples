@@ -147,10 +147,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The following image shows approximate performance speed increases using AMX INT8 during inference.
-
-![](assets/relative_speedup.png)
-
 ## License
 
 Code samples are licensed under the MIT license. See
