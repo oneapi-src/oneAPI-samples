@@ -10,7 +10,7 @@ add.qws
 add_kernel_wrapper
 
 # ignore oneAPI generated IP
-add.fpga_ip_export.prj_1
+*.prj
 
 # save .ip files, but not generated RTL
 ip/**/*
