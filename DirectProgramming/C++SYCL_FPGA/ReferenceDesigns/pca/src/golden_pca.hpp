@@ -36,6 +36,7 @@ class GoldenPCA {
   std::vector<T> covariance_matrix;      // storage for covariance matrices
   std::vector<T> eigen_values;           // storage for the Eigen values
   std::vector<T> eigen_vectors;          // storage for the Eigen vectors
+  std::vector<T> iterations;          // the number of QR iterations per matrix
 
  private:
   std::default_random_engine gen;
@@ -57,6 +58,8 @@ class GoldenPCA {
 
     eigen_values.resize(p * matrix_count);
     eigen_vectors.resize(p * p * matrix_count);
+
+    iterations.resize(matrix_count);
   }
 
   // Generate the input matrix with index matrix_index with random numbers
@@ -449,6 +452,7 @@ class GoldenPCA {
         if (debug)
           std::cout << "QR iteration stopped after " << iterations
                     << " iterations" << std::endl;
+        this->iterations[matrix_index] = iterations;
         if (debug)
           std::cout << "Eigen values for matrix #" << matrix_index << std::endl;
         for (int k = 0; k < features; k++) {
