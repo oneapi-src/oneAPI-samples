@@ -23,9 +23,8 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:name>$${FILENAME}</altera:name>
       <altera:displayName>$${FILENAME}</altera:displayName>
       <altera:version>1.0</altera:version>
-      <altera:description></altera:description>
       <altera:tags></altera:tags>
-      <altera:categories>System</altera:categories>
+      <altera:categories></altera:categories>
       <altera:tool>QsysPro</altera:tool>
     </altera:catalog_card_info>
     <altera:altera_system_parameters>
@@ -2154,10 +2153,6 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
-                    &lt;/entry&gt;
-                    &lt;entry&gt;
-                        &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;

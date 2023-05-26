@@ -19,7 +19,7 @@ https://fpgasoftware.intel.com/eula.-->
    version="1.0"
    description=""
    tags=""
-   categories="System"
+   categories=""
    tool="QsysPro" />
  <parameter name="board" value="Unknown" />
  <parameter name="bonusData"><![CDATA[bonusData 
@@ -1986,10 +1986,6 @@ https://fpgasoftware.intel.com/eula.-->
                     </entry>
                     <entry>
                         <key>writeWaitTime</key>
-                        <value>0</value>
-                    </entry>
-                    <entry>
-                        <key>enableConcurrentSubordinateAccess</key>
                         <value>0</value>
                     </entry>
                 </parameterValueMap>

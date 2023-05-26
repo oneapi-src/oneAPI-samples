@@ -375,11 +375,6 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>Write wait</ipxact:displayName>
           <ipxact:value>0</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="enableConcurrentSubordinateAccess" type="longint">
-          <ipxact:name>enableConcurrentSubordinateAccess</ipxact:name>
-          <ipxact:displayName>enableConcurrentSubordinateAccess</ipxact:displayName>
-          <ipxact:value>0</ipxact:value>
-        </ipxact:parameter>
       </ipxact:parameters>
       <ipxact:vendorExtensions>
         <altera:altera_assignments>
@@ -1019,10 +1014,6 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
-                    &lt;/entry&gt;
-                    &lt;entry&gt;
-                        &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
