@@ -1,6 +1,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/experimental/pipes.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 
 #include <algorithm>
 #include <iomanip>
@@ -18,10 +19,8 @@ class H2DPipeID;
 class D2HPipeID;
 
 // the host pipes
-using ValueT = int;
+using ValueT = ac_int<256>;
 constexpr size_t kPipeMinCapacity = 8;
-constexpr size_t kReadyLatency = 0;
-constexpr size_t kBitsPerSymbol = 1;
 
 using H2DPipe = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
@@ -42,7 +41,7 @@ void AlternatingTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
 void LaunchCollectTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
 
 // offloaded computation
-ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
+ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val >> 2)); }
 
 /////////////////////////////////////////
 
