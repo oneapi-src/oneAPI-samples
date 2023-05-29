@@ -15,7 +15,7 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
     # Check if the target is a BSP
-    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*a10_hostpipe.*")
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*a10gx_hostpipe.*")
         set(IS_BSP "1")
     else()
         set(IS_BSP "0")
