@@ -82,7 +82,7 @@ When working with the command-line interface (CLI), you should configure the one
    $ make
    ```
 
-   By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
+   By default, this command sequence will build the `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
 
 #### Troubleshooting
 
@@ -100,37 +100,26 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 You can run the programs for CPU and GPU. The commands indicate the device target.
 
-1. Run `02_sycl_dpct_migrated` for GPU.
-    ```
-    make run_sdm
-    ```
-   Run `02_sycl_dpct_migrated` for CPU.
-    ```
-    export SYCL_DEVICE_FILTER=cpu
-    make run_sdm
-    unset SYCL_DEVICE_FILTER
-    ```
-
-2. Run `03_sycl_migrated` for GPU.
+1. Run `03_sycl_migrated` for GPU.
     ```
     make run
     ```
    Run `03_sycl_migrated` for CPU.
     ```
-    export SYCL_DEVICE_FILTER=cpu
+    export ONEAPI_DEVICE_SELECTOR=opencl:cpu
     make run
-    unset SYCL_DEVICE_FILTER
+    unset ONEAPI_DEVICE_SELECTOR
     ```
 
-3. Run `04_sycl_migrated_optimized` for GPU.
+2. Run `04_sycl_migrated_optimized` for GPU.
     ```
     make run_smo
     ```
    Run `04_sycl_migrated_optimized` for CPU.
     ```
-    export SYCL_DEVICE_FILTER=cpu
+    export ONEAPI_DEVICE_SELECTOR=opencl:cpu
     make run_smo
-    unset SYCL_DEVICE_FILTER
+    unset ONEAPI_DEVICE_SELECTOR
     ```
 
 ### Build and Run the `HSOpticalFlow` Sample in Intel® DevCloud
