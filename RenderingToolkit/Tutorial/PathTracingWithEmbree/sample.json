@@ -47,7 +47,7 @@
                     "cd build",
                     "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/rkcommon/latest/lib/cmake/rkcommon ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./rkPathTracer"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./rkPathTracer"
                  ]
                  }
         ]
