@@ -15,12 +15,13 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
     # Check if the target is a BSP
-    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*a10gx_hostpipe.*")
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
         set(IS_BSP "1")
+        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as uses IPA flow only.")
     else()
         set(IS_BSP "0")
         message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
-        message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
+        message(STATUS "This tutorial does not support a BSP target as it uses IPA flow only.")
     endif()
 endif()
 
