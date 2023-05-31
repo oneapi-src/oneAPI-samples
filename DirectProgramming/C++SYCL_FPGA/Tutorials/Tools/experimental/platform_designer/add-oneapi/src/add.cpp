@@ -20,7 +20,7 @@ using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
         sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>));
 using OutputPipe =
-    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
+    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 0, OutputPipeProps>;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
