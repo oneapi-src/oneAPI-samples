@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 #if BENCHMARK
 #if defined(FPGA_SIMULATOR)
   // Only read a few lines of the input data when running the simulator
+  constexpr size_t kPCAsToCompute = 1;
   constexpr size_t kFeaturesCount = 3;
   constexpr size_t kSamplesCount = 6;
   constexpr bool kBenchmarkMode = false;
@@ -27,12 +28,14 @@ int main(int argc, char *argv[]) {
   std::cout << "The benchmark mode is disabled when running the simulator"
             << std::endl;
 #else
+  constexpr size_t kPCAsToCompute = 1;
   constexpr size_t kFeaturesCount = 8;
   constexpr size_t kSamplesCount = 4176;
   constexpr bool kBenchmarkMode = true;
   constexpr bool kBenchmarkModeForcelyDisabled = false;
 #endif
 #else
+  constexpr size_t kPCAsToCompute = 8;
   constexpr bool kBenchmarkMode = false;
   constexpr bool kBenchmarkModeForcelyDisabled = false;
   constexpr size_t kFeaturesCount = FEATURES_COUNT;
@@ -88,8 +91,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Increase the number of repetitions (e.g. 16)." << std::endl;
     return 1;
   }
-
-  constexpr size_t kPCAsToCompute = kBenchmarkMode ? 1 : 8;
 
   try {
     // Device selector selection
