@@ -46,7 +46,7 @@ elseif(DEVICE_FLAG MATCHES "S10")
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 2)
-    set(SEED "-Xsseed=2")
+    set(SEED "-Xsseed=3")
 elseif(DEVICE_FLAG MATCHES "Agilex7")
     # Agilex 7
     set(OUTER_UNROLL 2)
