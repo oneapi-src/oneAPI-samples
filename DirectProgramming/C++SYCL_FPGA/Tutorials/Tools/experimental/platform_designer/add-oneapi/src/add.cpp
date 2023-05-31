@@ -15,10 +15,21 @@
 // use host pipes to write into registers in the CSR address space
 class OutputPipeID;
 
-// using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to output to the CSR
+// using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to
+// output to the CSR
+
+// Workaround: protocol_name::avalon_mm does not currently work with simulation,
+// so use avalon_mm_uses_ready for now.
+#if FPGA_SIMULATOR
 using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
         sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>));
+#else
+using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
+    sycl::ext::intel::experimental::protocol<
+        sycl::ext::intel::experimental::protocol_name::avalon_mm>));
+#endif
+
 using OutputPipe =
     sycl::ext::intel::experimental::pipe<OutputPipeID, int, 0, OutputPipeProps>;
 
