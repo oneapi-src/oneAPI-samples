@@ -51,7 +51,7 @@ struct StreamingCovarianceMatrix {
     // Number of matrix blocks to read from the pipe
     constexpr int block_count = rows / columns;
 
-    // Break memories up to store 4 complex numbers (32 bytes) per bank
+    // Break memories up to store 8 float numbers (32 bytes) per bank
     constexpr short kBankwidth = pipe_size * sizeof(T);
     constexpr unsigned short kNumBanks = columns / pipe_size;
 

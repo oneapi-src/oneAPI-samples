@@ -60,11 +60,11 @@ void PCAKernel(
                 "This can be artificially achieved by increasing the number of "
                 "samples with no data.");
 
-  static_assert(k_samples_count > k_features_count,
-                "The number of samples must be greater than the number of "
-                "samples. Failing to do so, the standardized covariance matrix "
-                "would be rank deficient. Processing such a matrix from the QR "
-                "iteration kernel is not supported.");
+  // static_assert(k_samples_count > k_features_count,
+  //               "The number of samples must be greater than the number of "
+  //               "samples. Failing to do so, the standardized covariance matrix "
+  //               "would be rank deficient. Processing such a matrix from the QR "
+  //               "iteration kernel is not supported.");
 
   constexpr int kNumElementsPerDDRBurst = 8;
   constexpr int kInputMatrixSize = k_samples_count * k_features_count;

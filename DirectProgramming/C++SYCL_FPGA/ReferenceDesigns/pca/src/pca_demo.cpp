@@ -18,16 +18,23 @@ void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
 
 int main(int argc, char *argv[]) {
 #if BENCHMARK
-  constexpr bool kBenchmarkMode = true;
-  constexpr size_t kFeaturesCount = 8;
-#if defined (FPGA_SIMULATOR)
+#if defined(FPGA_SIMULATOR)
   // Only read a few lines of the input data when running the simulator
-  constexpr size_t kSamplesCount = 16;
+  constexpr size_t kFeaturesCount = 3;
+  constexpr size_t kSamplesCount = 6;
+  constexpr bool kBenchmarkMode = false;
+  constexpr bool kBenchmarkModeForcelyDisabled = true;
+  std::cout << "The benchmark mode is disabled when running the simulator"
+            << std::endl;
 #else
+  constexpr size_t kFeaturesCount = 8;
   constexpr size_t kSamplesCount = 4176;
-#endif  
+  constexpr bool kBenchmarkMode = true;
+  constexpr bool kBenchmarkModeForcelyDisabled = false;
+#endif
 #else
   constexpr bool kBenchmarkMode = false;
+  constexpr bool kBenchmarkModeForcelyDisabled = false;
   constexpr size_t kFeaturesCount = FEATURES_COUNT;
   constexpr size_t kSamplesCount = SAMPLES_COUNT;
 #endif
@@ -45,7 +52,7 @@ int main(int argc, char *argv[]) {
 #endif
   std::string in_file_name = "";
 
-  if constexpr (kBenchmarkMode) {
+  if constexpr (kBenchmarkMode || kBenchmarkModeForcelyDisabled) {
     // We expect to read the dataset path from the program arguments
     if ((argc != 2) && (argc != 3)) {
       std::cout << "Usage: " << std::endl
@@ -64,13 +71,12 @@ int main(int argc, char *argv[]) {
       // get the number of repetitions
       repetitions = std::stoi(argv[2]);
     }
-  }
-  else{
+  } else {
     // We expect to read the dataset path from the program arguments
     if (argc == 2) {
       // get the number of repetitions
       repetitions = std::stoi(argv[1]);
-    }    
+    }
   }
 
   // Get the number of times we want to repeat the decomposition
@@ -120,6 +126,8 @@ int main(int argc, char *argv[]) {
 
     if (kBenchmarkMode) {
       std::cout << "Reading the input data from file." << std::endl;
+      std::cout << "Features count: " << kFeaturesCount << std::endl;
+      std::cout << "Samples count: " << kSamplesCount << std::endl;
     } else {
       std::cout << "Generating " << kPCAsToCompute << " random ";
       std::cout << "matri" << (kPCAsToCompute > 1 ? "ces" : "x") << " of size "
@@ -304,36 +312,51 @@ int main(int argc, char *argv[]) {
 
     std::cout << "All the tests passed." << std::endl;
 
-
 #if FPGA_HARDWARE
-    if (kBenchmarkMode){
+    if (kBenchmarkMode) {
       // Compute expected throughput
 
-      // Compute the latency of the block with the highest latency in the covariance matrix computation kernel
-      constexpr int kBlockTransposedMatrixProductIterations = kFeaturesCount * kFeaturesCount;
-      constexpr int kBlockTransposedMatrixProductIterationsCount = kSamplesCount / kFeaturesCount;
-      constexpr int kBlockIterations = kBlockTransposedMatrixProductIterationsCount *  kBlockTransposedMatrixProductIterations;
+      // Compute the latency of the block with the highest latency in the
+      // covariance matrix computation kernel
+      constexpr int kBlockTransposedMatrixProductIterations =
+          kFeaturesCount * kFeaturesCount;
+      constexpr int kBlockTransposedMatrixProductIterationsCount =
+          kSamplesCount / kFeaturesCount;
+      constexpr int kBlockIterations =
+          kBlockTransposedMatrixProductIterationsCount *
+          kBlockTransposedMatrixProductIterations;
 
       // Compute the latency of all the QR iterations:
       // Compute the latency of one QR iteration
       // Total number of dummy iterations
       constexpr int kDummyIterations =
-          FIXED_ITERATIONS > kFeaturesCount ? (kFeaturesCount - 1) * kFeaturesCount / 2 + (FIXED_ITERATIONS - kFeaturesCount) * kFeaturesCount
-                             : FIXED_ITERATIONS * (FIXED_ITERATIONS - 1) / 2;
+          FIXED_ITERATIONS > kFeaturesCount
+              ? (kFeaturesCount - 1) * kFeaturesCount / 2 +
+                    (FIXED_ITERATIONS - kFeaturesCount) * kFeaturesCount
+              : FIXED_ITERATIONS * (FIXED_ITERATIONS - 1) / 2;
       // Total number of iterations (including dummy iterations)
-      constexpr int kQRDLatency =
-          kFeaturesCount + kFeaturesCount * (kFeaturesCount + 1) / 2 + kDummyIterations;
+      constexpr int kQRDLatency = kFeaturesCount +
+                                  kFeaturesCount * (kFeaturesCount + 1) / 2 +
+                                  kDummyIterations;
       constexpr int kRQLatency = kFeaturesCount * kFeaturesCount;
       constexpr int kQRIterationLatency = kQRDLatency + kRQLatency;
       int qr_itarations_latency = kQRIterationLatency * pca.iterations[0];
 
-      int highest_kernel_latency = std::max(kBlockIterations, qr_itarations_latency);
+      int highest_kernel_latency =
+          std::max(kBlockIterations, qr_itarations_latency);
 
-      std::cout << "Estimated throughput: " << 250000000/highest_kernel_latency << " matrices/s at 250 MHz" << std::endl;
-      std::cout << "Estimated throughput: " << 300000000/highest_kernel_latency << " matrices/s at 300 MHz" << std::endl;
-      std::cout << "Estimated throughput: " << 350000000/highest_kernel_latency << " matrices/s at 350 MHz" << std::endl;
-      std::cout << "Estimated throughput: " << 600000000/highest_kernel_latency << " matrices/s at 600 MHz" << std::endl;
-
+      std::cout << "Estimated throughput: "
+                << 250000000 / highest_kernel_latency
+                << " matrices/s at 250 MHz" << std::endl;
+      std::cout << "Estimated throughput: "
+                << 300000000 / highest_kernel_latency
+                << " matrices/s at 300 MHz" << std::endl;
+      std::cout << "Estimated throughput: "
+                << 350000000 / highest_kernel_latency
+                << " matrices/s at 350 MHz" << std::endl;
+      std::cout << "Estimated throughput: "
+                << 600000000 / highest_kernel_latency
+                << " matrices/s at 600 MHz" << std::endl;
     }
 #endif
 
