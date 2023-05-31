@@ -71,11 +71,11 @@ using SecondPipeInstance = cl::sycl::ext::intel::experimental::pipe<
     >;
 ```
 
-In this example, `FirstPipeT` and `SecondPipeT` are unique user-defined types that identify two host pipes. The first host pipe (which has been aliased to `FirstPipeInstance`), carries `int` type data elements and has a capacity of `8`. The second host pipe (`SecondPipeInstance`) carries `float` type data elements, and has a capacity of `4`. The other host pipe parameters beyond these three have been set to default values. For a description of all host pipe parameters, refer to the [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/). Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than having to repeatedly type out the full namespace and template parameters.
+In this example, `FirstPipeT` and `SecondPipeT` are unique user-defined types that identify two host pipes. The first host pipe (which has been aliased to `FirstPipeInstance`), carries `int` type data elements and has a capacity of `8`. The second host pipe (`SecondPipeInstance`) carries `float` type data elements, and has a capacity of `4`. Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than having to repeatedly type out the full namespace and template parameters.
 
 #### Host pipe properties
 
-Host pipes use an additional template parameter beyond the three described earlier. This template parameter uses the oneAPI properties class to allow users to define additional semantic properties for a host pipe. The use of these properties is beyond the scope of this tutorial. You can find their definitions and usage in the [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) Omitting the properties parameter (as has been done for the host pipes in this code sample) gives the host pipe the default values for these properties as described in the guide.
+Host pipes use a fourth template parameter beyond the three described earlier. This template parameter uses the oneAPI properties class to allow users to define additional semantic properties for a host pipe. The use of these properties is beyond the scope of this tutorial. You can find their definitions and usage in the [oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/) Omitting the properties parameter (as has been done for the host pipes in this code sample) gives the host pipe the default values for these properties as described in the guide.
 
 ### Host Pipe API
 
