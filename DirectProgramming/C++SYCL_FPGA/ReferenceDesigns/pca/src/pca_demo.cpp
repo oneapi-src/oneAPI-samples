@@ -325,6 +325,9 @@ int main(int argc, char *argv[]) {
           kFeaturesCount + kFeaturesCount * (kFeaturesCount + 1) / 2 + kDummyIterations;
       constexpr int kRQLatency = kFeaturesCount * kFeaturesCount;
       constexpr int kQRIterationLatency = kQRDLatency + kRQLatency;
+      int qr_itarations_latency = kQRIterationLatency * pca.iterations[0];
+
+      int highest_kernel_latency = std::max(kBlockIterations, qr_itarations_latency);
 
       std::cout << "Estimated throughput: " << 250000000/highest_kernel_latency << " matrices/s at 250 MHz" << std::endl;
       std::cout << "Estimated throughput: " << 300000000/highest_kernel_latency << " matrices/s at 300 MHz" << std::endl;
