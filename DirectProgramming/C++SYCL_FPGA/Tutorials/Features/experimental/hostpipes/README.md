@@ -284,12 +284,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
   >  ``` 
   >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
-  >  ``` 
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP. This BSP must also support host pipes.
+  > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP. 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -304,10 +299,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
   * Generate the optimization report:
     ```
     make report
-    ```
-  * Compile for FPGA hardware (longer compile time, targets FPGA device):
-    ```
-    make fpga
     ```
 
 ### On a Windows* System
@@ -347,10 +338,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
     ```
     nmake report
     ```
-  * Compile for FPGA hardware (longer compile time, targets FPGA device):
-    ```
-    nmake fpga
-    ```
 
 >**Tip**: If you encounter issues with long paths when compiling under Windows*, you might have to create your ‘build’ directory in a shorter path, for example `c:\samples\build`.  You can then run `cmake` from that directory, and provide `cmake` with the full path to your sample directory.
 
@@ -362,9 +349,7 @@ Open the **Views** menu and select **System Viewer**.
 
 In the left-hand pane, select **LoopBackKernelID** under the System hierarchy.
 
-In the main **System Viewer** pane, the pipe read and pipe write for the kernel are highlighted. They show that the read is reading from the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<H2DPipeID>` host pipe, and that the write is writing to the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<D2HPipeID>` host pipe. Clicking on either of these host pipes verifies the width (32-bit corresponding to the `int` type) and depth (8, which is the `kPipeMinCapacity` that each pipe was declared with).
-
-You might notice that there are additional identifiers in the pipe template (notably, `detail::HostPipePipeId`). This additional identifier is an internal implementation detail of this prototype feature. You can confirm the correspondence of these pipes to the ones declared in the source code by the template parameters `H2DPipeID` and `D2HPipeID`, which are the unique types declared in the source file and used in the pipe declarations:
+In the main **System Viewer** pane, the pipe read and pipe write for the kernel are highlighted in the **LoopBackKernelID.B1** block. Selecting **LoopBackKernelID.B1** in the left-hand pane gives an expanded view of this block in the main pane, with the pipe read represented by a 'RD' node, and pipe write as a 'WR' node. Clicking on either of these nodes gives further information for these pipes in the **Details** pane. This pane will show that the read is reading from the `H2DPipeID` host pipe, and that the write is writing to the `D2HPipeID` host pipe, as well as verifying that both pipes have a width of 32 bits (corresponding to the `int` type) and depth of 8 (which is the `kPipeMinCapacity` that each pipe was declared with).
 
 ```c++
 // forward declare kernel and pipe names to reduce name mangling
@@ -372,13 +357,13 @@ You might notice that there are additional identifiers in the pipe template (not
 class H2DPipeID;
 class D2HPipeID;
 ...
-using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
+using H2DPipe = cl::sycl::ext::intel::experimental::pipe<
    // Usual pipe parameters
    H2DPipeID,         // An identified for the pipe
    ...
    >;
-
-using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
+   
+using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    // Usual pipe parameters
    D2HPipeID,         // An identified for the pipe
    ...
@@ -389,37 +374,18 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
 
 ### On Linux
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   ./hostpipes.fpga_emu
-   ```
-2. Run the sample on the FPGA simulator.
-   ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
-   ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./hostpipes.fpga
-   ```
+  * On Linux
+    ```bash
+    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
+    ```
+  * On Windows
+    ```bash
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+    hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
+    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+    ```
 
-### On Windows
-
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-   ```
-   hostpipes.fpga_emu.exe
-   ```
-2. Run the sample on the FPGA simulator.
-   ```
-   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
-   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-   ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   hostpipes.fpga.exe
-   ```
-
-## Example Output
+### Example of Output
 
 ```
 Running Alternating write-and-read
