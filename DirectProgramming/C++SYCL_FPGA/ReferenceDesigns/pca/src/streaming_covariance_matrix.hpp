@@ -218,10 +218,10 @@ struct StreamingCovarianceMatrix {
           T numerator = t_matrix_consume[row][column] -
                         (rows * means[row] * means[column]);
 
-          T denominator = std::sqrt(t_matrix_diagonal_replicate[row] -
-                                    (rows * means[row] * means[row])) *
-                          std::sqrt(t_matrix_diagonal_replicate[column] -
-                                    (rows * means[column] * means[column]));
+          T denominator = std::sqrt((t_matrix_diagonal_replicate[row] -
+                                     (rows * means[row] * means[row])) *
+                                    (t_matrix_diagonal_replicate[column] -
+                                     (rows * means[column] * means[column])));
           cov_matrix[row][column] = numerator / denominator;
         }  // end for:column
       }    // end for:row
