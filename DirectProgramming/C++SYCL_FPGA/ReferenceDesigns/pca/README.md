@@ -12,7 +12,7 @@ The `PCA` reference design demonstrates a principal component analysis implement
 
 This FPGA reference design demonstrates the Principal Component Analysis (PCA) of real matrices, a common linear algebra operation used to analyze large datasets in machine learning applications. 
 
-Real-world datasets typically consist of multiple features describing a large number of samples.
+Real-world datasets typically consist of multiple features $Nf$ describing a large number of samples $Ns$.
 However, not all features contain significant information, and some may be nearly identical across the dataset.
 In order to facilitate analysis, visualization, and storage of the data, reducing the number of features while maintaining the majority of the information is crucial.
 The PCA approach identifies such principal features, in descending order based on their contribution to the information within the samples.
@@ -92,9 +92,11 @@ with $s_j$ being the standard deviation of the column $j$:
 ```math
 s_j = \frac{1}{\sqrt{N-1}}*\sqrt{\sum_{k=0}^{N-1}(A[k][j] - mean[j])^2}
 ```
+and $mean_{std}[j]$ being the mean of the column $j$ of the standardized A matrix.
 
 By rewriting these equations, we can obtain something that will better map to an FPGA: 
 ```math
+\label{covequation}
 Cov[i][j] = \frac{T[i][j] - N*mean[i]*mean[j]}{\sqrt{(T[i][i] -N*mean[i]^2) * (T[j][j] -N*mean[j]^2)}}
 ```
 
@@ -102,6 +104,76 @@ where $T$ is defined as the transposed input matrix multiplied by the input matr
 ```math
 T[i][j] = \sum_{k=0}^{N-1}(A[k][i]*A[k][j])
 ```
+
+Using these equations, we can write a function that implements the matrix product $T$, which also computes the mean of each column of $A$ while doing so.
+
+The number of samples in the $A$ matrix $Ns$ is typically very large, resulting in a very tall matrix $A$ matrix.
+Implementing the computation of $T$ using a single dot-product of size $Ns$ would then result in a very large DSP usage, and potentially not even fit in the target FPGA.
+
+As an example, let's consider this $Ns = 8, Nf = 4$ example:
+
+```math
+\begin{bmatrix}
+A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & A_{4,0} & A_{5,0} & A_{6,0} & A_{7,0} \\
+A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & A_{4,1} & A_{5,1} & A_{6,1} & A_{7,1} \\
+A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & A_{4,2} & A_{5,2} & A_{6,2} & A_{7,2} \\
+A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & A_{4,3} & A_{5,3} & A_{6,3} & A_{7,3} 
+\end{bmatrix} 
+\times 
+\begin{bmatrix}
+A_{0,0} & A_{0,1} & A_{0,2} & A_{0,3} \\
+A_{1,0} & A_{1,1} & A_{1,2} & A_{1,3} \\
+A_{2,0} & A_{2,1} & A_{2,2} & A_{2,3} \\
+A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
+A_{4,0} & A_{4,1} & A_{4,2} & A_{4,3} \\
+A_{5,0} & A_{5,1} & A_{5,2} & A_{5,3} \\
+A_{6,0} & A_{6,1} & A_{6,2} & A_{6,3} \\
+A_{7,0} & A_{7,1} & A_{7,2} & A_{7,3} 
+\end{bmatrix} 
+= 
+\begin{bmatrix}
+T_{0,0} & T_{0,1} & T_{0,2} & T_{0,3} \\
+T_{1,0} & T_{1,1} & T_{1,2} & T_{1,3} \\
+T_{2,0} & T_{2,1} & T_{2,2} & T_{2,3} \\
+T_{3,0} & T_{3,1} & T_{3,2} & T_{3,3} \\
+\end{bmatrix}
+```
+
+To compute any element of the $T$ matrix in a single iteration, one would need a dot-product engine of size 8.
+The dataset used in this reference design has 4176 samples, which would require a dot-product engine of size 4176.
+As this method does not scale to matrices with a large number of samples, we use a blocked matrix product approach.
+
+At each block iteration, a $Nf \times Nf$ submatrix of $A$ is read and used to compute the partial matrix product $T_{partial}$.
+Illustration of this mechanism after block $0$ has been computed:
+```math
+\begin{bmatrix}
+A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & \- & \- & \- & \- \\
+A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & \- & \- & \- & \- \\
+A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & \- & \- & \- & \- \\
+A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & \- & \- & \- & \-
+\end{bmatrix} 
+\times 
+\begin{bmatrix}
+A_{0,0} & A_{0,1} & A_{0,2} & A_{0,3} \\
+A_{1,0} & A_{1,1} & A_{1,2} & A_{1,3} \\
+A_{2,0} & A_{2,1} & A_{2,2} & A_{2,3} \\
+A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- \\
+\- & \- & \- & \- 
+\end{bmatrix} 
++ 
+\begin{bmatrix}
+T_{partial}{0,0} & T_{partial}{0,1} & T_{partial}{0,2} & T_{partial}{0,3} \\
+T_{partial}{1,0} & T_{partial}{1,1} & T_{partial}{1,2} & T_{partial}{1,3} \\
+T_{partial}{2,0} & T_{partial}{2,1} & T_{partial}{2,2} & T_{partial}{2,3} \\
+T_{partial}{3,0} & T_{partial}{3,1} & T_{partial}{3,2} & T_{partial}{3,3}
+\end{bmatrix}
+```
+After enough iterations, the $T_{partial}$ accumulated values will hold the result of the entire matrix product.
+Then, the covariance matrix can simply be computed using equation \cite{covequation}.
+
 
 ### Eigen values and Eigen vectors computation
 
