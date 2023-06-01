@@ -142,7 +142,7 @@ To compute any element of the $T$ matrix in a single iteration, one would need a
 The dataset used in this reference design has 4176 samples, which would require a dot-product engine of size 4176.
 As this method does not scale to matrices with a large number of samples, we use a blocked matrix product approach.
 
-At each block iteration, a $Nf \times Nf$ submatrix of $A$ is read and used to compute the partial matrix product $T_{partial}$.
+At each block iteration, a $Nf \times Nf$ submatrix of $A$ is read and used to compute the partial matrix product $Tp$.
 Illustration of this mechanism after block $0$ has been computed:
 ```math
 \begin{bmatrix}
@@ -164,19 +164,164 @@ A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
 \end{bmatrix} 
 + 
 \begin{bmatrix}
-T_{partial}{0,0} & T_{partial}{0,1} & T_{partial}{0,2} & T_{partial}{0,3} \\
-T_{partial}{1,0} & T_{partial}{1,1} & T_{partial}{1,2} & T_{partial}{1,3} \\
-T_{partial}{2,0} & T_{partial}{2,1} & T_{partial}{2,2} & T_{partial}{2,3} \\
-T_{partial}{3,0} & T_{partial}{3,1} & T_{partial}{3,2} & T_{partial}{3,3}
+Tp{0,0} & Tp{0,1} & Tp{0,2} & Tp{0,3} \\
+Tp{1,0} & Tp{1,1} & Tp{1,2} & Tp{1,3} \\
+Tp{2,0} & Tp{2,1} & Tp{2,2} & Tp{2,3} \\
+Tp{3,0} & Tp{3,1} & Tp{3,2} & Tp{3,3}
 \end{bmatrix}
 ```
 
-After enough iterations, the $T_{partial}$ accumulated values will hold the result of the entire matrix product.
-Partial means are also computed alongside the matrix mutliplication.
+After enough iterations, the $Tp$ accumulated values will hold the result of the entire matrix product.
+Partial means are also computed alongside the matrix multiplication.
 Then, the covariance matrix can simply be computed the covariance equation above.
 
-
 ### Eigen values and Eigen vectors computation
+
+The Eigen values and Eigen vectors are computed using the QR iteration process.
+The algorithm iterates until the Eigen values have been found.
+
+```math 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
+ **do** <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q_{k}$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($C$ converges)
+<br /><br />
+```
+Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signify the Eigenvalues. However, the primary limitation of this unsophisticated algorithm is that it necessitates an enormous number of iterations to attain convergence. To enhance convergence, the algorithm employs matrix shifts and deflation according to the following procedure:
+
+ **Set** $C^{F}=A_{StdCov}$ <br /> 
+**for** ($size_{C} = p$; $size_{C}  > 1$; $size_{C} =size_{C} -1$) **do** <br />
+&emsp; **Set** $C_{0}\[i\]\[j\]=C^{F}\[i\]\[j\]$ &emsp; $i < size_{C} $, $j < size_{C}$ <br /> 
+&emsp; **Set** $k=0$ <br /> 
+ &emsp; **do** <br /> 
+   &emsp; &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
+   &emsp; &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+   &emsp; &emsp; Set $C_{k}=R_{k}Q_{k} + \mu I$ <br /> 
+   &emsp; &emsp; $k = k+1$ <br /> 
+&emsp; **while** ($C$ converges) <br />
+&emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
+**endfor** <br /> 
+
+Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. It is assumed that matrix is converged if values indicated by \* is less than zero threshold, then $C_{3,3}$ will be eigen a value. 
+
+$$ \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & C_{3,0} \\
+C_{0,1} & C_{1,1} & C_{2,1} & C_{3,1} \\
+C_{0,2} & C_{1,2} & C_{2,2} & C_{3,2} \\
+\*      & \*      & \*      & C_{3,3}
+    \end{bmatrix} $$
+
+
+There are two options to compute the shift value $\mu$, Rayleigh quotient shifts and Wilkinson shift. Rayleigh quotient shifts is equvalent to right bottom element($C\[size_{D}-1\]\[size_{D}-1\]$) of matrix _C_.  Wilkinson shift requires bottom right $2 \times 2$ sub-matrix to compute the shift value. 
+
+$$  \begin{bmatrix}
+x & x & x & x \\
+x & x & x & x \\
+x & x & a & b \\
+x & x & b & c \\
+    \end{bmatrix} $$ 
+
+Wilkinson shift is given by following equation 
+$$\mu = c - \frac{sign(\delta) \times b^{2}}{|\delta| + \sqrt{\delta^{2} + b^{2}}}$$
+
+Rayleigh quotient shifts based QR iteration is not always stable but Wilkinson shift is highly stable, when using double preession arithmetic. Downside is Wilkinson shift requires costly hardware IPs such as divider, sqrt and reguires many pipeline stages, leads to higher latency. This reference design target to use floating point arithmetic (It supports anytype throgh SYCL template). It is observed that above agorithm will become numerically unstable when floating point arithmetic is used (due to floating point cancellation and errors propagate from divider in QR decomposition). In order to improve the the numerical accuaracy, we assign 99.9% of Rayleigh quotient shifts as $\mu$. This avoids the diagonal values become zero even other column elements becomes zero during QR iterations.  
+
+### Eigen vector computation 
+The Eigen vectors ($E_{vec}$) computed by compounding the $Q$ matrix computed from the QR decomposition in each QR iteration as follows. <br /> 
+ **Set** $C_{0}=A_{StdCov}$ <br /> 
+ **Set** $k=0$ <br /> 
+  **Set** $E_{vec}=I$ <br /> 
+ **do** <br /> 
+    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
+    &emsp; Set $C_{k}=R_{k}Q{k}$ <br /> 
+    &emsp;  $E_{vec} = E_{vec} Q$ <br /> 
+    &emsp;  $k = k+1$ <br /> 
+ **while** ($C$ converges)
+<br /><br />
+
+In the version that does shift and deflation, $Q$ will be made to $p \times p$ size by making rest of the diagonals to one and other elements left to zero as follows. 
+
+
+$$ \begin{bmatrix}
+Q_{0,0} & Q_{0,1} & Q_{0,2} \\
+Q_{1,0} & Q_{1,1} & Q_{1,2} \\
+Q_{2,0} & Q_{2,1} & Q_{2,2}
+\end{bmatrix} -> \begin{bmatrix}
+Q_{0,0} & Q_{0,1} & Q_{0,2} & 0 & 0 \\
+Q_{1,0} & Q_{1,1} & Q_{1,2} & 0 & 0 \\
+Q_{2,0} & Q_{2,1} & Q_{2,2} & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 1
+\end{bmatrix} $$
+
+### Implementation 
+There are two main components in iterative QR loop, based on data dependency 
+* $QR$ Matrix decomposition 
+* $RQ$ Matrix multiplication and $E_{vec} Q$ Matrix multiplication 
+
+In order to facilitate one full dot product computation in the above operations, memory for matrices are patitioned as follows 
+* Input to and output from, QR decomposition is organized column wise and partioned column wise. An entire column can be loaded each clock cycle
+
+$$ \begin{bmatrix}
+\* & X & \. \\
+\* & X & \. \\
+\* & X & \.
+\end{bmatrix} $$
+
+* $R$ and $E_{vec}$ memories are partitioned row wise. An entire row can be loaded each clock cycle
+
+$$ \begin{bmatrix}
+\* & \* & \* \\
+X & X & X \\
+\. & \. & \.
+\end{bmatrix} $$
+
+#### Modified QR decomposition 
+This design utlize the oneAPI sample source [QRD](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/ReferenceDesigns/qrd) and modify it to support QR decomposition of deflated matrices during the QR decomposition. The static design is made such that it can process big input matrix using one full dot product in modified gram schimdt algorithm. 
+
+$$ \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & C_{3,0} \\
+C_{0,1} & C_{1,1} & C_{2,1} & C_{3,1} \\
+C_{0,2} & C_{1,2} & C_{2,2} & C_{3,2} \\
+C_{0,3} & C_{1,3} & C_{2,3} & C_{3,3}
+\end{bmatrix} -> \begin{bmatrix}
+C_{0,0} & C_{1,0} & C_{2,0} & 0 \\
+C_{0,1} & C_{1,1} & C_{2,1} & 0 \\
+C_{0,2} & C_{1,2} & C_{2,2} & 0 \\
+0 & 0 & 0 & 0
+\end{bmatrix} $$
+ 
+Above example illustrate when deflating 4x4 matrix into 3x3, when doing QR decomposision, elements outside 3x3 matrix will be re-interpreted as zero and only 3x3 matrix element will be updated after QR decomposition. Shift value is subtracted when loading the diagonal values on the go. 
+
+- QR Decompostion latency model
+
+$$ VecDepth = 8 + (4 + 3 \lceil log_{2}(p) \rceil) + 15 $$
+
+$$ Clks_{QRD} = \sum_{i=1}^{p}{max(i,vecDepth)} $$
+
+
+#### Fused $RQ$ and $E_{vec} Q$ computation 
+In HLS, each loops is scheduled one after another, computing the $RQ$ and $E_{vec} Q$  matrix multiplication in separate loops will increase the latency. In this implementation both $RQ$ and $E_{vec} Q$ are computed in a single nested loop, using one full dot product for each operation. Similar to QR decompostion, masking is applied when computing $RQ$ in deflated matrices. 
+
+While computing the $RQ$, subtracted shift is added back and the new shift value for next iteration is stored in a register. Logic to check the convergence is also implemented in this loop and boolen outcome of convergence is stored in register. This register is checked at the end of the iteration to deflate the matrix or exist the computation if 1x1 deflated matrix is reached. Further, a debug logic to detect the $QR$ decomposition failure by inspecting the orthogonolity of $Q$ matrix is implemented in this nested loop. This also require a full dot prduct to check all possible combination of vectors. 
+
+- Fused Matrix multiplication latency model ignoring small pipeline latency
+
+$$ Clks_{FMM} = p^{2} $$
+
+#### Sorting 
+After the QRD iteration, eigen values and eigen vectors need to be sorted. This reference design implements the selection sort, searching through all the elements and finding the next maimum element. A new memory is used to store the indexes of sorted elements, in order to elminate the latency for swapping elements. Additionally a register block is used as mask avoid checking the already sorted elements. 
+
+- Sorting latency model ignoring small pipeline latency
+
+$$ Clks_{Sort} = 2 \times p^{2} $$
+
+
+
+
 
 The algorithms used to perform the QR decomposition in an iteration of the QR iteration process is the **Gram-Schmidt process** and the thin **QR factorization** method. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
 >**Note**: Read the *[QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition)* Wikipedia article for more information on the algorithms.
