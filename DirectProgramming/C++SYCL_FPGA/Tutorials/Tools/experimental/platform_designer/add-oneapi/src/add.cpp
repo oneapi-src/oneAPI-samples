@@ -18,8 +18,8 @@ class OutputPipeID;
 // using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to
 // output to the CSR
 
-// Workaround: protocol_name::avalon_mm does not currently work with simulation,
-// so use avalon_mm_uses_ready for now.
+// WORKAROUND: protocol_name::avalon_mm does not currently work with simulation,
+// so simulate with avalon_mm_uses_ready for now. avalon_mm works in hardware.
 #if FPGA_SIMULATOR
 using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
@@ -31,7 +31,7 @@ using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
 #endif
 
 using OutputPipe =
-    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 0, OutputPipeProps>;
+    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.

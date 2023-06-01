@@ -64,7 +64,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
-                <ipxact:name>reset</ipxact:name>
+                <ipxact:name>reset_n</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
                 <ipxact:name>resetn</ipxact:name>
@@ -776,7 +776,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;ports&gt;
                 &lt;port&gt;
                     &lt;name&gt;resetn&lt;/name&gt;
-                    &lt;role&gt;reset&lt;/role&gt;
+                    &lt;role&gt;reset_n&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;

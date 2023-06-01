@@ -19,7 +19,7 @@ https://fpgasoftware.intel.com/eula.-->
    version="1.0"
    description=""
    tags=""
-   categories=""
+   categories="System"
    tool="QsysPro" />
  <parameter name="board" value="Unknown" />
  <parameter name="bonusData"><![CDATA[bonusData 
@@ -606,7 +606,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ports>
                 <port>
                     <name>resetn</name>
-                    <role>reset</role>
+                    <role>reset_n</role>
                     <direction>Input</direction>
                     <width>1</width>
                     <lowerBound>0</lowerBound>
