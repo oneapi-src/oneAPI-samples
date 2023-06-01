@@ -180,30 +180,27 @@ Then, the covariance matrix can simply be computed the covariance equation above
 The Eigen values and Eigen vectors are computed using the QR iteration process.
 The algorithm iterates until the Eigen values have been found.
 
-```math 
- **Set** $C_{0}=A_{StdCov}$ <br /> 
- **Set** $k=0$ <br /> 
- **do** <br /> 
-    &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
-    &emsp; Set $C_{k}=R_{k}Q_{k}$ <br /> 
-    &emsp;  $k = k+1$ <br /> 
- **while** ($C$ converges)
-<br /><br />
-```
-Upon achieving convergence in matrix $C$, the diagonal values of $C$ will signify the Eigenvalues. However, the primary limitation of this unsophisticated algorithm is that it necessitates an enormous number of iterations to attain convergence. To enhance convergence, the algorithm employs matrix shifts and deflation according to the following procedure:
+**Set** $C=Cov$ <br /> 
+**do** <br /> 
+   &emsp; **QR Decomposition** $[Q,R] = qrd(C)$ <br /> 
+   &emsp; Set $C=R \times Q$ <br /> 
+**while** ($C$ is not a diagonal matrix)
+<br />
 
- **Set** $C^{F}=A_{StdCov}$ <br /> 
-**for** ($size_{C} = p$; $size_{C}  > 1$; $size_{C} =size_{C} -1$) **do** <br />
-&emsp; **Set** $C_{0}\[i\]\[j\]=C^{F}\[i\]\[j\]$ &emsp; $i < size_{C} $, $j < size_{C}$ <br /> 
-&emsp; **Set** $k=0$ <br /> 
- &emsp; **do** <br /> 
-   &emsp; &emsp; $C_{k−1} = C_{k−1} - \mu I$ <br /> 
-   &emsp; &emsp; **QR Decomposition** $C_{k−1}=Q_{k}R_{k}$ <br /> 
-   &emsp; &emsp; Set $C_{k}=R_{k}Q_{k} + \mu I$ <br /> 
-   &emsp; &emsp; $k = k+1$ <br /> 
-&emsp; **while** ($C$ converges) <br />
-&emsp; **Set** $C^{F}\[i\]\[j\]=C_{k-1}\[i\]\[j\]$ &emsp; $i < size_{C}$, $j < size_{C}$ <br /> 
-**endfor** <br /> 
+Upon achieving convergence, the diagonal values of $C$ will contain the Eigen values. 
+Although this approach is mathematically correct, the number of iterations required to reach convergeance is very high.
+To reduce the number of requried iterations, one common techinque is to apply the _shifited_ QR iteration process.
+At each iteration, the next Eigen value is first approximated using the _Rayleigh_ shift method.
+This shift value is substracted from the diagonal of $C$ before the QR decomposition is performed:
+
+**Set** $C=Cov$ <br /> 
+**do** <br /> 
+   &emsp; **Compute Rayleigh shift**: $\mu = shift(C)$ <br /> 
+   &emsp; **Substract the shift from the diagonal elements** $C = C - (Id \times \mu)$ <br /> 
+   &emsp; **QR Decomposition**: $[Q,R] = qrd(C)$ <br /> 
+   &emsp; Set $C=(R \times Q) + (Id \times \mu)$ <br /> 
+**while** ($C$ is not a diagonal matrix)
+<br />
 
 Above algorithm computes eigen values one by one and deflate the matrix once a eigen value has been computed. $size_{C}$ represent the dimension of deflated matrix. This algorithm converges much faster, requiring around 3 iteration to compute an eigen value compared to previous naive implementation. It is assumed that matrix is converged if values indicated by \* is less than zero threshold, then $C_{3,3}$ will be eigen a value. 
 
