@@ -96,7 +96,6 @@ and $mean_{std}[j]$ being the mean of the column $j$ of the standardized A matri
 
 By rewriting these equations, we can obtain something that will better map to an FPGA: 
 ```math
-\label{covequation}
 Cov[i][j] = \frac{T[i][j] - N*mean[i]*mean[j]}{\sqrt{(T[i][i] -N*mean[i]^2) * (T[j][j] -N*mean[j]^2)}}
 ```
 
@@ -147,10 +146,10 @@ At each block iteration, a $Nf \times Nf$ submatrix of $A$ is read and used to c
 Illustration of this mechanism after block $0$ has been computed:
 ```math
 \begin{bmatrix}
-A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & \- & \- & \- & \- \\
-A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & \- & \- & \- & \- \\
-A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & \- & \- & \- & \- \\
-A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & \- & \- & \- & \-
+A_{0,0} & A_{1,0} & A_{2,0} & A_{3,0} & - & - & - & - \\
+A_{0,1} & A_{1,1} & A_{2,1} & A_{3,1} & - & - & - & - \\
+A_{0,2} & A_{1,2} & A_{2,2} & A_{3,2} & - & - & - & - \\
+A_{0,3} & A_{1,3} & A_{2,3} & A_{3,3} & - & - & - & -
 \end{bmatrix} 
 \times 
 \begin{bmatrix}
@@ -158,10 +157,10 @@ A_{0,0} & A_{0,1} & A_{0,2} & A_{0,3} \\
 A_{1,0} & A_{1,1} & A_{1,2} & A_{1,3} \\
 A_{2,0} & A_{2,1} & A_{2,2} & A_{2,3} \\
 A_{3,0} & A_{3,1} & A_{3,2} & A_{3,3} \\
-\- & \- & \- & \- \\
-\- & \- & \- & \- \\
-\- & \- & \- & \- \\
-\- & \- & \- & \- 
+- & - & - & - \\
+- & - & - & - \\
+- & - & - & - \\
+- & - & - & - 
 \end{bmatrix} 
 + 
 \begin{bmatrix}
@@ -171,8 +170,10 @@ T_{partial}{2,0} & T_{partial}{2,1} & T_{partial}{2,2} & T_{partial}{2,3} \\
 T_{partial}{3,0} & T_{partial}{3,1} & T_{partial}{3,2} & T_{partial}{3,3}
 \end{bmatrix}
 ```
+
 After enough iterations, the $T_{partial}$ accumulated values will hold the result of the entire matrix product.
-Then, the covariance matrix can simply be computed using equation \cite{covequation}.
+Partial means are also computed alongside the matrix mutliplication.
+Then, the covariance matrix can simply be computed the covariance equation above.
 
 
 ### Eigen values and Eigen vectors computation
