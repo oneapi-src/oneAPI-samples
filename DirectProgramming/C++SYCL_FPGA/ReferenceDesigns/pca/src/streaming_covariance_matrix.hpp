@@ -124,12 +124,19 @@ struct StreamingCovarianceMatrix {
           });
         }  // for:li
 
+        // PRINTF("Cov submatrix read\n");
+        // for (int row = 0; row < columns; row++) {
+        //   fpga_tools::UnrolledLoop<columns>(
+        //       [&](auto t) { PRINTF("%f ", a_load[row].template get<t>()); });
+        //   PRINTF("\n");
+        // }
+
+        // We are going to reuse the same column of the matrix multiple
+        // iterations in a row, so we keep it locally
+        row_tuple current_base_column;
+        row_tuple next_base_column;
         // Compute the block T matrix and the partial means
         for (int row = 0; row < columns; row++) {
-          // We are going to reuse the same column of the matrix multiple
-          // iterations in a row, so we keep it locally
-          row_tuple current_base_column;
-          row_tuple next_base_column;
 
           [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
           for (int column = 0; column < columns; column++) {
@@ -219,6 +226,16 @@ struct StreamingCovarianceMatrix {
         }  // end for:column
       }    // end for:row
 
+
+      // PRINTF("COV MATRIX\n");
+      // for (int row = 0; row < columns; row++) {
+      //   for (int column = 0; column < columns; column++) {
+      //     PRINTF("%f ", cov_matrix[row][column]);
+      //   }  // end for:column
+      //     PRINTF("\n");
+      // }    // end for:row
+
+
       // Write the standardized covariance matrix to the output pipe
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (int li = 0; li < kLoopIterations; li++) {
@@ -241,17 +258,10 @@ struct StreamingCovarianceMatrix {
             }
           });
         });
-        // PRINTF("Writing to pipe:\n");
-        // fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-
-        // PRINTF("%f ", pipe_write.template get<t>());
-        // });
-        // PRINTF("\n");
 
         OutputPipe::write(pipe_write);
       }
     }  // end of while
-
   };  // end of operator()
 };    // end of struct{}
 

@@ -49,19 +49,16 @@ void MatrixReadFromDDRToPipeByBlocks(
       for (int block_index = 0; block_index < kBlockCount; block_index++) {
         for (int row = 0; row < rows; row++) {
           for (int column = 0; column < rows; column += num_elem_per_bank) {
-            // PRINTF("Writing %d elements from %d to %d out of a total of %d\n", num_elem_per_bank, column, column+num_elem_per_bank, rows);
             // Read num_elem_per_bank elements per burst
             fpga_tools::NTuple<TT, num_elem_per_bank> ddr_read;
-            // PRINTF("ddr_read :");
             fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
               if (column + k < rows) {
                 ddr_read.template get<k>() =
                     matrix_ptr[matrix_index * kMatrixSize + block_index * rows +
                                row * columns + column + k];
               }
-              // PRINTF("%f ", ddr_read.template get<k>());
             });
-            // PRINTF("\n");
+
             MatrixPipe::write(ddr_read);
           }  // end of column
         }    // end of row

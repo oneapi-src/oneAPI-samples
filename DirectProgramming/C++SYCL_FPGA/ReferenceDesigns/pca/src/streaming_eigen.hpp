@@ -235,7 +235,6 @@ struct StreamingEigen {
       int iteration_count = 0;
 
       bool input_matrix_is_rank_deficient = false;
-
       while (continue_iterating) {
         // ---------------------------------------
         // -------- Compute the QR decomposition
@@ -377,9 +376,6 @@ struct StreamingEigen {
                 col[k] = a_load[j].template get<k>();
               } else {
                 T to_sub = k == j ? shift_value : T{0};
-                // if(k==j){
-                //   PRINTF("diag value %f\n",rq_matrix[j][k]);
-                // }
                 col[k] = rq_matrix[j][k] - to_sub;
               }
             }
@@ -408,14 +404,6 @@ struct StreamingEigen {
                 i_lt_0[fanout_bank_idx] ? T{0.0} : s_or_ir_j[fanout_bank_idx];
             auto add = j_eq_i[fanout_bank_idx] ? T{0.0} : col[k];
             col1[k] = prod_lhs * prod_rhs + add;
-            // if (i >= 0 && j >= i) {
-            //   PRINTF("prod_rhs = s_or_ir[%d] = %f\n", int(j),
-            //          s_or_ir_j[fanout_bank_idx]);
-            //   PRINTF(
-            //       "col1[%d] = prod_lhs (%.10e) * prod_rhs (%.10e) + add "
-            //       "(%.10e) = %.10e\n",
-            //       int(k), prod_lhs, prod_rhs, add, col1[k]);
-            // }
 
             // Store Q_i in q_matrix and the modified a_j in a_compute
             // To reduce the amount of control, q_matrix and a_compute
@@ -429,7 +417,6 @@ struct StreamingEigen {
             // -> overwritten for the matrix Q (q_matrix)
             // -> unused for the a_compute
             if (i_ge_0_j_ge_i[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
-              // PRINTF("q[%d][%d] = %.10e\n", int(j), int(k), col1[k]);
               q_matrix[j].template get<k>() = col1[k];
               a_compute[j].template get<k>() = col1[k];
             }
@@ -445,7 +432,6 @@ struct StreamingEigen {
           fpga_tools::UnrolledLoop<size>(
               [&](auto k) { p_ij += col1[k] * a_ip1[k]; });
 
-          // PRINTF("p_ij %d %d = %f\n", int(i), int(j), p_ij);
           bool projection_is_zero_local = false;
 
           // Compute pip1 and ir based on the results of the dot product
@@ -468,12 +454,7 @@ struct StreamingEigen {
           // j may be negative if the number of "dummy" iterations is
           // larger than the matrix size
           if (j >= 0) {
-            // PRINTF("j = %d, s_or_ir = ir (%f) or s_j (%f)\n", int(j), ir,
-            // s_j);
             s_or_ir[j] = j == i + 1 ? ir : s_j;
-            // if (j == i + 1) {
-            //   PRINTF("ir = %f\n", ir)
-            // }
           }
 
           // Compute the R_{i+1,i+1} or R_{i+1,j}
@@ -590,6 +571,14 @@ struct StreamingEigen {
 
         shift_value *= 0.99;
 
+        // PRINTF("RQ at iteration %d\n", iteration_count);
+        // for (int row=0; row<size; row++){
+        //   for (int column=0; column<size; column++){
+        //     PRINTF("%f ", rq_matrix[row][column]);
+        //   }
+        //   PRINTF("\n");
+        // }
+
         if (row_is_zero) {
           shift_row--;
         }
@@ -603,6 +592,7 @@ struct StreamingEigen {
         iteration_count++;
 
       }  // end if while(continue_iterating)
+
 
       // -----------------------------------------------------------------
       // -------- Sort the Eigen Values/Vectors by weight
@@ -677,6 +667,7 @@ struct StreamingEigen {
         });
         EigenVectorsOut::write(pipe_write);
       }  // end for:li
+
     }    // end of while(1)
   }      // end of operator
 };       // end of struct

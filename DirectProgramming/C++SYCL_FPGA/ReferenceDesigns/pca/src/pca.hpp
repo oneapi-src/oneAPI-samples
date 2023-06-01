@@ -87,6 +87,7 @@ void PCAKernel(
   ac_int<1, false> *rank_deficient_flag_device;
 
   if (q.get_device().has(aspect::usm_device_allocations)) {
+    std::cout << "Using device allocations" << std::endl;
     // Allocate FPGA DDR memory.
     input_matrix_device =
         sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
@@ -97,6 +98,7 @@ void PCAKernel(
     rank_deficient_flag_device =
         sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
   } else if (q.get_device().has(aspect::usm_shared_allocations)) {
+    std::cout << "Using shared allocations" << std::endl;
     // No device allocations means that we are probably in an IP authoring flow
     input_matrix_device =
         sycl::malloc_shared<T>(kInputMatrixSize * matrix_count, q);

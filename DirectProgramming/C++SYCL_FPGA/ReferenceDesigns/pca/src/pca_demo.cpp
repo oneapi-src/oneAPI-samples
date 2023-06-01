@@ -17,23 +17,21 @@ void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
              int repetitions) {}
 
 int main(int argc, char *argv[]) {
-#if BENCHMARK
 #if defined(FPGA_SIMULATOR)
   // Only read a few lines of the input data when running the simulator
   constexpr size_t kPCAsToCompute = 1;
-  constexpr size_t kFeaturesCount = 3;
-  constexpr size_t kSamplesCount = 6;
+  constexpr size_t kFeaturesCount = 4;
+  constexpr size_t kSamplesCount = 8;
   constexpr bool kBenchmarkMode = false;
   constexpr bool kBenchmarkModeForcelyDisabled = true;
   std::cout << "The benchmark mode is disabled when running the simulator"
             << std::endl;
-#else
+#elif BENCHMARK
   constexpr size_t kPCAsToCompute = 1;
   constexpr size_t kFeaturesCount = 8;
   constexpr size_t kSamplesCount = 4176;
   constexpr bool kBenchmarkMode = true;
   constexpr bool kBenchmarkModeForcelyDisabled = false;
-#endif
 #else
   constexpr size_t kPCAsToCompute = 8;
   constexpr bool kBenchmarkMode = false;
@@ -144,6 +142,8 @@ int main(int argc, char *argv[]) {
     pca.standardizeA();
     pca.computeCovarianceMatrix();
     pca.computeEigenValuesAndVectors();
+
+    std::cout << "Software iterations " << pca.iterations[0] << std::endl;
 
     // Copy all the input matrices to the of the golden implementation to the
     // a_matrix that uses the float datatype, which is going to be used by the
