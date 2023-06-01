@@ -80,24 +80,28 @@ The algorithm is split in two parts:
 ### Input matrix standardization and covariance matrix computation
 
 The standardized covariance matrix is defined as:
-\begin{equation} 
-\label{stdcov}
+```math
 Cov[i][j] = \frac{1}{N-1}*\sum_{k=0}^{N-1}{(A_{std}[k][i] - mean_{std}[i])(A_{std}[k][j] - mean_{std}[j]) }
-\end{equation}
+```
 
 Where $A_{std}$ is the standardized matrix $A$, defined as:
-\begin{dmath} 
+```math
 A_{std}[i][j] = \frac{A[i][j] - mean[j]}{s_j}
-\end{dmath}
+```
 with $s_j$ being the standard deviation of the column $j$:
-$$s_j = \sqrt{\frac{\sum_{k=0}^{N-1}(A[k][j] - mean[j])^2}{N-1}}$$
+```math
+s_j = \frac{1}{\sqrt{N-1}}*\sqrt{\sum_{k=0}^{N-1}(A[k][j] - mean[j])^2}
+```
 
-By rewriting these equations, we can obtain something that will better map to an FPGA:
-\begin{dmath}
+By rewriting these equations, we can obtain something that will better map to an FPGA: 
+```math
 Cov[i][j] = \frac{T[i][j] - N*mean[i]*mean[j]}{\sqrt{T[i][i] -N*mean[i]^2}*\sqrt{T[j][j] -N*mean[j]^2}}
-\end{dmath}
+```
 
-where $T$ is defined as: $T[i][j] = \sum_{k=0}^{N-1}(A[k][i]*A[k][j])$ (the transposed input matrix multiplied by the input matrix).
+where $T$ is defined as the transposed input matrix multiplied by the input matrix: 
+```math
+T[i][j] = \sum_{k=0}^{N-1}(A[k][i]*A[k][j])
+```
 
 ### Eigen values and Eigen vectors computation
 
