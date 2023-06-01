@@ -95,7 +95,7 @@ s_j = \frac{1}{\sqrt{N-1}}*\sqrt{\sum_{k=0}^{N-1}(A[k][j] - mean[j])^2}
 
 By rewriting these equations, we can obtain something that will better map to an FPGA: 
 ```math
-Cov[i][j] = \frac{T[i][j] - N*mean[i]*mean[j]}{\sqrt{T[i][i] -N*mean[i]^2}*\sqrt{T[j][j] -N*mean[j]^2}}
+Cov[i][j] = \frac{T[i][j] - N*mean[i]*mean[j]}{\sqrt{(T[i][i] -N*mean[i]^2) * (T[j][j] -N*mean[j]^2)}}
 ```
 
 where $T$ is defined as the transposed input matrix multiplied by the input matrix: 
