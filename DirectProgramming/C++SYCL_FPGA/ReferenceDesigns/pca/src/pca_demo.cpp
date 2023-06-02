@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR) or defined(FPGA_SIMULATOR)
   int repetitions = 1;
 #else
-  int repetitions = 8;
+  int repetitions = 4096 ;
 #endif
   std::string in_file_name = "";
 
