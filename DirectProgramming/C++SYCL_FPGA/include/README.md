@@ -19,12 +19,14 @@ This directory contains utility header libraries optimized for SYCL*-compliant F
 
 ### Linear Algebra
 
-| Filename                           | Description                                                | Use case examples
----                                  |---                                                         |---
-| `streaming_qrd.hpp`                | QR decomposition of matrices with pipe interfaces.         | `ReferenceDesigns/qrd`
-| `streaming_qri.hpp`                | QR-based inversion of matrices with pipe interfaces.       | `ReferenceDesigns/qri`
-| `streaming_cholesky.hpp`           | Cholesky decomposition of matrices with pipe interfaces.   | `ReferenceDesigns/cholesky`
-| `streaming_cholesky_inversion.hpp` | Cholesky-based inversion of matrices with pipe interfaces. | `ReferenceDesigns/cholesky_inversion`
+| Filename                           | Description                                                                          | Use case examples
+---                                  |---                                                                                   |---
+| `streaming_cholesky.hpp`           | Cholesky decomposition of matrices with pipe interfaces.                             | `ReferenceDesigns/cholesky`
+| `streaming_cholesky_inversion.hpp` | Cholesky-based inversion of matrices with pipe interfaces.                           | `ReferenceDesigns/cholesky_inversion`
+| `streaming_covariance_matrix.hpp`  | Standardized covariance matrix computation using pipe interfaces.                    | `ReferenceDesigns/pca`
+| `streaming_eigen.hpp`              | Eigen values and Eigen vectors computation of square matrices using pipe interfaces. | `ReferenceDesigns/pca`
+| `streaming_qrd.hpp`                | QR decomposition of matrices with pipe interfaces.                                   | `ReferenceDesigns/qrd`
+| `streaming_qri.hpp`                | QR-based inversion of matrices with pipe interfaces.                                 | `ReferenceDesigns/qri`
 
 ## License
 
