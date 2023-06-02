@@ -404,7 +404,7 @@ Additionally, the `cmake` build system can be configured using the following par
 | Argument  | Description
 |:---       |:---
 | `<path>`  | (Required in benchmark mode, must be omitted otherwise) Path to the `abalone.csv` file located in the data folder of this sample.
-| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition. Its default value is **1** for the emulation and simulation flow and **4096 ** for the FPGA flow.
+| `<num>`   | (Optional) Specifies the number of times to repeat the decomposition. Its default value is **1** for the emulation and simulation flow and **4096** for the FPGA flow.
 
 ### On Linux
 
