@@ -1,9 +1,9 @@
 {
-  "guid": "1992581F-9DF8-4696-9B1C-0B31286B97C3",
+  "guid": "6362F0D3-467B-4BFE-BE05-60B23989C8D5",
   "name": "PCA",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of real and complex matrices on a Intel® FPGA",
-  "toolchain": ["dpcpp"],
+  "description": "Reference design implementing the Principle Component Analysis (PCA) of matrices on Intel® FPGAs",
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/qri",
+      "ReferenceDesigns/pca",
       "include"
     ],
     "exclude": []
@@ -20,22 +20,19 @@
     "linux": [
       {
         "id": "fpga_emu",
-        "env": [
-          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./qrd.fpga_emu"
+          "./pca.fpga_emu ../data/abalone.csv"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -46,27 +43,24 @@
     "windows": [
       {
         "id": "fpga_emu",
-        "env": [
-          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
           "nmake fpga_emu",
-          "qrd.fpga_emu.exe"
+          "pca.fpga_emu.exe  ../ReferenceDesigns/pca/data/abalone.csv"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
           "nmake report"
         ]
       }
