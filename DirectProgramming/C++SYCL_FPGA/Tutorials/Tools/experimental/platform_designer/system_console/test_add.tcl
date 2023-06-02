@@ -1,15 +1,10 @@
 #  Copyright (c) 2022 Intel Corporation
 #  SPDX-License-Identifier: MIT
 
-proc setup_jtag {} {
-    global master_service_path
-
-    get_service_paths master
-    set master_service_path [ lindex [get_service_paths master] 0]
-    open_service master $master_service_path
-
-    puts "reset component"
-    jtag_debug_sample_reset
+proc pause {{message "Hit Enter to continue ==> "}} {
+    puts -nonewline $message
+    flush stdout
+    gets stdin
 }
 
 proc load_inputs { VAL_A VAL_B } {
@@ -31,51 +26,73 @@ proc load_inputs { VAL_A VAL_B } {
     master_write_32 $master_service_path $ADDR_START 0x01
 }
 
-proc read_outputs_no_confirm {} {
+proc read_outputs {} {
     global master_service_path
 
     # addresses from add-oneapi/build/add.report.prj/<mangling>AdderID_register_map.hpp
     set ADDR_STATUS 0x00
     set ADDR_C 0x88
-    set ADDR_C_VALID 0x98
-    set ADDR_C_READY 0x90
     set ADDR_FINISH_COUNT 0x30
 
-    puts "Outputs:"
-
     set readData       [master_read_32 $master_service_path $ADDR_C 2];
-    set readDataValid  [master_read_32 $master_service_path $ADDR_C_VALID 2];
-    set readDataReady  [master_read_32 $master_service_path $ADDR_C_READY 2];
     set statusReg      [master_read_32 $master_service_path $ADDR_STATUS 2];
     set finishCounter  [master_read_32 $master_service_path $ADDR_FINISH_COUNT 2];
 
-    puts "  Data ($ADDR_C): $readData"
-    puts "  Data Ready ($ADDR_C_READY): $readData"
-    puts "  Data Valid ($ADDR_C_VALID): $readDataValid"
+    puts "  Data   ($ADDR_C): $readData"
     puts "  Status ($ADDR_STATUS): $statusReg"
     puts "  finish ($ADDR_FINISH_COUNT): $finishCounter"
 }
 
-proc read_outputs { } {
-    global master_service_path
+# set up jtag interface
+get_service_paths master
+set master_service_path [ lindex [get_service_paths master] 0]
 
-    # addresses from add-oneapi/build/add.report.prj/<mangling>AdderID_register_map.hpp
-    set ADDR_C_READY 0x90
+open_service master $master_service_path
 
-    # read the output registers
-    read_outputs_no_confirm
+puts "Resetting IP..."
+jtag_debug_reset_system $master_service_path
 
-    # set the `ready` bit to indicate that data has been consumed
-    set readDataReady 1;
-    puts "Store $readDataReady to address $ADDR_C_READY"
-    master_write_32 $master_service_path $ADDR_C_READY $readDataReady
-}
-
-# Example run
-setup_jtag
-load_inputs 4 5
-read_outputs_no_confirm
-load_inputs 3 4
-read_outputs_no_confirm
-load_inputs 1 2
+# interact with the IP
+puts "TEST 1: READ OUTPUT AFTER RESET"
+puts "Read outputs"
 read_outputs
+puts ""
+
+puts "TEST 2: LOAD INPUTS AND CHECK OUTPUT"
+pause "press 'enter' key to load inputs ==>"
+load_inputs 1 2
+
+pause "Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>"
+puts "Read outputs"
+read_outputs
+puts ""
+
+pause "press 'enter' key to load inputs ==>"
+load_inputs 3 3
+
+pause "Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>"
+puts "Read outputs"
+read_outputs
+puts ""
+
+puts "TEST 3: LOAD INPUTS WITHOUT CHECKING OUTPUT"
+pause "press 'enter' key to load inputs ==>"
+load_inputs 5 4
+
+pause "Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>"
+load_inputs 64 64
+
+pause "Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>"
+load_inputs 7 8
+
+pause "Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>"
+puts "Read outputs"
+read_outputs
+puts ""
+
+puts "TEST 4: READ OUTPUT AFTER NO PENDING INPUTS"
+pause "press 'enter' key to consume outputs ==>"
+puts "Read outputs"
+read_outputs
+puts ""
+puts "Test complete."

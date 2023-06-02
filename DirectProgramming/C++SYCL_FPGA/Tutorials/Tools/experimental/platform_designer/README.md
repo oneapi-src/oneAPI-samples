@@ -192,10 +192,6 @@ Follow these steps to compile and test the design:
 
       Don't forget to export the `irq_add` and `exception_add` signals. The provided top-level RTL file (`add.sv`) uses the generated IP. Following these naming conventions allows the IP to connect to this handwritten RTL.
 
-      > **Important**: If you are using the oneAPI Base Toolkit 2023.2, the DCP++/C++ compiler causes the generated IP to be incorrectly documented in its hardware TCL script. You can override this in Platform Designer by changing the signal type of the `resetn` signal to `reset_n`:
-      > 
-      > ![](assets/fix-reset_n-platform-designer.png)
-
    7. Save the system by clicking `File` > `Save`
 
    8. Make sure there are no errors in the 'System Messages' panel.
@@ -204,10 +200,6 @@ Follow these steps to compile and test the design:
 
       ![](assets/generate-hdl.png)
 
-      > **Important**: If you are using the oneAPI Base Toolkit 2023.2, you should see a warning due to the compiler bug described in Step 6.
-      > 
-      > ![](assets/platform-designer-warning.png)
-   
    10. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
@@ -281,7 +273,7 @@ Follow these steps to compile and test the design:
 
 ## Running the Sample
 
-Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` scripts in the `system_console` directory demonstrate how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
+Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
 
 To move the design to a different computer, copy the `system_console` and directories from the `add-quartus` directory.
 
@@ -306,8 +298,61 @@ Press any key to continue . . .
 <etc.>
 ---------------------------------------
 % source test_add.tcl
+Resetting IP...
+TEST 1: READ OUTPUT AFTER RESET
+Read outputs
+  Data   (0x88): 0x00000000 0x00000000
+  Status (0x00): 0x00050000 0x00000000
+  finish (0x30): 0x00000000 0x00000000
 
-TODO: ADD OUTPUT
+TEST 2: LOAD INPUTS AND CHECK OUTPUT
+press 'enter' key to load inputs ==>
+Store 1 to address 0x80
+Store 2 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x00000003 0x00000000
+  Status (0x00): 0x00050002 0x00000000
+  finish (0x30): 0x00000001 0x00000000
+
+press 'enter' key to load inputs ==>
+Store 3 to address 0x80
+Store 3 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x00000006 0x00000000
+  Status (0x00): 0x00050002 0x00000000
+  finish (0x30): 0x00000001 0x00000000
+
+TEST 3: LOAD INPUTS WITHOUT CHECKING OUTPUT
+press 'enter' key to load inputs ==>
+Store 5 to address 0x80
+Store 4 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>
+Store 64 to address 0x80
+Store 64 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>
+Store 7 to address 0x80
+Store 8 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x0000000f 0x00000000
+  Status (0x00): 0x00050002 0x00000000
+  finish (0x30): 0x00000003 0x00000000
+
+TEST 4: READ OUTPUT AFTER NO PENDING INPUTS
+press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x0000000f 0x00000000
+  Status (0x00): 0x00050000 0x00000000
+  finish (0x30): 0x00000000 0x00000000
+
+Test complete.
 ```
 
 ## License
