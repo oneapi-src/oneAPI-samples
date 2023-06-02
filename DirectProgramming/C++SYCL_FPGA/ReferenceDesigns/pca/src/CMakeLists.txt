@@ -1,5 +1,5 @@
 set(TARGET_NAME pca)
-set(SOURCE_FILE pca_demo.cpp golden_pca.hpp streaming_eigen.hpp streaming_covariance_matrix.hpp)
+set(SOURCE_FILE pca_demo.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
