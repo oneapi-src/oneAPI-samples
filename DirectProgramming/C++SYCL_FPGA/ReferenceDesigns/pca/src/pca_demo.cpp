@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
         }
       }
     }
-
+      
     /////////////////////////////////////////////////////////////////////
     /////////  Sorting and matching with golden value ///////////////////
     /////////////////////////////////////////////////////////////////////
@@ -326,6 +326,7 @@ int main(int argc, char *argv[]) {
       constexpr int kBlockIterations =
           kBlockTransposedMatrixProductIterationsCount *
           kBlockTransposedMatrixProductIterations;
+
 
       // Compute the latency of all the QR iterations:
       // Compute the latency of one QR iteration

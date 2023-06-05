@@ -67,35 +67,46 @@ struct StreamingCovarianceMatrix {
     // Number of pipe reads of pipe_size to read all the matrices
     constexpr int kLoopIterations = kLoopIterationPerRow * columns;
 
+
+
+    // We keep a replicate of the diagonal of T for improved memory access
+    // pattern over T
+    // [[intel::fpga_register]]       // NO-FORMAT: Attribute
+      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+    T t_matrix_diagonal_replicate[columns];
+
+    // Array to keep the means of all the A matrix columns
+    //   [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+    row_tuple means_tuple;
+        // Copy the mean and the T diagonal to structures that are
+        // more easily accessible
+      // [[intel::private_copies(4)]] // NO-FORMAT: Attribute
+        T means[columns];
+
+        // T means_consume[columns];
+
+
+    int block = 0;
+
     while (1) {
-      // Matrix to hold the partial block results of At*A
-      // During the compute of T
-      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-      T t_matrix_compute[columns][columns];
-      // For the computation of COV
-      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-      T t_matrix_consume[columns][columns];
 
-      // We keep a replicate of the diagonal of T for improved memory access
-      // pattern over T
-      [[intel::fpga_register]] row_tuple t_matrix_diagonal_replicate_tuple;
-      fpga_tools::UnrolledLoop<columns>([&](auto t) {
-        t_matrix_diagonal_replicate_tuple.template get<t>() = 0;
-      });
-      T t_matrix_diagonal_replicate[columns];
-
-      // Array to keep the means of all the A matrix columns
-      row_tuple means_tuple;
-      T means[columns];
-      fpga_tools::UnrolledLoop<columns>(
-          [&](auto t) { means_tuple.template get<t>() = 0; });
-
-      for (int block = 0; block < block_count; block++) {
+      // // [[intel::ivdep(t_matrix_compute, columns*columns)]]      // NO-FORMAT: Attribute
+      // for (int block = 0; block < block_count; block++) {
         // Read the first matrix block into the a_load local memory
+
+      if (block == 0){
+        fpga_tools::UnrolledLoop<columns>([&](auto t) {
+          // means[t] =0;
+          // t_matrix_diagonal_replicate[t] = 0;
+          // means_tuple.template get<t>() = 0;
+          // t_matrix_diagonal_replicate_tuple.template get<t>() = 0;
+        });
+      }
 
         [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
         [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
         row_tuple a_load[columns];
 
         [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -136,10 +147,30 @@ struct StreamingCovarianceMatrix {
         row_tuple current_base_column;
         row_tuple next_base_column;
         // Compute the block T matrix and the partial means
-        for (int row = 0; row < columns; row++) {
 
-          [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-          for (int column = 0; column < columns; column++) {
+    // Matrix to hold the partial block results of At*A
+    // During the compute of T
+    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+    T t_matrix_compute[columns * columns];
+    T t_matrix_diagonal_replicate_partial[columns];
+        T means_array[columns];
+
+    // For the computation of COV
+    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+    T t_matrix_consume[columns][columns];
+
+        int row=0;
+        int column =0;
+        // [[intel::ivdep]]      // NO-FORMAT: Attribute
+        // [[intel::ivdep(t_matrix_compute)]]      // NO-FORMAT: Attribute
+        // [[intel::ivdep(columns)]]      // NO-FORMAT: Attribute
+        // [[intel::ivdep(t_matrix_diagonal_replicate)]]      // NO-FORMAT: Attribute
+        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        for (int it = 0; it < columns*columns; it++){
+        // for (int row = 0; row < columns; row++) {
+        //   for (int column = 0; column < columns; column++) {
             // Load the current column of the block
             row_tuple current_column = a_load[column];
 
@@ -166,8 +197,8 @@ struct StreamingCovarianceMatrix {
             // Update the partial results matrix
             T t_result = block == 0
                              ? dot_product
-                             : dot_product + t_matrix_compute[row][column];
-            t_matrix_compute[row][column] = t_result;
+                             : dot_product + t_matrix_compute[it];
+            t_matrix_compute[it] = t_result;
 
             // on the last block, copy the final T matrix to the second
             // copy of T for the COV computation
@@ -181,86 +212,140 @@ struct StreamingCovarianceMatrix {
             }
             mean /= rows;
 
-            // Feed the mean and diagonal accumulators
-            fpga_tools::UnrolledLoop<columns>([&](auto t) {
-              T mean_to_add = (t == column) ? mean : 0;
-              means_tuple.template get<t>() += mean_to_add;
+            // T new_mean = means[column] + mean;
+            if (row == 0){
+              means_array[column] = mean;
+            }
 
-              T diagonal_value_to_add =
-                  (row == column) && (row == t) ? dot_product : 0;
-              t_matrix_diagonal_replicate_tuple.template get<t>() +=
-                  diagonal_value_to_add;
-            });
+            if (row == column){
+              t_matrix_diagonal_replicate_partial[column] = dot_product;
+            }
+
+            // if (block == block_count-1){
+            //   means_consume[column] = new_mean;
+            // }
+
+            // if (row == column){
+            //   T to_add = block == 0 ? dot_product : t_matrix_diagonal_replicate[row] + dot_product;
+            //   t_matrix_diagonal_replicate[row] = to_add;
+            //   if (block == block_count-1){
+            //     t_matrix_diagonal_replicate_consume[row] = to_add;
+            //   }
+            // }
+
+            // Feed the mean and diagonal accumulators
+            // fpga_tools::UnrolledLoop<columns>([&](auto t) {
+            //   // T mean_to_add = (t == column) ? mean : 0;
+            //   // means_tuple.template get<t>() += mean_to_add;
+
+            //   T diagonal_value_to_add =
+            //       (row == column) && (row == t) ? dot_product : 0;
+            //   t_matrix_diagonal_replicate_tuple.template get<t>() +=
+            //       diagonal_value_to_add;
+            // });
 
             // means[column] += mean;
-          }  // end for:column
-        }    // end for:row
-      }      // end of for: block
+        //   }  // end for:column
+        // }    // end for:row
 
-      // Copy the mean and the T diagonal to structures that are
-      // more easily accessible
-      fpga_tools::UnrolledLoop<columns>([&](auto t) {
-        means[t] = means_tuple.template get<t>();
-        t_matrix_diagonal_replicate[t] =
-            t_matrix_diagonal_replicate_tuple.template get<t>();
-      });
-
-      // t_matrix_consume now contains the full matrix product of the transpose
-      // of A times A. mean now contains the mean of all the columns of A. We
-      // now need to compose all of these results to get the covariance matrix
-      [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      T cov_matrix[columns][columns];
-
-      for (int row = 0; row < columns; row++) {
-        for (int column = 0; column < columns; column++) {
-          T numerator = t_matrix_consume[row][column] -
-                        (rows * means[row] * means[column]);
-
-          T denominator = std::sqrt((t_matrix_diagonal_replicate[row] -
-                                     (rows * means[row] * means[row])) *
-                                    (t_matrix_diagonal_replicate[column] -
-                                     (rows * means[column] * means[column])));
-          cov_matrix[row][column] = numerator / denominator;
-        }  // end for:column
-      }    // end for:row
-
-
-      // PRINTF("COV MATRIX\n");
-      // for (int row = 0; row < columns; row++) {
-      //   for (int column = 0; column < columns; column++) {
-      //     PRINTF("%f ", cov_matrix[row][column]);
-      //   }  // end for:column
-      //     PRINTF("\n");
-      // }    // end for:row
-
-
-      // Write the standardized covariance matrix to the output pipe
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (int li = 0; li < kLoopIterations; li++) {
-        int column_iter = li % kLoopIterationPerRow;
-        bool get[kLoopIterationPerRow];
-        fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto k) {
-          get[k] = column_iter == k;
-          column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
-
-        fpga_tools::NTuple<T, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-            if constexpr (t * pipe_size + k < columns) {
-              pipe_write.template get<k>() =
-                  get[t]
-                      ? cov_matrix[li / kLoopIterationPerRow][t * pipe_size + k]
-                      : sycl::ext::intel::fpga_reg(
-                            pipe_write.template get<k>());
+            if (column == columns-1){
+              column=0;
+              row++;
             }
-          });
+            else{
+              column++;
+            }
+          }
+      // }      // end of for: block
+
+        fpga_tools::UnrolledLoop<columns>([&](auto t) {
+          // means[t] = means_tuple.template get<t>();
+          T mean_to_add = block == 0 ? 0 : means[t]; 
+          means[t] = means_array[t] + mean_to_add;
+          T t_matrix_diagonal_replicate_to_add = block == 0 ? 0 : t_matrix_diagonal_replicate[t]; 
+          t_matrix_diagonal_replicate[t] = t_matrix_diagonal_replicate_partial[t] + t_matrix_diagonal_replicate_to_add;
         });
 
-        OutputPipe::write(pipe_write);
-      }
+        // fpga_tools::UnrolledLoop<columns>([&](auto t) {
+        //   // means[t] = means_tuple.template get<t>();
+        //   t_matrix_diagonal_replicate[t] =
+        //       t_matrix_diagonal_replicate_tuple.template get<t>();
+        // });
+
+        // t_matrix_consume now contains the full matrix product of the transpose
+        // of A times A. mean now contains the mean of all the columns of A. We
+        // now need to compose all of these results to get the covariance matrix
+        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        T cov_matrix[columns][columns];
+
+        // for (int row = 0; row < columns; row++) {
+        //   for (int column = 0; column < columns; column++) {
+        {
+          int row = 0;
+          int column = 0;
+          for (int it = 0; it < columns*columns; it++){
+              T numerator = t_matrix_consume[row][column] -
+                            (rows * means[row] * means[column]);
+
+              T denominator = std::sqrt((t_matrix_diagonal_replicate[row] -
+                                         (rows * means[row] * means[row])) *
+                                        (t_matrix_diagonal_replicate[column] -
+                                         (rows * means[column] * means[column])));
+              cov_matrix[row][column] = numerator / denominator;
+
+              if (column == columns-1){
+                column = 0;
+                row++;
+              }
+              else{
+                column++;
+              }
+          }
+        }
+        //   }  // end for:column
+        // }    // end for:row
+
+        // PRINTF("COV MATRIX\n");
+        // for (int row = 0; row < columns; row++) {
+        //   for (int column = 0; column < columns; column++) {
+        //     PRINTF("%f ", cov_matrix[row][column]);
+        //   }  // end for:column
+        //     PRINTF("\n");
+        // }    // end for:row
+
+        // Write the standardized covariance matrix to the output pipe
+        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        for (int li = 0; li < kLoopIterations; li++) {
+          int column_iter = li % kLoopIterationPerRow;
+          bool get[kLoopIterationPerRow];
+          fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto k) {
+            get[k] = column_iter == k;
+            column_iter = sycl::ext::intel::fpga_reg(column_iter);
+          });
+
+          fpga_tools::NTuple<T, pipe_size> pipe_write;
+          fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
+            fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+              if constexpr (t * pipe_size + k < columns) {
+                pipe_write.template get<k>() =
+                    get[t]
+                        ? cov_matrix[li / kLoopIterationPerRow][t * pipe_size + k]
+                        : sycl::ext::intel::fpga_reg(
+                              pipe_write.template get<k>());
+              }
+            });
+          });
+
+          if (block == block_count-1){
+            OutputPipe::write(pipe_write);
+          }
+        }
+      
+
+      block++;
     }  // end of while
   };  // end of operator()
 };    // end of struct{}
