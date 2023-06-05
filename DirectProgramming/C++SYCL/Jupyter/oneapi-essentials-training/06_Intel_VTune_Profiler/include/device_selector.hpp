@@ -20,18 +20,18 @@
 // which '()' returned the highest number, is selected. If a negative number
 // was returned for all devices, then the selection process will cause an
 // exception.
-class MyDeviceSelector : public cl::sycl::device_selector {
+class MyDeviceSelector : public ::sycl::device_selector {
  public:
   MyDeviceSelector(const std::string &p) : pattern(p) {
     // std::cout << "Looking for \"" << p << "\" devices" << "\n";
   }
 
   // This is the function which gives a "rating" to devices.
-  virtual int operator()(const cl::sycl::device &device) const override {
+  virtual int operator()(const ::sycl::device &device) const override {
     // The template parameter to device.get_info can be a variety of properties
     // defined by the SYCL spec's cl::sycl::info:: enum. Properties may have
     // different types. Here we query name which is a string.
-    const std::string name = device.get_info<cl::sycl::info::device::name>();
+    const std::string name = device.get_info<::sycl::info::device::name>();
     // std::cout << "Trying device: " << name << "..." << "\n";
     // std::cout << "  Vendor: " <<
     // device.get_info<cl::sycl::info::device::vendor>() << "\n";
