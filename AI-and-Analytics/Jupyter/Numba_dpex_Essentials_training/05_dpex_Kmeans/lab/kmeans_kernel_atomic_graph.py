@@ -58,22 +58,22 @@ def kmeans(
     arrayP, arrayPcluster, arrayC, arrayCsum, arrayCnumpoint, num_points, num_centroids
 ):
 
-    copy_arrayC[num_centroids, nb.DEFAULT_LOCAL_SIZE](arrayC, arrayP)
+    copy_arrayC[num_centroids,](arrayC, arrayP)
 
     for i in range(ITERATIONS):
-        groupByCluster[num_points, nb.DEFAULT_LOCAL_SIZE](
+        groupByCluster[num_points,](
             arrayP, arrayPcluster, arrayC, num_points, num_centroids
         )
 
-        calCentroidsSum1[num_centroids, nb.DEFAULT_LOCAL_SIZE](
+        calCentroidsSum1[num_centroids,](
             arrayCsum, arrayCnumpoint
         )
 
-        calCentroidsSum2[num_points, nb.DEFAULT_LOCAL_SIZE](
+        calCentroidsSum2[num_points,](
             arrayP, arrayPcluster, arrayCsum, arrayCnumpoint
         )
 
-        updateCentroids[num_centroids, nb.DEFAULT_LOCAL_SIZE](
+        updateCentroids[num_centroids,](
             arrayC, arrayCsum, arrayCnumpoint, num_centroids
         )
 

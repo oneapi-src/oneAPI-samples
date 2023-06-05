@@ -67,7 +67,7 @@ def local_memory():
         # preload
         lm[i] = A[i]
         # barrier local or global will both work as we only have one work group
-        dpex.barrier(dpex.CLK_LOCAL_MEM_FENCE)  # local mem fence
+        dpex.barrier(dpex.LOCAL_MEM_FENCE)  # local mem fence
         # write
         A[i] += lm[blocksize - 1 - i]
 
