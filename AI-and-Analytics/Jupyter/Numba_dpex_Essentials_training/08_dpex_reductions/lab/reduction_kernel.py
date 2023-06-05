@@ -1,21 +1,18 @@
-##==============================================================
-## Copyright © Intel Corporation
-##
-## SPDX-License-Identifier: Apache-2.0
-## =============================================================
+# SPDX-FileCopyrightText: 2020 - 2023 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
 
 import math
 
 import dpctl
 import numpy as np
 
-import numba_dpex as dpex
-import timeit
+import numba_dpex as ndpx
 
 
-@dpex.kernel
+@ndpx.kernel
 def sum_reduction_kernel(A, R, stride):
-    i = dpex.get_global_id(0)
+    i = ndpx.get_global_id(0)
     # sum two element
     R[i] = A[i] + A[i + stride]
     # store the sum to be used in nex iteration
@@ -31,15 +28,13 @@ def sum_reduce(A):
     # Use the environment variable SYCL_DEVICE_FILTER to change the default device.
     # See https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#sycl_device_filter.
     device = dpctl.select_default_device()
-    #print("Using device ...")
-    #device.print_device_info()
+    print("Using device ...")
+    device.print_device_info()
 
     with dpctl.device_context(device):
         while total > 1:
             global_size = total // 2
-            sum_reduction_kernel[global_size, dpex.DEFAULT_LOCAL_SIZE](
-                A, R, global_size
-            )
+            sum_reduction_kernel[ndpx.Range(global_size)](A, R, global_size)
             total = total // 2
 
     return R[0]
@@ -47,7 +42,8 @@ def sum_reduce(A):
 
 def test_sum_reduce():
     # This test will only work for size = power of two
-    N = 1024  
+    N = 2048
+    #assert N % 2 == 0
 
     A = np.array(np.random.random(N), dtype=np.float32)
     A_copy = A.copy()
@@ -55,13 +51,14 @@ def test_sum_reduce():
     actual = sum_reduce(A)
     expected = A_copy.sum()
 
-    #print("Actual:  ", actual)
-    #print("Expected:", expected)   
+    print("Actual:  ", actual)
+    print("Expected:", expected)
 
-    #print("Done...")
-    
+    #assert expected - actual < 1e-2
+
+    print("Done...")
+
+
 if __name__ == "__main__":
-    t = timeit.Timer(lambda: test_sum_reduce())
-    print("Time to calculate reduction",t.timeit(500),"seconds")
-    
+    test_sum_reduce()
     

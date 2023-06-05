@@ -1,57 +1,43 @@
-# Copyright 2020, 2021 Intel Corporation
+# SPDX-FileCopyrightText: 2020 - 2023 Intel Corporation
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 
-"""
-The numba_dpex extension adds an automatic offload optimizer to
-numba. The optimizer automatically detects data-parallel code
-regions in a numba.jit function and then offloads the data-parallel
-regions to a SYCL device. The optimizer is triggered when a numba.jit
-function is invoked inside a dpctl ``device_context`` scope.
-This example demonstrates the usage of numba_dpex's automatic offload
-functionality. Note that numba_dpex should be installed in your
-environment for the example to work.
-"""
+import dpnp
+import numpy.testing as testing
 
-import numpy as np
-from numba import njit, prange
-import dpctl
+import numba_dpex as ndpx
 
 
-@njit
-def add_two_arrays(b, c):
-    a = np.empty_like(b)
-    for i in prange(len(b)):
-        a[i] = b[i] + c[i]
+# Data parallel kernel implementing vector sum
+@ndpx.kernel
+def kernel_vector_sum(a, b, c):
+    i = ndpx.get_global_id(0)
+    c[i] = a[i] + b[i]
 
-    return a
 
+# Utility function for printing and testing
+def driver(a, b, c, global_size):
+    kernel_vector_sum[ndpx.Range(global_size)](a, b, c)
+    a_np = dpnp.asnumpy(a)  # Copy dpnp array a to NumPy array a_np
+    b_np = dpnp.asnumpy(b)  # Copy dpnp array b to NumPy array b_np
+    c_np = dpnp.asnumpy(c)  # Copy dpnp array c to NumPy array c_np
+    testing.assert_equal(c_np, a_np + b_np)
+
+
+# Main function
 def main():
     N = 10
-    b = np.ones(N)
-    c = np.ones(N)
+    global_size = N
+    print("Vector size N", N)
 
-    # Use the environment variable SYCL_DEVICE_FILTER to change the default device.
-    # See https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#sycl_device_filter.
-    device = dpctl.select_default_device()
+    # Create random vectors on the default device
+    a = dpnp.random.random(N)
+    b = dpnp.random.random(N)
+    c = dpnp.ones_like(a)
+
     print("Using device ...")
-    device.print_device_info()
-
-    with dpctl.device_context(device):
-        result = add_two_arrays(b, c)
-
-    print("Result :", result)
-
+    print(a.device)
+    driver(a, b, c, global_size)
     print("Done...")
 
 
