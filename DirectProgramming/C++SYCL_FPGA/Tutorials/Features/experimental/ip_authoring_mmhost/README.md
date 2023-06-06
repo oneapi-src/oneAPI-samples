@@ -78,7 +78,7 @@ struct MyIP {
 
   void operator()() const {
     ...
-    // Functor code
+    // Kernel code
     my_pointer[x] = y;
     ...
   }
