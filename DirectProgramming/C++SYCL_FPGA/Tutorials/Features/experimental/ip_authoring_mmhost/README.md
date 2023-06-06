@@ -16,12 +16,12 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-When optimizing a design, choosing the right interface can effectively improve the Quality of Results (QoR), often without requiring changes to the design's algorithm. Sometimes the system that a component will be added to, dictates what interfaces must be used.
+When optimizing a design, choosing the right interface can effectively improve the Quality of Results (QoR), often without requiring changes to the design's algorithm. Sometimes the system that a  will be added to, dictates what interfaces must be used.
 
 This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configure memory-mapped interfaces for kernel's arguments. These generated interfaces will follow the Avalon MM protocol. 
 
-Deciding what combinations of Avalon-MM interfaces your component uses is dependent on both 
-the desired area and performance of the component, as well as constraints from the system 
+Deciding what combinations of Avalon-MM interfaces your kernal uses is dependent on both 
+the desired area and performance of the kernal, as well as constraints from the system 
 (i.e., what type of memory is available?, is there contention on the memory bus?, etc.).
 
 ### Memory-mapped interface parameters
@@ -31,9 +31,9 @@ The following parameters are available for configuration:
 | Memory Attribute                 | Description               | Default Value
 ---                                |---   |---
 | `buffer_location`          | The address space of the interface that associates with the host. | 0
-| `awidth`          | The width of the memory-mapped data bus in bits. | 28
-| `dwidth`          | The width of the memory-mapped address bus in bits. | 64
-| `latency`         | The guaranteed latency from when a read command exits the component when the external memory returns valid read data. | 16
+| `awidth`          | The width of the memory-mapped address bus in bits. | 41
+| `dwidth`          | The width of the memory-mapped data bus in bits. | 64
+| `latency`         | The guaranteed latency from when a read command exits the kernal when the external memory returns valid read data. | 16
 | `readwrite_mode`  | The port direction of the interface. (0: Read & Write, 1: Read only, 2: Write only) | 0
 | `maxburst`        | The maximum number of data transfers that can associate with a read or write transaction. | 1
 | `align`           | The alignment of the base pointer address in bytes. | 0
@@ -95,9 +95,11 @@ struct MyIP {
 
 
 #### Example 2: Changing default mmhost interface.
-If the mmhost argument is specified as a conduit interface then an input wire is generated at the top-level device image module with the same width as the address width property.
+An Avalaon bus is generate for every unique global memory in the system. 
 
-If the mmhost argument is specified as a register-mapped argument, then only the Avalon bus will be created at the top-level device image module. The argument will be written into the register map
+If the mmhost argument is specified as a conduit interface then an input wire is generated at the top-level device image IP to carry the the pointer address into the kernal. 
+
+If the mmhost argument is specified as a register-mapped argument, the input pointer is written into a register map associated with the kernal. An Avalon bus is generated for writing those arguments into a register map, with no seperate wire needed at the top level device image to input the address. 
 ```c++
 // A memory-mapped interface that is implemented as a register.
   register_map_mmhost(
@@ -333,7 +335,7 @@ Locate `report.html` in the `mmhost_report.prj/reports/` directory. Open the rep
 
 Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `VectorMADIP` kernal consumes way less area under all categories than the `PointerIP` kernal. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
 
-Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `VectorMADIP` Kernal has a lower latency than the `PointerIP` Kernal, and there are less blcoks being scheduled. This is because the component has access to all 3 memories in parallel without contention.
+Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `VectorMADIP` Kernal has a lower latency than the `PointerIP` Kernal, and there are less blcoks being scheduled. This is because the kernal has access to all 3 memories in parallel without contention.
 
 
 ## Running the Sample
