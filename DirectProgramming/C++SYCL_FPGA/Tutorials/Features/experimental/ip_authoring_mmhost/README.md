@@ -94,12 +94,12 @@ struct MyIP {
 
 
 
-#### Example 2: Changing default mmhost interface.
 An Avalaon bus is generate for every unique global memory in the system. 
 
 If the mmhost argument is specified as a conduit interface then an input wire is generated at the top-level device image IP to carry the the pointer address into the kernal. 
 
-If the mmhost argument is specified as a register-mapped argument, the input pointer is written into a register map associated with the kernal. An Avalon bus is generated for writing those arguments into a register map, with no seperate wire needed at the top level device image to input the address. 
+If the mmhost argument is specified as a register-mapped argument, the input pointer is written into a register map associated with the kernal. An Avalon bus is generated for writing those arguments into a register map, with no seperate wire needed at the top level device image to input the address.
+#### Example 2: Changing default mmhost interface. 
 ```c++
 // A memory-mapped interface that is implemented as a register.
   register_map_mmhost(
@@ -133,7 +133,9 @@ The compiler infers a unique global memory for each pointer argument that is ann
 
 To understand how these start addresses are generated and how the compiler assigns special values to the top bits of the addresses please see the complete documentation on memory-mapped interfaces. If the parameters are not set correctly, this can lead to undefined behaviour.
 
-The file will have the following entries based on the kernel arguments used in this tutorial:Example of a pointer argument in the ipinterfaces.xml:
+The file will have the following entries based on the kernel arguments used in this tutorial:
+
+Example of a pointer argument in the ipinterfaces.xml:
 ```xml
 <global_mem name="1" default="1" max_bandwidth="0" config_addr="0x0" type="device private" allocation_type="host,shared">
   <interface name="1" type="agent" width="64" address="0x2000000000000" latency="16" latency_type="fixed" waitrequest="1" size="0x10000000">
@@ -155,13 +157,13 @@ A simplified description of the signals that constitute the Avalon signal bus is
 
 | Signal | Description | Width
 | --- | --- | ---
-| `address` | Represents the byte address | 1-64 bits
+| `address` | Represents the byte address | 1 - 64 bits
 | `writedata` | Data for write transfers | 8, 16, 32, 64, 128, 256, 512, or 1024 bits
 | `readdata` | The readdata driven from the agent to the host in response to a read transfer | 8, 16, 32, 64, 128, 256, 512, or 1024 bits
 | `byteenable` | Enables one or more specific byte lanes during transfers on interfaces of width greater than 8 bits. Each bit in byteenable corresponds to a byte in writedata and readadata | 2, 4, 8, 16, 32, 64, or 128 bits
 | `waitrequest` | An agent asserts this waitrequest signal when unable to respond to read/write requests | 1 bit 
 | `readdatavalid` | Used for variable-latency pipelined read transfers, asserts that the readdata signal contains valid data | 1 bit
-| `burstcount` | Used to indicate the number of transfers in each burst | 1-11 bits
+| `burstcount` | Used to indicate the number of transfers in each burst | 1 - 11 bits
 
 ### Buffer Location in Pointer Address Bits
 The compiler encodes certain information regarding the virtual address space in top bits of the 64 bits wide pointer address. Below is a table showing which bits correspond to what function
@@ -186,7 +188,6 @@ In some cases, the compiler cannot figure out which buffer location a pointer co
 This tutorial demonstrates how to implement a memory-mapped interface in an IP authoring flow. The design performs a multiply and add operation on two input vectors, stores the result of the multiple in the second vector, and the result of the add in an output-only vector.
 
 * Memory-mapped interfaces needs to contain all parameters to work correctly.
-* Available parameters and default values can be fount at the header <sycl/ext/intel/prototype/interfaces.hpp>
 
 ## Testing the Tutorial
 In ```mmhost.cpp```, two seperate Kernal IP's are declared for the same operation of adding and multiplying two vectors. ```PointerIP``` which declares a global memory interface for all pointers, and ```VectorMADIP``` which declares a seperate interface buffer location to each argument. 
