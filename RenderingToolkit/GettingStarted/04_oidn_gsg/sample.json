@@ -7,7 +7,7 @@
   "languages": [{"cpp":{}}],
   "dependencies": ["tbb","rkcommon"],
   "os":["linux", "windows", "darwin"],
-  "targetDevice": ["CPU"],
+  "targetDevice": ["CPU","GPU"],
   "ciTests": {
         "linux": [
                 {
@@ -18,7 +18,8 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                    "./oidnDenoise -d cpu -hdr accumulatedFrameCpp.pfm -o denoised.pfm",
+                    "./oidnDenoise -d sycl -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ],
@@ -32,7 +33,8 @@
                     "cmake --build . --config Release",
                     "cd Release",
 		    "copy ..\\..\\accumulatedFrameCpp.pfm .",
-                    ".\\oidnDenoise.exe -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                    ".\\oidnDenoise.exe -d cpu -hdr accumulatedFrameCpp.pfm -o denoised.pfm",
+                    ".\\oidnDenoise.exe -d sycl -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                 ]
 
                 }
