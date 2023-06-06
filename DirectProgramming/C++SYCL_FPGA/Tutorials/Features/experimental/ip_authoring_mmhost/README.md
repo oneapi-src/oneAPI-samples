@@ -18,7 +18,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 ## Purpose
 When optimizing a design, choosing the right interface can effectively improve the Quality of Results (QoR), often without requiring changes to the design's algorithm. Sometimes the system that a component will be added to, dictates what interfaces must be used.
 
-This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configure memory-mapped interfaces for kernel's arguments."
+This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configure memory-mapped interfaces for kernel's arguments. These generated interfaces will follow the Avalon MM protocol. 
 
 Deciding what combinations of Avalon-MM interfaces your component uses is dependent on both 
 the desired area and performance of the component, as well as constraints from the system 
@@ -65,11 +65,18 @@ struct PointerIP{
 
 The mmhost macros are restricted to use with functors, which means that they cannot be used when the kernel is written as a lambda function. Also, all arguments of the macro must be specified, even if just one parameter is being changed from the default values.
 
-#### Example: A kernel expressed using a functor model.
+#### Example 1: A kernel expressed using a functor model with mmhost macro.
 ```c++
 struct MyIP {
   mmhost(
-    ... // All mmhost parameters.
+    1,       // buffer_location or aspace
+    28,      // address width
+    64,      // data width
+    16,      // latency
+    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+    1,       // maxburst
+    0,       // align, 0 defaults to alignment of the type
+    1        // waitrequest, 0: false, 1: true
   ) int *my_pointer;
 
   MyIP(int *input_pointer) : my_pointer(input_pointer) { ... } // Constructor for our IP.
@@ -86,20 +93,6 @@ struct MyIP {
 ```
 
 
-#### Example 1: How to set-up a correct mmhost interface
-```c++
-// A memory-mapped interface must contain all parameters, in the following order:
-  mmhost(
-    1,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // latency
-    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *memory_mapped_pointer;
-```
 
 #### Example 2: Changing default mmhost interface.
 If the mmhost argument is specified as a conduit interface then an input wire is generated at the top-level device image module with the same width as the address width property.
@@ -129,6 +122,8 @@ If the mmhost argument is specified as a register-mapped argument, then only the
     1        // waitrequest, 0: false, 1: true
   ) int *memory_mapped_pointer;
 ```
+
+If unspecified, when using only the ```mmhost(...)``` macro, a register_map based input argument interface is used.
 
 ### Memory Base Addresses assigned by the compiler
 
