@@ -22,7 +22,7 @@ This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configu
 
 Deciding what combinations of Avalon-MM interfaces your component uses is dependent on both 
 the desired area and performance of the component, as well as constraints from the system 
-(ie. what type of memory is available, is there contention on the memory bus, etc.).
+(i.e., what type of memory is available?, is there contention on the memory bus?, etc.).
 
 ### Memory-mapped interface parameters
 
