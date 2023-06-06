@@ -63,7 +63,7 @@ struct PointerIP{
 
 ### Memory-mapped interface implementation restriction
 
-Memory-mapped interface is restricted to function implementations, which means that it is not supported for lambda implementation. Also, all parameters must be preset, even if just one parameter is being changed from the default values.
+The mmhost macros are restricted to use with functors, which means that they cannot be used when the kernel is written as a lambda function. Also, all arguments of the macro must be specified, even if just one parameter is being changed from the default values.
 
 #### Example: A kernel expressed using a functor model.
 ```c++
