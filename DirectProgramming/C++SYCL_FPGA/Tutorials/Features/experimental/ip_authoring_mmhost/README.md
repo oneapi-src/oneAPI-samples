@@ -30,7 +30,7 @@ The following parameters are available for configuration:
 
 | Memory Attribute                 | Description               | Default Value
 ---                                |---   |---
-| `buffer_location`          | The address space of the interface that associates with the host. | 1
+| `buffer_location`          | The address space of the interface that associates with the host. | 0
 | `awidth`          | The width of the memory-mapped data bus in bits | 28
 | `dwidth`          | The width of the memory-mapped address bus in bits. | 64
 | `latency`         | The guaranteed latency from when a read command exits the component when the external memory returns valid read data. | 16
