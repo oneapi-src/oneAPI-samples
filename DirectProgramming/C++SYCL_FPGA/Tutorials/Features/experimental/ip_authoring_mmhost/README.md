@@ -16,11 +16,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-When optimizing a design, not only changing the algorithm might help, but also
-choosing the right interface can effectively improve the QoR. However, sometimes
-the system that a component will be added to dictates what interfaces must be
-used. Choosing different interfaces can impact the QoR of a component without changing
-the algorithm. 
+When optimizing a design, choosing the right interface can effectively improve the Quality of Results (QoR), often without requiring changes to the design's algorithm. Sometimes the system that a component will be added to, dictates what interfaces must be used.
 
 With the mmhost interface controls, the user can configure memory-mapped interfaces for their components.
 
