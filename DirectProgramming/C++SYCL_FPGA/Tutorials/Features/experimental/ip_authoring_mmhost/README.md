@@ -46,9 +46,6 @@ If no memory-mapped interface macro is specified for a pointer kernel argument, 
 struct PointerIP{
   int *x, *y, *z;
   int size;
-  
-  PointerIP(int *x_, int *y_, int *z_, int size_)
-    : x(x_), y(y_), z(z_), size(size_) {}
 
     void operator()() const {
       for (int i = 0; i < size; ++i) {
@@ -78,10 +75,6 @@ struct MyIP {
     0,       // align, 0 defaults to alignment of the type
     1        // waitrequest, 0: false, 1: true
   ) int *my_pointer;
-
-  MyIP(int *input_pointer) : my_pointer(input_pointer) { ... } // Constructor for our IP.
-    ...
-  }
 
   void operator()() const {
     ...
