@@ -41,7 +41,7 @@ The following parameters are available for configuration:
 
 ### Default interface
 
-If no memory-mapped interface parameters is informed for a pointer, then a mmhost interface with all default parameters is assumed for it.
+If no memory-mapped interface macro is specified for a pointer kernel argument, then a mmhost interface with all default parameters is generated for it.
 ```c++
 struct PointerIP{
   int *x, *y, *z;
