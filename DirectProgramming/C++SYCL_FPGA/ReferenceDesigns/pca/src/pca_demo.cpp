@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
         }
       }
     }
-      
+
     /////////////////////////////////////////////////////////////////////
     /////////  Sorting and matching with golden value ///////////////////
     /////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
 
         if (fabs(fabs(golden_eigen_value) - fabs(kernel_eigen_value)) >
                 k_diff_threshold ||
-            isnan(golden_eigen_value) || isnan(kernel_eigen_value)) {
+            std::isnan(golden_eigen_value) || std::isnan(kernel_eigen_value)) {
           eigen_values_errors++;
           std::cout
               << "Mismatch between golden and kernel Eigen value for matrix "
@@ -269,7 +269,8 @@ int main(int argc, char *argv[]) {
 
           if (fabs(fabs(golden_vector_element) - fabs(kernel_vector_element)) >
                   k_diff_threshold ||
-              isnan(golden_vector_element) || isnan(kernel_vector_element)) {
+              std::isnan(golden_vector_element) ||
+              std::isnan(kernel_vector_element)) {
             eigen_vectors_errors++;
 
             std::cout << "Mismatch between golden and kernel Eigen vector "
@@ -326,7 +327,6 @@ int main(int argc, char *argv[]) {
       constexpr int kBlockIterations =
           kBlockTransposedMatrixProductIterationsCount *
           kBlockTransposedMatrixProductIterations;
-
 
       // Compute the latency of all the QR iterations:
       // Compute the latency of one QR iteration
