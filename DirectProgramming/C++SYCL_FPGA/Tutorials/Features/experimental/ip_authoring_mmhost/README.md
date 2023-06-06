@@ -65,7 +65,7 @@ struct PointerIP{
 
 Memory-mapped interface is restricted to function implementations, which means that it is not supported for lambda implementation. Also, all parameters must be preset, even if just one parameter is being changed from the default values.
 
-#### Example Functor
+#### Example: A kernel expressed using a functor model.
 ```c++
 struct MyIP {
   mmhost(
