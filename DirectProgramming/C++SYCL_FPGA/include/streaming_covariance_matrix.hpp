@@ -72,18 +72,23 @@ struct StreamingCovarianceMatrix {
     // We keep a replicate of the diagonal of T for improved memory access
     // pattern over T
     // [[intel::fpga_register]]       // NO-FORMAT: Attribute
-      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      // [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
     T t_matrix_diagonal_replicate[columns];
 
     // Array to keep the means of all the A matrix columns
-    //   [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+    //   [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
     row_tuple means_tuple;
         // Copy the mean and the T diagonal to structures that are
         // more easily accessible
-      // [[intel::private_copies(4)]] // NO-FORMAT: Attribute
+      // [[intel::private_copies(128)]] // NO-FORMAT: Attribute
         T means[columns];
 
         // T means_consume[columns];
+
+
+    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
+    T t_matrix[columns * columns];
 
 
     int block = 0;
@@ -94,19 +99,10 @@ struct StreamingCovarianceMatrix {
       // for (int block = 0; block < block_count; block++) {
         // Read the first matrix block into the a_load local memory
 
-      if (block == 0){
-        fpga_tools::UnrolledLoop<columns>([&](auto t) {
-          // means[t] =0;
-          // t_matrix_diagonal_replicate[t] = 0;
-          // means_tuple.template get<t>() = 0;
-          // t_matrix_diagonal_replicate_tuple.template get<t>() = 0;
-        });
-      }
-
         [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
         [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
         row_tuple a_load[columns];
 
         [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -148,19 +144,20 @@ struct StreamingCovarianceMatrix {
         row_tuple next_base_column;
         // Compute the block T matrix and the partial means
 
-    // Matrix to hold the partial block results of At*A
-    // During the compute of T
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-    T t_matrix_compute[columns * columns];
+
     T t_matrix_diagonal_replicate_partial[columns];
         T means_array[columns];
 
     // For the computation of COV
     [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
     T t_matrix_consume[columns][columns];
-
+    // Matrix to hold the partial block results of At*A
+    // During the compute of T
+    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
+    T t_matrix_compute[columns * columns];
+    
         int row=0;
         int column =0;
         // [[intel::ivdep]]      // NO-FORMAT: Attribute
@@ -194,17 +191,20 @@ struct StreamingCovarianceMatrix {
               mean += current_column.template get<t>();
             });
 
-            // Update the partial results matrix
-            T t_result = block == 0
-                             ? dot_product
-                             : dot_product + t_matrix_compute[it];
-            t_matrix_compute[it] = t_result;
 
-            // on the last block, copy the final T matrix to the second
-            // copy of T for the COV computation
-            if (block == (block_count - 1)) {
-              t_matrix_consume[row][column] = t_result;
-            }
+            t_matrix_compute[it] = dot_product;            
+
+            // // Update the partial results matrix
+            // T t_result = block == 0
+            //                  ? dot_product
+            //                  : dot_product + t_matrix_compute[it];
+            // t_matrix_compute[it] = t_result;
+
+            // // on the last block, copy the final T matrix to the second
+            // // copy of T for the COV computation
+            // if (block == (block_count - 1)) {
+            //   t_matrix_consume[row][column] = t_result;
+            // }
 
             // Adjust the mean as we only need to compute it once
             if (row != 0) {
@@ -266,6 +266,15 @@ struct StreamingCovarianceMatrix {
           t_matrix_diagonal_replicate[t] = t_matrix_diagonal_replicate_partial[t] + t_matrix_diagonal_replicate_to_add;
         });
 
+        for (row = 0; row< columns; row++){
+          fpga_tools::UnrolledLoop<columns>([&](auto column) {
+            T t_matrix_to_add = block == 0 ? 0 : t_matrix[row * columns + column]; 
+            T sum = t_matrix_compute[row * columns + column] + t_matrix_to_add;
+            t_matrix[row * columns + column] = sum;
+            t_matrix_consume[row][column] = sum;
+          });        
+        }
+
         // fpga_tools::UnrolledLoop<columns>([&](auto t) {
         //   // means[t] = means_tuple.template get<t>();
         //   t_matrix_diagonal_replicate[t] =
@@ -278,7 +287,7 @@ struct StreamingCovarianceMatrix {
         [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
         [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        [[intel::private_copies(128)]]            // NO-FORMAT: Attribute
         T cov_matrix[columns][columns];
 
         // for (int row = 0; row < columns; row++) {
@@ -308,13 +317,15 @@ struct StreamingCovarianceMatrix {
         //   }  // end for:column
         // }    // end for:row
 
-        // PRINTF("COV MATRIX\n");
-        // for (int row = 0; row < columns; row++) {
-        //   for (int column = 0; column < columns; column++) {
-        //     PRINTF("%f ", cov_matrix[row][column]);
-        //   }  // end for:column
-        //     PRINTF("\n");
-        // }    // end for:row
+          // if (block == block_count-1){
+          //   PRINTF("COV MATRIX\n");
+          //   for (int row = 0; row < columns; row++) {
+          //     for (int column = 0; column < columns; column++) {
+          //       PRINTF("%f ", cov_matrix[row][column]);
+          //     }  // end for:column
+          //       PRINTF("\n");
+          //   }    // end for:row
+          // }
 
         // Write the standardized covariance matrix to the output pipe
         // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -332,6 +343,7 @@ struct StreamingCovarianceMatrix {
               if constexpr (t * pipe_size + k < columns) {
                 pipe_write.template get<k>() =
                     get[t]
+                        // ? t_matrix_compute[(li / kLoopIterationPerRow) * columns + t * pipe_size + k]
                         ? cov_matrix[li / kLoopIterationPerRow][t * pipe_size + k]
                         : sycl::ext::intel::fpga_reg(
                               pipe_write.template get<k>());
@@ -345,7 +357,12 @@ struct StreamingCovarianceMatrix {
         }
       
 
-      block++;
+      if (block == block_count-1){
+        block = 0;
+      }
+      else{
+        block++;
+      }
     }  // end of while
   };  // end of operator()
 };    // end of struct{}

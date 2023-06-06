@@ -76,10 +76,10 @@ void PCAKernel(
   // Pipes to communicate the A, Q and R matrices between kernels
   using InputMatrixPipe = sycl::ext::intel::pipe<IMP, PipeType, 3>;
   using CovarianceMatrixPipe = sycl::ext::intel::pipe<CMP, PipeType, 3>;
-  using EigenValuesPipe = sycl::ext::intel::pipe<EValP, T, 3>;
-  using EigenVectorsPipe = sycl::ext::intel::pipe<EVecP, PipeType, 3>;
-  using RankDeficientFlagPipe =
-      sycl::ext::intel::pipe<RDFP, ac_int<1, false>, 3>;
+  // using EigenValuesPipe = sycl::ext::intel::pipe<EValP, T, 3>;
+  // using EigenVectorsPipe = sycl::ext::intel::pipe<EVecP, PipeType, 3>;
+  // using RankDeficientFlagPipe =
+  //     sycl::ext::intel::pipe<RDFP, ac_int<1, false>, 3>;
 
   T *input_matrix_device;
   T *eigen_vectors_device;
@@ -162,40 +162,40 @@ void PCAKernel(
           T, k_samples_count, k_features_count, kNumElementsPerDDRBurst,
           InputMatrixPipe, CovarianceMatrixPipe>());
 
-  // Compute the Eigen values and Eigen vectors
-  q.single_task<EigenValuesAndVectorsComputation>(
-      fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
-                                  kNumElementsPerDDRBurst, k_zero_threshold_1e,
-                                  CovarianceMatrixPipe, EigenValuesPipe,
-                                  EigenVectorsPipe, RankDeficientFlagPipe>());
+  // // Compute the Eigen values and Eigen vectors
+  // q.single_task<EigenValuesAndVectorsComputation>(
+  //     fpga_linalg::StreamingEigen<T, k_features_count, k_raw_latency,
+  //                                 kNumElementsPerDDRBurst, k_zero_threshold_1e,
+  //                                 CovarianceMatrixPipe, EigenValuesPipe,
+  //                                 EigenVectorsPipe, RankDeficientFlagPipe>());
 
-  // Write the Eigen values from local memory to FPGA DDR
-  auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
-  ]() [[intel::kernel_args_restrict]] {
-    VectorReadPipeToDDR<T, k_features_count, EigenValuesPipe>(
-        eigen_values_device, matrix_count, repetitions);
-  });
+  // // Write the Eigen values from local memory to FPGA DDR
+  // auto eigen_values_event = q.single_task<EigenValuesFromLocalMemToDDR>([=
+  // ]() [[intel::kernel_args_restrict]] {
+  //   VectorReadPipeToDDR<T, k_features_count, EigenValuesPipe>(
+  //       eigen_values_device, matrix_count, repetitions);
+  // });
 
-  // Write the rank deficient flag from local memory to FPGA DDR
-  auto rank_deficient_flag_event =
-      q.single_task<RankDeficientFlagFromLocalMemToDDR>([=
-  ]() [[intel::kernel_args_restrict]] {
-        VectorReadPipeToDDR<ac_int<1, false>, 1, RankDeficientFlagPipe>(
-            rank_deficient_flag_device, matrix_count, repetitions);
-      });
+  // // Write the rank deficient flag from local memory to FPGA DDR
+  // auto rank_deficient_flag_event =
+  //     q.single_task<RankDeficientFlagFromLocalMemToDDR>([=
+  // ]() [[intel::kernel_args_restrict]] {
+  //       VectorReadPipeToDDR<ac_int<1, false>, 1, RankDeficientFlagPipe>(
+  //           rank_deficient_flag_device, matrix_count, repetitions);
+  //     });
 
   // Write the Eigen vectors from local memory to FPGA DDR
   auto eigen_vectors_event = q.single_task<EigenVectorsFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count, k_features_count,
-                        kNumElementsPerDDRBurst, EigenVectorsPipe>(
+                        kNumElementsPerDDRBurst, CovarianceMatrixPipe>(
         eigen_vectors_device, matrix_count, repetitions);
   });
 
   // Wait for the completion of the pipeline
-  eigen_values_event.wait();
+  // eigen_values_event.wait();
   eigen_vectors_event.wait();
-  rank_deficient_flag_event.wait();
+  // rank_deficient_flag_event.wait();
 
   // Compute the total time the execution lasted
   auto start_time = ddr_write_event.template get_profiling_info<
