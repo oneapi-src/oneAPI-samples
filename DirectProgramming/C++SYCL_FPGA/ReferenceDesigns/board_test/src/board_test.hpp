@@ -200,7 +200,7 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
 
     // Get time for copy operation using Sycl event information (return in
     // nanoseconds)
-    sum_time_ns += SyclGetQSubExecTimeNs(h2d_copy_e);
+    sum_time_ns += SyclGetQStExecTimeNs(h2d_copy_e);
 
     // Increment offset and decrement remaining bytes by size of transfer
     offset += chunk;
@@ -261,7 +261,7 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
 
     // Get time for copy operation using Sycl event information (return in
     // nanoseconds)
-    sum_time_ns += SyclGetQSubExecTimeNs(d2h_copy_e);  // Nanoseconds
+    sum_time_ns += SyclGetQStExecTimeNs(d2h_copy_e);  // Nanoseconds
 
     // **** Verification **** //
 
@@ -355,7 +355,7 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
 // 3. struct Speed ReadSpeed(queue &q, buffer<char,1> &device_buffer, char
 // *hostbuf_rd, size_t block_bytes, size_t total_bytes)
 // 4. bool CheckResults
-// 4. unsigned long SyclGetQSubExecTimeNs(event e)
+// 4. unsigned long SyclGetQStExecTimeNs(event e)
 // 5. unsigned long SyclGetTotalTimeNs(event first_evt, event last_evt)
 
 int ShimMetrics::HostSpeed(sycl::queue &q) {
@@ -729,7 +729,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
 
   // **** Get time for kernel event **** //
 
-  float time = SyclGetQSubExecTimeNs(e);
+  float time = SyclGetQStExecTimeNs(e);
   kernel_freq_ =
       ((float)kGlobalSize) /
       (time / 1000.0f);  // Time is returned in nanoseconds,
