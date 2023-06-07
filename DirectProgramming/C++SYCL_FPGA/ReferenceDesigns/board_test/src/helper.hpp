@@ -128,11 +128,11 @@ unsigned long SyclGetQStExecTimeNs(sycl::event e) {
 // returns the total execution time for all events between first and last
 
 unsigned long SyclGetTotalTimeNs(sycl::event first_evt, sycl::event last_evt) {
-  unsigned long first_evt_submit =
+  unsigned long first_evt_start =
       first_evt.get_profiling_info<sycl::info::event_profiling::command_start>();
   unsigned long last_evt_end =
       last_evt.get_profiling_info<sycl::info::event_profiling::command_end>();
-  return (last_evt_end - first_evt_submit);
+  return (last_evt_end - first_evt_start);
 }  // End of SyclGetTotalTimeNs
 
 /////////////////////////////////////////
