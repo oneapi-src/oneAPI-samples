@@ -269,7 +269,7 @@ The key optimization techniques used are as follows:
 
 ### Dataset used to validate the sample
 
-The dataset used in this sample is the [Abalone dataset](https://www.kaggle.com/datasets/rodolfomendes/abalone-dataset?resource=download) which is used to predicting the age of abalone from physical measurements.
+The dataset used in this sample is the [Abalone dataset](https://archive.ics.uci.edu/ml/datasets/abalone) which is used to predicting the age of abalone from physical measurements.
 It can be found in the `data` folder.
 
 ### Compiler Flags Used
