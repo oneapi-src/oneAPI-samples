@@ -12,19 +12,6 @@ if(NOT DEFINED FPGA_DEVICE)
                     \nPlease refer to the README for information on target selection.")
 else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
-
-    # Check if the target is a BSP
-    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
-        set(IS_BSP "1")
-    else()
-        set(IS_BSP "0")
-        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
-        message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1.")
-    endif()
-endif()
-
-if((IS_BSP STREQUAL "1"))
-    message(FATAL_ERROR "ERROR: This tutorial is only supported in the IP Authoring flow and therefore does not support BSPs as a target.")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
