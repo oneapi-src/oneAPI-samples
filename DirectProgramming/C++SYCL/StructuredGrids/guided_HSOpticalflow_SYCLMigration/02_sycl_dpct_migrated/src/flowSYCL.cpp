@@ -46,12 +46,12 @@
 
 // custom device selector to pick device that supports sycl::image
 int sycl_image_support(const sycl::device& d ) {
-  if(d.get_info<info::device::image_support>() == false){
+  if(d.has(aspect::image) == false){
     std::cout << d.get_info<info::device::name>() << " ==> Image Support = NO\n"; 
   } else {
     std::cout << d.get_info<info::device::name>() << " ==> Image Support = YES\n";  
   }
-  return d.get_info<info::device::image_support>();
+  return d.has(aspect::image);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,8 +84,7 @@ void ComputeFlowSYCL(const float *I0, const float *I1, int width, int height,
     }
   };
   
-  sycl::device preferred_device { sycl_image_support };
-  sycl::queue q_ct1(preferred_device, exception_handler, property::queue::in_order());
+  sycl::queue q{aspect_selector(aspect::image), exception_handler, property::queue::in_order()};
   
   printf("Computing optical flow on Device...\n");
   std::cout << "\nRunning on "

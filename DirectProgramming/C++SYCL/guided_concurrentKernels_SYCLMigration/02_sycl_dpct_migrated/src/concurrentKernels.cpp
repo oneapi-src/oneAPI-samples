@@ -44,7 +44,9 @@
 // This is a kernel that does no real work but runs at least for a specified
 // number of clocks
 void clock_block(clock_t *d_o, clock_t clock_count, sycl::nd_item<3> item_ct1) {
-  // int i = 0;
+  // initialize
+  d_o[0] = 0;
+  
   for (int i = item_ct1.get_local_id(2); i < 500000;
        i += item_ct1.get_local_range(2)) {
     d_o[0] = d_o[0] + i;
