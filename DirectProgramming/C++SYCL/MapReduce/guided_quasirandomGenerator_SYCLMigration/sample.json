@@ -15,8 +15,9 @@
                         "cd build",
                         "cmake ..",
                         "make",
-                        "make run_cpu",
-                        "make run_gpu"
+                        "make run",
+                        "make run_smo"
+                 
                  ]
         }]
 
