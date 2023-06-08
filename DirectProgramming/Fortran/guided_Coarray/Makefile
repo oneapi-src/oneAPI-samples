@@ -1,5 +1,18 @@
-# to compile and run the sequential version type: make seq
-# to compile and run the coarray version type: make coarray
+## =============================================================
+## Copyright © 2020 Intel Corporation
+##
+## SPDX-License-Identifier: MIT
+## =============================================================
+##
+##
+##******************************************************************************
+## Content:
+##
+##  Build for guided_coarray
+ ##
+ ##  To compile and run the sequential version type: make seq
+ ##  To compile and run your coarray version type: make coarray
+ ##******************************************************************************
 
 FC=ifx
 FCFLAGS=
