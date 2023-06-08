@@ -111,7 +111,7 @@ int main(void) {
     double start, end;
     event e;
 
-    // MMHost arguments
+    // Allocate memory for pointer kernel arguments with specified buffer location
     auto x = make_malloc_shared<int>(q, size, BL1);
     auto y = make_malloc_shared<int>(q, size, BL2);
     auto z = make_malloc_shared<int>(q, size, BL3);
