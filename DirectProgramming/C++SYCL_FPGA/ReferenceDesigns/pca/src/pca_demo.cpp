@@ -11,11 +11,6 @@
 
 typedef double DataTypeCPU;
 
-// Real single precision floating-point PCA
-void PCAsycl(std::vector<float> &a_matrix, std::vector<float> &q_matrix,
-             std::vector<float> &r_matrix, sycl::queue &q, int matrix_count,
-             int repetitions) {}
-
 int main(int argc, char *argv[]) {
 #if defined(FPGA_SIMULATOR)
   // Only read a few lines of the input data when running the simulator
