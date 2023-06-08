@@ -92,7 +92,7 @@ Note that:
    ```
 3. Run the program.
    ```
-   a.out
+   ./a.out
    ```
 
 Alternately, use the `Makefile` to compile and run the program. :
@@ -117,7 +117,7 @@ Alternately, use the `Makefile` to compile and run the program. :
    ```
 4. Run the program.
    ```
-   mm_sequential.exe
+   01_mm_sequential.exe
    ```
 
 ### Example Sequential Program Output
@@ -180,7 +180,7 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
    ```
 4. Run the program.
    ```
-   a.out
+   ./a.out
    ```
 
 Alternately, use the `Makefile` to compile and run the program:
@@ -287,7 +287,7 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
    ```
 3. Run the program.
    ```
-   a.out
+   ./a.out
    ```
 
 Alternately, use the `Makefile` to compile and run the program:
@@ -315,7 +315,7 @@ Alternately, use the `Makefile` to compile and run the program:
    mm_GPU.exe
    ```
 
-### Example Parallel Program Output
+### Example GPU Offload Program Output
 
 If the run was successful, the output is:
 
