@@ -1,7 +1,7 @@
 {
   "guid": "C78A7AA5-C2A8-4527-8239-A62D2BC660AA",
   "name": "Coarray Fortran",
-  "description": "This sample shows a guided approach to build and run a serial Fortran application, and then convert it to run in parallel using coarrays.",
+  "description": "Demonstrates how to build and run a serial implementation of a Monte Carlo program, and then convert it to run in parallel using Fortran coarrays.",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Coarray"],
   "toolchain": [ "ifort", "ifx"],
   "languages": [ { "fortran": {} } ],
