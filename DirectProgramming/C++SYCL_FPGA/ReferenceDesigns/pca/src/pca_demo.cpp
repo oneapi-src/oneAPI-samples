@@ -9,8 +9,6 @@
 #include "golden_pca.hpp"
 #include "pca.hpp"
 
-typedef double DataTypeCPU;
-
 int main(int argc, char *argv[]) {
 #if defined(FPGA_SIMULATOR)
   // Only read a few lines of the input data when running the simulator

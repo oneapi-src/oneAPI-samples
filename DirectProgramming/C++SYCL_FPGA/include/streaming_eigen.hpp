@@ -177,25 +177,9 @@ struct StreamingEigen {
         });
       }
 
-      // PRINTF("A matrix in QR iteration kernel\n");
-      // for (int row = 0; row < size; row++) {
-      //   fpga_tools::UnrolledLoop<size>(
-      //       [&](auto t) { PRINTF("%f ", a_load[row].template get<t>()); });
-      //   PRINTF("\n");
-      // }
-
       // ------------------------------------------------
       // -------- Initialize matrices for the iteration
       //-------------------------------------------------
-
-      // Matrices to hold the computed R*Q matrix and the Eigen vectors
-      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      // // column_tuple rq_matrix[size],
-      // //     eigen_vectors_matrix[size];
-      // column_tuple eigen_vectors_matrix[size],
 
       T rq_matrix[size][size];
       T eigen_vectors_matrix[size][size];
@@ -570,14 +554,6 @@ struct StreamingEigen {
         }
 
         shift_value *= 0.99;
-
-        // PRINTF("RQ at iteration %d\n", iteration_count);
-        // for (int row=0; row<size; row++){
-        //   for (int column=0; column<size; column++){
-        //     PRINTF("%f ", rq_matrix[row][column]);
-        //   }
-        //   PRINTF("\n");
-        // }
 
         if (row_is_zero) {
           shift_row--;

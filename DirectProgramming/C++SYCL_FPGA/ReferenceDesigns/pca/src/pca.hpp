@@ -60,11 +60,11 @@ void PCAKernel(
                 "This can be artificially achieved by increasing the number of "
                 "samples with no data.");
 
-  // static_assert(k_samples_count > k_features_count,
-  //               "The number of samples must be greater than the number of "
-  //               "samples. Failing to do so, the standardized covariance matrix "
-  //               "would be rank deficient. Processing such a matrix from the QR "
-  //               "iteration kernel is not supported.");
+  static_assert(k_samples_count > k_features_count,
+                "The number of samples must be greater than the number of "
+                "samples. Failing to do so, the standardized covariance matrix "
+                "would be rank deficient. Processing such a matrix from the QR "
+                "iteration kernel is not supported.");
 
   constexpr int kNumElementsPerDDRBurst = 8;
   constexpr int kInputMatrixSize = k_samples_count * k_features_count;
@@ -86,7 +86,7 @@ void PCAKernel(
   T *eigen_values_device;
   ac_int<1, false> *rank_deficient_flag_device;
 
-  if (q.get_device().has(aspect::usm_device_allocations)) {
+  if (q.get_device().has(sycl::aspect::usm_device_allocations)) {
     std::cout << "Using device allocations" << std::endl;
     // Allocate FPGA DDR memory.
     input_matrix_device =
@@ -97,7 +97,7 @@ void PCAKernel(
         sycl::malloc_device<T>(kEigenValuesVectorSize * matrix_count, q);
     rank_deficient_flag_device =
         sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
-  } else if (q.get_device().has(aspect::usm_shared_allocations)) {
+  } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
     std::cout << "Using shared allocations" << std::endl;
     // No device allocations means that we are probably in an IP authoring flow
     input_matrix_device =

@@ -1,20 +1,6 @@
 #ifndef __STREAMING_COVARIANCE_MATRIX_HPP__
 #define __STREAMING_COVARIANCE_MATRIX_HPP__
 
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-
-using namespace sycl;
-
-#define PRINTF(format, ...)                                    \
-  {                                                            \
-    static const CL_CONSTANT char _format[] = format;          \
-    ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
 namespace fpga_linalg {
 // This functor computes the columns x columns covariance matrix of a rows x
 // columns input matrix A
@@ -114,13 +100,6 @@ struct StreamingCovarianceMatrix {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }  // for:li
-
-      // PRINTF("Cov submatrix read\n");
-      // for (int row = 0; row < columns; row++) {
-      //   fpga_tools::UnrolledLoop<columns>(
-      //       [&](auto t) { PRINTF("%f ", a_load[row].template get<t>()); });
-      //   PRINTF("\n");
-      // }
 
       // We are going to reuse the same column of the matrix multiple
       // iterations in a row, so we keep it locally
@@ -248,16 +227,6 @@ struct StreamingCovarianceMatrix {
           }
         }
       }
-
-      // if (block == block_count-1){
-      //   PRINTF("COV MATRIX\n");
-      //   for (int row = 0; row < columns; row++) {
-      //     for (int column = 0; column < columns; column++) {
-      //       PRINTF("%f ", cov_matrix[row][column]);
-      //     }  // end for:column
-      //       PRINTF("\n");
-      //   }    // end for:row
-      // }
 
       // Write the standardized covariance matrix to the output pipe
       // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
