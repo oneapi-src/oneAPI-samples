@@ -460,13 +460,21 @@ Example Output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA**.
 
 ```
 
-TODO
-```
-
-Example output when running on **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**.
-
-```
-TODO
+Running on device: pac_a10 : Intel PAC Platform (pac_f300000)
+Reading the input data from file.
+Features count: 8
+Samples count: 4176
+Software iterations 25
+Running Principal Component analysis of 1 matrix 4096 times
+Using device allocations
+   Total duration:   0.531844 s
+Throughput: 7.70151k matrices/s
+Verifying results...
+All the tests passed.
+Estimated throughput: 7483 matrices/s at 250 MHz
+Estimated throughput: 8979 matrices/s at 300 MHz
+Estimated throughput: 10476 matrices/s at 350 MHz
+Estimated throughput: 17959 matrices/s at 600 MHz
 ```
 
 ## License
