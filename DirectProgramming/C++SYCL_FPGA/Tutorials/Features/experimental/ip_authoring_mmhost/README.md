@@ -18,7 +18,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 ## Purpose
 When optimizing a design, choosing the right interface can effectively improve the Quality of Results (QoR), often without requiring changes to the design's algorithm. Sometimes the system that a RTL IP component will be added to, dictates what interfaces must be used.
 
-This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configure memory-mapped interfaces for kernel's arguments. These generated interfaces will follow the Avalon MM protocol. 
+This tutorial shows how to use the Memory Mapped Host (mmhost) macros to configure memory-mapped interfaces for kernel's arguments. These generated interfaces will follow the Avalon Memory Mapped (MM) protocol. 
 
 Deciding what combinations of Avalon-MM interfaces your kernal uses is dependent on both 
 the desired area and performance of the kernal, as well as constraints from the system 
