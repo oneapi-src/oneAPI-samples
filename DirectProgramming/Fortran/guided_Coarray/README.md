@@ -70,7 +70,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 3. Run the program.
    ```
-   seq
+   ./seq
    ```
 
 Alternately, use the `Makefile` to compile and run the program:
@@ -255,7 +255,7 @@ The Intel Fortran Compiler requires that coarray features are enabled by specify
    ```
 3. Run the program.
    ```
-   coarray
+   ./coarray
    ```
 
 Alternately, use the `Makefile` to compile and run the program:
@@ -314,7 +314,7 @@ The program can be run with a different number of images; the default is determi
    ```
 3. Run the program.
    ```
-   coarray
+   ./coarray
    ```
 
 Alternately, set the environment variable `FOR_COARRAY_NUM_IMAGES` to the desired number of images and run the program. The environment variable overrides the compiler option setting. For example: 
