@@ -141,8 +141,8 @@ int main(void) {
     // convert from nanoseconds to ms
     double kernel_pointer_time = (double)(end - start) * 1e-6;
 
-    std::cout << "MMHost kernel time : " << kernel_mmhost_time << " ms\n";
-    std::cout << "Pointer kernel time : " << kernel_pointer_time << " ms\n";
+    std::cout << "Kernel time with separate argument interfaces: " << kernel_mmhost_time << " ms\n";
+    std::cout << "Kernel time with common argument interface: " << kernel_pointer_time << " ms\n";
     std::cout << "elements in vector : " << size << "\n";
 
     bool pass_check = true;
