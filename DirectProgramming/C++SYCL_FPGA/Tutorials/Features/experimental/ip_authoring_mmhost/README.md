@@ -1,5 +1,5 @@
 # Memory-Mapped Interfaces (mmhost)
-This FPGA tutorial demonstrates how to use the memory-mapped interfaces with IP authoring and set the configurable parameters.
+This FPGA tutorial demonstrates how to configure Avalon memory-mapped interfaces for kernel arguments with the IP authoring flow.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
