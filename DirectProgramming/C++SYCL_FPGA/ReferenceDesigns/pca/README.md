@@ -67,8 +67,7 @@ Performance results are based on testing as of June 1st, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | ??? matrices/s for matrices of size 8 features * 4176 samples
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | ??? matrices/s for matrices of size 8 features * 4176 samples
+| Intel® PAC with Intel® Arria® 10 GX FPGA          | 7.7k matrices/s for matrices of size 8 features * 4176 samples
 
 
 ## Key Implementation Details
