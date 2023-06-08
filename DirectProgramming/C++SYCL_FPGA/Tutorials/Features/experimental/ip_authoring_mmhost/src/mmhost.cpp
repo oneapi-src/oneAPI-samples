@@ -43,7 +43,7 @@ struct VectorMADIP {
   mmhost(BL1,  // buffer_location or aspace
          28,   // address width
          64,   // data width
-         16,   // ! latency, must be atleast 16
+         16,   // latency
          1,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
          1,    // maxburst
          0,    // align, 0 defaults to alignment of the type
