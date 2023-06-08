@@ -126,7 +126,8 @@ int main(void) {
     // convert from nanoseconds to ms
     double kernel_mmhost_time = (double)(end - start) * 1e-6;
 
-    // Regular pointer arguments
+```suggestion
+    // Allocate memory for pointer kernel arguments, no buffer location is specified
     auto px = malloc_shared<int>(size, q);
     auto py = malloc_shared<int>(size, q);
     auto pz = malloc_shared<int>(size, q);
