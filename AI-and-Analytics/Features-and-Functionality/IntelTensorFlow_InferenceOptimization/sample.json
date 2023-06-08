@@ -1,6 +1,6 @@
 {
 	"guid": "9d32f194-8667-41d3-865d-d43e9983c471",
-	"name": "Optimize TensorFlow pre-trained model for inference",
+	"name": "Intel® Optimization for TensorFlow* pre-trained model for inference",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
 	"description": "This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also analyze the model pb files before and after the inference optimizations.",
 	"builder": ["cli"],

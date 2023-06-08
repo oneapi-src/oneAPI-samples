@@ -83,16 +83,26 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 You can run the programs for CPU and GPU. The commands indicate the device target.
 
-1. Run `02_sycl_dpct_migrated` for CPU and GPU.
+1. Run `02_sycl_dpct_migrated` for GPU.
     ```
-    make run_sdm_cpu
-    make run_sdm_gpu
+    make run_sdm
+    ```
+   Run `02_sycl_dpct_migrated` for CPU. 
+    ```
+    export SYCL_DEVICE_FILTER=cpu
+    make run_sdm
+    unset SYCL_DEVICE_FILTER
     ```
 
-2. Run `03_sycl_migrated` for CPU and GPU.
+2. Run `03_sycl_migrated` for GPU.
     ```
-    make run_cpu
-    make run_gpu
+    make run
+    ```
+   Run `03_sycl_migrated` for CPU.  
+    ```
+    export SYCL_DEVICE_FILTER=cpu
+    make run
+    unset SYCL_DEVICE_FILTER
     ```
 
 ### Build and Run the `concurrentKernels` Sample in Intel® DevCloud

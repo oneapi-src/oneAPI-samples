@@ -1,19 +1,15 @@
---- text_classification_with_transformer.py	2022-09-20 02:24:42.814605146 -0700
-+++ text_classification_with_transformer2.py	2022-09-20 02:24:48.489188611 -0700
-@@ -27,6 +27,16 @@
+--- text_classification_with_transformer2.py
++++ text_classification_with_transformer.py
+@@ -43,6 +43,12 @@
+ tf.config.threading.set_inter_op_parallelism_threads(inter_thread)
  
  
- """
++"""
 +## Bfloat16 mixed precision learning 
 +"""
 +
-+from tensorflow.keras import mixed_precision
++tf.config.optimizer.set_experimental_options({'auto_mixed_precision_onednn_bfloat16':True})
 +
-+policy = mixed_precision.Policy('mixed_bfloat16')
-+mixed_precision.set_global_policy(policy)
-+
-+
-+"""
+ """
  ## Implement a Transformer block as a layer
  """
- 

@@ -1,61 +1,57 @@
 #! /usr/bin/env python
-# Copyright Intel Corporation
+
+# SPDX-FileCopyrightText: 2020 - 2023 Intel Corporation
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 
 import dpctl
+import dpctl.tensor as dpt
 import numpy as np
 
-import numba_dpex as dpex
+import numba_dpex as ndpx
 
 
-@dpex.kernel
+@ndpx.kernel
 def data_parallel_sum(a, b, c):
     """
     A two-dimensional vector addition example using the ``kernel`` decorator.
     """
-    i = dpex.get_global_id(0)
-    j = dpex.get_global_id(1)
+    i = ndpx.get_global_id(0)
+    j = ndpx.get_global_id(1)
     c[i, j] = a[i, j] + b[i, j]
 
 
 def driver(a, b, c, global_size):
-    print("before A: ", a)
-    print("before B: ", b)
-    data_parallel_sum[global_size, dpex.DEFAULT_LOCAL_SIZE](a, b, c)
-    print("after  C : ", c)
+    data_parallel_sum[global_size](a, b, c)
 
 
 def main():
     # Array dimensions
     X = 8
     Y = 8
-    global_size = X, Y
+    global_size = ndpx.Range(X, Y)
 
     a = np.arange(X * Y, dtype=np.float32).reshape(X, Y)
-    b = np.array(np.random.random(X * Y), dtype=np.float32).reshape(X, Y)
-    c = np.ones_like(a).reshape(X, Y)
+    b = np.arange(X * Y, dtype=np.float32).reshape(X, Y)
+    c = np.empty_like(a).reshape(X, Y)
 
-    # Use the environment variable SYCL_DEVICE_FILTER to change the default device.
-    # See https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#sycl_device_filter.
+    c = a + b
+
     device = dpctl.select_default_device()
+    a_dpt = dpt.arange(X * Y, dtype=dpt.float32, device=device)
+    a_dpt = dpt.reshape(a_dpt, (X, Y))
+    b_dpt = dpt.arange(X * Y, dtype=dpt.float32, device=device)
+    b_dpt = dpt.reshape(b_dpt, (X, Y))
+    c_dpt = dpt.empty_like(a_dpt)
+    c_dpt = dpt.reshape(c_dpt, (X, Y))
+
     print("Using device ...")
     device.print_device_info()
 
-    with dpctl.device_context(device):
-        driver(a, b, c, global_size)
-
-    print(c)
+    print("Running kernel ...")
+    driver(a_dpt, b_dpt, c_dpt, global_size)
+    c_out = dpt.asnumpy(c_dpt)
+    assert np.allclose(c, c_out)
 
     print("Done...")
 

@@ -18,6 +18,7 @@
 * License.
 *******************************************************************************/
 
+// Snippet begin
 #include <stdio.h>
 #include <omp.h>
 #include "mkl.h"
@@ -253,3 +254,4 @@ int main() {
     mkl_free(alpha); mkl_free(beta);
     return 0;
 }
+// Snippet end

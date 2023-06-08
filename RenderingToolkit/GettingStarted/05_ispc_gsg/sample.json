@@ -44,8 +44,8 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "./simple",
-		    "./simple_multi"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./simple",
+		    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./simple_multi"
                  ]
                  }
         ]

@@ -13,7 +13,7 @@
 #include <cfloat>
 #include <iostream>
 #include <string>
-namespace sycl;
+using namespace sycl;
 
 constexpr int num_runs = 10;
 constexpr size_t scalar = 3;
@@ -23,7 +23,7 @@ cl_ulong triad(size_t array_size) {
   cl_ulong min_time_ns0 = DBL_MAX;
   cl_ulong min_time_ns1 = DBL_MAX;
 
-  device dev = device(gpu_selector());
+  device dev = device(gpu_selector_v);
 
   std::vector<device> subdev = {};
   subdev = dev.create_sub_devices<sycl::info::partition_property::

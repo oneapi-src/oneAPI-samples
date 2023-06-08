@@ -1,6 +1,6 @@
 {
   "guid": "916154f6-03ca-450b-b234-5ca476d888ae",
-  "name": "HSOpticalFlow",
+  "name": "HSOpticalFlow Sample",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/StructuredGrids"],
   "description": "Variational optical flow estimation example. Uses textures for image operations. Shows how simple PDE solver can be accelerated with SYCL.",
   "toolchain": [ "dpcpp" ],
@@ -15,8 +15,7 @@
                         "cd build",
                         "cmake ..",
                         "make",
-                        "make run_cpu",
-                        "make run_gpu"
+                        "make run"
                  ]
         }]
 

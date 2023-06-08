@@ -6,7 +6,7 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 
 | Property                       | Description
 |:---                               |:---
-| What you will learn               | How to begin migrating CUDA to SYCL*
+| What you will learn               | How to begin migrating CUDA to SYCL
 | Time to complete                  | 15 minutes
 
 
@@ -69,7 +69,7 @@ Perform the following steps:
    $ make
    ```
 
-    By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
+    By default, this command sequence will build the `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
     
 #### Troubleshooting
 
@@ -85,23 +85,19 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ### On Linux
 
 You can run the programs for CPU and GPU. The commands indicate the device target.
-
-1. Run `02_sycl_dpct_migrated` for CPU and GPU.
-     ```
-    make run_sdm_cpu
-    make run_sdm_gpu
-    ```
     
-2. Run `03_sycl_migrated` for CPU and GPU.
+1. Run `03_sycl_migrated` for CPU and GPU.
     ```
     make run_cpu
-    make run_gpu
+    make run_gpu (runs on Level-Zero Backend)
+    make run_gpu_opencl (runs on OpenCL Backend)
     ```
     
-3. Run `04_sycl_migrated_optimized` for CPU and GPU.
+2. Run `04_sycl_migrated_optimized` for CPU and GPU.
     ```
     make run_smo_cpu
-    make run_smo_gpu
+    make run_smo_gpu (runs on Level-Zero Backend)
+    make run_smo_gpu_opencl (runs on OpenCL Backend)
     ```
 
 ### Run the `MonteCarloMultiGPU` Sample in Intel&reg; DevCloud
@@ -128,7 +124,6 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 5. Configure the sample for a GPU node using `qsub`and choose the backend needed either OpenCL or Level Zero.
     ```
     qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-    export SYCL_DEVICE_FILTER=level_zero
     ```
     - `-I` (upper case I) requests an interactive session.
     - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
@@ -149,31 +144,30 @@ The following example is for `03_sycl_migrated` for GPU on Intel(R) UHD Graphics
 ```
 ./a.out Starting...
 
-Using single CPU thread for multiple GPUs
 MonteCarloMultiGPU
 ==================
 Parallelization method  = streamed
 Problem scaling         = weak
-Number of GPUs          = 1
-Total number of options = 16
+Number of Devices       = 1
+Total number of options = 12
 Number of paths         = 262144
 main(): generating input data...
 main(): starting 1 host threads...
-main(): GPU statistics, streamed
-GPU Device #0: Intel(R) UHD Graphics [0x9a60]
-Options         : 16
+main(): Device statistics, streamed
+Device #0: Intel(R) UHD Graphics P630 [0x3e96]
+Options         : 12
 Simulation paths: 262144
 
-Total time (ms.): 6.054000
+Total time (ms.): 11.149000
         Note: This is elapsed time for all to compute.
-Options per sec.: 2642.880783
+Options per sec.: 1076.329699
 main(): comparing Monte Carlo and Black-Scholes results...
 Shutting down...
 Test Summary...
-L1 norm        : 4.815522E-04
-Average reserve: 5.051839
+L1 norm        : 5.782880E-04
+Average reserve: 3.871013
 Test passed
-
+Built target run_gpu
 ```
 
 ## License

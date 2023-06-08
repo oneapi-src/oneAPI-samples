@@ -1,13 +1,26 @@
-# Loop Fusion
-This FPGA tutorial demonstrates how loop fusion is used and how it affects performance.
+# `loop_fusion` Sample
 
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
-| Time to complete                  | 20 minutes
+This sample is an FPGA tutorial that demonstrates how loop fusion is used and how it affects performance.
+
+| Area                 | Description
+|:--                   |:--
+| What you will learn  | Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
+| Time to complete     | 20 minutes
+| Category             | Concepts and Functionality
+
+
+## Purpose
+
+This sample demonstrates how to apply loop fusion to loops in your design. It is necessary to understand the motivation and consequences of loop fusion in your design.
+
+## Prerequisites
+
+| Optimized for        | Description
+|:---                  |:---
+| OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Software             | Intel® oneAPI DPC++/C++ Compiler
+
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -17,10 +30,8 @@ This FPGA tutorial demonstrates how loop fusion is used and how it affects perfo
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-## Prerequisites
+> **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 2 sample that demonstrates a compiler feature.
@@ -41,21 +52,37 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), and more.
 
-## Purpose
-In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion.
+## Key Implementation Details
+
+The sample illustrates the important concepts.
+
+- The basics of loop fusion.
+- The reasons for loop fusion.
+- How to use loop fusion to increase performance.
+- Understanding safe application of loop fusion.
+
+The file `loop_fusion.cpp` contains four kernels, all of which contain an outer loop and two inner loops.
+
+| Kernel Name            | Description
+|:---                    |:---
+|`DefaultFusionKernel`   | This kernel contains two inner loops with equal trip counts which fuse by default.
+|`NoFusionKernel`        | This kernel has two inner loops with equal trip counts as in `DefaultFusionKernel`, but the compiler is instructed not to fuse the loops using the `intel::nofusion` attribute.
+|`DefaultNoFusionKernel` | This kernel contains two inner loops with unequal trip counts, which the compiler does not fuse by default.
+|`FusionFunctionKernel`  | This kernel contains two inner loops with unequal trip counts as in `DefaultNoFusionKernel`, but the compiler is instructed to fuse the loops using the `fpga_loop_fuse<N>(f)` function.
 
 ### Loop Fusion
+
 Loop fusion is a compiler transformation in which adjacent loops are merged into a single loop over the same index range. This transformation is typically applied to reduce loop overhead and improve runtime performance. Loop control structures can represent a significant area overhead on designs produced by the compiler. Fusing two loops into one loop reduces the number of required loop-control structures, which reduces overhead.
 
-In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions which were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
+In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions that were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
 
-Loop fusion joins loops at the same nesting level. The merging of nested loops is known as *loop coalescing*, and tools to achieve this are described in the documentation and in the [`loop_coalesce` code sample](https://github.com/oneapi-src/oneAPI-samples/tree/da084668be646bfe9f788da7530a3efb3494e8c7/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/loop_coalesce).
+Loop fusion joins loops at the same nesting level. The merging of nested loops is known as *loop coalescing*, and tools to achieve this are described in the documentation and in the [`loop_coalesce` code sample](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/loop_coalesce).
 
 #### Default Loop Fusion
 
-The compiler attempts to fuse adjacent loops by default when profitable and when memory dependencies allow. For example, the compiler will not fuse loops by default when two adjacent loops have unequal trip counts, if only one of the two loops has stall-free logic, or if only one of the two loops is tagged with the `intel::ivdep` attribute. The `intel::nofusion` attribute should be applied to a loop to tell the compiler not to fuse that loop with others.
+The compiler attempts to fuse adjacent loops by default when profitable and when memory dependencies allow. If only one of the two loops has stall-free logic or if only one of the two loops is tagged with the `intel::ivdep` attribute, the compiler will not fuse loops by default when two adjacent loops have unequal trip counts.
 
 #### Explicit Loop Fusion
 
@@ -80,31 +107,13 @@ When `N=1`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> wit
 
 #### Overriding Compiler Memory Checks
 
-The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function.
+The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation, the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function.
 
-**IMPORTANT**: Functional incorrectness may result if `fpga_loop_fuse_independent<N>(f)` is applied where a negative-distance dependency exists.
+>**Important**: Functional incorrectness may result if `fpga_loop_fuse_independent<N>(f)` is applied where a negative-distance dependency exists.
 
-### Testing the Tutorial
-The file `loop_fusion.cpp` contains four kernels, all of which contain an outer loop and two inner loops.
+## Build the `Loop Fusion` Tutorial
 
-|Kernel Name|Description
-|:---      |:---
-|`DefaultFusionKernel`| This kernel contains two inner loops with equal trip counts which fuse by default. |
-|`NoFusionKernel`| This kernel has two inner loops with equal trip counts as in `DefaultFusionKernel`, but the compiler is instructed not to fuse the loops using the `intel::nofusion` attribute.  |
-|`DefaultNoFusionKernel`| This kernel contains two inner loops with unequal trip counts, which the compiler does not fuse by default.   |
-|`FusionFunctionKernel`| This kernel contains two inner loops with unequal trip counts as in `DefaultNoFusionKernel`, but the compiler is instructed to fuse the loops using the `fpga_loop_fuse<N>(f)` function. |
-
-## Key Concepts
-* Basics of loop fusion.
-* The reasons for loop fusion.
-* How to use loop fusion to increase performance.
-* Understanding safe application of loop fusion.
-
-## Building the Loop Fusion Tutorial
-
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
-> This practice ensures that your compiler, libraries, and tools are ready for development.
+>**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -117,95 +126,89 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### On a Linux* System
+### On Linux*
 
-1. Generate the `Makefile` by running `cmake`.
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
-  ```
-  cmake ..
-  ```
+1. Change to the sample directory.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ```
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ```
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
+   1. Compile and run for emulation (fast compile time, targets emulates an FPGA device).
       ```
       make fpga_emu
       ```
-   * Generate the optimization report:
-     ```
-     make report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     make fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     make fpga
-     ```
+   2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      make report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+      ```
+      make fpga_sim
+      ```
+   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      make fpga
+      ```
 
-### On a Windows* System
+### On Windows*
 
-1. Generate the `Makefile` by running `cmake`.
-  ```
-  mkdir build
-  cd build
-  ```
-  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
-  ```
-  cmake -G "NMake Makefiles" ..
-  ```
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ```
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ```
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
+1. Change to the sample directory.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
-     ```
-     nmake fpga_sim
-     ```
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-     ```
-     nmake fpga
-     ```
-
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      nmake report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
+      ```
+      nmake fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Examining the Reports
-Locate `report.html` in the `loop_fusion_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
+### Read the Reports
+Locate `report.html` in the `loop_fusion_report.prj/reports/` directory.
 
 Navigate to the Loops Analysis section of the optimization report under Throughput Analysis and notice that two loops were fused to one in both `DefaultFusionKernel` and in `FusionFunctionKernel`, but not in `NoFusionKernel` or in `DefaultNoFusionKernel`.
 
@@ -213,31 +216,41 @@ In both cases where fusion has occurred, the number of loop cycles has decreased
 
 Navigate to the Area Analysis of the system under Area Analysis. The Kernel System section displays the area consumption of each kernel. Notice the area savings when loop fusion is performed in`DefaultFusionKernel`, against when it is off in `NoFusionKernel`.  As well, notice the area savings when loop fusion is manually turned on in`FusionFunctionKernel`, against when it is off by default in `DefaultNoFusionKernel`.
 
-## Running the Sample
+## Run the `Loop Fusion` Sample
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
-     ./loop_fusion.fpga_emu     (Linux)
-     loop_fusion.fpga_emu.exe   (Windows)
-     ```
-2. Run the sample on the FPGA simulator device (the kernel executes on the CPU):
-  * On Linux
-    ```bash
-    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_fusion.fpga_sim
-    ```
-  * On Windows
-    ```bash
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-    loop_fusion.fpga_sim.exe
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-     ```
-     ./loop_fusion.fpga         (Linux)
-     loop_fusion.fpga.exe       (Windows)
-     ```
+### On Linux
 
-### Example of Output
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./loop_fusion.fpga_emu
+   ```
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./loop_fusion.fpga_sim
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   ./loop_fusion.fpga
+   ```
+
+### On Windows
+
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   loop_fusion.fpga_emu.exe
+   ```
+2. Run the sample on the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   loop_fusion.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   loop_fusion.fpga.exe
+   ```
+
+## Example Output
 
 ```
 Throughput for kernel with default loop fusion and with equally-sized loops: 1.48999 Ops/ns
@@ -247,11 +260,9 @@ Throughput for kernel with a loop fusion function with unequally-sized loops: 1.
 PASSED: The results are correct
 ```
 
-### Discussion of Results
-
 Loop fusion increases the throughput by ~100% in both the cases with equally-sized and unequally-sized loops.
 
-> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance.
+>**Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance.
 
 ## License
 

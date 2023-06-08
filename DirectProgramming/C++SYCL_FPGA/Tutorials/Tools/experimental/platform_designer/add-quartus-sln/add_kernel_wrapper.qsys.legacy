@@ -21,10 +21,10 @@ https://fpgasoftware.intel.com/eula.-->
    tags=""
    categories="System"
    tool="QsysPro" />
- <parameter name="board" value="default" />
+ <parameter name="board" value="Unknown" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element add_fpga_ip_export_1_di_0
+   element add_report_di_0
    {
       datum _sortIndex
       {
@@ -69,7 +69,6 @@ https://fpgasoftware.intel.com/eula.-->
  <parameter name="hdlLanguage" value="VERILOG" />
  <parameter name="hideFromIPCatalog" value="false" />
  <parameter name="lockedInterfaceDefinition" value="" />
- <parameter name="pinAssignmentListDefinition" value="" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="0" />
  <parameter name="systemInfos"><![CDATA[<systemInfosDefinition>
@@ -96,17 +95,17 @@ https://fpgasoftware.intel.com/eula.-->
  <interface name="clk" internal="clock_in.in_clk" type="clock" dir="end" />
  <interface
    name="exception_add"
-   internal="add_fpga_ip_export_1_di_0.device_exception_bus"
+   internal="add_report_di_0.device_exception_bus"
    type="conduit"
    dir="end" />
  <interface
    name="irq_add"
-   internal="add_fpga_ip_export_1_di_0.kernel_irqs"
+   internal="add_report_di_0.kernel_irqs"
    type="interrupt"
    dir="end" />
  <interface name="reset" internal="reset_in.in_reset" type="reset" dir="end" />
  <module
-   name="add_fpga_ip_export_1_di_0"
+   name="add_report_di_0"
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
@@ -531,9 +530,9 @@ https://fpgasoftware.intel.com/eula.-->
         </interfaces>
     </boundary>
     <originalModuleInfo>
-        <className>add_fpga_ip_export_1_di</className>
+        <className>add_report_di</className>
         <version>1.0</version>
-        <displayName>add_fpga_ip_export_1_di</displayName>
+        <displayName>add_report_di</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
         <descriptors/>
@@ -607,7 +606,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ports>
                 <port>
                     <name>resetn</name>
-                    <role>reset</role>
+                    <role>reset_n</role>
                     <direction>Input</direction>
                     <width>1</width>
                     <lowerBound>0</lowerBound>
@@ -699,7 +698,6 @@ https://fpgasoftware.intel.com/eula.-->
                     </entry>
                     <entry>
                         <key>bridgedReceiverOffset</key>
-                        <value>0</value>
                     </entry>
                     <entry>
                         <key>bridgesToReceiver</key>
@@ -792,20 +790,16 @@ https://fpgasoftware.intel.com/eula.-->
             <assignments>
                 <assignmentValueMap>
                     <entry>
-                        <key>embeddedsw.configuration.isFlash</key>
-                        <value>0</value>
-                    </entry>
-                    <entry>
                         <key>embeddedsw.configuration.isMemoryDevice</key>
-                        <value>0</value>
+                        <value>false</value>
                     </entry>
                     <entry>
                         <key>embeddedsw.configuration.isNonVolatileStorage</key>
-                        <value>0</value>
+                        <value>false</value>
                     </entry>
                     <entry>
                         <key>embeddedsw.configuration.isPrintableDevice</key>
-                        <value>0</value>
+                        <value>false</value>
                     </entry>
                     <entry>
                         <key>hls.cosim.name</key>
@@ -849,7 +843,6 @@ https://fpgasoftware.intel.com/eula.-->
                     </entry>
                     <entry>
                         <key>bridgedAddressOffset</key>
-                        <value>0</value>
                     </entry>
                     <entry>
                         <key>bridgesToMaster</key>
@@ -984,44 +977,37 @@ https://fpgasoftware.intel.com/eula.-->
     </interfaces>
 </boundaryDefinition>]]></parameter>
   <parameter name="generationInfoDefinition"><![CDATA[<generationInfoDefinition>
-    <hdlLibraryName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</hdlLibraryName>
+    <hdlLibraryName>add_kernel_wrapper_add_report_di_0</hdlLibraryName>
     <fileSets>
         <fileSet>
-            <fileSetName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetFixedName>
+            <fileSetName>add_kernel_wrapper_add_report_di_0</fileSetName>
+            <fileSetFixedName>add_kernel_wrapper_add_report_di_0</fileSetFixedName>
             <fileSetKind>QUARTUS_SYNTH</fileSetKind>
             <fileSetFiles/>
         </fileSet>
         <fileSet>
-            <fileSetName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetFixedName>
+            <fileSetName>add_kernel_wrapper_add_report_di_0</fileSetName>
+            <fileSetFixedName>add_kernel_wrapper_add_report_di_0</fileSetFixedName>
             <fileSetKind>SIM_VERILOG</fileSetKind>
             <fileSetFiles/>
         </fileSet>
         <fileSet>
-            <fileSetName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetFixedName>
+            <fileSetName>add_kernel_wrapper_add_report_di_0</fileSetName>
+            <fileSetFixedName>add_kernel_wrapper_add_report_di_0</fileSetFixedName>
             <fileSetKind>SIM_VHDL</fileSetKind>
             <fileSetFiles/>
         </fileSet>
         <fileSet>
-            <fileSetName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetFixedName>
+            <fileSetName>add_kernel_wrapper_add_report_di_0</fileSetName>
+            <fileSetFixedName>add_kernel_wrapper_add_report_di_0</fileSetFixedName>
             <fileSetKind>CDC</fileSetKind>
             <fileSetFiles/>
         </fileSet>
-        <fileSet>
-            <fileSetName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_add_fpga_ip_export_1_di_0</fileSetFixedName>
-            <fileSetKind>CDC_VHDL</fileSetKind>
-            <fileSetFiles/>
-        </fileSet>
     </fileSets>
-    <pinAssignments/>
 </generationInfoDefinition>]]></parameter>
   <parameter name="hdlParameters"><![CDATA[<hdlParameterDescriptorDefinitionList/>]]></parameter>
   <parameter name="hlsFile" value="" />
-  <parameter name="logicalView">ip/add_kernel_wrapper/add_kernel_wrapper_add_fpga_ip_export_1_di_0.ip</parameter>
+  <parameter name="logicalView">ip/add_kernel_wrapper/add_kernel_wrapper_add_report_di_0.ip</parameter>
   <parameter name="moduleAssignmentDefinition"><![CDATA[<assignmentDefinition>
     <assignmentValueMap/>
 </assignmentDefinition>]]></parameter>
@@ -1267,14 +1253,7 @@ https://fpgasoftware.intel.com/eula.-->
             <fileSetKind>CDC</fileSetKind>
             <fileSetFiles/>
         </fileSet>
-        <fileSet>
-            <fileSetName>add_kernel_wrapper_clock_in</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_clock_in</fileSetFixedName>
-            <fileSetKind>CDC_VHDL</fileSetKind>
-            <fileSetFiles/>
-        </fileSet>
     </fileSets>
-    <pinAssignments/>
 </generationInfoDefinition>]]></parameter>
   <parameter name="hdlParameters"><![CDATA[<hdlParameterDescriptorDefinitionList/>]]></parameter>
   <parameter name="hlsFile" value="" />
@@ -2041,14 +2020,7 @@ https://fpgasoftware.intel.com/eula.-->
             <fileSetKind>CDC</fileSetKind>
             <fileSetFiles/>
         </fileSet>
-        <fileSet>
-            <fileSetName>add_kernel_wrapper_master_0</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_master_0</fileSetFixedName>
-            <fileSetKind>CDC_VHDL</fileSetKind>
-            <fileSetFiles/>
-        </fileSet>
     </fileSets>
-    <pinAssignments/>
 </generationInfoDefinition>]]></parameter>
   <parameter name="hdlParameters"><![CDATA[<hdlParameterDescriptorDefinitionList/>]]></parameter>
   <parameter name="hlsFile" value="" />
@@ -2260,14 +2232,7 @@ https://fpgasoftware.intel.com/eula.-->
             <fileSetKind>CDC</fileSetKind>
             <fileSetFiles/>
         </fileSet>
-        <fileSet>
-            <fileSetName>add_kernel_wrapper_reset_in</fileSetName>
-            <fileSetFixedName>add_kernel_wrapper_reset_in</fileSetFixedName>
-            <fileSetKind>CDC_VHDL</fileSetKind>
-            <fileSetFiles/>
-        </fileSet>
     </fileSets>
-    <pinAssignments/>
 </generationInfoDefinition>]]></parameter>
   <parameter name="hdlParameters"><![CDATA[<hdlParameterDescriptorDefinitionList/>]]></parameter>
   <parameter name="hlsFile" value="" />
@@ -2279,9 +2244,9 @@ https://fpgasoftware.intel.com/eula.-->
  </module>
  <connection
    kind="avalon"
-   version="22.3"
+   version="22.2"
    start="master_0.master"
-   end="add_fpga_ip_export_1_di_0.csr_ring_root_avs">
+   end="add_report_di_0.csr_ring_root_avs">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
@@ -2303,22 +2268,27 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="clock"
-   version="22.3"
+   version="22.2"
    start="clock_in.out_clk"
    end="master_0.clk" />
  <connection
    kind="clock"
-   version="22.3"
+   version="22.2"
    start="clock_in.out_clk"
-   end="add_fpga_ip_export_1_di_0.clock" />
+   end="add_report_di_0.clock" />
  <connection
    kind="reset"
-   version="22.3"
+   version="22.2"
+   start="master_0.master_reset"
+   end="add_report_di_0.resetn" />
+ <connection
+   kind="reset"
+   version="22.2"
    start="reset_in.out_reset"
    end="master_0.clk_reset" />
  <connection
    kind="reset"
-   version="22.3"
+   version="22.2"
    start="reset_in.out_reset"
-   end="add_fpga_ip_export_1_di_0.resetn" />
+   end="add_report_di_0.resetn" />
 </system>

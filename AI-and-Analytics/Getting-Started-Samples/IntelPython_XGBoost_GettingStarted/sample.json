@@ -1,6 +1,6 @@
 {
   "guid": "3B164041-12CD-4429-A1AB-0F35EFE521FF",
-  "name": "Intel® Python XGBoost Getting Started",
+  "name": "Intel® Optimization for XGBoost* Getting Started",
   "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
   "description": "The sample illustrates how to setup and train an XGBoost model on datasets for prediction",
   "builder": ["cli"],

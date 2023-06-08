@@ -18,13 +18,13 @@
 # -------------------------------------------------------------------------- #
 #
 # Quartus Prime
-# Version 22.3.0 Build 104 09/14/2022 SC Pro Edition
-# Date created = 08:31:30  February 03, 2023
+# Version 22.2.0 Build 94 06/08/2022 SC Pro Edition
+# Date created = 04:43:52  May 26, 2023
 #
 # -------------------------------------------------------------------------- #
 
-QUARTUS_VERSION = "22.3"
-DATE = "08:31:30  February 03, 2023"
+QUARTUS_VERSION = "22.2"
+DATE = "04:43:52  May 26, 2023"
 
 # Revisions
 

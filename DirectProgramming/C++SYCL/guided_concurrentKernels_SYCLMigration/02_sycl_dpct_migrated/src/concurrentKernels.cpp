@@ -44,7 +44,9 @@
 // This is a kernel that does no real work but runs at least for a specified
 // number of clocks
 void clock_block(clock_t *d_o, clock_t clock_count, sycl::nd_item<3> item_ct1) {
-  // int i = 0;
+  // initialize
+  d_o[0] = 0;
+  
   for (int i = item_ct1.get_local_id(2); i < 500000;
        i += item_ct1.get_local_range(2)) {
     d_o[0] = d_o[0] + i;
@@ -162,6 +164,7 @@ int main(int argc, char **argv) {
   // queue nkernels in separate streams and record when they are done
   for (int i = 0; i < nkernels; ++i) {
     streams[i]->submit([&](sycl::handler &cgh) {
+      d_a[i] = 0;
       auto d_a_i_ct0 = &d_a[i];
 
       cgh.parallel_for(

@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
@@ -96,3 +97,4 @@ int main() {
             << (end - start).count() << " nano-secs\n";
   return 0;
 }
+// Snippet end

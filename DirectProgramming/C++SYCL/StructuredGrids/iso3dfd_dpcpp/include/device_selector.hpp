@@ -36,6 +36,11 @@ class MyDeviceSelector {
     // std::cout << "  Vendor: " <<
     // device.get_info<sycl::info::device::vendor>() << std::endl;
 
+    if ((pattern == "Gen") && device.is_gpu()) {
+      return 200;
+    } else if ((pattern == "CPU") && device.is_cpu()) {
+      return 200;
+    }
     // Device with pattern in the name is prioritized:
     return (name.find(pattern) != std::string::npos) ? 100 : 1;
   }

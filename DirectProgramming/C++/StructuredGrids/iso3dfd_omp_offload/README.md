@@ -100,6 +100,9 @@ To learn more about the extensions and how to configure the oneAPI environment, 
     ```
     make VERBOSE=1
     ```
+3. Change the optimized version (if needed)
+
+   If you already compiled with the optimization path, for example "*cmake -DUSE_OPT1=1 ..*", use "*cmake -DUSE_OPT1=0 ..*" can go back to the baseline version.
 
 #### Troubleshooting
 

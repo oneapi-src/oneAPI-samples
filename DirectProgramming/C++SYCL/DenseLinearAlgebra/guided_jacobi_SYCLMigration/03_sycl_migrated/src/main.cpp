@@ -96,14 +96,13 @@ int main(int argc, char **argv) {
   // stop Host timer
   auto stopHostTime = Time::now();
 
-  printf("\nSerial Implementation : \n");
-  printf("Iterations : %d\n", cnt);
-  printf("Error : %.3e\n", sum);
+  printf("CPU iterations : %d\n", cnt);
+  printf("CPU error : %.3e\n", sum);
 
   auto Host_duration =
       std::chrono::duration_cast<float_ms>(stopHostTime - startHostTime)
           .count();
-  printf("Processing time : %f (ms)\n", Host_duration);
+  printf("CPU Processing time : %f (ms)\n", Host_duration);
 
   // Device variable allocation and declaration
   float *d_A;
@@ -139,7 +138,7 @@ int main(int argc, char **argv) {
   auto Device_duration =
       std::chrono::duration_cast<float_ms>(stopDeviceTime - startDeviceTime)
           .count();
-  printf("Processing time : %f (ms)\n", Device_duration);
+  printf("Device Processing time : %f (ms)\n", Device_duration);
 
   // Free up allocated memory
   free(d_b, q);

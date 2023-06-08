@@ -1,6 +1,6 @@
---- text_classification_with_transformer.py	2022-10-17 04:04:37.455448493 -0700
-+++ text_classification_with_transformer2.py	2022-10-17 04:07:15.196716415 -0700
-@@ -9,10 +9,38 @@
+--- text_classification_with_transformer1.py
++++ text_classification_with_transformer.py
+@@ -10,10 +10,38 @@
  ## Setup
  """
  
@@ -39,7 +39,7 @@
  
  """
  ## Implement a Transformer block as a layer
-@@ -110,6 +138,11 @@
+@@ -111,6 +139,11 @@
  model.compile(
      optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
  )

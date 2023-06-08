@@ -70,7 +70,7 @@
                     "cmake --build . ",
 		    "cmake --install .",
 		    "cd ../bin",
-                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./minimal"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./minimal"
                  ]
                  }
         ]

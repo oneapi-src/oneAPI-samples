@@ -20,10 +20,10 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>in_clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.2"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.2"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -57,10 +57,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>out_clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.2"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.2"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -118,7 +118,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:fileSetRef>
           <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
         </ipxact:fileSetRef>
-        <ipxact:parameters></ipxact:parameters>
       </ipxact:componentInstantiation>
     </ipxact:instantiations>
     <ipxact:ports>
@@ -126,7 +125,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>in_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -139,7 +137,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>out_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -181,7 +178,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="board" type="string">
           <ipxact:name>board</ipxact:name>
           <ipxact:displayName>Board</ipxact:displayName>
-          <ipxact:value>default</ipxact:value>
+          <ipxact:value>Unknown</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="device" type="string">
           <ipxact:name>device</ipxact:name>
@@ -208,22 +205,6 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>bonusData</ipxact:displayName>
           <ipxact:value>bonusData 
 {
-   element $system
-   {
-      datum _originalDeviceFamily
-      {
-         value = "Arria 10";
-         type = "String";
-      }
-   }
-   element clock_in
-   {
-      datum _sortIndex
-      {
-         value = "0";
-         type = "int";
-      }
-   }
 }
 </ipxact:value>
         </ipxact:parameter>
@@ -349,11 +330,6 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/entry&gt;
     &lt;/connPtSystemInfos&gt;
 &lt;/systemInfosDefinition&gt;</ipxact:value>
-        </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value>&lt;pinAssignmentListDefinition/&gt;</ipxact:value>
         </ipxact:parameter>
       </ipxact:parameters>
     </altera:altera_system_parameters>

@@ -57,7 +57,7 @@ int reductionSingleQ(std::vector<int> &data, int iter) {
 
   sycl::buffer<int> buf(data.data(), data_size, props);
   sycl::buffer<int> sum_buf(&sum, 1, props);
-  sycl::queue q{sycl::default_selector{}, exception_handler};
+  sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   // initialize data on the device
@@ -73,9 +73,7 @@ int reductionSingleQ(std::vector<int> &data, int iter) {
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
@@ -121,7 +119,7 @@ int reductionMultipleQMultipleC(std::vector<int> &data, int iter) {
   sycl::buffer<int> buf(data.data(), data_size, props);
   sycl::buffer<int> sum_buf(&sum, 1, props);
 
-  sycl::queue q1{sycl::default_selector{}, exception_handler};
+  sycl::queue q1{sycl::default_selector_v, exception_handler};
   // initialize data on the device
   q1.submit([&](auto &h) {
     sycl::accessor buf_acc(buf, h, sycl::write_only, sycl::no_init);
@@ -130,7 +128,7 @@ int reductionMultipleQMultipleC(std::vector<int> &data, int iter) {
 
   double elapsed = 0;
   for (int i = 0; i < iter; i++) {
-    sycl::queue q2{sycl::default_selector{}, exception_handler};
+    sycl::queue q2{sycl::default_selector_v, exception_handler};
     if (i == 0)
       std::cout << q2.get_device().get_info<sycl::info::device::name>() << "\n";
     // reductionMultipleQMultipleC main begin
@@ -138,9 +136,7 @@ int reductionMultipleQMultipleC(std::vector<int> &data, int iter) {
     q2.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
@@ -187,7 +183,7 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
   sycl::buffer<int> buf(data.data(), data_size, props);
   sycl::buffer<int> sum_buf(&sum, 1, props);
 
-  sycl::queue q1{sycl::default_selector{}, exception_handler};
+  sycl::queue q1{sycl::default_selector_v, exception_handler};
   // initialize data on the device
   q1.submit([&](auto &h) {
     sycl::accessor buf_acc(buf, h, sycl::write_only, sycl::no_init);
@@ -196,7 +192,7 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
 
   double elapsed = 0;
   for (int i = 0; i < iter; i++) {
-    sycl::queue q2{q1.get_context(), sycl::default_selector{},
+    sycl::queue q2{q1.get_context(), sycl::default_selector_v,
                    exception_handler};
     if (i == 0)
       std::cout << q2.get_device().get_info<sycl::info::device::name>() << "\n";
@@ -205,9 +201,7 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
     q2.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
-      sycl::accessor<int, 1, sycl::access::mode::read_write,
-                     sycl::access::target::local>
-          scratch(work_group_size, h);
+      sycl::local_accessor<int, 1> scratch(work_group_size, h);
       h.parallel_for(sycl::nd_range<1>{num_work_items, work_group_size},
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
