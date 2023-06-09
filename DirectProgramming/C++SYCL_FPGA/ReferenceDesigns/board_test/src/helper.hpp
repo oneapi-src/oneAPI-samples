@@ -91,27 +91,6 @@ void PrintHelp(int details) {
   }
 }  // End of PrintHelp
 
-//////////////////////////////////////////////
-// **** SyclGetQSubExecTimeNs function **** //
-//////////////////////////////////////////////
-
-// Input:
-// event e - SYCL event with profiling information
-// Returns:
-// Difference in time from command submission to command end (in nanoseconds)
-
-// The function does the following task:
-// Gets profiling information from a SYCL event and
-// returns execution time for a given SYCL event from a queue
-
-unsigned long SyclGetQSubExecTimeNs(sycl::event e) {
-  unsigned long submit_time =
-      e.get_profiling_info<sycl::info::event_profiling::command_submit>();
-  unsigned long end_time =
-      e.get_profiling_info<sycl::info::event_profiling::command_end>();
-  return (end_time - submit_time);
-}  // End of SyclGetQSubExecTimeNs
-
 /////////////////////////////////////////////
 // **** SyclGetQStExecTimeNs function **** //
 /////////////////////////////////////////////
@@ -149,11 +128,11 @@ unsigned long SyclGetQStExecTimeNs(sycl::event e) {
 // returns the total execution time for all events between first and last
 
 unsigned long SyclGetTotalTimeNs(sycl::event first_evt, sycl::event last_evt) {
-  unsigned long first_evt_submit =
-      first_evt.get_profiling_info<sycl::info::event_profiling::command_submit>();
+  unsigned long first_evt_start =
+      first_evt.get_profiling_info<sycl::info::event_profiling::command_start>();
   unsigned long last_evt_end =
       last_evt.get_profiling_info<sycl::info::event_profiling::command_end>();
-  return (last_evt_end - first_evt_submit);
+  return (last_evt_end - first_evt_start);
 }  // End of SyclGetTotalTimeNs
 
 /////////////////////////////////////////
