@@ -31,6 +31,11 @@ else()
     set(PLATFORM_SPECIFIC_LINK_FLAGS "")
 endif()
 
+set(SEED "-Xsseed=2")
+if(IGNORE_DEFAULT_SEED)
+    set(SEED "")
+endif()
+
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
@@ -41,7 +46,7 @@ set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS
 # By default oneAPI compiler burst interleaves across same memory type,
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsno-interleaving=default -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsno-interleaving=default ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
