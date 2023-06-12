@@ -60,7 +60,7 @@ struct StreamingCovarianceMatrix {
     T means[columns];
     // Array to keep the T matrix
     [[intel::max_replicates(1)]]    // NO-FORMAT: Attribute
-    [[intel::private_copies(128)]]  // NO-FORMAT: Attribute
+    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
     T t_matrix[columns * columns];
 
     // We keep count of the current block number
@@ -72,7 +72,7 @@ struct StreamingCovarianceMatrix {
       [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      [[intel::private_copies(128)]]          // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]          // NO-FORMAT: Attribute
       row_tuple a_load[columns];
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -109,7 +109,7 @@ struct StreamingCovarianceMatrix {
 
       // Arrays to keep all the data of the current block being computed
       [[intel::max_replicates(1)]]    // NO-FORMAT: Attribute
-      [[intel::private_copies(128)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       T t_matrix_compute[columns * columns];
       T t_matrix_diagonal_replicate_partial[columns];
       T means_partial[columns];
@@ -182,7 +182,7 @@ struct StreamingCovarianceMatrix {
 
       // For the computation of COV
       [[intel::max_replicates(1)]]    // NO-FORMAT: Attribute
-      [[intel::private_copies(128)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       T t_matrix_consume[columns][columns];
 
       // Update the global T matrix with the partial results and copy the result
@@ -203,7 +203,7 @@ struct StreamingCovarianceMatrix {
       [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      [[intel::private_copies(128)]]          // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]          // NO-FORMAT: Attribute
       T cov_matrix[columns][columns];
 
       {

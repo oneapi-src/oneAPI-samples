@@ -136,8 +136,6 @@ int main(int argc, char *argv[]) {
     pca.computeCovarianceMatrix();
     pca.computeEigenValuesAndVectors();
 
-    std::cout << "Software iterations " << pca.iterations[0] << std::endl;
-
     // Copy all the input matrices to the of the golden implementation to the
     // a_matrix that uses the float datatype, which is going to be used by the
     // hardware implementation
@@ -306,54 +304,6 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "All the tests passed." << std::endl;
-
-#if FPGA_HARDWARE
-    if (kBenchmarkMode) {
-      // Compute expected throughput
-
-      // Compute the latency of the block with the highest latency in the
-      // covariance matrix computation kernel
-      constexpr int kBlockTransposedMatrixProductIterations =
-          kFeaturesCount * kFeaturesCount;
-      constexpr int kBlockTransposedMatrixProductIterationsCount =
-          kSamplesCount / kFeaturesCount;
-      constexpr int kBlockIterations =
-          kBlockTransposedMatrixProductIterationsCount *
-          kBlockTransposedMatrixProductIterations;
-
-      // Compute the latency of all the QR iterations:
-      // Compute the latency of one QR iteration
-      // Total number of dummy iterations
-      constexpr int kDummyIterations =
-          FIXED_ITERATIONS > kFeaturesCount
-              ? (kFeaturesCount - 1) * kFeaturesCount / 2 +
-                    (FIXED_ITERATIONS - kFeaturesCount) * kFeaturesCount
-              : FIXED_ITERATIONS * (FIXED_ITERATIONS - 1) / 2;
-      // Total number of iterations (including dummy iterations)
-      constexpr int kQRDLatency = kFeaturesCount +
-                                  kFeaturesCount * (kFeaturesCount + 1) / 2 +
-                                  kDummyIterations;
-      constexpr int kRQLatency = kFeaturesCount * kFeaturesCount;
-      constexpr int kQRIterationLatency = kQRDLatency + kRQLatency;
-      int qr_itarations_latency = kQRIterationLatency * pca.iterations[0];
-
-      int highest_kernel_latency =
-          std::max(kBlockIterations, qr_itarations_latency);
-
-      std::cout << "Estimated throughput: "
-                << 250000000 / highest_kernel_latency
-                << " matrices/s at 250 MHz" << std::endl;
-      std::cout << "Estimated throughput: "
-                << 300000000 / highest_kernel_latency
-                << " matrices/s at 300 MHz" << std::endl;
-      std::cout << "Estimated throughput: "
-                << 350000000 / highest_kernel_latency
-                << " matrices/s at 350 MHz" << std::endl;
-      std::cout << "Estimated throughput: "
-                << 600000000 / highest_kernel_latency
-                << " matrices/s at 600 MHz" << std::endl;
-    }
-#endif
 
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
