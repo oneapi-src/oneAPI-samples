@@ -1,0 +1,6 @@
+transformers 
+evaluate 
+accelerate 
+datasets 
+neural-compressor 
+git+https://github.com/huggingface/optimum.git#egg=optimum[neural-compressor]
