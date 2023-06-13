@@ -1,0 +1,31 @@
+{
+  "guid": "C78A7AA5-C2A8-4527-8239-A62D2BC660AA",
+  "name": "Coarray Fortran",
+  "description": "Demonstrates how to build and run a serial implementation of a Monte Carlo program, and then convert it to run in parallel using Fortran coarrays.",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Coarray"],
+  "toolchain": [ "ifort", "ifx"],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "linux", "windows"],
+  "builder": [ "make" ],
+  "ciTests": {
+    	"linux": [
+        {
+          "id": "seq",
+          "steps": [
+            "make clean",
+            "make seq"
+          ]
+        },
+        {
+          "id": "coarray",
+          "steps": [
+            "make clean",
+            "make coarray"
+          ]
+        }
+      ],
+      "windows": []
+  },
+  "expertise": "Tutorial"
+}
