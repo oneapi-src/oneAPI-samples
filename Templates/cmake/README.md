@@ -35,3 +35,7 @@ oneAPI compilers.
 Older versions of may also be suitable depending on a project's needs.  The following
 table summarizes which kinds of tasks work in each version of CMake.
 
+License
+-------
+Code samples are licensed under the MIT license. See License.txt for details.
+Third-party program Licenses can be found here: third-party-programs.txt.
