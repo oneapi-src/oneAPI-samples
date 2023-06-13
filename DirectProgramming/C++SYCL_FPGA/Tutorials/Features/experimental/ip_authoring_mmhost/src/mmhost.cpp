@@ -106,7 +106,13 @@ int main(void) {
     // Print out the device information.
     std::cout << "Running on device: "
               << q.get_device().get_info<info::device::name>() << "\n";
-
+    // make sure the device supports USM host allocations
+    if (!device.has(sycl::aspect::usm_host_allocations)) {
+      std::cerr << "This design must either target a board that supports USM "
+                   "Host/Shared allocations, or IP Component Authoring. "
+                << std::endl;
+      std::terminate();
+    }
     int size = 10000;
     double start, end;
     event e;
