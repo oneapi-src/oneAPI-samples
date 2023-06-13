@@ -11,15 +11,15 @@
 # =============================================================
 
 
-# # Fine-tuning text classification model with Intel Neural Compressor (INC) Quantization Aware Training
+# # Fine-tuning text classification model with Intel® Neural Compressor (INC) Quantization Aware Training
 # 
-# This code sample will show you how to fine tune BERT text model for text multi-class classification task using Quantization Aware Training provided as part of Intel Neural Compressor (INC).
+# This code sample will show you how to fine tune BERT text model for text multi-class classification task using Quantization Aware Training provided as part of Intel® Neural Compressor (INC).
 # 
 # Before we start, please make sure you have installed all necessary libraries to run this code sample.
 
 # ## Loading model 
 # 
-# We decided to use really small model for this code sample which is `prajjwal1/bert-tiny` but please feel free to use different model changing `model_id` to other name form HuggingFace library or your local model path (if it is compatible with HuggingFace API). 
+# We decided to use really small model for this code sample which is `prajjwal1/bert-tiny` but please feel free to use different model changing `model_id` to other name form Hugging Face library or your local model path (if it is compatible with Hugging Face API). 
 # 
 # Keep in mind that using bigger models like `bert-base-uncased` can improve the final result of the classification after fine-tuning process but it is also really resources and time consuming.
 
@@ -37,7 +37,8 @@ save_dir = "quantized_model"
 
 
 # ## Dataset
-# We are using `emotion` [dataset form HuggingFace](https://huggingface.co/datasets/dair-ai/emotion). This dataset has 2 different configurations - **split** and **unsplit**. 
+# 
+# We are using `emotion` [dataset form Hugging Face](https://huggingface.co/datasets/dair-ai/emotion). This dataset has 2 different configurations - **split** and **unsplit**. 
 # 
 # In this code sample we are using split configuration. It contains in total 20 000 examples split into train (16 000 texts), test (2 000 texts) and validation (2 000 text) datasets. We decided to use split dataset instead of unsplit configuration as it contains over 400 000 texts which is overkill for fine-tuning.
 # 
@@ -162,7 +163,7 @@ eval_results
 # 
 # **Quantization Aware Training** replicates inference-time quantization, resulting in a model that downstream tools may utilize to generate actually quantized models. In other words, it provides quantization to the model during training (or fine-tuning like in our case) based on provided quantization configuration.
 # 
-# Having that in mind, we can provide configuration for the Quantization Aware Training form Intel Neural Compressor.
+# Having that in mind, we can provide configuration for the Quantization Aware Training form Intel® Neural Compressor.
 
 
 # In[ ]:
@@ -174,7 +175,7 @@ from neural_compressor import QuantizationAwareTrainingConfig
 quantization_config = QuantizationAwareTrainingConfig()
 
 
-# The next step is to create trainer for our model. We will use Intel Neural Compressor optimize trainer form `optimum.intel` package.
+# The next step is to create trainer for our model. We will use Intel® Neural Compressor optimize trainer form `optimum.intel` package.
 # We need to provide all necessary parameters to the trainer:
 # 
 # * initialized model and tokenizer
@@ -231,7 +232,7 @@ metrics
 
 
 # After the training it is important to save the model. One again we will use prepared trainer and other method - `save_model()`. Our model will be saved in the location provided before.
-# After that, to use this model in the future you just need load it similarly as at the beginning, using dedicated Intel Neural Compressor optimized method `INCModelForSequenceClassification.from_pretrained(...)`. 
+# After that, to use this model in the future you just need load it similarly as at the beginning, using dedicated Intel® Neural Compressor optimized method `INCModelForSequenceClassification.from_pretrained(...)`. 
 
 
 # In[ ]:
@@ -242,7 +243,7 @@ trainer.save_model()
 model = INCModelForSequenceClassification.from_pretrained(save_dir)
 
 
-# In this code sample we use BERT-tiny and emotion dataset to create text classification model using Intel Neural Compressor Quantization Aware Training. We encourage you to experiment with this code sample changing model and datasets to make text models for different classification tasks. 
+# In this code sample we use BERT-tiny and emotion dataset to create text classification model using Intel® Neural Compressor Quantization Aware Training. We encourage you to experiment with this code sample changing model and datasets to make text models for different classification tasks. 
 
 
 # In[ ]:

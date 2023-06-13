@@ -1,26 +1,26 @@
-# `Fine-tuning text classification model with Intel® Neural Compressor (INC) Quantization Aware Training` Sample
+# `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` Sample
 
-The `Fine-tuning text classification model with Intel® Neural Compressor (INC) Quantization Aware Training` sample demonstrates how to fine-tune BERT tiny model for emotion classification task using Quantization Aware Training from Intel® Neural Compressor.
+The `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` sample demonstrates how to fine-tune BERT tiny model for emotion classification task using Quantization Aware Training (QAT) from Intel® Neural Compressor.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to fine-tune text model using Intel® Neural Compressor quantization aware training
+| What you will learn   | How to fine-tune text model using Intel® Neural Compressor Quantization Aware Training
 | Time to complete      | 10 minutes
 | Category              | Concepts and Functionality
 
-Intel® Neural Compressor simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference as part of Intel® AI Analytics Toolkit (AI Kit)
+Intel® Neural Compressor simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference as part of Intel® AI Analytics Toolkit (AI Kit).
 
 ## Purpose
 
-This sample shows how to fine-tune text model for emotion classification on pre-trained `bert-tiny` model from HuggingFace. How perform fine-tuning using Intel® Neural Compressor Quantization Aware Training. It gives users the ability to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
+This sample shows how to fine-tune text model for emotion classification on pre-trained `bert-tiny` model from Hugging Face and how to perform fine-tuning using Intel® Neural Compressor Quantization Aware Training. Fine-tuning allows you to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
 
 ## Prerequisites
 
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 20.04 or newer
+| OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel® Xeon® Scalable Processor family
-| Software                | Intel® Neural Compressor
+| Software                | Intel® Neural Compressor (INC)
 
 ### For Local Development Environments
 
@@ -56,19 +56,19 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Notebook                                                 | Description
 |:---                                                      |:---
-|`mINC_QuantizationAwareTraining_TextClassification.ipynb` | Performs chat creation with IPEX quantization and provides interface for interactions in Jupyter Notebook.
+|`mINC_QuantizationAwareTraining_TextClassification.ipynb` | Performs chat creation with Intel® Extension for PyTorch* quantization and provides interface for interactions in Jupyter Notebook.
 
 ### Python Scripts
 
-| Script                                               | Description
-|:---                                                  |:---
-|`INC_QuantizationAwareTraining_TextClassification.py` | The script performs chat creation with IPEX quantization and provides simple interactions based on prepared input.
+| Script                                                   | Description
+|:---                                                      |:---
+|`INC_QuantizationAwareTraining_TextClassification.py`     | The script performs chat creation with Intel® Extension for PyTorch* quantization and provides simple interactions based on prepared input.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `Fine-tuning text classification model with Intel® Neural Compressor (INC) Quantization Aware Training` Sample
+## Run the `Fine-tuning Text Classification Model with Intel® Neural Compressor` Sample
 
 ### On Linux*
 
@@ -85,9 +85,9 @@ When working with the command-line interface (CLI), you should configure the one
 #### Activate Conda
 
 1. Activate the Conda environment.
-    ```
-    conda activate pytorch
-    ```
+   ```
+   conda activate pytorch
+   ```
 2. Activate Conda environment without Root access (Optional).
 
    By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
@@ -122,7 +122,7 @@ When working with the command-line interface (CLI), you should configure the one
    python INC_QuantizationAwareTraining_TextClassification.py
    ```
 
-### Run the `Fine-tuning text classification model with Intel® Neural Compressor (INC) Quantization Aware Training` Sample on Intel® DevCloud
+### Run the Sample on Intel® DevCloud (Optional)
 
 1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 2. On a Linux* system, open a terminal.
@@ -153,4 +153,4 @@ If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Addit
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
