@@ -378,7 +378,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim
    ```
 > **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
 	
@@ -391,7 +391,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
 2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
+   hostpipes.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 > **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
