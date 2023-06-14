@@ -187,7 +187,7 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
    ```
 5. Run the program.
    ```
-   mm_CPU_parallel.exe
+   02_mm_CPU_parallel.exe
    ```
 
 ### Example Parallel Program Output
@@ -280,7 +280,7 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
    ```
 4. Run the program.
    ```
-   mm_GPU.exe
+   03_mm_GPU.exe
    ```
 
 ### Example GPU Offload Program Output
