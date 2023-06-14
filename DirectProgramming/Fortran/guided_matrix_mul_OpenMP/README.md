@@ -11,7 +11,15 @@ The `Matrix Multiply` sample provides a guided approach to modify a simple Fortr
 
 The `Matrix Multiply` sample demonstrates the steps to modify a simple Fortran program to use OpenMP* directives to offload the compute kernel from the host to an Intel® GPU using the Intel® Fortran Compiler. 
 
-In the sample program, two matrices are multiplied to produce a result matrix. To do the multiplication the number of columns in the first matrix must be equal to the number of rows in the second matrix. The result matrix has the number of rows of the first matrix and the number of columns of the second matrix. For a deeper refresh on this linear algebra algorithm, refer to the [Wikipedia Matrix multiplication article](https://en.wikipedia.org/wiki/Matrix_multiplication). The example in this tutorial multiplies square matrices; the number of rows equals the number of columns.
+Three working versions of the matrix multiply program are provided with the sample:
+
+* `01_mm_CPU_sequential.f90`: the working sequential version of the matrix multiply program.
+* `02_mm_CPU_parallel.f90`: the working  parallel version of the matrix multiply program, modified to use OpenMP directives to parallelize the program for CPU.
+* `03_mm_GPU.f90`: the working parallel version of the  matrix multiply program, modified to use OpenMP directives for GPU.
+
+The instructions in this sample show the steps to modify the original sequential version of the program (`01_mm_CPU_sequential.f90`) into the OpenMP parallel processing versions for CPU and GPU. 
+
+You can compare your modified programs against the provided working versions of the programs.
 
 ## Prerequisites
 
@@ -23,7 +31,9 @@ In the sample program, two matrices are multiplied to produce a result matrix. T
 
 ## Key Implementation Details
 
-This program shows how to use OpenMP on the CPU host as well as using target offload capabilities.
+This guided sample shows how to use OpenMP on the CPU host as well as using target offload capabilities.
+
+The sample program multiplies two matrices to produce a result matrix. To do the multiplication the number of columns in the first matrix must be equal to the number of rows in the second matrix. The result matrix has the number of rows of the first matrix and the number of columns of the second matrix. For a deeper refresh on this linear algebra algorithm, refer to the [Wikipedia Matrix multiplication article](https://en.wikipedia.org/wiki/Matrix_multiplication). The sample program multiplies square matrices; the number of rows equals the number of columns.
 
 In the sample program, the following practical and performance concepts are given
 particular attention:
@@ -35,14 +45,6 @@ particular attention:
   - OpenMP defines defaults for variables and arrays. Explicitly define SHARED, PRIVATE, and REDUCTION variables and arrays for clarity.
 
 Read the [Intel® Fortran Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/overview.html) for more information about features and options mentioned in this sample.
-
-This sample contains three versions of the program:
-
-| File Name                   | Description
-|:---                         |:---
-| `01_mm_CPU_sequential.F90`  | The sequential version of the matrix multiply program.
-| `02_mm_CPU_parallel.F90`    | A working version of the converted CPU parallel matrix multiply program.
-| `03_mm_GPU.F90`             | A working version of the converted GPU offload matrix multiply program.
 
 ## Set Environment Variables
 
@@ -63,7 +65,6 @@ When working with the command-line interface (CLI), you should configure the one
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
-
 
 In the sequential version of the program (`01_mm_CPU_sequential.f90`), the matrix multiply is performed in a triply nested loop:
 
@@ -95,18 +96,6 @@ Note that:
    ./a.out
    ```
 
-Alternately, use the `Makefile` to compile and run the program. :
-
-1. Change to the sample directory.
-2. Remove any leftover files from a previous compilation.
-   ```
-   make clean
-   ```
-3. Compile and run the program.
-   ```
-   make seq
-   ```
-
 ### On Windows* 
 
 1. Open an Intel oneAPI command window.
@@ -122,7 +111,7 @@ Alternately, use the `Makefile` to compile and run the program. :
 
 ### Example Sequential Program Output
 
-The output of the sequential program output is:
+The output of the sequential program is:
 
 ```
 Matrix size 2600
@@ -131,7 +120,7 @@ PASSED
 
 Note that when compiler option -xhost (/Qxhost) is used, the compiler optimizes the code for the CPU where the compile is done.
 
-## Modify the Program to Use OpenMP Directives (Parallel Version)
+## Modify the Sequential Program to Use OpenMP Parallel Directives for CPU
 
 In a parallel region of code, the master thread spawns a team of threads as needed according to the OpenMP directives. Parallelism can be added incrementally by the developer until the desired performance is achieved.
 
@@ -143,12 +132,12 @@ A DO loop can be parallelized by simply wrapping the loop with `!$omp parallel d
 
 Optional clauses for `!$omp parallel do` include `shared` and `private`. Variables that are declared shared are shared between the threads. In the parallel version of the sample, the parallelism is done at the outer loop where `j` is the loop index. That makes the value of `j` unique with each thread, so there is no opportunity to write to the same memory location (creating a race condition) in the arrays during the computation. The memory locations of the arrays are shared. Variables that are declared private are unique for each thread. By default, according to the OpenMP standard, the index of a DO loop is private. The indices are declared in the example for clarity.
 
-In the sample, the arrays `a`, `b`, and `c` are shared between the threads as is the variable `n`, the size of the matrix. Those are listed in the shared clause. The indices are declared as private, although that is optional.
+In the sample parallel program (`02_mm_CPU_parallel.f90`), the arrays `a`, `b`, and `c` are shared between the threads as is the variable `n`, the size of the matrix. Those are listed in the shared clause. The indices are declared as private, although that is optional.
 
-### Edit the Parallel Program
+Follow these steps to modify the sequential program to use OpenMP directives to parallelize the code for CPU:
 
-1. Open the file `01_mm_CPU_sequential.F90` and save it as `mm_CPU_parallel.F90`. 
-2. In `mm_CPU_parallel.F90`, add two `!$omp` directives, wrapping the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do`: 
+1. Open the file `01_mm_CPU_sequential.f90` and save it as `mm_CPU_parallel.f90`.
+2. In your new `mm_CPU_parallel.f90` file, wrap the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do` OpenMP directives: 
 
    ```
    !$omp parallel do shared(a, b, c, n), private(i, j, k)
@@ -162,17 +151,18 @@ In the sample, the arrays `a`, `b`, and `c` are shared between the threads as is
       enddo
    !$omp end parallel do
    ```
+3. Save your changes.
 
-## Build and Run the Parallel Program
+## Build and Run the Parallel Program for CPU
 
 In order for the Intel Fortran Compiler to recognize OpenMP directives, the program must be compiled with the `-qopenmp` (Linux) or `/Qopenmp` (Windows) option. Without this compiler option, the OpenMP directives are ignored and the program will run sequentially. Note that this can be helpful for debugging the program.
 
 ### On Linux
 
-1. Change to the sample directory.
-2. Build the program using the `-qopenmp` option.
+1. Change to the directory that contains your modified program for CPU (`mm_CPU_parallel.f90`).
+2. Build your modified program using the `-qopenmp` option.
    ```
-   ifx -xhost -qopenmp mm_CPUparallel.f90
+   ifx -xhost -qopenmp mm_CPU_parallel.f90
    ```
 3. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
    ```
@@ -183,25 +173,13 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
    ./a.out
    ```
 
-Alternately, use the `Makefile` to compile and run the program:
-
-1. Change to the sample directory.
-2. Remove any leftover files from a previous compilation.
-   ```
-   make clean
-   ```
-3. Compile and run the program.
-   ```
-   make par
-   ```
-
 ### On Windows
 
 1. Open an Intel oneAPI command window.
-2. Change to the sample directory.
+2. Change to the directory that contains your modified program for CPU (`mm_CPU_parallel.f90`).
 3. Build the program using the `/Qopenmp` option.
    ```
-   ifx /Qxhost /Qopenmp mm_CPUparallel.f90
+   ifx /Qxhost /Qopenmp mm_CPU_parallel.f90
    ```
 4. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
    ```
@@ -209,20 +187,21 @@ Alternately, use the `Makefile` to compile and run the program:
    ```
 5. Run the program.
    ```
-   mm_CPUparallel.exe
+   mm_CPU_parallel.exe
    ```
 
 ### Example Parallel Program Output
 
-If the run was successful, the output is:
+If the execution of the parallel program was successful, the output is:
 
 ```
+Matrix size 2600
 PASSED
 ```
 
 Note that when compiler option `-xhost` (`/Qxhost`) is used, the compiler optimizes the code for the processor where the compile is run.
 
-## Modify the Program for GPU Offload
+## Modify the Parallel Program to Use OpenMP Offload for GPU
 
 This section of the guided sample assumes that the host and the device do not share physical memory. In this sample, the device is a discrete Intel GPU. 
 
@@ -231,7 +210,7 @@ The following are offloading terms and concepts helpful for this section:
 - TARGET: The OpenMP directive that initiates offloading.
 - TARGET region: The code that is offloaded, which is contained in the TARGET construct.
 
-The sample code from the Build and Run the Parallel Program section of this sample (`mm_CPUparallel.f90`) showed that there is an opportunity for a performance increase by offloading the nested DO loops of the matrix multiply to an Intel GPU. 
+The parallel version of the program showed that there is an opportunity for a performance increase by offloading the nested DO loops of the matrix multiply to an Intel GPU. 
 
 To use an Intel GPU, the OpenMP TARGET directive and its clauses designate the task. The OpenMP TARGET directive transfers control from the host (the CPU), to the target device (the GPU). The host thread waits until the offload region is completed before continuing. There are other OpenMP tasks not covered in this sample that allow asynchronous execution of threads on the host and the device.
 
@@ -239,7 +218,7 @@ The OpenMP directives to define the computation in an offload region are bracket
 
 The TEAMS and MAP clauses for the TARGET directive are used to take advantage of the architecture of the device. The TEAMS clause starts multiple thread teams running in parallel on the device. More teams can improve the performance. The MAP clause determines how the original variable on the CPU is mapped (copied) to the corresponding variable on the device. All variables that are used on the host that are required on the device are identified in the MAP clause.
 
-In the sample code, the arrays `A`, `B`, and `C` are initialized on the host. All three arrays are mapped *to* the device so the initial values are available on the device. Only the array `C` needs to be mapped *from* the device. This is because `A` and `B` are not modified on the device, so there is no need to copy those arrays back to the host. For best performance, only map the required variables between the host and the device and vice versa.
+In the sample GPU program (`03_mm_GPU.f90`), the arrays `A`, `B`, and `C` are initialized on the host. All three arrays are mapped *to* the device so the initial values are available on the device. Only the array `C` needs to be mapped *from* the device. This is because `A` and `B` are not modified on the device, so there is no need to copy those arrays back to the host. For best performance, only map the required variables between the host and the device and vice versa.
 
 The complete TARGET directive for this sample is `!$omp target teams map(to: a, b) map(tofrom: c)`.
 In the TARGET region, there are additional clauses for `!$OMP PARALLEL DO`. 
@@ -254,10 +233,10 @@ The combination of TEAMS and DISTRIBUTE enables two levels of parallelism. TEAMS
 
 Variables that are PRIVATE are only available on the device; no mapping is required.
 
-### Edit the GPU Offload Program
+Follow these steps to modify your parallel program to use OpenMP offload directives to parallelize the code for GPU:
 
-1. Open the file `mm_CPU_parallel.F90` and save it as `mm_GPU.F90`. 
-2. In `mm_GPU.F90`, replace the PARALLEL DO directives with the following OpenMP TARGET directives:
+1. Open the file `mm_CPU_parallel.f90` and save it as `mm_GPU.f90`. 
+2. In `mm_GPU.f90`, replace the PARALLEL DO directives with the following OpenMP TARGET directives:
    ```
    !$omp target teams map(to: a, b) map(tofrom: c)
    !$omp distribute parallel do SIMD private(j, i, k)
@@ -271,6 +250,7 @@ Variables that are PRIVATE are only available on the device; no mapping is requi
          enddo
    !$omp end target teams
    ```
+3. Save your changes.
 
 ## Build and Run the GPU Offload Program
 
@@ -280,7 +260,7 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
 
 ### On Linux
 
-1. Change to the sample directory.
+1. Change to the directory that contains your modified program for GPU (`mm_GPU.f90`).
 2. Build the program using the `-qopenmp`  and `-fopenmp-targets=spir64` options.
    ```
    ifx -xhost -qopenmp -fopenmp-targets=spir64 mm_GPU.f90
@@ -290,22 +270,10 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
    ./a.out
    ```
 
-Alternately, use the `Makefile` to compile and run the program:
-
-1. Change to the sample directory.
-2. Remove any leftover files from a previous compilation.
-   ```
-   make clean
-   ```
-3. Compile and run the program.
-   ```
-   make gpu
-   ```
-
 ### On Windows
 
 1. Open an Intel oneAPI command window.
-2. Change to the sample directory.
+2. Change to the directory that contains your modified program for GPU (`mm_GPU.f90`).
 3. Build the program using the `/Qopenmp` option.
    ```
    ifx /Qxhost /Qopenmp /Qopenmp-targets:spir64 mm_GPU.f90
@@ -317,7 +285,7 @@ Alternately, use the `Makefile` to compile and run the program:
 
 ### Example GPU Offload Program Output
 
-If the run was successful, the output is:
+If the execution of the GPU program was successful, the output is:
 
 ```
 Matrix size 2600
@@ -327,11 +295,11 @@ PASSED
 Note that when `-xhost` (`/Qxhost`) is used, the compiler optimizes the CPU portion of the code for the processor used to compile. In this sample, that includes the initialization of the arrays and the serial computation of the matrix multiply that is used to validate the results. Setting OMP_NUM_THREADS has no impact in a TARGET region.
 
 
-## Determine If the Compute Kernel Offloaded
+### Determine If the Compute Kernel Offloaded to GPU
 
-There are (at least) two ways to determine if the compute kernel offloaded.
+There are (at least) two methods to determine if the compute kernel offloaded.
 
-### Use LIBOMPTARGET_PLUGIN_PROFILE to Confirm Kernel Offload
+**Method One: Use LIBOMPTARGET_PLUGIN_PROFILE to Confirm Kernel Offload**
 
 You can set the `LIBOMPTARGET_PLUGIN_PROFILE` environment variable to confirm that the application ran on the device. After setting the variable, a table with offload information will be printed when you run the sample code. Some profile information is also printed. 
 
@@ -384,9 +352,9 @@ Look at the table row by row in the Count column:
 - Linking: The count is 1. There’s just one kernel to offload to the device.
 - OffloadEntriesInit: The count is 1. There’s just one kernel to offload to the device.
 
-### Use Code to Confirm Kernel Offload
+**Method Two: Use Code to Confirm Kernel Offload**
 
-Add the following code early in the sample to print information about the compute environment and the size of the matrix.
+Add the following code early in the program to print information about the compute environment and the size of the matrix.
 
 ```
 myid = OMP_GET_THREAD_NUM()
@@ -403,6 +371,45 @@ myid = OMP_GET_THREAD_NUM()
 !$omp end target 
     endif
 ```
+
+## Run the Supplied Working Versions of the Program with Make
+
+On Linux, you can run the working versions of the program provided with this sample using Make. 
+
+### Compile and Run `01_mm_CPU_sequential.f90` 
+
+1. Change to the sample directory.
+2. Remove any leftover files from a previous compilation.
+   ```
+   make clean
+   ```
+3. Compile and run the program.
+   ```
+   make seq
+   ```
+
+### Compile and Run `02_mm_CPU_parallel.f90`
+
+1. Change to the sample directory.
+2. Remove any leftover files from a previous compilation.
+   ```
+   make clean
+   ```
+3. Compile and run the program.
+   ```
+   make par
+   ```
+### Compile and Run `03_mm_GPU.f90`
+
+1. Change to the sample directory.
+2. Remove any leftover files from a previous compilation.
+   ```
+   make clean
+   ```
+3. Compile and run the program.
+   ```
+   make gpu
+   ```
 
 ## Additional Information
 
@@ -422,9 +429,6 @@ https://app.plan.intel.com/e/er?cid=em&source=elo&campid=satg_WW_satgobmcdn_EMNL
 - [Using OpenMP—The Next Step: Affinity, Accelerators, Tasking, and SIMD](https://direct.mit.edu/books/book/4482/Using-OpenMP-The-Next-StepAffinity-Accelerators)
 
 - [OpenMP* Offload Basics](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/openmp-offload.html#gs.wf54fg)
-
-
-
 
 ## License
 
