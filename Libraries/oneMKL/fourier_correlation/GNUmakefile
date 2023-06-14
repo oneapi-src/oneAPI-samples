@@ -9,7 +9,7 @@ run_all: fcorr_1d_buff fcorr_1d_usm fcorr_2d_usm
 	./fcorr_1d_usm 4096
 	./fcorr_2d_usm
 
-DPCPP_OPTS = -DMKL_ILP64 -I${MKLROOT}/include -qmkl=parallel
+DPCPP_OPTS = -DMKL_ILP64 -qmkl=parallel
 
 fcorr_1d_buff: fcorr_1d_buffers.cpp
 	icpx $< -fsycl -o $@ $(DPCPP_OPTS)

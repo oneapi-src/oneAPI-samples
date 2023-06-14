@@ -8,8 +8,8 @@ run: sgemm.mkl dgemm.mkl
 	./sgemm.mkl
 	./dgemm.mkl
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
-MKL_LIBS = -L${MKLROOT}/lib -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
+MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
 
 DPCPP_OPTS = -O3 $(MKL_COPTS) $(MKL_LIBS)
 

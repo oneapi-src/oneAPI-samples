@@ -7,8 +7,8 @@ all: run
 run: sparse_cg
 	./sparse_cg
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
-MKL_LIBS = -L${MKLROOT}/lib -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
+MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
 
 DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
 
