@@ -136,8 +136,8 @@ In the sample parallel program (`02_mm_CPU_parallel.f90`), the arrays `a`, `b`, 
 
 Follow these steps to modify the sequential program to use OpenMP directives to parallelize the code for CPU:
 
-1. Open the file `01_mm_CPU_sequential.f90` and save it as `mm_CPU_parallel.f90`.
-2. In your new `mm_CPU_parallel.f90` file, wrap the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do` OpenMP directives: 
+1. Open the file `01_mm_CPU_sequential.f90` and save it as `02_mm_CPU_parallel.f90`.
+2. In your new `02_mm_CPU_parallel.f90` file, wrap the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do` OpenMP directives: 
 
    ```
    !$omp parallel do shared(a, b, c, n), private(i, j, k)
@@ -159,10 +159,10 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
 
 ### On Linux
 
-1. Change to the directory that contains your modified program for CPU (`mm_CPU_parallel.f90`).
+1. Change to the directory that contains your modified program for CPU (`02_mm_CPU_parallel.f90`).
 2. Build your modified program using the `-qopenmp` option.
    ```
-   ifx -xhost -qopenmp mm_CPU_parallel.f90
+   ifx -xhost -qopenmp 02_mm_CPU_parallel.f90
    ```
 3. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
    ```
@@ -176,10 +176,10 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
 ### On Windows
 
 1. Open an Intel oneAPI command window.
-2. Change to the directory that contains your modified program for CPU (`mm_CPU_parallel.f90`).
+2. Change to the directory that contains your modified program for CPU (`02_mm_CPU_parallel.f90`).
 3. Build the program using the `/Qopenmp` option.
    ```
-   ifx /Qxhost /Qopenmp mm_CPU_parallel.f90
+   ifx /Qxhost /Qopenmp 02_mm_CPU_parallel.f90
    ```
 4. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
    ```
@@ -235,8 +235,8 @@ Variables that are PRIVATE are only available on the device; no mapping is requi
 
 Follow these steps to modify your parallel program to use OpenMP offload directives to parallelize the code for GPU:
 
-1. Open the file `mm_CPU_parallel.f90` and save it as `mm_GPU.f90`. 
-2. In `mm_GPU.f90`, replace the PARALLEL DO directives with the following OpenMP TARGET directives:
+1. Open the file `02_mm_CPU_parallel.f90` and save it as `03_mm_GPU.f90`. 
+2. In `03_mm_GPU.f90`, replace the PARALLEL DO directives with the following OpenMP TARGET directives:
    ```
    !$omp target teams map(to: a, b) map(tofrom: c)
    !$omp distribute parallel do SIMD private(j, i, k)
@@ -260,10 +260,10 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
 
 ### On Linux
 
-1. Change to the directory that contains your modified program for GPU (`mm_GPU.f90`).
+1. Change to the directory that contains your modified program for GPU (`03_mm_GPU.f90`).
 2. Build the program using the `-qopenmp`  and `-fopenmp-targets=spir64` options.
    ```
-   ifx -xhost -qopenmp -fopenmp-targets=spir64 mm_GPU.f90
+   ifx -xhost -qopenmp -fopenmp-targets=spir64 03_mm_GPU.f90
    ```
 3. Run the program.
    ```
@@ -273,10 +273,10 @@ To compile for the device, use the `-fopenmp-targets=spir64` (Linux) or `/Qopenm
 ### On Windows
 
 1. Open an Intel oneAPI command window.
-2. Change to the directory that contains your modified program for GPU (`mm_GPU.f90`).
+2. Change to the directory that contains your modified program for GPU (`03_mm_GPU.f90`).
 3. Build the program using the `/Qopenmp` option.
    ```
-   ifx /Qxhost /Qopenmp /Qopenmp-targets:spir64 mm_GPU.f90
+   ifx /Qxhost /Qopenmp /Qopenmp-targets:spir64 03_mm_GPU.f90
    ```
 4. Run the program.
    ```
