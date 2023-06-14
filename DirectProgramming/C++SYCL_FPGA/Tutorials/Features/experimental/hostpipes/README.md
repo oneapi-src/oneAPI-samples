@@ -300,6 +300,10 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
       ```
       make fpga_sim
       ```
+   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      make fpga
+      ```	
 
 ### On Windows*
 
@@ -330,6 +334,10 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
       ```
       nmake fpga_sim
+      ```
+   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      nmake fpga
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -372,7 +380,8 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
    ```
-
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+	
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
@@ -385,6 +394,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
 
 ## Example Output
 
