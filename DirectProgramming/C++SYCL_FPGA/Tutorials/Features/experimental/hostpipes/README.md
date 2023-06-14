@@ -61,16 +61,6 @@ This tutorial illustrates some key concepts:
 - Basics of declaring host pipes.
 - Using blocking read and write API for host pipes.
 
-### Prototype Implementation
-
-The host pipe implementation in oneAPI 2022.3 is a prototype implementation that relies on experimental features that are not incorporated into the standard inter-kernel pipes that are already supported. To separate the host pipe implementation from the existing inter-kernel pipe implementation, host pipes in this oneAPI version are declared in a different namespace than inter-kernel pipes. This namespace is as follows:
-
-```c++
-cl::sycl::ext::intel::prototype
-```
-
-Additionally, the oneAPI 2022.3 prototype implementation of host pipes relies on Unified Shared Memory (USM). Only boards and devices that support USM can be used with host pipes in this release.
-
 ### Declaring a Host Pipe
 
 Each individual host pipe is a function scope class declaration of the templated pipe class. The first template parameter should be a user-defined type that differentiates this particular pipe from the others. The second template parameter defines the datatype of each element carried by the pipe. The third template parameter defines the pipe capacity, which is the guaranteed minimum number of elements of datatype that can be held in the pipe. In other words, for a given pipe with capacity `c`, the compiler guarantees that operations on the pipe will not block due to capacity as long as, for any consecutive `n` operations on the pipe, the number of writes to the pipe minus the number of reads does not exceed `c`.
@@ -81,38 +71,25 @@ class FirstPipeT;
 class SecondPipeT;
 
 // two host pipes
-using FirstPipeInstance = cl::sycl::ext::intel::prototype::pipe<
+using FirstPipeInstance = cl::sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     FirstPipeT, // An identifier for the pipe
     int,        // The type of data in the pipe
-    8,          // The capacity of the pipe
-    // Additional host pipe parameters
-    kReadyLatency,                   // Latency for ready signal deassert
-    kBitsPerSymbol,                  // Symbol size on data bus
-    true,                            // Exposes a valid on the pipe interface
-    false,                           // First symbol in high order bits
-    protocol_name::AVALON_STREAMING  // Protocol
+    8           // The capacity of the pipe
     >;
-using SecondPipeInstance = cl::sycl::ext::intel::prototype::pipe<
+using SecondPipeInstance = cl::sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     SecondPipeT, // An identifier for the pipe
     int,         // The type of data in the pipe
-    4,           // The capacity of the pipe
-    // Additional host pipe parameters
-    kReadyLatency,                   // Latency for ready signal deassert
-    kBitsPerSymbol,                  // Symbol size on data bus
-    true,                            // Exposes a valid on the pipe interface
-    false,                           // First symbol in high order bits
-    protocol_name::AVALON_STREAMING  // Protocol
+    4            // The capacity of the pipe
     >;
 ```
 
-In this example, `FirstPipeT` and `SecondPipeT` are unique user-defined types that identify two host pipes. The first host pipe (which has been aliased to `FirstPipeInstance`), carries `int` type data elements and has a capacity of `8`. The second host pipe (`SecondPipeInstance`) carries `float` type data elements, and has a capacity of `4`. The other host pipe parameters beyond these three have been set to default values. For a description of all host pipe parameters, refer to the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/)*. Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than having to repeatedly type out the full namespace and template parameters.
+In this example, `FirstPipeT` and `SecondPipeT` are unique user-defined types that identify two host pipes. The first host pipe (which has been aliased to `FirstPipeInstance`), carries `int` type data elements and has a capacity of `8`. The second host pipe (`SecondPipeInstance`) carries `float` type data elements, and has a capacity of `4`. Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than having to repeatedly type out the full namespace and template parameters.
 
-#### Additional Template Parameters
+#### Host pipe properties
 
-Host pipes use additional template parameters beyond the three described above. The use of these parameters is beyond the scope of this tutorial; their definitions and usage can be found in the *[FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)*. Suitable values for these parameters consistent with non-specialized host pipe usage have been used in the accompanying tutorial code.
-Host pipes use additional template parameters beyond the three described earlier. The use of these parameters is beyond the scope of this tutorial. You can find their definitions and usage in the *Intel® oneAPI Programming Guide* Parameter values consistent with non-specialized host pipe usage have been used in the tutorial code.
+Host pipes use a fourth template parameter beyond the three described earlier. This template parameter uses the oneAPI properties class to allow users to define additional semantic properties for a host pipe. The use of these properties is beyond the scope of this tutorial. You can find their definitions and usage in the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/)*. Omitting the properties parameter (as has been done for the host pipes in this code sample) gives the host pipe the default values for these properties as described in the guide.
 
 ### Host Pipe API
 
@@ -230,8 +207,8 @@ Host pipe connections for a particular host pipe are inferred by the compiler fr
 In `hostpipes.cpp`, two host pipes are declared for transferring host-to-device data (`H2DPipe`) and device-to-host data (`D2HPipe`).
 
 ```c++
-using H2DPipe = cl::sycl::ext::intel::prototype::pipe<H2DPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, true, false, protocol_name::AVALON_STREAMING>;
-using D2HPipe = cl::sycl::ext::intel::prototype::pipe<D2HPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, true, false, protocol_name::AVALON_STREAMING>;
+using H2DPipe = cl::sycl::ext::intel::experimental::pipe<H2DPipeID, ValueT, kPipeMinCapacity>;
+using D2HPipe = cl::sycl::ext::intel::experimental::pipe<D2HPipeID, ValueT, kPipeMinCapacity>;
 ```
 
 These host pipes are used to transfer data to and from `SubmitLoopBackKernel`, which reads a data element from the H2DPipe (parameterized in the kernel template as `InHostPipe`), processes it using the `SomethingComplicated()` function (a placeholder example of offload computation), and writes it back to the host via `D2HPipe` (template parameter `OutHostPipes`).
@@ -307,12 +284,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
+   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -327,10 +299,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    3. Compile for simulation (fast compile time, targets simulated FPGA device).
       ```
       make fpga_sim
-      ```
-   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
-      ```
-      make fpga
       ```
 
 ### On Windows*
@@ -347,12 +315,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
+   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -368,10 +331,6 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
       ```
       nmake fpga_sim
       ```
-   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
-      ```
-      nmake fpga
-      ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 #### Read the Reports
@@ -380,9 +339,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 2. Open the **Views** menu and select **System Viewer**.
 3. In the left-hand pane, select **LoopBackKernelID** under the System hierarchy.
 
-In the main **System Viewer** pane, the pipe read and pipe write for the kernel are highlighted. They show that the read is reading from the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<H2DPipeID>` host pipe, and that the write is writing to the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<D2HPipeID>` host pipe. Clicking on either of these host pipes verifies the width (32-bit corresponding to the `int` type) and depth (8, which is the `kPipeMinCapacity` that each pipe was declared with).
-
-You might notice that there are additional identifiers in the pipe template (notably, `detail::HostPipePipeId`). This additional identifier is an internal implementation detail of this prototype feature. You can confirm the correspondence of these pipes to the ones declared in the source code by the template parameters `H2DPipeID` and `D2HPipeID`, which are the unique types declared in the source file and used in the pipe declarations:
+In the main **System Viewer** pane, the pipe read and pipe write for the kernel are highlighted in the **LoopBackKernelID.B1** block. Selecting **LoopBackKernelID.B1** in the left-hand pane gives an expanded view of this block in the main pane, with the pipe read represented by a 'RD' node, and pipe write as a 'WR' node. Clicking on either of these nodes gives further information for these pipes in the **Details** pane. This pane will show that the read is reading from the `H2DPipeID` host pipe, and that the write is writing to the `D2HPipeID` host pipe, as well as verifying that both pipes have a width of 32 bits (corresponding to the `int` type) and depth of 8 (which is the `kPipeMinCapacity` that each pipe was declared with).
 
 ```c++
 // forward declare kernel and pipe names to reduce name mangling
@@ -390,13 +347,13 @@ You might notice that there are additional identifiers in the pipe template (not
 class H2DPipeID;
 class D2HPipeID;
 ...
-using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
+using H2DPipe = cl::sycl::ext::intel::experimental::pipe<
    // Usual pipe parameters
    H2DPipeID,         // An identified for the pipe
    ...
    >;
 
-using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
+using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    // Usual pipe parameters
    D2HPipeID,         // An identified for the pipe
    ...
@@ -415,10 +372,6 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim <input_file> [-o=<output_file>]
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./hostpipes.fpga
-   ```
 
 ### On Windows
 
@@ -431,10 +384,6 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    hostpipes.fpga_sim.exe <input_file> [-o=<output_file>]
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-   ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   hostpipes.fpga.exe
    ```
 
 ## Example Output
