@@ -1,14 +1,34 @@
-CMake + Intel&reg; oneAPI Examples
-==================================
+# CMake Template Examples for OneAPI
 
 The CMake projects in this code repository demonstrate use of CMake to build
-simple programs with CMake for various common scenarios. Examples are divided
--into directories for C, C++, and Fortran. SYCL examples are included at the
-top level. SYCL can be implemented entirely in C++, but people looking for SYCL
-examples are more likely to beless interested in pure C, C++, or Fortran examples.
+simple programs with OneAPI compilers for various common scenarios.
 
-Each language specific directory are contains at least a simple "Hello, World"
-example, and OpenMP example.
+
+| Area                      | Description
+|:---                       |:---
+| What you will learn       | How to use CMake to build projects with OneAPI compilers.
+| Time to complete          | 10 minutes
+| Category                  | Tutorial
+
+## Purpose
+
+The CMake projects in this code repository demonstrate use of CMake to build
+simple programs with OneAPI Compilers for various common scenarios. Examples are divided
+-into directories for C, C++, and Fortran. SYCL examples are included at the
+top level. SYCL examples are implemented entirely in C++.
+
+## Prerequisites
+
+| Optimized for             | Description
+|:---                       |:---
+| OS                        | Windows, Linux
+| Hardware                  | N/A
+| Software                  | CMake, OneAPI Compilers
+
+## Key Implementation Details
+
+
+Each language specific directory are contains few sample examples such as OpenMP, IPO.
 
 The examples in this directory are structured as a collection of independent
 projects, rather as a large single project. This way, any example can be copied
@@ -16,7 +36,9 @@ into a separate subdirectory, compiled, run, and used as the basis for a new pro
 
 The top level CMakeLists.txt includes projects in all the sub-directories.  To
 build all of the examples, create a build directory and generate the project as
-usual.  For example in Linux,
+usual.  
+ 
+For example in Linux,
 
     $ mkdir build
     $ cd build
@@ -24,18 +46,80 @@ usual.  For example in Linux,
     $ cmake --build . -j
 
 
-CMake Minimum Required Version
-------------------------------
+For example in Windows
 
-CMake version 3.20.0 first added support for the Intel oneAPI C, C++, and
-Fortran compilers.  Since 3.20.0 a improvements have been made to the initial
-support in CMake.  The latest released CMake is likely to work best with
-oneAPI compilers.
+    $ mkdir build
+    $ cd build
+    $ CC=icx CXX=icx FC=ifx cmake -GNinja ..
+    $ cmake --build . -j
 
-Older versions of may also be suitable depending on a project's needs.  The following
-table summarizes which kinds of tasks work in each version of CMake.
+>**Note**: CMake support for GNU style OneAPI driver `icpx` on Windows is not yet available until CMake 3.25 and such support will be added in future releases of CMake.
+>**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
+>**Note**: For comprehensive information about CMake with OneAPI Compilers, see the *[Intel® oneAPI DPC++/C++ Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference)*. (Use search or the table of contents to find relevant information quickly. OR, Navigate to Compiler Setup -> Use the Command Line -> Use the Cmake with the compiler)
 
-License
--------
-Code samples are licensed under the MIT license. See License.txt for details.
-Third-party program Licenses can be found here: third-party-programs.txt.
+
+## Set Environment Variables
+
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+
+Ensure the availability of latest CMake binaries.
+
+## Build the Cmake example Sample
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+>
+> Windows*:
+> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
+
+### On Linux*
+
+1. Change to the sample directory.
+2. Build the program.
+   ```
+    $ mkdir build
+    $ cd build
+    $ CC=icx CXX=icpx FC=ifx cmake ..
+    $ cmake --build . -j
+   ```
+
+### On Windows*
+
+
+1. Change to the sample directory.
+2. Build the program.
+   ```
+    $ mkdir build
+    $ cd build
+    $ CC=icx CXX=icx FC=ifx cmake -GNinja ..
+    $ cmake --build . -j
+   ```
+>**Note**: Currently, only Ninja generators are supported in the Windows. A Visual Studio Generator may be supported with OneAPI may be supported in the future CMake releases.
+
+#### Troubleshooting
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+```
+make VERBOSE=1
+```
+
+
+
+Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
+
+© Intel Corporation.
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
