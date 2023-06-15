@@ -2,7 +2,7 @@
   "guid": "f9d91098-095c-4ab6-a7ea-e1b454f04ccc",
   "name": "Introduction to Machine Learning",
   "categories": [ "Toolkit/oneAPI AI And Analytics/AI Getting Started Samples" ],
-  "description": "The Jupyter Notebooks in these samples are intended to give professors and students an accesible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms which are used daily to address machine learning challenges. It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the Intel AI Analytics Toolkit powered by oneAPI. This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.",
+  "description": "The Jupyter Notebooks in these samples are intended to give professors and students an accessible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms, which are used daily to address machine learning challenges. It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the Intel® AI Analytics Toolkit (AI Kit) powered by oneAPI. This workshop is designed to be used on the Intel® DevCloud and includes details on submitting batch jobs on the DevCloud environment.",
   "toolchain": [ "jupyter" ],
   "languages": [ { "python": {} } ],
   "os": [ "linux" ],
