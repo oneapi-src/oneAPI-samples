@@ -93,6 +93,8 @@ icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation 
 icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
 ```
 
+Note that the library files (\*.a) must be included after all of the cpp files in the `icpx` command.
+
 ## Building the `use_library` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
