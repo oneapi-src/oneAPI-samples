@@ -19,11 +19,6 @@ At the end of this course, you will be able to:
 
 - Optimize your SYCL code to run faster and efficiently on GPUs.
 
-## License  
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Content Details
 
 #### Pre-requisites
@@ -83,4 +78,7 @@ The Jupyter Notebooks can be viewed on Github and you can run the code on comman
 - git clone the repo
 - open command line terminal and use the `run_*.sh` script in each module to compile and run code.
 
+## License  
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
