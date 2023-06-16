@@ -17,6 +17,17 @@ This sample contains a Jupyter* NoteBook that guides you through the process of 
 | Hardware             | Intel® Xeon® scalable processor family <br> Intel® Data Center GPUs
 | Software             | Intel® AI Analytics Toolkit (AI Kit)
 
+
+## Hardware requirement
+
+Verified Hardware Platforms for CPU samples:
+ - Intel® CPU (Xeon, Core)
+
+Verified Hardware Platforms for GPU samples:
+ - [Intel® Data Center GPU Flex Series](https://www.intel.com/content/www/us/en/products/docs/discrete-gpus/data-center-gpu/flex-series/overview.html)
+ - [Intel® Data Center GPU Max Series](https://www.intel.com/content/www/us/en/products/docs/processors/max-series/overview.html)
+ - [Intel® Arc™ Graphics](https://www.intel.com/content/www/us/en/products/details/discrete-gpus/arc.html) (experimental)
+
 ## Purpose
 
 This sample code demonstrates how to begin using the Intel® Extension for PyTorch*. 
