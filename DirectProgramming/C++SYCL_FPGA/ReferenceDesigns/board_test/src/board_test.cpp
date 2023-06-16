@@ -203,6 +203,18 @@ int main(int argc, char* argv[]) {
 
       ret |= hldshim.KernelMemBW(q);
     }
+
+    // Test 7 - USM
+    if (test_to_run == 0 || test_to_run == 7) {
+      if (!device.has(sycl::aspect::usm_host_allocations)) {
+        std::cout << "Board does not support BSM, skipping this test \n";
+      } else {
+        std::cout << "\n*****************************************************************\n"
+                  << "***********************  USM Bandwidth  *************************\n"
+                  << "*****************************************************************\n\n";
+        ret |= hldshim.USMBWTest(q);
+      }
+    }
   }  // End of try block
 
   catch (sycl::exception const& e) {

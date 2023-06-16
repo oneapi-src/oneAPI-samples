@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "host_speed.hpp"
+#include "usm_speed.hpp"
 
 // Pre-declare kernel name to prevent name mangling
 // This is an FPGA best practice that makes it easier to identify the kernel in
@@ -80,6 +81,7 @@ class ShimMetrics {
   int KernelLatency(sycl::queue &q);
   int KernelMemRW(sycl::queue &q);
   int KernelMemBW(sycl::queue &q);
+  int USMBWTest(sycl::queue &q);
   void ReadBinary();
 
  private:
@@ -1497,6 +1499,70 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
   delete[] host_data_in;
   delete[] host_data_out;
 
+  return 0;
+}
+
+////////////////////////////////////
+// ****** USMMemBW function ***** //
+////////////////////////////////////
+
+// Inputs:
+// queue &q - queue to submit operation
+// Returns:
+// 0 if test passes, 1 if device max allocation size is 0 or verification fails
+
+// The function does the following tasks:
+
+int ShimMetrics::USMBWTest(sycl::queue &q) {
+  int iterations = 1;
+  size_t data_size = 1024 * 1024 * 1024;
+  const double MB = 1000.0 * 1000.0;
+  const double GB = MB * 1000.0;
+  const int TYPE_MEMCOPY = 0;
+  const int TYPE_READ = 1;
+  const int TYPE_WRITE = 2;
+
+  std::cout << "Iterations: " << iterations << std::endl;
+  std::cout << "Data size: " << data_size / MB << " MB" << std::endl;
+  std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes" << std::endl;
+  std::cout << "-- Results Full Duplex -- " << std::endl;
+
+  for (int i = 0; i < 3; i++) {
+    std::chrono::microseconds time{0};
+    switch (i) {
+    case TYPE_MEMCOPY: {
+      std::cout << std::endl << "Case: Full Duplex" << std::endl;
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> memcopy_k = memcopy_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_memcopy_kernel;
+      run_test(q, data_size, iterations, memcopy_k, verify, time);
+    } break;
+    case TYPE_READ: {
+      std::cout << std::endl << "Case: From Host to Device" << std::endl;
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> read_k = read_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_read_kernel;
+      run_test(q, data_size, iterations, read_k, verify, time);
+    } break;
+    case TYPE_WRITE: {
+      std::cout << std::endl << "Case: From Device to Host" << std::endl;
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> write_k = write_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_write_kernel;
+      run_test(q, data_size, iterations, write_k, verify, time);
+    } break;
+    default:
+      std::cout << "Error: Don't know how to launch test " << i << std::endl;
+      return 1;
+    }
+    time /= iterations;
+    std::cout << "Average Time: " << time.count() / 1000.0 << " ms\t" << std::endl;
+    double data_size_gb;
+    if (i == TYPE_MEMCOPY) {
+      // full duplex transfers twice the amount of data
+      data_size_gb = data_size * 2 / GB;
+    } else {
+      data_size_gb = data_size / GB;
+    }
+    std::cout << "Average Throughput: " << (data_size_gb / (time.count() / (1000.0 * 1000.0))) << " GB/s\t" << std::endl;
+  }
   return 0;
 }
 
