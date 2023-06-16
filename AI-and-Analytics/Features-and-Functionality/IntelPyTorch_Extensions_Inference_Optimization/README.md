@@ -138,9 +138,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-Users should be able to see some diagrams for performance comparison and analysis. An example of performance comparison for inference speedup obtained by enabling IPEX optimizations.
-
-![Performance Numbers](images/performance_numbers.png)
+Users should be able to see some diagrams for performance comparison and analysis for inference speedup obtained by enabling IPEX optimizations.
 
 ## License
 

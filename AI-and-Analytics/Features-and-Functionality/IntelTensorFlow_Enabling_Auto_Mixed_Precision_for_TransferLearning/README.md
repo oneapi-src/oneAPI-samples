@@ -108,15 +108,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-You will see diagrams comparing performance and analysis. 
+You will see diagrams comparing performance and analysis. This includes performance comparison for training speedup obtained by enabling auto-mixed precision and inference speedup obtained by optimizing the saved model for inference.
 
-The following image illustrates performance comparison for training speedup obtained by enabling auto-mixed precision.
-
-![Training Speedup](images/training-perf-comp.png)
-
-For performance analysis, you will see histograms showing different Tensorflow* operations in the analyzed pre-trained model pb file. The following image illustrates performance comparison for inference speedup obtained by optimizing the saved model for inference.
-
-![Inference Speedup](images/inference-perf-comp.png)
+For performance analysis, you will see histograms showing different Tensorflow* operations in the analyzed pre-trained model pb file.
 
 ## License
 

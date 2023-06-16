@@ -19,7 +19,7 @@ The Intel® Extension for PyTorch* gives users the ability to speed up training 
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 18.04 or newer
-| Hardware                | Intel® Xeon® Scalable Processor family
+| Hardware                | 4th Gen Intel® Xeon® Scalable Processors or newer
 | Software                | Intel® Extension for PyTorch*
 
 ### For Local Development Environments

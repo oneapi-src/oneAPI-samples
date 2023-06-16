@@ -118,9 +118,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-Users should be able to see some diagrams for performance comparison and analysis. One example of performance comparison diagrams:
-
-![speed up example](images/perf_comparison.png)
+Users should be able to see some diagrams for performance comparison and analysis.
 
 For performance analysis, users can also see pie charts for different Tensorflow* operations in the analyzed pre-trained model pb file.
 
