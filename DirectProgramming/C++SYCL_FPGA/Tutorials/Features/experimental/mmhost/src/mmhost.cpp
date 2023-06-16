@@ -43,7 +43,7 @@ struct VectorMADIP {
   mmhost(BL1,  // buffer_location or aspace
          28,   // address width
          64,   // data width
-         16,   // latency
+         16,   // ! latency, must be atleast 16
          1,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
          1,    // maxburst
          0,    // align, 0 defaults to alignment of the type
@@ -100,24 +100,17 @@ int main(void) {
 #endif
 
   try {
-    sycl::queue q(selector, fpga_tools::exception_handler,
-                  property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler, sycl::property::queue::enable_profiling{});
 
     // Print out the device information.
     std::cout << "Running on device: "
               << q.get_device().get_info<info::device::name>() << "\n";
-    // make sure the device supports USM host allocations
-    if (!device.has(sycl::aspect::usm_host_allocations)) {
-      std::cerr << "This design must either target a board that supports USM "
-                   "Host/Shared allocations, or IP Component Authoring. "
-                << std::endl;
-      std::terminate();
-    }
+
     int size = 10000;
     double start, end;
     event e;
 
-    // Allocate memory for pointer kernel arguments with specified buffer location
+    // MMHost arguments
     auto x = make_malloc_shared<int>(q, size, BL1);
     auto y = make_malloc_shared<int>(q, size, BL2);
     auto z = make_malloc_shared<int>(q, size, BL3);
@@ -132,8 +125,7 @@ int main(void) {
     // convert from nanoseconds to ms
     double kernel_mmhost_time = (double)(end - start) * 1e-6;
 
-```suggestion
-    // Allocate memory for pointer kernel arguments, no buffer location is specified
+    // Regular pointer arguments
     auto px = malloc_shared<int>(size, q);
     auto py = malloc_shared<int>(size, q);
     auto pz = malloc_shared<int>(size, q);
@@ -147,8 +139,8 @@ int main(void) {
     // convert from nanoseconds to ms
     double kernel_pointer_time = (double)(end - start) * 1e-6;
 
-    std::cout << "Kernel time with separate argument interfaces: " << kernel_mmhost_time << " ms\n";
-    std::cout << "Kernel time with common argument interface: " << kernel_pointer_time << " ms\n";
+    std::cout << "MMHost kernel time : " << kernel_mmhost_time << " ms\n";
+    std::cout << "Pointer kernel time : " << kernel_pointer_time << " ms\n";
     std::cout << "elements in vector : " << size << "\n";
 
     bool pass_check = true;

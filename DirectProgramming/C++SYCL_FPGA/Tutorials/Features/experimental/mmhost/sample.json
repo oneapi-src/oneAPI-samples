@@ -1,6 +1,6 @@
 {
   "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
-  "name": "Host Pipes",
+  "name": "MMHost",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of mmhost macros",
   "toolchain": ["icpx"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/experimental/ip_authoring_mmhost",
+      "Tutorials/Features/experimental/mmhost",
       "include"
     ],
     "exclude": []
@@ -49,7 +49,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/ip_authoring_mmhost",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
@@ -61,7 +61,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/ip_authoring_mmhost",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost",
           "nmake report"
         ]
       }
