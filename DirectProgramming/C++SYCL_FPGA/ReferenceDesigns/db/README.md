@@ -58,7 +58,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-In this design, we accelerate four database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
+In this design, we accelerate three database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -80,17 +80,11 @@ This design leverages concepts discussed in the [FPGA tutorials](/DirectProgramm
 
 ### Query Implementations
 
-The following sections describe at a high level how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The following sections describe at a high level how queries 1, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
 
-Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
-
-#### Query 9
-
-Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin`, and `FifoSort`). The block diagram of the design is shown below.
-
-![](assets/q9.png)
+Query 1 is the simplest of the three queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
 
 #### Query 11
 
@@ -111,8 +105,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 |`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
 |`dbdata.hpp`                           | Definitions of database related data structures and parsing functions
 |`query1/query1_kernel.cpp`             | Contains the kernel for Query 1
-|`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
-|`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
 |`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
 |`query11/pipe_types.cpp`               | All data types and instantiations for pipes used in query 11
 |`query12/query12_kernel.cpp`           | Contains the kernel for Query 12
@@ -154,7 +146,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    cd build
    cmake .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
    > **Note**: You can change the default target by using the command:
    >  ```
@@ -184,8 +176,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       The report resides at `db_report.prj/reports/report.html`.
 
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
-
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
       ```
@@ -203,7 +193,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    cd build
    cmake -G "NMake Makefiles" .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
    > **Note**: You can change the default target by using the command:
    >  ```
@@ -233,8 +223,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       The report resides at `db_report.prj/reports/report.html` directory.
 
-      >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
-
    4. Compile for FPGA hardware (longer compile time, targets FPGA device):
       ```
       nmake fpga
@@ -261,7 +249,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    ```
    ./db.fpga_emu --dbroot=../data/sf0.01 --test
    ```
-   (Optional) Run the design for queries `9`, `11` and `12`.
+   (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
@@ -277,7 +265,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    ```
    db.fpga_emu.exe --dbroot=../data/sf0.01 --test
    ```
-   (Optional) Run the design for queries `9`, `11` and `12`.
+   (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
