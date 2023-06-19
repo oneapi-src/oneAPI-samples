@@ -7,10 +7,10 @@ class USMMemWrite;
 
 void memcopy_kernel(sycl::queue &q, sycl::vec<long, 8> *in, sycl::vec<long, 8> *out, const sycl::range<1> numItems) {
   q.single_task<USMMemCopy>([=]() [[intel::kernel_args_restrict]] {
-    sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
-    sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
+    // sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
+    // sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
     for (size_t i = 0; i < numItems.get(0); i++) {
-      out_h[i] = in_h[i];
+      out[i] = in[i];
     }
   });
 }
@@ -18,22 +18,22 @@ void memcopy_kernel(sycl::queue &q, sycl::vec<long, 8> *in, sycl::vec<long, 8> *
 void read_kernel(sycl::queue &q, sycl::vec<long, 8> *in, sycl::vec<long, 8> *out, const sycl::range<1> numItems) {
   q.single_task<USMMemRead>([=]() {
     sycl::vec<long, 8> sum{0};
-    sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
-    sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
+    // sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
+    // sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
     for (size_t i = 0; i < numItems.get(0); i++) {
-      sum += in_h[i];
+      sum += in[i];
     }
     // This prevents the reads from being optimized away
-    out_h[0] = sum;
+    out[0] = sum;
   });
 }
 
 void write_kernel(sycl::queue &q, sycl::vec<long, 8> *in, sycl::vec<long, 8> *out, const sycl::range<1> numItems) {
   q.single_task<USMMemWrite>([=]() {
     sycl::vec<long, 8> anws{5};
-    sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
+    // sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
     for (size_t i = 0; i < numItems.get(0); i++) {
-      out_h[i] = anws;
+      out[i] = anws;
     }
   });
 }

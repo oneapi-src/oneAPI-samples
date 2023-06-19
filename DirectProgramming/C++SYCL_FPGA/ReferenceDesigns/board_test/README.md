@@ -5,6 +5,7 @@ The `Board Test` sample is a reference design contains tests to check FPGA board
 - Kernel clock frequency
 - Kernel launch latency
 - Kernel to device global memory bandwidth
+- Unified Shared Memory bandwidth
 
 | Area                    | Description
 |:---                     |:---
@@ -89,6 +90,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 | `board_test.hpp`   | Contains the definitions for all the individual tests in the sample.
 | `host_speed.hpp`   | Header for host speed test. Contains definition of functions used in host speed test.
 | `helper.hpp`       | Contains constants (for example, binary name) used throughout the code as well as definition of functions that print help and measure execution time.
+| `usm_speed.hpp`    | Header for the USM bandwidth test. Contains definitions of functions used in the USM bandwidth test.
 
 ### Compiler Flags Used
 
