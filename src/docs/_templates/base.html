@@ -22,11 +22,15 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
         
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
 
         <meta http-equiv="Content-Security-Policy" 
-        content="
+            content="
             default-src 'self'; 
             child-src 'self'
             data: https://*.github.io; 
@@ -42,14 +46,11 @@
                 https://*.bootstrapcdn.com https://*.cloudflare.com https://*.googleapis.com https://*.gstatic.com https://www.google-analytics.com; 
             worker-src 'self'" 
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+        <meta name="description" content="Find C++, Python, and Fortran samples for AI, ML, CUDA to SYCL migration, and performance acceleration using CPUs, GPUs, and FPGAs.">
+        <meta name="robots" content="max-snippet:-1">
+        <title> Intel Samples Catalog </title>
 
-        <title>{% block title %}Intel oneAPI Samples Catalog {% endblock %} </title>
-</head>     
+    </head>     
 {% endblock %}
 <body>
     <!-- Google tag (gtag.js) --> 
