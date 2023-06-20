@@ -28,7 +28,7 @@ top level. SYCL examples are implemented entirely in C++.
 ## Key Implementation Details
 
 
-Each language specific directory are contains few sample examples such as OpenMP, IPO.
+Each language specific directory contains a one or more samples with examples on how to use cmake with OneAPI (with examples using IPO/OpenMP).
 
 The examples in this directory are structured as a collection of independent
 projects, rather as a large single project. This way, any example can be copied
@@ -36,38 +36,23 @@ into a separate subdirectory, compiled, run, and used as the basis for a new pro
 
 The top level CMakeLists.txt includes projects in all the sub-directories.  To
 build all of the examples, create a build directory and generate the project as
-usual.  
- 
-For example in Linux,
+usual.
 
-    $ mkdir build
-    $ cd build
-    $ CC=icx CXX=icpx FC=ifx cmake ..
-    $ cmake --build . -j
-
-
-For example in Windows
-
-    $ mkdir build
-    $ cd build
-    $ CC=icx CXX=icx FC=ifx cmake -GNinja ..
-    $ cmake --build . -j
-
->**Note**: CMake support for GNU style OneAPI driver `icpx` on Windows is not yet available until CMake 3.25 and such support will be added in future releases of CMake.
+>**Note**: CMake support for GNU style OneAPI driver `icpx` on Windows is not yet available in CMake 3.25.
 >**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 >**Note**: For comprehensive information about CMake with OneAPI Compilers, see the *[Intel® oneAPI DPC++/C++ Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference)*. (Use search or the table of contents to find relevant information quickly. OR, Navigate to Compiler Setup -> Use the Command Line -> Use the Cmake with the compiler)
 
 
 ## Set Environment Variables
-
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 Ensure the availability of latest CMake binaries.
 
 ## Build the Cmake example Sample
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
+> This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -75,10 +60,11 @@ Ensure the availability of latest CMake binaries.
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+Use these commands to run the design, depending on your OS.
 
 ### On Linux*
 
@@ -88,7 +74,7 @@ Ensure the availability of latest CMake binaries.
     $ mkdir build
     $ cd build
     $ CC=icx CXX=icpx FC=ifx cmake ..
-    $ cmake --build . -j
+    $ cmake --build .
    ```
 
 ### On Windows*
@@ -100,9 +86,9 @@ Ensure the availability of latest CMake binaries.
     $ mkdir build
     $ cd build
     $ CC=icx CXX=icx FC=ifx cmake -GNinja ..
-    $ cmake --build . -j
+    $ cmake --build .
    ```
->**Note**: Currently, only Ninja generators are supported in the Windows. A Visual Studio Generator may be supported with OneAPI may be supported in the future CMake releases.
+>**Note**: Currently, only Ninja generators are supported on Windows.
 
 #### Troubleshooting
 
