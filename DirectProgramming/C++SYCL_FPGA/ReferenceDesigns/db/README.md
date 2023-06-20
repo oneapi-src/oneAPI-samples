@@ -10,7 +10,7 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 
 ## Purpose
 
-The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how three queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the three queries.
 
 Note that this design uses a lot of resources and is designed with Intel® Stratix® 10 FPGA capabilities in mind.
 
@@ -53,8 +53,6 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
-
-> **Note**: You'll need a large FPGA part to be able to fit the query 9 variant of this design
 
 ### Performance
 
