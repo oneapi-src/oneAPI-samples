@@ -42,11 +42,6 @@ using namespace sycl;
 bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
               std::string& args, bool test, bool print, double& kernel_latency,
               double& total_latency);
-#elif (QUERY == 9)
-#include "query9/query9_kernel.hpp"
-bool DoQuery9(queue& q, Database& dbinfo, std::string& db_root_dir,
-              std::string& args, bool test, bool print, double& kernel_latency,
-              double& total_latency);
 #elif (QUERY == 11)
 #include "query11/query11_kernel.hpp"
 bool DoQuery11(queue& q, Database& dbinfo, std::string& db_root_dir,
@@ -176,9 +171,9 @@ int main(int argc, char* argv[]) {
   }
 
   // make sure the query is supported
-  if (!(query == 1 || query == 9 || query == 11 || query == 12)) {
+  if (!(query == 1 || query == 11 || query == 12)) {
     std::cerr << "ERROR: unsupported query (" << query << "). "
-              << "Only queries 1, 9, 11 and 12 are supported\n";
+              << "Only queries 1, 11 and 12 are supported\n";
     return 1;
   }
 
@@ -237,13 +232,6 @@ int main(int argc, char* argv[]) {
       if (query == 1) {
 #if (QUERY == 1)
         success = DoQuery1(q, dbinfo, db_root_dir, args,
-                           test_query, print_result,
-                           kernel_latency[run], total_latency[run]);
-#endif
-      } else if (query == 9) {
-        // query9
-#if (QUERY == 9)
-        success = DoQuery9(q, dbinfo, db_root_dir, args,
                            test_query, print_result,
                            kernel_latency[run], total_latency[run]);
 #endif
@@ -368,51 +356,6 @@ bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
     if (print) {
       dbinfo.PrintQ1(sum_qty, sum_base_price, sum_disc_price, sum_charge,
                      avg_qty, avg_price, avg_discount, count);
-    }
-  }
-
-  return success;
-}
-#endif
-
-#if (QUERY == 9)
-bool DoQuery9(queue& q, Database& dbinfo, std::string& db_root_dir,
-              std::string& args, bool test, bool print, double& kernel_latency,
-              double& total_latency) {
-  // the default colour regex based on the TPCH documents
-  std::string colour = "GREEN";
-
-  // parse the query arguments
-  if (!test && !args.empty()) {
-    std::stringstream ss(args);
-    std::getline(ss, colour, ',');
-  } else {
-    if (!args.empty()) {
-      std::cout << "Testing query 9, therefore ignoring the '--args' flag\n";
-    }
-  }
-
-  // convert the colour regex to uppercase characters (convention)
-  transform(colour.begin(), colour.end(), colour.begin(), ::toupper);
-
-  std::cout << "Running Q9 with colour regex: " << colour << std::endl;
-
-  // the output of the query
-  std::array<DBDecimal, 25 * 2020> sum_profit;
-
-  // perform the query
-  bool success = SubmitQuery9(q, dbinfo, colour, sum_profit, kernel_latency,
-                              total_latency);
-
-  if (success) {
-    // validate the results of the query, if requested
-    if (test) {
-      success = dbinfo.ValidateQ9(db_root_dir, sum_profit);
-    }
-
-    // print the results of the query, if requested
-    if (print) {
-      dbinfo.PrintQ9(sum_profit);
     }
   }
 

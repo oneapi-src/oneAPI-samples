@@ -181,9 +181,6 @@ struct Database {
                   std::array<DBDecimal, 3 * 2>& avg_discount,
                   std::array<DBDecimal, 3 * 2>& count);
 
-  bool ValidateQ9(std::string db_root_dir,
-                  std::array<DBDecimal, 25 * 2020>& sum_profit);
-
   bool ValidateQ11(std::string db_root_dir, std::vector<DBIdentifier>& partkeys,
                    std::vector<DBDecimal>& partkey_values);
 
@@ -200,8 +197,6 @@ struct Database {
                std::array<DBDecimal, 3 * 2>& avg_price,
                std::array<DBDecimal, 3 * 2>& avg_discount,
                std::array<DBDecimal, 3 * 2>& count);
-
-  void PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit);
 
   void PrintQ11(std::vector<DBIdentifier>& partkeys,
                 std::vector<DBDecimal>& partkey_values);
