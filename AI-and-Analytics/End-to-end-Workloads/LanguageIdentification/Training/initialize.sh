@@ -10,12 +10,16 @@ pip install -r requirements.txt
 pip install --editable .
 cd ..
 
+# Add speechbrain to environment variable PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:/Training/speechbrain
+
 # Install webdataset
 pip install webdataset==0.1.96
 
 # Install PyTorch and Intel Extension for PyTorch (IPEX)
-pip install torch==1.12.0 torchaudio==0.12.0 torchvision==0.13.0
-pip install intel_extension_for_pytorch==1.12.0
+pip install torch==1.13.1 torchaudio
+pip install --no-deps torchvision==0.14.0
+pip install intel_extension_for_pytorch==1.13.100
 
 # Install libraries for MP3 to WAV conversion
 pip install pydub

@@ -1,0 +1,75 @@
+name: github-samples-app
+
+on:
+ push:
+  branches:
+  - master
+
+ workflow_dispatch: 
+
+#  schedule:
+#    - cron: '55 13 * * *' 
+
+jobs:
+  pages:
+    name: Build GitHub Pages
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+
+    - uses: actions/checkout@v3
+      name: Check out app/dev  # checks out app/dev in top-level dir
+      with:
+        ref: 'refs/heads/app/dev'
+
+    - uses: actions/checkout@v3
+      name: Check out master # checks out master in subdirectory
+      with:
+        ref: 'refs/heads/master'
+        path: master
+        
+    - name: Build JSON DB
+      run: |
+        python3 -m pip install -r src/requirements.txt
+        echo master
+        python3 src/db.py master
+
+    - name: Remove JSON pre-prod  
+      run: |       
+        rm -rf src/docs/sample_db_pre.json
+
+    - name: Build Sphinx
+      run: |    
+        python3 -m sphinx -W -b html src/docs/ src/docs/_build/
+        echo $PWD
+        echo ${{ github.ref }}
+
+    - name: Add GPU-Occupancy-Calculator
+      env: 
+        GPU_OCC_CALC: src/docs/_build/Tools/GPU-Occupancy-Calculator/
+      run: |
+        mkdir -p ${GPU_OCC_CALC}
+        cp -v ${{ github.workspace }}/master/Tools/GPU-Occupancy-Calculator/index.html ${GPU_OCC_CALC}/index.html
+
+    - name: Push docs
+      if: ${{ github.ref == 'refs/heads/master' }} # only if this workflow is run from the master branch, push docs
+      env:
+        GITHUB_USER: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_REPO: ${{ github.repository }} 
+      run: |
+        cd src/docs/_build/
+        touch .nojekyll       
+        git init
+        git remote add origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}"
+        git add -A
+        git status
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git commit -sm "$(date)"
+        git branch -M gh-pages
+        git push -u origin -f gh-pages

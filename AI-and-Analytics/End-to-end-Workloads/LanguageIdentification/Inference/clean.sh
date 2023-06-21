@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -R RIRS_NOISES
 rm -R tmp
 rm -R speechbrain

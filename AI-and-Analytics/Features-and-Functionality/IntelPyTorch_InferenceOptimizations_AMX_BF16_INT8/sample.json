@@ -1,0 +1,23 @@
+{
+  "guid": "4AE0B94D-5272-4F81-9D8B-27718072B659",
+  "name": "PyTorch Inference Optimizations with Advanced Matrix Extensions Bfloat16 and Integer8",
+  "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
+  "description": "This sample illustrates how to do inference with a PyTorch model using Advanced Matrix Extensions Bfloat16 and Integer8",
+  "builder": ["cli"],
+  "languages": [{ "python": {} }],
+  "os": ["linux"],
+  "targetDevice": ["CPU"],
+  "cpuInstructionSets": ["AVX512", "AMX"],
+  "ciTests": {
+    "linux": [{
+      "id": "intel amx bf16 int8 inference",
+      "steps": [
+        "source activate pytorch",
+        "python IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.py",
+        "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
+        "python ci_test.py"
+      ]
+    }]
+  },
+  "expertise": "Code Optimization"
+}

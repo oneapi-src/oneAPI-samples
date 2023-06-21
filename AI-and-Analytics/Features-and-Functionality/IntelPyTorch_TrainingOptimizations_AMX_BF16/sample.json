@@ -7,6 +7,7 @@
     "languages": [{"python":{}}],
     "os":["linux"],
     "targetDevice": ["CPU"],
+    "cpuInstructionSets": ["AVX512", "AMX"],
     "ciTests": {
       "linux": [
       {
@@ -22,4 +23,3 @@
     },
     "expertise": "Code Optimization"
   }
-  
