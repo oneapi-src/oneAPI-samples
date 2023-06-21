@@ -30,6 +30,13 @@
           "make clean",
           "make vec_report2"
         ]
+      },
+      {
+        "id": "vec_report3",
+        "steps": [
+          "make clean",
+          "make vec_report3"
+        ]
       }
     ]
   },
