@@ -73,7 +73,7 @@ Use these commands to run the design, depending on your OS.
    ```
     $ mkdir build
     $ cd build
-    $ CC=icx CXX=icpx FC=ifx cmake ..
+    $ cmake ..
     $ cmake --build .
    ```
 
@@ -85,7 +85,7 @@ Use these commands to run the design, depending on your OS.
    ```
     $ mkdir build
     $ cd build
-    $ CC=icx CXX=icx FC=ifx cmake -GNinja ..
+    $ cmake -GNinja ..
     $ cmake --build .
    ```
 >**Note**: Currently, only Ninja generators are supported on Windows.
