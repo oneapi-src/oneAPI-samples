@@ -1,6 +1,6 @@
---- train_ecapa.yaml	2022-09-20 14:00:46.352900022 -0700
-+++ train_ecapa_commonvoice.yaml	2022-09-20 14:12:41.278972900 -0700
-@@ -4,7 +4,7 @@
+--- train_ecapa.yaml.orig	2023-02-09 17:17:34.849537612 +0000
++++ train_ecapa.yaml	2023-02-09 17:19:42.936542193 +0000
+@@ -4,19 +4,19 @@
  # ################################
  
  # Basic parameters
@@ -9,9 +9,11 @@
  __set_seed: !apply:torch.manual_seed [!ref <seed>]
  output_folder: !ref results/epaca/<seed>
  save_folder: !ref <output_folder>/save
-@@ -12,10 +12,10 @@
- data_folder: ./
+ train_log: !ref <output_folder>/train_log.txt
+-data_folder: !PLACEHOLDER
++data_folder: ./
  rir_folder: !ref <data_folder>
+ # skip_prep: False
  
 -shards_url: /data/voxlingua107_shards
 +shards_url: /data/commonVoice_shards
@@ -22,7 +24,7 @@
  val_shards: !ref <shards_url>/dev/shard-000000.tar
  
  # Set to directory on a large disk if you are training on Webdataset shards hosted on the web
-@@ -24,7 +24,7 @@
+@@ -25,7 +25,7 @@
  ckpt_interval_minutes: 5
  
  # Training parameters
@@ -31,7 +33,7 @@
  lr: 0.001
  lr_final: 0.0001
  sample_rate: 16000
-@@ -37,15 +37,15 @@
+@@ -38,11 +38,11 @@
  deltas: False
  
  # Number of languages
@@ -40,17 +42,13 @@
  
  train_dataloader_options:
 -    num_workers: 4
-+    num_workers: 1
 -    batch_size: 128
++    num_workers: 1
 +    batch_size: 64
  
  val_dataloader_options:
      num_workers: 1
-     batch_size: 32
- 
- # Functions
- compute_features: !new:speechbrain.lobes.features.Fbank
-@@ -137,3 +137,20 @@
+@@ -138,3 +138,20 @@
          classifier: !ref <classifier>
          normalizer: !ref <mean_var_norm>
          counter: !ref <epoch_counter>

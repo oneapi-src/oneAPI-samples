@@ -143,6 +143,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
     >**Note**: The program is compiled with `fp-model` set to "precise" so that the accuracies of the floating-point math functions conform to the IEEE standard.
 
+
   - **Emulation vs. FPGA Hardware for fixed point math operations**: Due to the differences in the internal math implementations, the results from `ac_fixed` math functions in emulation and FPGA hardware might not always be bit-accurate. This tutorial shows how to build and run the sample for emulation and FPGA hardware so you can observe the difference.
 
 ## Build the `AC Fixed` Tutorial

@@ -10,10 +10,14 @@ pip install -r requirements.txt
 pip install --editable .
 cd ..
 
+# Add speechbrain to environment variable PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:/Inference/speechbrain
+
 # Install PyTorch and Intel Extension for PyTorch (IPEX)
-pip install torch==1.12.0 torchaudio==0.12.0 torchvision==0.13.0
-pip install intel_extension_for_pytorch==1.12.0
-pip install neural-compressor==1.14.2
+pip install torch==1.13.1 torchaudio
+pip install --no-deps torchvision==0.14.0
+pip install intel_extension_for_pytorch==1.13.100
+pip install neural-compressor==2.0
 
 # Update packages
 apt-get update && apt-get install libgl1
