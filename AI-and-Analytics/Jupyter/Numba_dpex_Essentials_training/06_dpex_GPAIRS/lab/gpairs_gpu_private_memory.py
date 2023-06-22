@@ -9,8 +9,8 @@ import gwpc_private as gwpc
 import dpctl, dpctl.tensor as dpt
 from device_selector import get_device_selector
 import dpctl
-from numba_dppy import kernel, atomic, DEFAULT_LOCAL_SIZE
-import numba_dppy
+from numba_dpex import kernel, atomic, DEFAULT_LOCAL_SIZE
+import numba_dpex
 
 atomic_add = atomic.add
 
@@ -23,8 +23,8 @@ def count_weighted_pairs_3d_intel(
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    start = numba_dppy.get_global_id(0)
-    stride = numba_dppy.get_global_size(0)
+    start = numba_dpex.get_global_id(0)
+    stride = numba_dpex.get_global_size(0)
 
     n1 = x1.shape[0]
     n2 = x2.shape[0]
@@ -62,7 +62,7 @@ def count_weighted_pairs_3d_intel_ver2(
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpex.get_global_id(0)
     nbins = rbins_squared.shape[0]
     n2 = x2.shape[0]
 

@@ -6,20 +6,32 @@
 #include <iostream>
 
 // oneAPI headers
+#include <sycl/ext/intel/experimental/pipes.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/host_pipes.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
-// use host pipes to write into addresses in the CSR
+// use host pipes to write into registers in the CSR address space
 class OutputPipeID;
-using OutputPipe = sycl::ext::intel::prototype::pipe<
-    OutputPipeID, int, 1,
-    // choose defaults for these 4:
-    0, 1, true, false,
-    // store the most recently processed index to the CSR
-    sycl::ext::intel::prototype::internal::protocol_name::AVALON_MM>;
+
+// using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to
+// output to the CSR
+
+// WORKAROUND: protocol_name::avalon_mm does not currently work with simulation,
+// so simulate with avalon_mm_uses_ready for now. avalon_mm works in hardware.
+#if FPGA_SIMULATOR
+using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
+    sycl::ext::intel::experimental::protocol<
+        sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>));
+#else
+using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
+    sycl::ext::intel::experimental::protocol<
+        sycl::ext::intel::experimental::protocol_name::avalon_mm>));
+#endif
+
+using OutputPipe =
+    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
@@ -53,8 +65,7 @@ int main() {
 #endif
 
     // create the device queue
-    sycl::queue q(selector, fpga_tools::exception_handler,
-                  sycl::property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler);
 
     auto device = q.get_device();
     std::cout << "Running on device: "

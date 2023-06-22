@@ -1,0 +1,2332 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          1729
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          1806
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2080
+    Length:          0
+    ReplacementText: "\n#include <chrono>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2697
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2724
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2744
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2768
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2783
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2786
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1005:50: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2837
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2855
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2895
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3107
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3134
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:51: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3152
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3176
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3198
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3232
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4088
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1093:52: The \"plan->device\" device may be not the one intended for use. Adjust the selected device if needed.\n  */\n  /*\n  DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4106
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4133
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4139
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4166
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:54: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4184
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4208
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4234
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4457
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:55: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4475
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4617
+    Length:          24
+    ReplacementText: 'dpct::get_default_queue().wait()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4736
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4879
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4904
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4942
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4960
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4983
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5020
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5034
+    Length:          0
+    ReplacementText: "\n  std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5073
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:56: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:57: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5093
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5122
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5125
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:58: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5145
+    Length:          31
+    ReplacementText: '((streams[i]) = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5179
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:59: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5199
+    Length:          29
+    ReplacementText: '(events[i] = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5504
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:60: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:61: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5524
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5553
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5561
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5588
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:62: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5608
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5632
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5660
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5825
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:63: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5845
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5874
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5877
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5897
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6045
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:66: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:67: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6065
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6094
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6165
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1012:68: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n    */\n    /*\n    DPCT1024:69: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6169
+    Length:          0
+    ReplacementText: "events_ct1_i = std::chrono::steady_clock::now(); \n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6185
+    Length:          38
+    ReplacementText: '(*events[i] = streams[i]->ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6268
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:70: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6288
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6317
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6324
+    Length:          31
+    ReplacementText: 'events[i]->wait_and_throw()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6448
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:72: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6468
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6497
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6534
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6554
+    Length:          29
+    ReplacementText: '(dpct::get_current_device().destroy_queue(streams[i]), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6586
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:75: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6606
+    Length:          27
+    ReplacementText: '(dpct::destroy_event(events[i]), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          8601
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:76: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          8619
+    Length:          26
+    ReplacementText: '(GPU_N = dpct::dev_mgr::instance().device_count(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11474
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11501
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:77: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11534
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11558
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11594
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11669
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12713
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12740
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12773
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12797
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12833
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12908
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14552
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:79: The \"i\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:80: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14572
+    Length:          13
+    ReplacementText: '(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14588
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1619
+    Length:          0
+    ReplacementText: "\n#include <oneapi/mkl.hpp>\n\n#include <oneapi/mkl/rng/device.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1621
+    Length:          20
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          3933
+    Length:          17
+    ReplacementText: 'dpct::rng::host_rng_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          3957
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          3975
+    Length:          58
+    ReplacementText: '(gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mcg59)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4033
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4073
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4091
+    Length:          45
+    ReplacementText: '(gen->set_seed(seed)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4136
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4257
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4277
+    Length:          51
+    ReplacementText: '(gen->generate_gaussian(samples, pathN, 0.0, 1.0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4328
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4683
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4701
+    Length:          27
+    ReplacementText: '(gen.reset()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4728
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1741
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1780
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1813
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1872
+    Length:          0
+    ReplacementText: "\n#include <oneapi/mkl.hpp>\n\n#include <oneapi/mkl/rng/device.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1873
+    Length:          27
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2186
+    Length:          35
+    ReplacementText: '#include "MonteCarlo_reduction.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2221
+    Length:          0
+    ReplacementText: "\n#include <cmath>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2505
+    Length:          0
+    ReplacementText: ' dpct_type_177251'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2809
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2965
+    Length:          28
+    ReplacementText: 'sycl::exp(MuByT + VBySqrtT * r)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3050
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3214
+    Length:          25
+    ReplacementText: 'sycl::exp(MuByT + VBySqrtT * r)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3685
+    Length:          0
+    ReplacementText: "/*\nDPCT1110:3: The total declared local variable size in device function \"MonteCarloOneBlockPerOption\" exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3692
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3737
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1032:26: A different random number generator is used. You may need to adjust the code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3741
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3892
+    Length:          0
+    ReplacementText: ",\n    const sycl::nd_item<3> &item_ct1, real *s_SumCall, real *s_Sum2Call"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3932
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3955
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3982
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4017
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4080
+    Length:          33
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4116
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4196
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4210
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4223
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4297
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1032:27: A different random number generator is used. You may need to adjust the code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4299
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4365
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4422
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4836
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4871
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5009
+    Length:          26
+    ReplacementText: 'localState.generate<oneapi::mkl::rng::device::gaussian<float>, 1>()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5385
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:4: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5389
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5539
+    Length:          0
+    ReplacementText: ', item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5549
+    Length:          0
+    ReplacementText: "/*\nDPCT1032:28: A different random number generator is used. You may need to adjust the code.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5556
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5587
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5623
+    Length:          0
+    ReplacementText: ",\n                           const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5671
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5685
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5698
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5818
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1105:29: The mcg59 random number generator is used. The subsequence argument \"item_ct1.get_local_id(2)\" is ignored. You need to verify the migration.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5820
+    Length:          93
+    ReplacementText: 'rngState[tid] = dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>(item_ct1.get_group(2) + item_ct1.get_group_range(2) * device_id, 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6178
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6196
+    Length:          105
+    ReplacementText: '(plan->d_OptionData = (void *)sycl::malloc_device(sizeof(__TOptionData) * (plan->optionCount), dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6304
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6322
+    Length:          105
+    ReplacementText: '(plan->d_CallValue = (void *)sycl::malloc_device(sizeof(__TOptionValue) * (plan->optionCount), dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6430
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6448
+    Length:          113
+    ReplacementText: '(plan->h_OptionData = (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount), dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6601
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6619
+    Length:          113
+    ReplacementText: '(plan->h_CallValue = sycl::malloc_host<__TOptionValue>((plan->optionCount), dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6792
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:34: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6810
+    Length:          115
+    ReplacementText: '(plan->rngStates = sycl::malloc_device<dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>>(plan->gridSize * THREAD_N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6928
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6946
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6977
+    Length:          0
+    ReplacementText: "                             /*\n                             DPCT1032:37: A different random number generator is used. You may need to adjust the code.\n                             */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7041
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7054
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7140
+    Length:          75
+    ReplacementText: "dpct::get_default_queue().submit(\n    [&](sycl::handler &cgh) {\n      auto plan_rngStates_ct0 = plan->rngStates;\n      auto plan_device_ct1 = plan->device;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) * sycl::range<3>(1, 1, THREAD_N), sycl::range<3>(1, 1, THREAD_N)), \n        [=](sycl::nd_item<3> item_ct1) {\n          rngSetupStates(plan_rngStates_ct0, plan_device_ct1, item_ct1);\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7215
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8093
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:38: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8111
+    Length:          25
+    ReplacementText: '(sycl::free(plan->rngStates, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8136
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8139
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:39: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8157
+    Length:          31
+    ReplacementText: '(sycl::free(plan->h_CallValue, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8188
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8191
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8209
+    Length:          32
+    ReplacementText: '(sycl::free(plan->h_OptionData, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8241
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8244
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:41: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8262
+    Length:          27
+    ReplacementText: '(sycl::free(plan->d_CallValue, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8289
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8292
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:42: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8310
+    Length:          28
+    ReplacementText: '(sycl::free(plan->d_OptionData, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8338
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8414
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9163
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9181
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9306
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9364
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9373
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9379
+    Length:          208
+    ReplacementText: "stream->submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:81: 'SUM_N' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<real, 1> s_SumCall_acc_ct1(sycl::range<1>(256/*SUM_N*/), cgh);\n      /*\n      DPCT1101:82: 'SUM_N' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(sycl::range<1>(256/*SUM_N*/), cgh);\n\n      auto plan_rngStates_ct0 = plan->rngStates;\n      auto plan_d_OptionData_ct1 = (__TOptionData *)(plan->d_OptionData);\n      auto plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);\n      auto plan_pathN_ct3 = plan->pathN;\n      auto plan_optionCount_ct4 = plan->optionCount;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) * sycl::range<3>(1, 1, THREAD_N), sycl::range<3>(1, 1, THREAD_N)), \n        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n          MonteCarloOneBlockPerOption(plan_rngStates_ct0, plan_d_OptionData_ct1, plan_d_CallValue_ct2, plan_pathN_ct3, plan_optionCount_ct4, item_ct1, s_SumCall_acc_ct1.get_pointer(), s_Sum2Call_acc_ct1.get_pointer());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9587
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9662
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9680
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9804
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9862
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9871
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Digest:          9b6751ce6ca8975f456d2a766b2b31e9
+  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Digest:          159520f3d2870e5dd7ce9e3a94b71419
+  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Digest:          a980a50dca71a0a0651d3dc4f5a45f22
+DpctVersion:     17.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    destroy_event:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_create_inorder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        device_ext_destroy_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_ext_inorder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_get_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+        device_info_set_uuid:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    typedef_event_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      SubFeatureMap:   {}
+  lib_common_utils.hpp:
+    get_memory:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+  memory.hpp:
+    dpct_memset:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    dpct_memset_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    dpct_memset_2d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    dpct_memset_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    dpct_memset_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    dpct_memset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+  rng_utils.hpp:
+    create_host_rng:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+    random_engine_type:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+    rng_generator:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    rng_generator_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    rng_generator_base:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+    rng_generator_generate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    rng_generator_generate_vec:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      SubFeatureMap:   {}
+    rng_generator_host:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+    typedef_host_rng_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Manju/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

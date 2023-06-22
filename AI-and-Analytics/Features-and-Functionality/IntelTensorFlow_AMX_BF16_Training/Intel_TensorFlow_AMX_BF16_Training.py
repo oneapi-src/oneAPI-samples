@@ -129,13 +129,7 @@ print("Training model with FP32")
 #########################################################################################
 
 # BF16 without AMX
-# os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_BF16"
-os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_BF16"
-# Comment out for testing tf.config.optimizer.set_experimental_options({'auto_mixed_precision_onednn_bfloat16':True})
-# from tensorflow.keras import mixed_precision
-# policy = mixed_precision.Policy('mixed_bfloat16')
-# mixed_precision.set_global_policy(policy)
-
+os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_BF16"
 tf.config.optimizer.set_experimental_options({'auto_mixed_precision_onednn_bfloat16':True})
 
 transformer_layer = transformers.TFDistilBertModel.from_pretrained('distilbert-base-uncased')
@@ -165,11 +159,8 @@ print("Training model with BF16 without AMX")
 #########################################################################################
 
 # BF16 with AMX
-# os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_AMX"
-os.environ["ONEDNN_MAX_CPU_ISA"] = "AMX_BF16"
-
-# policy = mixed_precision.Policy('mixed_bfloat16')
-# mixed_precision.set_global_policy(policy)
+os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_AMX"
+# If not previously set, still need to setup the experiemntal options
 # tf.config.optimizer.set_experimental_options({'auto_mixed_precision_onednn_bfloat16':True})
 
 transformer_layer = transformers.TFDistilBertModel.from_pretrained('distilbert-base-uncased')

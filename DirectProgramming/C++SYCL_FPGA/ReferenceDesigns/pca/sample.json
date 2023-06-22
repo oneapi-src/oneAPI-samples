@@ -1,0 +1,70 @@
+{
+  "guid": "6362F0D3-467B-4BFE-BE05-60B23989C8D5",
+  "name": "PCA",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "Reference design implementing the Principle Component Analysis (PCA) of matrices on Intel® FPGAs",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/pca",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./pca.fpga_emu ../data/abalone.csv"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
+          "nmake fpga_emu",
+          "pca.fpga_emu.exe  ../ReferenceDesigns/pca/data/abalone.csv"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Reference Designs and End to End"
+}

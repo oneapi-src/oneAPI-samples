@@ -1,8 +1,8 @@
 {
   "guid": "1de1f2df-f068-4d46-b280-4f2f8150c24e",
-  "name": "Numba DPPY Essentials training",
+  "name": "Numba Data Parallel Python* Essentials Training",
   "categories": ["Toolkit/oneAPI AI And Analytics/Numba DPPY Samples"],
-  "description": "Numba DPPY Essentials Tutorials using Jupyter Notebooks",
+  "description": "Numba Data Parallel Python* Essentials Tutorials using Jupyter Notebooks",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"],
