@@ -1,0 +1,1 @@
+neural_compressor==2.1

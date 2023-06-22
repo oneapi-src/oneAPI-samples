@@ -1,27 +1,25 @@
 {
-    "guid": "030C6A71-39DA-436E-9644-4FC25C7C5907",
-    "name": "TensorFlow Training Optimizations with Advanced Matrix Extensions Bfloat16",
-    "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
-    "description": "This sample illustrates how to train a TensorFlow model using Advanced Matrix Extensions Bfloat16",
-    "builder": ["cli"],
-    "languages": [{"python":{}}],
-    "os":["linux"],
-    "targetDevice": ["CPU"],
-    "ciTests": {
-      "linux": [
-      {
-          "id": "intel amx bf16 training",
-          "steps": [
-              "source activate tensorflow",
-              "pip install -r requirements.txt",
-              "python -m pip install py-cpuinfo",
-              "python Intel_TensorFlow_AMX_BF16_Training.py",
-              "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
-              "python ci_test.py"
-           ]
-      }
-       ]
-    },
-    "expertise": "Code Optimization"
-  }
-  
+  "guid": "030C6A71-39DA-436E-9644-4FC25C7C5907",
+  "name": "TensorFlow Training Optimizations with Advanced Matrix Extensions Bfloat16",
+  "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
+  "description": "This sample illustrates how to train a TensorFlow model using Advanced Matrix Extensions Bfloat16",
+  "builder": ["cli"],
+  "languages": [{ "python": {} }],
+  "os": ["linux"],
+  "targetDevice": ["CPU"],
+  "cpuInstructionSets": ["AVX512", "AMX"],
+  "ciTests": {
+    "linux": [{
+      "id": "intel amx bf16 training",
+      "steps": [
+        "source activate tensorflow",
+        "pip install -r requirements.txt",
+        "python -m pip install py-cpuinfo",
+        "python Intel_TensorFlow_AMX_BF16_Training.py",
+        "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+        "python ci_test.py"
+      ]
+    }]
+  },
+  "expertise": "Code Optimization"
+}
