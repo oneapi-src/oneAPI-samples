@@ -34,15 +34,23 @@ of the application debugger.
 
 ## Prerequisites
 
-| Optimized for       | Description
-|---------------------|--------------
-| OS                  | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
-| Hardware            | discrete GPU (Linux* OS only): Intel® Arc(tm), Intel® Data Center GPU Flex Series
-| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
+| Optimized for                                    | Description
+|--------------------------------------------------|--------------
+| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10, 11
+| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series
+| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler
 
-> **Note** On Windows* 10 with 2023.0 release debugging kernels offloaded
-> to GPU device is not supported.
- 
+> **Note** although the sample can be run on all supported by Intel® oneAPI
+> Base Toolkit platforms, the GPU debugger can debug only kernels offloaded
+> onto devices specified at “Hardware to debug offloaded kernels on GPUs”
+> while running with the L0 backend.  When the GPU device is different from
+> the listed above, e.g., an integrated graphics device, breakpoints inside
+> the kernel won't be hit.  In such case, try to switch the offload to a CPU
+> device by using ONEAPI_DEVICE_SELECTOR environment variable.
+
+We recommend to first make sure that the program you intend to debug is running
+correctly on CPU and only after that switch the offload to GPU.
+
 ## Key Implementation Details
 
 The basic SYCL implementation explained in the code includes device
