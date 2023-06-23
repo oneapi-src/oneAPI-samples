@@ -19,7 +19,7 @@ The Intel® Optimization for TensorFlow* gives users the ability to speed up tra
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 18.04 or newer
-| Hardware                | Intel® Xeon® Scalable Processor family
+| Hardware                | 4th Gen Intel® Xeon® Scalable Processors or newer
 | Software                | Intel® Optimization for TensorFlow*
 
 ### For Local Development Environments
@@ -133,9 +133,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The following image shows approximate performance speed increases using AMX BF16 with auto-mixed precision during training. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
-
-![comparison images](assets/amx_relative_speedup.png)
+The diagrams show approximate performance speed increases using AMX BF16 with auto-mixed precision during training. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
 
 ## License
 
