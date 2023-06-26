@@ -1515,53 +1515,71 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
   int iterations = 1;
-  size_t data_size = 1024 * 1024 * 1024;
-  const double MB = 1000.0 * 1000.0;
-  const double GB = MB * 1000.0;
-  const int TYPE_MEMCOPY = 0;
-  const int TYPE_READ = 1;
-  const int TYPE_WRITE = 2;
+  const size_t data_size = 1024 * 1024 * 1024;
 
   std::cout << "Iterations: " << iterations << std::endl;
-  std::cout << "Data size: " << data_size / MB << " MB" << std::endl;
-  std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes" << std::endl;
+  std::cout << "Data size: " << data_size / kMB << " MB" << std::endl;
+  std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes"
+            << std::endl;
   std::cout << "-- Results Full Duplex -- " << std::endl;
 
   for (int i = 0; i < 3; i++) {
     std::chrono::microseconds time{0};
     switch (i) {
-    case TYPE_MEMCOPY: {
+    case 0: {
+      // MEMCOPY
       std::cout << std::endl << "Case: Full Duplex" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> memcopy_k = memcopy_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_memcopy_kernel;
-      run_test(q, data_size, iterations, memcopy_k, verify, time);
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
+                         sycl::vec<long, 8> *, const sycl::range<1>)> memcopy_k
+          = memcopy_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
+                         const sycl::range<1>)> verify = verify_memcopy_kernel;
+      if (run_test(q, data_size, iterations, memcopy_k, verify, time)) {
+        return 1;
+      }
     } break;
-    case TYPE_READ: {
+    case 1: {
+      // READ
       std::cout << std::endl << "Case: From Host to Device" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> read_k = read_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_read_kernel;
-      run_test(q, data_size, iterations, read_k, verify, time);
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
+                         sycl::vec<long, 8> *, const sycl::range<1>)> read_k
+          = read_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
+                         const sycl::range<1>)> verify = verify_read_kernel;
+      if (run_test(q, data_size, iterations, read_k, verify, time)) {
+        return 1;
+      }
     } break;
-    case TYPE_WRITE: {
+    case 2: {
+      // WRITE
       std::cout << std::endl << "Case: From Device to Host" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> write_k = write_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *, const sycl::range<1>)> verify = verify_write_kernel;
-      run_test(q, data_size, iterations, write_k, verify, time);
+      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
+                         sycl::vec<long, 8> *, const sycl::range<1>)> write_k
+          = write_kernel;
+      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
+                         const sycl::range<1>)> verify = verify_write_kernel;
+      if (run_test(q, data_size, iterations, write_k, verify, time)) {
+        return 1;
+      }
     } break;
     default:
-      std::cout << "Error: Don't know how to launch test " << i << std::endl;
+      std::cout << "Error: Failed to launch test " << i << std::endl;
       return 1;
     }
     time /= iterations;
-    std::cout << "Average Time: " << time.count() / 1000.0 << " ms\t" << std::endl;
+    std::cout << "Average Time: " << time.count() / 1000.0 << " ms\t"
+              << std::endl;
     double data_size_gb;
-    if (i == TYPE_MEMCOPY) {
+    if (i == 0) {
+      // ONLY ON MEMCOPY
       // full duplex transfers twice the amount of data
-      data_size_gb = data_size * 2 / GB;
+      data_size_gb = data_size * 2 / kGB;
     } else {
-      data_size_gb = data_size / GB;
+      data_size_gb = data_size / kGB;
     }
-    std::cout << "Average Throughput: " << (data_size_gb / (time.count() / (1000.0 * 1000.0))) << " GB/s\t" << std::endl;
+    std::cout << "Average Throughput: "
+              << (data_size_gb / (time.count() / (1000.0 * 1000.0)))
+              << " GB/s\t" << std::endl;
   }
   return 0;
 }
