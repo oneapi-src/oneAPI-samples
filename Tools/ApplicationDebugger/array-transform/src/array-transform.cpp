@@ -78,6 +78,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  cout << "success; result is correct.\n";
+  cout << "success; result is correct.\n"; // success
   return 0;
 }

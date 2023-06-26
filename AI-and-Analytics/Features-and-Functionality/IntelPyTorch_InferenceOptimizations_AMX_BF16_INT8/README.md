@@ -19,7 +19,7 @@ The Intel® Extension for PyTorch* allows you to speed up inference on Intel® X
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 18.04 or newer
-| Hardware                | Intel® Xeon® Scalable Processor family
+| Hardware                | 4th Gen Intel® Xeon® Scalable Processors or newer
 | Software                | Intel® Extension for PyTorch*
 
 ### For Local Development Environments
