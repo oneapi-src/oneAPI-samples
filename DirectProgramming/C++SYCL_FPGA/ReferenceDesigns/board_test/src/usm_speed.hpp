@@ -54,24 +54,24 @@ bool verify_memcopy_kernel(sycl::vec<long, 8> *in, sycl::vec<long, 8> *out,
 
 bool verify_read_kernel(sycl::vec<long, 8> *in, sycl::vec<long, 8> *out,
                         const sycl::range<1> num_items) {
-  sycl::vec<long, 8> anwser{0};
+  sycl::vec<long, 8> answer{0};
   for (auto i = 0; i < num_items.get(0); i++) {
-    anwser += in[i];
+    answer += in[i];
   }
   for (auto i = 0; i < num_items.get(0); i++) {
     sycl::vec<long, 8> compare{0};
     if (i == 0) {
-      compare = anwser == out[i];
+      compare = answer == out[i];
     } else {
       compare = compare == out[i];
     }
     for (auto j = 0; j < compare.size(); j++) {
       if (!compare[j]) {
         if (i == 0) {
-          std::cerr << "ERROR: Values do not match, anwser[" << j
-                    << "]:" << anwser[j];
+          std::cerr << "ERROR: Values do not match, answer[" << j
+                    << "]:" << answer[j];
         } else {
-          std::cerr << "ERROR: Values do not match, anwser[" << j
+          std::cerr << "ERROR: Values do not match, answer[" << j
                     << "]:" << compare[j];
         }
         std::cerr << " != out[" << i << "][" << j << "]:" << out[i][j]
@@ -85,13 +85,13 @@ bool verify_read_kernel(sycl::vec<long, 8> *in, sycl::vec<long, 8> *out,
 
 bool verify_write_kernel(sycl::vec<long, 8> *in, sycl::vec<long, 8> *out,
                          const sycl::range<1> num_items) {
-  sycl::vec<long, 8> anwser{5};
+  sycl::vec<long, 8> answer{5};
   for (auto i = 0; i < num_items.get(0); i++) {
-    sycl::vec<long, 8> compare = anwser == out[i];
+    sycl::vec<long, 8> compare = answer == out[i];
     for (auto j = 0; j < compare.size(); j++) {
       if (!compare[j]) {
-        std::cerr << "ERROR: Values do not match, anwser[" << j
-                  << "]:" << anwser[j] << " != out[" << i << "][" << j
+        std::cerr << "ERROR: Values do not match, answer[" << j
+                  << "]:" << answer[j] << " != out[" << i << "][" << j
                   << "]:" << out[i][j] << std::endl;
         return false;
       }
