@@ -1515,10 +1515,10 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
   int iterations = 1;
-  const size_t data_size = 1024 * 1024 * 1024;
+  constexpr size_t kDataSize = 1024 * 1024 * 1024;
 
   std::cout << "Iterations: " << iterations << std::endl;
-  std::cout << "Data size: " << data_size / kMB << " MB" << std::endl;
+  std::cout << "Data size: " << kDataSize / kMB << " MB" << std::endl;
   std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes"
             << std::endl;
   std::cout << "-- Results Full Duplex -- " << std::endl;
@@ -1534,7 +1534,7 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
           = memcopy_kernel;
       std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
                          const sycl::range<1>)> verify = verify_memcopy_kernel;
-      if (run_test(q, data_size, iterations, memcopy_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, memcopy_k, verify, time)) {
         return 1;
       }
     } break;
@@ -1546,7 +1546,7 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
           = read_kernel;
       std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
                          const sycl::range<1>)> verify = verify_read_kernel;
-      if (run_test(q, data_size, iterations, read_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, read_k, verify, time)) {
         return 1;
       }
     } break;
@@ -1558,7 +1558,7 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
           = write_kernel;
       std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
                          const sycl::range<1>)> verify = verify_write_kernel;
-      if (run_test(q, data_size, iterations, write_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, write_k, verify, time)) {
         return 1;
       }
     } break;
@@ -1569,16 +1569,16 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
     time /= iterations;
     std::cout << "Average Time: " << time.count() / 1000.0 << " ms\t"
               << std::endl;
-    double data_size_gb;
+    double kDataSize_gb;
     if (i == 0) {
       // ONLY ON MEMCOPY
       // full duplex transfers twice the amount of data
-      data_size_gb = data_size * 2 / kGB;
+      kDataSize_gb = kDataSize * 2 / kGB;
     } else {
-      data_size_gb = data_size / kGB;
+      kDataSize_gb = kDataSize / kGB;
     }
     std::cout << "Average Throughput: "
-              << (data_size_gb / (time.count() / (1000.0 * 1000.0)))
+              << (kDataSize_gb / (time.count() / (1000.0 * 1000.0)))
               << " GB/s\t" << std::endl;
   }
   return 0;
