@@ -1,94 +1,51 @@
 #include <iomanip>
+#include <sycl/sycl.hpp>
+#include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/interfaces.hpp>
-#include <sycl/sycl.hpp>
-
 #include "exception_handler.hpp"
 
 using namespace sycl;
-using ext::intel::experimental::property::usm::buffer_location;
+using namespace ext::oneapi::experimental;
+using usm_buffer_location = ext::intel::experimental::property::usm::buffer_location;
 
-template <typename T>
-inline std::shared_ptr<T> make_malloc_shared(queue &q, int n, int kBL) {
-  T *mem =
-      malloc_shared<T>(sizeof(T) * n, q, property_list{buffer_location(kBL)});
-  return std::move(
-      std::shared_ptr<T>(mem, [&q](T *ptr) { sycl::free(ptr, q); }));
-}
+constexpr int kBL1 = 0;
+constexpr int kBL2 = 1;
+constexpr int kBL3 = 2;
 
-constexpr int BL1 = 1;
-constexpr int BL2 = 2;
-constexpr int BL3 = 3;
+struct MMHostIP {
+    annotated_ptr<int, decltype(properties{buffer_location<kBL1>,
+                                            awidth<32>,
+                                            dwidth<32>,
+                                            latency<0>,
+                                            read_write_mode_readwrite,
+                                            maxburst<4>,
+                                            wait_request_requested})> a;
+    annotated_ptr<int, decltype(properties{buffer_location<kBL2>,
+                                            awidth<15>,
+                                            dwidth<64>,
+                                            latency<1>,
+                                            read_write_mode_read,
+                                            maxburst<1>,
+                                            wait_request_not_requested})> b;
+    annotated_ptr<int, decltype(properties{buffer_location<kBL3>,
+                                            awidth<28>,
+                                            dwidth<16>,
+                                            latency<16>,
+                                            read_write_mode_write,
+                                            maxburst<1>,
+                                            wait_request_not_requested})> c;
 
-// Using pointers,
-struct PointerIP {
-  int *x, *y, *z;
-  int size;
+    int n;
 
-  PointerIP(int *x_, int *y_, int *z_, int size_)
-      : x(x_), y(y_), z(z_), size(size_) {}
+    MyIP(int *a_, int *b_, int *c_, int n_) : a(a_), b(b_), c(c_), n(n_) {}
 
-  void operator()() const {
-    for (int i = 0; i < size; ++i) {
-      int mul = x[i] * y[i];
-      int add = mul + z[i];
-      y[i] = mul;
-      z[i] = add;
+    streaming_interface void operator()() const {
+      for (int i = 0; i < n; i++) {
+        c[i] = a[i] + b[i];
+      }
     }
-  }
-};
-
-// Using mmhost macro
-struct VectorMADIP {
-  mmhost(BL1,  // buffer_location or aspace
-         28,   // address width
-         64,   // data width
-         16,   // ! latency, must be atleast 16
-         1,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,    // maxburst
-         0,    // align, 0 defaults to alignment of the type
-         1     // waitrequest, 0: false, 1: true
-         ) int *x;
-  mmhost(BL2,  // buffer_location or aspace
-         28,   // address width
-         64,   // data width
-         16,   // ! latency, must be atleast 16
-         0,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,    // maxburst
-         0,    // align, 0 defaults to alignment of the type
-         1     // waitrequest, 0: false, 1: true
-         ) int *y;
-  mmhost(BL3,  // buffer_location or aspace
-         28,   // address width
-         64,   // data width
-         16,   // ! latency, must be atleast 16
-         0,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,    // maxburst
-         0,    // align, 0 defaults to alignment of the type
-         1     // waitrequest, 0: false, 1: true
-         ) int *z;
-  int size;
-
-  VectorMADIP(int *x_, int *y_, int *z_, int size_)
-      : x(x_), y(y_), z(z_), size(size_) {}
-
-  void operator()() const {
-    for (int i = 0; i < size; ++i) {
-      int mul = x[i] * y[i];
-      int add = mul + z[i];
-      y[i] = mul;
-      z[i] = add;
-    }
-  }
-};
-
-void fillArrays(int *x, int *y, int *z, int size) {
-  for (int i = 0; i < size; ++i) {
-    x[i] = i;
-    y[i] = i * 2;
-    z[i] = i * 3;
-  }
-}
+  };
 
 int main(void) {
 #if FPGA_SIMULATOR
@@ -106,66 +63,40 @@ int main(void) {
     std::cout << "Running on device: "
               << q.get_device().get_info<info::device::name>() << "\n";
 
-    int size = 10000;
-    double start, end;
-    event e;
+    //Create and initialize the host arrays
+    constexpr int kN = 8;
+    auto host_array_A =
+        malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
+    assert(host_array_A);
+    auto host_array_B =
+        malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
+    assert(host_array_B);
+    auto host_array_C =
+        malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL3)});
+    assert(host_array_C);
 
-    // MMHost arguments
-    auto x = make_malloc_shared<int>(q, size, BL1);
-    auto y = make_malloc_shared<int>(q, size, BL2);
-    auto z = make_malloc_shared<int>(q, size, BL3);
-
-    fillArrays(x.get(), y.get(), z.get(), size);
-
-    e = q.single_task(VectorMADIP{x.get(), y.get(), z.get(), size});
-    e.wait();
-
-    start = e.get_profiling_info<info::event_profiling::command_start>();
-    end = e.get_profiling_info<info::event_profiling::command_end>();
-    // convert from nanoseconds to ms
-    double kernel_mmhost_time = (double)(end - start) * 1e-6;
-
-    // Regular pointer arguments
-    auto px = malloc_shared<int>(size, q);
-    auto py = malloc_shared<int>(size, q);
-    auto pz = malloc_shared<int>(size, q);
-
-    fillArrays(px, py, pz, size);
-    e = q.single_task(PointerIP{px, py, pz, size});
-    e.wait();
-
-    start = e.get_profiling_info<info::event_profiling::command_start>();
-    end = e.get_profiling_info<info::event_profiling::command_end>();
-    // convert from nanoseconds to ms
-    double kernel_pointer_time = (double)(end - start) * 1e-6;
-
-    std::cout << "MMHost kernel time : " << kernel_mmhost_time << " ms\n";
-    std::cout << "Pointer kernel time : " << kernel_pointer_time << " ms\n";
-    std::cout << "elements in vector : " << size << "\n";
-
-    bool pass_check = true;
-    for (int i = 0; i < size; ++i) {
-      int mul = i * i * 2;
-      int add = mul + i * 3;
-      if (x.get()[i] != i || y.get()[i] != mul || z.get()[i] != add) {
-        pass_check = false;
-        break;
-      }
+    for (int i = 0; i < kN; i++) {
+      host_array_A[i] = i;
+      host_array_B[i] = i * 2;
     }
-    for (int i = 0; i < size; ++i) {
-      int mul = i * i * 2;
-      int add = mul + i * 3;
-      if (px[i] != i || py[i] != mul || pz[i] != add) {
-        pass_check = false;
-        break;
+
+    //Run the kernal code
+    q.single_task(MyIP{host_array_A, host_array_B, host_array_C, kN}).wait();
+
+    //Check to see if results are correct
+    for (int i = 0; i < kN; i++) {
+      auto golden = host_array_A[i] + host_array_B[i];
+      if (host_array_C[i] != golden) {
+        std::cout << "ERROR! At index: " << i << " , expected: " << golden
+                << " , found: " << host_array_C[i] << "\n";
       }
     }
 
-    if (!pass_check) {
-      std::cout << "--> FAIL\n";
-    } else {
-      std::cout << "--> PASS\n";
-    }
+    //Free memory
+    free(host_array_A, q);
+    free(host_array_B, q);
+    free(host_array_C, q);
+
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
@@ -181,3 +112,89 @@ int main(void) {
     std::terminate();
   }
 }
+
+
+// // clang-format off
+// #include <sycl/sycl.hpp>
+// #include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
+// #include <sycl/ext/intel/fpga_extensions.hpp>
+// #include <sycl/ext/intel/prototype/interfaces.hpp>
+// #include "ExceptionHandler.h"
+// #include "TestConfigSelector.h"
+// // clang-format on
+
+// using namespace sycl;
+// using namespace ext::oneapi::experimental;
+// using usm_buffer_location = ext::intel::experimental::property::usm::buffer_location;
+
+// constexpr int kBL1 = 0;
+// constexpr int kBL2 = 1;
+// constexpr int kBL3 = 2;
+
+
+// void TestVectorAddWithAnnotatedMMHosts() {
+//   struct MyIP {
+//     annotated_ptr<int, decltype(properties{buffer_location<kBL1>,
+//                                             awidth<32>,
+//                                             dwidth<32>,
+//                                             latency<0>,
+//                                             read_write_mode_readwrite,
+//                                             maxburst<4>,
+//                                             wait_request_requested})> a;
+//     annotated_ptr<int, decltype(properties{buffer_location<kBL2>,
+//                                             awidth<15>,
+//                                             dwidth<64>,
+//                                             latency<1>,
+//                                             read_write_mode_read,
+//                                             maxburst<1>,
+//                                             wait_request_not_requested})> b;
+//     annotated_ptr<int, decltype(properties{buffer_location<kBL3>,
+//                                             awidth<28>,
+//                                             dwidth<16>,
+//                                             latency<16>,
+//                                             read_write_mode_write,
+//                                             maxburst<1>,
+//                                             wait_request_not_requested})> c;
+
+//     int n;
+
+//     MyIP(int *a_, int *b_, int *c_, int n_) : a(a_), b(b_), c(c_), n(n_) {}
+
+//     streaming_interface void operator()() const {
+//       for (int i = 0; i < n; i++) {
+//         c[i] = a[i] + b[i];
+//       }
+//     }
+//   };
+
+//   queue q(testconfig_selector_v, &m_exception_handler);
+//   constexpr int kN = 8;
+//   auto host_array_A =
+//       malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
+//   assert(host_array_A);
+//   auto host_array_B =
+//       malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
+//   assert(host_array_B);
+//   auto host_array_C =
+//       malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL3)});
+//   assert(host_array_C);
+
+//   for (int i = 0; i < kN; i++) {
+//     host_array_A[i] = i;
+//     host_array_B[i] = i * 2;
+//   }
+
+//   q.single_task(MyIP{host_array_A, host_array_B, host_array_C, kN}).wait();
+
+//   for (int i = 0; i < kN; i++) {
+//     auto golden = host_array_A[i] + host_array_B[i];
+//     if (host_array_C[i] != golden) {
+//       std::cout << "ERROR! At index: " << i << " , expected: " << golden
+//                 << " , found: " << host_array_C[i] << "\n";
+//     }
+//   }
+
+//   free(host_array_A, q);
+//   free(host_array_B, q);
+//   free(host_array_C, q);
+// }

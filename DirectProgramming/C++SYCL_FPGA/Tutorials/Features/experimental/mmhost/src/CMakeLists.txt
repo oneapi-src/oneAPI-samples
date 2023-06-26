@@ -24,6 +24,13 @@ if((IS_BSP STREQUAL "1"))
     message(FATAL_ERROR "ERROR: This tutorial is only supported in the IP Authoring flow and therefore does not support BSPs as a target.")
 endif()
 
+# This is for finding the install path to the necessary include files
+if(DEFINED ENV{INTELFPGAOCLSDKROOT})
+   set(SDK_ROOT_PATH $ENV{INTELFPGAOCLSDKROOT})
+else()
+   message(FATAL_ERROR "The INTELFPGAOCLSDKROOT environment variable must be defined for this tutorial to compile.")
+endif()
+
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
@@ -97,6 +104,7 @@ set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reu
 ### FPGA Emulator
 ###############################################################################
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../../include)
 target_compile_options(${EMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${EMULATOR_TARGET} PRIVATE ${EMULATOR_COMPILE_FLAGS})
 target_link_libraries(${EMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -107,6 +115,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${EMULATOR_OUTPU
 ### FPGA Simulator
 ###############################################################################
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../../include)
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${SIMULATOR_COMPILE_FLAGS})
 target_link_libraries(${SIMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -118,6 +127,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${SIMULATOR_OUT
 ###############################################################################
 add_executable(${REPORT_TARGET} ${SOURCE_FILE})
 target_compile_options(${REPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
+target_include_directories(${REPORT_TARGET} PRIVATE ../../../../../include)
 target_compile_options(${REPORT_TARGET} PRIVATE ${REPORT_COMPILE_FLAGS})
 
 # The report target does not need the QACTYPES flag at link stage
@@ -134,6 +144,7 @@ set_target_properties(${REPORT_TARGET} PROPERTIES OUTPUT_NAME ${REPORT_OUTPUT_NA
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_compile_options(${FPGA_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${FPGA_TARGET} PRIVATE ${FPGA_COMPILE_FLAGS})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../../../include)
 target_link_libraries(${FPGA_TARGET} ${COMMON_LINK_FLAGS})
 target_link_libraries(${FPGA_TARGET} ${FPGA_LINK_FLAGS})
 set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
