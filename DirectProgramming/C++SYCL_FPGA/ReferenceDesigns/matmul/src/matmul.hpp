@@ -103,7 +103,7 @@ void MatmulImpl(sycl::queue &q,            // Device queue
                                PipeDone>{a, repetitions});
 
   // Producer kernel for matrix B
-  q.single_task<FeederB>(
+  auto feeder_b_event = q.single_task<FeederB>(
       MatrixReadFromDDRToPipeB<TT, kBL2, rows_a, common, cols_b, tile_a, tile_b,
                                kElemsPerDDRAccess, num_matrices, PipeB>{
           b, repetitions});
@@ -119,6 +119,8 @@ void MatmulImpl(sycl::queue &q,            // Device queue
                           kElemsPerDDRAccess, num_matrices, PipeC>{
           c, repetitions});
 
+  feeder_a_event.wait();
+  feeder_b_event.wait();
   drain_event.wait();
 
   // Compute the total time the execution lasted
