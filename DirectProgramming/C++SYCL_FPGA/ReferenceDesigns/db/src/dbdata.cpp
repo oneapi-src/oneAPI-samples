@@ -626,6 +626,59 @@ bool Database::ValidateQ1(std::string db_root_dir,
 }
 
 //
+// validate the results of Query 9
+//
+bool Database::ValidateQ9(std::string db_root_dir,
+                          std::array<DBDecimal, 25 * 2020>& sum_profit) {
+  std::cout << "Validating query 9 test results" << std::endl;
+
+  // populate date row by row (as presented in the file)
+  std::string path(db_root_dir + kSeparator + "answers" + kSeparator + "q9.out");
+  std::ifstream ifs(path);
+  std::string line;
+
+  bool valid = true;
+
+  if (!ifs.is_open()) {
+    std::cout << "Failed to open " << path << "\n";
+    return false;
+  }
+
+  // do nothing with the first line, it is a header line
+  std::getline(ifs, line);
+
+  while (std::getline(ifs, line)) {
+    // split row into column strings by separator ('|')
+    std::vector<std::string> column_data = SplitRowStr(line);
+    assert(column_data.size() == 3);
+
+    std::string nationname_gold = column_data[0];
+    trim(nationname_gold);
+    transform(nationname_gold.begin(), nationname_gold.end(),
+              nationname_gold.begin(), ::toupper);
+
+    assert(n.name_key_map.find(nationname_gold) != n.name_key_map.end());
+
+    unsigned char nationkey_gold = n.name_key_map[nationname_gold];
+
+    unsigned int year_gold = std::stoi(column_data[1]);
+    double sum_profit_gold = std::stod(column_data[2]);
+
+    double sum_profit_res =
+        (double)(sum_profit[year_gold * 25 + nationkey_gold]) / (100.0 * 100.0);
+
+    if (!AlmostEqual(sum_profit_gold, sum_profit_res, 0.01f)) {
+      std::cerr << "ERROR: sum_profit for " << nationname_gold << " in "
+                << year_gold << " did not match (Expected=" << sum_profit_gold
+                << ", Result=" << sum_profit_res << ")\n";
+      valid = false;
+    }
+  }
+
+  return valid;
+}
+
+//
 // validate the results of Query 11
 //
 bool Database::ValidateQ11(std::string db_root_dir,
@@ -789,6 +842,66 @@ void Database::PrintQ1(std::array<DBDecimal, 3 * 2>& sum_qty,
 
   // Restore the output format of cout
   std::cout.copyfmt(oldState);
+}
+
+//
+// print the results of Query 9
+//
+void Database::PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit) {
+  // row of Q9 output for local sorting
+  struct Row {
+    Row(std::string& nation, int year, DBDecimal sum_profit)
+        : nation(nation), year(year), sum_profit(sum_profit) {}
+    std::string nation;
+    int year;
+    DBDecimal sum_profit;
+
+    void print() {
+      std::cout << nation << "|" << year << "|"
+                << (double)(sum_profit) / (100.0 * 100.0) << "\n";
+    }
+  };
+
+  // create the rows
+  std::vector<Row> outrows;
+  for (unsigned char nat = 0; nat < kNationTableSize; nat++) {
+    std::string nation_name = n.key_name_map[nat];
+    for (int y = 1992; y <= 1998; y++) {
+      outrows.push_back(Row(nation_name, y, sum_profit[y * 25 + nat]));
+    }
+  }
+
+  // sort rows by year
+  std::sort(outrows.begin(), outrows.end(),
+    [](const Row& a, const Row& b) -> bool {
+      return a.year > b.year;
+  });
+
+  // sort rows by nation
+  // stable_sort() preserves the order of the previous sort
+  std::stable_sort(outrows.begin(), outrows.end(),
+    [](const Row& a, const Row& b) -> bool {
+      return a.nation < b.nation;
+  });
+
+  // print the header
+  std::cout << "nation|o_year|sum_profit\n";
+
+  // Copy old state of cout
+  std::ios oldState(nullptr);
+  oldState.copyfmt(std::cout);
+
+  // Edit the output format of cout
+  std::cout << std::fixed << std::setprecision(2);
+
+  // print the results
+  for (int i = 0; i < outrows.size(); i++) {
+    outrows[i].print();
+  }
+
+  // Restore the output format of cout
+  std::cout.copyfmt(oldState);
+
 }
 
 //
