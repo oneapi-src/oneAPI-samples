@@ -27,44 +27,32 @@ void run_on_device(const int &n, const unsigned long long &offset,
   data_type *d_data = nullptr;
 
   /* C data to device */
-  CUDA_CHECK(DPCT_CHECK_ERROR(d_data = (data_type *)sycl::malloc_device(
-                                  sizeof(data_type) * h_data.size(), q_ct1)));
+  d_data = (data_type *)sycl::malloc_device(
+                                  sizeof(data_type) * h_data.size(), q_ct1);
 
   /* Create quasi-random number generator */
-  /*
-  DPCT1032:20: A different random number generator is used. You may need to
-  adjust the code.
-  */
-  CURAND_CHECK(DPCT_CHECK_ERROR(
-      gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::sobol)));
+  gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::sobol);
 
   /* Set cuRAND to stream */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_queue(stream)));
+  gen->set_queue(stream);
 
   /* Set offset */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->skip_ahead(offset)));
+  gen->skip_ahead(offset);
 
   /* Set Dimension */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_dimensions(num_dimensions)));
-
-  /* Set ordering */
-  /*
-  DPCT1007:21: Migration of curandSetGeneratorOrdering is not supported.
-  */
-  // CURAND_CHECK(curandSetGeneratorOrdering(gen, order));
+  gen->set_dimensions(num_dimensions);
 
   /* Generate n floats on device */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->generate_uniform(d_data, h_data.size())));
+  gen->generate_uniform(d_data, h_data.size());
 
   /* Copy data to host */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream->memcpy(
-      h_data.data(), d_data, sizeof(data_type) * h_data.size())));
+  stream->memcpy(h_data.data(), d_data, sizeof(data_type) * h_data.size());
 
   /* Sync stream */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream->wait()));
+  stream->wait();
 
   /* Cleanup */
-  CUDA_CHECK(DPCT_CHECK_ERROR(sycl::free(d_data, q_ct1)));
+  sycl::free(d_data, q_ct1);
 }
 catch (sycl::exception const &exc) {
   std::cerr << exc.what() << "Exception caught at file:" << __FILE__
@@ -80,34 +68,22 @@ void run_on_host(const int &n, const unsigned long long &offset,
                  std::vector<data_type> &h_data) try {
 
   /* Create quasi-random number generator */
-  /*
-  DPCT1032:22: A different random number generator is used. You may need to
-  adjust the code.
-  */
-  CURAND_CHECK(DPCT_CHECK_ERROR(
-      gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::sobol)));
+  gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::sobol);
 
   /* Set cuRAND to stream */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_queue(stream)));
+  gen->set_queue(stream);
 
   /* Set offset */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->skip_ahead(offset)));
+  gen->skip_ahead(offset);
 
   /* Set Dimension */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_dimensions(num_dimensions)));
-
-  /* Set ordering */
-  /*
-  DPCT1007:23: Migration of curandSetGeneratorOrdering is not supported.
-  */
-  // CURAND_CHECK(curandSetGeneratorOrdering(gen, order));
+  gen->set_dimensions(num_dimensions);
 
   /* Generate n floats on host */
-  CURAND_CHECK(
-      DPCT_CHECK_ERROR(gen->generate_uniform(h_data.data(), h_data.size())));
+  gen->generate_uniform(h_data.data(), h_data.size());
 
   /* Cleanup */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen.reset()));
+  gen.reset();
 }
 catch (sycl::exception const &exc) {
   std::cerr << exc.what() << "Exception caught at file:" << __FILE__
@@ -120,10 +96,6 @@ int main(int argc, char *argv[]) try {
 
   dpct::queue_ptr stream = &dpct::get_default_queue();
   dpct::rng::host_rng_ptr gen = NULL;
-  /*
-  DPCT1032:24: A different random number generator is used. You may need to
-  adjust the code.
-  */
   dpct::rng::random_engine_type rng = dpct::rng::random_engine_type::sobol;
   curandOrdering_t order = CURAND_ORDERING_QUASI_DEFAULT;
 
@@ -133,10 +105,7 @@ int main(int argc, char *argv[]) try {
   const unsigned int num_dimensions = 1;
 
   /* Create stream */
-  /*
-  DPCT1025:25: The SYCL queue is created ignoring the flag and priority options.
-  */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream = dev_ct1.create_queue()));
+  stream = dev_ct1.create_queue();
 
   /* Allocate n floats on host */
   std::vector<data_type> h_data(n, 0);
@@ -154,9 +123,9 @@ int main(int argc, char *argv[]) try {
   printf("=====\n");
 
   /* Cleanup */
-  CUDA_CHECK(DPCT_CHECK_ERROR(dev_ct1.destroy_queue(stream)));
+  dev_ct1.destroy_queue(stream);
 
-  CUDA_CHECK(DPCT_CHECK_ERROR(dev_ct1.reset()));
+  dev_ct1.reset();
 
   return EXIT_SUCCESS;
 }

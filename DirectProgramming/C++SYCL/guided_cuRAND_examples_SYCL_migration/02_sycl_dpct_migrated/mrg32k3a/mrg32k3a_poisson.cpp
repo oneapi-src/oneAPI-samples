@@ -26,39 +26,30 @@ void run_on_device(const int &n, const unsigned long long &seed,
   data_type *d_data = nullptr;
 
   /* C data to device */
-  CUDA_CHECK(DPCT_CHECK_ERROR(d_data = (data_type *)sycl::malloc_device(
-                                  sizeof(data_type) * h_data.size(), q_ct1)));
+  d_data = (data_type *)sycl::malloc_device(
+                                  sizeof(data_type) * h_data.size(), q_ct1);
 
   /* Create pseudo-random number generator */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen = dpct::rng::create_host_rng(
-                                    dpct::rng::random_engine_type::mrg32k3a)));
+  gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mrg32k3a);
 
   /* Set cuRAND to stream */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_queue(stream)));
-
-  /* Set ordering */
-  /*
-  DPCT1007:2: Migration of curandSetGeneratorOrdering is not supported.
-  */
-  // CURAND_CHECK(curandSetGeneratorOrdering(gen, order));
+  gen->set_queue(stream);
 
   /* Set seed */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_seed(seed)));
+  gen->set_seed(seed);
 
   /* Generate n floats on device */
-  CURAND_CHECK(
-      DPCT_CHECK_ERROR(gen->generate_poisson(d_data, h_data.size(), lambda)));
+  gen->generate_poisson(d_data, h_data.size(), lambda);
 
   /* Copy data to host */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream->memcpy(
-      h_data.data(), d_data, sizeof(data_type) * h_data.size())));
+  stream->memcpy(h_data.data(), d_data, sizeof(data_type) * h_data.size());
 
   /* Sync stream */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream->wait()));
+  stream->wait();
 
   /* Cleanup */
-  CUDA_CHECK(DPCT_CHECK_ERROR(sycl::free(d_data, q_ct1)));
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen.reset()));
+  sycl::free(d_data, q_ct1);
+  gen.reset();
 }
 catch (sycl::exception const &exc) {
   std::cerr << exc.what() << "Exception caught at file:" << __FILE__
@@ -73,27 +64,19 @@ void run_on_host(const int &n, const unsigned long long &seed,
                  std::vector<data_type> &h_data) try {
 
   /* Create pseudo-random number generator */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen = dpct::rng::create_host_rng(
-                                    dpct::rng::random_engine_type::mrg32k3a)));
+  gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mrg32k3a);
 
   /* Set cuRAND to stream */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_queue(stream)));
-
-  /* Set ordering */
-  /*
-  DPCT1007:3: Migration of curandSetGeneratorOrdering is not supported.
-  */
-  // CURAND_CHECK(curandSetGeneratorOrdering(gen, order));
+  gen->set_queue(stream);
 
   /* Set seed */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen->set_seed(seed)));
+  gen->set_seed(seed);
 
   /* Generate n floats on host */
-  CURAND_CHECK(DPCT_CHECK_ERROR(
-      gen->generate_poisson(h_data.data(), h_data.size(), lambda)));
+  gen->generate_poisson(h_data.data(), h_data.size(), lambda);
 
   /* Cleanup */
-  CURAND_CHECK(DPCT_CHECK_ERROR(gen.reset()));
+  gen.reset();
 }
 catch (sycl::exception const &exc) {
   std::cerr << exc.what() << "Exception caught at file:" << __FILE__
@@ -115,10 +98,7 @@ int main(int argc, char *argv[]) try {
   const unsigned long long seed = 1234ULL;
 
   /* Create stream */
-  /*
-  DPCT1025:4: The SYCL queue is created ignoring the flag and priority options.
-  */
-  CUDA_CHECK(DPCT_CHECK_ERROR(stream = dev_ct1.create_queue()));
+  stream = dev_ct1.create_queue();
 
   /* Allocate n floats on host */
   std::vector<data_type> h_data(n, 0);
@@ -136,9 +116,9 @@ int main(int argc, char *argv[]) try {
   printf("=====\n");
 
   /* Cleanup */
-  CUDA_CHECK(DPCT_CHECK_ERROR(dev_ct1.destroy_queue(stream)));
+  dev_ct1.destroy_queue(stream);
 
-  CUDA_CHECK(DPCT_CHECK_ERROR(dev_ct1.reset()));
+  dev_ct1.reset();
 
   return EXIT_SUCCESS;
 }
