@@ -86,9 +86,9 @@ void MatmulImpl(sycl::queue &q,            // Device queue
   q.memcpy(a, a_matrix.data(), kMatsizeA * num_matrices * sizeof(TT)).wait();
   q.memcpy(b, b_matrix.data(), kMatsizeB * num_matrices * sizeof(TT)).wait();
 
-  using PipeDataA = fpga_tools::NTuple<TT, TILE_A>;
-  using PipeDataB = fpga_tools::NTuple<TT, TILE_B>;
-  using PipeDataC = fpga_tools::NTuple<TT, TILE_A>;
+  using PipeDataA = fpga_tools::NTuple<TT, tile_a>;
+  using PipeDataB = fpga_tools::NTuple<TT, tile_b>;
+  using PipeDataC = fpga_tools::NTuple<TT, tile_a>;
 
   // Pipes to communicate the matrices between kernels
   using PipeA = sycl::ext::intel::pipe<APipe, PipeDataA, 64>;
