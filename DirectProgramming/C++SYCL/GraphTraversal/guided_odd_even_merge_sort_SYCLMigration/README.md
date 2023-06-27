@@ -46,9 +46,9 @@ Refer to the [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/con
 
 ### CUDA Source Code Evaluation
 
-In this implementation, a random sequence of power of 2 elements is given as input, and the algorithm sorts the sequence in parallel. The algorithm sorts the first half of the list and second half of the list separately. The algorithm then sorts the odd-indexed entries and the even-indexed entries separately. You need make only one more comparison-switch per pair of keys to sort the list completely.
+In this implementation, a random sequence of power of 2 elements is given as input, and the algorithm sorts the sequence in parallel. The algorithm sorts the first half of the list and second half of the list separately. The algorithm then sorts the odd-indexed entries and the even-indexed entries separately. You need to make only one more comparison-switch per pair of keys to sort the list completely.
 
-In this sample, the array length of 1048576 is the input size for the algorithm. The code checks for all the input sizes in the intervals of 2th power from array lengths from  64 to 1048576 calculated for one iteration. The comparator swaps the value if top value is greater or equal to the bottom value.
+In this sample, the array length of 1048576 is the input size for the algorithm. The code checks for all the input sizes in the intervals of 2nd power from array lengths from  64 to 1048576 calculated for one iteration. The comparator swaps the value if top value is greater or equal to the bottom value.
 
 This sample is migrated from NVIDIA CUDA sample. See the [sortingNetworks](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/sortingNetworks) sample in the NVIDIA/cuda-samples GitHub.
 
@@ -107,7 +107,7 @@ For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA cod
      ```
    Run `02_sycl_migrated` for  CPU.
      ```
-    export SYCL_dEVICE_FILTER=cpu
+    export ONEAPI_DEVICE_SELECTOR =cpu
     make run
     ```
 
