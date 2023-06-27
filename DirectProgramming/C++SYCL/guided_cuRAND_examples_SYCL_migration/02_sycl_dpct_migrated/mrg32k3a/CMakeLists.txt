@@ -1,0 +1,14 @@
+add_executable(mrg32k3a_lognormal mrg32k3a_lognormal.cpp)
+add_executable(mrg32k3a_normal mrg32k3a_normal.cpp)
+add_executable(mrg32k3a_poisson mrg32k3a_poisson.cpp)
+add_executable(mrg32k3a_uniform mrg32k3a_uniform.cpp)
+
+target_link_libraries(mrg32k3a_lognormal OpenCL sycl)
+target_link_libraries(mrg32k3a_normal OpenCL sycl)
+target_link_libraries(mrg32k3a_poisson OpenCL sycl)
+target_link_libraries(mrg32k3a_uniform OpenCL sycl)
+
+add_custom_target(run_mrg32k3a_lognormal mrg32k3a_lognormal)
+add_custom_target(run_mrg32k3a_normal mrg32k3a_normal)
+add_custom_target(run_mrg32k3a_poisson mrg32k3a_poisson)
+add_custom_target(run_mrg32k3a_uniform mrg32k3a_uniform)
