@@ -1,0 +1,1223 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2124
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2482
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          2486
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3393
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3403
+    Length:          50
+    ReplacementText: '(d_InputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3481
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3491
+    Length:          50
+    ReplacementText: '(d_InputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3569
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:27: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3579
+    Length:          51
+    ReplacementText: '(d_OutputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3658
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3668
+    Length:          51
+    ReplacementText: '(d_OutputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3747
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3757
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3808
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3854
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3882
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3892
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3943
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          3989
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4310
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4322
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4660
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          4672
+    Length:          23
+    ReplacementText: '(dpct::get_current_device().queues_wait_and_throw(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5320
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5332
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5388
+    Length:          47
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5436
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5466
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:34: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5478
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5534
+    Length:          47
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          5582
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6036
+    Length:          21
+    ReplacementText: 'sycl::free(d_OutputVal, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6061
+    Length:          21
+    ReplacementText: 'sycl::free(d_OutputKey, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6086
+    Length:          20
+    ReplacementText: 'sycl::free(d_InputVal, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6110
+    Length:          20
+    ReplacementText: 'sycl::free(d_InputKey, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Offset:          6266
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1653
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1673
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1706
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          1803
+    Length:          37
+    ReplacementText: '#include "sortingNetworks_common.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2084
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2291
+    Length:          0
+    ReplacementText: ",\n                                       const sycl::nd_item<3> &item_ct1,\n                                       uint *s_key, uint *s_val"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2331
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2354
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2438
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2482
+    Length:          41
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2594
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2627
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2654
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2687
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2714
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2747
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2774
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2807
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2828
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2868
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2908
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          2998
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3184
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3219
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3225
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3261
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3276
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3485
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3491
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3527
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3542
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3729
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3731
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3768
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3808
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3876
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          3966
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4264
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4518
+    Length:          0
+    ReplacementText: ', const sycl::nd_item<3> &item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4550
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4563
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          4576
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6571
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6575
+    Length:          118
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:35: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(512/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:36: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(512/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, arrayLength, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6693
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6706
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:4: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6710
+    Length:          124
+    ReplacementText: "dpct::get_default_queue().submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1101:37: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_key_acc_ct1(sycl::range<1>(512/*SHARED_SIZE_LIMIT*/), cgh);\n        /*\n        DPCT1101:38: 'SHARED_SIZE_LIMIT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<uint, 1> s_val_acc_ct1(sycl::range<1>(512/*SHARED_SIZE_LIMIT*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) * sycl::range<3>(1, 1, threadCount), sycl::range<3>(1, 1, threadCount)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, SHARED_SIZE_LIMIT, dir, item_ct1, s_key_acc_ct1.get_pointer(), s_val_acc_ct1.get_pointer());\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          6834
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          7242
+    Length:          157
+    ReplacementText: "dpct::get_default_queue().parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) * sycl::range<3>(1, 1, 256), sycl::range<3>(1, 1, 256)), \n          [=](sycl::nd_item<3> item_ct1) {\n            oddEvenMergeGlobal(d_DstKey, d_DstVal, d_DstKey, d_DstVal, arrayLength, size, stride, dir, item_ct1);\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Offset:          7399
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+    Digest:          18265fc7366cdb986e9c10ee4b1f31ac
+  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+    Digest:          fa6ec57bc03cc3635923aef43500f6af
+DpctVersion:     17.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_inorder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_set_uuid:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      SubFeatureMap:   {}
+  memory.hpp:
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Manju/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Manju/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
