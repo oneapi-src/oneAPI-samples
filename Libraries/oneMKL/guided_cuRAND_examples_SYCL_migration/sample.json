@@ -16,7 +16,7 @@
       "cd build",
       "cmake ..",
       "make",
-      "make run_amax"
+      "make run_mt19937_uniform"
      ]
   }]
   },
