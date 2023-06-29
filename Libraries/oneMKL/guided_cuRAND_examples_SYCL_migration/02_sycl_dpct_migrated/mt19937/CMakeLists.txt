@@ -1,0 +1,14 @@
+add_executable(mt19937_lognormal mt19937_lognormal.cpp)
+add_executable(mt19937_normal mt19937_normal.cpp)
+add_executable(mt19937_poisson mt19937_poisson.cpp)
+add_executable(mt19937_uniform mt19937_uniform.cpp)
+
+target_link_libraries(mt19937_lognormal OpenCL sycl)
+target_link_libraries(mt19937_normal OpenCL sycl)
+target_link_libraries(mt19937_poisson OpenCL sycl)
+target_link_libraries(mt19937_uniform OpenCL sycl)
+
+add_custom_target(run_mt19937_lognormal mt19937_lognormal)
+add_custom_target(run_mt19937_normal mt19937_normal)
+add_custom_target(run_mt19937_poisson mt19937_poisson)
+add_custom_target(run_mt19937_uniform mt19937_uniform)

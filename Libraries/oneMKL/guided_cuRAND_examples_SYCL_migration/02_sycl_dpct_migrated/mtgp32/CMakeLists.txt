@@ -1,0 +1,14 @@
+add_executable(mtgp32_lognormal mtgp32_lognormal.cpp)
+add_executable(mtgp32_normal mtgp32_normal.cpp)
+add_executable(mtgp32_poisson mtgp32_poisson.cpp)
+add_executable(mtgp32_uniform mtgp32_uniform.cpp)
+
+target_link_libraries(mtgp32_lognormal OpenCL sycl)
+target_link_libraries(mtgp32_normal OpenCL sycl)
+target_link_libraries(mtgp32_poisson OpenCL sycl)
+target_link_libraries(mtgp32_uniform OpenCL sycl)
+
+add_custom_target(run_mtgp32_lognormal mtgp32_lognormal)
+add_custom_target(run_mtgp32_normal mtgp32_normal)
+add_custom_target(run_mtgp32_poisson mtgp32_poisson)
+add_custom_target(run_mtgp32_uniform mtgp32_uniform)
