@@ -1,18 +1,29 @@
-# Makefile for NMAKE
+# Makefile for GNU Make
 
-default: run
 
-all: run
+default: all
 
-run: matrix_mul_mkl.exe
-	.\matrix_mul_mkl.exe
+all: sgemm.mkl dgemm.mkl 
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
+run: sgemm.mkl dgemm.mkl
+	./sgemm.mkl
+	./dgemm.mkl
 
-matrix_mul_mkl.exe: matrix_mul_mkl.cpp
-	icx-cl -fsycl matrix_mul_mkl.cpp /Fematrix_mul_mkl.exe $(DPCPP_OPTS)
+
+MKL_COPTS = 
+MKL_LIBS = -qmkl
+
+
+DPCPP_OPTS = -O3 $(MKL_COPTS) $(MKL_LIBS)
+
+sgemm.mkl: matrix_mul_mkl.cpp
+	icpx -fsycl $< -o $@ $(DPCPP_OPTS)
+
+dgemm.mkl: matrix_mul_mkl.cpp
+	icpx -fsycl $< -o $@ $(DPCPP_OPTS) -DUSE_DOUBLE
+
 
 clean:
-	del /q matrix_mul_mkl.exe matrix_mul_mkl.exp matrix_mul_mkl.lib
+	-rm -f sgemm.mkl dgemm.mkl
 
-pseudo: clean run all
+.PHONY: clean run all
