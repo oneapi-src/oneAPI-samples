@@ -76,6 +76,7 @@ Problem size:  A (8192x8192) * B (8192x8192)  -->  C (8192x8192)
 Benchmark interations: 100
 Device: Intel(R) Data Center GPU Max 1100
 Launching oneMKL GEMM calculation...
+DGEMM performance : 14979.3 GFLOPS
 ```
 
 ### Troubleshooting
