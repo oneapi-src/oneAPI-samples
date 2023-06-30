@@ -2,7 +2,7 @@
 
 default: all
 
-all: sgemm.exe dgemm.exe 
+all: sgemm.exe dgemm.exe
 
 run: sgemm.exe dgemm.exe
 	.\sgemm.exe
@@ -20,4 +20,3 @@ clean:
 	del /q sgemm.exe sgemm.exp sgemm.lib dgemm.exe dgemm.exp dgemm.lib
 
 pseudo: clean run all
-

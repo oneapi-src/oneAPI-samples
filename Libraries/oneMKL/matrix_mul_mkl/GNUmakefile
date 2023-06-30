@@ -2,7 +2,7 @@
 
 default: all
 
-all: sgemm.mkl dgemm.mkl 
+all: sgemm.mkl dgemm.mkl
 
 run: sgemm.mkl dgemm.mkl
 	./sgemm.mkl
