@@ -30,7 +30,7 @@
 #
 #   Source <path_to_oneAPI>/setvars.sh;
 #
-#   > make icc
+#   > make icx
 #
 # To compile with the Intel(R) C++ Compiler for Linux* with Intel(R) MKL library
 # creating an executionfile with the extension ".mkl":
