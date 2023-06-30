@@ -13,7 +13,6 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
-#include <unistd.h>
 
 #include <CL/sycl.hpp>
 #include "oneapi/mkl.hpp"
@@ -44,28 +43,6 @@ int main(int argc, char* argv[])
         int msize = MSIZE;
         int loops = LOOPS;
         int verify = 0;
-        
-        int opt;
-        while ((opt = getopt(argc, argv, "s:l:vh")) != -1) {
-            switch (opt) {
-            case 's':
-                msize = atoi(optarg);
-                break;
-            case 'l':
-                loops = atoi(optarg);
-                break;
-            case 'v':
-                verify = 1;
-                break;
-            case 'h':
-                cout << "Usage: -s <matrix size, default 8192> -l <loops, default 10> -v <verify result, default False>, -h <print help> " << endl;
-                return 0;
-            default:
-                break;
-            }
-        }
-
-        //cout << "matrix size: " << msize << " x " << msize << endl;
 
         // Initialize data for GEMM. The full GEMM operation is:
         //

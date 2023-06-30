@@ -1,21 +1,23 @@
+# Makefile for NMAKE
+
 default: all
 
 all: sgemm.exe dgemm.exe 
 
 run: sgemm.exe dgemm.exe
-	./sgemm.exe
-	./dgemm.exe
+	.\sgemm.exe
+	.\dgemm.exe
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
-MKL_LIBS = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl
-
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
+DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
 sgemm.exe: matrix_mul_mkl.cpp
-	icpx -fsycl $< -o $@ $(DPCPP_OPTS)
+	icx-cl -fsycl matrix_mul_mkl.cpp /Fesgemm.exe $(DPCPP_OPTS)
 
 dgemm.exe: matrix_mul_mkl.cpp
-	icpx -fsycl $< -o $@ $(DPCPP_OPTS) -DUSE_DOUBLE
+	icx-cl -fsycl matrix_mul_mkl.cpp /Fedgemm.exe $(DPCPP_OPTS) -DUSE_DOUBLE
 
 clean:
-	del /q sgemm.exe dgemm.exe
+	del /q sgemm.exe sgemm.exp sgemm.lib dgemm.exe dgemm.exp dgemm.lib
+
+pseudo: clean run all
+
