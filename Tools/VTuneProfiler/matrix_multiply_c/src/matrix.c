@@ -22,9 +22,12 @@
 	#endif
 #endif
 #include <stdio.h>
+#if defined(WIN32) || defined(ICC)
 #include <time.h>
+#else
+#include <sys/time.h>
+#endif
 #include <malloc.h>
-
 #include "multiply.h"
 
 typedef unsigned long long  UINT64;
@@ -63,10 +66,9 @@ void print_arr(char *name, TYPE array[][NUM])
 
 int main()
 {
-#ifdef WIN32
+#if defined(WIN32) || defined(ICC)
 	clock_t start=0.0, stop=0.0;
 #else // Pthreads
-	double start=0.0, stop=0.0;
 	struct timeval  before, after;
 #endif
 	double secs;
