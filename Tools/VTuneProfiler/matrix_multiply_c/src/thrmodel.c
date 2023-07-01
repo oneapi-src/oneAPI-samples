@@ -27,6 +27,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #include "multiply.h"
 
 #define xstr(s) x_str(s)
@@ -86,8 +87,6 @@ void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM], TY
 	DWORD tid[MAXTHREADS];
 #else 
 	pthread_t ht[MAXTHREADS];
-	int tret[MAXTHREADS]; 
-	int rc; 
 	void* status;
 #endif
 	_tparam par[MAXTHREADS];
@@ -107,7 +106,7 @@ void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM], TY
 #ifdef WIN32		
 		ht[tidx] = (HANDLE)CreateThread(NULL, 0, ThreadFunction, &par[tidx], 0, &tid[tidx]);
 #else
-		tret[tidx] = pthread_create( &ht[tidx], NULL, (void*)ThreadFunction, (void*) &par[tidx]);
+		pthread_create( &ht[tidx], NULL, (void*)ThreadFunction, (void*) &par[tidx]);
 #endif
 	}
 #ifdef WIN32
@@ -116,7 +115,7 @@ void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM], TY
 	for (tidx=0; tidx<NTHREADS; tidx++)
 	{
 	//	printf("Enter join\n"); fflush(stdout);
-		rc = pthread_join(ht[tidx], (void **)&status);
+		pthread_join(ht[tidx], (void **)&status);
 	//	printf("Exit join\n"); fflush(stdout);
 	}
 #endif
