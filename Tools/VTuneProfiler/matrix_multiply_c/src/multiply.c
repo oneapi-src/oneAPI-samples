@@ -76,7 +76,9 @@ void multiply3(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM], TYPE
 // Add compile option for vectorization report Windows: /Qvec-report3 Linux -vec-report3
     for(i=tidx; i<msize; i=i+numt) {
         for(k=0; k<msize; k++) {
+#ifdef ICC
 #pragma ivdep
+#endif
             for(j=0; j<msize; j++) {
                 c[i][j] = c[i][j] + a[i][k] * b[k][j];
             }
@@ -101,7 +103,9 @@ void multiply4(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM], TYPE
             for (j0 =0; j0 < msize; j0 += mblock) {
                 for (i = i0; i < i0 + mblock; i++) {
                     for (k = k0; k < k0 + mblock; k++) {
+#ifdef ICC
 #pragma ivdep
+#endif
 #ifdef ALIGNED 
     #pragma vector aligned
 #endif //ALIGNED
@@ -131,8 +135,10 @@ void multiply5(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM], TYPE
 /*  for(i=0;i<msize;i+=4) { // use instead for single threaded impl.*/
     for(i=ibeg;i<ibound;i+=4) {
         for(j=0;j<msize;j+=4) {
+#ifdef ICC
 #pragma loop_count (NUM)
 #pragma ivdep
+#endif
             for(k=0;k<msize;k++) {
                 c[i][j] = c[i][j] + a[i][k] * t[j][k];
                 c[i+1][j] = c[i+1][j] + a[i+1][k] * t[j][k];
