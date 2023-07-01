@@ -51,8 +51,8 @@ PARAMODEL = -DUSE_THR	# Default parallelism using pthreads/Win threads
 
 GCC     = gcc
 ICC     = icc
-ICX		= icx
-CFLAGS  = -g -O3 -fno-asm
+ICX	= icx
+CFLAGS  = -g -O3
 OPTFLAGS = -xSSE3 
 # OPTFLAGS = -xHost -fno-alias
 # add -DALIGNED to the multiply.c and matrix.c
@@ -60,7 +60,7 @@ LDFLAGS = -lpthread -lm
 
 GCFLAGS = $(CFLAGS) $(PARAMODEL)
 ICFLAGS = $(CFLAGS) $(PARAMODEL)-DICC -debug inline-debug-info -qopt-report
-MKFLAGS = $(CFLAGS) -DUSE_MKL   -DICC -mkl -debug inline-debug-info
+MKFLAGS = $(CFLAGS) -DUSE_MKL   -DICC -qmkl -debug inline-debug-info
 
 
 GCC_EXE = matrix.gcc
