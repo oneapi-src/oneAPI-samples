@@ -1,49 +1,81 @@
-﻿# `Concurrent Kernels` Sample
+# `Concurrent Kernels` Sample
 
-The `Concurrent Kernels` sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU device. It is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU or CPU and further demonstrates how to optimize and improve processing time.
+The `Concurrent Kernels` sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU devices. It is implemented using SYCL by migrating Native CUDA source code for offloading computations to a GPU or CPU and further demonstrates how to optimize and improve processing time.
 
 | Area                   | Description
 |:---                    |:---
 | What you will learn    | How to begin migrating CUDA to SYCL
 | Time to complete       | 15 minutes
+| Category               | Concepts and Functionality
 
->**Note**: This sample is based on the [concurrentKernels](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/concurrentKernels) sample in the NVIDIA/cuda-samples GitHub repository.
+>**Note**: This sample is migrated from NVIDIA CUDA sample. See the [concurrentKernels](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/concurrentKernels) sample in the NVIDIA/cuda-samples GitHub.
 
 ## Purpose
 
 The `Concurrent Kernels` sample shows the execution of multiple kernels on the device at the same time.
 
-This sample contains three versions of the code in the following folders:
+> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment Base Toolkit.
 
-| Folder Name             | Description
-|:---                     |:---
-| `01_sycl_dpct_output`   | Contains output of Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
-| `02_sycl_dpct_migrated` | Contains Intel® DPC++ Compatibility Tool migrated SYCL code from CUDA code with manual changes done to fix the unmigrated code to work functionally.
-| `03_sycl_migrated`      | Contains manually migrated SYCL code from CUDA code.
+This sample contains two versions of the code in the following folders:
+
+| Folder Name          | Description
+|:---                  |:---
+|`01_dpct_output`      | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
+|`02_sycl_migrated`    | Contains manually migrated SYCL code from CUDA code.
 
 ## Prerequisites
 
 | Optimized for         | Description
 |:---                   |:---
-| OS                    | Ubuntu* 20.04 (or newer)
-| Hardware              | GEN9 (or newer)
-| Software              | Intel® oneAPI DPC++/C++ Compiler
+| OS                    | Ubuntu* 20.04
+| Hardware              | Intel® Gen9 <br> Gen11 <br> Xeon CPU
+| Software              | SYCLomatic <br> Intel® oneAPI Base Toolkit (Base Kit)
+
+For information on how to use SYCLomatic, refer to the materials at *[Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html)*.
+
 
 ## Key Implementation Details
 
+This sample demonstrates the migration of the following prominent CUDA feature:
+
+- Streams and Event Management
+- Reduction
+
 concurrentKernels involves a kernel that does no real work but runs at least for a specified number of iterations.
 
->**Note**: This sample demonstrates the CUDA concurrentKernels using key concepts such as CUDA streams and Performance Strategies.
+This code demonstrates the use of CUDA streams for concurrent execution of multiple kernels. It creates multiple streams, each associated with a separate kernel, and uses cudaStreamWaitEvent to introduce dependencies between the streams. The code measures the elapsed time for both serial and concurrent execution of the kernels. The kernel has a loop that iterates for a specific number of times without performing any actual work. Finally, the code verifies if the concurrent execution of kernels was faster than the serial execution based on the measured times.
 
-SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution.
+>**Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html) for general information about the migration workflow.
 
-The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Build the `Concurrent Kernels` Sample
+## Migrate the Code Using SYCLomatic
+
+For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool.
+
+1. Clone the required GitHub repository to your local environment.
+   ```
+   git clone https://github.com/NVIDIA/cuda-samples.git
+   ```
+2. Change to the concurrentKernels sample directory.
+   ```
+   cd cuda-samples/Samples/0_Introduction/concurrentKernels/
+   ```
+3. Generate a compilation database with intercept-build.
+   ```
+   intercept-build make
+   ```
+   This step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
+
+4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated.
+   ```
+   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api
+   ```
+
+## Build and Run the `Concurrent Kernels` Sample
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -53,7 +85,11 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> Windows*:
+> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
 ### On Linux*
 
@@ -66,7 +102,30 @@ When working with the command-line interface (CLI), you should configure the one
    $ make
    ```
 
-   By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated` versions of the program.
+   By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated` version of the program.
+
+3. Run the program.
+
+   Run `01_dpct_output` on GPU.
+   ```
+   make run
+   ```
+      Run `01_dpct_output` on CPU.
+   ```
+   export ONEAPI_DEVICE_SELECTOR=cpu
+   make run
+   unset ONEAPI_DEVICE_SELECTOR
+   ```
+4. Run `02_sycl_migrated` on GPU.
+   ```
+   make run_sm
+   ```
+   Run `02_sycl_migrated` on CPU.
+   ```
+   export ONEAPI_DEVICE_SELECTOR=cpu
+   make run_sm
+   unset ONEAPI_DEVICE_SELECTOR
+   ```
 
 #### Troubleshooting
 
@@ -78,93 +137,21 @@ make VERBOSE=1
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 
-## Run the `Concurrent Kernels` Sample
-
-### On Linux
-
-You can run the programs for CPU or GPU. The commands indicate the device target.
-
-1. Run `02_sycl_dpct_migrated` for **GPU**.
-   ```
-   make run_sdm
-   ```
-   Run `02_sycl_dpct_migrated` for **CPU**.
-   ```
-   export SYCL_DEVICE_FILTER=cpu
-   make run_sdm
-   unset SYCL_DEVICE_FILTER
-   ```
-
-2. Run `03_sycl_migrated` for **GPU**.
-   ```
-   make run
-   ```
-   Run `03_sycl_migrated` for **CPU**.
-   ```
-   export SYCL_DEVICE_FILTER=cpu
-   make run
-   unset SYCL_DEVICE_FILTER
-   ```
-
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
-#### Build and Run Samples in Batch Mode (Optional)
-
-You can submit build and run jobs through a Portable Bash Script (PBS). A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`.
-
-1. Open a terminal on a Linux* system.
-2. Log in to Intel® DevCloud.
-    ```
-    ssh devcloud
-    ```
-3. Download the samples.
-    ```
-    git clone https://github.com/oneapi-src/oneAPI-samples.git
-    ```
-4. Change to the sample directory.
-5. Configure the sample for a GPU node and choose the backend as OpenCL.
-   ```
-   qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-   export SYCL_DEVICE_FILTER=opencl:gpu
-   ```
-   - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
-   - `-d .` makes the current folder as the working directory for the task.
-
-     |Available Nodes  |Command Options
-     |:---             |:---
-     | GPU	         |`qsub -l nodes=1:gpu:ppn=2 -d .`
-     | CPU	         |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-6. Perform build steps as you would on Linux.
-7. Run the programs.
-8. Clean up the project files.
-    ```
-    make clean
-    ```
-9. Disconnect from the Intel® DevCloud.
-    ```
-    exit
-    ```
-
 ## Example Output
 
-The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** with OpenCL Backend.
-
+The following example is for `02_sycl_migrated` for GPU on **Intel(R) UHD Graphics [0x9a60]**.
 ```
 [./a.out] - Starting...
-Device: Intel(R) UHD Graphics [0x9a60]
-> Detected Compute SM 3.0 hardware with 32 multi-processors
+Device: Intel(R) UHD Graphics P630 [0x3e96]
+> Detected Compute SM 3.0 hardware with 24 multi-processors
 Expected time for serial execution of 8 kernels = 0.080s
 Expected time for concurrent execution of 8 kernels = 0.010s
-Measured time for sample = 0.07301s
+Measured time for sample = 0.08594s
 Test passed
-
 ```
 
 ## License
+
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
