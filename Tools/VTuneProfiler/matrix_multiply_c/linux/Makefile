@@ -67,7 +67,7 @@ GCC_EXE = matrix.gcc
 ICC_EXE = matrix.icc
 ICX_EXE	= matrix.icx
 MKL_EXE = matrix.mkl
-
+TARGET = ../matrix
 
 srcdir = ../src
 
@@ -109,6 +109,9 @@ matrix.mkl:     $(srcdir)/matrix.c $(srcdir)/multiply.c $(srcdir)/multiply.h $(s
 	$(ICC) $(MKFLAGS) $(OPTFLAGS) -c $(srcdir)/multiply.c -D_LINUX
 	$(ICC) $(MKFLAGS) $(OPTFLAGS) -c $(srcdir)/matrix.c -D_LINUX
 	$(ICC) $(MKFLAGS) $(OBJS) -o ../matrix $(LDFLAGS)
+
+run:
+	$(TARGET)
 
 clean:
 	@rm -rf $(OBJS) $(GCC_EXE) $(ICC_EXE) $(ICX_EXE) $(MKL_EXE)
