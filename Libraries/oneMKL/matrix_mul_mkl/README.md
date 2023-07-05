@@ -71,12 +71,19 @@ Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 If everything is working correctly, the program will generate two input matrices and call oneMKL to multiply them. It will also compute the product matrix itself to verify the results from oneMKL.
 
 ```
+./sgemm.mkl
+Problem size:  A (8192x8192) * B (8192x8192)  -->  C (8192x8192)
+Benchmark interations: 100
+Device: Intel(R) Iris(R) Xe Graphics
+Launching oneMKL GEMM calculation...
+SGEMM performance : GFLOPS
+
 ./dgemm.mkl
 Problem size:  A (8192x8192) * B (8192x8192)  -->  C (8192x8192)
 Benchmark interations: 100
 Device: Intel(R) Data Center GPU Max 1100
 Launching oneMKL GEMM calculation...
-DGEMM performance : 14979.3 GFLOPS
+DGEMM performance : GFLOPS
 ```
 
 ### Troubleshooting
