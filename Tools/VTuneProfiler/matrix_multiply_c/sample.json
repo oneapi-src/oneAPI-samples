@@ -17,7 +17,36 @@
                "make gcc",
                "make run"
         ]
-        }],
+        },
+    {
+      "id": "icc",
+       "steps": [
+               "make icc",
+               "make run"
+        ]
+        },
+    {
+      "id": "icx",
+       "steps": [
+               "make icx",
+               "make run"
+        ]
+        },
+    {
+      "id": "mkl",
+       "steps": [
+               "make mkl",
+               "make run"
+        ]
+        },
+    {
+      "id": "all",
+       "steps": [
+               "make all",
+               "make run"
+        ]
+        }
+   ],
         "windows": [{
                 "steps": [
                        "cd vc16", 
