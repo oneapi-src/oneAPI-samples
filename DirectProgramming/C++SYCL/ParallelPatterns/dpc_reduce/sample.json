@@ -6,21 +6,21 @@
   "toolchain": ["dpcpp"],
   "languages": [{
     "cpp": {}
-   }],
-   "targetDevice": ["CPU", "GPU"],
-   "gpuRequired": ["gen9"],
-   "os": ["linux"],
-   "builder": ["cmake"],
-   "ciTests": {
-     "linux": [{
-       "id": "dpc_reduce",
-       "steps": [
-         "export I_MPI_CXX=icpx",
- 	 "mkdir build",
- 	 "cd build",
- 	 "cmake ..",
- 	 "make", 
-         "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./dpc_reduce"
+  }],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["gen9"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "ciTests": {
+    "linux": [{
+      "id": "dpc_reduce",
+      "steps": [
+        "export I_MPI_CXX=icpx",
+ 	      "mkdir build",
+ 	      "cd build",
+ 	      "cmake ..",
+ 	      "make", 
+        "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./dpc_reduce"
         ]
       }
     ]
