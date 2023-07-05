@@ -88,40 +88,30 @@ using namespace sycl;
 #define TWID_STAGES 5
 
 // FFT butterfly building block
-template <typename T>
-std::array<ac_complex<T>, 8> Butterfly(std::array<ac_complex<T>, 8> data) {
-  std::array<ac_complex<T>, 8> res;
-  res[0] = data[0] + data[1];
-  res[1] = data[0] - data[1];
-  res[2] = data[2] + data[3];
-  res[3] = data[2] - data[3];
-  res[4] = data[4] + data[5];
-  res[5] = data[4] - data[5];
-  res[6] = data[6] + data[7];
-  res[7] = data[6] - data[7];
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> Butterfly(std::array<ac_complex<T>, points> data) {
+  std::array<ac_complex<T>, points> res;
+  #pragma unroll
+  for(int k=0; k<points; k++){
+    if(k%2 == 0){
+      res[k] = data[k] + data[k+1];
+    }
+    else{
+      res[k] = data[k-1] - data[k];
+    }
+  }
   return res;
 }
 
 // Swap real and imaginary components in preparation for inverse transform
-template <typename T>
-std::array<ac_complex<T>, 8> SwapComplex(std::array<ac_complex<T>, 8> data) {
-  std::array<ac_complex<T>, 8> res;
-  res[0].r() = data[0].i();
-  res[0].i() = data[0].r();
-  res[1].r() = data[1].i();
-  res[1].i() = data[1].r();
-  res[2].r() = data[2].i();
-  res[2].i() = data[2].r();
-  res[3].r() = data[3].i();
-  res[3].i() = data[3].r();
-  res[4].r() = data[4].i();
-  res[4].i() = data[4].r();
-  res[5].r() = data[5].i();
-  res[5].i() = data[5].r();
-  res[6].r() = data[6].i();
-  res[6].i() = data[6].r();
-  res[7].r() = data[7].i();
-  res[7].i() = data[7].r();
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> SwapComplex(std::array<ac_complex<T>, points> data) {
+  std::array<ac_complex<T>, points> res;
+  #pragma unroll
+  for(int k=0; k<points; k++){
+    res[k].r() = data[k].i();
+    res[k].i() = data[k].r();
+  }
   return res;
 }
 
@@ -179,37 +169,32 @@ ac_complex<T> Delay(ac_complex<T> data, int depth, ac_complex<T> *shift_reg) {
 // data[0]         : GECA...   ---->      DBCA...
 // data[1]         : HFDB...   ---->      HFGE...
 
-template <typename T>
-std::array<ac_complex<T>, 8> ReorderData(std::array<ac_complex<T>, 8> data,
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> ReorderData(std::array<ac_complex<T>, points> data,
                                          int depth, ac_complex<T> *shift_reg,
                                          bool toggle) {
   // Use disconnected segments of length 'depth + 1' elements starting at
   // 'shift_reg' to implement the delay elements. At the end of each FFT step,
   // the contents of the entire buffer is shifted by 1 element
-  data[1] = Delay(data[1], depth, shift_reg);
-  data[3] = Delay(data[3], depth, shift_reg + depth + 1);
-  data[5] = Delay(data[5], depth, shift_reg + 2 * (depth + 1));
-  data[7] = Delay(data[7], depth, shift_reg + 3 * (depth + 1));
 
-  if (toggle) {
-    ac_complex<T> tmp = data[0];
-    data[0] = data[1];
-    data[1] = tmp;
-    tmp = data[2];
-    data[2] = data[3];
-    data[3] = tmp;
-    tmp = data[4];
-    data[4] = data[5];
-    data[5] = tmp;
-    tmp = data[6];
-    data[6] = data[7];
-    data[7] = tmp;
+#pragma unroll 
+  for(int k=0; k<points; k++){
+    data[k*2+1] = Delay(data[k*2+1], depth, shift_reg + (k*2+1-1) / 2 * (depth + 1));
   }
 
-  data[0] = Delay(data[0], depth, shift_reg + 4 * (depth + 1));
-  data[2] = Delay(data[2], depth, shift_reg + 5 * (depth + 1));
-  data[4] = Delay(data[4], depth, shift_reg + 6 * (depth + 1));
-  data[6] = Delay(data[6], depth, shift_reg + 7 * (depth + 1));
+  if (toggle) {
+#pragma unroll 
+    for(int k=0; k<points; k+=2){
+      ac_complex<T> tmp = data[k];
+      data[k] = data[k+1];
+      data[k+1] = tmp;
+    }
+  }
+
+#pragma unroll 
+  for(int k=0; k<points; k+=2){
+    data[k] = Delay(data[k], depth, shift_reg + (points + k) / 2  * (depth + 1));
+  }
 
   return data;
 }
@@ -566,7 +551,7 @@ struct Fetch {
 
         auto base_addr = (where & ((1 << (logn + LOGPOINTS)) - 1));
 
-        buf[base_addr + 0] = src[where_global];
+        buf[base_addr + 0] = src[where_global + 0];
         buf[base_addr + 1] = src[where_global + 1];
         buf[base_addr + 2] = src[where_global + 2];
         buf[base_addr + 3] = src[where_global + 3];
@@ -681,7 +666,7 @@ struct Transpose {
     constexpr int kN = (1 << logn);
 
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+    constexpr int kIterations = kN * kN / POINTS / kWorkGroupSize;
 
     // using BurstCoalescedLSU =
     // ext::intel::lsu<ext::intel::burst_coalesce<true>,
@@ -690,35 +675,35 @@ struct Transpose {
     for (int t = 0; t < kIterations; t++) {
       ac_complex<T> buf[POINTS * kN];
       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-        std::array<ac_complex<T>, 8> from_pipe = PipeIn::read();
+        std::array<ac_complex<T>, POINTS> from_pipe = PipeIn::read();
 
 #pragma unroll
-        for (int k = 0; k < 8; k++) {
-          buf[8 * work_item + k] = from_pipe[k];
+        for (int k = 0; k < POINTS; k++) {
+          buf[POINTS * work_item + k] = from_pipe[k];
         }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize / 8; work_item++) {
+      for (int work_item = 0; work_item < kWorkGroupSize / POINTS; work_item++) {
         int colt = work_item;
 
         // [[intel::fpga_register]]
-        ac_complex<T> local_buf[8][8];
-        for (int wi = 0; wi < 8; wi++) {
+        ac_complex<T> local_buf[POINTS][POINTS];
+        for (int wi = 0; wi < POINTS; wi++) {
 #pragma unroll
-          for (int k = 0; k < 8; k++) {
-            local_buf[wi][k] = buf[wi * kN + colt * 8 + k];
+          for (int k = 0; k < POINTS; k++) {
+            local_buf[wi][k] = buf[wi * kN + colt * POINTS + k];
           }
         }
 
         // [[intel::ivdep]]
-        for (int k = 0; k < 8; k++) {
-          int revcolt = BitReversed(colt * 8 + k, logn);
+        for (int k = 0; k < POINTS; k++) {
+          int revcolt = BitReversed(colt * POINTS + k, logn);
           int i = (t * kN + revcolt) >> logn;
           int where = revcolt * kN + i * POINTS;
           if (mangle) where = MangleBits<logn>(where);
 
 #pragma unroll
-          for (int kk = 0; kk < 8; kk++) {
+          for (int kk = 0; kk < POINTS; kk++) {
             dest[where + kk] = local_buf[kk][k];
           }
         }
