@@ -515,194 +515,143 @@ int MangleBits(int x) {
  * locations in local memory, according to the requirements of the FFT engine.
  */
 
-template <int logn, typename PipesOut, typename T>
-void Fetch(ac_complex<T> *src, int mangle) {
-  constexpr int kN = (1 << logn);
+template <int logn, typename PipeOut, typename T>
+struct Fetch {
+  ac_complex<T> *src;
+  int mangle;
 
-  // Make sure a pipe array of the correct size was given
-  // static_assert(PipesOut::template GetDimSize<0>() == kN &&
-  // PipesOut::template GetDimSize<1>() == 1,
-  //               "The provided pipe array is of the incorrect size.");
+  Fetch(ac_complex<T> *src_, int mangle_) : src(src_), mangle(mangle_) {}
 
-  constexpr int kWorkGroupSize = kN;
-  constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+  void operator()() const {
 
-  for (int i = 0; i < kIterations; i++) {
-    // Local memory for storing 8 rows
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    [[intel::fpga_memory]]        // NO-FORMAT: Attribute
-    ac_complex<T> buf[8 * kN];
+    constexpr int kN = (1 << logn);
 
-    for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-      // Each read fetches 8 matrix points
-      int x = (i * kN + work_item) << LOGPOINTS;
+    // Make sure a pipe array of the correct size was given
+    // static_assert(PipeOut::template GetDimSize<0>() == kN &&
+    // PipeOut::template GetDimSize<1>() == 1,
+    //               "The provided pipe array is of the incorrect size.");
 
-      /* When using the alternative memory layout, each row consists of a set of
-       * segments placed far apart in memory. Instead of reading all segments
-       * from one row in order, read one segment from each row before switching
-       * to the next segment. This requires swapping bits log(N) + 2 ... log(N)
-       * with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
-       */
+    constexpr int kWorkGroupSize = kN;
+    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
 
-      int where, where_global;
-      if (mangle) {
-        constexpr int kNB = logn / 2;
-        int a1210 = x & ((POINTS - 1) << (2 * kNB));
-        int a75 = x & ((POINTS - 1) << kNB);
-        int mask = ((POINTS - 1) << kNB) | ((POINTS - 1) << (2 * kNB));
-        a1210 >>= kNB;
-        a75 <<= kNB;
-        where = (x & ~mask) | a1210 | a75;
-        where_global = MangleBits<logn>(where);
-      } else {
-        where = x;
-        where_global = where;
+    for (int i = 0; i < kIterations; i++) {
+      // Local memory for storing 8 rows
+      ac_complex<T>  buf[8 * kN];
+
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+        // Each read fetches 8 matrix points
+        int x = (i * kN + work_item) << LOGPOINTS;
+
+        /* When using the alternative memory layout, each row consists of a set of
+         * segments placed far apart in memory. Instead of reading all segments
+         * from one row in order, read one segment from each row before switching
+         * to the next segment. This requires swapping bits log(N) + 2 ... log(N)
+         * with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
+         */
+
+        int where, where_global;
+        if (mangle) {
+          constexpr int kNB = logn / 2;
+          int a1210 = x & ((POINTS - 1) << (2 * kNB));
+          int a75 = x & ((POINTS - 1) << kNB);
+          int mask = ((POINTS - 1) << kNB) | ((POINTS - 1) << (2 * kNB));
+          a1210 >>= kNB;
+          a75 <<= kNB;
+          where = (x & ~mask) | a1210 | a75;
+          where_global = MangleBits<logn>(where);
+        } else {
+          where = x;
+          where_global = where;
+        }
+
+        auto base_addr = (where & ((1 << (logn + LOGPOINTS)) - 1));
+
+        buf[base_addr + 0] = src[where_global];
+        buf[base_addr + 1] = src[where_global + 1];
+        buf[base_addr + 2] = src[where_global + 2];
+        buf[base_addr + 3] = src[where_global + 3];
+        buf[base_addr + 4] = src[where_global + 4];
+        buf[base_addr + 5] = src[where_global + 5];
+        buf[base_addr + 6] = src[where_global + 6];
+        buf[base_addr + 7] = src[where_global + 7];
       }
 
-      auto base_addr = (where & ((1 << (logn + LOGPOINTS)) - 1));
+      for (int work_item = 0; work_item < kWorkGroupSize / 8; work_item++) {
+        int row = (work_item * 8) >> (logn - LOGPOINTS);
+        int col = (work_item * 8) & (kN / POINTS - 1);
 
-      buf[base_addr + 0] = src[where_global];
-      buf[base_addr + 1] = src[where_global + 1];
-      buf[base_addr + 2] = src[where_global + 2];
-      buf[base_addr + 3] = src[where_global + 3];
-      buf[base_addr + 4] = src[where_global + 4];
-      buf[base_addr + 5] = src[where_global + 5];
-      buf[base_addr + 6] = src[where_global + 6];
-      buf[base_addr + 7] = src[where_global + 7];
+        // [[intel::fpga_register]]
+        ac_complex<T> local_buf[8][8];
+        for (int wi = 0; wi < 8; wi++) {
+  #pragma unroll
+          for (int k = 0; k < 8; k++) {
+            local_buf[wi][k] = buf[row * kN + wi * kN / 8 + col + k];
+          }
+        }
 
-      // PRINTF("Writing at %d at iteration %d\n", (where & ((1 << (logn +
-      // LOGPOINTS)) - 1)), work_item);
-    }
+        for (int k = 0; k < 8; k++) {
+          std::array<ac_complex<T>, 8> to_pipe{
+              local_buf[0][k], local_buf[4][k], local_buf[2][k], local_buf[6][k],
+              local_buf[1][k], local_buf[5][k], local_buf[3][k], local_buf[7][k]};
 
-
-
-    // PRINTF("buf:\n");
-    // for(int kk=0; kk<kWorkGroupSize; kk++){
-    //   for (int k=0; k<8; k++){
-    //     PRINTF("(%f, %f) ", buf[kk * 8 + k ].r(), buf[kk * 8 + k ].i());
-    //   }
-    //   PRINTF("\n");
-    // }
-
-    for (int work_item = 0; work_item < kWorkGroupSize/8; work_item++) {
-      int row = (work_item*8) >> (logn - LOGPOINTS);
-      int col = (work_item*8) & (kN / POINTS - 1);
-
-      // [[intel::fpga_register]]
-      ac_complex<T> local_buf[8][8];
-      for (int wi=0; wi<8; wi++){
-        #pragma unroll
-        for(int k=0; k<8; k++){
-          local_buf[wi][k] =  buf[row * kN + wi *kN/8 + col + k];
+          // Stream fetched data to the FFT engine
+          PipeOut::write(to_pipe);
         }
       }
-
-      for (int k=0; k<8; k++){
-
-        // Stream fetched data over 8 channels to the FFT engine
-
-        PipesOut::template PipeAt<0, 0>::write(local_buf[0][k]);
-        PipesOut::template PipeAt<1, 0>::write(local_buf[4][k]);
-        PipesOut::template PipeAt<2, 0>::write(local_buf[2][k]);
-        PipesOut::template PipeAt<3, 0>::write(local_buf[6][k]);
-        PipesOut::template PipeAt<4, 0>::write(local_buf[1][k]);
-        PipesOut::template PipeAt<5, 0>::write(local_buf[5][k]);
-        PipesOut::template PipeAt<6, 0>::write(local_buf[3][k]);
-        PipesOut::template PipeAt<7, 0>::write(local_buf[7][k]);
-      }
-
     }
-
-    // exit(0);
-
-    // for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-    //   int row = work_item >> (logn - LOGPOINTS);
-    //   int col = work_item & (kN / POINTS - 1);
-
-    //   // Stream fetched data over 8 channels to the FFT engine
-
-    //   PipesOut::template PipeAt<0, 0>::write(buf[row * kN + col]);
-    //   PipesOut::template PipeAt<1, 0>::write(buf[row * kN + 4 * kN / 8 + col]);
-    //   PipesOut::template PipeAt<2, 0>::write(buf[row * kN + 2 * kN / 8 + col]);
-    //   PipesOut::template PipeAt<3, 0>::write(buf[row * kN + 6 * kN / 8 + col]);
-    //   PipesOut::template PipeAt<4, 0>::write(buf[row * kN + kN / 8 + col]);
-    //   PipesOut::template PipeAt<5, 0>::write(buf[row * kN + 5 * kN / 8 + col]);
-    //   PipesOut::template PipeAt<6, 0>::write(buf[row * kN + 3 * kN / 8 + col]);
-    //   PipesOut::template PipeAt<7, 0>::write(buf[row * kN + 7 * kN / 8 + col]);
-    // }
   }
-}
+};
 
 /* This single work-item task wraps the FFT engine
  * 'inverse' toggles between the direct and the inverse transform
  */
-template <int logn, typename PipesIn, typename PipesOut, typename T>
-void FFT(int inverse) {
-  constexpr int kN = (1 << logn);
+template <int logn, typename PipeIn, typename PipeOut, typename T>
+struct FFT {
+  int inverse;
 
-  // Make sure a pipe array of the correct size was given
-  // static_assert(PipesIn::template GetDimSize<0>() == kN && PipesIn::template
-  // GetDimSize<1>() == 1,
-  //               "The provided input pipe array is of the incorrect size.");
-  // static_assert(PipesOut::template GetDimSize<0>() == kN &&
-  // PipesOut::template GetDimSize<1>() == 1,
-  //               "The provided output pipe array is of the incorrect size.");
+  FFT(int inverse_) : inverse(inverse_) {}
 
-  /* The FFT engine requires a sliding window for data reordering; data stored
-   * in this array is carried across loop iterations and shifted by 1 element
-   * every iteration; all loop dependencies derived from the uses of this
-   * array are simple transfers between adjacent array elements
-   */
+  void operator()() const {
+    constexpr int kN = (1 << logn);
 
-  ac_complex<T> fft_delay_elements[kN + POINTS * (logn - 2)];
+    // Make sure a pipe array of the correct size was given
+    // static_assert(PipeIn::template GetDimSize<0>() == kN && PipeIn::template
+    // GetDimSize<1>() == 1,
+    //               "The provided input pipe array is of the incorrect size.");
+    // static_assert(PipeOut::template GetDimSize<0>() == kN &&
+    // PipeOut::template GetDimSize<1>() == 1,
+    //               "The provided output pipe array is of the incorrect size.");
 
-  // needs to run "kN / 8 - 1" additional iterations to drain the last outputs
-  for (unsigned i = 0; i < kN * (kN / POINTS) + kN / POINTS - 1; i++) {
-    std::array<ac_complex<T>, 8> data;
+    /* The FFT engine requires a sliding window for data reordering; data stored
+     * in this array is carried across loop iterations and shifted by 1 element
+     * every iteration; all loop dependencies derived from the uses of this
+     * array are simple transfers between adjacent array elements
+     */
 
-    // Read data from channels
-    if (i < kN * (kN / POINTS)) {
-      data[0] = PipesIn::template PipeAt<0, 0>::read();
-      data[1] = PipesIn::template PipeAt<1, 0>::read();
-      data[2] = PipesIn::template PipeAt<2, 0>::read();
-      data[3] = PipesIn::template PipeAt<3, 0>::read();
-      data[4] = PipesIn::template PipeAt<4, 0>::read();
-      data[5] = PipesIn::template PipeAt<5, 0>::read();
-      data[6] = PipesIn::template PipeAt<6, 0>::read();
-      data[7] = PipesIn::template PipeAt<7, 0>::read();
-    } else {
-      data[0] = data[1] = data[2] = data[3] = data[4] = data[5] = data[6] =
-          data[7] = 0;
-    }
+    ac_complex<T> fft_delay_elements[kN + POINTS * (logn - 2)];
 
-    // PRINTF("iteration %d\n", i);
-    // PRINTF("READ\n");
-    // for (int j =0; j<8; j++){
-    //   PRINTF("data[%d] = %f %f\n", j, data[j].r(), data[j].i());
-    // }
+    // needs to run "kN / 8 - 1" additional iterations to drain the last outputs
+    for (unsigned i = 0; i < kN * (kN / POINTS) + kN / POINTS - 1; i++) {
+      std::array<ac_complex<T>, 8> data;
 
-    // exit(0);
-    // Perform one FFT step
-    data = FFTStep<logn>(data, i % (kN / POINTS), fft_delay_elements, inverse);
+      // Read data from channels
+      if (i < kN * (kN / POINTS)) {
+        data = PipeIn::read();
+      } else {
+        data[0] = data[1] = data[2] = data[3] = data[4] = data[5] = data[6] =
+            data[7] = 0;
+      }
 
-    // PRINTF("WRITE\n");
-    // for (int j =0; j<8; j++){
-    //   PRINTF("data[%d] = %f %f\n", j, data[j].r(), data[j].i());
-    // }
-    // Write result to channels
-    if (i >= kN / POINTS - 1) {
-      PipesOut::template PipeAt<0, 0>::write(data[0]);
-      PipesOut::template PipeAt<1, 0>::write(data[1]);
-      PipesOut::template PipeAt<2, 0>::write(data[2]);
-      PipesOut::template PipeAt<3, 0>::write(data[3]);
-      PipesOut::template PipeAt<4, 0>::write(data[4]);
-      PipesOut::template PipeAt<5, 0>::write(data[5]);
-      PipesOut::template PipeAt<6, 0>::write(data[6]);
-      PipesOut::template PipeAt<7, 0>::write(data[7]);
+      // Perform one FFT step
+      data = FFTStep<logn>(data, i % (kN / POINTS), fft_delay_elements, inverse);
+
+      // Write result to channels
+      if (i >= kN / POINTS - 1) {
+        PipeOut::write(data);
+      }
     }
   }
-}
+};
 
 /* This kernel receives the FFT results, buffers 8 rows and then writes the
  * results transposed in memory. Because 8 rows are buffered, 8 consecutive
@@ -712,17 +661,17 @@ void FFT(int inverse) {
  * higher memory access efficiency
  */
 using sycl::ext::intel::experimental::property::usm::buffer_location;
-template <int logn, typename PipesIn, typename T>
+template <int logn, typename PipeIn, typename T>
 struct Transpose {
   // register_map_mmhost(0,    // buffer_location or aspace
   //                     64,   // address width
   //                     512,  // data width
   //                     16,   // ! latency, must be at least 16
-  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-  //                     512,    // maxburst
-  //                     0,    // align, 0 defaults to alignment of the type
-  //                     1     // waitrequest, 0: false, 1: true
-  //                     ) 
+  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2:
+  //                     Write 512,    // maxburst 0,    // align, 0 defaults to
+  //                     alignment of the type 1     // waitrequest, 0: false,
+  //                     1: true
+  //                     )
   ac_complex<T> *dest;
   int mangle;
 
@@ -734,43 +683,42 @@ struct Transpose {
     constexpr int kWorkGroupSize = kN;
     constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
 
-    // using BurstCoalescedLSU = ext::intel::lsu<ext::intel::burst_coalesce<true>,
+    // using BurstCoalescedLSU =
+    // ext::intel::lsu<ext::intel::burst_coalesce<true>,
     //                                  ext::intel::statically_coalesce<true>>;
 
     for (int t = 0; t < kIterations; t++) {
       ac_complex<T> buf[POINTS * kN];
       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-        buf[8 * work_item] = PipesIn::template PipeAt<0, 0>::read();
-        buf[8 * work_item + 1] = PipesIn::template PipeAt<1, 0>::read();
-        buf[8 * work_item + 2] = PipesIn::template PipeAt<2, 0>::read();
-        buf[8 * work_item + 3] = PipesIn::template PipeAt<3, 0>::read();
-        buf[8 * work_item + 4] = PipesIn::template PipeAt<4, 0>::read();
-        buf[8 * work_item + 5] = PipesIn::template PipeAt<5, 0>::read();
-        buf[8 * work_item + 6] = PipesIn::template PipeAt<6, 0>::read();
-        buf[8 * work_item + 7] = PipesIn::template PipeAt<7, 0>::read();
+        std::array<ac_complex<T>, 8> from_pipe = PipeIn::read();
+
+#pragma unroll
+        for (int k = 0; k < 8; k++) {
+          buf[8 * work_item + k] = from_pipe[k];
+        }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize/8; work_item++) {
+      for (int work_item = 0; work_item < kWorkGroupSize / 8; work_item++) {
         int colt = work_item;
 
         // [[intel::fpga_register]]
         ac_complex<T> local_buf[8][8];
-        for (int wi=0; wi<8; wi++){
-          #pragma unroll
-          for(int k=0; k<8; k++){
-            local_buf[wi][k] =  buf[wi * kN + colt*8 + k];
+        for (int wi = 0; wi < 8; wi++) {
+#pragma unroll
+          for (int k = 0; k < 8; k++) {
+            local_buf[wi][k] = buf[wi * kN + colt * 8 + k];
           }
         }
 
         // [[intel::ivdep]]
-        for (int k=0; k<8; k++){
-          int revcolt = BitReversed(colt*8+k, logn);
+        for (int k = 0; k < 8; k++) {
+          int revcolt = BitReversed(colt * 8 + k, logn);
           int i = (t * kN + revcolt) >> logn;
           int where = revcolt * kN + i * POINTS;
           if (mangle) where = MangleBits<logn>(where);
 
 #pragma unroll
-          for(int kk =0; kk<8; kk++){
+          for (int kk = 0; kk < 8; kk++) {
             dest[where + kk] = local_buf[kk][k];
           }
         }

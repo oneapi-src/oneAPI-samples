@@ -164,29 +164,12 @@ void TestFFT(bool mangle, bool inverse) {
     double start_time{};
     double end_time{};
 
-    constexpr int kPipeDepth = 0;
-    constexpr int kPipeArrayRows = 8;
-    constexpr int kPipeArrayColumns = 1;
-
-    using FetchToFFT = fpga_tools::PipeArray<  // Defined in "pipe_utils.hpp".
-        class FetchToFFTPipe,                  // An identifier for the pipe.
-        ac_complex<float>,                     // The type of data in the pipe.
-        kPipeDepth,                            // The capacity of each pipe.
-        kPipeArrayRows,                        // array dimension.
-        kPipeArrayColumns                      // array dimension.
-        >;
-
+    using FetchToFFT =
+        sycl::ext::intel::pipe<class FetchToFFTPipe,
+                               std::array<ac_complex<float>, 8>, 0>;
     using FFTToTranspose =
-        fpga_tools::PipeArray<         // Defined in "pipe_utils.hpp".
-            class FFTToTransposePipe,  // An identifier for the pipe.
-            ac_complex<float>,         // The type of data in the pipe.
-            kPipeDepth,                // The capacity of each pipe.
-            kPipeArrayRows,            // array dimension.
-            kPipeArrayColumns          // array dimension.
-            >;
-
-    // using FetchToFFT = sycl::ext::intel::pipe<class FetchToFFTPipe, std::array<ac_complex<float>, 8>, 0>;
-    // using FFTToTranspose = sycl::ext::intel::pipe<class FFTToTransposePipe, std::array<ac_complex<float>, 8>, 0>;
+        sycl::ext::intel::pipe<class FFTToTransposePipe,
+                               std::array<ac_complex<float>, 8>, 0>;
 
     for (int i = 0; i < 2; i++) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
@@ -195,11 +178,11 @@ void TestFFT(bool mangle, bool inverse) {
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Fetch<logn, FetchToFFT>(to_read, mangle);
+        Fetch<logn, FetchToFFT, float>{to_read, mangle}();
       });
 
       q.single_task<class FFTKernel>([=]() [[intel::kernel_args_restrict]] {
-        FFT<logn, FetchToFFT, FFTToTranspose, float>(inverse);
+        FFT<logn, FetchToFFT, FFTToTranspose, float>{inverse}();
       });
 
       auto transpose_event = q.single_task<class TransposeKernel>([=
@@ -224,8 +207,7 @@ void TestFFT(bool mangle, bool inverse) {
     q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
 
-    std::cout << "Processing time = " << kernel_runtime << "s"
-              << std::endl;
+    std::cout << "Processing time = " << kernel_runtime << "s" << std::endl;
 
     double gpoints_per_sec = ((double)kN * kN / kernel_runtime) * 1e-9;
     double gflops = 2 * 5 * kN * kN * (log((float)kN) / log((float)2)) /
