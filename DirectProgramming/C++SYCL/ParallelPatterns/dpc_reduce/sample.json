@@ -16,10 +16,10 @@
       "id": "dpc_reduce",
       "steps": [
         "export I_MPI_CXX=icpx",
- 	      "mkdir build",
- 	      "cd build",
- 	      "cmake ..",
- 	      "make", 
+        "mkdir build",
+        "cd build",
+        "cmake ..",
+        "make", 
         "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./dpc_reduce"
         ]
       }
