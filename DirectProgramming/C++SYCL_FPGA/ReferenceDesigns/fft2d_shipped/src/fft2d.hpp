@@ -2,8 +2,11 @@
 #define __FFT2D_HPP__
 
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
-#include "pipe_utils.hpp"
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/prototype/interfaces.hpp>
+#include <sycl/sycl.hpp>
 
+#include "pipe_utils.hpp"
 
 #ifdef __SYCL_DEVICE_ONLY__
 #define CL_CONSTANT __attribute__((opencl_constant))
@@ -18,7 +21,6 @@ using namespace sycl;
     static const CL_CONSTANT char _format[] = format;          \
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
-
 
 /*
  * A 2D FFT transform requires applying a 1D FFT transform to each matrix row
@@ -179,8 +181,8 @@ ac_complex<T> Delay(ac_complex<T> data, int depth, ac_complex<T> *shift_reg) {
 
 template <typename T>
 std::array<ac_complex<T>, 8> ReorderData(std::array<ac_complex<T>, 8> data,
-                                        int depth, ac_complex<T> *shift_reg,
-                                        bool toggle) {
+                                         int depth, ac_complex<T> *shift_reg,
+                                         bool toggle) {
   // Use disconnected segments of length 'depth + 1' elements starting at
   // 'shift_reg' to implement the delay elements. At the end of each FFT step,
   // the contents of the entire buffer is shifted by 1 element
@@ -223,7 +225,7 @@ template <int size, typename T>
 ac_complex<T> Twiddle(int index, int stage, int stream) {
   ac_complex<T> twid;
 
-// clang-format off
+  // clang-format off
   // Coalesces the twiddle tables for indexed access
   T twiddles_cos[TWID_STAGES][6][512] = {
       {
@@ -309,7 +311,7 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
         {-0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f, -0.0f, -0.9238795042f, -0.7071067691f, 0.3826834261f}
       }
     };
-// clang-format on
+  // clang-format on
 
   // Use the precomputed twiddle fators, if available - otherwise, compute them
   int twid_stage = stage >> 1;
@@ -358,7 +360,7 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
 // FFT complex rotation building block
 template <int size, typename T>
 std::array<ac_complex<T>, 8> ComplexRotate(std::array<ac_complex<T>, 8> data,
-                                          int index, int stage) {
+                                           int index, int stage) {
   data[1] *= Twiddle<size, T>(index, stage, 0);
   data[2] *= Twiddle<size, T>(index, stage, 1);
   data[3] *= Twiddle<size, T>(index, stage, 2);
@@ -382,9 +384,10 @@ std::array<ac_complex<T>, 8> ComplexRotate(std::array<ac_complex<T>, 8> data,
 //        propagated throughout the code to achieve efficient hardware
 //
 template <int logn, typename T>
-std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data, int step,
-                                    ac_complex<T> *fft_delay_elements,
-                                    bool inverse) {
+std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
+                                     int step,
+                                     ac_complex<T> *fft_delay_elements,
+                                     bool inverse) {
   constexpr int size = 1 << logn;
 
   // Swap real and imaginary components if doing an inverse transform
@@ -517,7 +520,8 @@ void Fetch(ac_complex<T> *src, int mangle) {
   constexpr int kN = (1 << logn);
 
   // Make sure a pipe array of the correct size was given
-  // static_assert(PipesOut::template GetDimSize<0>() == kN && PipesOut::template GetDimSize<1>() == 1,
+  // static_assert(PipesOut::template GetDimSize<0>() == kN &&
+  // PipesOut::template GetDimSize<1>() == 1,
   //               "The provided pipe array is of the incorrect size.");
 
   constexpr int kWorkGroupSize = kN;
@@ -525,17 +529,20 @@ void Fetch(ac_complex<T> *src, int mangle) {
 
   for (int i = 0; i < kIterations; i++) {
     // Local memory for storing 8 rows
+    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
+    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+    [[intel::fpga_memory]]        // NO-FORMAT: Attribute
     ac_complex<T> buf[8 * kN];
-    for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
 
+    for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
       // Each read fetches 8 matrix points
       int x = (i * kN + work_item) << LOGPOINTS;
 
       /* When using the alternative memory layout, each row consists of a set of
-       * segments placed far apart in memory. Instead of reading all segments from
-       * one row in order, read one segment from each row before switching to the
-       *  next segment. This requires swapping bits log(N) + 2 ... log(N) with
-       *  bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
+       * segments placed far apart in memory. Instead of reading all segments
+       * from one row in order, read one segment from each row before switching
+       * to the next segment. This requires swapping bits log(N) + 2 ... log(N)
+       * with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
        */
 
       int where, where_global;
@@ -553,31 +560,77 @@ void Fetch(ac_complex<T> *src, int mangle) {
         where_global = where;
       }
 
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1))] = src[where_global];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 1] = src[where_global + 1];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 2] = src[where_global + 2];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 3] = src[where_global + 3];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 4] = src[where_global + 4];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 5] = src[where_global + 5];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 6] = src[where_global + 6];
-      buf[(where & ((1 << (logn + LOGPOINTS)) - 1)) + 7] = src[where_global + 7];
+      auto base_addr = (where & ((1 << (logn + LOGPOINTS)) - 1));
+
+      buf[base_addr + 0] = src[where_global];
+      buf[base_addr + 1] = src[where_global + 1];
+      buf[base_addr + 2] = src[where_global + 2];
+      buf[base_addr + 3] = src[where_global + 3];
+      buf[base_addr + 4] = src[where_global + 4];
+      buf[base_addr + 5] = src[where_global + 5];
+      buf[base_addr + 6] = src[where_global + 6];
+      buf[base_addr + 7] = src[where_global + 7];
+
+      // PRINTF("Writing at %d at iteration %d\n", (where & ((1 << (logn +
+      // LOGPOINTS)) - 1)), work_item);
     }
 
-    for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
-      int row = work_item >> (logn - LOGPOINTS);
-      int col = work_item & (kN / POINTS - 1);
 
-      // Stream fetched data over 8 channels to the FFT engine
 
-      PipesOut::template PipeAt<0, 0>::write(buf[row * kN + col]);
-      PipesOut::template PipeAt<1, 0>::write(buf[row * kN + 4 * kN / 8 + col]);
-      PipesOut::template PipeAt<2, 0>::write(buf[row * kN + 2 * kN / 8 + col]);
-      PipesOut::template PipeAt<3, 0>::write(buf[row * kN + 6 * kN / 8 + col]);
-      PipesOut::template PipeAt<4, 0>::write(buf[row * kN + kN / 8 + col]);
-      PipesOut::template PipeAt<5, 0>::write(buf[row * kN + 5 * kN / 8 + col]);
-      PipesOut::template PipeAt<6, 0>::write(buf[row * kN + 3 * kN / 8 + col]);
-      PipesOut::template PipeAt<7, 0>::write(buf[row * kN + 7 * kN / 8 + col]);
+    // PRINTF("buf:\n");
+    // for(int kk=0; kk<kWorkGroupSize; kk++){
+    //   for (int k=0; k<8; k++){
+    //     PRINTF("(%f, %f) ", buf[kk * 8 + k ].r(), buf[kk * 8 + k ].i());
+    //   }
+    //   PRINTF("\n");
+    // }
+
+    for (int work_item = 0; work_item < kWorkGroupSize/8; work_item++) {
+      int row = (work_item*8) >> (logn - LOGPOINTS);
+      int col = (work_item*8) & (kN / POINTS - 1);
+
+      // [[intel::fpga_register]]
+      ac_complex<T> local_buf[8][8];
+      for (int wi=0; wi<8; wi++){
+        #pragma unroll
+        for(int k=0; k<8; k++){
+          local_buf[wi][k] =  buf[row * kN + wi *kN/8 + col + k];
+        }
+      }
+
+      for (int k=0; k<8; k++){
+
+        // Stream fetched data over 8 channels to the FFT engine
+
+        PipesOut::template PipeAt<0, 0>::write(local_buf[0][k]);
+        PipesOut::template PipeAt<1, 0>::write(local_buf[4][k]);
+        PipesOut::template PipeAt<2, 0>::write(local_buf[2][k]);
+        PipesOut::template PipeAt<3, 0>::write(local_buf[6][k]);
+        PipesOut::template PipeAt<4, 0>::write(local_buf[1][k]);
+        PipesOut::template PipeAt<5, 0>::write(local_buf[5][k]);
+        PipesOut::template PipeAt<6, 0>::write(local_buf[3][k]);
+        PipesOut::template PipeAt<7, 0>::write(local_buf[7][k]);
+      }
+
     }
+
+    // exit(0);
+
+    // for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+    //   int row = work_item >> (logn - LOGPOINTS);
+    //   int col = work_item & (kN / POINTS - 1);
+
+    //   // Stream fetched data over 8 channels to the FFT engine
+
+    //   PipesOut::template PipeAt<0, 0>::write(buf[row * kN + col]);
+    //   PipesOut::template PipeAt<1, 0>::write(buf[row * kN + 4 * kN / 8 + col]);
+    //   PipesOut::template PipeAt<2, 0>::write(buf[row * kN + 2 * kN / 8 + col]);
+    //   PipesOut::template PipeAt<3, 0>::write(buf[row * kN + 6 * kN / 8 + col]);
+    //   PipesOut::template PipeAt<4, 0>::write(buf[row * kN + kN / 8 + col]);
+    //   PipesOut::template PipeAt<5, 0>::write(buf[row * kN + 5 * kN / 8 + col]);
+    //   PipesOut::template PipeAt<6, 0>::write(buf[row * kN + 3 * kN / 8 + col]);
+    //   PipesOut::template PipeAt<7, 0>::write(buf[row * kN + 7 * kN / 8 + col]);
+    // }
   }
 }
 
@@ -589,9 +642,11 @@ void FFT(int inverse) {
   constexpr int kN = (1 << logn);
 
   // Make sure a pipe array of the correct size was given
-  // static_assert(PipesIn::template GetDimSize<0>() == kN && PipesIn::template GetDimSize<1>() == 1,
+  // static_assert(PipesIn::template GetDimSize<0>() == kN && PipesIn::template
+  // GetDimSize<1>() == 1,
   //               "The provided input pipe array is of the incorrect size.");
-  // static_assert(PipesOut::template GetDimSize<0>() == kN && PipesOut::template GetDimSize<1>() == 1,
+  // static_assert(PipesOut::template GetDimSize<0>() == kN &&
+  // PipesOut::template GetDimSize<1>() == 1,
   //               "The provided output pipe array is of the incorrect size.");
 
   /* The FFT engine requires a sliding window for data reordering; data stored
@@ -656,49 +711,72 @@ void FFT(int inverse) {
  * consecutive rows are closer in memory, and this is also beneficial for
  * higher memory access efficiency
  */
-
+using sycl::ext::intel::experimental::property::usm::buffer_location;
 template <int logn, typename PipesIn, typename T>
-void Transpose(ac_complex<T> *dest, int mangle) {
-  constexpr int kN = (1 << logn);
+struct Transpose {
+  // register_map_mmhost(0,    // buffer_location or aspace
+  //                     64,   // address width
+  //                     512,  // data width
+  //                     16,   // ! latency, must be at least 16
+  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+  //                     512,    // maxburst
+  //                     0,    // align, 0 defaults to alignment of the type
+  //                     1     // waitrequest, 0: false, 1: true
+  //                     ) 
+  ac_complex<T> *dest;
+  int mangle;
 
-  // Make sure a pipe array of the correct size was given
-  // static_assert(PipesIn::template GetDimSize<0>() == kN && PipesIn::template GetDimSize<1>() == 1,
-  //               "The provided input pipe array is of the incorrect size.");
+  Transpose(ac_complex<T> *dest_, int mangle_) : dest(dest_), mangle(mangle_) {}
 
-  constexpr int kWorkGroupSize = kN;
-  constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+  void operator()() const {
+    constexpr int kN = (1 << logn);
 
-  for (int t = 0; t < kIterations; t++) {
-    ac_complex<T> buf[POINTS * kN];
-    for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
+    constexpr int kWorkGroupSize = kN;
+    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
 
-      buf[8 * work_item] = PipesIn::template PipeAt<0, 0>::read();
-      buf[8 * work_item + 1] = PipesIn::template PipeAt<1, 0>::read();
-      buf[8 * work_item + 2] = PipesIn::template PipeAt<2, 0>::read();
-      buf[8 * work_item + 3] = PipesIn::template PipeAt<3, 0>::read();
-      buf[8 * work_item + 4] = PipesIn::template PipeAt<4, 0>::read();
-      buf[8 * work_item + 5] = PipesIn::template PipeAt<5, 0>::read();
-      buf[8 * work_item + 6] = PipesIn::template PipeAt<6, 0>::read();
-      buf[8 * work_item + 7] = PipesIn::template PipeAt<7, 0>::read();
-    }
+    // using BurstCoalescedLSU = ext::intel::lsu<ext::intel::burst_coalesce<true>,
+    //                                  ext::intel::statically_coalesce<true>>;
 
-    for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
+    for (int t = 0; t < kIterations; t++) {
+      ac_complex<T> buf[POINTS * kN];
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+        buf[8 * work_item] = PipesIn::template PipeAt<0, 0>::read();
+        buf[8 * work_item + 1] = PipesIn::template PipeAt<1, 0>::read();
+        buf[8 * work_item + 2] = PipesIn::template PipeAt<2, 0>::read();
+        buf[8 * work_item + 3] = PipesIn::template PipeAt<3, 0>::read();
+        buf[8 * work_item + 4] = PipesIn::template PipeAt<4, 0>::read();
+        buf[8 * work_item + 5] = PipesIn::template PipeAt<5, 0>::read();
+        buf[8 * work_item + 6] = PipesIn::template PipeAt<6, 0>::read();
+        buf[8 * work_item + 7] = PipesIn::template PipeAt<7, 0>::read();
+      }
 
-      int colt = work_item;
-      int revcolt = BitReversed(colt, logn);
-      int i = (t * kN + work_item) >> logn;
-      int where = colt * kN + i * POINTS;
-      if (mangle) where = MangleBits<logn>(where);
-      dest[where] = buf[revcolt];
-      dest[where + 1] = buf[kN + revcolt];
-      dest[where + 2] = buf[2 * kN + revcolt];
-      dest[where + 3] = buf[3 * kN + revcolt];
-      dest[where + 4] = buf[4 * kN + revcolt];
-      dest[where + 5] = buf[5 * kN + revcolt];
-      dest[where + 6] = buf[6 * kN + revcolt];
-      dest[where + 7] = buf[7 * kN + revcolt];
+      for (int work_item = 0; work_item < kWorkGroupSize/8; work_item++) {
+        int colt = work_item;
+
+        // [[intel::fpga_register]]
+        ac_complex<T> local_buf[8][8];
+        for (int wi=0; wi<8; wi++){
+          #pragma unroll
+          for(int k=0; k<8; k++){
+            local_buf[wi][k] =  buf[wi * kN + colt*8 + k];
+          }
+        }
+
+        // [[intel::ivdep]]
+        for (int k=0; k<8; k++){
+          int revcolt = BitReversed(colt*8+k, logn);
+          int i = (t * kN + revcolt) >> logn;
+          int where = revcolt * kN + i * POINTS;
+          if (mangle) where = MangleBits<logn>(where);
+
+#pragma unroll
+          for(int kk =0; kk<8; kk++){
+            dest[where + kk] = local_buf[kk][k];
+          }
+        }
+      }
     }
   }
-}
+};
 
 #endif /* __FFT2D_HPP__ */

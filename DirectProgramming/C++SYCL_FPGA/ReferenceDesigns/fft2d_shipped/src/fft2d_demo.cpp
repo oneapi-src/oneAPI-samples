@@ -124,18 +124,18 @@ void TestFFT(bool mangle, bool inverse) {
     ac_complex<float> *temp_data;
 
     if (q.get_device().has(sycl::aspect::usm_device_allocations)) {
-      std::cout << "Using device allocations" << std::endl;
+      std::cout << "Using USM device allocations" << std::endl;
       // Allocate FPGA DDR memory.
       input_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
       output_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
       temp_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
     } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
-      std::cout << "Using shared allocations" << std::endl;
+      std::cout << "Using USM host allocations" << std::endl;
       // No device allocations means that we are probably in an IP authoring
       // flow
-      input_data = sycl::malloc_shared<ac_complex<float>>(kN * kN, q);
-      output_data = sycl::malloc_shared<ac_complex<float>>(kN * kN, q);
-      temp_data = sycl::malloc_shared<ac_complex<float>>(kN * kN, q);
+      input_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
+      output_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
+      temp_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
     } else {
       std::cerr << "USM device allocations or USM shared allocations must be "
                    "supported to run this sample."
@@ -185,6 +185,9 @@ void TestFFT(bool mangle, bool inverse) {
             kPipeArrayColumns          // array dimension.
             >;
 
+    // using FetchToFFT = sycl::ext::intel::pipe<class FetchToFFTPipe, std::array<ac_complex<float>, 8>, 0>;
+    // using FFTToTranspose = sycl::ext::intel::pipe<class FFTToTransposePipe, std::array<ac_complex<float>, 8>, 0>;
+
     for (int i = 0; i < 2; i++) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
       ac_complex<float> *to_write = i == 0 ? temp_data : output_data;
@@ -201,7 +204,7 @@ void TestFFT(bool mangle, bool inverse) {
 
       auto transpose_event = q.single_task<class TransposeKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Transpose<logn, FFTToTranspose>(to_write, mangle);
+        Transpose<logn, FFTToTranspose, float>{to_write, mangle}();
       });
 
       transpose_event.wait();
@@ -215,18 +218,18 @@ void TestFFT(bool mangle, bool inverse) {
       }
     }
 
-    double kernel_runtime = (end_time - start_time);
+    double kernel_runtime = (end_time - start_time) / 1.0e9;
 
     // Copy the output data from the USM memory to the host DDR
     q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
 
-    std::cout << "Processing time = " << (float)(kernel_runtime * 1E3) << "ms"
+    std::cout << "Processing time = " << kernel_runtime << "s"
               << std::endl;
 
-    double gpoints_per_sec = ((double)kN * kN / kernel_runtime) * 1E-9;
+    double gpoints_per_sec = ((double)kN * kN / kernel_runtime) * 1e-9;
     double gflops = 2 * 5 * kN * kN * (log((float)kN) / log((float)2)) /
-                    (kernel_runtime * 1E9);
+                    (kernel_runtime * 1e9);
 
     std::cout << "Throughput = " << gpoints_per_sec << " Gpoints / sec ("
               << gflops << " Gflops)" << std::endl;
@@ -282,8 +285,8 @@ void TestFFT(bool mangle, bool inverse) {
     }
     double db = 10 * log(magnitude_sum / noise_sum) / log(10.0);
 
-    std::cout << "Signal to noise ratio on output sample: " << db << " --> "
-              << (db > 120 ? "PASSED" : "FAILED") << std::endl;
+    std::cout << "Signal to noise ratio on output sample: " << db << std::endl;
+    std::cout << " --> " << (db > 120 ? "PASSED" : "FAILED") << std::endl;
 
     free(input_data, q);
     free(output_data, q);
