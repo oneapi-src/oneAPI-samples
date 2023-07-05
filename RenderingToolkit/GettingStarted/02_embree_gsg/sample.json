@@ -7,7 +7,8 @@
   "languages": [{"cpp":{}}],
   "dependencies": ["tbb","rkcommon"],
   "os":["linux", "windows", "darwin"],
-  "targetDevice": ["CPU"],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["dg2", "ats-m", "pvc"],
   "ciTests": {
         "linux": [
                 {
