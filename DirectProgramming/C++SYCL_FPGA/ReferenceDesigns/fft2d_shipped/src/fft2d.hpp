@@ -116,42 +116,40 @@ std::array<ac_complex<T>, points> SwapComplex(std::array<ac_complex<T>, points> 
 }
 
 // FFT trivial rotation building block
-template <typename T>
-std::array<ac_complex<T>, 8> TrivialRotate(std::array<ac_complex<T>, 8> data) {
-  ac_complex<T> tmp = data[3];
-  data[3].r() = tmp.i();
-  data[3].i() = -tmp.r();
-  tmp = data[7];
-  data[7].r() = tmp.i();
-  data[7].i() = -tmp.r();
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> TrivialRotate(std::array<ac_complex<T>, points> data) {
+#pragma unroll
+  for(int k =0; k<(points/4); k++ ){
+    ac_complex<T> tmp = data[k*4+3];
+    data[k*4+3].r() = tmp.i();
+    data[k*4+3].i() = -tmp.r();    
+  }
   return data;
 }
 
 // FFT data swap building block associated with trivial rotations
-template <typename T>
-std::array<ac_complex<T>, 8> TrivialSwap(std::array<ac_complex<T>, 8> data) {
-  ac_complex<T> tmp = data[1];
-  data[1] = data[2];
-  data[2] = tmp;
-  tmp = data[5];
-  data[5] = data[6];
-  data[6] = tmp;
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> TrivialSwap(std::array<ac_complex<T>, points> data) {
+#pragma unroll
+  for(int k =0; k<(points/4); k++ ){
+    ac_complex<T> tmp = data[k*4+1];
+    data[k*4+1] = data[k*4+2];
+    data[k*4+2] = tmp; 
+  }
   return data;
 }
 
 // FFT data swap building block associated with complex rotations
-template <typename T>
-std::array<ac_complex<T>, 8> Swap(std::array<ac_complex<T>, 8> data) {
-  ac_complex<T> tmp = data[1];
-  data[1] = data[4];
-  ac_complex<T> tmp2 = data[2];
-  data[2] = tmp;
-  tmp = data[3];
-  data[3] = data[5];
-  data[4] = tmp2;
-  data[5] = data[6];
-  data[6] = tmp;
-  return data;
+template <size_t points, typename T>
+std::array<ac_complex<T>, points> Swap(std::array<ac_complex<T>, points> data) {
+  std::array<ac_complex<T>, points> tmp;
+#pragma unroll
+  for(int k =0; k<(points/2); k++ ){
+    tmp[k + k] = data[k];
+    tmp[points - 1 - k - k] = data[points - 1 - k];
+  }
+
+  return tmp;
 }
 
 // This function "delays" the input by 'depth' steps
@@ -343,15 +341,17 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
 }
 
 // FFT complex rotation building block
-template <int size, typename T>
-std::array<ac_complex<T>, 8> ComplexRotate(std::array<ac_complex<T>, 8> data,
+template <int size, size_t points, typename T>
+std::array<ac_complex<T>, points> ComplexRotate(std::array<ac_complex<T>, points> data,
                                            int index, int stage) {
-  data[1] *= Twiddle<size, T>(index, stage, 0);
-  data[2] *= Twiddle<size, T>(index, stage, 1);
-  data[3] *= Twiddle<size, T>(index, stage, 2);
-  data[5] *= Twiddle<size, T>(index, stage, 3);
-  data[6] *= Twiddle<size, T>(index, stage, 4);
-  data[7] *= Twiddle<size, T>(index, stage, 5);
+  #pragma unroll
+  for(int group =0; group<points/4; group++){
+    #pragma unroll
+    for(int k=1; k<4; k++){
+      int idx = group*3 + k - 1;
+      data[k + group *4] *= Twiddle<size, T>(index, stage, idx);
+    }
+  }
   return data;
 }
 
@@ -368,8 +368,8 @@ std::array<ac_complex<T>, 8> ComplexRotate(std::array<ac_complex<T>, 8> data,
 // 'logn' should be a COMPILE TIME constant evaluating log(N) - the constant is
 //        propagated throughout the code to achieve efficient hardware
 //
-template <int logn, typename T>
-std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
+template <int logn, size_t points, typename T>
+std::array<ac_complex<T>, points> FFTStep(std::array<ac_complex<T>, points> data,
                                      int step,
                                      ac_complex<T> *fft_delay_elements,
                                      bool inverse) {
@@ -387,7 +387,7 @@ std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
 
   // Stage 1
   data = Butterfly(data);
-  data = ComplexRotate<size>(data, step & (size / 8 - 1), 1);
+  data = ComplexRotate<size>(data, step & (size / points - 1), 1);
   data = Swap(data);
 
   // Next logn - 2 stages alternate two computation patterns - represented as
@@ -402,7 +402,7 @@ std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
     // Figure out the index of the element processed at this stage
     // Subtract (add modulo size / 8) the delay incurred as data travels
     // from one stage to the next
-    int data_index = (step + (1 << (logn - 1 - stage))) & (size / 8 - 1);
+    int data_index = (step + (1 << (logn - 1 - stage))) & (size / points - 1);
 
     data = Butterfly(data);
 
@@ -421,7 +421,7 @@ std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
     // Assign unique sections of the buffer for the set of delay elements at
     // each stage
     ac_complex<T> *head_buffer =
-        fft_delay_elements + size - (1 << (logn - stage + 2)) + 8 * (stage - 2);
+        fft_delay_elements + size - (1 << (logn - stage + 2)) + points * (stage - 2);
 
     data = ReorderData(data, delay, head_buffer, toggle);
 
@@ -438,7 +438,7 @@ std::array<ac_complex<T>, 8> FFTStep(std::array<ac_complex<T>, 8> data,
 // important, when unrolling this loop each transfer maps to a trivial
 // loop-carried dependency
 #pragma unroll
-  for (int ii = 0; ii < size + 8 * (logn - 2) - 1; ii++) {
+  for (int ii = 0; ii < size + points * (logn - 2) - 1; ii++) {
     fft_delay_elements[ii] = fft_delay_elements[ii + 1];
   }
 
@@ -500,7 +500,7 @@ int MangleBits(int x) {
  * locations in local memory, according to the requirements of the FFT engine.
  */
 
-template <int logn, typename PipeOut, typename T>
+template <int logn, size_t log_points, typename PipeOut, typename T>
 struct Fetch {
   ac_complex<T> *src;
   int mangle;
@@ -510,6 +510,7 @@ struct Fetch {
   void operator()() const {
 
     constexpr int kN = (1 << logn);
+    constexpr int kPoints = (1 << log_points);
 
     // Make sure a pipe array of the correct size was given
     // static_assert(PipeOut::template GetDimSize<0>() == kN &&
@@ -517,15 +518,15 @@ struct Fetch {
     //               "The provided pipe array is of the incorrect size.");
 
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+    constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
 
     for (int i = 0; i < kIterations; i++) {
-      // Local memory for storing 8 rows
-      ac_complex<T>  buf[8 * kN];
+      // Local memory for storing kPoints rows
+      ac_complex<T>  buf[kPoints * kN];
 
       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-        // Each read fetches 8 matrix points
-        int x = (i * kN + work_item) << LOGPOINTS;
+        // Each read fetches kPoints matrix points
+        int x = (i * kN + work_item) << log_points;
 
         /* When using the alternative memory layout, each row consists of a set of
          * segments placed far apart in memory. Instead of reading all segments
@@ -537,9 +538,9 @@ struct Fetch {
         int where, where_global;
         if (mangle) {
           constexpr int kNB = logn / 2;
-          int a1210 = x & ((POINTS - 1) << (2 * kNB));
-          int a75 = x & ((POINTS - 1) << kNB);
-          int mask = ((POINTS - 1) << kNB) | ((POINTS - 1) << (2 * kNB));
+          int a1210 = x & ((kPoints - 1) << (2 * kNB));
+          int a75 = x & ((kPoints - 1) << kNB);
+          int mask = ((kPoints - 1) << kNB) | ((kPoints - 1) << (2 * kNB));
           a1210 >>= kNB;
           a75 <<= kNB;
           where = (x & ~mask) | a1210 | a75;
@@ -549,36 +550,46 @@ struct Fetch {
           where_global = where;
         }
 
-        auto base_addr = (where & ((1 << (logn + LOGPOINTS)) - 1));
+        auto base_addr = (where & ((1 << (logn + log_points)) - 1));
 
-        buf[base_addr + 0] = src[where_global + 0];
-        buf[base_addr + 1] = src[where_global + 1];
-        buf[base_addr + 2] = src[where_global + 2];
-        buf[base_addr + 3] = src[where_global + 3];
-        buf[base_addr + 4] = src[where_global + 4];
-        buf[base_addr + 5] = src[where_global + 5];
-        buf[base_addr + 6] = src[where_global + 6];
-        buf[base_addr + 7] = src[where_global + 7];
+#pragma unroll
+        for (int k = 0; k < kPoints; k++) {
+          buf[base_addr + k] = src[where_global + k];
+        }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize / 8; work_item++) {
-        int row = (work_item * 8) >> (logn - LOGPOINTS);
-        int col = (work_item * 8) & (kN / POINTS - 1);
+      for (int work_item = 0; work_item < kWorkGroupSize / kPoints; work_item++) {
+        int row = (work_item * kPoints) >> (logn - log_points);
+        int col = (work_item * kPoints) & (kN / kPoints - 1);
 
         // [[intel::fpga_register]]
-        [[intel::private_copies(8)]]
-        ac_complex<T> local_buf[8][8];
-        for (int wi = 0; wi < 8; wi++) {
+        [[intel::private_copies(kPoints)]]
+        ac_complex<T> local_buf[kPoints][kPoints];
+        for (int wi = 0; wi < kPoints; wi++) {
   #pragma unroll
-          for (int k = 0; k < 8; k++) {
-            local_buf[wi][k] = buf[row * kN + wi * kN / 8 + col + k];
+          for (int k = 0; k < kPoints; k++) {
+            local_buf[wi][k] = buf[row * kN + wi * kN / kPoints + col + k];
           }
         }
 
-        for (int k = 0; k < 8; k++) {
-          std::array<ac_complex<T>, 8> to_pipe{
+        for (int k = 0; k < kPoints; k++) {
+          // std::array<ac_complex<T>, kPoints> to_pipe;
+          std::array<ac_complex<T>, kPoints> to_pipe{
               local_buf[0][k], local_buf[4][k], local_buf[2][k], local_buf[6][k],
               local_buf[1][k], local_buf[5][k], local_buf[3][k], local_buf[7][k]};
+
+// #pragma unroll
+//           for (int kk = 0; kk < kPoints; kk++) {
+//             to_pipe[kk] = local_buf[kk][k];
+//           }
+        // #pragma unroll
+        //   for(int kk =0; kk<(kPoints/2); kk++ ){
+        //     to_pipe[kk + kk] = local_buf[kk][k];
+        //     to_pipe[kPoints - 1 - kk - kk] = local_buf[kPoints - 1 - kk][k];
+        //   }
+
+
+
 
           // Stream fetched data to the FFT engine
           PipeOut::write(to_pipe);
@@ -648,15 +659,15 @@ struct FFT {
 using sycl::ext::intel::experimental::property::usm::buffer_location;
 template <int logn, typename PipeIn, typename T>
 struct Transpose {
-  register_map_mmhost(0,    // buffer_location or aspace
-                      64,   // address width
-                      512,  // data width
-                      500,   // ! latency, must be at least 16
-                      2,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-                      16,    // maxburst 
-                       0,    // align, 0 defaults to Write alignment of the type 
-                      1     // waitrequest, 0: false, 1: true
-                      )
+  // register_map_mmhost(0,    // buffer_location or aspace
+  //                     64,   // address width
+  //                     512,  // data width
+  //                     500,   // ! latency, must be at least 16
+  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+  //                     16,    // maxburst 
+  //                      0,    // align, 0 defaults to Write alignment of the type 
+  //                     1     // waitrequest, 0: false, 1: true
+  //                     )
   ac_complex<T> *dest;
   int mangle;
 

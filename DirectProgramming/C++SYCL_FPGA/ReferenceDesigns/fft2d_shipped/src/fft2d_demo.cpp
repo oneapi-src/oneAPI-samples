@@ -178,7 +178,7 @@ void TestFFT(bool mangle, bool inverse) {
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Fetch<logn, FetchToFFT, float>{to_read, mangle}();
+        Fetch<logn, 3, FetchToFFT, float>{to_read, mangle}();
       });
 
       q.single_task<class FFTKernel>([=]() [[intel::kernel_args_restrict]] {
