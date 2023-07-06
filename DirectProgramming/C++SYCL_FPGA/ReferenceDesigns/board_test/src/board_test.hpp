@@ -2,7 +2,10 @@
 #include <vector>
 
 #include "host_speed.hpp"
+
+#if defined(SUPPORTS_USM)
 #include "usm_speed.hpp"
+#endif
 
 // Pre-declare kernel name to prevent name mangling
 // This is an FPGA best practice that makes it easier to identify the kernel in
@@ -81,7 +84,9 @@ class ShimMetrics {
   int KernelLatency(sycl::queue &q);
   int KernelMemRW(sycl::queue &q);
   int KernelMemBW(sycl::queue &q);
+#if defined(SUPPORTS_USM)
   int USMBWTest(sycl::queue &q);
+#endif
   void ReadBinary();
 
  private:
@@ -1502,6 +1507,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
   return 0;
 }
 
+#if defined(SUPPORTS_USM)
+
 ////////////////////////////////////
 // ****** USMMemBW function ***** //
 ////////////////////////////////////
@@ -1509,9 +1516,18 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 // Inputs:
 // queue &q - queue to submit operation
 // Returns:
-// 0 if test passes, 1 if device max allocation size is 0 or verification fails
+// 0 if test passes, 1 if memory allocation or verification fails
 
-// The function does the following tasks:
+// The function does the following tasks, for each test (memcopy, read, write):
+// 1. Allocate host USM for input and output. Initialize input with random
+// values and initialize output with zero.
+// 2. Launch a kernel to perform one of the following tests:
+//      - Memcopy: copy data from input USM pointer to output USM pointer
+//      - Read: read data from input USM pointer
+//      - Write: write data to output USM pointer
+// 3. Host verifies the output data is correct
+// 4. Rerun the kernel from several more times to measure bandwidth (the first
+// iteration is slow due to one time tasks).
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
   int iterations = 1;
@@ -1521,68 +1537,55 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
   std::cout << "Data size: " << kDataSize / kMB << " MB" << std::endl;
   std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes"
             << std::endl;
-  std::cout << "-- Results Full Duplex -- " << std::endl;
 
-  for (int i = 0; i < 3; i++) {
-    std::chrono::microseconds time{0};
-    switch (i) {
+  float time;
+  double kDataSize_gb;
+
+  for (int test = 0; test < 3; test++) {
+
+    time = 0;
+    switch (test) {
     case 0: {
       // MEMCOPY
       std::cout << std::endl << "Case: Full Duplex" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
-                         sycl::vec<long, 8> *, const sycl::range<1>)> memcopy_k
-          = memcopy_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
-                         const sycl::range<1>)> verify = verify_memcopy_kernel;
-      if (run_test(q, kDataSize, iterations, memcopy_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, memcopy_kernel, verify_memcopy, time)) {
         return 1;
       }
+      // full duplex transfers twice the amount of data
+      kDataSize_gb = kDataSize * 2 / kGB;
     } break;
     case 1: {
       // READ
       std::cout << std::endl << "Case: From Host to Device" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
-                         sycl::vec<long, 8> *, const sycl::range<1>)> read_k
-          = read_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
-                         const sycl::range<1>)> verify = verify_read_kernel;
-      if (run_test(q, kDataSize, iterations, read_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, read_kernel, verify_read, time)) {
         return 1;
       }
+      kDataSize_gb = kDataSize / kGB;
     } break;
     case 2: {
       // WRITE
       std::cout << std::endl << "Case: From Device to Host" << std::endl;
-      std::function<void(sycl::queue &, sycl::vec<long, 8> *,
-                         sycl::vec<long, 8> *, const sycl::range<1>)> write_k
-          = write_kernel;
-      std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
-                         const sycl::range<1>)> verify = verify_write_kernel;
-      if (run_test(q, kDataSize, iterations, write_k, verify, time)) {
+      if (run_test(q, kDataSize, iterations, write_kernel, verify_write, time)) {
         return 1;
       }
+      kDataSize_gb = kDataSize / kGB;
     } break;
     default:
-      std::cout << "Error: Failed to launch test " << i << std::endl;
+      std::cout << "Error: Failed to launch test" << std::endl;
       return 1;
     }
+
     time /= iterations;
-    std::cout << "Average Time: " << time.count() / 1000.0 << " ms\t"
-              << std::endl;
-    double kDataSize_gb;
-    if (i == 0) {
-      // ONLY ON MEMCOPY
-      // full duplex transfers twice the amount of data
-      kDataSize_gb = kDataSize * 2 / kGB;
-    } else {
-      kDataSize_gb = kDataSize / kGB;
-    }
+    std::cout << "Average Time: " << time / 1000.0 << " ns\t" << std::endl;
     std::cout << "Average Throughput: "
-              << (kDataSize_gb / (time.count() / (1000.0 * 1000.0)))
+              << (kDataSize_gb / (time / (1000.0 * 1000.0 * 1000.0)))
               << " GB/s\t" << std::endl;
   }
+
   return 0;
 }
+
+#endif
 
 ///////////////////////////////////
 // **** ReadBinary function **** //

@@ -213,6 +213,8 @@ The `Board Test` program checks following interfaces in a platform:
 
 - **Host-to-kernel interface:** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
+- **Unified shared memory (USM) interface:** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case.
+
 - **Kernel clock frequency:** The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.
 
   >**Note**: Kernel clock frequency test measures the frequency that the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency. The test allows overriding this failure; however, overriding might lead to functional errors, and it is not recommended. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). To override, set the `report_chk` variable to `false` in `board_test.cpp` and recompile only the host code by using the `-reuse-exe=board_test.fpga` option in your compile command.
@@ -230,6 +232,7 @@ The complete board test is divided into six subtests. By default, all tests run.
 | 4            | Kernel Latency Measurement
 | 5            | Kernel-to-Memory Read Write Test
 | 6            | Kernel-to-Memory Bandwidth Test
+| 7            | Unified Shared Memory (USM) Bandwidth Test
 
 >**Note:** You should run all tests at least once to ensure that the platform interfaces are fully functional.
 

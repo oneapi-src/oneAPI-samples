@@ -209,11 +209,11 @@ int main(int argc, char* argv[]) {
       std::cout << "\n*****************************************************************\n"
                 << "***********************  USM Bandwidth  *************************\n"
                 << "*****************************************************************\n\n";
-      if (!device.has(sycl::aspect::usm_host_allocations)) {
-        std::cout << "Board does not support USM, skipping this test \n";
-      } else {
-        ret |= hldshim.USMBWTest(q);
-      }
+#if defined(SUPPORTS_USM)
+      ret |= hldshim.USMBWTest(q);
+#else
+      std::cout << "Board does not support USM, skipping this test \n";
+#endif
     }
   }  // End of try block
 
