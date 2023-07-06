@@ -1549,7 +1549,8 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
     case 0: {
       // MEMCOPY
       std::cout << std::endl << "Case: Full Duplex" << std::endl;
-      if (run_test(q, kDataSize, iterations, memcopy_kernel, verify_memcopy, time)) {
+      if (run_test(q, kDataSize, iterations, memcopy_kernel, verify_memcopy,
+                   time)) {
         return 1;
       }
       // full duplex transfers twice the amount of data
@@ -1566,7 +1567,8 @@ int ShimMetrics::USMBWTest(sycl::queue &q) {
     case 2: {
       // WRITE
       std::cout << std::endl << "Case: From Device to Host" << std::endl;
-      if (run_test(q, kDataSize, iterations, write_kernel, verify_write, time)) {
+      if (run_test(q, kDataSize, iterations, write_kernel, verify_write,
+                   time)) {
         return 1;
       }
       kDataSize_gb = kDataSize / kGB;

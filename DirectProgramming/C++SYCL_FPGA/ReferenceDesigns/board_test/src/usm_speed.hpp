@@ -1,14 +1,12 @@
-#include <sycl/sycl.hpp>
-
 class USMMemCopy;
 class USMMemRead;
 class USMMemWrite;
 
 // Launches a kernel to copy data from one USM pointer to another.
-sycl::event memcopy_kernel(sycl::queue &q,           // device queue
-                           sycl::vec<long, 8> *in,   // input pointer
-                           sycl::vec<long, 8> *out,  // output pointer
-                           int num_items             // num items to copy
+sycl::event memcopy_kernel(sycl::queue &q,          // device queue
+                           sycl::vec<long, 8> *in,  // input pointer
+                           sycl::vec<long, 8> *out, // output pointer
+                           int num_items            // num items to copy
 ) {
   return q.single_task<USMMemCopy>([=]() [[intel::kernel_args_restrict]] {
     sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
@@ -19,9 +17,9 @@ sycl::event memcopy_kernel(sycl::queue &q,           // device queue
   });
 }
 
-bool verify_memcopy(sycl::vec<long, 8> *in,   // input pointer
-                    sycl::vec<long, 8> *out,  // output pointer
-                    int num_items             // num items to verify
+bool verify_memcopy(sycl::vec<long, 8> *in,  // input pointer
+                    sycl::vec<long, 8> *out, // output pointer
+                    int num_items            // num items to verify
 ) {
   for (int i = 0; i < num_items; i++) {
     // "compare" is vector containing an element-wise "==" of in[i] and out[i]
@@ -29,8 +27,8 @@ bool verify_memcopy(sycl::vec<long, 8> *in,   // input pointer
     for (int j = 0; j < compare.size(); j++) {
       if (!compare[j]) {
         std::cerr << "ERROR: Values do not match, in[" << i << "][" << j
-                  << "]:" << in[i][j] << " != out[" << i << "][" << j << "]:"
-                  << out[i][j] << std::endl;
+                  << "]:" << in[i][j] << " != out[" << i << "][" << j
+                  << "]:" << out[i][j] << std::endl;
         return false;
       }
     }
@@ -40,10 +38,10 @@ bool verify_memcopy(sycl::vec<long, 8> *in,   // input pointer
 
 // Launches a kernel to read data from a USM pointer, sum it up, and store to an
 // output pointer.
-sycl::event read_kernel(sycl::queue &q,           // device queue
-                        sycl::vec<long, 8> *in,   // input pointer
-                        sycl::vec<long, 8> *out,  // output pointer
-                        int num_items             // num items to copy
+sycl::event read_kernel(sycl::queue &q,          // device queue
+                        sycl::vec<long, 8> *in,  // input pointer
+                        sycl::vec<long, 8> *out, // output pointer
+                        int num_items            // num items to copy
 ) {
   return q.single_task<USMMemRead>([=]() {
     sycl::host_ptr<sycl::vec<long, 8>> in_h(in);
@@ -57,9 +55,9 @@ sycl::event read_kernel(sycl::queue &q,           // device queue
   });
 }
 
-bool verify_read(sycl::vec<long, 8> *in,   // input pointer
-                 sycl::vec<long, 8> *out,  // output pointer
-                 int num_items             // num items to verify
+bool verify_read(sycl::vec<long, 8> *in,  // input pointer
+                 sycl::vec<long, 8> *out, // output pointer
+                 int num_items            // num items to verify
 ) {
   // The read kernel calculates a sum of all the values at "in" and stores it
   // at out[0]. First calculate a reference to compare to.
@@ -85,8 +83,8 @@ bool verify_read(sycl::vec<long, 8> *in,   // input pointer
     for (int j = 0; j < compare.size(); j++) {
       if (!compare[j]) {
         if (i == 0) {
-          std::cerr << "ERROR: Values do not match, answer[" << j << "]:"
-                    << answer[j];
+          std::cerr << "ERROR: Values do not match, answer[" << j
+                    << "]:" << answer[j];
         } else {
           std::cerr << "ERROR: Values do not match, 0";
         }
@@ -100,10 +98,10 @@ bool verify_read(sycl::vec<long, 8> *in,   // input pointer
 }
 
 // Launches a kernel to write data to a USM pointer.
-sycl::event write_kernel(sycl::queue &q,           // device queue
-                         sycl::vec<long, 8> *in,   // input pointer (unused)
-                         sycl::vec<long, 8> *out,  // output pointer
-                         int num_items             // num items to copy
+sycl::event write_kernel(sycl::queue &q,          // device queue
+                         sycl::vec<long, 8> *in,  // input pointer (unused)
+                         sycl::vec<long, 8> *out, // output pointer
+                         int num_items            // num items to copy
 ) {
   return q.single_task<USMMemWrite>([=]() {
     sycl::host_ptr<sycl::vec<long, 8>> out_h(out);
@@ -114,9 +112,9 @@ sycl::event write_kernel(sycl::queue &q,           // device queue
   });
 }
 
-bool verify_write(sycl::vec<long, 8> *in,   // input pointer (unused)
-                  sycl::vec<long, 8> *out,  // output pointer
-                  int num_items             // num items to verify
+bool verify_write(sycl::vec<long, 8> *in,  // input pointer (unused)
+                  sycl::vec<long, 8> *out, // output pointer
+                  int num_items            // num items to verify
 ) {
   // The write kernel writes a known value to every index of "out".
   sycl::vec<long, 8> answer{5};
@@ -126,10 +124,9 @@ bool verify_write(sycl::vec<long, 8> *in,   // input pointer (unused)
     sycl::vec<long, 8> compare = out[i] == answer;
     for (int j = 0; j < compare.size(); j++) {
       if (!compare[j]) {
-        std::cerr << "ERROR: Values do not match, answer[" << j << "]:"
-                  << answer[j]
-                  << " != out[" << i << "][" << j << "]:"
-                  << out[i][j] << std::endl;
+        std::cerr << "ERROR: Values do not match, answer[" << j
+                  << "]:" << answer[j] << " != out[" << i << "][" << j
+                  << "]:" << out[i][j] << std::endl;
         return false;
       }
     }
@@ -143,15 +140,17 @@ bool verify_write(sycl::vec<long, 8> *in,   // input pointer (unused)
 int run_test(sycl::queue &q,         // device queue
              const size_t num_bytes, // number of bytes of memory to allocate
              int iterations,         // number of times to repeat the test
-             std::function<sycl::event(sycl::queue&, sycl::vec<long, 8>*,
-                                       sycl::vec<long, 8>*, int)> kernel,
+             std::function<sycl::event(sycl::queue &, sycl::vec<long, 8> *,
+                                       sycl::vec<long, 8> *, int)>
+                 kernel, // test function
              std::function<bool(sycl::vec<long, 8> *, sycl::vec<long, 8> *,
-                                int)> verify,
-             float &time            // variable to store time take by operation
+                                int)>
+                 verify, // verifier function
+             float &time // variable to store time take by operation
 ) {
   // USM host allocation
   int num_items = num_bytes / sizeof(sycl::vec<long, 8>);
-  sycl::vec<long, 8> *in  = sycl::malloc_host<sycl::vec<long, 8>>(num_items, q);
+  sycl::vec<long, 8> *in = sycl::malloc_host<sycl::vec<long, 8>>(num_items, q);
   sycl::vec<long, 8> *out = sycl::malloc_host<sycl::vec<long, 8>>(num_items, q);
   if (in == nullptr || out == nullptr) {
     std::cerr << "Error: Out of memory, can't allocate " << num_bytes
@@ -183,7 +182,7 @@ int run_test(sycl::queue &q,         // device queue
   }
 
   // Free USM
-  sycl::free(in,  q);
+  sycl::free(in, q);
   sycl::free(out, q);
 
   return 0;
