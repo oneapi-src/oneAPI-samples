@@ -1528,6 +1528,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 // 3. Host verifies the output data is correct
 // 4. Rerun the kernel from several more times to measure bandwidth (the first
 // iteration is slow due to one time tasks).
+// 5. Calculate and report bandwidth.
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
   int iterations = 1;
