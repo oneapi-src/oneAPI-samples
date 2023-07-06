@@ -566,6 +566,7 @@ struct Fetch {
         int col = (work_item * 8) & (kN / POINTS - 1);
 
         // [[intel::fpga_register]]
+        [[intel::private_copies(8)]]
         ac_complex<T> local_buf[8][8];
         for (int wi = 0; wi < 8; wi++) {
   #pragma unroll
@@ -623,8 +624,7 @@ struct FFT {
       if (i < kN * (kN / POINTS)) {
         data = PipeIn::read();
       } else {
-        data[0] = data[1] = data[2] = data[3] = data[4] = data[5] = data[6] =
-            data[7] = 0;
+        data = std::array<ac_complex<T>, 8>{0};
       }
 
       // Perform one FFT step
@@ -648,15 +648,15 @@ struct FFT {
 using sycl::ext::intel::experimental::property::usm::buffer_location;
 template <int logn, typename PipeIn, typename T>
 struct Transpose {
-  // register_map_mmhost(0,    // buffer_location or aspace
-  //                     64,   // address width
-  //                     512,  // data width
-  //                     16,   // ! latency, must be at least 16
-  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2:
-  //                     Write 512,    // maxburst 0,    // align, 0 defaults to
-  //                     alignment of the type 1     // waitrequest, 0: false,
-  //                     1: true
-  //                     )
+  register_map_mmhost(0,    // buffer_location or aspace
+                      64,   // address width
+                      512,  // data width
+                      500,   // ! latency, must be at least 16
+                      2,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+                      16,    // maxburst 
+                       0,    // align, 0 defaults to Write alignment of the type 
+                      1     // waitrequest, 0: false, 1: true
+                      )
   ac_complex<T> *dest;
   int mangle;
 
@@ -687,6 +687,7 @@ struct Transpose {
         int colt = work_item;
 
         // [[intel::fpga_register]]
+        [[intel::private_copies(8)]]
         ac_complex<T> local_buf[POINTS][POINTS];
         for (int wi = 0; wi < POINTS; wi++) {
 #pragma unroll
@@ -695,7 +696,7 @@ struct Transpose {
           }
         }
 
-        // [[intel::ivdep]]
+        [[intel::ivdep]]
         for (int k = 0; k < POINTS; k++) {
           int revcolt = BitReversed(colt * POINTS + k, logn);
           int i = (t * kN + revcolt) >> logn;
@@ -706,6 +707,8 @@ struct Transpose {
           for (int kk = 0; kk < POINTS; kk++) {
             dest[where + kk] = local_buf[kk][k];
           }
+
+
         }
       }
     }
