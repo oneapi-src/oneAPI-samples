@@ -15,6 +15,7 @@
 		"linux": [{
 			"id": "icx",
 			"steps": [
+				"cd linux",
 				"make icx",
 				"make run"
 			]
