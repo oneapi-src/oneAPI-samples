@@ -1531,61 +1531,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 // 5. Calculate and report bandwidth.
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
-  int iterations = 1;
-  constexpr size_t kDataSize = 1024 * 1024 * 1024;
-
-  std::cout << "Iterations: " << iterations << std::endl;
-  std::cout << "Data size: " << kDataSize / kMB << " MB" << std::endl;
-  std::cout << "Data type size: " << sizeof(sycl::vec<long, 8>) << " bytes"
-            << std::endl;
-
-  float time;
-  double kDataSize_gb;
-
-  for (int test = 0; test < 3; test++) {
-
-    time = 0;
-    switch (test) {
-    case 0: {
-      // MEMCOPY
-      std::cout << std::endl << "Case: Full Duplex" << std::endl;
-      if (run_test(q, kDataSize, iterations, memcopy_kernel, verify_memcopy,
-                   time)) {
-        return 1;
-      }
-      // full duplex transfers twice the amount of data
-      kDataSize_gb = kDataSize * 2 / kGB;
-    } break;
-    case 1: {
-      // READ
-      std::cout << std::endl << "Case: From Host to Device" << std::endl;
-      if (run_test(q, kDataSize, iterations, read_kernel, verify_read, time)) {
-        return 1;
-      }
-      kDataSize_gb = kDataSize / kGB;
-    } break;
-    case 2: {
-      // WRITE
-      std::cout << std::endl << "Case: From Device to Host" << std::endl;
-      if (run_test(q, kDataSize, iterations, write_kernel, verify_write,
-                   time)) {
-        return 1;
-      }
-      kDataSize_gb = kDataSize / kGB;
-    } break;
-    default:
-      std::cout << "Error: Failed to launch test" << std::endl;
-      return 1;
-    }
-
-    time /= iterations;
-    std::cout << "Average Time: " << time / 1000.0 << " ns\t" << std::endl;
-    std::cout << "Average Throughput: "
-              << (kDataSize_gb / (time / (1000.0 * 1000.0 * 1000.0)))
-              << " GB/s\t" << std::endl;
-  }
-
-  return 0;
+  return run_test(q, MEMCOPY) & run_test(q, READ) & run_test(q, WRITE);
 }
 
 #endif
