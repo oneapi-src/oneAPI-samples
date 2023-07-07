@@ -125,7 +125,6 @@ Using multiply kernel: multiply1
 Freq = 2.847324 GHz
 Execution time = 0.769 seconds
 MFLOPS: 22331.479 mflops
-
 ```
 
 ## Running an Intel&reg; VTune&trade; Profiler analysis
