@@ -6,64 +6,50 @@
 
 CXX=icx
 INCLUDES=-I src
-CXXFLAGS=-c -O1 $(INCLUDES) $(BITS)
+CXXFLAGS=-c -O2 $(INCLUDES) $(BITS)
 
 PROGS=MatVector
 
 help:
-	@echo "Usage:"
-	@echo "    To build: make <config>"
-	@echo "    To run  : MatVector                (for baseline)"
-	@echo "              vec_samples_<config>.out (for other configs)"
-	@echo ""
-	@echo "where <config> is one of the following:"
-	@echo "    baseline, vec_report1, vec_report2, pointer_disam, align, and ipo"
-	@echo ""
+        @echo "Usage:"
+        @echo "    To build: make <config>"
+        @echo "    To run  : MatVector                (for baseline)"
+        @echo "              vec_samples_<config>.out (for other configs)"
+        @echo ""
+        @echo "where <config> is one of the following:"
+        @echo "    baseline, vec_report1, vec_report2, vec_report3"
+        @echo ""
 
 run: help
 
-baseline: clean Driver.o Multiply.o
-	$(CXX) Driver.o Multiply.o -o MatVector $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./MatVector now."
+baseline: clean driver.o multiply.o
+        $(CXX) driver.o multiply.o -o MatVector $(LIBS)
+        @echo "Build complete."
+        @echo "You may run ./MatVector now."
 
-vec_report1: CXXFLAGS = -c -O2 -std=c99 -qopt-report=1 -qopt-report-phase=vec -D NOFUNCCALL $(INCLUDES) $(BITS)
-vec_report1: clean Driver.o Multiply.o
-	$(CXX) Driver.o Multiply.o -o vec_samples_report1.out $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./vec_samples_report1.out now."
-	@echo "LIBS is $(LIBS), BITS is $(BITS)."
+vec_report1: CXXFLAGS = -c -O2 -std=c17 -qopt-report=1 -DNOFUNCCALL $(INCLUDES)
+vec_report1: clean driver.o multiply.o
+        $(CXX) driver.o multiply.o -o vec_samples_report1.out $(LIBS)
+        @echo "Build complete."
+        @echo "You may run ./vec_samples_report1.out now."
 
+vec_report2: CXXFLAGS = -c -O2 -std=c17 -qopt-report=2 -DNOFUNCCALL $(INCLUDES)
+vec_report2: clean driver.o multiply.o
+        $(CXX) driver.o multiply.o -o vec_samples_report2.out $(LIBS)
+        @echo "Build complete."
+        @echo "You may run ./vec_samples_report2.out now."
 
-vec_report2: CXXFLAGS = -c -O2 -std=c99 -qopt-report=2 -qopt-report-phase=vec -D NOFUNCCALL $(INCLUDES) $(BITS)
-vec_report2: clean Driver.o Multiply.o
-	$(CXX) Driver.o Multiply.o -o vec_samples_report2.out $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./vec_samples_report2.out now."
+vec_report3: CXXFLAGS = -c -O2 -std=c17 -qopt-report=3 -DNOFUNCCALL $(INCLUDES)
+vec_report3: clean driver.o multiply.o
+        $(CXX) driver.o multiply.o -o vec_samples_report3.out $(LIBS)
+        @echo "Build complete."
+        @echo "You may run ./vec_samples_report3.out now."
 
-pointer_disam: CXXFLAGS = -c -O2 -std=c99 -qopt-report=2 -qopt-report-phase=vec -D NOALIAS $(INCLUDES) $(BITS)
-pointer_disam: clean Driver.o Multiply.o
-	$(CXX) Driver.o Multiply.o -o vec_samples_pointer_disam.out $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./vec_samples_pointer_disam.out now."
+driver.o: src/driver.c
+        $(CXX) $(BITS) $(CXXFLAGS) -o $@ src/driver.c
 
-align: CXXFLAGS = -c -O2 -std=c99 -qopt-report=4 -qopt-report-phase=vec -D NOALIAS -D ALIGNED $(INCLUDES) $(BITS)
-align: clean Driver.o Multiply.o
-	$(CXX) Driver.o Multiply.o -o vec_samples_align.out $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./vec_samples_align.out now."
-
-ipo: CXXFLAGS = -c -O2 -std=c99 -ipo -qopt-report=2 -qopt-report-phase=vec -D NOALIAS -D ALIGNED $(INCLUDES) $(BITS)
-ipo: clean Driver.o Multiply.o
-	$(CXX) -ipo Driver.o Multiply.o -o vec_samples_ipo.out $(LIBS)
-	@echo "Build complete."
-	@echo "You may run ./vec_samples_ipo.out now."
-
-Driver.o: src/Driver.c
-	$(CXX) $(BITS) $(CXXFLAGS) -o $@ src/Driver.c
-
-Multiply.o: src/Multiply.c
-	$(CXX) $(BITS) $(CXXFLAGS) -o $@ src/Multiply.c
+multiply.o: src/multiply.c
+        $(CXX) $(BITS) $(CXXFLAGS) -o $@ src/multiply.c
 
 clean:
-	rm -f $(PROGS) *.o *.out *.optrpt
+        rm -f $(PROGS) *.o *.out *.optrpt

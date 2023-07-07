@@ -1,6 +1,6 @@
 # `Matrix Multiply` Sample
 
-The `Matrix Multiply` sample shows how auto-vectorization improve the performance of the sample matrix multiplication application. An optimization report is used to identify potential points of performance improvement.
+The `Matrix Multiply` sample shows how auto-vectorization can improve the performance of the sample matrix multiplication application. An optimization report is used to identify potential points of performance improvement.
 
 | Area                      | Description
 |:---                       |:---
@@ -39,7 +39,7 @@ The sample makes use of the following source files:
 * `multiply.c`: the matrix multiplication program.
 * `multiply.h`: the header file used by `multiply.c`.
 
-In the `main()` function of `driver.c` there are two possible code paths for the matrix multiplication:
+The `main()` function in `driver.c` contains two possible implementations of the matrix multiplication. The first implementation is an inline execution of a double loop, gated by the `NOFUNCCALL` macro. The second implementation calls the `matvec` function, located in `multiply.c`, which contains the same double loop:
 
 ```
 #ifdef NOFUNCCALL
@@ -54,11 +54,6 @@ In the `main()` function of `driver.c` there are two possible code paths for the
   matvec(size1,size2,a,b,x);
 #endif
 ```
-The `NOFUNCCALL` .....
-
-TODO: Add highlevel description of DNOFUNCALL in the source - what it does, why this is potentially beneficial, describing that this sample focuses on the inline func
-
-TODO: Note that more pronounced performance gains can be seen when using specific hardware such as AVX or AVX512.
 
 >**Note**: For comprehensive information about oneAPI programming, refer to the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -78,10 +73,10 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* 
 
-Create a performance baseline (that does not use the inline function) by compiling and running the sample:
+Create a performance baseline by compiling and running the sample. 
 
 1. Change to the sample directory.
-2. Build the program.
+2. Build the program. This will use the `matvec` function call implementation of matrix multiplication.
 
    ```
    icx multiply.c driver.c -o MatVector
@@ -106,26 +101,24 @@ Record the execution time reported in the output. This is the baseline without a
 
 ## Generate an Optimization Report
 
-The [`-qopt-report`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/qopt-report-qopt-report.html) option enables the generation of an optimization report at compilation. In this sample, the report is used to show what loops in the code were vectorized and to explain why other loops were not vectorized. The option enables three levels of detail in the report, with `qopt-report=1` providing minimum detail, and `qopt-report=3` providing max detail. 
+The [`-qopt-report`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/qopt-report-qopt-report.html) option enables the generation of an optimization report at compilation. In this sample, the report is used to show what loops in the code were vectorized and to explain why other loops were not vectorized. The option enables three levels of detail in the report, with `qopt-report=1` providing minimum detail, and `qopt-report=3` providing maximum detail. 
 
-* `qopt-report=1` (minimum) generates a report that identifies the loops in your code that were vectorized 
-* `qopt-report=2` (medium) generates a report that identifies both the loops in your code that were vectorized, and the reason that other loops were not vectorized
-* `qopt-report=3` (maximum) generates a report with maximum detail, including loop cost summary
+* `qopt-report=1` (minimum) generates a report that identifies the loops in your code that were vectorized.
+* `qopt-report=2` (medium) generates a report that identifies both the loops in your code that were vectorized, and the reason that other loops were not vectorized.
+* `qopt-report=3` (maximum) generates a report with maximum detail, including loop cost summary.
 
 **Note**: If you use `-qopt-report` when vectorization is disabled ([`O1`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/o-001.html)), the compiler will not generate a optimization report.
 
 ### Generate a Level 1 Optimization Report
 
-Generate a level 1 optimization report by compiling your project with the `O2` and `qopt-report=1` options. 
+Generate a level 1 optimization report and compile to use the inline implementation of matrix multiplication.
 
 1. Change to the sample directory.
-2. Build the program with `O2` and `qopt-report=1` options.
+2. Build the program with the `qopt-report=1` option to generate the report and the [`D`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/d.html) option to specify to use the `NOFUNCCALL` implementation of matrix multiplication.
 
    ```
    icx -DNOFUNCCALL -qopt-report=1 multiply.c driver.c -o vec_report1 
    ```
-
-   [`-DNOFUNCCALL`](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/d.html) is used to tell the compiler to use the inline equivalent of the `matvec` function (found in `Driver.c`).
 
 3. Run the program.
 
@@ -144,17 +137,17 @@ Generate a level 1 optimization report by compiling your project with the `O2` a
 
 The reduction in time, compared to the baseline, is mostly due to auto-vectorization of the inner loop at line 145, as noted in the vectorization report `Driver.optrpt`:  
 ```
-LOOP BEGIN at Driver.c (140, 5) 
+LOOP BEGIN at driver.c (140, 5) 
   
-    LOOP BEGIN at Driver.c (143, 9) 
+    LOOP BEGIN at driver.c (143, 9) 
         remark #25529: Dead stores eliminated in loop 
   
-        LOOP BEGIN at Driver.c (145, 13) 
+        LOOP BEGIN at driver.c (145, 13) 
             remark #15300: LOOP WAS VECTORIZED 
             remark #15305: vectorization support: vector length 2 
         LOOP END 
   
-        LOOP BEGIN at Driver.c (145, 13) 
+        LOOP BEGIN at driver.c (145, 13) 
         <Remainder loop for vectorization> 
         LOOP END 
     LOOP END 
@@ -173,22 +166,22 @@ Now use `qopt-report=2` to generate a report with medium details.
    icx -DNOFUNCCALL -qopt-report=2 multiply.c driver.c -o vec_report2 
    ```
 
-The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The optimization report Driver.optrpt indicates that the loop at line 119 in `Driver.c` did not vectorize:
+The resulting report includes information about which loops were vectorized and which loops were not vectorized (and why). The optimization report `Driver.optrpt` indicates that the loop at line 119 in `driver.c` did not vectorize:
 
 ```
-LOOP BEGIN at Driver.c (119, 5) 
+LOOP BEGIN at driver.c (119, 5) 
     remark #15553: loop was not vectorized: outer loop is not an auto-vectorization candidate. 
   
-    LOOP BEGIN at Driver.c (122, 9) 
+    LOOP BEGIN at driver.c (122, 9) 
         remark #25529: Dead stores eliminated in loop 
         remark #15553: loop was not vectorized: outer loop is not an auto-vectorization candidate. 
   
-        LOOP BEGIN at Driver.c (124, 13) 
+        LOOP BEGIN at driver.c (124, 13) 
             remark #15300: LOOP WAS VECTORIZED 
             remark #15305: vectorization support: vector length 2 
         LOOP END 
   
-        LOOP BEGIN at Driver.c (124, 13) 
+        LOOP BEGIN at driver.c (124, 13) 
         <Remainder loop for vectorization> 
         LOOP END 
     LOOP END 
@@ -208,7 +201,7 @@ Now use `qopt-report=3` to generate a report with maximum details.
 In addition to information about which loops were vectorized and which were not vectorized, the level 3 report includes information about the cost of performing loops. The optimization report `Driver.optrpt` displays the loop cost summary: 
 
 ```
-LOOP BEGIN at Driver.c (102, 13) 
+LOOP BEGIN at driver.c (102, 13) 
    remark #15300: LOOP WAS VECTORIZED 
    remark #15305: vectorization support: vector length 2 
    remark #15475: --- begin vector loop cost summary --- 
