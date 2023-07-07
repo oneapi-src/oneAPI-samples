@@ -3,7 +3,7 @@
 	"name": "Matrix Multiply VTune™ Profiler - C",
 	"categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
 	"description": "Simple program that shows how to improve the C language (CPU only) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
-	"toolchain": ["cpp"],
+	"toolchain": ["dpcpp"],
 	"dependencies": ["compiler|icc", "compiler|icx", "mkl", "vtune"],
 	"languages": [{
 		"c": {}
