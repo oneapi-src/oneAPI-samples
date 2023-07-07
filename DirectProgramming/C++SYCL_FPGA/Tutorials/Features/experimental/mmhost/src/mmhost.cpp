@@ -9,9 +9,9 @@ using namespace sycl;
 using namespace ext::oneapi::experimental;
 using usm_buffer_location = ext::intel::experimental::property::usm::buffer_location;
 
-constexpr int kBL1 = 0;
-constexpr int kBL2 = 1;
-constexpr int kBL3 = 2;
+constexpr int kBL1 = 1;
+constexpr int kBL2 = 2;
+constexpr int kBL3 = 3;
 
 struct PointerIP {
   int* const a; 
@@ -53,7 +53,7 @@ struct MMHostIP {
 
     MMHostIP(int *a_, int *b_, int *c_, int n_) : a(a_), b(b_), c(c_), n(n_) {}
 
-    streaming_interface void operator()() const {
+    void operator()() const {
       for (int i = 0; i < n; i++) {
         c[i] = a[i] + b[i];
       }
