@@ -7,20 +7,35 @@
 if (CMAKE_HOST_WIN32)
     # need CMake 3.25.0+ for IntelLLVM support of target link properties on Windows
     cmake_minimum_required(VERSION 3.25)
-    set(CMAKE_C_COMPILER icx)
-    set(CMAKE_CXX_COMPILER icx)
-    set(CMAKE_Fortran_COMPILER ifx)
+    if( NOT DEFINED CMAKE_C_COMPILER)
+      set(CMAKE_C_COMPILER icx)
+    endif()
+    if( NOT DEFINED CMAKE_CXX_COMPILER)
+      set(CMAKE_CXX_COMPILER icx)
+    endif()
+    if( NOT DEFINED CMAKE_Fortran_COMPILER)
+      set(CMAKE_Fortran_COMPILER ifx)
+    endif()
 else()
     # CMake 3.20.5 is the minimum recommended for IntelLLVM on Linux
     cmake_minimum_required(VERSION 3.20.5)
-    set(CMAKE_C_COMPILER icx)
-    set(CMAKE_CXX_COMPILER icpx)
-    set(CMAKE_Fortran_COMPILER ifx)
+    if( NOT DEFINED CMAKE_C_COMPILER)
+      set(CMAKE_C_COMPILER icx)
+    endif()
+    if( NOT DEFINED CMAKE_CXX_COMPILER)
+      set(CMAKE_CXX_COMPILER icpx)
+    endif()
+    if( NOT DEFINED CMAKE_Fortran_COMPILER)
+      set(CMAKE_Fortran_COMPILER ifx)
+    endif()
 endif()
 
 project(find_omp_fortran VERSION 1.0 LANGUAGES Fortran)
 
 find_package(OpenMP REQUIRED)
+
+# A simple library to generate images for Mandlebrot
+add_library(pnm-omp STATIC pnm-omp.f90)
 
 # The GNU (Linux and Mac) and MSVC (Windows) frontend variants spell options
 # differently
@@ -42,14 +57,11 @@ target_link_options(hello-omp-gpu-fortran PRIVATE ${openmp_target_offload_flags}
 
 # OpenMP mandlebrot program for host
 add_executable(mandelbrot-cpu-omp mandelbrot-omp.f90)
-target_link_libraries(mandelbrot-cpu-omp PUBLIC OpenMP::OpenMP_Fortran pnm)
+target_link_libraries(mandelbrot-cpu-omp PUBLIC OpenMP::OpenMP_Fortran pnm-omp)
 target_compile_options(mandelbrot-cpu-omp PRIVATE)
 
 # OpenMP mandlebrot program for GPU
 add_executable(mandelbrot-gpu-omp mandelbrot-omp.f90)
-target_link_libraries(mandelbrot-gpu-omp PUBLIC OpenMP::OpenMP_Fortran pnm)
+target_link_libraries(mandelbrot-gpu-omp PUBLIC OpenMP::OpenMP_Fortran pnm-omp)
 target_compile_options(mandelbrot-gpu-omp PRIVATE ${openmp_target_offload_flags})
 target_link_options(mandelbrot-gpu-omp PRIVATE ${openmp_target_offload_flags})
-
-# A simple library to generate images for Mandlebrot
-add_library(pnm-omp STATIC pnm-omp.f90)
