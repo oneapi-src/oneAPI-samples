@@ -70,9 +70,9 @@ You will build the program several times with different optimization levels. Not
 > **Note**
 > There are separate sets of instructions for Linux and Windows for each optimization option.
 
-### Build and Run with `-O0` (Linux) or `/Od` (Windows) Option
+### Build and Run with Optimization Level 0
 
-Level 0 disables all optimizations.
+Optimization level 0 ([`-O0` on Linux or `/Od` on Windows](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/o-001.html)) disables all optimizations.
 
 #### Linux
 
@@ -127,7 +127,7 @@ Level 0 disables all optimizations.
    CPU Time = 3.776983 seconds 
    ```
 
-### Build and Run with `O1` Option
+### Build and Run with Optimization Level 1
 
 Level 1 (`O1`) enables optimizations for speed and disables some optimizations that increase code size and affect speed. 
 
@@ -183,7 +183,7 @@ Level 1 (`O1`) enables optimizations for speed and disables some optimizations t
    CPU Time = 1.444569 seconds  
    ```
 
-### Build and Run with `O2` Option
+### Build and Run with Optimization Level 2
 
 Level 2 (`O2`) enables optimizations for speed. This is the recommended optimization level and is the default. Vectorization is enabled at level 2 and higher levels.
 
@@ -239,7 +239,7 @@ Level 2 (`O2`) enables optimizations for speed. This is the recommended optimiza
    CPU Time = 0.5143980 seconds 
    ```
 
-### Build and Run with `O3` Option
+### Build and Run with Optimization Level 3
 
 Level 3 (`O3`) performs level 2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
 
