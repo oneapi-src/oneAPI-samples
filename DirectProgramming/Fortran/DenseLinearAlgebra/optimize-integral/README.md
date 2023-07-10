@@ -64,7 +64,7 @@ development.
 > For more information on configuring environment variables, see [Use the
 > setvars Script with Linux* and Windows*](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/specifying-the-location-of-compiler-components.html).
 
-## Build and Run the `Fortran Optimization` Sample
+## Build and Run the `Fortran Optimization Integral` Sample
 You will build the program several times with different optimization levels. Notice the timings for each change.
 
 > **Note**
