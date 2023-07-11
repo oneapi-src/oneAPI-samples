@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 if("${CMAKE_CXX_COMPILER}" STREQUAL "")
     set(CMAKE_CC_COMPILER "icx")
-    set(CMAKE_CXX_COMPILER "icx")
+    set(CMAKE_CXX_COMPILER "icpx")
 endif()
 project (getting_started)
 file(COPY $ENV{DNNLROOT}/examples/ DESTINATION src FILES_MATCHING PATTERN "*.cpp")
