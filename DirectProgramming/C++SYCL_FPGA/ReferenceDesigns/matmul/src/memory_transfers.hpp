@@ -39,7 +39,7 @@ public:
   mmhost(aspace, // buffer_location or aspace
          28,     // address width
          dwidth, // data width
-         16,     // latency
+         0,      // latency
          1,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
          1,      // maxburst
          0,      // align, 0 defaults to alignment of the type
@@ -192,7 +192,7 @@ public:
   mmhost(aspace, // buffer_location or aspace
          28,     // address width
          dwidth, // data width
-         16,     // latency
+         0,      // latency
          1,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
          1,      // maxburst
          0,      // align, 0 defaults to alignment of the type
@@ -337,7 +337,7 @@ public:
   mmhost(aspace, // buffer_location or aspace
          28,     // address width
          dwidth, // data width
-         16,     // latency
+         0,      // latency
          2,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
          1,      // maxburst
          0,      // align, 0 defaults to alignment of the type
