@@ -429,6 +429,32 @@ Summarizing bandwidth in MB/s/bank for banks 1 to 8
 
 KERNEL-TO-MEMORY BANDWIDTH = 16509.6 MB/s/bank
 
+*****************************************************************
+***********************  USM Bandwidth  *************************
+*****************************************************************
+
+Case: Full Duplex
+Iterations: 1
+Data size: 1024 MB
+Data type size: 64 bytes
+Average Time: 99122.8 ns	
+Average Throughput: 20.177 GB/s	
+
+Case: From Host to Device
+Iterations: 1
+Data size: 1024 MB
+Data type size: 64 bytes
+Average Time: 86711.5 ns	
+Average Throughput: 11.5325 GB/s	
+
+Case: From Device to Host
+Iterations: 1
+Data size: 1024 MB
+Data type size: 64 bytes
+Average Time: 84240.3 ns	
+Average Throughput: 11.8708 GB/s	
+
+
 BOARD TEST PASSED
 
 ```
