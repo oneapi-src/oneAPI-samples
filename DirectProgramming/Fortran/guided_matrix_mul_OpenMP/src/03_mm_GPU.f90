@@ -2,15 +2,17 @@ program matrix_multiply
    use omp_lib
    implicit none
    integer :: i, j, k, myid, m, n
-   real(8), allocatable, dimension(:,:) :: a, b, c, c_serial
-
+   real, allocatable, dimension(:,:) :: a, b, c, c_serial
+! 
+! Different Intel GPUs have varying amounts of memory. If the program
+! fails at runtime, try decreasing the value of "n".
+!
    n = 2600
 
     myid = OMP_GET_THREAD_NUM()
     if (myid .eq. 0) then
       print *, 'matrix size ', n
       print *, 'Number of CPU procs is ', OMP_GET_NUM_THREADS()
-
       print *, 'Number of OpenMP Device Available:', omp_get_num_devices()
 !$omp target 
       if (OMP_IS_INITIAL_DEVICE()) then
