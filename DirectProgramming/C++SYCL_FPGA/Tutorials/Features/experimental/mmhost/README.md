@@ -1,18 +1,47 @@
 # Memory-Mapped Interfaces (mmhost)
 This FPGA tutorial demonstrates how to configure Avalon memory-mapped interfaces for kernel arguments with the IP authoring flow.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               |  The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes
+| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
+| What you will learn               | The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes 
 | Time to complete                  | 45 minutes
 
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+>
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> - Questa*-Intel® FPGA Edition
+> - Questa*-Intel® FPGA Starter Edition
+> - ModelSim® SE
+>
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+>
+> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+
+## Prerequisites
+
+This sample is part of the FPGA code samples.
+It is categorized as a Tier 2 sample that demonstrates a compiler feature.
+
+```mermaid
+flowchart LR
+   tier1("Tier 1: Get Started")
+   tier2("Tier 2: Explore the Fundamentals")
+   tier3("Tier 3: Explore the Advanced Techniques")
+   tier4("Tier 4: Explore the Reference Designs")
+   
+   tier1 --> tier2 --> tier3 --> tier4
+   
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
+
+Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 
 ## Purpose
@@ -30,14 +59,16 @@ The following parameters are available for configuration:
 
 | Memory Attribute                 | Description               | Default Value
 ---                                |---   |---
-| `buffer_location`          | The address space of the interface that associates with the host. | 0
-| `awidth`          | The width of the memory-mapped address bus in bits. | 41
-| `dwidth`          | The width of the memory-mapped data bus in bits. | 64
-| `latency`         | The guaranteed latency from when a read command exits the kernal when the external memory returns valid read data. | 16
-| `readwrite_mode`  | The port direction of the interface. (0: Read & Write, 1: Read only, 2: Write only) | 0
-| `maxburst`        | The maximum number of data transfers that can associate with a read or write transaction. | 1
-| `align`           | The alignment of the base pointer address in bytes. | 0
-| `waitrequest`     | Adds the waitrequest signal that is asserted by the agent when it is unable to respond to a read or write request. | 0
+| `conduit`    | Directs the compiler to create a dedicated input port on the kernal for the input | N/A
+| `register_map` | Directs the compiler to create a register to store the input | N/A
+| `stable` | Assertion that kernal inputs will not change between pipelined invocations of the kernal | N/A
+| `buffer_location<id>`          | The address space of the interface that associates with the host. | 0
+| `awidth<width>`          | The width of the memory-mapped address bus in bits. | 41
+| `dwidth<width>`          | The width of the memory-mapped data bus in bits. | 64
+| `latency<value>`         | The guaranteed latency from when a read command exits the kernal when the external memory returns valid read data. | 1
+| `read_write_mode<mode>`  | The port direction of the interface. (`read_write`, `read` or `write`) | `read_write`
+| `maxburst<value>`        | The maximum number of data transfers that can associate with a read or write transaction. | 1
+| `wait_request<flag>`     | Adds the waitrequest signal that is asserted by the agent when it is unable to respond to a read or write request. | `false`
 
 ### Default interface
 
@@ -60,21 +91,20 @@ struct PointerIP{
 
 ### Memory-mapped interface implementation restriction
 
-The mmhost macros are restricted to use with functors, which means that they cannot be used when the kernel is written as a lambda function. Also, all arguments of the macro must be specified, even if just one parameter is being changed from the default values.
+The mmhost macros are restricted to use with functors, which means that they cannot be used when the kernel is written as a lambda function.
 
 #### Example 1: A kernel expressed using a functor model with mmhost macro.
 ```c++
 struct MyIP {
-  mmhost(
-    1,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // latency
-    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *my_pointer;
+  annotated_ptr<int, decltype(properties{
+    buffer_location<kBL1>,         // buffer location
+    awidth<32>,                    // address width
+    dwidth<32>,                    // data width
+    latency<0>,                    // latency 
+    read_write_mode_read,          // read/write mode
+    maxburst<4>,                   // maxburst
+    wait_request<true>             // wait request on
+  })> int *my_pointer; 
 
   void operator()() const {
     ...
@@ -95,30 +125,19 @@ If the mmhost argument is specified as a register-mapped argument, the input poi
 #### Example 2: Changing default mmhost interface. 
 ```c++
 // A memory-mapped interface that is implemented as a register.
-  register_map_mmhost(
-    1,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // latency
-    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *memory_mapped_pointer;
+  annotated_ptr<int, decltype(properties{
+    register_map,
+    buffer_location<kBL1>
+  })> int *memory_mapped_pointer; 
+
 // A memory-mapped interface that is implemented as a wire.
-  conduit_mmhost(
-    1,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // latency
-    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *memory_mapped_pointer;
+  annotated_ptr<int, decltype(properties{
+    conduit,
+    buffer_location<kBL1>
+  })> int *memory_mapped_pointer; 
 ```
 
-If unspecified, when using only the ```mmhost(...)``` macro, a register_map based input argument interface is used.
+If unspecified, a register_map based input argument interface is used.
 
 ### Memory Base Addresses assigned by the compiler
 
@@ -183,7 +202,7 @@ This tutorial demonstrates how to implement a memory-mapped interface in an IP a
 * Memory-mapped interfaces needs to contain all parameters to work correctly.
 
 ## Testing the Tutorial
-In ```mmhost.cpp```, two seperate Kernal IP's are declared for the same operation of adding and multiplying two vectors. ```PointerIP``` which declares a global memory interface for all pointers, and ```VectorMADIP``` which declares a seperate interface buffer location to each argument. 
+In ```mmhost.cpp```, two seperate Kernal IP's are declared for the same operation of adding and multiplying two vectors. ```PointerIP``` which declares a global memory interface for all pointers, and ```MMHostIP``` which declares a seperate interface buffer location to each argument. 
 ```c++
 struct PointerIP {
   int *x, *y, *z;
@@ -197,13 +216,13 @@ struct PointerIP {
     }
 };
 
-struct VectorMADIP {
-  mmhost(BL1, ...) int *x;
-  mmhost(BL2, ...) int *y;
-  mmhost(BL3, ...) int *z;
+struct MMHostIP {
+  annotated_ptr<int, decltype(properties{buffer_location<kBL1>, ...})> int *x;
+  annotated_ptr<int, decltype(properties{buffer_location<kBL2>, ...})> int *y;
+  annotated_ptr<int, decltype(properties{buffer_location<kBL3>, ...})> int *z;
   int size;
 
-  VectorMADIP(int *x_, int *y_, int *z_, int size_)
+  MMHostIP(int *x_, int *y_, int *z_, int size_)
       : x(x_), y(y_), z(z_), size(size_) {}
 
     void operator()() const {
@@ -211,7 +230,7 @@ struct VectorMADIP {
     }
 ```
 
-We test and compare the kernal times for both of these IP's. Notice that the ```VectorMADIP``` is much faster. This is because all three pointers can be accessed concurrently without arbitration. 
+We test and compare the kernal times for both of these IP's. Notice that the ```MMHostIP``` is much faster. This is because all three pointers can be accessed concurrently without arbitration. 
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -220,9 +239,6 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `mmhost` Tutorial
-
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -327,9 +343,9 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `mmhost_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `VectorMADIP` kernal consumes way less area under all categories than the `PointerIP` kernal. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
+Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MMHostIP` kernal consumes way less area under all categories than the `PointerIP` kernal. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
 
-Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `VectorMADIP` Kernal has a lower latency than the `PointerIP` Kernal, and there are less blcoks being scheduled. This is because the kernal has access to all 3 memories in parallel without contention.
+Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MMHostIP` Kernal has a lower latency than the `PointerIP` Kernal, and there are less blcoks being scheduled. This is because the kernal has access to all 3 memories in parallel without contention.
 
 
 ## Running the Sample
@@ -360,9 +376,8 @@ Navigate to the Loop Throughput section under Throughput Analysis, and you will 
 ### Example of Output
 
 ```
-MMHost kernel time : 7742.1 ms
-Pointer kernel time : 58357.4 ms
-elements in vector : 10000
+Running on device: Intel(R) FPGA Emulation Device
+elements in vector : 8
 --> PASS
 ```
 
