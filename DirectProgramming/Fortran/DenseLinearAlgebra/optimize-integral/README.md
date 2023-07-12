@@ -1,4 +1,5 @@
 ﻿# `Optimization Integral` Sample
+
 The `Optimization Integral` sample is designed to illustrate compiler optimization features and programming concepts.
 
 | Area                     | Description
@@ -76,9 +77,9 @@ Optimization level 0 ([`-O0` on Linux or `/Od` on Windows](https://www.intel.com
 
 #### Linux
 
-1. Change to the sample directory.                          
-2. Using your favorite editor, open the `Makefile` file.    
-3. Uncomment the line for `-O0`.                            
+1. Change to the sample directory.
+2. Using your favorite editor, open the `Makefile` file.
+3. Uncomment the line for `-O0`.
 4. Save the change. Your final version should resemble the following example:
    ```
    FC = ifx -O0
@@ -89,11 +90,11 @@ Optimization level 0 ([`-O0` on Linux or `/Od` on Windows](https://www.intel.com
 5. Compile the program.
    ```
    make
-   ```                                
+   ```
 6. Run the program.
    ```
    make run
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
    CPU Time = 3.776983 seconds 
@@ -101,27 +102,27 @@ Optimization level 0 ([`-O0` on Linux or `/Od` on Windows](https://www.intel.com
 8. Clean the project and program files.
    ```
    make clean
-   ```   
+   ```
 
 #### Windows
-1. Change to the sample directory.                        
-2. Using your favorite editor, open the `build.bat` file. 
-3. Uncomment the line for `/Od`.                          
-4. Save the change. Your final version should resemble the following example: 
+1. Change to the sample directory.
+2. Using your favorite editor, open the `build.bat` file.
+3. Uncomment the line for `/Od`.
+4. Save the change. Your final version should resemble the following example:
    ```
    ifx /Od src/int_sin.f90 /o int_sin.exe
    : ifx /O1 src/int_sin.f90 /o int_sin.exe
    : ifx /O2 src/int_sin.f90 /o int_sin.exe
-   : ifx /O3 src/int_sin.f90 /o int_sin.exe  
+   : ifx /O3 src/int_sin.f90 /o int_sin.exe
    ```
-5. Compile the program. 
+5. Compile the program.
    ```
    build.bat
-   ```                         
+   ```
 6. Run the program.
    ```
    run.bat
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
    CPU Time = 3.776983 seconds 
@@ -129,12 +130,12 @@ Optimization level 0 ([`-O0` on Linux or `/Od` on Windows](https://www.intel.com
 
 ### Build and Run with Optimization Level 1
 
-Level 1 (`O1`) enables optimizations for speed and disables some optimizations that increase code size and affect speed. 
+Optimization level 1 (`O1`) enables optimizations for speed and disables some optimizations that increase code size and affect speed. 
 
-#### Linux     
-1. Change to the sample directory.                          
-2. Using your favorite editor, open the `Makefile` file.    
-3. Uncomment the line for `-O1`.                            
+#### Linux
+1. Change to the sample directory.
+2. Using your favorite editor, open the `Makefile` file.
+3. Uncomment the line for `-O1`.
 4. Save the change. Your final version should resemble the following example:
    ```
    #FC = ifx -O0
@@ -142,55 +143,55 @@ Level 1 (`O1`) enables optimizations for speed and disables some optimizations t
    #FC = ifx -O2
    #FC = ifx -O3 
    ```
-5. Compile the program. 
+5. Compile the program.
    ```
    make
-   ```                                
+   ```
 6. Run the program.
    ```
    make run
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
-   CPU Time = 1.444569 seconds 
+   CPU Time = 1.444569 seconds
    ```
 8. Clean the project and program files.
    ```
    make clean
-   ```   
+   ```
 
-#### Windows   
-1. Change to the sample directory.                        
-2. Using your favorite editor, open the `build.bat` file. 
-3. Uncomment the line for `/O1`.                          
+#### Windows
+1. Change to the sample directory.
+2. Using your favorite editor, open the `build.bat` file.
+3. Uncomment the line for `/O1`.
 4. Save the change. Your final version should resemble the following example:
    ```
    : ifx /Od src/int_sin.f90 /o int_sin.exe
    ifx /O1 src/int_sin.f90 /o int_sin.exe
    : ifx /O2 src/int_sin.f90 /o int_sin.exe
-   : ifx /O3 src/int_sin.f90 /o int_sin.exe  
+   : ifx /O3 src/int_sin.f90 /o int_sin.exe
    ```
-5. Compile the program. 
+5. Compile the program.
    ```
    build.bat
-   ```                   
+   ``` 
 6. Run the program.
    ```
    run.bat
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
-   CPU Time = 1.444569 seconds  
+   CPU Time = 1.444569 seconds
    ```
 
 ### Build and Run with Optimization Level 2
 
-Level 2 (`O2`) enables optimizations for speed. This is the recommended optimization level and is the default. Vectorization is enabled at level 2 and higher levels.
+Optimization level 2 (`O2`) enables optimizations for speed. This is the recommended optimization level and is the default. Vectorization is enabled at level 2 and higher.
 
-#### Linux     
-1. Change to the sample directory.                          
-2. Using your favorite editor, open the `Makefile` file.    
-3. Uncomment the line for `-O2`.                            
+#### Linux
+1. Change to the sample directory.
+2. Using your favorite editor, open the `Makefile` file.
+3. Uncomment the line for `-O2`.
 4. Save the change. Your final version should resemble the following example:
    ```
    #FC = ifx -O0
@@ -201,11 +202,11 @@ Level 2 (`O2`) enables optimizations for speed. This is the recommended optimiza
 5. Compile the program.
    ```
    make
-   ```                                
+   ```
 6. Run the program.
    ```
    make run
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
    CPU Time = 0.5143980 seconds
@@ -213,12 +214,12 @@ Level 2 (`O2`) enables optimizations for speed. This is the recommended optimiza
 8. Clean the project and program files.
    ```
    make clean
-   ```   
+   ```
 
-#### Windows   
-1. Change to the sample directory.                        
-2. Using your favorite editor, open the `build.bat` file. 
-3. Uncomment the line for `/O2`.                          
+#### Windows
+1. Change to the sample directory.
+2. Using your favorite editor, open the `build.bat` file.
+3. Uncomment the line for `/O2`.
 4. Save the change. Your final version should resemble the following example:
    ```
    : ifx /Od src/int_sin.f90 /o int_sin.exe
@@ -229,11 +230,11 @@ Level 2 (`O2`) enables optimizations for speed. This is the recommended optimiza
 5. Compile the program.
    ```
    build.bat
-   ```                         
+   ```
 6. Run the program.
    ```
    run.bat
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
    CPU Time = 0.5143980 seconds 
@@ -241,40 +242,40 @@ Level 2 (`O2`) enables optimizations for speed. This is the recommended optimiza
 
 ### Build and Run with Optimization Level 3
 
-Level 3 (`O3`) performs level 2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
+Optimization level 3 (`O3`) performs level 2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
 
-#### Linux     
-1. Change to the sample directory.                          
-2. Using your favorite editor, open the `Makefile` file.    
-3. Uncomment the line for `-O3`.                            
+#### Linux
+1. Change to the sample directory.
+2. Using your favorite editor, open the `Makefile` file.
+3. Uncomment the line for `-O3`.
 4. Save the change. Your final version should resemble the following example:
    ```
    #FC = ifx -O0
    #FC = ifx -O1
    #FC = ifx -O2
    FC = ifx -O3
-   ``` 
-5. Compile the program. 
+   ```
+5. Compile the program.
    ```
    make
-   ```                                
+   ```
 6. Run the program.
    ```
    make run
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
-   CPU Time = 0.5133380 seconds 
+   CPU Time = 0.5133380 seconds
    ```
-8. Clean the project and program files. 
+8. Clean the project and program files.
    ```
    make clean
    ```
 
-#### Windows   
-1. Change to the sample directory.                        
-2. Using your favorite editor, open the `build.bat` file. 
-3. Uncomment the line for `/O3`.                          
+#### Windows
+1. Change to the sample directory.
+2. Using your favorite editor, open the `build.bat` file.
+3. Uncomment the line for `/O3`.
 4. Save the change. Your final version should resemble the following example:
    ```
    : ifx /Od src/int_sin.f90 /o int_sin.exe
@@ -282,14 +283,14 @@ Level 3 (`O3`) performs level 2 optimizations and enables more aggressive loop t
    : ifx /O2 src/int_sin.f90 /o int_sin.exe
    ifx /O3 src/int_sin.f90 /o int_sin.exe  
    ```
-5. Compile the program. 
+5. Compile the program.
    ```
    build.bat
-   ```                         
-6. Run the program. 
+   ```
+6. Run the program.
    ```
    run.bat
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
    CPU Time = 0.5133380 seconds 
@@ -315,56 +316,56 @@ Read the *Compiler Options* section of the [Intel® Fortran Compiler Developer G
 Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/compiler-options-001.html)
  for more information about these and other compiler options.
 
-#### Linux     
-1. Change to the sample directory.                          
-2. Using your favorite editor, open the `Makefile` file.    
+#### Linux
+1. Change to the sample directory.
+2. Using your favorite editor, open the `Makefile` file.
 3. Uncomment the line for `-O3` and add the two options as shown.
    ```
    #FC = ifx -O0
    #FC = ifx -O1
    #FC = ifx -O2
-   FC = ifx -O3 -xhost -align array64byte                           
+   FC = ifx -O3 -xhost -align array64byte
    ```
-4. Save the change.                                         
-5. Compile the program. 
+4. Save the change.
+5. Compile the program.
    ```
    make
-   ```                                
-6. Run the program. 
+   ```
+6. Run the program.
    ```
    make run
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
-   CPU Time = 0.2578490 seconds  
+   CPU Time = 0.2578490 seconds
    ```
 8. Clean the project and program files.
    ```
    make clean
    ```
 
-#### Windows   
-1. Change to the sample directory.                        
-2. Using your favorite editor, open the `build.bat` file. 
+#### Windows
+1. Change to the sample directory. 
+2. Using your favorite editor, open the `build.bat` file.
 3. Uncomment the line for `/O3` and add the two compiler options as shown.
    ```
    : ifx /Od src/int_sin.f90 /o int_sin.exe
    : ifx /O1 src/int_sin.f90 /o int_sin.exe
    : ifx /O2 src/int_sin.f90 /o int_sin.exe
-   ifx /O3 /Qxhost /align:array64byte src/int_sin.f90 /o int_sin.exe  
-   ```                           
-4. Save the change.                                       
+   ifx /O3 /Qxhost /align:array64byte src/int_sin.f90 /o int_sin.exe
+   ```
+4. Save the change.
 5. Compile the program.
    ```
    build.bat
-   ```                          
-6. Run the program. 
+   ```
+6. Run the program.
    ```
    run.bat
-   ```                                
+   ```
 7. Notice the CPU time. Your time should look similar to this example.
    ```
-   CPU Time = 0.2578490 seconds  
+   CPU Time = 0.2578490 seconds
    ```
 
 ## License
