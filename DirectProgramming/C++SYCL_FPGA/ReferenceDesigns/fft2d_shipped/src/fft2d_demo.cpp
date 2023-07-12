@@ -115,6 +115,7 @@ void TestFFT(bool mangle, bool inverse) {
             (float)((double)rand() / (double)RAND_MAX);
         host_verify[Coordinates<kN>(i, j)].i() = host_input_data[where].i() =
             (float)((double)rand() / (double)RAND_MAX);
+
       }
     }
 
@@ -164,12 +165,23 @@ void TestFFT(bool mangle, bool inverse) {
     double start_time{};
     double end_time{};
 
+    constexpr int kPoints = 8;
+    constexpr int kLogPoints = 3;
+
+    // constexpr int kPoints = 4;
+    // constexpr int kLogPoints = 2;
+
+    // constexpr int kPoints = 2;
+    // constexpr int kLogPoints = 1;    
+
+    static_assert(kN/kPoints >= kPoints);
+
     using FetchToFFT =
         sycl::ext::intel::pipe<class FetchToFFTPipe,
-                               std::array<ac_complex<float>, 8>, 0>;
+                               std::array<ac_complex<float>, kPoints>, 0>;
     using FFTToTranspose =
         sycl::ext::intel::pipe<class FFTToTransposePipe,
-                               std::array<ac_complex<float>, 8>, 0>;
+                               std::array<ac_complex<float>, kPoints>, 0>;
 
     for (int i = 0; i < 2; i++) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
@@ -178,16 +190,16 @@ void TestFFT(bool mangle, bool inverse) {
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Fetch<logn, 3, FetchToFFT, float>{to_read, mangle}();
+        Fetch<logn, kLogPoints, FetchToFFT, float>{to_read, mangle}();
       });
 
       q.single_task<class FFTKernel>([=]() [[intel::kernel_args_restrict]] {
-        FFT<logn, FetchToFFT, FFTToTranspose, float>{inverse}();
+        FFT<logn, kLogPoints, FetchToFFT, FFTToTranspose, float>{inverse}();
       });
 
       auto transpose_event = q.single_task<class TransposeKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Transpose<logn, FFTToTranspose, float>{to_write, mangle}();
+        Transpose<logn, kLogPoints, FFTToTranspose, float>{to_write, mangle}();
       });
 
       transpose_event.wait();
@@ -206,6 +218,17 @@ void TestFFT(bool mangle, bool inverse) {
     // Copy the output data from the USM memory to the host DDR
     q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
+
+
+    // std::cout << "Output data from host\n";
+    // for(int row=0; row<kN; row++){
+    //   for(int col=0; col<kN; col++){
+    //     int where =  row*kN + col;
+    //     std::cout << "(" << host_output_data[where].r() << ", " << host_output_data[where].i() << ") " ;
+    //   }
+    //   std::cout << "\n";
+    // }
+
 
     std::cout << "Processing time = " << kernel_runtime << "s" << std::endl;
 
