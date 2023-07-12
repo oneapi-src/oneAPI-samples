@@ -108,7 +108,16 @@ endif()
 
 message(STATUS "LOGN=${LOGN}")
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG} -DDISABLE_SYCL_EXT_ANNOTATED_INTERFACES)
+set(PARALLELISM "8")
+
+if(DEFINED SET_PARALLELISM)
+    set(PARALLELISM ${SET_PARALLELISM})
+endif()
+
+message(STATUS "PARALLELISM=${PARALLELISM}")
+
+
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG} -DLOGN=${LOGN} -DPARALLELISM=${PARALLELISM} -DDISABLE_SYCL_EXT_ANNOTATED_INTERFACES)
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
@@ -116,13 +125,13 @@ set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 #    representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR -DLOGN=${LOGN})
+set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR)
 set(EMULATOR_LINK_FLAGS )
-set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE -DLOGN=${LOGN})
+set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
-set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR -DLOGN=${LOGN})
+set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
 set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
-set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE -DLOGN=${LOGN})
+set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
 
 ###############################################################################

@@ -8,7 +8,7 @@
 #include "fft2d.hpp"
 #include "pipe_utils.hpp"
 
-template <int logn>
+// Forward declarations
 void TestFFT(bool mangle, bool inverse);
 template <int n>
 int Coordinates(int iteration, int i);
@@ -18,21 +18,18 @@ template <int lognr_points>
 void FourierStage(ac_complex<double> *data);
 
 int main(int argc, char **argv) {
-  // defines log of the FFT size on each dimension, hardcoded in the kernel
-  constexpr int kLogN = LOGN;
-
   if (argc == 1) {
     std::cout << "No program argument was passed, running all fft2d variants"
               << std::endl;
 
     // test FFT transform with ordered memory layout
-    TestFFT<kLogN>(false, false);
+    TestFFT(false, false);
     // test inverse FFT transform with ordered memory layout
-    TestFFT<kLogN>(false, true);
+    TestFFT(false, true);
     // test FFT transform with alternative memory layout
-    TestFFT<kLogN>(true, false);
+    TestFFT(true, false);
     // test inverse FFT transform with alternative memory layout
-    TestFFT<kLogN>(true, true);
+    TestFFT(true, true);
 
   } else {
     std::string mode = argv[1];
@@ -59,15 +56,12 @@ int main(int argc, char **argv) {
       std::terminate();
     }
 
-    TestFFT<kLogN>(mangle, inverse);
+    TestFFT(mangle, inverse);
   }
   return 0;
 }
 
-template <int logn>
 void TestFFT(bool mangle, bool inverse) {
-  constexpr int kN = 1 << logn;
-
   try {
     // Device selector selection
 #if FPGA_SIMULATOR
@@ -90,6 +84,24 @@ void TestFFT(bool mangle, bool inverse) {
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>() << std::endl;
 
+
+    // Define the log of the FFT size on each dimension and the level of parallelism to implement
+#if FPGA_SIMULATOR
+    // Force small sizes in simulation mode to reduce simulation time
+    constexpr int kLogN = 4;
+    constexpr int kParallelism = 4;
+#else
+    constexpr int kLogN = LOGN;
+    constexpr int kParallelism = PARALLELISM;
+#endif
+
+    static_assert(kParallelism == 4 || kParallelism == 8,
+                  "The FFT kernel implementation only supports 4-parallel and "
+                  "8-parallel FFTs.");
+
+    constexpr int kN = 1 << kLogN;
+    constexpr int kLogParallelism = kParallelism == 8 ? 3 : 2;
+
     // Host memory
     ac_complex<float> *host_input_data =
         (ac_complex<float> *)std::malloc(sizeof(ac_complex<float>) * kN * kN);
@@ -109,13 +121,12 @@ void TestFFT(bool mangle, bool inverse) {
     // Initialize input and produce verification data
     for (int i = 0; i < kN; i++) {
       for (int j = 0; j < kN; j++) {
-        int where = mangle ? MangleBits<logn>(Coordinates<kN>(i, j))
+        int where = mangle ? MangleBits<kLogN>(Coordinates<kN>(i, j))
                            : Coordinates<kN>(i, j);
         host_verify[Coordinates<kN>(i, j)].r() = host_input_data[where].r() =
             (float)((double)rand() / (double)RAND_MAX);
         host_verify[Coordinates<kN>(i, j)].i() = host_input_data[where].i() =
             (float)((double)rand() / (double)RAND_MAX);
-
       }
     }
 
@@ -154,7 +165,8 @@ void TestFFT(bool mangle, bool inverse) {
     q.memcpy(input_data, host_input_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
 
-    std::cout << "Launching " << (inverse ? "inverse " : "")
+    std::cout << "Launching a " << kN * kN << " points " << kParallelism
+              << "-parallel " << (inverse ? "inverse " : "")
               << "FFT transform (" << (mangle ? "alternative" : "ordered")
               << " data layout)" << std::endl;
 
@@ -165,23 +177,14 @@ void TestFFT(bool mangle, bool inverse) {
     double start_time{};
     double end_time{};
 
-    constexpr int kPoints = 8;
-    constexpr int kLogPoints = 3;
-
-    // constexpr int kPoints = 4;
-    // constexpr int kLogPoints = 2;
-
-    // constexpr int kPoints = 2;
-    // constexpr int kLogPoints = 1;    
-
-    static_assert(kN/kPoints >= kPoints);
+    static_assert(kN / kParallelism >= kParallelism);
 
     using FetchToFFT =
         sycl::ext::intel::pipe<class FetchToFFTPipe,
-                               std::array<ac_complex<float>, kPoints>, 0>;
+                               std::array<ac_complex<float>, kParallelism>, 0>;
     using FFTToTranspose =
         sycl::ext::intel::pipe<class FFTToTransposePipe,
-                               std::array<ac_complex<float>, kPoints>, 0>;
+                               std::array<ac_complex<float>, kParallelism>, 0>;
 
     for (int i = 0; i < 2; i++) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
@@ -190,16 +193,18 @@ void TestFFT(bool mangle, bool inverse) {
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Fetch<logn, kLogPoints, FetchToFFT, float>{to_read, mangle}();
+        Fetch<kLogN, kLogParallelism, FetchToFFT, float>{to_read, mangle}();
       });
 
       q.single_task<class FFTKernel>([=]() [[intel::kernel_args_restrict]] {
-        FFT<logn, kLogPoints, FetchToFFT, FFTToTranspose, float>{inverse}();
+        FFT<kLogN, kLogParallelism, FetchToFFT, FFTToTranspose, float>{
+            inverse}();
       });
 
       auto transpose_event = q.single_task<class TransposeKernel>([=
       ]() [[intel::kernel_args_restrict]] {
-        Transpose<logn, kLogPoints, FFTToTranspose, float>{to_write, mangle}();
+        Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
+                                                                 mangle}();
       });
 
       transpose_event.wait();
@@ -219,16 +224,15 @@ void TestFFT(bool mangle, bool inverse) {
     q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
 
-
     // std::cout << "Output data from host\n";
     // for(int row=0; row<kN; row++){
     //   for(int col=0; col<kN; col++){
     //     int where =  row*kN + col;
-    //     std::cout << "(" << host_output_data[where].r() << ", " << host_output_data[where].i() << ") " ;
+    //     std::cout << "(" << host_output_data[where].r() << ", " <<
+    //     host_output_data[where].i() << ") " ;
     //   }
     //   std::cout << "\n";
     // }
-
 
     std::cout << "Processing time = " << kernel_runtime << "s" << std::endl;
 
@@ -243,7 +247,7 @@ void TestFFT(bool mangle, bool inverse) {
 
     // Run reference code
     for (int i = 0; i < kN; i++) {
-      FourierTransformGold<logn>(host_verify + Coordinates<kN>(i, 0), inverse);
+      FourierTransformGold<kLogN>(host_verify + Coordinates<kN>(i, 0), inverse);
     }
 
     for (int i = 0; i < kN; i++) {
@@ -254,8 +258,8 @@ void TestFFT(bool mangle, bool inverse) {
     }
 
     for (int i = 0; i < kN; i++) {
-      FourierTransformGold<logn>(host_verify_tmp + Coordinates<kN>(i, 0),
-                                 inverse);
+      FourierTransformGold<kLogN>(host_verify_tmp + Coordinates<kN>(i, 0),
+                                  inverse);
     }
 
     for (int i = 0; i < kN; i++) {
@@ -269,7 +273,7 @@ void TestFFT(bool mangle, bool inverse) {
     double noise_sum = 0;
     for (int i = 0; i < kN; i++) {
       for (int j = 0; j < kN; j++) {
-        int where = mangle ? MangleBits<logn>(Coordinates<kN>(i, j))
+        int where = mangle ? MangleBits<kLogN>(Coordinates<kN>(i, j))
                            : Coordinates<kN>(i, j);
         double magnitude = (double)host_verify[Coordinates<kN>(i, j)].r() *
                                (double)host_verify[Coordinates<kN>(i, j)].r() +
