@@ -115,7 +115,7 @@ int run_test(sycl::queue &q, USMTest test) {
 
   // Initialize the input with random values and output with zero
   for (int i = 0; i < kNumItems; i++) {
-    in[i] = 1; //{rand() % 2};
+    in[i] = rand();
     out[i] = {0};
   }
 
