@@ -1,27 +1,67 @@
+#include <math.h>
+
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 #include "fft2d.hpp"
+#include "pipe_utils.hpp"
 
-void ReferenceFFT(short int dir, long m, sycl::double2 *d);
+// Forward declarations
+void TestFFT(bool mangle, bool inverse);
+template <int n>
+int Coordinates(int iteration, int i);
+template <int lognr_points>
+void FourierTransformGold(ac_complex<double> *data, bool inverse);
+template <int lognr_points>
+void FourierStage(ac_complex<double> *data);
 
-int main(int argc, char *argv[]) {
-  constexpr int kRepetitions = 1;
-  constexpr int kLogN = 10;
-  constexpr int kN = 1 << kLogN;
-  constexpr int kRows = kN;
-  constexpr int kColumns = kN;
+int main(int argc, char **argv) {
+  if (argc == 1) {
+    std::cout << "No program argument was passed, running all fft2d variants"
+              << std::endl;
 
-  constexpr int kLogRows = kLogN;
-  constexpr int kLogColumns = kLogN;
+    // test FFT transform with ordered memory layout
+    TestFFT(false, false);
+    // test inverse FFT transform with ordered memory layout
+    TestFFT(false, true);
+    // test FFT transform with alternative memory layout
+    TestFFT(true, false);
+    // test inverse FFT transform with alternative memory layout
+    TestFFT(true, true);
 
-  using T = sycl::float2;
+  } else {
+    std::string mode = argv[1];
 
-  constexpr int kPadding = 8192 / sizeof(T);
-  constexpr int kLogStride = 3;
-  constexpr int kStride = 8;
+    bool mangle{};
+    bool inverse{};
 
+    if (mode == "normal") {
+      mangle = false;
+      inverse = false;
+    } else if (mode == "inverse") {
+      mangle = false;
+      inverse = true;
+    } else if (mode == "mangle") {
+      mangle = true;
+      inverse = false;
+    } else if (mode == "inverse-mangle") {
+      mangle = true;
+      inverse = true;
+    } else {
+      std::cerr << "Usage: fft2d <mode>" << std::endl;
+      std::cerr << "Where mode can be normal|inverse|mangle|inverse-mangle|all"
+                << std::endl;
+      std::terminate();
+    }
+
+    TestFFT(mangle, inverse);
+  }
+  return 0;
+}
+
+void TestFFT(bool mangle, bool inverse) {
   try {
     // Device selector selection
 #if FPGA_SIMULATOR
@@ -44,50 +84,70 @@ int main(int argc, char *argv[]) {
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>() << std::endl;
 
+
+    // Define the log of the FFT size on each dimension and the level of parallelism to implement
+#if FPGA_SIMULATOR
+    // Force small sizes in simulation mode to reduce simulation time
+    constexpr int kLogN = 4;
+    constexpr int kParallelism = 4;
+#else
+    constexpr int kLogN = LOGN;
+    constexpr int kParallelism = PARALLELISM;
+#endif
+
+    static_assert(kParallelism == 4 || kParallelism == 8,
+                  "The FFT kernel implementation only supports 4-parallel and "
+                  "8-parallel FFTs.");
+
+    constexpr int kN = 1 << kLogN;
+    constexpr int kLogParallelism = kParallelism == 8 ? 3 : 2;
+
     // Host memory
-    T *host_input_data = (T *)std::malloc(
-        kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding) *
-        sizeof(T));
-    T *host_output_data = (T *)std::malloc(
-        kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding) *
-        sizeof(T));
-    sycl::double2 *host_verify_0 = (sycl::double2 *)std::malloc(
-        kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding) *
-        sizeof(sycl::double2));
-    sycl::double2 *host_verify_1 = (sycl::double2 *)std::malloc(
-        kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding) *
-        sizeof(sycl::double2));
+    ac_complex<float> *host_input_data =
+        (ac_complex<float> *)std::malloc(sizeof(ac_complex<float>) * kN * kN);
+    ac_complex<float> *host_output_data =
+        (ac_complex<float> *)std::malloc(sizeof(ac_complex<float>) * kN * kN);
+    ac_complex<double> *host_verify =
+        (ac_complex<double> *)std::malloc(sizeof(ac_complex<double>) * kN * kN);
+    ac_complex<double> *host_verify_tmp =
+        (ac_complex<double> *)std::malloc(sizeof(ac_complex<double>) * kN * kN);
 
     if ((host_input_data == nullptr) || (host_output_data == nullptr) ||
-        (host_verify_0 == nullptr) || (host_verify_1 == nullptr)) {
+        (host_verify == nullptr) || (host_verify_tmp == nullptr)) {
       std::cerr << "Failed to allocate host memory with malloc." << std::endl;
       std::terminate();
     }
 
+    // Initialize input and produce verification data
+    for (int i = 0; i < kN; i++) {
+      for (int j = 0; j < kN; j++) {
+        int where = mangle ? MangleBits<kLogN>(Coordinates<kN>(i, j))
+                           : Coordinates<kN>(i, j);
+        host_verify[Coordinates<kN>(i, j)].r() = host_input_data[where].r() =
+            (float)((double)rand() / (double)RAND_MAX);
+        host_verify[Coordinates<kN>(i, j)].i() = host_input_data[where].i() =
+            (float)((double)rand() / (double)RAND_MAX);
+      }
+    }
+
     // Device memory
-    T *device_input_data;
-    T *device_output_data;
-    T *device_temp_data;
+    ac_complex<float> *input_data;
+    ac_complex<float> *output_data;
+    ac_complex<float> *temp_data;
 
     if (q.get_device().has(sycl::aspect::usm_device_allocations)) {
-      std::cout << "Using device allocations" << std::endl;
+      std::cout << "Using USM device allocations" << std::endl;
       // Allocate FPGA DDR memory.
-      device_input_data = sycl::malloc_device<T>(
-          kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding), q);
-      device_output_data = sycl::malloc_device<T>(
-          kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding), q);
-      device_temp_data = sycl::malloc_device<T>(
-          kRows * kColumns + (kColumns / kStride) * kPadding, q);
+      input_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
+      output_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
+      temp_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
     } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
-      std::cout << "Using shared allocations" << std::endl;
+      std::cout << "Using USM host allocations" << std::endl;
       // No device allocations means that we are probably in an IP authoring
       // flow
-      device_input_data = sycl::malloc_host<T>(
-          kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding), q);
-      device_output_data = sycl::malloc_host<T>(
-          kRepetitions * (kRows * kColumns + (kRows / kStride) * kPadding), q);
-      device_temp_data = sycl::malloc_host<T>(
-          kRows * kColumns + (kColumns / kStride) * kPadding, q);
+      input_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
+      output_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
+      temp_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
     } else {
       std::cerr << "USM device allocations or USM shared allocations must be "
                    "supported to run this sample."
@@ -95,228 +155,236 @@ int main(int argc, char *argv[]) {
       std::terminate();
     }
 
-    // Helper lambdas to compute addresses in one dimensional arrays
-    auto coord = [](int &k, int &i, int j) {
-      return k * (kRows * kColumns + (kRows / kStride) * kPadding) + i * kRows +
-             (i / kStride) * kPadding + j;
-    };
-    auto coordt = [](int &k, int &i, int j) {
-      return k * (kColumns * kRows + (kColumns / kStride) * kPadding) +
-             i * kColumns + (i / kStride) * kPadding + j;
-    };
+    if (input_data == nullptr || output_data == nullptr ||
+        temp_data == nullptr) {
+      std::cerr << "Failed to allocate USM memory." << std::endl;
+      std::terminate();
+    }
 
-    for (int k = 0; k < kRepetitions; k++) {
-      // Create random data
-      for (int i = 0; i < kRows; i++) {
-        for (int j = 0; j < kColumns; j++) {
-          host_verify_0[coord(k, i, j)][0] =
-              host_input_data[coord(k, i, j)][0] =
-                  rand() / (float)RAND_MAX * 32;
-          host_verify_0[coord(k, i, j)][1] =
-              host_input_data[coord(k, i, j)][1] =
-                  rand() / (float)RAND_MAX * 32;
-        }
-      }
+    // Copy the input data from host DDR to USM memory
+    q.memcpy(input_data, host_input_data, sizeof(ac_complex<float>) * kN * kN)
+        .wait();
 
-      // Run in-place FFT on CPU using code from web to verify our results
-      for (int i = 0; i < kRows; i++) {
-        ReferenceFFT(1, kLogColumns, host_verify_0 + coord(k, i, 0));
-      }
+    std::cout << "Launching a " << kN * kN << " points " << kParallelism
+              << "-parallel " << (inverse ? "inverse " : "")
+              << "FFT transform (" << (mangle ? "alternative" : "ordered")
+              << " data layout)" << std::endl;
 
-      for (int i = 0; i < kRows; i++) {
-        for (int j = 0; j < kColumns; j++) {
-          host_verify_1[coordt(k, j, i)] = host_verify_0[coord(k, i, j)];
-        }
-      }
+    // A 2D FFT transform requires applying a 1D FFT transform to each matrix
+    // row followed by a 1D FFT transform to each column of the intermediate
+    // result.
 
-      for (int i = 0; i < kColumns; i++) {
-        ReferenceFFT(1, kLogRows, host_verify_1 + coordt(k, i, 0));
-      }
+    double start_time{};
+    double end_time{};
 
-      for (int i = 0; i < kColumns; i++) {
-        for (int j = 0; j < kRows; j++) {
-          host_verify_0[coord(k, j, i)] = host_verify_1[coordt(k, i, j)];
-        }
+    static_assert(kN / kParallelism >= kParallelism);
+
+    using FetchToFFT =
+        sycl::ext::intel::pipe<class FetchToFFTPipe,
+                               std::array<ac_complex<float>, kParallelism>, 0>;
+    using FFTToTranspose =
+        sycl::ext::intel::pipe<class FFTToTransposePipe,
+                               std::array<ac_complex<float>, kParallelism>, 0>;
+
+    for (int i = 0; i < 2; i++) {
+      ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
+      ac_complex<float> *to_write = i == 0 ? temp_data : output_data;
+
+      // Start a 1D FFT on the matrix rows/columns
+      auto fetch_event = q.single_task<class FetchKernel>([=
+      ]() [[intel::kernel_args_restrict]] {
+        Fetch<kLogN, kLogParallelism, FetchToFFT, float>{to_read, mangle}();
+      });
+
+      q.single_task<class FFTKernel>([=]() [[intel::kernel_args_restrict]] {
+        FFT<kLogN, kLogParallelism, FetchToFFT, FFTToTranspose, float>{
+            inverse}();
+      });
+
+      auto transpose_event = q.single_task<class TransposeKernel>([=
+      ]() [[intel::kernel_args_restrict]] {
+        Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
+                                                                 mangle}();
+      });
+
+      transpose_event.wait();
+
+      if (i == 0) {
+        start_time = fetch_event.template get_profiling_info<
+            sycl::info::event_profiling::command_start>();
+      } else {
+        end_time = transpose_event.template get_profiling_info<
+            sycl::info::event_profiling::command_end>();
       }
     }
 
-    // Copy the input data from host DDR to FPGA DDR
-    q.memcpy(device_input_data, host_input_data,
-             kRepetitions * sizeof(T) *
-                 (kRows * kColumns + (kRows / kStride) * kPadding))
-        .wait();
-
-    // Compute the FFT2D on device
-    auto fft2d_event =
-        q.single_task<class FFT2DKernel>([=]() [[intel::kernel_args_restrict]] {
-          FFT2D<kRows, kColumns, kStride, kPadding, kLogColumns, kLogStride, sycl::float2>(
-              device_input_data, device_output_data, device_temp_data,
-              kRepetitions);
-        });
-
-    // Compute the total time the execution lasted
-    auto start_time = fft2d_event.template get_profiling_info<
-        sycl::info::event_profiling::command_start>();
-    auto end_time = fft2d_event.template get_profiling_info<
-        sycl::info::event_profiling::command_end>();
     double kernel_runtime = (end_time - start_time) / 1.0e9;
 
-    std::cout << "Total duration:   " << kernel_runtime << " s" << std::endl;
-
-    double g_gpoints_per_sec =
-        ((double)2 * kRepetitions * kRows * kColumns / kernel_runtime) * 1.0e-9;
-    double g_gflops = 5 * kColumns * (log((float)kColumns) / log((float)2)) /
-                          (kernel_runtime / (kRepetitions * kRows) * 1E9) +
-                      5 * kRows * (log((float)kRows) / log((float)2)) /
-                          (kernel_runtime / (kRepetitions * kColumns) * 1E9);
-    std::cout << "Timing: " << kernel_runtime
-              << " seconds total, throughput = " << g_gpoints_per_sec
-              << "Gpoints/s" << std::endl;
-    std::cout << "Throughput = " << g_gflops << std::endl;
-
-    q.memcpy(host_output_data, device_output_data,
-             kRepetitions * sizeof(T) *
-                 (kRows * kColumns + (kRows / kStride) * kPadding))
+    // Copy the output data from the USM memory to the host DDR
+    q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
 
-    // Check
-    double fpga_snr = 200;
-    for (int k = 0; k < kRepetitions; k++) {
-      double mag_sum = 0;
-      double noise_sum = 0;
-      for (int i = 0; i < kRows; i++) {
-        for (int j = 0; j < kColumns; j++) {
-          double magnitude = (double)host_output_data[coord(k, i, j)][0] *
-                                 (double)host_output_data[coord(k, i, j)][0] +
-                             (double)host_output_data[coord(k, i, j)][1] *
-                                 (double)host_output_data[coord(k, i, j)][1];
+    // std::cout << "Output data from host\n";
+    // for(int row=0; row<kN; row++){
+    //   for(int col=0; col<kN; col++){
+    //     int where =  row*kN + col;
+    //     std::cout << "(" << host_output_data[where].r() << ", " <<
+    //     host_output_data[where].i() << ") " ;
+    //   }
+    //   std::cout << "\n";
+    // }
 
-          double noise = (host_verify_0[coord(k, i, j)][0] -
-                          (double)host_output_data[coord(k, i, j)][0]) *
-                             (host_verify_0[coord(k, i, j)][0] -
-                              (double)host_output_data[coord(k, i, j)][0]) +
-                         (host_verify_0[coord(k, i, j)][1] -
-                          (double)host_output_data[coord(k, i, j)][1]) *
-                             (host_verify_0[coord(k, i, j)][1] -
-                              (double)host_output_data[coord(k, i, j)][1]);
+    std::cout << "Processing time = " << kernel_runtime << "s" << std::endl;
 
-          mag_sum += magnitude;
-          noise_sum += noise;
-        }
-      }
-      double db = 10 * log(mag_sum / noise_sum) / log(10.0);
-      if (db < fpga_snr) fpga_snr = db;
+    double gpoints_per_sec = ((double)kN * kN / kernel_runtime) * 1e-9;
+    double gflops = 2 * 5 * kN * kN * (log((float)kN) / log((float)2)) /
+                    (kernel_runtime * 1e9);
+
+    std::cout << "Throughput = " << gpoints_per_sec << " Gpoints / sec ("
+              << gflops << " Gflops)" << std::endl;
+
+    // Check signal to noise ratio
+
+    // Run reference code
+    for (int i = 0; i < kN; i++) {
+      FourierTransformGold<kLogN>(host_verify + Coordinates<kN>(i, 0), inverse);
     }
 
-    std::cout << "Signal to noise ratio: " << fpga_snr << std::endl;
+    for (int i = 0; i < kN; i++) {
+      for (int j = 0; j < kN; j++) {
+        host_verify_tmp[Coordinates<kN>(j, i)] =
+            host_verify[Coordinates<kN>(i, j)];
+      }
+    }
 
-    if (fpga_snr > 115) printf("PASSED\n");
+    for (int i = 0; i < kN; i++) {
+      FourierTransformGold<kLogN>(host_verify_tmp + Coordinates<kN>(i, 0),
+                                  inverse);
+    }
 
-    free(device_input_data, q);
-    free(device_output_data, q);
-    free(device_temp_data, q);
+    for (int i = 0; i < kN; i++) {
+      for (int j = 0; j < kN; j++) {
+        host_verify[Coordinates<kN>(j, i)] =
+            host_verify_tmp[Coordinates<kN>(i, j)];
+      }
+    }
 
-    free(host_input_data);
-    free(host_output_data);
-    free(host_verify_0);
-    free(host_verify_1);
+    double magnitude_sum = 0;
+    double noise_sum = 0;
+    for (int i = 0; i < kN; i++) {
+      for (int j = 0; j < kN; j++) {
+        int where = mangle ? MangleBits<kLogN>(Coordinates<kN>(i, j))
+                           : Coordinates<kN>(i, j);
+        double magnitude = (double)host_verify[Coordinates<kN>(i, j)].r() *
+                               (double)host_verify[Coordinates<kN>(i, j)].r() +
+                           (double)host_verify[Coordinates<kN>(i, j)].i() *
+                               (double)host_verify[Coordinates<kN>(i, j)].i();
+        double noise = (host_verify[Coordinates<kN>(i, j)].r() -
+                        (double)host_output_data[where].r()) *
+                           (host_verify[Coordinates<kN>(i, j)].r() -
+                            (double)host_output_data[where].r()) +
+                       (host_verify[Coordinates<kN>(i, j)].i() -
+                        (double)host_output_data[where].i()) *
+                           (host_verify[Coordinates<kN>(i, j)].i() -
+                            (double)host_output_data[where].i());
+
+        magnitude_sum += magnitude;
+        noise_sum += noise;
+      }
+    }
+    double db = 10 * log(magnitude_sum / noise_sum) / log(10.0);
+
+    std::cout << "Signal to noise ratio on output sample: " << db << std::endl;
+    std::cout << " --> " << (db > 120 ? "PASSED" : "FAILED") << std::endl;
+
+    free(input_data, q);
+    free(output_data, q);
+    free(temp_data, q);
 
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
               << std::endl;
     std::terminate();
   }
+}
 
-  return 0;
-}  // end of main
+/////// HELPER FUNCTIONS ///////
 
-void ReferenceFFT(short int dir, long m, sycl::double2 *d) {
-  /* Following from: http://paulbourke.net/miscellaneous/dft/
-     This computes an in-place complex-to-complex FFT
-     x and y are the real and imaginary arrays of 2^m points.
-     dir =  1 gives forward transform, -1 = reverse */
-  long n, i, i1, j, k, i2, l, l1, l2;
-  double c1, c2, tx, ty, t1, t2, u1, u2, z;
+// provides a linear offset in the input array
+template <int n>
+int Coordinates(int iteration, int i) {
+  return iteration * n + i;
+}
 
-  /* Calculate the number of points */
-  n = 1;
-  for (i = 0; i < m; i++) n *= 2;
+// Reference Fourier transform
+template <int lognr_points>
+void FourierTransformGold(ac_complex<double> *data, bool inverse) {
+  constexpr int kNrPoints = 1 << lognr_points;
 
-  /* Do the bit reversal */
-  i2 = n >> 1;
-  j = 0;
-  for (i = 0; i < n - 1; i++) {
-    if (i < j) {
-      tx = d[i][0];
-      ty = d[i][1];
-      d[i][0] = d[j][0];
-      d[i][1] = d[j][1];
-      d[j][0] = tx;
-      d[j][1] = ty;
+  // The inverse requires swapping the real and imaginary component
+  if (inverse) {
+    for (int i = 0; i < kNrPoints; i++) {
+      double tmp = data[i].r();
+      data[i].r() = data[i].i();
+      data[i].i() = tmp;
     }
-    k = i2;
-    while (k <= j) {
-      j -= k;
-      k >>= 1;
-    }
-    j += k;
   }
 
-  /* Compute the FFT */
-  c1 = -1.0;
-  c2 = 0.0;
-  l2 = 1;
-  for (l = 0; l < m; l++) {
-    l1 = l2;
-    l2 <<= 1;
-    u1 = 1.0;
-    u2 = 0.0;
-    for (j = 0; j < l1; j++) {
-      for (i = j; i < n; i += l2) {
-        i1 = i + l1;
-        t1 = u1 * d[i1][0] - u2 * d[i1][1];
-        t2 = u1 * d[i1][1] + u2 * d[i1][0];
-        d[i1][0] = d[i][0] - t1;
-        d[i1][1] = d[i][1] - t2;
-        d[i][0] += t1;
-        d[i][1] += t2;
-      }
-      z = u1 * c1 - u2 * c2;
-      u2 = u1 * c2 + u2 * c1;
-      u1 = z;
+  // Do a FT recursively
+  FourierStage<lognr_points>(data);
+
+  // The inverse requires swapping the real and imaginary component
+  if (inverse) {
+    for (int i = 0; i < kNrPoints; i++) {
+      double tmp = data[i].r();
+      data[i].r() = data[i].i();
+      data[i].i() = tmp;
     }
-    c2 = sqrt((1.0 - c1) / 2.0);
-    if (dir == 1) c2 = -c2;
-    c1 = sqrt((1.0 + c1) / 2.0);
   }
+}
 
-  /* Do the bit reversal */
-  /*  i2 = n >> 1;
-    j = 0;
-    for (i=0;i<n-1;i++) {
-      if (i < j) {
-        tx = d[i][0];
-        ty = d[i][1];
-        d[i][0] = d[j][0];
-        d[i][1] = d[j][1];
-        d[j][0] = tx;
-        d[j][1] = ty;
-      }
-      k = i2;
-      while (k <= j) {
-        j -= k;
-        k >>= 1;
-      }
-      j += k;
+template <int lognr_points>
+void FourierStage(ac_complex<double> *data) {
+  if constexpr (lognr_points > 0) {
+    constexpr int kNrPoints = 1 << lognr_points;
+
+    ac_complex<double> *half1 = (ac_complex<double> *)malloc(
+        sizeof(ac_complex<double>) * kNrPoints / 2);
+    ac_complex<double> *half2 = (ac_complex<double> *)malloc(
+        sizeof(ac_complex<double>) * kNrPoints / 2);
+
+    if (half1 == nullptr || half2 == nullptr) {
+      std::cerr << "Failed to allocate memory in validation function."
+                << std::endl;
+      std::terminate();
     }
-  */
 
-  /* Scaling for forward transform */
-  //  if (dir == 1) {
-  //    for (i=0;i<n;i++) {
-  //      d[i][0] /= n;
-  //      d[i][1] /= n;
-  //    }
-  //  }
-  //  cout << "  ... done post scaling\n";
+    for (int i = 0; i < kNrPoints / 2; i++) {
+      half1[i] = data[2 * i];
+      half2[i] = data[2 * i + 1];
+    }
+
+    FourierStage<lognr_points - 1>(half1);
+    FourierStage<lognr_points - 1>(half2);
+
+    for (int i = 0; i < kNrPoints / 2; i++) {
+      data[i].r() = half1[i].r() +
+                    cos(2 * M_PI * i / kNrPoints) * half2[i].r() +
+                    sin(2 * M_PI * i / kNrPoints) * half2[i].i();
+      data[i].i() = half1[i].i() -
+                    sin(2 * M_PI * i / kNrPoints) * half2[i].r() +
+                    cos(2 * M_PI * i / kNrPoints) * half2[i].i();
+      data[i + kNrPoints / 2].r() =
+          half1[i].r() - cos(2 * M_PI * i / kNrPoints) * half2[i].r() -
+          sin(2 * M_PI * i / kNrPoints) * half2[i].i();
+      data[i + kNrPoints / 2].i() =
+          half1[i].i() + sin(2 * M_PI * i / kNrPoints) * half2[i].r() -
+          cos(2 * M_PI * i / kNrPoints) * half2[i].i();
+    }
+
+    free(half1);
+    free(half2);
+  } else {
+    return;
+  }
 }
