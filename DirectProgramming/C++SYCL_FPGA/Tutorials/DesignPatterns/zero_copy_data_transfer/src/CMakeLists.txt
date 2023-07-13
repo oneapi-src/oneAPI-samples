@@ -48,12 +48,12 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Wall -DFPGA_EMULATOR ${DEVICE_FLAG} ${BSP_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Wall -DFPGA_EMULATOR ${BSP_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${BSP_FLAG}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -Wall -DFPGA_SIMULATOR ${DEVICE_FLAG} ${BSP_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS} ${BSP_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Wall ${DEVICE_FLAG} -DFPGA_HARDWARE ${BSP_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -Wall -DFPGA_SIMULATOR ${BSP_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${BSP_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Wall -DFPGA_HARDWARE ${BSP_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
