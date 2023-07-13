@@ -8,7 +8,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")

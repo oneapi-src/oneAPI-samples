@@ -1,0 +1,34 @@
+{
+  "guid": "0DDCAFEA-65A6-4DE1-ACFF-FB219612E91F",  
+  "name": "Binomial",
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "Binomial European Option Pricing Model Simulation using Intel® oneMKL Random Number Generators",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["gen9"],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "binomial",
+        "steps": [
+          "make clean",
+          "make && ./binomial_sycl"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "binomial",
+        "steps": [
+          "nmake clean",
+          "nmake && binomial_sycl.exe"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

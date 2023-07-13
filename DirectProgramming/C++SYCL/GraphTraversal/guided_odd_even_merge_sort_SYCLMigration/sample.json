@@ -1,8 +1,8 @@
 {
-  "guid": "d4d338a2-dd64-492a-86fe-6fb4ae4190e2",
-  "name": "odd-even-merge-sort",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/GraphTraversal"],
-  "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs",
+  "guid": "E17DC0AF-780B-41CE-9F44-36A06960C73F",
+  "name": "guided_oddEvenMergeSort_SYCLMigration",
+  "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL/GraphTraversal"],
+  "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
@@ -15,11 +15,10 @@
                         "cd build",
                         "cmake ..",
                         "make",
-                        "make run_cpu",
-                        "make run_gpu"
+                        "make run"
                  ]
         }]
 
   },
-  "expertise": "Getting Started"
+  "expertise": "Code Optimization"
 }

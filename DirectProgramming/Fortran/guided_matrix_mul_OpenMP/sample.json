@@ -1,0 +1,39 @@
+{
+  "guid": "E1044C2C-963E-4ACE-9667-4390CCD2B81F",
+  "name": "Matrix Multiply Fortran",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/OpenMP"],
+  "description": "Demonstrates how to use OpenMP* directives with Fortran to offload computations to an Intel GPU.",
+  "toolchain": [ "ifort", "ifx" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+      "linux": [
+        {
+          "id": "seq",
+          "steps": [
+            "make clean",
+            "make seq"
+          ]
+        },
+        {
+          "id": "par",
+          "steps": [
+            "make clean",
+            "make par"
+          ]
+        },
+        {
+          "id": "gpu",
+          "steps": [
+            "make clean",
+            "make gpu"
+          ]
+        }
+      ],
+      "windows": []
+  },
+  "expertise": "Tutorial"
+}

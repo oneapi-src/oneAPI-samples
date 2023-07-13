@@ -1,0 +1,28 @@
+{
+  "guid": "33682BBE-FE55-472D-A248-AC41B85C02D6",
+  "name": "Jacobi Cuda Graphs Sample",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
+  "description": "Migration of JacobiCudaGraphs from CUDA to SYCL, demonstrates usage of Taskflow programming model inplace of CUDA Graph API's and optimization of the migrated code",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run0",
+			"make run1",
+			"make run_smo0",
+			"make run_smo1"
+                 ]
+        }]
+
+  },
+  "expertise": "Concepts and Functionality"
+}
+

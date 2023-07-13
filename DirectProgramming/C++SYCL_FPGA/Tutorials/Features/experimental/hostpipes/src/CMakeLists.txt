@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -17,34 +17,17 @@ else()
     # Check if the target is a BSP
     if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
         set(IS_BSP "1")
+        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as uses IPA flow only.")
     else()
         set(IS_BSP "0")
-        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so USM will be enabled by default.")
-        message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
+        message(STATUS "This tutorial does not support a BSP target as it uses IPA flow only.")
     endif()
-endif()
-
-# this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
-# to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
-# to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if((IS_BSP STREQUAL "1") AND NOT FPGA_DEVICE MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
-    message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
-endif()
-
-if (USM_HOST_ALLOCATIONS_ENABLED)
-    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-endif()
-
-# This is for finding the install path to the necessary include files
-if(DEFINED ENV{INTELFPGAOCLSDKROOT})
-   set(SDK_ROOT_PATH $ENV{INTELFPGAOCLSDKROOT})
-else()
-   message(FATAL_ERROR "The INTELFPGAOCLSDKROOT environment variable must be defined for this tutorial to compile.")
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

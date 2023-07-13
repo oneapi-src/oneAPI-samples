@@ -1,7 +1,6 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-// Host pipe support in $INTELFPGAOCLSDKROOT/include/sycl/ext/intel/prototype
-#include <host_pipes.hpp>
+#include <sycl/ext/intel/experimental/pipes.hpp>
 
 #include <algorithm>
 #include <iomanip>
@@ -21,35 +20,19 @@ class D2HPipeID;
 // the host pipes
 using ValueT = int;
 constexpr size_t kPipeMinCapacity = 8;
-constexpr size_t kReadyLatency = 0;
-constexpr size_t kBitsPerSymbol = 1;
 
-using H2DPipe = sycl::ext::intel::prototype::pipe<
+using H2DPipe = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     H2DPipeID,         // An identifier for the pipe
     ValueT,            // The type of data in the pipe
-    kPipeMinCapacity,  // The capacity of the pipe
-    // Additional host pipe parameters
-    kReadyLatency,   // Latency for ready signal deassert
-    kBitsPerSymbol,  // Symbol size on data bus
-    true,            // Exposes a valid on the pipe interface
-    false,           // First symbol in high order bits
-    sycl::ext::intel::prototype::internal::protocol_name::
-        AVALON_STREAMING  // Protocol
+    kPipeMinCapacity   // The capacity of the pipe
     >;
 
-using D2HPipe = sycl::ext::intel::prototype::pipe<
+using D2HPipe = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     D2HPipeID,         // An identifier for the pipe
     ValueT,            // The type of data in the pipe
-    kPipeMinCapacity,  // The capacity of the pipe
-    // Additional host pipe parameters
-    kReadyLatency,   // Latency for ready signal deassert
-    kBitsPerSymbol,  // Symbol size on data bus
-    true,            // Exposes a valid on the pipe interface
-    false,           // First symbol in high order bits
-    sycl::ext::intel::prototype::internal::protocol_name::
-        AVALON_STREAMING  // Protocol
+    kPipeMinCapacity   // The capacity of the pipe
     >;
 
 // forward declare the test functions
@@ -91,14 +74,7 @@ int main(int argc, char* argv[]) {
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
-    // make sure the device supports USM device allocations
     auto device = q.get_device();
-    if (!device.has(sycl::aspect::usm_host_allocations)) {
-      std::cerr << "ERROR: The selected device does not support USM host"
-                << " allocations" << std::endl;
-      return 1;
-    }
-
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
@@ -198,8 +174,6 @@ void AlternatingTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
 void LaunchCollectTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
                        size_t repeats) {
   std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
-  auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
-      q, count * repeats);
 
   for (size_t r = 0; r < repeats; r++) {
     std::cout << "\t " << r << ": "
@@ -208,7 +182,12 @@ void LaunchCollectTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
       // write data in host-to-device hostpipe
       H2DPipe::write(q, in[i]);
     }
+  }
 
+  auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
+      q, count * repeats);
+
+  for (size_t r = 0; r < repeats; r++) {
     std::cout << "\t " << r << ": "
               << "Doing " << count << " reads" << std::endl;
     for (size_t i = 0; i < count; i++) {

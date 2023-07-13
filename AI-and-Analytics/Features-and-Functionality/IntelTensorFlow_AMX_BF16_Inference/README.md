@@ -19,7 +19,7 @@ The Intel® Optimization for TensorFlow* gives users the ability to speed up inf
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 or newer
-| Hardware                          | Intel® Xeon® Scalable processor family or newer
+| Hardware                          | 4th Gen Intel® Xeon® Scalable Processors newer
 | Software                          | Intel® AI Analytics Toolkit (AI Kit)
 
 ### For Local Development Environments
@@ -119,14 +119,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Example Output
 If successful, the sample displays [CODE_SAMPLE_COMPLETED_SUCCESSFULLY]. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The following image shows approximate performance speed increases using AMX BF16 with auto-mixed precision during inference. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
-
-![Inference Speedup](images/inference-perf-comp.png)
+The diagrams show approximate performance speed increases using AMX BF16 with auto-mixed precision during inference. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
 
 With the imporovement on model inference speed, using AMX BF16 with auto-mixed precision during inference will not influence the inference accuracy.
-
-![Inference Speedup](images/inference-acc-comp.png)
-
 
 ## License
 

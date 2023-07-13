@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
   if (N < 32) N = 32;
 
   // Initialize SYCL queue
-  sycl::queue Q(sycl::default_selector{});
+  sycl::queue Q(sycl::default_selector_v);
   std::cout << "Running on: "
             << Q.get_device().get_info<sycl::info::device::name>() << "\n";
 

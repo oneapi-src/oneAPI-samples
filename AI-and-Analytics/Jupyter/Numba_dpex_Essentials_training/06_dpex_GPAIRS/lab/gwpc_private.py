@@ -1,11 +1,11 @@
 import numpy as np
-import numba_dppy
+import numba_dpex
 import math
 from numba import cuda
 
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_no_slm_ker(
     n,
     nbins,
@@ -23,20 +23,20 @@ def count_weighted_pairs_3d_intel_no_slm_ker(
     result,
 ):
 
-    lid0 = numba_dppy.get_local_id(0)
-    gr0 = numba_dppy.get_group_id(0)
+    lid0 = numba_dpex.get_local_id(0)
+    gr0 = numba_dpex.get_group_id(0)
 
-    lid1 = numba_dppy.get_local_id(1)
-    gr1 = numba_dppy.get_group_id(1)
+    lid1 = numba_dpex.get_local_id(1)
+    gr1 = numba_dpex.get_group_id(1)
 
-    lws0 = numba_dppy.get_local_size(0)
-    lws1 = numba_dppy.get_local_size(1)
+    lws0 = numba_dpex.get_local_size(0)
+    lws1 = numba_dpex.get_local_size(1)
 
     n_wi = 20
 
-    dsq_mat = numba_dppy.private.array(shape=(20 * 20), dtype=np.float32)
-    w0_vec = numba_dppy.private.array(shape=(20), dtype=np.float32)
-    w1_vec = numba_dppy.private.array(shape=(20), dtype=np.float32)
+    dsq_mat = numba_dpex.private.array(shape=(20 * 20), dtype=np.float32)
+    w0_vec = numba_dpex.private.array(shape=(20), dtype=np.float32)
+    w1_vec = numba_dpex.private.array(shape=(20), dtype=np.float32)
 
     offset0 = gr0 * n_wi * lws0 + lid0
     offset1 = gr1 * n_wi * lws1 + lid1
@@ -76,7 +76,7 @@ def count_weighted_pairs_3d_intel_no_slm_ker(
 
     # update slm_hist. Use work-item private buffer of 16 tfloat elements
     for k in range(0, slm_hist_size, private_hist_size):
-        private_hist = numba_dppy.private.array(shape=(16), dtype=np.float32)
+        private_hist = numba_dpex.private.array(shape=(16), dtype=np.float32)
         for p in range(private_hist_size):
             private_hist[p] = 0.0
 
@@ -105,11 +105,11 @@ def count_weighted_pairs_3d_intel_no_slm_ker(
 
         pk = k
         for p in range(private_hist_size):
-            numba_dppy.atomic.add(result, pk, private_hist[p])
+            numba_dpex.atomic.add(result, pk, private_hist[p])
             pk += 1
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_orig_ker(
     n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result_tmp
 ):
@@ -117,7 +117,7 @@ def count_weighted_pairs_3d_intel_orig_ker(
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpex.get_global_id(0)
 
     px = x1[i]
     py = y1[i]
@@ -137,18 +137,18 @@ def count_weighted_pairs_3d_intel_orig_ker(
         if dsq <= rbins_squared[nbins - 1]:
             for k in range(nbins - 1, -1, -1):
                 if (k == 0) or (dsq > rbins_squared[k - 1]):
-                    numba_dppy.atomic.add(result_tmp, k, wprod)
+                    numba_dpex.atomic.add(result_tmp, k, wprod)
                     break
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_agg_ker(result, result_tmp):
     i = numba_dpy.get_global_id(0)
     for j in range(i + 1):
         result[i] += result_tmp[j]
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_ver1(
     n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
 ):
@@ -156,8 +156,8 @@ def count_weighted_pairs_3d_intel_ver1(
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    start = numba_dppy.get_global_id(0)
-    stride = numba_dppy.get_global_size(0)
+    start = numba_dpex.get_global_id(0)
+    stride = numba_dpex.get_global_size(0)
 
     n1 = n
     n2 = n
@@ -180,13 +180,13 @@ def count_weighted_pairs_3d_intel_ver1(
 
             k = nbins - 1
             while dsq <= rbins_squared[k]:
-                numba_dppy.atomic.add(result, k - 1, wprod)
+                numba_dpex.atomic.add(result, k - 1, wprod)
                 k = k - 1
                 if k <= 0:
                     break
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_ver2(
     n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
 ):
@@ -194,7 +194,7 @@ def count_weighted_pairs_3d_intel_ver2(
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    i = numba_dppy.get_global_id(0)
+    i = numba_dpex.get_global_id(0)
 
     px = x1[i]
     py = y1[i]
@@ -217,7 +217,7 @@ def count_weighted_pairs_3d_intel_ver2(
             # - could reenable later when it's supported (~April 2020)
             # - could work around this to avoid atomics, which would perform better anyway
             # cuda.atomic.add(result, k-1, wprod)
-            numba_dppy.atomic.add(result, k - 1, wprod)
+            numba_dpex.atomic.add(result, k - 1, wprod)
             k = k - 1
             if k <= 0:
                 break

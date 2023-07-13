@@ -5,9 +5,9 @@
 // =============================================================
 #include <CL/sycl.hpp>
 #include <iostream>
-namespace sycl;
+using namespace sycl;
 int main() {
-  sycl::device d(sycl::gpu_selector{});
+  sycl::device d(sycl::gpu_selector_v);
   std::vector<sycl::device> *subdevices = new std::vector<sycl::device>();
   std::vector<sycl::device> *CCS = new std::vector<sycl::device>();
   auto part_prop = d.get_info<sycl::info::device::partition_properties>();

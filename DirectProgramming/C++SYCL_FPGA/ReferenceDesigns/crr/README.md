@@ -24,9 +24,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -39,7 +39,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -53,7 +53,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: You'll need a large FPGA part to be able to fit this design 
+> **Note**: You'll need a large FPGA part to be able to fit this design
 
 ### Performance
 
@@ -137,8 +137,8 @@ This design measures the FPGA performance to determine how many assets can be pr
 
 ## Build the `CRR Binomial Tree` Sample
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -155,7 +155,7 @@ This design measures the FPGA performance to determine how many assets can be pr
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -166,12 +166,12 @@ This design measures the FPGA performance to determine how many assets can be pr
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -195,7 +195,7 @@ This design measures the FPGA performance to determine how many assets can be pr
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -205,12 +205,12 @@ This design measures the FPGA performance to determine how many assets can be pr
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 

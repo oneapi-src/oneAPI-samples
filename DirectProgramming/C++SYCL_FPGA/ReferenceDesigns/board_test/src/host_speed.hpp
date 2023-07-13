@@ -71,7 +71,7 @@ struct Speed WriteSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
   speed_wr.slowest = 1.0e7f;
 
   for (size_t i = 0; i < num_xfers; i++) {
-    float time_ns = SyclGetQSubExecTimeNs(evt[i]);
+    float time_ns = SyclGetQStExecTimeNs(evt[i]);
     float speed_MBps = ((float)block_bytes / kMB) / ((float)time_ns * 1e-9);
 
     if (speed_MBps > speed_wr.fastest) speed_wr.fastest = speed_MBps;
@@ -149,7 +149,7 @@ struct Speed ReadSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
   speed_rd.slowest = 1.0e7f;
 
   for (size_t i = 0; i < num_xfers; i++) {
-    float time_ns = SyclGetQSubExecTimeNs(evt[i]);
+    float time_ns = SyclGetQStExecTimeNs(evt[i]);
     float speed_MBps = ((float)block_bytes / kMB) / ((float)time_ns * 1e-9);
 
     if (speed_MBps > speed_rd.fastest) speed_rd.fastest = speed_MBps;

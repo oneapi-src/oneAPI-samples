@@ -30,16 +30,16 @@ int main() {
   auto e1 = q.memcpy(data1_device, data1, N * sizeof(int));
   auto e2 = q.memcpy(data2_device, data2, N * sizeof(int));
     
-  //# STEP 3 : Write kernel code to update data1 on device with sqrt of value
+  //# STEP 3 : Write kernel code to update data1 on device with square of its value
     
   auto e3 = q.parallel_for(N, e1, [=](auto i) { 
-    data1_device[i] = sqrt(data1_device[i]);
+    data1_device[i] = (data1_device[i]*data1_device[i]);
   });
 
-  //# STEP 4 : Write kernel code to update data2 on device with sqrt of value
+  //# STEP 4 : Write kernel code to update data2 on device with square of its value
     
   auto e4 = q.parallel_for(N, e2, [=](auto i) { 
-    data2_device[i] = sqrt(data2_device[i]); 
+    data2_device[i] = (data2_device[i]*data2_device[i]); 
   });
 
   //# STEP 5 : Write kernel code to add data2 on device to data1
@@ -52,7 +52,7 @@ int main() {
 
   //# verify results
   int fail = 0;
-  for (int i = 0; i < N; i++) if(data1[i] != 12) {fail = 1; break;}
+  for (int i = 0; i < N; i++) if(data1[i] != 3026) {fail = 1; break;}
   if(fail == 1) std::cout << " FAIL"; else std::cout << " PASS";
   std::cout << "\n";
 

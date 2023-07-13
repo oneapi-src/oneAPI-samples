@@ -127,25 +127,20 @@ int main(int argc, char **argv)
     std::string radon_bmpname    = argc > 4 ? argv[4] : "radon.bmp";
     std::string restored_bmpname = argc > 5 ? argv[5] : "restored.bmp";
 
-    auto exception_handler = [](sycl::exception_list exceptions) {
-        for (std::exception_ptr const &e : exceptions) {
-            try {
-                std::rethrow_exception(e);
-            }
-            catch (sycl::exception const &e) {
-                std::cout << "Caught asynchronous SYCL exception:" << std::endl
-                          << e.what() << std::endl;
-            }
-        }
-    };
+    // Create execution queue.
+    // This sample requires double precision, so look for a device that supports it.
+    sycl::queue main_queue;
 
-    // create execution queue with asynchronous error handling
-    sycl::queue main_queue(sycl::device{sycl::default_selector{}}, exception_handler);
+    try {
+        main_queue = sycl::queue(sycl::aspect_selector({sycl::aspect::fp64}));
+    } catch (sycl::exception &e) {
+        std::cerr << "Could not find any device with double precision support. Exiting.\n";
+        return 0;
+    }
 
     std::cout << "Reading original image from " << original_bmpname << std::endl;
     matrix_r original_image(main_queue);
     bmp_read(original_image, original_bmpname);
-    // bmpWrite( "check-original.bmp", originalImage ); //For debugging purpose
 
     std::cout << "Allocating radonImage for backprojection" << std::endl;
     matrix_r radon_image(main_queue);

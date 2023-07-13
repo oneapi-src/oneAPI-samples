@@ -43,7 +43,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./ospTutorialCpp"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./ospTutorialCpp"
                  ]
                  }
         ]

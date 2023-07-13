@@ -82,7 +82,7 @@ When working with the command-line interface (CLI), you should configure the one
    $ make
    ```
 
-   By default, this command sequence will build the `02_sycl_dpct_migrated`, `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
+   By default, this command sequence will build the `03_sycl_migrated`, and `04_sycl_migrated_optimized` versions of the program.
 
 #### Troubleshooting
 
@@ -100,22 +100,26 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 You can run the programs for CPU and GPU. The commands indicate the device target.
 
-1. Run `02_sycl_dpct_migrated` for CPU and GPU.
+1. Run `03_sycl_migrated` for GPU.
     ```
-    make run_sdm_cpu
-    make run_sdm_gpu
+    make run
+    ```
+   Run `03_sycl_migrated` for CPU.
+    ```
+    export ONEAPI_DEVICE_SELECTOR=opencl:cpu
+    make run
+    unset ONEAPI_DEVICE_SELECTOR
     ```
 
-2. Run `03_sycl_migrated` for CPU and GPU.
+2. Run `04_sycl_migrated_optimized` for GPU.
     ```
-    make run_cpu
-    make run_gpu
+    make run_smo
     ```
-
-3. Run `04_sycl_migrated_optimized` for CPU and GPU.
+   Run `04_sycl_migrated_optimized` for CPU.
     ```
-    make run_smo_cpu
-    make run_smo_gpu
+    export ONEAPI_DEVICE_SELECTOR=opencl:cpu
+    make run_smo
+    unset ONEAPI_DEVICE_SELECTOR
     ```
 
 ### Build and Run the `HSOpticalFlow` Sample in Intel® DevCloud

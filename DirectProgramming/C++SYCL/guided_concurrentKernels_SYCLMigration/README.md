@@ -1,8 +1,8 @@
-﻿# `concurrentKernels` Sample
+﻿# `Concurrent Kernels` Sample
 
-The `concurrentKernels` sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU device.It is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU/CPU and further demonstrates how to optimize and improve processing time.
+The `Concurrent Kernels` sample demonstrates the use of SYCL queues for concurrent execution of several kernels on GPU device. It is implemented using SYCL* by migrating code from original CUDA source code for offloading computations to a GPU or CPU and further demonstrates how to optimize and improve processing time.
 
-| Property               | Description
+| Area                   | Description
 |:---                    |:---
 | What you will learn    | How to begin migrating CUDA to SYCL
 | Time to complete       | 15 minutes
@@ -10,39 +10,40 @@ The `concurrentKernels` sample demonstrates the use of SYCL queues for concurren
 >**Note**: This sample is based on the [concurrentKernels](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/concurrentKernels) sample in the NVIDIA/cuda-samples GitHub repository.
 
 ## Purpose
-ConcurrentKernels sample show the execution of Multiple Kernels on the device at the same time.
 
-This sample contains three versions in the following folders:
+The `Concurrent Kernels` sample shows the execution of multiple kernels on the device at the same time.
 
-| Folder Name                   | Description
-|:---                           |:---
-| `01_sycl_dpct_output`         | Contains output of Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
-| `02_sycl_dpct_migrated`       | Contains Intel® DPC++ Compatibility Tool migrated SYCL code from CUDA code with manual changes done to fix the unmigrated code to work functionally.
-| `03_sycl_migrated`            | Contains manually migrated SYCL code from CUDA code.
+This sample contains three versions of the code in the following folders:
+
+| Folder Name             | Description
+|:---                     |:---
+| `01_sycl_dpct_output`   | Contains output of Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
+| `02_sycl_dpct_migrated` | Contains Intel® DPC++ Compatibility Tool migrated SYCL code from CUDA code with manual changes done to fix the unmigrated code to work functionally.
+| `03_sycl_migrated`      | Contains manually migrated SYCL code from CUDA code.
 
 ## Prerequisites
 
-| Property              | Description
+| Optimized for         | Description
 |:---                   |:---
-| OS                    | Ubuntu* 20.04
-| Hardware              | Skylake with GEN9 or newer
+| OS                    | Ubuntu* 20.04 (or newer)
+| Hardware              | GEN9 (or newer)
 | Software              | Intel® oneAPI DPC++/C++ Compiler
 
 ## Key Implementation Details
 
-concurrentKernels involves a kernel that does no real work but runs atleast for a specified number of iterations.
+concurrentKernels involves a kernel that does no real work but runs at least for a specified number of iterations.
 
 >**Note**: This sample demonstrates the CUDA concurrentKernels using key concepts such as CUDA streams and Performance Strategies.
 
 SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution.
 
-The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order().By default, when no property is specified, the queue is out-of-order.
+The choice to create an in-order or out-of-order queue is made at queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Build the `concurrentKernels` Sample for CPU and GPU
+## Build the `Concurrent Kernels` Sample
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -77,25 +78,35 @@ make VERBOSE=1
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 
-## Run the `concurrentKernels` Sample
+## Run the `Concurrent Kernels` Sample
 
 ### On Linux
 
-You can run the programs for CPU and GPU. The commands indicate the device target.
+You can run the programs for CPU or GPU. The commands indicate the device target.
 
-1. Run `02_sycl_dpct_migrated` for CPU and GPU.
-    ```
-    make run_sdm_cpu
-    make run_sdm_gpu
-    ```
+1. Run `02_sycl_dpct_migrated` for **GPU**.
+   ```
+   make run_sdm
+   ```
+   Run `02_sycl_dpct_migrated` for **CPU**.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run_sdm
+   unset SYCL_DEVICE_FILTER
+   ```
 
-2. Run `03_sycl_migrated` for CPU and GPU.
-    ```
-    make run_cpu
-    make run_gpu
-    ```
+2. Run `03_sycl_migrated` for **GPU**.
+   ```
+   make run
+   ```
+   Run `03_sycl_migrated` for **CPU**.
+   ```
+   export SYCL_DEVICE_FILTER=cpu
+   make run
+   unset SYCL_DEVICE_FILTER
+   ```
 
-### Build and Run the `concurrentKernels` Sample in Intel® DevCloud
+### Build and Run the Sample in Intel® DevCloud (Optional)
 
 When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
@@ -138,9 +149,10 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
     exit
     ```
 
-### Example Output
+## Example Output
 
 The following example is for `03_sycl_migrated` on **Intel(R) UHD Graphics P630 \[0x3e96\]** with OpenCL Backend.
+
 ```
 [./a.out] - Starting...
 Device: Intel(R) UHD Graphics [0x9a60]

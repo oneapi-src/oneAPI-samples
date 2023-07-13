@@ -1,56 +1,36 @@
-// Copyright 2009-2021 Intel Corporation
+// Copyright 2018 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
-#include <cstdlib>
-#include <stdexcept>
-#include <string>
+#include "common/platform.h"
 
-namespace oidn {
+OIDN_NAMESPACE_BEGIN
 
-// Command-line argument parser
-class ArgParser {
- private:
-  int argc;
-  char** argv;
-  int pos;
+  // Command-line argument parser
+  class ArgParser
+  {
+  public:
+    ArgParser(int argc, char* argv[]);
 
- public:
-  ArgParser(int argc, char* argv[]) : argc(argc), argv(argv), pos(1) {}
+    bool hasNext() const;
+    std::string getNext();
+    std::string getNextOpt();
 
-  bool hasNext() const { return pos < argc; }
+    template<typename T = std::string>
+    T getNextValue()
+    {
+      return fromString<T>(getNextValue());
+    }
 
-  std::string getNext() {
-    if (pos < argc)
-      return argv[pos++];
-    else
-      throw std::invalid_argument("argument expected");
-  }
+  private:
+    int argc;
+    char** argv;
+    int pos;
+  };
 
-  std::string getNextOpt() {
-    std::string str = getNext();
-    if (str.empty() || str[0] != '-')
-      throw std::invalid_argument("option expected");
-    return str.substr(str.find_first_not_of("-"));
-  }
+  template<>
+  std::string ArgParser::getNextValue();
 
-  std::string getNextValue() {
-    std::string str = getNext();
-    if (!str.empty() && str[0] == '-')
-      throw std::invalid_argument("value expected");
-    return str;
-  }
+OIDN_NAMESPACE_END
 
-  int getNextValueInt() {
-    std::string str = getNextValue();
-    return atoi(str.c_str());
-  }
-
-  float getNextValueFloat() {
-    std::string str = getNextValue();
-    return atof(str.c_str());
-  }
-};
-
-}  // namespace oidn

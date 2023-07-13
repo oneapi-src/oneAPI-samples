@@ -9,15 +9,17 @@
   "targetDevice": ["CPU"],
   "cpuInstructionSets": ["AVX512", "AMX"],
   "ciTests": {
-    "linux": [{
-      "env": [],
-      "id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
-      "steps": [
-        "conda activate tensorflow",
-        "conda install -y jupyter",
-        "jupyter nbconvert --execute IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
-      ]
-    }]
-  },
-  "expertise": "Getting Started"
+  	"linux": [
+    {
+  		"env": [],
+  		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
+  		"steps": [
+			"conda activate tensorflow",
+			"conda install -y jupyter",
+			"jupyter nbconvert --execute --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
+  		]
+  	}
+    ]
+},
+"expertise": "Getting Started"
 }

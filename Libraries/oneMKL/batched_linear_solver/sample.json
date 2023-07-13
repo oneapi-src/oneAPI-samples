@@ -1,0 +1,24 @@
+{
+  "guid": "B90C0393-6FCE-443B-8CFA-2576FC8FDA2C",
+  "name": "Batched Linear Solver",
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "Solve batched linear systems using oneMKL and OpenMP target offloading",
+  "toolchain": [ "ifx" ],
+  "dependencies": [ "oneMKL" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "batched_linear_solver",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ]
+  },
+  "expertise": "Code Optimization"
+}

@@ -1,30 +1,15 @@
-# ==============================================================================
-# Makefile for NMAKE
+all: black_scholes_sycl.exe 
 
-# ==============================================================================
-#  Content:
-#      Black-Scholes formula example makefile
-# ==============================================================================
-#
-#    Parameters of this makefile:
-#    ----------------------------  
-#      N              : number of stock options
-#      ACC=ha, la, ep : VML accuracy level
-# ==============================================================================
+!if "$(init_on_host)" == "1"
+        INIT_ON_HOST=/DINIT_ON_HOST=1
+!endif
 
-N = 10000000
-ACC = ha
+DPCPP_OPTS=-O3 /I$(MKLROOT)\include /DMKL_ILP64 /DVERBOSE=1 /DSMALL_OPT_N=0 $(INIT_ON_HOST) -fsycl -qmkl
 
-CFLAGS = -I"$(MKLROOT)\include" -Qmkl -EHsc -O2 -fsycl-device-code-split=per_kernel -DACC_$(ACC) -fno-sycl-early-optimizations
-LIBS = OpenCL.lib
-
-all: black_scholes.run
-
-black_scholes.exe: black_scholes.cpp
-	icx-cl -fsycl black_scholes.cpp $(CFLAGS) $(LIBS) -o black_scholes.exe
-
-black_scholes.run: black_scholes.exe
-	.\black_scholes.exe $(N)
+black_scholes_sycl.exe: src\black_scholes_sycl.cpp
+	icpx $(DPCPP_OPTS) src\black_scholes_sycl.cpp /oblack_scholes_sycl.exe
 
 clean:
-	del /q black_scholes.exe black_scholes.exp black_scholes.lib
+	del /q black_scholes_sycl.exe
+
+.PHONY: clean all

@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 
 #define NITERS 10
@@ -86,3 +87,4 @@ int main() {
   }
   std::cout << "Time = " << elapsed << " usecs\n";
 }
+// Snippet end

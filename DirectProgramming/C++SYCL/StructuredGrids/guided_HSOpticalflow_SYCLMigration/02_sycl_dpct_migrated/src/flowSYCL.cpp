@@ -44,6 +44,16 @@
 #include "upscaleKernel.hpp"
 #include "warpingKernel.hpp"
 
+// custom device selector to pick device that supports sycl::image
+int sycl_image_support(const sycl::device& d ) {
+  if(d.has(aspect::image) == false){
+    std::cout << d.get_info<info::device::name>() << " ==> Image Support = NO\n"; 
+  } else {
+    std::cout << d.get_info<info::device::name>() << " ==> Image Support = YES\n";  
+  }
+  return d.has(aspect::image);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief method logic
 ///
@@ -73,11 +83,10 @@ void ComputeFlowSYCL(const float *I0, const float *I1, int width, int height,
       }
     }
   };
-
-  dpct::device_ext &dev_ct1 = dpct::get_current_device();
-  sycl::queue &q_ct1 = dev_ct1.default_queue();
-
-  printf("Computing optical flow on GPU...\n");
+  
+  sycl::queue q{aspect_selector(aspect::image), exception_handler, property::queue::in_order()};
+  
+  printf("Computing optical flow on Device...\n");
   std::cout << "\nRunning on "
             << q_ct1.get_device().get_info<sycl::info::device::name>() << "\n";
 

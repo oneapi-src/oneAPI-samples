@@ -1,0 +1,26 @@
+{
+  "guid": "37600D4F-001B-421F-A8D1-E1E5B3F83B3E",
+  "name": "Guided Matrix Multiplication Bad Buffers",
+  "categories": ["Toolkit/oneAPI Tools/Application Debugger"],
+  "description": "The Guided Matrix Multiplication Bad Buffers sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and several tools found in it to triage incorrect use of the SYCL language.",
+  "toolchain": ["icpx"],
+  "dependencies": ["debugger"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "bad-buffers",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make"
+        ]
+      }
+    ]
+  },
+  "expertise": "Tutorial"
+}

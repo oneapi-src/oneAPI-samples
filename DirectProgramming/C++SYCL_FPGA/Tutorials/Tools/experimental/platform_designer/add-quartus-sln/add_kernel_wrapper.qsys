@@ -33,14 +33,14 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="board" type="string">
           <ipxact:name>board</ipxact:name>
           <ipxact:displayName>Board</ipxact:displayName>
-          <ipxact:value>default</ipxact:value>
+          <ipxact:value>Unknown</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="bonusData" type="string">
           <ipxact:name>bonusData</ipxact:name>
           <ipxact:displayName>bonusData</ipxact:displayName>
           <ipxact:value>bonusData 
 {
-   element add_fpga_ip_export_1_di_0
+   element add_report_di_0
    {
       datum _sortIndex
       {
@@ -130,11 +130,6 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>lockedInterfaceDefinition</ipxact:displayName>
           <ipxact:value></ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value></ipxact:value>
-        </ipxact:parameter>
         <ipxact:parameter parameterId="sopcBorderPoints" type="bit">
           <ipxact:name>sopcBorderPoints</ipxact:name>
           <ipxact:displayName>Use SOPC Builder port naming</ipxact:displayName>
@@ -193,7 +188,7 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:module altera:enabled="true" altera:auto_export="false">
         <altera:entity_info>
           <ipxact:vendor>Altera Corporation</ipxact:vendor>
-          <ipxact:library>add_fpga_ip_export_1_di_0</ipxact:library>
+          <ipxact:library>add_report_di_0</ipxact:library>
           <ipxact:name>altera_generic_component</ipxact:name>
           <ipxact:version>1.0</ipxact:version>
         </altera:entity_info>
@@ -623,9 +618,9 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/interfaces&gt;
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
-        &lt;className&gt;add_fpga_ip_export_1_di&lt;/className&gt;
+        &lt;className&gt;add_report_di&lt;/className&gt;
         &lt;version&gt;1.0&lt;/version&gt;
-        &lt;displayName&gt;add_fpga_ip_export_1_di&lt;/displayName&gt;
+        &lt;displayName&gt;add_report_di&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
         &lt;descriptors/&gt;
@@ -703,7 +698,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;ports&gt;
                 &lt;port&gt;
                     &lt;name&gt;resetn&lt;/name&gt;
-                    &lt;role&gt;reset&lt;/role&gt;
+                    &lt;role&gt;reset_n&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
@@ -795,7 +790,6 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgedReceiverOffset&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToReceiver&lt;/key&gt;
@@ -888,20 +882,16 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;assignments&gt;
                 &lt;assignmentValueMap&gt;
                     &lt;entry&gt;
-                        &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
-                    &lt;/entry&gt;
-                    &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isMemoryDevice&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
+                        &lt;value&gt;false&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isNonVolatileStorage&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
+                        &lt;value&gt;false&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isPrintableDevice&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
+                        &lt;value&gt;false&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;hls.cosim.name&lt;/key&gt;
@@ -945,7 +935,6 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgedAddressOffset&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
@@ -1084,40 +1073,33 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:name>generationInfoDefinition</ipxact:name>
               <ipxact:displayName>Generation Behavior</ipxact:displayName>
               <ipxact:value>&lt;generationInfoDefinition&gt;
-    &lt;hdlLibraryName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/hdlLibraryName&gt;
+    &lt;hdlLibraryName&gt;add_kernel_wrapper_add_report_di_0&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_report_di_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_add_fpga_ip_export_1_di_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -1133,7 +1115,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
-              <ipxact:value>ip/add_kernel_wrapper/add_kernel_wrapper_add_fpga_ip_export_1_di_0.ip</ipxact:value>
+              <ipxact:value>ip/add_kernel_wrapper/add_kernel_wrapper_add_report_di_0.ip</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="moduleAssignmentDefinition" type="string">
               <ipxact:name>moduleAssignmentDefinition</ipxact:name>
@@ -1405,14 +1387,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_clock_in&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_clock_in&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -2217,14 +2192,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_master_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_master_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -2474,14 +2442,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;add_kernel_wrapper_reset_in&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;add_kernel_wrapper_reset_in&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -2516,7 +2477,7 @@ https://fpgasoftware.intel.com/eula.-->
       </altera:module>
     </altera:modules>
     <altera:connections>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="master_0.master" altera:end="add_fpga_ip_export_1_di_0.csr_ring_root_avs">
+      <altera:connection altera:kind="avalon" altera:version="22.2" altera:start="master_0.master" altera:end="add_report_di_0.csr_ring_root_avs">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -2536,10 +2497,11 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="master_0.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="clock_in.out_clk" altera:end="add_fpga_ip_export_1_di_0.clock"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="reset_in.out_reset" altera:end="master_0.clk_reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="reset_in.out_reset" altera:end="add_fpga_ip_export_1_di_0.resetn"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.2" altera:start="clock_in.out_clk" altera:end="master_0.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.2" altera:start="clock_in.out_clk" altera:end="add_report_di_0.clock"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="22.2" altera:start="master_0.master_reset" altera:end="add_report_di_0.resetn"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="22.2" altera:start="reset_in.out_reset" altera:end="master_0.clk_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="22.2" altera:start="reset_in.out_reset" altera:end="add_report_di_0.resetn"></altera:connection>
     </altera:connections>
     <altera:interconnect_requirements></altera:interconnect_requirements>
     <altera:wire_level_connections></altera:wire_level_connections>
@@ -2548,8 +2510,8 @@ https://fpgasoftware.intel.com/eula.-->
     <altera:preserved_ports_for_debug></altera:preserved_ports_for_debug>
     <altera:altera_interface_boundary>
       <altera:interface_mapping altera:name="clk" altera:internal="clock_in.in_clk" altera:type="clock" altera:dir="end"></altera:interface_mapping>
-      <altera:interface_mapping altera:name="exception_add" altera:internal="add_fpga_ip_export_1_di_0.device_exception_bus" altera:type="conduit" altera:dir="end"></altera:interface_mapping>
-      <altera:interface_mapping altera:name="irq_add" altera:internal="add_fpga_ip_export_1_di_0.kernel_irqs" altera:type="interrupt" altera:dir="end"></altera:interface_mapping>
+      <altera:interface_mapping altera:name="exception_add" altera:internal="add_report_di_0.device_exception_bus" altera:type="conduit" altera:dir="end"></altera:interface_mapping>
+      <altera:interface_mapping altera:name="irq_add" altera:internal="add_report_di_0.kernel_irqs" altera:type="interrupt" altera:dir="end"></altera:interface_mapping>
       <altera:interface_mapping altera:name="reset" altera:internal="reset_in.in_reset" altera:type="reset" altera:dir="end"></altera:interface_mapping>
     </altera:altera_interface_boundary>
     <ipxact:components>
@@ -2560,12 +2522,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:version>1.0</ipxact:version>
         <ipxact:busInterfaces>
           <ipxact:busInterface>
-            <ipxact:name>add_fpga_ip_export_1_di_0.csr_ring_root_avs</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:name>add_report_di_0.csr_ring_root_avs</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.2"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>master_0.master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.2"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="master_0.master">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -2578,7 +2540,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:name>master_0.master</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
-                <ipxact:name>add_fpga_ip_export_1_di_0.csr_ring_root_avs</ipxact:name>
+                <ipxact:name>add_report_di_0.csr_ring_root_avs</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0100</ipxact:range>
               </ipxact:segment>

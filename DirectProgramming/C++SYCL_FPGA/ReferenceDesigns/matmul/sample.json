@@ -1,0 +1,71 @@
+{
+  "guid": "77C05AED-3CBF-4C3C-8E6E-28253893807D",
+  "name": "matmul",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL_FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance general matrix multiplication on an Intel® FPGA",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "README.md",
+      "ReferenceDesigns/matmul",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./matmul.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/matmul",
+          "nmake fpga_emu",
+          "matmul.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/matmul",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Reference Designs and End to End"
+}

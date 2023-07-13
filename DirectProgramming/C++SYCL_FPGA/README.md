@@ -95,6 +95,7 @@ flowchart LR
 | [pipes](Tutorials/Features/pipes)                                                                                             | [Tutorials/Features](Tutorials/Features)             | The basics of using SYCL*-compliant pipes extension for FPGA <br> How to declare and use pipes
 | [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to declare and use `printf` in program
 | [register_map_and_streaming_interfaces (experimental)](Tutorials/Features/experimental/register_map_and_streaming_interfaces) | [Tutorials/Features](Tutorials/Features)             | How to specify the kernel invocation interface and kernel argument interfaces
+| [pipelined_kernels (experimental)](Tutorials/Features/experimental/pipelined_kernels)                                         | [Tutorials/Features](Tutorials/Features)             | Basics of declaring and launching a pipelined kernel
 
 
 #### Tier 3: Explore the Advanced Techniques
@@ -126,10 +127,9 @@ flowchart LR
 | [latency_control (experimental)](Tutorials/Features/experimental/latency_control) | [Tutorials/Features](Tutorials/Features)             | How to set latency constraints to pipes and LSUs accesses <br> How to confirm that the compiler respected the latency control directive
 | [loop_carried_dependency](Tutorials/DesignPatterns/loop_carried_dependency)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A technique to remove loop carried dependencies from your FPGA device code, and when to apply it
 | [lsu_control](Tutorials/Features/lsu_control)                                     | [Tutorials/Features](Tutorials/Features)             | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
-| [mem_channel](Tutorials/Features/mem_channel)                                     | [Tutorials/Features](Tutorials/Features)             | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
-| [minimum_latency](Tutorials/Features/optimization_levels/minimum_latency)         | [Tutorials/Features](Tutorials/Features)             | How to use the minimum latency flow to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency flow
 | [n_way_buffering](Tutorials/DesignPatterns/n_way_buffering)                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to apply the N-way buffering optimization technique
 | [onchip_memory_cache](Tutorials/DesignPatterns/onchip_memory_cache)               | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to implement the on-chip memory cache optimization
+| [optimization_targets](Tutorials/Features/optimization_targets)                   | [Tutorials/Features](Tutorials/Features)             | How to set optimization targets for your compile</br>How to use the minimum latency optimization target to compile low-latency designs<br>How to manually override underlying controls set by the minimum latency optimization target
 | [optimize_inner_loop](Tutorials/DesignPatterns/optimize_inner_loop)               | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimize the throughput of an inner loop with a low trip
 | [platform_designer](Tutorials/Tools/experimental/platform_designer)               | [Tutorials/Tools](Tutorials/Tools)                   | How to use an IP Component with Intel® Quartus® Prime Pro Edition software suite and Platform Designer
 | [pipe_array](Tutorials/DesignPatterns/pipe_array)                                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
@@ -174,8 +174,10 @@ All the Tier 4 samples are in the [ReferenceDesigns](ReferenceDesigns) category.
 | [db](ReferenceDesigns/db)                                 | How to accelerate database queries using an FPGA
 | [decompress](ReferenceDesigns/decompress)                 | How to implement an efficient GZIP and Snappy decompression engine on a FPGA
 | [gzip](ReferenceDesigns/gzip)                             | How to implement a high-performance multi-engine compression algorithm on FPGA
+| [matmul](ReferenceDesigns/matmul)                         | How to implement a systolic-array-based high-performance matrix multiplication algorithm on FPGA
 | [merge_sort](ReferenceDesigns/merge_sort)                 | How to use the spatial compute of the FPGA to create a merge sort design that takes advantage of thread- and SIMD-level parallelism
 | [mvdr_beamforming](ReferenceDesigns/mvdr_beamforming)     | How to create a full, complex system that performs IO streaming using SYCL*-compliant code
+| [pca](ReferenceDesigns/pca)                               | How to implement high performance principal component analysis on a FPGA
 | [qrd](ReferenceDesigns/qrd)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm
 | [qri](ReferenceDesigns/qri)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion
 

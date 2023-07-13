@@ -1,39 +1,41 @@
 # `Black-Scholes` Sample
 
-Black-Scholes shows how to use Vector Math (VM) and Random Number Generator (RNG) functionality available in Intel® oneAPI Math Kernel Library (oneMKL) to calculate the prices of options using the Black-Scholes formula for suitable randomly-generated portfolios.
+Black-Scholes shows how to use Random Number Generator (RNG) functionality
+available in Intel® oneAPI Math Kernel Library (oneMKL) to calculate the prices
+of options using the Black-Scholes formula for suitable randomly-generated portfolios.
 
 | Optimized for       | Description
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04 <br> Windows 10
-| Hardware            | Skylake with Gen9 or newer
+| Hardware            | Skylake CPU with Gen9 GPU or newer
 | Software            | Intel® oneAPI Math Kernel Library (oneMKL)
-| What you will learn | How to use the vector math and random number generation functionality in oneMKL
-| Time to complete    | 15 minutes
+| What you will learn | How to use the oneMKL random number generation functionality
+| Time to complete    | 5 minutes
 
-For more information on oneMKL and complete documentation of all oneMKL routines, see https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-documentation.html.
+For more information on oneMKL and complete documentation of all oneMKL routines,
+see https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-documentation.html.
 
 ## Purpose
 
-The Black-Scholes formula is widely used in financial markets as a basic prognostic tool. The ability to calculate it quickly for a large number of options has become a necessity and represents a classic problem in parallel computation.
+The Black-Scholes formula is widely used in financial markets as a basic
+prognostic tool. The ability to calculate it quickly for a large number of
+options has become a necessity and represents a classic problem in parallel
+computation.
 
-The sample first generates a portfolio within given constraints using a uniform distribution and a Philox-type generator provided by the oneMKL RNG API.
-Examples of both host-based APIs and device-based APIs for random number generation are provided.
+The sample first generates a portfolio within given constraints using a uniform
+distribution and a Philox-type generator provided by the oneMKL RNG API.
 
-Then, the Black-Scholes formula is used in two distinct implementations:
-* scalar kernel containing SYCL scalar functions, which will be parallelized by the Intel® oneAPI DPC++ Compiler
-* vector-based implementation, which uses oneMKL vector math functionality in sequential calls to evaluate the transcendental functions used in the formula.
-
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
-
+This sample performs its computations on the default SYCL* device. You can set
+the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
 
 ## Key Implementation Details
 
-This sample illustrates how to use oneMKL VM to implement explicit vectorization of calculations over vectors of large size. The key point illustrated is the ability to asynchronously mix kernels with VM function calls and their results. When using USM, the user is in charge of noting explicit dependencies between calls; this essential technique is also illustrated.
+This sample illustrates how to create an RNG engine object (the source of
+pseudo-randomness), a distribution object (specifying the desired probability
+distribution), and finally generate the random numbers themselves.
 
-This sample also illustrates how to create an RNG engine object (the source of pseudo-randomness), a distribution object (specifying the desired probability distribution), and finally generate the random numbers themselves. Random number generation can be done from the host, storing the results in a SYCL buffer or USM pointer, or directly in a kernel using device API.
-
-In this sample, a Philox 4x32x10 generator is used. It is a lightweight counter-based RNG well-suited for parallel computing.
-
+In this sample, a Philox 4x32x10 generator is used. It is a lightweight
+counter-based RNG well-suited for parallel computing.
 
 ## Using Visual Studio Code* (Optional)
 
@@ -47,10 +49,8 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+To learn more about the extensions, see the
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ## Building the Black-Scholes Sample
 
@@ -71,46 +71,53 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 
 ### Running Samples In Intel® DevCloud
-If running a sample in the Intel® DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+If running a sample in the Intel® DevCloud, remember that you must specify the
+compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode.
+For more information see the Intel® oneAPI Base Toolkit Get Started Guide
+(https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### On a Linux* System
-Run `make` to build and run the sample. One program is generated, which will use four different interfaces in turn.
+Run `make` to build the sample. Then run the sample calling generated execution file.
 
 You can remove all generated files with `make clean`.
 
 ### On a Windows* System
-Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
+Run `nmake` to build and run the sample programs. `nmake clean` removes temporary files.
 
-*Warning*: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
+#### Build a sample using Random Number Generation on Host
+To use the RNG on host use `init_on_host=1`, e.g.
+```
+make init_on_host=1
+```
+for Linux* system or
+
+```
+nmake init_on_host=1
+```
+
+for Windows* System.
 
 ## Running the Black-Scholes Sample
-If everything is working correctly, the program will exercise different combinations of APIs for both single and double precision (if available) and print a summary of its computations.
+If everything is working correctly, the program will run the Black-scholes simulation.
+After the simulation, results will be checked against the known true values
+given by the Black-Scholes formula, and the absolute error is output.
 
+Example of output:
 ```
-running on:
-       device name: Intel(R) Gen9
-    driver version: 0.91
+$ ./black_scholes_sycl
 
-running floating-point type float
+Double Precision Black&Scholes Option Pricing version 1.6 running on Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz using DPC++, workgroup size 256, sub-group size 32.
+Compiler Version: Intel(R) oneAPI DPC++/C++ Compiler 2023.1.0 (2023.1.0.20230320), LLVM 16.0 based.
+Driver Version  : 2023.15.3.0.20_160000
+Build Time      : Apr 28 2023 05:34:33
+Input Dataset   : 8388608
+Pricing 16777216 Options in 512 iterations, 8589934592 Options in total.
+Completed in    1.41111 seconds. GOptions per second:    6.08735
+Time Elapsed =     1.41111 seconds
+Creating the reference result...
+L1 norm: 1.385136E-16
+TEST PASSED
 
-
-running USM mkl::rng
-    <s0> = 29.9999
-    <x> = 29.9994
-    <t> = 1.50002
-running USM mkl::vm
-    <opt_call> = 27.148
-    <opt_put>  = 4.12405
-```
-...
-```
-running Buffer mkl::rng_device
-    <s0> = 30.2216
-    <x> = 30.0563
-    <t> = 1.49756
-running Buffer dpcpp
-    <opt_call> = 27.3496
-    <opt_put>  = 4.10354
 ```
 
 ### Troubleshooting

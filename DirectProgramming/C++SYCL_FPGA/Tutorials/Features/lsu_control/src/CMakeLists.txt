@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -19,6 +19,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+set(SEED "-Xsseed=2")
+
+if(IGNORE_DEFAULT_SEED)
+    set(SEED "")
+endif()
+
+message(STATUS "SEED=${SEED}")
+
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
@@ -27,7 +35,7 @@ set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA simulator compilation
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${SEED}")
 if(FPGA_DEVICE STREQUAL "intel_a10gx_pac:pac_a10")
     # hyper-optimized-handshaking does not apply to Intel Arria 10® FPGAs
     set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")

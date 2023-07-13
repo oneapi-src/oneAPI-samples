@@ -10,7 +10,7 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 
 ## Purpose
 
-The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the four queries.
+The database query acceleration sample includes 8 tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how three queries can be accelerated using oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are combined in different ways to build the three queries.
 
 Note that this design uses a lot of resources and is designed with Intel® Stratix® 10 FPGA capabilities in mind.
 
@@ -25,9 +25,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
@@ -40,7 +40,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -54,11 +54,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: You'll need a large FPGA part to be able to fit the query 9 variant of this design 
-
 ### Performance
 
-In this design, we accelerate four database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
+In this design, we accelerate three database queries as **offload accelerators**. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). Most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -80,17 +78,11 @@ This design leverages concepts discussed in the [FPGA tutorials](/DirectProgramm
 
 ### Query Implementations
 
-The following sections describe at a high level how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The following sections describe at a high level how queries 1, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
 
-Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
-
-#### Query 9
-
-Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin`, and `FifoSort`). The block diagram of the design is shown below.
-
-![](assets/q9.png)
+Query 1 is the simplest of the three queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
 
 #### Query 11
 
@@ -111,8 +103,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 |`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
 |`dbdata.hpp`                           | Definitions of database related data structures and parsing functions
 |`query1/query1_kernel.cpp`             | Contains the kernel for Query 1
-|`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
-|`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
 |`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
 |`query11/pipe_types.cpp`               | All data types and instantiations for pipes used in query 11
 |`query12/query12_kernel.cpp`           | Contains the kernel for Query 12
@@ -131,8 +121,8 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ## Build the `DB` Reference Design
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
+> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
+> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -148,23 +138,23 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 
 ### On Linux*
 1. Change to the sample directory.
-2. Configure the build system for the default target (the Agilex® device family).
+2. Configure the build system for the default target (the Agilex® 7 device family).
    ```
    mkdir build
    cd build
    cmake .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -184,8 +174,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       The report resides at `db_report.prj/reports/report.html`.
 
-       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
-
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
 
       ```
@@ -197,23 +185,23 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the default target (the Agilex® device family).
+2. Configure the build system for the default target (the Agilex® 7 device family).
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" .. -DQUERY=1
    ```
-   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `9`, `11` or `12`.
+   `-DQUERY=<QUERY_NUMBER>` can be any of the following query numbers: `1`, `11` or `12`.
 
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
+   >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER> -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
+   >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -232,8 +220,6 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       nmake report
       ```
       The report resides at `db_report.prj/reports/report.html` directory.
-
-      >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device):
       ```
@@ -261,7 +247,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    ```
    ./db.fpga_emu --dbroot=../data/sf0.01 --test
    ```
-   (Optional) Run the design for queries `9`, `11` and `12`.
+   (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./db.fpga_sim --dbroot=../data/sf0.01 --test
@@ -277,7 +263,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    ```
    db.fpga_emu.exe --dbroot=../data/sf0.01 --test
    ```
-   (Optional) Run the design for queries `9`, `11` and `12`.
+   (Optional) Run the design for queries `11` and `12`.
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1

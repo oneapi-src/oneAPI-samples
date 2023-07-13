@@ -1,8 +1,8 @@
 {
   "guid": "B29DB886-B31C-45BA-9BC6-5698A9D090C2",	
-  "name": "concurrentKernels",
+  "name": "Concurrent Kernels",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
-  "description": "This sample shows the execution of Multiple Kernels on the device at the same time.",
+  "description": "This sample shows the execution of multiple kernels on the device at the same time.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
@@ -15,8 +15,7 @@
       		        "cd build",
            		"cmake ..",
            		"make",
-			"make run_cpu",
-			"make run_gpu"
+			"make run"
 		 ]
 	}]
 

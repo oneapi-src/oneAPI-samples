@@ -1,14 +1,24 @@
-# Scheduler Target FMAX
+# `scheduler_target_fmax_mhz` Sample
 
-This tutorial explains the `scheduler_target_fmax_mhz` attribute and its effect on the performance of Intel® FPGA kernels.
+This sample is an FPGA tutorial that explains the `scheduler_target_fmax_mhz` attribute and its effect on the performance of Intel® FPGA kernels.
 
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               |  The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it. <br> The effect this attribute can have on kernel performance on FPGA.
-| Time to complete                  | 15 minutes
+| Area                 | Description
+|:---                  |:---
+| What you will learn  |  The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it. <br> The effect this attribute can have on kernel performance on FPGA.
+| Time to complete     | 15 minutes
+| Category             | Concepts and Functionality
+
+## Purpose
+
+This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to set the fMAX target for a single kernel. The purpose this attribute serves is to direct the compiler to prioritize a high fMAX over a low initiation interval (II). The `[[intel::initiation_interval(N)]]` attribute can change the II of a loop to improve performance. If you are not familiar with the attribute, refer to the prerequisite tutorial "Loop initiation_interval attribute".
+
+## Prerequisites
+
+| Optimized for        | Description
+|:---                  |:---
+| OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -18,10 +28,8 @@ This tutorial explains the `scheduler_target_fmax_mhz` attribute and its effect 
 > - ModelSim® SE
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
->
-> :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-## Prerequisites
+> **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 3 sample that demonstrates a compiler feature.
@@ -32,9 +40,9 @@ flowchart LR
    tier2("Tier 2: Explore the Fundamentals")
    tier3("Tier 3: Explore the Advanced Techniques")
    tier4("Tier 4: Explore the Reference Designs")
-   
+
    tier1 --> tier2 --> tier3 --> tier4
-   
+
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
@@ -42,20 +50,24 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), and more.
 
-## Purpose
 
-This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to set the fMAX target for a single kernel. The purpose this attribute serves is to direct the compiler to prioritize a high fMAX over a low initiation interval (II). If you are not yet familiar with the `[[intel::initiation_interval(N)]]` attribute which can change the II of a loop to improve performance, refer to the prerequisite tutorial "Loop initiation_interval attribute".
+## Key Implementation Details
+
+The sample illustrates the following important concepts.
+
+- The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it on your kernel
+- The effect this attribute can have on your kernel's performance on FPGA
 
 ### Specifying Schedule fMAX Target for Kernels
 
 The compiler provides two methods to specify fMAX target for kernels:
 
-* By using the `[[intel::scheduler_target_fmax_mhz(N)]]` source-level attribute on a given kernel. This is the focus of this tutorial.
-* By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the icpx command to direct the compiler to globally compile all kernels at a specific fMAX target.
+1. By using the `[[intel::scheduler_target_fmax_mhz(N)]]` source-level attribute on a given kernel. This is the focus of this tutorial.
+2. By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the icpx command to direct the compiler to compile all kernels globally at a specific fMAX target.
 
-If you use both the command-line option `-Xsclock` and the source-level attribute `[[intel::scheduler_target_fmax_mhz(N)]]`, the attribute takes priority.
+If you use both the command-line option `-Xsclock` and the source-level attribute `[intel::scheduler_target_fmax_mhz(N)]]` the attribute takes priority.
 
 ### Use Cases of `intel::scheduler_target_fmax_mhz(N)`
 
@@ -77,16 +89,9 @@ In kernel `Fmax240Attr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attribu
 
 In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attribute tells the compiler to target 240 MHz, and the `[[intel::initiation_interval(1)]]` attribute forces block `B1` to be scheduled with II=1. Since the `[[intel::initiation_interval(1)]]` attribute takes priority over the `[[intel::scheduler_target_fmax_mhz(240)]]` attribute, the compiler is not able to schedule block `B1` at the requested target fMAX but is able to achieve II=1. This achieves a similar latency as kernel `Default` but provides you the control over how much pipelining the compiler generates while still achieving the desired II on critical loops.
 
-## Key Concepts
+## Build the `scheduler_target_fmax_mhz` Tutorial
 
-* The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it on your kernel
-* The effect this attribute can have on your kernel's performance on FPGA
-
-## Building the `scheduler_target_fmax` Tutorial
-
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
-> This practice ensures that your compiler, libraries, and tools are ready for development.
+>**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -94,154 +99,139 @@ In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attri
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
 
-### On a Linux* System
+### On Linux*
 
-1. Generate the `Makefile` by running `cmake`.
+1. Change to the sample directory.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-  ```
-  mkdir build
-  cd build
-  ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
-  ```
-  cmake ..
-  ```
-
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-
+   1. Compile and run for emulation (fast compile time, targets emulates an FPGA device).
       ```
       make fpga_emu
       ```
+   2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      make report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+      ```
+      make fpga_sim
+      ```
+   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      make fpga
+      ```
 
-   * Generate the optimization report:
+### On Windows*
 
-     ```
-     make report
-     ```
+1. Change to the sample directory.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-   * Compile for simulation (fast compile time, targets simulated FPGA device)
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-     ```bash
-     make fpga_sim
-     ```
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      nmake report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
+      ```
+      nmake fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
+### Read the Reports
 
-     ```
-     make fpga
-     ```
-
-### On a Windows* System
-
-1. Generate the `Makefile` by running `cmake`.
-
-  ```
-  mkdir build
-  cd build
-  ```
-
-  To compile for the default target (the Agilex® device family), run `cmake` using the command:
-  ```
-  cmake -G "NMake Makefiles" ..
-  ```
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ``` 
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-  >  ```
-  >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ``` 
-  >
-  > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-
-     ```
-     nmake fpga_emu
-     ```
-
-   * Generate the optimization report:
-
-     ```
-     nmake report
-     ```
-
-   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
-
-     ```
-     nmake fpga_sim
-     ```
-
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-
-     ```
-     nmake fpga
-     ```
-
-> __Note__: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
-## Examining the Reports
-
-Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` directory.
 
 Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1. In kernel `Fmax240Attr` and `Fmax480Attr`, all blocks are scheduled at the target fMAX, but they have II>1. In kernel `Fmax240IIAttr`, similar to kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1.
 
 Navigate to the Area Analysis of System (Area Analysis > Area Analysis of System). By comparing the results in resource usage for different fMAX and II targets, you can see that the compiler inserts more pipeline stages and therefore increases area usage if the component is scheduled for a higher fMAX.
 
-## Running the Sample
+## Run the `scheduler_target_fmax_mhz` Sample
 
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+### On Linux
 
-     ```
-     ./scheduler_target_fmax.fpga_emu     (Linux)
-     scheduler_target_fmax.fpga_emu.exe   (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./scheduler_target_fmax.fpga_emu
+   ```
 
-2. Run the sample on the FPGA simulator device:
+2. Run the sample on the FPGA simulator device.
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./scheduler_target_fmax.fpga_sim
+   ```
 
-  * On Linux
-    ```bash
-    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./scheduler_target_fmax.fpga_sim
-    ```
-  * On Windows
-    ```bash
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-    scheduler_target_fmax.fpga_sim.exe
-    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-    ```
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   ./scheduler_target_fmax.fpga
+   ```
 
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
+### On Windows
 
-  ```
-  ./scheduler_target_fmax.fpga         (Linux)
-  scheduler_target_fmax.fpga.exe       (Windows)
-  ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   scheduler_target_fmax.fpga_emu.exe
+   ```
 
-### Example of Output
+2. Run the sample on the FPGA simulator device.
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   scheduler_target_fmax.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
+
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+   ```
+   scheduler_target_fmax.fpga.exe
+   ```
+
+## Example Output
 
 ```
 PASSED: all kernel results are correct.

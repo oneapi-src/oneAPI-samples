@@ -7,13 +7,9 @@ and Intel Processor Graphics. oneDNN is intended for deep learning
 applications and framework developers interested in improving application
 performance on Intel CPUs and GPUs.
 
-You can find library source code and code used by these samples at [oneDNN Github repository](https://github.com/oneapi-src/oneDNN).
+You can find library source code and code used by these samples at [oneDNN GitHub repository](https://github.com/oneapi-src/oneDNN).
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+See the [Intel® oneAPI Deep Neural Network Library](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onednn.html) product page for details on getting oneDNN.
 
 # oneDNN Samples
 
@@ -27,7 +23,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 You can use oneDNN samples in
 [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/)
 the environment in the following ways:
-* Login to a DevCloud system via SSH and
+
+* Log in to a DevCloud system via SSH and
   * use `git clone` to get a full copy of samples repository, or
   * use the `oneapi-cli` tool to download specific sample.
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.
@@ -44,7 +41,12 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

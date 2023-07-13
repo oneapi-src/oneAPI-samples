@@ -6,7 +6,7 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
@@ -42,10 +42,10 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarg
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
+#    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR vector_add.cpp -o vector_add.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -o fpga_compile.cpp.o -c fpga_compile.cpp
-#    [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} fpga_compile.cpp.o -o fpga_compile.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -o vector_add.cpp.o -c vector_add.cpp
+#    [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} vector_add.cpp.o -o vector_add.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -56,7 +56,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early ac_fixed.cpp -o ac_fixed_report.a
+#   icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early vector_add.cpp -o vector_add_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -70,10 +70,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp -o ac_fixed.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> vector_add.cpp -o vector_add.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
-#   [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp.o -o ac_fixed.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -o vector_add.cpp.o -c vector_add.cpp
+#   [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> vector_add.cpp.o -o vector_add.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
@@ -86,10 +86,10 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> ac_fixed.cpp -o ac_fixed.fpga
+#   icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> vector_add.cpp -o vector_add.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
-#   [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> ac_fixed.cpp.o -o ac_fixed.fpga
+#   [compile] icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -o vector_add.cpp.o -c vector_add.cpp
+#   [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> vector_add.cpp.o -o vector_add.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})

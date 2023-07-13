@@ -89,7 +89,7 @@ Follow these steps to compile and test the design:
    $> mkdir build
    $> cd build
    $> cmake ..
-   $> make fpga_ip_export
+   $> make report
    ```
 
    Windows:
@@ -99,12 +99,12 @@ Follow these steps to compile and test the design:
    > mkdir build
    > cd build
    > cmake -G "NMake Makefiles" ..
-   > nmake fpga_ip_export
+   > nmake report
    ```
 
 2. **From the same terminal**, prepare a project directory for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `add-quartus-sln` into it. Then launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
-> **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
+   > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
 
    Linux:
    
@@ -142,45 +142,20 @@ Follow these steps to compile and test the design:
 
       ![](assets/add-files.png)
 
-3. Copy the generated IP to the Intel Quartus® Prime project. This design uses host pipes, which generates additional internal SYCL kernels. The `fpga_ip_export` build target uses the `-fsycl-device-code-split=per_kernel` flag to separate these additional kernels from your kernel, but these kernels have their own reports and associated RTL. You must locate the the `.prj_X` directory that contains the IP you want to use in your design.
-
-   You can identify the correct `.prj_X` folder by looking for the folder that contains `*_di_inst.v` file where the interfaces match your kernel. For example, in this project, `add.fpga_ip_export.prj_1` is the correct `.prj_x` directory, because `add_fpga_ip_export_1_di_inst.v` contains only a CSR Agent interface in addition to the clock/reset signals:
-   
-   ```verilog
-   add_fpga_ip_export_1_di add_fpga_ip_export_1_di_inst (
-      // Interface: clock (clock end)
-      .clock                          ( ), // 1-bit clk input
-      // Interface: resetn (reset end)
-      .resetn                         ( ), // 1-bit reset_n input
-      // Interface: device_exception_bus (conduit end)
-      .device_exception_bus           ( ), // 64-bit data output
-      // Interface: kernel_irqs (interrupt end)
-      .kernel_irqs                    ( ), // 1-bit irq output
-      // Interface: csr_ring_root_avs (avalon end)
-      .csr_ring_root_avs_read         ( ), // 1-bit read input
-      .csr_ring_root_avs_readdata     ( ), // 64-bit readdata output
-      .csr_ring_root_avs_readdatavalid( ), // 1-bit readdatavalid output
-      .csr_ring_root_avs_write        ( ), // 1-bit write input
-      .csr_ring_root_avs_writedata    ( ), // 64-bit writedata input
-      .csr_ring_root_avs_address      ( ), // 5-bit address input
-      .csr_ring_root_avs_byteenable   ( ), // 8-bit byteenable input
-      .csr_ring_root_avs_waitrequest  ( )  // 1-bit waitrequest output
-   );
-   ```
+3. Copy the IP you generated in Step 1 to the Intel Quartus® Prime project. 
 
    Linux:
 
    ```
    $> cd .. # navigate to project root if not there already
-   $> cp -r add-oneapi/build/add.fpga_ip_export.prj_1/ add-quartus/
+   $> cp -r add-oneapi/build/add.report.prj/ add-quartus/
    ```
 
    Windows:
 
    ```
    > cd .. # navigate to project root if not there already
-   > ROBOCOPY add-oneapi\build\add.fpga_ip_export.prj_1\ add-quartus\add.fpga_ip_export.prj_1\ /S
-
+   > ROBOCOPY add-oneapi\build\add.report.prj\ add-quartus\add.report.prj\ /S
    ```
 
 4. Create the Platform Designer system.
@@ -203,7 +178,7 @@ Follow these steps to compile and test the design:
 
       * Basic Functions > Bridges and Adaptors > Memory Mapped > **JTAG to Avalon Master Bridge Intel® FPGA IP**
 
-      * oneAPI > **add_fpga_ip_export_1_di**
+      * oneAPI > **add_report_di**
 
       ![](assets/add-ip-platform-designer.png)
 
@@ -217,10 +192,6 @@ Follow these steps to compile and test the design:
 
       Don't forget to export the `irq_add` and `exception_add` signals. The provided top-level RTL file (`add.sv`) uses the generated IP. Following these naming conventions allows the IP to connect to this handwritten RTL.
 
-      > **Important**: If you are using the oneAPI Base Toolkit 2023.1, the DCP++/C++ compiler causes the generated IP to be incorrectly documented in its hardware TCL script. You can override this in Platform Designer by changing the signal type of the `resetn` signal to `reset_n`:
-      > 
-      > ![](assets/fix-reset_n-platform-designer.png)
-
    7. Save the system by clicking `File` > `Save`
 
    8. Make sure there are no errors in the 'System Messages' panel.
@@ -228,7 +199,7 @@ Follow these steps to compile and test the design:
    9. Generate the system so that it can be included in the Intel® Quartus® Prime project by clicking `Generate HDL...`
 
       ![](assets/generate-hdl.png)
-   
+
    10. Close Platform Designer. 
    
 6. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
@@ -302,7 +273,7 @@ Follow these steps to compile and test the design:
 
 ## Running the Sample
 
-Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` scripts in the `system_console` directory demonstrate how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
+Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
 
 To move the design to a different computer, copy the `system_console` and directories from the `add-quartus` directory.
 
@@ -326,22 +297,62 @@ Press any key to continue . . .
 
 <etc.>
 ---------------------------------------
-% source jtag_avmm.tcl
-% source read_outputs.tcl
-Outputs:
-  Data (0x80): 0x00000000 0x00000000
+% source test_add.tcl
+Resetting IP...
+TEST 1: READ OUTPUT AFTER RESET
+Read outputs
+  Data   (0x88): 0x00000000 0x00000000
   Status (0x00): 0x00050000 0x00000000
   finish (0x30): 0x00000000 0x00000000
-% source load_inputs.tcl
-Store 6 to address 0x94
-Store 3 to address 0x90
+
+TEST 2: LOAD INPUTS AND CHECK OUTPUT
+press 'enter' key to load inputs ==>
+Store 1 to address 0x80
+Store 2 to address 0x84
 Set 'Start' bit to 1
-% source read_outputs.tcl
-Outputs:
-  Data (0x80): 0x00000009 0x00000000
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x00000003 0x00000000
   Status (0x00): 0x00050002 0x00000000
   finish (0x30): 0x00000001 0x00000000
-%
+
+press 'enter' key to load inputs ==>
+Store 3 to address 0x80
+Store 3 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x00000006 0x00000000
+  Status (0x00): 0x00050002 0x00000000
+  finish (0x30): 0x00000001 0x00000000
+
+TEST 3: LOAD INPUTS WITHOUT CHECKING OUTPUT
+press 'enter' key to load inputs ==>
+Store 5 to address 0x80
+Store 4 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>
+Store 64 to address 0x80
+Store 64 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to overload inputs without consuming outputs ==>
+Store 7 to address 0x80
+Store 8 to address 0x84
+Set 'Start' bit to 1
+Check that IRQ LED is lit, then press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x0000000f 0x00000000
+  Status (0x00): 0x00050002 0x00000000
+  finish (0x30): 0x00000003 0x00000000
+
+TEST 4: READ OUTPUT AFTER NO PENDING INPUTS
+press 'enter' key to consume outputs ==>
+Read outputs
+  Data   (0x88): 0x0000000f 0x00000000
+  Status (0x00): 0x00050000 0x00000000
+  finish (0x30): 0x00000000 0x00000000
+
+Test complete.
 ```
 
 ## License
