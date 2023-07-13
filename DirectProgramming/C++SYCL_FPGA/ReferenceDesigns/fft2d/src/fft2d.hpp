@@ -591,21 +591,21 @@ struct Fetch {
     constexpr int kPoints = (1 << log_points);
 
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
+    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
 
     for (int i = 0; i < kIterations; i++) {
-      // Local memory for storing kPoints rows
-      ac_complex<T> buf[kPoints * kN];
+      // Local memory for storing 8 rows
+      ac_complex<T> buf[8 * kN];
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
 
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-        // Each read fetches kPoints matrix points
+        // Each read fetches 8 matrix points
         int x = (i * kN + work_item) << log_points;
 
-        /* When using the alternative memory layout, each row consists of a set
-         * of segments placed far apart in memory. Instead of reading all
-         * segments from one row in order, read one segment from each row before
-         * switching to the next segment. This requires swapping bits log(N) + 2
-         * ... log(N) with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
+        /* When using the alternative memory layout, each row consists of a set of
+         * segments placed far apart in memory. Instead of reading all segments from
+         * one row in order, read one segment from each row before switching to the
+         *  next segment. This requires swapping bits log(N) + 2 ... log(N) with
+         *  bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
          */
 
         int where, where_global;
@@ -623,40 +623,98 @@ struct Fetch {
           where_global = where;
         }
 
-        auto base_addr = (where & ((1 << (logn + log_points)) - 1));
 
 #pragma unroll
         for (int k = 0; k < kPoints; k++) {
-          buf[base_addr + k] = src[where_global + k];
+          buf[(where & ((1 << (logn + log_points)) - 1)) + k] = src[where_global + k];
         }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
-           work_item++) {
-        int row = (work_item * kPoints) >> (logn - log_points);
-        int col = (work_item * kPoints) & (kN / kPoints - 1);
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
+        int row = work_item >> (logn - log_points);
+        int col = work_item & (kN / kPoints - 1);
 
-        [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
-        ac_complex<T> local_buf[kPoints][kPoints];
-        for (int wi = 0; wi < kPoints; wi++) {
+        // Stream fetched data over 8 channels to the FFT engine
+
+        std::array<ac_complex<T>, kPoints> to_pipe;
 #pragma unroll
-          for (int k = 0; k < kPoints; k++) {
-            local_buf[wi][k] = buf[row * kN + wi * kN / kPoints + col + k];
-          }
-        }
-
         for (int k = 0; k < kPoints; k++) {
-          std::array<ac_complex<T>, kPoints> to_pipe;
-#pragma unroll
-          for (int kk = 0; kk < kPoints; kk++) {
-            to_pipe[kk] = local_buf[BitReversed<log_points>(kk)][k];
-          }
-
-          // Stream fetched data to the FFT engine
-          PipeOut::write(to_pipe);
+          to_pipe[k] = buf[row * kN + BitReversed<log_points>(k) * kN / kPoints + col];
         }
+        PipeOut::write(to_pipe);
       }
     }
+
+//     constexpr int kN = (1 << logn);
+//     constexpr int kPoints = (1 << log_points);
+
+//     constexpr int kWorkGroupSize = kN;
+//     constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
+
+//     for (int i = 0; i < kIterations; i++) {
+//       // Local memory for storing kPoints rows
+//       ac_complex<T> buf[kPoints * kN];
+
+//       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+//         // Each read fetches kPoints matrix points
+//         int x = (i * kN + work_item) << log_points;
+
+//         /* When using the alternative memory layout, each row consists of a set
+//          * of segments placed far apart in memory. Instead of reading all
+//          * segments from one row in order, read one segment from each row before
+//          * switching to the next segment. This requires swapping bits log(N) + 2
+//          * ... log(N) with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
+//          */
+
+//         int where, where_global;
+//         if (mangle) {
+//           constexpr int kNB = logn / 2;
+//           int a1210 = x & ((kPoints - 1) << (2 * kNB));
+//           int a75 = x & ((kPoints - 1) << kNB);
+//           int mask = ((kPoints - 1) << kNB) | ((kPoints - 1) << (2 * kNB));
+//           a1210 >>= kNB;
+//           a75 <<= kNB;
+//           where = (x & ~mask) | a1210 | a75;
+//           where_global = MangleBits<logn>(where);
+//         } else {
+//           where = x;
+//           where_global = where;
+//         }
+
+//         auto base_addr = (where & ((1 << (logn + log_points)) - 1));
+
+// #pragma unroll
+//         for (int k = 0; k < kPoints; k++) {
+//           buf[base_addr + k] = src[where_global + k];
+//         }
+//       }
+
+//       for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
+//            work_item++) {
+//         int row = (work_item * kPoints) >> (logn - log_points);
+//         int col = (work_item * kPoints) & (kN / kPoints - 1);
+
+//         [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
+//         ac_complex<T> local_buf[kPoints][kPoints];
+//         for (int wi = 0; wi < kPoints; wi++) {
+// #pragma unroll
+//           for (int k = 0; k < kPoints; k++) {
+//             local_buf[wi][k] = buf[row * kN + wi * kN / kPoints + col + k];
+//           }
+//         }
+
+//         for (int k = 0; k < kPoints; k++) {
+//           std::array<ac_complex<T>, kPoints> to_pipe;
+// #pragma unroll
+//           for (int kk = 0; kk < kPoints; kk++) {
+//             to_pipe[kk] = local_buf[BitReversed<log_points>(kk)][k];
+//           }
+
+//           // Stream fetched data to the FFT engine
+//           PipeOut::write(to_pipe);
+//         }
+//       }
+//     }
   }
 };
 
@@ -732,19 +790,17 @@ struct Transpose {
   Transpose(ac_complex<T> *dest_, int mangle_) : dest(dest_), mangle(mangle_) {}
 
   void operator()() const {
+
+
     constexpr int kN = (1 << logn);
-    constexpr int kPoints = (1 << log_points);
-
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
-
-    // using BurstCoalescedLSU =
-    // ext::intel::lsu<ext::intel::burst_coalesce<true>,
-    //                                  ext::intel::statically_coalesce<true>>;
+    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+    constexpr int kPoints = (1 << log_points);
 
     for (int t = 0; t < kIterations; t++) {
       ac_complex<T> buf[kPoints * kN];
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
+
         std::array<ac_complex<T>, kPoints> from_pipe = PipeIn::read();
 
 #pragma unroll
@@ -753,33 +809,70 @@ struct Transpose {
         }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
-           work_item++) {
-        // int colt = work_item;
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
 
-        [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
-        ac_complex<T> local_buf[kPoints][kPoints];
-        for (int wi = 0; wi < kPoints; wi++) {
+        int colt = work_item;
+        int revcolt = BitReversed<logn>(colt);
+        int i = (t * kN + work_item) >> logn;
+        int where = colt * kN + i * kPoints;
+        if (mangle) where = MangleBits<logn>(where);
+
 #pragma unroll
-          for (int k = 0; k < kPoints; k++) {
-            local_buf[wi][k] = buf[wi * kN + work_item * kPoints + k];
-          }
-        }
-
-        [[intel::ivdep]] // NO-FORMAT: Attribute 
         for (int k = 0; k < kPoints; k++) {
-          int revcolt = BitReversed<logn>(work_item * kPoints + k);
-          int i = (t * kN + revcolt) >> logn;
-          int where = revcolt * kN + i * kPoints;
-          if (mangle) where = MangleBits<logn>(where);
-
-#pragma unroll
-          for (int kk = 0; kk < kPoints; kk++) {
-            dest[where + kk] = local_buf[kk][k];
-          }
+          dest[where + k] = buf[k * kN + revcolt];
         }
       }
     }
+
+
+//     constexpr int kN = (1 << logn);
+//     constexpr int kPoints = (1 << log_points);
+
+//     constexpr int kWorkGroupSize = kN;
+//     constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
+
+//     // using BurstCoalescedLSU =
+//     // ext::intel::lsu<ext::intel::burst_coalesce<true>,
+//     //                                  ext::intel::statically_coalesce<true>>;
+
+//     for (int t = 0; t < kIterations; t++) {
+//       ac_complex<T> buf[kPoints * kN];
+//       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
+//         std::array<ac_complex<T>, kPoints> from_pipe = PipeIn::read();
+
+// #pragma unroll
+//         for (int k = 0; k < kPoints; k++) {
+//           buf[kPoints * work_item + k] = from_pipe[k];
+//         }
+//       }
+
+//       for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
+//            work_item++) {
+//         // int colt = work_item;
+
+//         [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
+//         ac_complex<T> local_buf[kPoints][kPoints];
+//         for (int wi = 0; wi < kPoints; wi++) {
+// #pragma unroll
+//           for (int k = 0; k < kPoints; k++) {
+//             local_buf[wi][k] = buf[wi * kN + work_item * kPoints + k];
+//           }
+//         }
+
+//         [[intel::ivdep]] // NO-FORMAT: Attribute 
+//         for (int k = 0; k < kPoints; k++) {
+//           int revcolt = BitReversed<logn>(work_item * kPoints + k);
+//           int i = (t * kN + revcolt) >> logn;
+//           int where = revcolt * kN + i * kPoints;
+//           if (mangle) where = MangleBits<logn>(where);
+
+// #pragma unroll
+//           for (int kk = 0; kk < kPoints; kk++) {
+//             dest[where + kk] = local_buf[kk][k];
+//           }
+//         }
+//       }
+//     }
   }
 };
 
