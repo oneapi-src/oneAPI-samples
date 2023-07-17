@@ -54,42 +54,14 @@ sycl::event write_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out) {
 }
 
 // Function to check the answer of the memcopy, read or write test.
-bool verify(sycl::ulong8 *in, sycl::ulong8 *out, USMTest test) {
-  // The read kernel calculates a sum of all the values at "in" and stores it
-  // at out[0]; first calculate a reference to compare to.
-  sycl::ulong8 read_answer{0};
+bool verify(sycl::ulong8 *actual, sycl::ulong8 *expected) {
+  // Verify all values are equal
   for (int i = 0; i < kNumItems; i++) {
-    read_answer += in[i];
-  }
-
-  for (int i = 0; i < kNumItems; i++) {
-    // The actual value of each element of the output pointer and the value we
-    // expect it to take, respectively.
-    sycl::ulong8 actual = out[i];
-    sycl::ulong8 expected;
-
-    switch (test) {
-    case MEMCOPY:
-      // Output pointer should match the input pointer.
-      expected = in[i];
-      break;
-    case READ:
-      // First index should contain the expected answer (sum of all values at
-      // the input pointer); at all other it should contain zero.
-      expected = (i == 0) ? read_answer : (sycl::ulong8)(0);
-      break;
-    case WRITE:
-      // Each index should contain the known answer that was written.
-      expected = kTestValue;
-      break;
-    }
-
-    // Verify the vectors are equal
     for (int j = 0; j < 8; j++) {
-      if (actual[j] != expected[j]) {
+      if (actual[i][j] != expected[i][j]) {
         std::cerr << "ERROR: Values do not match, "
-                  << "out[" << i << "][" << j << "] = " << out[i][j]
-                  << "; expected " << expected[j] << std::endl;
+                  << "out[" << i << "][" << j << "] = " << actual[i][j]
+                  << "; expected " << expected[i][j] << std::endl;
         return false;
       }
     }
@@ -102,7 +74,7 @@ bool verify(sycl::ulong8 *in, sycl::ulong8 *out, USMTest test) {
 // re-runs the test several times to measure bandwidth.
 int run_test(sycl::queue &q, USMTest test) {
 
-  double kNumBytes_gb;
+  double kNumBytes_gb = kNumBytes / kGB;
 
   // USM host allocation
   sycl::ulong8 *in = sycl::malloc_host<sycl::ulong8>(kNumItems, q);
@@ -119,26 +91,48 @@ int run_test(sycl::queue &q, USMTest test) {
     out[i] = 0;
   }
 
-  // Test selection
-  std::function<sycl::event(sycl::queue &, sycl::ulong8 *, sycl::ulong8 *)>
-      kernel;
+  std::function<sycl::event(sycl::queue &, sycl::ulong8 *, sycl::ulong8 *)> kernel;
+  sycl::ulong8 *expected = new sycl::ulong8[kNumItems];
+
+  // Test selection: set the function that will be run, and fill the "expected"
+  // array with the expected answer.
   switch (test) {
-  case MEMCOPY:
+  case MEMCOPY: {
     std::cout << "Case: Full Duplex" << std::endl;
     kernel = memcopy_kernel;
     // Full duplex transfers twice the amount of data
-    kNumBytes_gb = kNumBytes * 2 / kGB;
+    kNumBytes_gb *= 2;
+    // When verifying, the output pointer should match the input pointer.
+    for (int i = 0; i < kNumItems; i++) {
+      expected[i] = in[i];
+    }
     break;
-  case READ:
+  }
+  case READ: {
     std::cout << "Case: From Host to Device" << std::endl;
     kernel = read_kernel;
-    kNumBytes_gb = kNumBytes / kGB;
+    // When verifying, the first index of the output pointer should contain
+    // the expected answer (sum of all values at the input pointer); at all
+    // other indices it should contain zero.
+    sycl::ulong8 read_answer{0};
+    for (int i = 0; i < kNumItems; i++) {
+      read_answer += in[i];
+    }
+    for (int i = 0; i < kNumItems; i++) {
+      expected[i] = (i == 0) ? read_answer : (sycl::ulong8)(0);
+    }
     break;
-  case WRITE:
+  }
+  case WRITE: {
     std::cout << "Case: From Device to Host" << std::endl;
     kernel = write_kernel;
-    kNumBytes_gb = kNumBytes / kGB;
+    // When verifying, each index of the output pointer should contain the
+    // known answer that was written.
+    for (int i = 0; i < kNumItems; i++) {
+      expected[i] = kTestValue;
+    }
     break;
+  }
   default:
     std::cout << "Error: Failed to launch test" << std::endl;
     return 1;
@@ -153,7 +147,7 @@ int run_test(sycl::queue &q, USMTest test) {
   // program creation and device programming, bandwidth measured in subsequent
   // iterations.
   kernel(q, in, out).wait();
-  if (!verify(in, out, test)) {
+  if (!verify(out, expected)) {
     std::cerr << "FAILED" << std::endl << std::endl;
     return 1;
   }
@@ -167,6 +161,8 @@ int run_test(sycl::queue &q, USMTest test) {
   // Free USM
   sycl::free(in, q);
   sycl::free(out, q);
+
+  delete[] expected;
 
   // Report throughput
   time /= kIterations;
