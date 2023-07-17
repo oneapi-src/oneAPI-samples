@@ -5,7 +5,7 @@
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+#include <sycl/ext/oneapi/annotated_arg/annotated_arg.hpp> // TODO: remove before 2024.0 release
 #include <sycl/sycl.hpp>
 
 #include "memory_transfers.hpp"
