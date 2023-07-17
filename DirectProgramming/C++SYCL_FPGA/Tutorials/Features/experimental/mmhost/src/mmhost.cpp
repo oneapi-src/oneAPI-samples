@@ -1,6 +1,4 @@
-#include <iomanip>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
 #include <sycl/sycl.hpp>
 #include "exception_handler.hpp"
@@ -76,15 +74,15 @@ int main(void) {
     constexpr int kN = 8;
     std::cout << "elements in vector : " << kN << "\n";
 
-    auto host_array_A =
+    auto array_A =
         malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    assert(host_array_A);
-    auto host_array_B =
+    assert(array_A);
+    auto array_B =
         malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
-    assert(host_array_B);
-    auto host_array_C =
+    assert(array_B);
+    auto array_C =
         malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL3)});
-    assert(host_array_C);
+    assert(array_C);
 
     auto pointer_array_A = malloc_shared<int>(kN, q);
     assert(pointer_array_A);
@@ -94,15 +92,15 @@ int main(void) {
     assert(pointer_array_C);
 
     for (int i = 0; i < kN; i++) {
-      host_array_A[i] = i;
-      host_array_B[i] = i * 2;
+      array_A[i] = i;
+      array_B[i] = i * 2;
 
       pointer_array_A[i] = i;
       pointer_array_B[i] = i * 2;
     }
 
     // Run the kernal code
-    q.single_task(MMHostIP{host_array_A, host_array_B, host_array_C, kN})
+    q.single_task(MMHostIP{array_A, array_B, array_C, kN})
         .wait();
     q.single_task(
          PointerIP{pointer_array_A, pointer_array_B, pointer_array_C, kN})
@@ -111,8 +109,8 @@ int main(void) {
     // Check to see if results are correct
     bool passed = true;
     for (int i = 0; i < kN; i++) {
-      auto golden = host_array_A[i] + host_array_B[i];
-      if (host_array_C[i] != golden || pointer_array_C[i] != golden) {
+      auto golden = array_A[i] + array_B[i];
+      if (array_C[i] != golden || pointer_array_C[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
                   << " , found: " << pointer_array_C[i] << "\n";
         passed = false;
@@ -125,9 +123,9 @@ int main(void) {
     }
 
     // Free memory
-    free(host_array_A, q);
-    free(host_array_B, q);
-    free(host_array_C, q);
+    free(array_A, q);
+    free(array_B, q);
+    free(array_C, q);
     free(pointer_array_A, q);
     free(pointer_array_B, q);
     free(pointer_array_C, q);
