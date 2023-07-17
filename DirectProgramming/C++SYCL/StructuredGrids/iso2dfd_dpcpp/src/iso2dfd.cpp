@@ -173,8 +173,8 @@ void Iso2dfdIterationCpu(float* next, float* prev, float* vel,
         // Stencil code to update grid
         gid = j + (i * n_cols);
         value = 0.0;
-        value += prev[gid + 1] - 2.0 * prev[gid] + prev[gid - 1];
-        value += prev[gid + n_cols] - 2.0 * prev[gid] + prev[gid - n_cols];
+        value += prev[gid + 1] - 2.0f * prev[gid] + prev[gid - 1];
+        value += prev[gid + n_cols] - 2.0f * prev[gid] + prev[gid - n_cols];
         value *= dtDIVdxy * vel[gid];
         next[gid] = 2.0f * prev[gid] - next[gid] + value;
       }
@@ -216,8 +216,8 @@ void Iso2dfdIterationGlobal(id<2> it, float* next, float* prev,
     //    the immediate neighbors in both the horizontal and vertical
     //    directions, as well as the value of grid point at a previous time step
     value = 0.0;
-    value += prev[gid + 1] - 2.0 * prev[gid] + prev[gid - 1];
-    value += prev[gid + n_cols] - 2.0 * prev[gid] + prev[gid - n_cols];
+    value += prev[gid + 1] - 2.0f * prev[gid] + prev[gid - 1];
+    value += prev[gid + n_cols] - 2.0f * prev[gid] + prev[gid - n_cols];
     value *= dtDIVdxy * vel[gid];
     next[gid] = 2.0f * prev[gid] - next[gid] + value;
   }

@@ -4,9 +4,10 @@
   "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
   "description": "This sample code demonstrates optimizing a TensorFlow model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on Sapphire Rapids",
   "builder": ["cli"],
-  "languages": [{"python":{}}],
-  "os":["linux"],
+  "languages": [{ "python": {} }],
+  "os": ["linux"],
   "targetDevice": ["CPU"],
+  "cpuInstructionSets": ["AVX512", "AMX"],
   "ciTests": {
   	"linux": [
     {

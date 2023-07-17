@@ -1,19 +1,21 @@
-# Enabling Auto-Mixed Precision for Transfer Learning with TensorFlow
-This tutorial guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow* (TF).
+# `Enable Auto-Mixed Precision for Transfer Learning with TensorFlow*` Sample
 
-This sample demonstrates the end-to-end pipeline tasks typically performed in a deep learning use-case: training (and retraining), inference optimization, and serving the model with TensorFlow Serving.
+The `Enable Auto-Mixed Precision for Transfer Learning with TensorFlow*` sample guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow* (TF).
+
+The sample demonstrates the end-to-end pipeline tasks typically performed in a deep learning use-case: training (and retraining), inference optimization, and serving the model with TensorFlow Serving.
 
 | Area                    | Description
 |:---                     |:---
-| What you will learn     | Enable Auto-Mixed Precision for Transfer Learning with TensorFlow
+| What you will learn     | Enable Auto-Mixed Precision for Transfer Learning with TensorFlow*
 | Time to complete        | 30 minutes
+| Category                | Code Optimization
 
 ## Purpose
 
-Through the implementation of end-to-end deep learning example, this sample demonstrates three important concepts:
-1. The benefits of using auto-mixed precision to accelerate tasks like transfer learning, with minimal changes to existing scripts.
-2. The importance of inference optimization on performance.
-3. The ease of using Intel® optimizations in TensorFlow, which are enabled by default in 2.9.0 and newer.
+Through the implementation of end-to-end deep learning example, this sample demonstrates important concepts:
+- The benefits of using auto-mixed precision to accelerate tasks like transfer learning, with minimal changes to existing scripts.
+- The importance of inference optimization on performance.
+- The ease of using Intel® optimizations in TensorFlow, which are enabled by default in 2.9.0 and newer.
 
 ## Prerequisites
 
@@ -64,7 +66,10 @@ The sample tutorial contains one Jupyter Notebook and two Python scripts.
 |`freeze_optimize_v2.py`   |The script optimizes a pre-trained TensorFlow model PB file.
 |`tf_benchmark.py`         |The script measures inference performance of a model using dummy data.
 
-## Run the Sample on Linux*
+## Run the Enable Auto-Mixed Precision for Transfer Learning with TensorFlow* 
+
+### On Linux*
+
 1. Launch Jupyter Notebook.
    ```
    jupyter notebook --ip=0.0.0.0
@@ -78,7 +83,7 @@ The sample tutorial contains one Jupyter Notebook and two Python scripts.
 5. Run every cell in the Notebook in sequence.
 
 
-### Run the Sample on Intel® DevCloud
+### Run the Sample on Intel® DevCloud (Optional)
 
 1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 2. On a Linux* system, open a terminal.
@@ -102,16 +107,10 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 
 ## Example Output
-You will see diagrams that compare performance and analysis. 
 
-The following image illustrates performance comparison for training speedup obtained by enabling auto-mixed precision.
+You will see diagrams comparing performance and analysis. This includes performance comparison for training speedup obtained by enabling auto-mixed precision and inference speedup obtained by optimizing the saved model for inference.
 
-![Training Speedup](images/training-perf-comp.png)
-
-For performance analysis, you will see histograms showing different Tensorflow* operations in the analyzed pre-trained model pb file. The following image illustrates performance comparison for inference speedup obtained by optimizing the saved model for inference.
-
-![Inference Speedup](images/inference-perf-comp.png)
-
+For performance analysis, you will see histograms showing different Tensorflow* operations in the analyzed pre-trained model pb file.
 
 ## License
 

@@ -313,7 +313,9 @@ struct StreamingQRD {
           }
 
           // Load a_i for reuse across j iterations
-          if (j_eq_i[fanout_bank_idx]) {
+          if (i_lt_0[fanout_bank_idx]) {
+            a_i[k] = 0;
+          } else if (j_eq_i[fanout_bank_idx]) {
             a_i[k] = col[k];
           }
         });

@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020-2023 Intel Corporation
+// Copyright © 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -9,18 +9,41 @@
 // This samples uses the oneAPI Math Kernel Library (oneMKL) to accelerate
 //     the computation.
 
+// The test is updated based on oneAPI samples oneAPI-samples/Libraries/oneMKL/matrix_mul_mkl
 #include <iostream>
+#include <iomanip>
 #include <limits>
 
 #include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
+#include "dpc_common.hpp"
 
-float rand_uniform();
-bool verify_result(int m, int n, int k, int ldc, const float *C, const float *C_reference);
+#ifndef USE_DOUBLE
+#define FLOAT   float
+#else
+#define FLOAT   double
+#endif
 
-int main()
+FLOAT rand_uniform();
+bool verify_result(int m, int n, int k, int ldc, FLOAT *C, FLOAT *C_reference);
+
+#define WARMUP	 10
+#define LOOPS   100
+//default matrix size 8192x8192
+#define MSIZE   8192
+#define VERIFY_RESULT   False
+
+
+using namespace std ;
+
+int main(int argc, char* argv[])
 {
     try {
+
+        int msize = MSIZE;
+        int loops = LOOPS;
+        int verify = 0;
+
         // Initialize data for GEMM. The full GEMM operation is:
         //
         //      C = alpha * op(A) * op(B) + beta * C
@@ -29,7 +52,7 @@ int main()
         // optional matrix transposition.
         //
         // For this simple matrix multiplication, no transposition is needed.
-        //
+        // 
         // By choosing alpha = 1, beta = 0, GEMM will calculate C = A * B.
         //
         // In this example, matrices are stored in row-major layout.
@@ -38,12 +61,19 @@ int main()
         auto transB = oneapi::mkl::transpose::nontrans;
 
         // Matrix data sizes.
-        //
+        // 
         // A is m x k
         // B is k x n  --> product C is m x n
-        int m = 600;
-        int k = 1200;
-        int n = 2400;
+        int m = msize;
+        int k = msize;
+        int n = msize;
+
+        cout << "Problem size: "
+                  << " A (" << m << 'x' << k << ") *"
+                  << " B (" << k << 'x' << n << ")  --> "
+                  << " C (" << m << 'x' << n << ")\n";
+        
+        cout << "Benchmark interations: " << loops << endl;
 
         // Leading dimensions of data. For row-major matrices, the leading
         // dimension is the stride between adjacent rows.
@@ -52,8 +82,8 @@ int main()
         int ldc = n;
 
         // Scaling factors.
-        float alpha = 1.0f;
-        float beta = 0.0f;
+        FLOAT alpha = 1.0f;
+        FLOAT beta = 0.0f;
 
         // Create a queue on the default device.
         sycl::queue device_queue{sycl::default_selector_v};
@@ -63,12 +93,14 @@ int main()
                   << std::endl;
 
         // Allocate shared memory for matrices.
-        auto A = sycl::malloc_shared<float>(m * k, device_queue);
-        auto B = sycl::malloc_shared<float>(k * n, device_queue);
-        auto C = sycl::malloc_shared<float>(m * n, device_queue);
-        auto C_reference = (float *) calloc(m * n, sizeof(float));
+        const size_t alignment = 4096;
+        auto a = sycl::aligned_alloc_host<FLOAT>(alignment, m * k, device_queue);
+        auto b = sycl::aligned_alloc_host<FLOAT>(alignment, k * n, device_queue);
+        auto c = sycl::aligned_alloc_host<FLOAT>(alignment, m * n, device_queue);
 
-        if (!A || !B || !C || !C_reference) {
+        auto C_reference = (FLOAT *) calloc(m * n, sizeof(FLOAT));
+
+        if (!a || !b || !c || !C_reference) {
             std::cerr << "Could not allocate memory for matrices." << std::endl;
             exit(1);
         }
@@ -76,43 +108,79 @@ int main()
         // Initialize matrix data.
         for (int i = 0; i < m; i++)
             for (int j = 0; j < k; j++)
-                A[i * lda + j] = rand_uniform();
+                a[i * lda + j] = rand_uniform();
 
         for (int i = 0; i < k; i++)
             for (int j = 0; j < n; j++)
-                B[i * ldb + j] = rand_uniform();
+                b[i * ldb + j] = rand_uniform();
 
-        std::cout << "Problem size: "
-                  << " A (" << m << 'x' << k << ") *"
-                  << " B (" << k << 'x' << n << ")  --> "
-                  << " C (" << m << 'x' << n << ")\n";
+        auto A = sycl::aligned_alloc_device<FLOAT>(alignment, m * k, device_queue);
+        auto B = sycl::aligned_alloc_device<FLOAT>(alignment, m * n, device_queue);
+        auto C = sycl::aligned_alloc_device<FLOAT>(alignment, m * n, device_queue);
+        device_queue.wait();
+
+        device_queue.memcpy(A, &(a[0]), m * k * sizeof(FLOAT));
+        device_queue.memcpy(B, &(b[0]), k * n * sizeof(FLOAT));
+        device_queue.memcpy(C, &(c[0]), m * n * sizeof(FLOAT));
+        device_queue.wait();
+        
 
         // Call GEMM to do matrix multiplication, asynchronously.
         std::cerr << "Launching oneMKL GEMM calculation..." << std::endl;
-        oneapi::mkl::blas::row_major::gemm(device_queue, transA, transB, m, n, k,
-                                           alpha, A, lda, B, ldb, beta, C, ldc);
+        dpc_common::TimeInterval timer;
+        double start_time = 0.0;
 
-        // While calculation occurs, compute reference result to check accuracy.
-        std::cerr << "Performing reference calculation..." << std::endl;
-        for (int i = 0; i < m; i++)
-            for (int h = 0; h < k; h++)
-                for (int j = 0; j < n; j++)
-                    C_reference[i * ldc + j] += A[i * lda + h] * B[h * ldb + j];
+        //warm up
+	for (int w=0; w < WARMUP; w++)
+	{
+            oneapi::mkl::blas::row_major::gemm(device_queue, transA, transB, m, n, k,
+                                            alpha, A, lda, B, ldb, beta, C, ldc);
+	}
+	device_queue.wait_and_throw();
 
-        // Wait for oneMKL computation to complete.
+        start_time = timer.Elapsed();
+        for (int l=0; l < loops; l++)
+        {
+            oneapi::mkl::blas::row_major::gemm(device_queue, transA, transB, m, n, k,
+                                            alpha, A, lda, B, ldb, beta, C, ldc);
+        }
+        // Wait for oneMKL computation to complete.        
         device_queue.wait_and_throw();
 
-        // Check results for accuracy.
-        bool ok = verify_result(m, n, k, ldc, C, C_reference);
+        double stop_time = timer.Elapsed();
+        double avg_gemm_time = (stop_time - start_time)/loops;
+
+        double gflops = 2.0 * (double)m * (double)m * (double)m;
+        #ifdef USE_DOUBLE
+            cout << "DGEMM performance : " << gflops / avg_gemm_time * 1.e-9 << " GFLOPS" << endl;
+        #else
+            cout << "SGEMM performance : " << gflops / avg_gemm_time * 1.e-9 << " GFLOPS" << endl;
+        #endif
+
+        
+        if(verify)
+        {
+            // While calculation occurs, compute reference result to check accuracy.
+            std::cerr << "Performing reference calculation..." << std::endl;
+            for (int i = 0; i < m; i++)
+                for (int h = 0; h < k; h++)
+                    for (int j = 0; j < n; j++)
+                        C_reference[i * ldc + j] += a[i * lda + h] * b[h * ldb + j];        
+            // Check results for accuracy.
+           device_queue.memcpy(&(c[0]), C, m*n*sizeof(FLOAT)).wait();
+           verify_result(m, n, k, ldc, c, C_reference);
+        }
+        
 
         // Free memory.
         free(A, device_queue);
         free(B, device_queue);
         free(C, device_queue);
-        free(C_reference);
+        free(C_reference);        
+	free(a, device_queue);
+	free(b, device_queue);
+	free(c, device_queue);
 
-        if (!ok)
-            exit(2);
     } catch (const std::exception &e) {
         std::cerr << "An exception occurred: "
                   << e.what() << std::endl;
@@ -120,15 +188,14 @@ int main()
     }
 }
 
-float rand_uniform()
+FLOAT rand_uniform()
 {
-    return float(rand()) / float(RAND_MAX);
+    return static_cast <FLOAT> (rand()) / static_cast <FLOAT> (RAND_MAX);
 }
 
-bool verify_result(int m, int n, int k, int ldc,
-                   const float *C, const float *C_reference)
+bool verify_result(int m, int n, int k, int ldc, FLOAT *C, FLOAT *C_reference)
 {
-    float tolerance = 1e-3;
+    FLOAT tolerance = 1e-3;
     bool ok = true;
 
     // Compare host side results with the result buffer from device side: print
@@ -150,7 +217,9 @@ bool verify_result(int m, int n, int k, int ldc,
     }
 
     if (ok)
-        std::cout << "Results are accurate.\n";
+        std::cout << "Results are accurate with tolerance = " << tolerance << endl;
+    else
+        std::cout << "Results may not be accurate with tolerance = " << tolerance << endl;
 
     return ok;
 }

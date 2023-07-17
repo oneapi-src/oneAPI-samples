@@ -7,7 +7,7 @@ of options using the Black-Scholes formula for suitable randomly-generated portf
 | Optimized for       | Description
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04 <br> Windows 10
-| Hardware            | Skylake with Gen9 or newer
+| Hardware            | Skylake CPU with Gen9 GPU or newer
 | Software            | Intel® oneAPI Math Kernel Library (oneMKL)
 | What you will learn | How to use the oneMKL random number generation functionality
 | Time to complete    | 5 minutes

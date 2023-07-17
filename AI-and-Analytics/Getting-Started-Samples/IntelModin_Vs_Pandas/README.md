@@ -1,30 +1,37 @@
-# `Intel® Modin Vs Pandas Performance` Sample
-The `Intel® Modin Vs Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Intel® Distribution of Modin* and the performance of Pandas for specific dataframe operations.
+# `Intel® Modin* Vs. Pandas Performance` Sample
 
-| Property                       | Description
-|:---                            |:---
-| What you will learn            | How to accelerate the Pandas API using Intel® Distribution of Modin*.
-| Time to complete               | Less than 10 minutes
+The `Intel® Modin* Vs. Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Intel® Distribution of Modin* and the performance of Pandas for specific dataframe operations.
+
+| Area                       | Description
+|:---                        |:---
+| What you will learn        | How to accelerate the Pandas API using Intel® Distribution of Modin*.
+| Time to complete           | Less than 10 minutes
+| Category                   | Concepts and Functionality
 
 ## Purpose
-Intel® Distribution of Modin* accelerates Pandas operations using Ray or Dask execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Intel® Distribution of Modin. You will be able to compare the performance difference between the two methods.
+
+Intel® Distribution of Modin* accelerates Pandas operations using Ray or Dask execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Intel® Distribution of Modin*. You will be able to compare the performance difference between the two methods.
 
 You can run the sample locally or in Google Colaboratory (Colab).
 
 ## Prerequisites
+
 | Optimized for             | Description
 |:---                       |:---
-| OS                        | Ubuntu 18.04.3 LTS
-| Hardware                  | Intel® Xeon® CPU
+| OS                        | Ubuntu* 20.04 (or newer)
+| Hardware                  | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
 | Software                  | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® Distribution of Modin*
 
 ## Key Implementation Details
+
 This code sample is implemented for CPU using Python programming language. The sample requires NumPy, Pandas, Modin libraries, and the time module in Python.
 
 ## Run the `Intel® Modin Vs Pandas Performance` Sample Locally
+
 If you want to run the sample on a local system using a command-line interface (CLI), you must install the Intel® Distribution of Modin* in a new Conda* environment first.
 
 ### Install the Intel® Distribution of Modin*
+
 1. Create a Conda environment.
    ```
    conda create --name aikit-modin
@@ -51,14 +58,16 @@ If you want to run the sample on a local system using a command-line interface (
    pip install ipython
    ```
 ### Run the Sample
+
 1. Change to the directory containing the `IntelModin_Vs_Pandas.ipynb` notebook file on your local system.
 
 2. Run the sample notebook.
    ```
-   ipython Modin_Vs_Pandas.ipynb
+   ipython IntelModin_Vs_Pandas.ipynb
    ```
 
 ## Run the `Intel® Modin Vs Pandas Performance` Sample in Google Colaboratory
+
 1. Change to the directory containing the `IntelModin_Vs_Pandas.ipynb` notebook file on your local system.
 
 2. Open the notebook file, and remove the prepended number sign (#) symbol from the following lines:
@@ -84,14 +93,18 @@ If you want to run the sample on a local system using a command-line interface (
 9. Select **Runtime** > **Run all**.
 
 ## Example Output
+
 >**Note**: Your output might be different between runs on the notebook depending upon the random generation of the dataset. For the first run, Modin may take longer to execute than Pandas for certain operations since Modin performs some initialization in the first iteration.
+
 ```
 CPU times: user 8.47 s, sys: 132 ms, total: 8.6 s
 Wall time: 8.57 s
 ```
-Example expected cell output is included in `IntelModin_Vs_Pandas.ipynb` too.
+
+Example expected cell output is included in `IntelModin_Vs_Pandas.ipynb`.
 
 ## License
+
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 

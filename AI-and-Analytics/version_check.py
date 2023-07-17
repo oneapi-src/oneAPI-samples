@@ -10,6 +10,12 @@ sklearnex_found = util.find_spec("sklearnex") is not None
 inc_found = util.find_spec("neural_compressor") is not None
 modin_found = util.find_spec("modin") is not None
 torchccl_found = util.find_spec("oneccl_bindings_for_pytorch") is not None
+dpctl_found = util.find_spec("dpctl") is not None
+numba_dpex_found = util.find_spec("numba_dpex") is not None
+dpnp_found = util.find_spec("dpnp") is not None
+
+import warnings
+warnings.filterwarnings('ignore')
 
 class arch_checker:
 
@@ -109,6 +115,17 @@ if torchccl_found == True:
     import oneccl_bindings_for_pytorch as torchccl
     print("oneCCL Bindings version {}".format(torchccl.__version__))
 
+if dpctl_found == True:
+    import dpctl as dpctl
+    print("DPCTL version {}".format(dpctl.__version__))
+
+if numba_dpex_found == True:
+    import numba_dpex as dpex
+    print("numba_dpex version {}".format(dpex.__version__))
+
+if dpnp_found == True:
+    import dpnp as np
+    print("dpnp version {}".format(np.__version__))
 
 checker = arch_checker()
 print("Arch : ", checker.arch)

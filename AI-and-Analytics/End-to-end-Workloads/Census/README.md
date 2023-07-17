@@ -11,7 +11,7 @@ The `Census` sample code illustrates how to use Intel® Distribution of Modin* f
 ## Purpose
 This sample code demonstrates how to run the end-to-end census workload using the AI Toolkit without any external dependencies.
 
-Intel® Distribution of Modin* uses Ray to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel® Distribution of Modin* provides integration and compatibility with existing Pandas code. Intel® Extension for Scikit-learn* dynamically patches scikit-learn estimators to use Intel® oneAPI Data Analytics Library (oneDAL) as the underlying solver to get the solution faster.
+Intel® Distribution of Modin* uses HDK to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel® Distribution of Modin* provides integration and compatibility with existing Pandas code. Intel® Extension for Scikit-learn* dynamically patches scikit-learn estimators to use Intel® oneAPI Data Analytics Library (oneDAL) as the underlying solver to get the solution faster.
 
 ## Prerequisites
 
@@ -19,14 +19,14 @@ Intel® Distribution of Modin* uses Ray to speed up your Pandas notebooks, scrip
 | :---                              | :---
 | OS                                | 64-bit Ubuntu* 18.04 or higher
 | Hardware                          | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software                          | Intel® AI Analytics Toolkit (AI Kit) (Python version 3.7, Intel® Distribution of Modin*) <br> Intel® Extension for Scikit-learn* <br> NumPy <br> Ray
+| Software                          | Intel® AI Analytics Toolkit (AI Kit) (Python version 3.8 or newer, Intel® Distribution of Modin*) <br> Intel® Extension for Scikit-learn* <br> NumPy
 
 The Intel® Distribution of Modin* and Intel® Extension for Scikit-learn* libraries are available together in [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 
 ## Key Implementation Details
 
-This end-to-end workload sample code is implemented for CPU using the Python language. Once you have installed AI Kit, the Conda environment is prepared with Python version 3.7 (or newer), Intel Distribution of Modin*, Ray, Intel® Extension for Scikit-Learn, and NumPy. 
+This end-to-end workload sample code is implemented for CPU using the Python language. Once you have installed AI Kit, the Conda environment is prepared with Python version 3.8 (or newer), Intel Distribution of Modin*, Intel® Extension for Scikit-Learn, and NumPy. 
 
 In this sample, you will use Intel® Distribution of Modin* to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression-based model to find the relation between education and total income earned in the US.
 
@@ -74,23 +74,29 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 ### On Linux*
 
-1. Install the Intel® Distribution of Modin* python environment.
+1. Install the Intel® Distribution of Modin* python environment (Only python 3.8 - 3.10 are supported).
    ```
-   conda create -y -n intel-aikit-modin intel-aikit-modin -c intel
+   conda create -n modin-hdk python=3.x -y
    ```
 2. Activate the Conda environment.
    ```
-   conda activate intel-aikit-modin
+   conda activate modin-hdk
    ```
-3. Install Jupyter Notebook.
+3. Install modin-hdk, Intel® Extension for Scikit-learn* and related libraries.
    ```
-   conda install jupyter nb_conda_kernels
+   conda install modin-hdk -c conda-forge -y
+   pip install scikit-learn-intelex
+   pip install matplotlib
    ```
-4. Install OpenCensus.
+4. Install Jupyter Notebook
    ```
-   pip install opencensus
+   pip install jupyter ipykernel
    ```
-5. Change to the sample directory, and open Jupyter Notebook.
+5. Add kernel to Jupyter Notebook.
+   ```
+   python -m ipykernel install --user --name modin-hdk
+   ```
+6. Change to the sample directory, and open Jupyter Notebook.
    ```
    jupyter notebook
    ```
@@ -127,20 +133,17 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Open a web browser, and navigate to https://devcloud.intel.com. Select **Work with oneAPI**.
 3. From Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started), locate the ***Connect with Jupyter* Lab*** section (near the bottom).
 4. Click **Sign in to Connect** button. (If you are already signed in, the link should say ***Launch JupyterLab****.)
-5. Once JupyterLab opens, select **no kernel**.
-6. You might need to [clone the samples](#clone-the-samples-in-intel®-devcloud) from GitHub. If the samples are already present, skip this step.
-7. Change to the sample directory.
-8. Open `census_modin.ipynb`.
-9. Click **Run** to run the cells.
-10. Alternatively, run the entire workbook by selecting **Restart kernel and re-run whole notebook**.
-
-#### Clone the Samples in Intel® DevCloud
-If the samples are not already present in your Intel® DevCloud account, download them.
-1. From JupyterLab, select **File** > **New** > **Terminal**.
-2. In the terminal, clone the samples from GitHub.
+5. Open a terminal from Launcher
+6. Follow [step 1-5](#on-linux) to create conda environment
+7. Clone the samples from GitHub. If the samples are already present, skip this step.
    ```
    git clone https://github.com/oneapi-src/oneAPI-samples.git
    ```
+8. Change to the sample directory.
+9. Open `census_modin.ipynb`.
+10. Select kernel "modin-hdk" 
+11. Click **Run** to run the cells.
+12. Alternatively, run the entire workbook by selecting **Restart kernel and re-run whole notebook**.
 
 ## Example Output
 

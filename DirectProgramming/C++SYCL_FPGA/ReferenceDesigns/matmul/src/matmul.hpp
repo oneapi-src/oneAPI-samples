@@ -86,9 +86,9 @@ void MatmulImpl(sycl::queue &q,            // Device queue
   q.memcpy(a, a_matrix.data(), kMatsizeA * num_matrices * sizeof(TT)).wait();
   q.memcpy(b, b_matrix.data(), kMatsizeB * num_matrices * sizeof(TT)).wait();
 
-  using PipeDataA = fpga_tools::NTuple<TT, TILE_A>;
-  using PipeDataB = fpga_tools::NTuple<TT, TILE_B>;
-  using PipeDataC = fpga_tools::NTuple<TT, TILE_A>;
+  using PipeDataA = fpga_tools::NTuple<TT, tile_a>;
+  using PipeDataB = fpga_tools::NTuple<TT, tile_b>;
+  using PipeDataC = fpga_tools::NTuple<TT, tile_a>;
 
   // Pipes to communicate the matrices between kernels
   using PipeA = sycl::ext::intel::pipe<APipe, PipeDataA, 64>;
@@ -103,7 +103,7 @@ void MatmulImpl(sycl::queue &q,            // Device queue
                                PipeDone>{a, repetitions});
 
   // Producer kernel for matrix B
-  q.single_task<FeederB>(
+  auto feeder_b_event = q.single_task<FeederB>(
       MatrixReadFromDDRToPipeB<TT, kBL2, rows_a, common, cols_b, tile_a, tile_b,
                                kElemsPerDDRAccess, num_matrices, PipeB>{
           b, repetitions});
@@ -119,6 +119,8 @@ void MatmulImpl(sycl::queue &q,            // Device queue
                           kElemsPerDDRAccess, num_matrices, PipeC>{
           c, repetitions});
 
+  feeder_a_event.wait();
+  feeder_b_event.wait();
   drain_event.wait();
 
   // Compute the total time the execution lasted
