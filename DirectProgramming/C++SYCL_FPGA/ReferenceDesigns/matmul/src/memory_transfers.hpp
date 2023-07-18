@@ -38,9 +38,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
+          sycl::ext::oneapi::experimental::awidth<28>,
           sycl::ext::oneapi::experimental::buffer_location<aspace>,
           sycl::ext::oneapi::experimental::dwidth<datawidth>,
           sycl::ext::oneapi::experimental::latency<0>,
+          sycl::ext::oneapi::experimental::maxburst<1>,
+          sycl::ext::oneapi::experimental::read_write_mode_read,
           sycl::ext::oneapi::experimental::wait_request_requested})>
 #else
   TT *
@@ -191,9 +195,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
+          sycl::ext::oneapi::experimental::awidth<28>,
           sycl::ext::oneapi::experimental::buffer_location<aspace>,
           sycl::ext::oneapi::experimental::dwidth<datawidth>,
           sycl::ext::oneapi::experimental::latency<0>,
+          sycl::ext::oneapi::experimental::maxburst<1>,
+          sycl::ext::oneapi::experimental::read_write_mode_read,
           sycl::ext::oneapi::experimental::wait_request_requested})>
 #else
   TT *
@@ -336,9 +344,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
+          sycl::ext::oneapi::experimental::awidth<28>,
           sycl::ext::oneapi::experimental::buffer_location<aspace>,
           sycl::ext::oneapi::experimental::dwidth<datawidth>,
           sycl::ext::oneapi::experimental::latency<0>,
+          sycl::ext::oneapi::experimental::maxburst<1>,
+          sycl::ext::oneapi::experimental::read_write_mode_write,
           sycl::ext::oneapi::experimental::wait_request_requested})>
 #else
   TT *
