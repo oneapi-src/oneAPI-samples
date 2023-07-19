@@ -14,28 +14,32 @@
         "id": "baseline",
         "steps": [
           "make clean",
-          "make baseline"
+          "make baseline",
+          "./MatVector"
         ]
       },
       {
         "id": "vec_report1",
         "steps": [
           "make clean",
-          "make vec_report1"
+          "make vec_report1",
+          "./vec_samples_report1.out"
         ]
       },
       {
         "id": "vec_report2",
         "steps": [
           "make clean",
-          "make vec_report2"
+          "make vec_report2",
+          "./vec_samples_report2.out"
         ]
       },
       {
         "id": "vec_report3",
         "steps": [
           "make clean",
-          "make vec_report3"
+          "make vec_report3",
+          "./vec_samples_report3.out"
         ]
       }
     ]
