@@ -6,10 +6,10 @@
   "toolchain": [ "ifx" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
-  "os": [ "darwin" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "make" ],
   "ciTests":{
-    "darwin": [
+    "linux": [
       {
         "id": "ifx_release_cpu",
         "steps": [
@@ -18,7 +18,7 @@
           "make clean"
         ]
        },
-       { 
+       {
         "id": "ifx_debug_cpu",
         "steps": [
           "make debug",
@@ -26,7 +26,8 @@
           "make clean"
         ]
        }
-    ]
+    ],
+    "windows": []
   },
   "expertise": "Concepts and Functionality"
 }
