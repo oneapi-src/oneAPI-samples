@@ -591,11 +591,11 @@ struct Fetch {
     constexpr int kPoints = (1 << log_points);
 
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
+    constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
 
     for (int i = 0; i < kIterations; i++) {
       // Local memory for storing 8 rows
-      ac_complex<T> buf[8 * kN];
+      ac_complex<T> buf[kPoints * kN];
       for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
 
         // Each read fetches 8 matrix points
@@ -794,8 +794,8 @@ struct Transpose {
 
     constexpr int kN = (1 << logn);
     constexpr int kWorkGroupSize = kN;
-    constexpr int kIterations = kN * kN / 8 / kWorkGroupSize;
     constexpr int kPoints = (1 << log_points);
+    constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
 
     for (int t = 0; t < kIterations; t++) {
       ac_complex<T> buf[kPoints * kN];
