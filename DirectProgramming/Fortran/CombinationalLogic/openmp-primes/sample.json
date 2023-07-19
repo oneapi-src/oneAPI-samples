@@ -27,7 +27,22 @@
         ]
        }
     ],
-    "windows": []
+    "windows": [
+       {
+        "id": "ifx_release_cpu",
+        "steps": [
+          "build.bat",
+          "run.bat"
+        ]
+       },
+       {
+        "id": "ifx_debug_cpu",
+        "steps": [
+          "build.bat",
+          "debug_run.bat"
+        ]
+       }
+    ]
   },
   "expertise": "Concepts and Functionality"
 }
