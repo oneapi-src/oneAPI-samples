@@ -331,11 +331,7 @@ input[type=checkbox] label{
 }
 
 .badge1 {
-  /* background-color: rgba(160, 235, 255, 0.80); TEST 04-24-23
-  border: 1px solid rgb(160, 235, 255); TEST 04-24-23 */
-  background-color: rgba( 250,250,250,98); /* TEST 04-24-23 */
-  /* background-color: rgba(233, 233, 233);
-  border: 1px solid rgb(233, 233, 233); */  
+  background-color: rgba( 250,250,250,98); 
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
   color: rgb(0, 0, 0) !important;
   inline-size: 100px; 
@@ -353,10 +349,7 @@ input[type=checkbox] label{
   }
 
 .badge2 {
-  /* background-color:rgba(0, 199, 253, 0.80); /* TEST 04-24-23 */
-  /* border: 1px solid rgb(0, 199, 253);  TEST 04-24-23 */
-  background-color: rgba(233,233,233,91); /* TEST 04-24-23 */
-  /* border: .5px solid rgb(174,174,174); */
+  background-color: rgba(233,233,233,91); 
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
   color: rgb(0, 0, 0) !important;
   font-size: 14px !important; 
@@ -371,12 +364,9 @@ input[type=checkbox] label{
  }
 
 .badge3 {
-  /* background-color:rgba(0, 84, 174, 0.80); TEST 04-24-23
-  border: 1px solid rgb(0, 84, 174); TEST 04-24-23 */
-  background-color: rgba(207,207,207,81); /* TEST 04-24-23 */
+  background-color: rgba(207,207,207,81); 
   color: rgb(0, 0, 0) !important;
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
-  /* color: rgb(255, 255, 255) !important; */
   font-size: 14px !important; 
   font-family: var(--bs-header-font-family);
   font-weight: bold;
@@ -394,52 +384,51 @@ input[type=checkbox] label{
   border: 1px solid rgb(0,199,253);
 }
 
-
 .app-title {
   font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
   font-size: 20px;
   font-weight: normal; 
   font-weight: 400;
   color: rgba(255,255,255,100);
-  padding:  10px 0px 15px 20px;
+  padding:  12px 0px 15px 20px;
 }
 
-/* input[type=button] > #nobutton {
-  /* outline: none !important; */
+input[type=button] > #nobutton {
+  outline: none !important;
+}
 
-.app-title button{
-  padding: 0;
+/* disabled 20230718*/
+/* .app-title button{
+  padding-top: 0;
   border: none;
   background: none;
   color: rgba(255,255,255,100);
 }
 
-.app-title button a:hover{
+.app-title a:hover{
   color: rgb(0,199,253) !important;
-}
+} */
 
-#total-records{
+#total-records{  
   font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
-  font-size: 18px;
+  /* font-size: 18px; */
   font-weight: normal; 
   font-weight: 400;
-  color: rgba(255,255,255,100);
-  padding:  10px 20px 15px 0px;
 }
 
 .logo {
   background-size: contain;
 }
 
-.firstrow {
+.grid-row {
   display: flex;
-  /* flex-grow: 1; */
   grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
   background-color: rgb(0,84,174);
   width: 100%;
   text-align: center;
-  padding: 6px 0px 4px 0px;
-}
+  align-items: center;
+  padding: 4px 0px 2px 0px;
+} 
 
 .col {
   display: flex;
@@ -449,78 +438,45 @@ input[type=checkbox] label{
   align-items: center;
   text-align: center;
   vertical-align: middle;
-  /* margin-top: 6px;
-  margin-bottom: 4px; */
-  /* min-height: 20px; */
-  /* flex-grow: 1; */
-  /* padding: 10px; */
 }
+
+/* dev only
+/* outline: dotted; outline-color: orangered;*/
 
 .col:nth-child(1) {
   align-items: flex-start;
   margin-left: 12px;
-
 }
 .col:nth-child(2) {
   align-items: flex-start;
+  max-width: 10%;
 }
 
 .col:nth-child(3) {
   align-items: center;
+  min-width: 30%;
 }
 
 .col:nth-child(4) {
   align-items: flex-start;
+  max-width: 10%;
 }
 
 .col:nth-child(5) {
+  flex-direction: column; 
   align-items: flex-end;
-  flex-wrap: nowrap;
   margin-right: 12px;
 }
 
 .col-nav-left{
+  font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
+  font-size: 18px;
+  font-weight: normal; 
+  font-weight: 400;
   display: flex;
   direction: row;
   overflow: hidden;
 } 
-
-
-.col-nav-rght{
-  display: flex;
-  direction: row;
-  overflow: hidden;
-} 
-
-/* .col-nav-rght .fa-github {
-
-} */
-
-.fa-github{
-  color: rgba(255,255,255,100);
-  position: relative;
-  /* background-color: transparent; */
-  /* background-color: #0054AE; */
-  background-color: transparent;
-  /* background: transparent; */
-  position: relative;
-  border: none;
-  outline: none;
-  /* margin-bottom: 10px; */
-  /* top: 50%;
-  right: 0;
-  left: 0;
-  width: 0px;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  align-items: left;*/
-  padding-bottom: 10px;
-}
-
-.fa-github:hover{
-  color:rgba(174,174,174,68);
-}
 
 .search-container{
   justify-content: center;
@@ -764,6 +720,19 @@ input:hover {
   transition: background 2s ease-out;  
 }
 
+.nav-titlebar{
+  font-family: var(--bs-header-font-family);
+  font-weight: normal;
+  font-weight: 400;
+  font-size: 18px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  color: rgb(0,84,174);
+}
+
 .nav-ctrls {
   font-family: var(--bs-header-font-family);
   font-weight: normal;
@@ -840,17 +809,29 @@ input:hover {
   height: 28px;
   border-radius: 50%;
 }
-.circle-icon {
-  width: 40px;
-  height: 40px;
-  background: rgb(0,84,174);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  margin-left: 8px;
-  padding: 20px 0px 10px 0px;
+
+figure {
+  display: inline-block;
+  padding: 5px 0px 0px 100px;
+  border: none;
+  max-width: 250px;
+  margin: auto;
+}
+
+img.scaled {
+  width: 20%;
+}
+
+figcaption {
+  font-family:var(--bs-header-font-family);
+  font-weight: 400;
+  font-size: 18px;
+  border-bottom: none;
+  color:rgb(255,255,255);
+}
+
+figcaption:hover{
+  color:rgb(160, 235, 255) !important;
 }
 
 .badge1-circle { 
@@ -944,7 +925,6 @@ input[type=checkbox]:hover {
   background-color: rgba(174,174,174,68);
   box-shadow: inset 0px 0px 3px rgba(128,128,128,0.5);
 }
-
 
 input[type=checkbox]:after {
   top: 10px;
@@ -1132,7 +1112,12 @@ ul.help li {
 
 a {
   text-decoration: none !important;
-  color: rgb(255,255,255) !important;
+  /* color: rgb(255,255,255) !important; */
+  color: rgb(0,84,174) !important;
+}
+
+a:hover {
+    color: rgb(0, 199, 253) !important;
 }
 
 #trademarks{

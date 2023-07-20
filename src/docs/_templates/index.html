@@ -9,9 +9,9 @@
 
 <div class="all-wrapper">
 
-    <div class="firstrow"> 
+    <div class="grid-row"> 
 
-        <div class="col">
+        <div class="col"> <!--#1-->
 
             <div class="col-nav-left"> 
 
@@ -20,19 +20,16 @@
                 </div>
 
                 <div class="app-title">
-                    <button id="nobutton">
-                        <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">
-                            Intel®&nbsp;oneAPI&nbsp;Toolkits
-                        </a>
+                    Sample Catalog 
                 </div>
 
             </div>
 
         </div>
-            <div class="col">
+            <div class="col"><!--#2-->
             </div>    
 
-        <div class="col">
+        <div class="col"> <!--#3-->
 
             <div class="search-container">            
                 
@@ -61,29 +58,42 @@
 
         </div>
         
-        <div class="col">
+        <div class="col"> <!--#4-->
             <div id="results-container">
                 <div id="qty-show-results" class="transparent"></div>
             </div>
         </div>
 
 
-        <div class="col">
-  
-
-            <div class="col-nav-rght"> 
-                <div>
-                    <div id="total-records"></div>
-                </div>
-                
-                <div class="circle-icon center">
+        <div class="col"><!--#5-->
+                <figure>
                     <a href="https://github.com/oneapi-src/oneAPI-samples">
-                        <i class="fab fa-github fa-2x"></i>
+                    <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
                     </a>
-                </div>
+                    <figcaption>View on GitHub*</figcaption>
+                </figure>
+       </div>
+    </div>
 
+    <div class="nav-titlebar"><!--#1-->
+
+        <div class="col"> 
+            <div class="col-nav-left"> for 
+                <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">&nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
+                </a>
             </div>
+        </div>
 
+        <div class="col"></div><!--#2-->
+
+        <div class="col"> <!--#3-->
+            Get started on oneAPI development with code samples
+        </div>
+
+        <div class="col"></div><!--#4-->
+
+        <div class="col"><!--#5-->
+            <div id="total-records"></div> 
         </div>
 
     </div>
