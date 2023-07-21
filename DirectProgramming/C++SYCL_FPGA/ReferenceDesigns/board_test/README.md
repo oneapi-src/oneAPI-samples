@@ -209,8 +209,6 @@ The `Board Test` program checks following interfaces in a platform:
 
 - **Kernel-to-device global memory interface:** This interface is checked by performing kernel to memory data transfers using simple read and write kernels. Kernel to memory bandwidth is measured and reported.
 
-  <!-- > **Note**: This test currently does not support SYCL Unified Shared Memory (USM). For testing the USM interface, use the [Simple host streaming sample](/DirectProgramming/C++SYCL_FPGA/Tutorials/DesignPatterns/simple_host_streaming) code sample in the oneAPI-sample GitHub repository. -->
-
 - **Host-to-kernel interface:** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
 - **Unified shared memory (USM) interface:** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case. Applies only to board variants with USM support.
