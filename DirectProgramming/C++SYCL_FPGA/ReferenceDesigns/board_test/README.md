@@ -78,6 +78,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 - Path 1 represents the host-to-device global memory interface.
 - Path 2 represents the host to kernel interface.
 - Path 3 represents the kernel-to-device global memory interface.
+- Path 4 represents the kernel-to-shared host memory interface
 
 
 ![BSP hardware design](assets/oneapi_fpga_platform.png)
