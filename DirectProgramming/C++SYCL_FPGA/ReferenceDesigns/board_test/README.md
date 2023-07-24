@@ -1,13 +1,11 @@
 # `Board Test` Sample
-The `Board Test` sample is a reference design that contains tests to check FPGA board interfaces and reports the following metrics:
+The `Board Test` sample is a reference design contains tests to check FPGA board interfaces and reports the following metrics:
 
 - Host to device global memory interface bandwidth
 - Kernel clock frequency
 - Kernel launch latency
-- Memory bandwidth
-    - Kernel to device global memory bandwidth (buffer)
-    - Host to device global memory (buffer)
-    - Kernel to shared host memory (USM shared/host)
+- Kernel to device global memory bandwidth
+- Unified Shared Memory bandwidth
 
 | Area                    | Description
 |:---                     |:---
@@ -46,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Hardware                | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 
-> **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
