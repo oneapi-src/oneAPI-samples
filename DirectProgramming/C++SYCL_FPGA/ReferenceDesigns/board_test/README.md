@@ -1,11 +1,13 @@
 # `Board Test` Sample
-The `Board Test` sample is a reference design contains tests to check FPGA board interfaces and reports the following metrics:
+The `Board Test` sample is a reference design that contains tests to check FPGA board interfaces and reports the following metrics:
 
 - Host to device global memory interface bandwidth
 - Kernel clock frequency
 - Kernel launch latency
-- Kernel to device global memory bandwidth
-- Unified Shared Memory bandwidth
+- Memory bandwidth
+    - Kernel to device global memory bandwidth (buffer)
+    - Host to device global memory (buffer)
+    - Kernel to shared host memory (USM shared/host)
 
 | Area                    | Description
 |:---                     |:---
@@ -44,7 +46,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Hardware                | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
@@ -89,14 +91,14 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 | `board_test.cpp`   | Contains the `main()` function and the test selection logic as well as calls to each test.
 | `board_test.hpp`   | Contains the definitions for all the individual tests in the sample.
 | `host_speed.hpp`   | Header for host speed test. Contains definition of functions used in host speed test.
-| `helper.hpp`       | Contains constants (for example, binary name) used throughout the code as well as definition of functions that print help and measure execution time.
 | `usm_speed.hpp`    | Header for the USM bandwidth test. Contains definitions of functions used in the USM bandwidth test.
+| `helper.hpp`       | Contains constants (for example, binary name) used throughout the code as well as definition of functions that print help and measure execution time.
 
 ### Compiler Flags Used
 
 | Flag                  | Description
 |:---                   |:---
-`-Xsno-interleaving`    | By default oneAPI compiler burst interleaves across same memory type.  `-Xsno-interleaving` disables burst interleaving and enables testing each memory bank independently. (See the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html) for more information.)
+`-Xsno-interleaving`    | By default oneAPI compiler burst interleaves across same memory type.  `-Xsno-interleaving` disables burst interleaving and enables testing each memory bank independently. (See the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/disabl-burst-int.html) for more information.)
 
 ### Performance
 
@@ -208,8 +210,6 @@ The `Board Test` program checks following interfaces in a platform:
 - **Host-to-device global memory interface:** This interface is checked by performing explicit data movement between the host and device global memory. Host to device global memory bandwidth is measured and reported. As a part of this interface check, unaligned data transfers are also performed to verify that non-DMA transfers complete successfully.
 
 - **Kernel-to-device global memory interface:** This interface is checked by performing kernel to memory data transfers using simple read and write kernels. Kernel to memory bandwidth is measured and reported.
-
-  <!-- > **Note**: This test currently does not support SYCL Unified Shared Memory (USM). For testing the USM interface, use the [Simple host streaming sample](/DirectProgramming/C++SYCL_FPGA/Tutorials/DesignPatterns/simple_host_streaming) code sample in the oneAPI-sample GitHub repository. -->
 
 - **Host-to-kernel interface:** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
