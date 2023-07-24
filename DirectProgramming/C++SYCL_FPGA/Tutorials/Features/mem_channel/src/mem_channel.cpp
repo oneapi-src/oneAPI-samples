@@ -61,7 +61,7 @@ event runVecAdd(sycl::queue &q, const std::vector<int> &a_vec,
 int main() {
   // Host and kernel profiling
   event e;
-  ulong t1_kernel, t2_kernel;
+  uint64_t t1_kernel, t2_kernel;
   double time_kernel;
 
   // Create input and output vectors
