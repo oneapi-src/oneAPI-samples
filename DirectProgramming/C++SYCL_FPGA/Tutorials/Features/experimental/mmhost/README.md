@@ -20,7 +20,7 @@ This tutorial demonstrates how to configure Avalon memory-mapped host data inter
 
 > **Note**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: This tutorial will not work in a oneAPI fat binary `<PW: SHOULD this SAY 'FULL SYSTEM' INSTEAD????>`
+> **Note**: This tutorial will not work for a Full System compile. 
 
 ## Prerequisites
 
