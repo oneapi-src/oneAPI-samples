@@ -21,8 +21,7 @@ struct MultiMMIP {
     dwidth<32>, 
     latency<0>, 
     read_write_mode_read,
-    maxburst<4>, 
-    wait_request<true>
+    maxburst<4>
   })> x;
 
   annotated_ptr<int, decltype(properties{
@@ -31,8 +30,7 @@ struct MultiMMIP {
     dwidth<32>, 
     latency<0>, 
     read_write_mode_read,
-    maxburst<4>, 
-    wait_request<true>
+    maxburst<4>
   })> y;
 
   annotated_ptr<int, decltype(properties{
@@ -41,8 +39,7 @@ struct MultiMMIP {
     dwidth<32>, 
     latency<0>, 
     read_write_mode_write,
-    maxburst<4>, 
-    wait_request<true>
+    maxburst<4>
   })> z;
 
   int size;

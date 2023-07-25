@@ -87,8 +87,7 @@ struct SingleMMIP {
     dwidth<32>, 
     latency<0>, 
     read_write_mode<read>,
-    maxburst<4>, 
-    wait_request<true>
+    maxburst<4>
   })> my_pointer; 
   void operator()() const {
     ...
