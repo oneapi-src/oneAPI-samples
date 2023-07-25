@@ -86,8 +86,10 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    int *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    int *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
+    // Host array must share the same buffer location property as defined in the kernel
+    // Here we may use auto* or int* when declaring the pointer interface
+    auto *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
+    auto *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
     int *array_C = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL3)});
 
     for(int i = 0; i < kN; i++){

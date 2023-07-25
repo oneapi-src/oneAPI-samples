@@ -77,6 +77,11 @@ struct PointerIP{
 
 You can override the default behaviour of a pointer argument by declaring an `annotated_ptr` kernel argument instead.
 
+To use this feature, you must first make the necessary inclusions
+```c++
+#include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
+```
+
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
 struct SingleMMIP {
@@ -98,13 +103,13 @@ struct SingleMMIP {
 }
 ```
 
-As with scalar kernel arguments and the `annotated_ptr` type, you can use the following parameters to control how the pointer is passed to your kernel:s
+The following table describes additional properties you can use to customize the interface. 
 
 | Parameter                 | Description
 |---                        |---
 | `register_map`            | Pass the pointer for this memory-mapped host interface through the IP component's control/status register
 | `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface 
-| `stable`                  | Guarantee that the pointer will not change between pipelined invocations of the kernel
+| `stable`                  | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to furthur optimize the kernel.
 
 
 You can use the following parameters to configure your IP component's Avalon memory-mapped host interfaces:

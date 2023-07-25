@@ -1,42 +1,18 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-#include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
 
 #include "exception_handler.hpp"
 
 using namespace sycl;
-using namespace ext::oneapi::experimental;
 
-using usm_buffer_location =
-    ext::intel::experimental::property::usm::buffer_location;
-
-constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
-
-struct DDRIP{
-  annotated_ptr<int, decltype(properties{
-          buffer_location<kBL1>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>
-          })> x; 
-  annotated_ptr<int, decltype(properties{
-          buffer_location<kBL1>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>
-          })> y;
-  annotated_ptr<int, decltype(properties{
-          buffer_location<kBL2>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>
-          })> z;  
-
+struct PointerIP{
+  int *x; 
+  int *y; 
+  int *z;
   int size;
 
   void operator()() const {
-    for(int i = 0; i < size; i++){
+    for (int i = 0; i < size; ++i) {
       int add = x[i] + y[i];
       z[i] = add;
     }
@@ -56,8 +32,7 @@ int main(void){
 
   try {
     // create the device queue
-    sycl::queue q(selector, fpga_tools::exception_handler,
-                  sycl::property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler, sycl::property::queue::enable_profiling{});
 
     // make sure the device supports USM host allocations
     sycl::device device = q.get_device();
@@ -75,16 +50,17 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    int *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    int *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    int *array_C = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
+    // Here we may use auto* or int* when declaring the pointer interface
+    int *array_A = malloc_shared<int>(kN, q);
+    int *array_B = malloc_shared<int>(kN, q);
+    int *array_C = malloc_shared<int>(kN, q);
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;
         array_B[i] = 2*i;
     }
 
-    q.single_task(DDRIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(PointerIP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3*i;
       if (array_C[i] != golden) {
