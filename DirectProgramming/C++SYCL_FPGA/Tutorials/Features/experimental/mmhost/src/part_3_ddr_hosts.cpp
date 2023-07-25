@@ -13,30 +13,27 @@ using usm_buffer_location =
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 
-struct DDRIP{
-  annotated_ptr<int, decltype(properties{
+struct DDR_IP{
+
+  using params = decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          })> x; 
-  annotated_ptr<int, decltype(properties{
-          buffer_location<kBL1>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>
-          })> y;
+          });
+  annotated_ptr<int, params> x; 
+  annotated_ptr<int, params> y;
   annotated_ptr<int, decltype(properties{
           buffer_location<kBL2>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
           })> z;  
-
   int size;
 
   void operator()() const {
-    for(int i = 0; i < size; i++){
+    #pragma unroll 4
+    for (int i = 0; i < size; ++i) {
       int add = x[i] + y[i];
       z[i] = add;
     }
@@ -86,7 +83,7 @@ int main(void){
         array_B[i] = 2*i;
     }
 
-    q.single_task(DDRIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(DDR_IP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3*i;
       if (array_C[i] != golden) {

@@ -15,6 +15,7 @@ constexpr int kBL2 = 2;
 constexpr int kBL3 = 3;
 
 struct MultiMMIP {
+
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 

@@ -63,9 +63,7 @@ struct PointerIP{
 
   void operator()() const {
     for (int i = 0; i < size; ++i) {
-      int mul = x[i] * y[i];
-      int add = mul + z[i];
-      y[i] = mul;
+      int add = x[i] + y[i];
       z[i] = add;
     }
   }
@@ -134,24 +132,42 @@ constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 constexpr int kBL3 = 3;
 
-struct MultiMMIP{
+struct MultiMMIP {
 
   annotated_ptr<int, decltype(properties{
-          buffer_location<kBL1>
-          })> x; 
+    buffer_location<kBL1>,
+    awidth<32>, 
+    dwidth<32>, 
+    latency<0>, 
+    read_write_mode_read,
+    maxburst<4>
+  })> x;
+
   annotated_ptr<int, decltype(properties{
-          buffer_location<kBL2>
-          })> y;
+    buffer_location<kBL2>,
+    awidth<32>, 
+    dwidth<32>, 
+    latency<0>, 
+    read_write_mode_read,
+    maxburst<4>
+  })> y;
+
   annotated_ptr<int, decltype(properties{
-          buffer_location<kBL3>
-          })> z;  
+    buffer_location<kBL3>,
+    awidth<32>, 
+    dwidth<32>, 
+    latency<0>, 
+    read_write_mode_write,
+    maxburst<4>
+  })> z;
+
   int size;
 
   void operator()() const {
-    for (int i = 0; i < size; ++i) {
-      int mul = x[i] * y[i];
-      int add = mul + z[i];
-      y[i] = mul;
+
+    #pragma unroll 4
+    for(int i = 0; i < size; i++){
+      int add = x[i] + y[i];
       z[i] = add;
     }
   }
@@ -175,14 +191,14 @@ We can make better use of the available DDR bandwidth by coalescing the 32-bit w
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 
-struct DDRIP{
+struct DDR_IP{
 
   using params = decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          })
+          });
   annotated_ptr<int, params> x; 
   annotated_ptr<int, params> y;
   annotated_ptr<int, decltype(properties{
@@ -194,7 +210,6 @@ struct DDRIP{
   int size;
 
   void operator()() const {
-
     #pragma unroll 4
     for (int i = 0; i < size; ++i) {
       int add = x[i] + y[i];
