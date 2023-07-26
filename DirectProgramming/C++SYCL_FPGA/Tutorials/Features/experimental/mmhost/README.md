@@ -191,14 +191,12 @@ constexpr int kBL2 = 2;
 
 struct DDR_IP{
 
-  using params = decltype(properties{
+  annotated_ptr<int, decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          });
-  annotated_ptr<int, params> x; 
-  annotated_ptr<int, params> y;
+          })> x, y;
   annotated_ptr<int, decltype(properties{
           buffer_location<kBL2>,
           maxburst<8>,
