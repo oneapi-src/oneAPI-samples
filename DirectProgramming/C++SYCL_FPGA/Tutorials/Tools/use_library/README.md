@@ -261,6 +261,7 @@ PASSED: result is correct!
 
 In previous section, we have performed the basic function of byteswaping in RTL module.
 With RTL module, we are able to customize DSP block behaviour in SYCL application and observe the impact on area utilization and performance.
+In `use_rtl_dsp` design, we perform 27x27 multiplier with a native math implemation and a RTL-libary customised DSP version. 
 
 To switch this sample to build with customised DSP RTL, you may change the SOURCE_FILES and LIB_FILENAME in the CMakeList.txt. 
    ```
@@ -273,8 +274,28 @@ To switch this sample to build with customised DSP RTL, you may change the SOURC
 After modification, you may build and run the `use_rtl_dsp` sample just like `use_library`.
 
 ## Read the Reports
+
+Locate the `report.html` file in `use_rtl_dsp_report.prj` or `use_rtl_dsp.fpga_sim.prj`
+
+Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of the customised DSP (KernelComputeRTL) should be lower than native design (KernelCompute).
+
+Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**)
 By default, compiler area estimation tools assume that the RTL module area is 0.
-Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute and it will reflect exactly in optimasation report.
+Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute.
+In this table, you can find the Compile Estimated: Kernel System used 2 DSP, one for each multiplier design.
+
+In order to see the area utilization for each design implementation, you will have to compile only one implementation design at a time. See code comment for details.
+The following table compared the estimated area usage after compiling each kernel separately.
+
+|Compile Estimated: Kernel System
+|	 | Native Design | RTL with customised DSP
+|:--- 	 |:---           |:---
+|ALM	 | 80.5          | 66
+|-ALUT   | 161           | 132
+|-REG    | 408           | 406
+|-MLAB   | 0             | 0
+|RAM     | 6             | 6
+|DSP     | 1             | 1
 
 ## License
 
