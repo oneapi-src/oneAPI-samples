@@ -88,7 +88,7 @@ void PrintHelp(int details) {
         << "  * 7. Unified Shared Memory (USM) Bandwidth Test *\n"
         << "    Unified Shared Memory Bandwidth test measures and reports the "
         << "average throughput of copying data between, reading data from, and "
-        << "writing data to host USM. The SUPPORTS_USM macro must be defined "
+        << "writing data to host USM. The SUPPORTS_USM macro must be specified "
         << "at compile-time in order to run this test. \n\n"
         << "    Note: This test assumes that design was compiled with "
         << "-Xsno-interleaving option\n\n"

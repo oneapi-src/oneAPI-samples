@@ -212,7 +212,7 @@ The `Board Test` program checks following interfaces in a platform:
 
 - **Host-to-kernel interface:** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
-- **Unified shared memory (USM) interface:** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case. Applies only to board variants with USM support.
+- **Unified shared memory (USM) interface:** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case. Applies only to board variants with USM support; to run this test you must specify the `SUPPORTS_USM` macro at compile-time; e.g., `cmake .. -DSUPPORTS_USM=1`.
 
 - **Kernel clock frequency:** The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.
 
@@ -287,6 +287,7 @@ The tests are:
   4. Kernel Latency Measurement
   5. Kernel-to-Memory Read Write Test
   6. Kernel-to-Memory Bandwidth Test
+  7. Unified Shared Memory Bandwidth Test
 Note: Kernel Clock Frequency is run along with all tests except 1 (Host Speed and Host Read Write test)
 
 Running all tests
