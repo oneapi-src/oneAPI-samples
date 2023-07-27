@@ -57,14 +57,13 @@ int main(void){
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
-    // make sure the device supports USM host allocations
-    sycl::device device = q.get_device();
-
     // Print out the device information.
+    sycl::device device = q.get_device();
     std::cout << "Running on device: "
               << q.get_device().get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
+    // make sure the device supports USM host allocations
     if (!device.has(sycl::aspect::usm_host_allocations)) {
       std::terminate();
     }
