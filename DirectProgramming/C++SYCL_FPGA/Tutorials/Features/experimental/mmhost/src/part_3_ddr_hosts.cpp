@@ -14,13 +14,17 @@ constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 
 struct DDR_IP{
-
-  annotated_ptr<int, decltype(properties{
+  using params = decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          })> x, y;
+          });
+
+  //Declare the pointer interfaces to be used in this kernel,
+  //look at the other kernals to compare the difference 
+  annotated_ptr<int, params> x;
+  annotated_ptr<int, params> y;
   annotated_ptr<int, decltype(properties{
           buffer_location<kBL2>,
           maxburst<8>,

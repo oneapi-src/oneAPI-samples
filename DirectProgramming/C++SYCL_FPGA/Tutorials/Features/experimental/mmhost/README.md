@@ -47,7 +47,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 
 ## Purpose
-When you design an IP component for an FPGA system, that system will often dictate the interface requirements of your IP component. This tutorial shows how to use `annotated_ptr` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows your IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, please refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/22-3/memory-mapped-interfaces.html). 
+When you design an IP component for an FPGA system, that system will often dictate the interface requirements of your IP component. This tutorial shows how to use `annotated_ptr` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows your IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, please refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/memory-mapped-interfaces.html). 
 
 ![](assets/basic_avhost.svg)
 
@@ -56,6 +56,9 @@ The compiler will infer Avalon memory-mapped host interfaces for your design whe
 #### Example 1: A kernel with multiple pointer arguments
 ```c++
 struct PointerIP{
+
+  //Declare the pointer interfaces to be used in this kernel,
+  //look at the other kernals to compare the difference 
   int *x; 
   int *y; 
   int *z;
@@ -100,13 +103,12 @@ struct SingleMMIP {
 }
 ```
 
-The following table describes additional properties you can use to customize the interface. 
+The following table describes mutually exclusive properties you can use to customize the interface. Only one may be specified at a time. 
 
 | Parameter                 | Description
 |---                        |---
 | `register_map`            | Pass the pointer for this memory-mapped host interface through the IP component's control/status register
 | `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface 
-| `stable`                  | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to furthur optimize the kernel.
 
 
 You can use the following parameters to configure your IP component's Avalon memory-mapped host interfaces:
@@ -120,6 +122,7 @@ You can use the following parameters to configure your IP component's Avalon mem
 | `read_write_mode<mode>`  | `read_write`  | Port direction of the interface. (`read_write`, `read` or `write`) 
 | `maxburst<value>`        | 1             | Maximum number of data transfers that can associate with a read or write request. 
 | `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
+| `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to furthur optimize the kernel.
 
 We can use some of these parameters to improve the performance of `Example 1`. Re-structure the design so that each pointer had exclusive access to a dedicated Avalon memory-mapped agent memory, like this:
 
@@ -133,6 +136,8 @@ constexpr int kBL3 = 3;
 
 struct MultiMMIP {
 
+  //Declare the pointer interfaces to be used in this kernel,
+  //look at the other kernals to compare the difference 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 
@@ -191,18 +196,23 @@ constexpr int kBL2 = 2;
 
 struct DDR_IP{
 
-  annotated_ptr<int, decltype(properties{
+  using params = decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          })> x, y;
+          });
+
+  //Declare the pointer interfaces to be used in this kernel,
+  //look at the other kernals to compare the difference 
+  annotated_ptr<int, params> x;
+  annotated_ptr<int, params> y;
   annotated_ptr<int, decltype(properties{
           buffer_location<kBL2>,
           maxburst<8>,
           dwidth<256>,
           alignment<32>
-          })> z;  
+          })> z;   
   int size;
 
   void operator()() const {
