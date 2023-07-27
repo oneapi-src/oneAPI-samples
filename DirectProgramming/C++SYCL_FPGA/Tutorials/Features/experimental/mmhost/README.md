@@ -247,7 +247,16 @@ This design uses CMake to generate a build script for GNU/make.
 
 1. Change to the sample directory.
 
-2. Configure the build system for the Agilex® 7 device family, which is the default.
+2. For different parts of this tutorial, navigate to the appropriate sub-folder.
+   ```
+   cd <partX_XXX>
+   ```
+   where `<partX_XXX>` is:
+   - `part1_pointers`
+   - `part2_hosts`
+   - `part3_ddr_hosts`
+
+3. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -260,8 +269,7 @@ This design uses CMake to generate a build script for GNU/make.
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
 
-3. Compile the design using `make`.
-
+4. Compile the design using `make`.
    | Compilation Type    | Command
    |:---                 |:---
    | FPGA Emulator       | `make fpga_emu`
@@ -273,34 +281,38 @@ This design uses CMake to generate a build script for GNU/make.
 This design uses CMake to generate a build script for  `nmake`.
 
 1. Change to the sample directory.
+2. For different parts of this tutorial, navigate to the appropriate sub-folder.
+   ```
+   cd <partX_XXX>
+   ```
+   where `<partX_XXX>` is:
+   - `part1_pointers`
+   - `part2_hosts`
+   - `part3_ddr_hosts`
 
-2. Configure the build system for the Agilex® 7 device family, which is the default.
+3. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-
 3. Compile the design using `nmake`.
-
    | Compilation Type    | Command (Windows)
    |:---                 |:---
    | FPGA Emulator       | `nmake fpga_emu`
    | Optimization Report | `nmake report`
    | FPGA Simulator      | `nmake fpga_sim`
    | FPGA Hardware       | `nmake fpga`
-
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Reports
 Locate `report.html` in the `<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MMHostIP` kernel consumes way less area under all categories than the `PointerIP` kernel. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
+Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes way less area under all categories than the `PointerIP` kernel. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
 
 Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blcoks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 
@@ -313,33 +325,25 @@ Observe how the 32-bit LSUs are coalesced for you, after unrolling the for-loop.
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
    ```
-   ./pointers_model.fpga_emu
-   ./multi_mmhost_model.fpga_emu
-   ./ddr_hosts_model.fpga_emu
+   ./mmhost.fpga_emu
    ```
 
 2. Run the sample on the FPGA simulator device (the kernel executes in a simulator):
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mmhost.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./multi_mmhost_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./ddr_hosts_model.fpga_sim
    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
    ```
-   pointers_model.fpga_emu.exe
-   multi_mmhost_model.fpga_emu.exe
-   ddr_hosts_model.fpga_emu.exe
+   mmhost.fpga_emu.exe
    ```
 
 2. Run the sample on the FPGA simulator device (the kernel executes in a simulator):
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   pointers_model.fpga_sim.exe
-   multi_mmhost_model.fpga_sim.exe
-   ddr_hosts_model.fpga_sim.exe
+   mmhost.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
@@ -347,8 +351,8 @@ Observe how the 32-bit LSUs are coalesced for you, after unrolling the for-loop.
 
 ```
 Running on device: Intel(R) FPGA Emulation Device
-elements in vector : 8
---> PASS
+Elements in vector : 8
+PASSED
 ```
 
 ## License
