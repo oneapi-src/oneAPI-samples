@@ -211,8 +211,13 @@ int main(int argc, char* argv[]) {
                 << "*****************************************************************\n\n";
 #if defined(SUPPORTS_USM)
       ret |= hldshim.USMBWTest(q);
-#else
-      std::cout << "Board does not support USM, skipping this test \n";
+#else    
+      if (q.get_device().has(sycl::aspect::usm_host_allocations)) {
+        std::cout << "USM support was detected but the SUPPORTS_USM macro was "
+                  << "not defined; USM-related tests will not run.\nTo enable "
+                  << "these tests, please compile with the SUPPORTS_USM macro "
+                  << "defined." << std::endl;
+      }
 #endif
     }
   }  // End of try block

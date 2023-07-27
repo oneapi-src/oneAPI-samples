@@ -22,16 +22,17 @@ if(NOT FPGA_DEVICE MATCHES ".*:.*")
     message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
 endif()
 
-# Some tests in this sample require USM. Check the BSP name (which should contain the text 'usm')
-# and set a flag accordingly to disable those tests if the board does not support USM.
-# Allow the user to define USM_HOST_ALLOCATIONS_ENABLED to override this check
+# Some tests in this sample require USM. Only enable those tests if the user
+# specifies that their board supports USM.
 # (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if((FPGA_DEVICE MATCHES ".usm.*") OR (DEFINED USM_HOST_ALLOCATIONS_ENABLED AND USM_HOST_ALLOCATIONS_ENABLED STREQUAL "1"))
+if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
     set(USM_FLAG "-DSUPPORTS_USM")
 endif()
 
-if (USM_HOST_ALLOCATIONS_ENABLED)
-    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
+if (SUPPORTS_USM)
+    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations.")
+else()
+    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled.")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
