@@ -73,8 +73,8 @@ The BSP consists of components operating at different clock domains. PCIe and ex
 
 The following block diagram shows an overview of a typical oneAPI FPGA BSP hardware design and the numbered arrows depict the following:
 
-- Path 1 represents the host-to-device global memory interface.
-- Path 2 represents the host to kernel interface.
+- Path 1 represents the host to kernel interface.
+- Path 2 represents the host-to-device global memory interface.
 - Path 3 represents the kernel-to-device global memory interface.
 - Path 4 represents the kernel-to-shared host memory interface
 
