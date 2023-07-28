@@ -216,7 +216,7 @@ int main(int argc, char* argv[]) {
         std::cout << "USM support was detected but the SUPPORTS_USM macro was "
                   << "not defined; USM-related tests will not run.\nTo enable "
                   << "these tests, please compile with the SUPPORTS_USM macro "
-                  << "defined." << std::endl;
+                  << "defined.\n";
       } else {
         std::cout << "Board does not support USM, skipping this test.\n";
       }
