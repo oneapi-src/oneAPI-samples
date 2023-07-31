@@ -3,27 +3,43 @@
   "name": "OpenMP* Primes",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Combinational Logic"],
   "description": "Fortran Tutorial - Using OpenMP* (OMP)",
-  "toolchain": [ "ifort" ],
+  "toolchain": [ "ifx" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
-  "os": [ "darwin" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "make" ],
   "ciTests":{
-    "darwin": [
+    "linux": [
       {
-        "id": "fort_release_cpu",
+        "id": "ifx_release_cpu",
         "steps": [
           "make release",
           "make run",
           "make clean"
         ]
        },
-       { 
-        "id": "fort_debug_cpu",
+       {
+        "id": "ifx_debug_cpu",
         "steps": [
           "make debug",
           "make debug_run",
           "make clean"
+        ]
+       }
+    ],
+    "windows": [
+       {
+        "id": "ifx_release_cpu",
+        "steps": [
+          "build.bat",
+          "run.bat"
+        ]
+       },
+       {
+        "id": "ifx_debug_cpu",
+        "steps": [
+          "build.bat",
+          "debug_run.bat"
         ]
        }
     ]
