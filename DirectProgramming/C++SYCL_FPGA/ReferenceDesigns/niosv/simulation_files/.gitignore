@@ -1,0 +1,9 @@
+# ignore modelsim outputs
+libraries
+*.ver
+*.ini
+transcript
+*.wlf
+
+# ignore the NIOS hex file
+*.hex

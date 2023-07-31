@@ -1,0 +1,8 @@
+# Ignore generated RTL
+pd_system
+pd_system_tb
+
+# ignore generated RTL for Platform Designer system
+/ip/*/*/
+!/ip/*/
+!/ip/*/*.ip
