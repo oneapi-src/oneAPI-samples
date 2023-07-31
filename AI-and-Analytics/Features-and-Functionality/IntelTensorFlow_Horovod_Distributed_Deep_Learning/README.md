@@ -34,10 +34,6 @@ You will need to download and install the following toolkits, tools, and compone
 
   Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
 
-- **Intel Extension for TensorFlow**
-
-  See *Intel Extension for TensorFlow* [*Installation*](https://www.tensorflow.org/tfx/serving/setup) for detailed installation options.
-
 
 ### For Intel® Developer Cloud (Beta)
 
