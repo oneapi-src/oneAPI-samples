@@ -1,0 +1,48 @@
+{
+  "guid": "D61F9365-9455-4726-A272-B566618D7B5F",
+  "name": "Matrix Multiply",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++/Compiler Infrastructure"],
+  "description": "Demonstrates how compiler auto-vectorization can improve the performance of a program. The optimization report option is used to identify potential points of performance improvement.",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["CPU"],
+  "builder": ["make"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "baseline",
+        "steps": [
+          "make clean",
+          "make baseline",
+          "./MatVector"
+        ]
+      },
+      {
+        "id": "vec_report1",
+        "steps": [
+          "make clean",
+          "make vec_report1",
+          "./vec_samples_report1.out"
+        ]
+      },
+      {
+        "id": "vec_report2",
+        "steps": [
+          "make clean",
+          "make vec_report2",
+          "./vec_samples_report2.out"
+        ]
+      },
+      {
+        "id": "vec_report3",
+        "steps": [
+          "make clean",
+          "make vec_report3",
+          "./vec_samples_report3.out"
+        ]
+      }
+    ]
+  },
+  "expertise": "Tutorial"
+}
