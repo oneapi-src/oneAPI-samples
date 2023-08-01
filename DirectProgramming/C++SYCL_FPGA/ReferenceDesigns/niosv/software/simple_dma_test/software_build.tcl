@@ -55,38 +55,38 @@ set SIM_DIR "../../simulation_files"
 
 # create BSP
 set cmd "niosv-bsp --create --quartus-project=$QPF_FILE --qsys=$QSYS_FILE --type=hal $BSP_DIR/bsp_settings.bsp"
-puts "Creating BSP:  $cmd"
+post_message -type info "Creating BSP:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # generate BSP
 set cmd "niosv-bsp --generate $BSP_DIR/bsp_settings.bsp"
-puts "Generating BSP:  $cmd"
+post_message -type info "Generating BSP:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # create application
 set cmd "niosv-app --app-dir=$APP_DIR --bsp-dir=$BSP_DIR --srcs=$SRC_DIR --elf-name=$ELF_FILE"
-puts "Creating Application:  $cmd"
+post_message -type info "Creating Application:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # run CMAKE on application
 set cmd "cmake -B $APP_BUILD_DIR -S $APP_DIR -G \"Unix Makefiles\""
-puts "CMake on Application:  $cmd"
+post_message -type info "CMake on Application:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # run make on application
 set cmd "make -C $APP_BUILD_DIR"
-puts "Compiling Application:  $cmd"
+post_message -type info "Compiling Application:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # generate a hex file pointed to by script variable HEX_SIM_FILE in the
 # application build directory
 set cmd "elf2hex --input $APP_BUILD_DIR/$ELF_FILE --width $CODE_RAM_WIDTH --base $CODE_RAM_BASE --end $CODE_RAM_END $HEX_SIM_FILE"
-puts "Generating Memory Initialization File:  $cmd"
+post_message -type info "Generating Memory Initialization File:  $cmd"
 eval "exec -ignorestderr"  $cmd
 
 # copy the .hex file to the simulation directory
 set cmd "file copy -force $HEX_SIM_FILE $SIM_DIR"
-puts "Copying .hex file to simulation directory: $cmd"
+post_message -type info "Copying .hex file to simulation directory: $cmd"
 eval $cmd
 
-puts "Finished. Now run questasim to simulate your design"
+post_message -type info "Finished. Now run questasim to simulate your design"

@@ -1,8 +1,39 @@
 Author:  JCJB
 Date:    5/25/2023
 
+Regtest notes:
 
+This design requires the following ARC resources to run:
 
+```
+acdskit/23.1/115,perl/5.8.8,regutils/22.2/4,testutils/22.2/94,sycl/rel/20230629,gcc/7.4.0/2,cygwin/2.9.0,msvc/2019,aclsycltest/2023.2/20230725.5478,rocket/main/20230706.5287,hldregutil/2023.2/20230706.5285,hld_regtest_files/rel/2023.2/20230721.5455,oneapi_samples/rel/2023.2/20230704.5241,adapt/19.1/367,python/2.7.13,modelsim_se/2023.2,gdb/8.3/2,cmake/3.24.0
+```
+
+Pay special attention to modelsim_se-lic and cmake/3.24.0 (the NIOS V tools require a newer CMake than oneAPI uses)
+
+you can run this design within ARC using the following command:
+
+```
+aocl do quartus_sh -t build_and_sim_testsystem.tcl 
+```
+
+```
+arc submit modelsim_se-lic priority=90 group=opencl -- aocl do quartus_sh -t build_and_sim_testsystem.tcl 
+```
+
+Here is an ARC job: https://psg-sc-arc.sc.intel.com/arc/dashboard/reports/show_job/772341414
+
+You can tell if the simulation succeeded by looking for this text in the [output transcript](https://psg-sc-arc.sc.intel.com/p/psg/data/whitepau/job/20230801/0400/772341414/stdout.txt):
+
+```
+# Initializing memory contents for pd_system_tb.pd_system_inst.code_data_ram.code_data_ram.altera_syncram_component.initialize_mem_contents with                                                                                                                                                                                                                                           code_data_ram_init.ver
+#               990000: INFO: pd_system_tb.pd_system_inst_reset_bfm.pd_system_inst_reset_bfm.reset_deassert: Reset deasserted
+# Test design for the simple DMA kernel
+# 
+# Test will initialize 256 incrementing four byte unsigned integers, have the accelerator DMA copy the data to a destination and then check the destination for correctness.
+# Test Pass:  All the data at the destination matches the source.
+# Software will now exit.
+```
 
 This design does not have any timing constraints or pin assignments so do not synthesize the design without including those first.  This design contains a JTAG UART so if it is ported
 to a board ensure the JTAG I/O are contrainted properly.  The input reset path can be safely cut since the reset block inside the Platform Designer system will synchronize the reset

@@ -1,3 +1,9 @@
+# Ignore generated Intel® Quartus® Prime files
+qdb
+DNI
+.qsys_edit
+*.qws
+
 # Ignore generated RTL
 pd_system
 pd_system_tb

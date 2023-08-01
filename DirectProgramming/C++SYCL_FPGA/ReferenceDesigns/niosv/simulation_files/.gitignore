@@ -4,6 +4,7 @@ libraries
 *.ini
 transcript
 *.wlf
+*.vstf
 
 # ignore the NIOS hex file
 *.hex
