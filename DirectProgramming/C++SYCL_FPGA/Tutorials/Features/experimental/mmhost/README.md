@@ -113,7 +113,7 @@ You can use the following parameters to configure your IP component's Avalon mem
 |  `buffer_location<id>`   | N/A           | The address space of the interface that associates with the host. Each unique buffer location will result in a unique Avalon memory-mapped host interface. When `buffer_location` is not specified, then corresponding LSUs will connect to all of the IP's Avalon memory-mapped host interfaces.
 | `awidth<width>`          | 41            | Width of the Avalon memory-mapped host address bus in bits. 
 | `dwidth<width>`          | 64            | Width of the Avalon memory-mapped host data bus in bits. 
-| `latency<value>`         | 0             | Read/Write latency for downstream fixed-latency Avalon memory-mapped agent. For a variable-latency Avalon memory-mapped agent, set `latency<0>`. 
+| `latency<value>`         | 1             | Read/Write latency for downstream fixed-latency Avalon memory-mapped agent. For a variable-latency Avalon memory-mapped agent, set `latency<0>`. 
 | `read_write_mode<mode>`  | `read_write`  | Port direction of the interface. (`read_write`, `read` or `write`) 
 | `maxburst<value>`        | 1             | Maximum number of data transfers that can associate with a read or write request. 
 | `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
