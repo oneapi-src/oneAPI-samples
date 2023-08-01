@@ -21,7 +21,8 @@ post_message -type info  "1. Compile oneAPI kernel into an IP component"
 echoAndEval "cd kernels/simple_dma"
 echoAndEval "file mkdir build"
 echoAndEval "cd build"
-if { $OS == "Windows" } {
+post_message -type info "Detected OS = $OS"
+if { $OS == "windows" } {
     echoAndExec "cmake .. -DFPGA_DEVICE=Arria10 -G \"NMake Makefiles\""
 } else {
     echoAndExec "cmake .. -DFPGA_DEVICE=Arria10"
