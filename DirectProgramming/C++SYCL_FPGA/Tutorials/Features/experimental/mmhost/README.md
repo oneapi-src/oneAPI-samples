@@ -117,9 +117,9 @@ You can use the following parameters to configure your IP component's Avalon mem
 | `read_write_mode<mode>`  | `read_write`  | Port direction of the interface. (`read_write`, `read` or `write`) 
 | `maxburst<value>`        | 1             | Maximum number of data transfers that can associate with a read or write request. 
 | `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
-| `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to furthur optimize the kernel.
+| `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to further optimize the kernel.
 
-We can use some of these parameters to improve the performance of `Example 1`. Re-structure the design so that each pointer had exclusive access to a dedicated Avalon memory-mapped agent memory, like this:
+We can use some of these parameters to improve the performance of `Example 1`. Re-structure the design so that each pointer has exclusive access to a dedicated Avalon memory-mapped agent memory, like this:
 
 ![](assets/dedicated_avhost.svg)
 
@@ -307,9 +307,9 @@ This design uses CMake to generate a build script for  `nmake`.
 ## Examining the Reports
 Locate `report.html` in the `<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes way less area under all categories than the `PointerIP` kernel. This is due to stall free memory accesses and the removal of arbiration logic, both of which come from separating the accesses into their own interfaces.
+Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes way less area under all categories than the `PointerIP` kernel. This is due to stall free memory accesses and the removal of arbitration logic, both of which come from separating the accesses into their own interfaces.
 
-Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blcoks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
+Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 
 Observe how the 32-bit LSUs are coalesced for you, after unrolling the for-loop.
 
