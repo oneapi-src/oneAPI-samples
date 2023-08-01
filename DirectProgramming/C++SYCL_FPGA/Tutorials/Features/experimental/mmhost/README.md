@@ -77,11 +77,6 @@ struct PointerIP{
 
 You can override the default behaviour of a pointer argument by declaring an `annotated_ptr` kernel argument instead.
 
-To use this feature, you must first make the necessary inclusions
-```c++
-#include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
-```
-
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
 struct SingleMMIP {

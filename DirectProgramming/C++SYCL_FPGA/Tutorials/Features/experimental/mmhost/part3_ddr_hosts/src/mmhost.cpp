@@ -1,6 +1,5 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-#include <sycl/ext/oneapi/annotated_arg/annotated_ptr.hpp>
 
 #include "exception_handler.hpp"
 
