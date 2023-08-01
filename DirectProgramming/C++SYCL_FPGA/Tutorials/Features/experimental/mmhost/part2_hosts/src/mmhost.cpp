@@ -77,11 +77,6 @@ int main(void){
               << q.get_device().get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    // make sure the device supports USM host allocations
-    if (!device.has(sycl::aspect::usm_host_allocations)) {
-      std::terminate();
-    }
-
     // Create and initialize the host arrays
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
