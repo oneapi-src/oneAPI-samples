@@ -46,9 +46,9 @@ void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
 
       h.single_task<LatencyControl>([=]() [[intel::kernel_args_restrict]] {
         auto in_ptr =
-            in_accessor.template get_multi_ptr<access::decorated::no>();
+            in_accessor.template get_multi_ptr<sycl::access::decorated::no>();
         auto out_ptr =
-            out_accessor.template get_multi_ptr<access::decorated::no>();
+            out_accessor.template get_multi_ptr<sycl::access::decorated::no>();
 
         for (size_t i = 0; i < size; i++) {
           // The following load has a label 0.
