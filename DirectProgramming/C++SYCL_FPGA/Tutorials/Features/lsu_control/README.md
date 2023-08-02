@@ -105,7 +105,7 @@ using PrefetchingLSU = ext::intel::lsu<ext::intel::prefetch<true>,
 q.submit([&](handler &h) {
   h.single_task<Kernel>([=] {
     //Pointer to external memory
-    auto input_ptr = input_accessor.get_pointer();
+    auto input_ptr = input_accessor.template get_multi_ptr<access::decorated::no>();
 
     //Compiler will use a Prefetch LSU for this load
     int in_data = PrefetchingLSU::load(input_ptr);
