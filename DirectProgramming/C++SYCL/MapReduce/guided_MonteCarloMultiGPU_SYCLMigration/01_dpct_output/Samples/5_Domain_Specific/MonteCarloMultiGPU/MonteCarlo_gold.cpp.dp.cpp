@@ -106,15 +106,15 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
   dpct::rng::host_rng_ptr gen;
 
   /*
-  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You
+  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
   */
-  checkCudaErrors(
-      (gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mcg59),
-       0));
+  checkCudaErrors((gen = dpct::rng::create_host_rng(
+                       dpct::rng::random_engine_type::philox4x32x10),
+                   0));
   unsigned long long seed = 1234ULL;
   /*
-  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You
+  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
   */
   checkCudaErrors((gen->set_seed(seed), 0));
@@ -124,7 +124,7 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
   } else {
     samples = (float *)malloc(pathN * sizeof(float));
     /*
-    DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted.
+    DPCT1003:27: Migrated API does not return error code. (*, 0) is inserted.
     You may need to rewrite this code.
     */
     checkCudaErrors((gen->generate_gaussian(samples, pathN, 0.0, 1.0), 0));
@@ -144,7 +144,7 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
   if (h_Samples == NULL) free(samples);
 
   /*
-  DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You
+  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You
   may need to rewrite this code.
   */
   checkCudaErrors((gen.reset(), 0));
