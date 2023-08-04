@@ -11,44 +11,41 @@
 
 #include "exception_handler.hpp"
 
-constexpr size_t kNumCounters = 4;
-constexpr int kInitialValue = 10;
-constexpr unsigned kNumIncrements = 3;
+constexpr size_t kNumIterations = 4;
+constexpr unsigned kNumWeightIncrements = 3;
+constexpr unsigned kVectorSize = 4;
 
 namespace exp = sycl::ext::oneapi::experimental;
 
-using IntScalar = std::array<int, 1>;
+using IntScalar = std::array<int, kVectorSize>;
 using FPGAProperties =
-    decltype(exp::properties(exp::device_image_scope, exp::host_access_none));
+    decltype(exp::properties(exp::device_image_scope, exp::host_access_write));
 
-// Array of counters that have a lifetime longer than a single kernel invocation
-exp::device_global<int[kNumCounters], FPGAProperties> counters;
-// Flag if the counters have been initialized - zero-initialized to `false`
-exp::device_global<bool, FPGAProperties> is_counters_initialized;
+// globally declared weights for the calculation
+exp::device_global<int[kVectorSize], FPGAProperties> weights;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class Kernel;
 
-// Launch a kernel that increments the value of a global variable counter
-// at a particular index, and returns the current value of that counter
-void IncrementAndRead(sycl::queue q, IntScalar &result, int index) {
-  sycl::buffer<int, 1> buffer_result(result.data(), 1);
+// Launch a kernel that does a vector weighted add
+// result = a + (weights * b)
+void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &result) {
+  sycl::range<1> io_range(kVectorSize);
+  sycl::buffer buffer_result {result.data(), io_range};
+  sycl::buffer buffer_a{a.data(), io_range};
+  sycl::buffer buffer_b{b.data(), io_range};
+
   q.submit([&](sycl::handler &h) {
     sycl::accessor accessor_result{buffer_result, h, sycl::write_only,
                                    sycl::no_init};
+    sycl::accessor accessor_a{buffer_a, h, sycl::read_only};
+    sycl::accessor accessor_b{buffer_b, h, sycl::read_only};
 
     h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-      // Initialize counters the first time we use it
-      if (!is_counters_initialized.get()) {
-        for (size_t init_index = 0; init_index < kNumCounters; init_index++)
-          counters[init_index] = kInitialValue;
-        is_counters_initialized = true;
+      for(auto i = 0; i < kVectorSize; i++) {
+        accessor_result[i] = accessor_a[i] + (weights[i] * accessor_b[i]);
       }
-
-      // Increment and read at a specific index
-      counters[index]++;
-      accessor_result[0] = counters[index];
     });
   });
   q.wait();
@@ -56,8 +53,6 @@ void IncrementAndRead(sycl::queue q, IntScalar &result, int index) {
 
 int main() {
   bool success = true;
-
-  IntScalar result;
 
   try {
 #if FPGA_SIMULATOR
@@ -77,24 +72,32 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;                  
                   
+    IntScalar a, b, result, host_weights;
 
-    // Increment each counter multiple times
-    for (auto num_increments = 1; num_increments <= kNumIncrements;
-         num_increments++) {
-      // Increment each position
-      for (auto counter_index = 0; counter_index < kNumCounters;
-           counter_index++) {
-        // Run the kernel
-        IncrementAndRead(q, result, counter_index);
+    // Periodically update the weights of the calculation
+    for (auto weight_increment = 0; weight_increment <= kNumWeightIncrements;
+         weight_increment++) {
+      host_weights.fill(weight_increment);
+      // Transfer data from the host to the device_global
+      q.copy(host_weights.data(), weights).wait();
+
+      // Update the input to the kernel and launch it
+      for (auto index = 0; index < kNumIterations; index++) {
+        a.fill(index);
+        b.fill(index);
+        WeightedVectorAdd(q, a, b, result);
 
         // verify the results are correct
-        int expected_result = kInitialValue + num_increments;
-        if (result[0] != expected_result) {
-          std::cerr << "device_global: mismatch at index {" << num_increments
-                    << ", " << counter_index << "}: " << result[0]
-                    << " != " << expected_result << " (kernel != expected)"
-                    << '\n';
-          success = false;
+        int expected_result = index + (weight_increment * index);
+        for (auto element = 0; element < kVectorSize; element++) { 
+          if (result[element] != expected_result) {
+            std::cerr << "Error: for expession {" << index << " + (" 
+              << weight_increment << " x " << index << ")} expected all "
+              << kVectorSize 
+              << " indicies to be " << expected_result << " but got " 
+              << result[element] << " at index " << element << "\n";
+            success = false;
+          }
         }
       }
     }
