@@ -46,10 +46,10 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE}
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fintelfpga -DFPGA_EMULATOR hostpipes.cpp -o hostpipes.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR hostpipes.cpp -o hostpipes.fpga_emu
 # CMake executes:
-#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o hostpipes.cpp.o -c hostpipes.cpp
-#    [link]    icpx -fintelfpga hostpipes.cpp.o -o hostpipes.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o hostpipes.cpp.o -c hostpipes.cpp
+#    [link]    icpx -fsycl -fintelfpga hostpipes.cpp.o -o hostpipes.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -77,7 +77,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early hostpipes.cpp -o hostpipes_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early hostpipes.cpp -o hostpipes_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -91,10 +91,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> hostpipes.cpp -o hostpipes.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> hostpipes.cpp -o hostpipes.fpga
 # CMake executes:
-#   [compile] icpx -fintelfpga -o hostpipes.cpp.o -c hostpipes.cpp
-#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> hostpipes.cpp.o -o hostpipes.fpga
+#   [compile] icpx -fsycl -fintelfpga -o hostpipes.cpp.o -c hostpipes.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> hostpipes.cpp.o -o hostpipes.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
