@@ -13,7 +13,7 @@
 
 constexpr size_t kNumIterations = 4;
 constexpr unsigned kNumWeightIncrements = 3;
-constexpr unsigned kVectorSize = 64;
+constexpr unsigned kVectorSize = 4;
 
 namespace exp = sycl::ext::oneapi::experimental;
 
@@ -31,9 +31,10 @@ class Kernel;
 // Launch a kernel that does a vector weighted add
 // result = a + (weights * b)
 void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &result) {
-  sycl::buffer<int, kVectorSize> buffer_result(result.data(), kVectorSize);
-  sycl::buffer<int, kVectorSize> buffer_a(a.data(), kVectorSize);
-  sycl::buffer<int, kVectorSize> buffer_b(b.data(), kVectorSize);
+  sycl::range<1> io_range(kVectorSize);
+  sycl::buffer buffer_result {result.data(), io_range};
+  sycl::buffer buffer_a{a.data(), io_range};
+  sycl::buffer buffer_b{b.data(), io_range};
 
   q.submit([&](sycl::handler &h) {
     sycl::accessor accessor_result{buffer_result, h, sycl::write_only,
@@ -43,7 +44,7 @@ void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &res
 
     h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
       for(auto i = 0; i < kVectorSize; i++) {
-        accessor_result[i] = accessor_a[i] + (weights[i] + accessor_b[i]);
+        accessor_result[i] = accessor_a[i] + (weights[i] * accessor_b[i]);
       }
     });
   });
@@ -56,6 +57,8 @@ int main() {
   try {
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+#elif FPGA_HARDWARE
+    auto selector = sycl::ext::intel::fpga_selector_v;
 #else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
@@ -71,18 +74,17 @@ int main() {
                   
     IntScalar a, b, result, host_weights;
 
-    // Increment each counter multiple times
+    // Periodically update the weights of the calculation
     for (auto weight_increment = 0; weight_increment <= kNumWeightIncrements;
          weight_increment++) {
       host_weights.fill(weight_increment);
       // Transfer data from the host to the device_global
-      q.copy(host_weights, weights).wait();
+      q.copy(host_weights.data(), weights).wait();
 
-      // Increment each position
+      // Update the input to the kernel and launch it
       for (auto index = 0; index < kNumIterations; index++) {
         a.fill(index);
         b.fill(index);
-        // Run the kernel
         WeightedVectorAdd(q, a, b, result);
 
         // verify the results are correct
@@ -92,8 +94,8 @@ int main() {
             std::cerr << "Error: for expession {" << index << " + (" 
               << weight_increment << " x " << index << ")} expected all "
               << kVectorSize 
-              << "indicies to be " << expected_result << " but got " 
-              << result[element] << "at index " << element << "\n";
+              << " indicies to be " << expected_result << " but got " 
+              << result[element] << " at index " << element << "\n";
             success = false;
           }
         }
