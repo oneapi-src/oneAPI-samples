@@ -51,8 +51,8 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile in a single command:
 #    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_ivdep.cpp -o loop_ivdep.fpga_sim
 # CMake executes:
-#    [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_ivdep.cpp.o -c loop_ivdep.cpp
-#    [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> loop_ivdep.cpp.o -o loop_ivdep.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_ivdep.cpp.o -c loop_ivdep.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> loop_ivdep.cpp.o -o loop_ivdep.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
