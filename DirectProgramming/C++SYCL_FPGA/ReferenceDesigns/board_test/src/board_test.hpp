@@ -1531,7 +1531,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 // 5. Calculate and report bandwidth.
 
 int ShimMetrics::USMBWTest(sycl::queue &q) {
-  return run_test(q, MEMCOPY) & run_test(q, READ) & run_test(q, WRITE);
+  return run_test(q, MEMCOPY) | run_test(q, READ) | run_test(q, WRITE);
 }
 
 #endif
