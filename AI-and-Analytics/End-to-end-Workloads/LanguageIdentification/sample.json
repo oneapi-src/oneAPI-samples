@@ -23,6 +23,7 @@
           "tar -xf cv-corpus-11.0-2022-09-21-sv-SE.tar.gz",
           "mv cv-corpus-11.0-2022-09-21 commonVoice/swedish",
           "cd $cwd",
+          "curl -fsSL https://get.docker.com/ | sh",
           "docker pull intel/oneapi-aikit",
           "./launch_docker.sh"
         ],
