@@ -36,9 +36,9 @@ You will need to download and install the following toolkits, tools, and compone
 
 - **Additional Packages**
 
-  You will need to install these additional packages: **Matplotlib**.
+  You will need to install these additional packages, already added in requirements.txt file: **Matplotlib**, **requests**, **tqdm**
   ```
-  python -m pip install matplotlib tqdm
+  pip install -r requirements.txt
   ```
 
 
