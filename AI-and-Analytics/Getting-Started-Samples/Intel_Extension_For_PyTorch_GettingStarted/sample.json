@@ -6,7 +6,8 @@
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "os":["linux"],
-  "targetDevice": ["CPU"],
+  "targetDevice": ["CPU","GPU"],
+  "gpuRequired": ["ats-m","pvc"],
   "ciTests": {
 	"linux": [
 	{
