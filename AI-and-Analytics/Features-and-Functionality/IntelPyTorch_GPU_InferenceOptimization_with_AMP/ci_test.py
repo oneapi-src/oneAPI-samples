@@ -21,6 +21,6 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
 
 
 runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                'IntelPyTorch_GPU_with_AMP.ipynb'),
-                                'IntelPyTorch_GPU_with_AMP_result.ipynb', 
+                                'IntelPyTorch_GPU_InferenceOptimization_with_AMP.ipynb'),
+                                'IntelPyTorch_GPU_InferenceOptimization_with_AMP_result.ipynb', 
                                 'pytorch-gpu')
