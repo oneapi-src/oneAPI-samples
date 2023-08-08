@@ -61,9 +61,13 @@ This sample illustrates some key concepts.
 
 ### `device_global` Description
 
-The `device_global` class is an extension that introduces device scoped memory allocations into SYCL that can be accessed within a kernel using syntax similar to C++ global variables; the class has unique instances per `sycl::device`. Similar to C++ global variables, a `device_global` variable have a namespace scope and is visible to all kernels within that scope.
+The `device_global` class is an extension that introduces device-scoped memory allocations into SYCL that can be accessed within a kernel using syntax similar to C++ global variables; the class has unique instances per `sycl::device`. Similar to C++ global variables, a `device_global` variable has a namespace scope and is visible to all kernels within that scope.
 
-A `device_global` class is instantiated from a class template. The template is parameterized by the type of the underlying allocation, and a list of properties. The type of the allocation also encodes the size of the allocation for potentially multidimensional array types. The list of properties change the functional behavior of the `device_global` instance to enable compiler and runtime optimizations. In the code sample two properties are used, `device_image_scope` and `host_access_write`. The `device_image_scope` property limits the scope of a single instance of a `device_global` from a device to a `device_image`. The absence of the `device_image_scope` property is not supported by the compiler. The `host_access` property is an assertion by the user telling the implementation whether the host code copies to or from the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default). The `host_access` property makes no assertion on how the device can access the `device_global`, the device can always both read and write to the `device_global` object.
+A `device_global` class is instantiated from a class template. The template is parameterized by the type of the underlying allocation, and a list of properties. The type of the allocation also encodes the size of the allocation for potentially multidimensional array types. The list of properties lets you control the functional behavior of the `device_global` instance to enable compiler and runtime optimizations. In this code sample two properties are used, `device_image_scope` and `host_access_write`. 
+
+* The `device_image_scope` property limits the scope of a single instance of a `device_global` from a device to a `device_image`. The `device_image_scope` property is required. 
+
+* The `host_access` property tells the compiler how the host code accesses the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default). The `host_access` property makes no assertion on how the **device** can access the `device_global`: the device can always read and write to the `device_global` object.
 
 > **Note**: Further details on these and other properties can be found in the [Properties for `device_global` variables](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc#properties-for-device-global-variables) section of the [SYCL `device_global` Language Specification](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc). The language specification can also help you helps understand the API and of `device_globals` and restrictions on its usage.
 
@@ -71,7 +75,7 @@ A `device_global` instance can be used to store state across multiple relaunches
 
 ### Initialize a `device_global` Instance
 
-A `device_global` instance is always zero-initialized. If you need the first usage of a `device_global` instance in device code to be initialized to a non-zero value you can copy values from the host to the device_global. These copy operations get placed in the queue, but will not implicitly block any other operations on the queue.
+A `device_global` instance is always zero-initialized, so the compiler cannot pre-initialize `device_global` memories to non-zero values for you at compile-time. However, if you are using a BSP that supports `device_global` memories with host access from a dedicated interfaces, you can use the `sycl::queue::copy()` function to copy values from the host to the `device_global` before you start your kernel. These copy operations get placed in the SYCL* queue, but will not implicitly block any other operations on the queue.
 
 ```cpp
 namespace exp = sycl::ext::oneapi::experimental;

@@ -18,7 +18,7 @@ constexpr unsigned kVectorSize = 4;
 namespace exp = sycl::ext::oneapi::experimental;
 
 using IntScalar = std::array<int, kVectorSize>;
-using FPGAProperties =
+using WeightsDeviceGlobalProperties=
     decltype(exp::properties(exp::device_image_scope, exp::host_access_write));
 
 // globally declared weights for the calculation
@@ -28,7 +28,7 @@ exp::device_global<int[kVectorSize], FPGAProperties> weights;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class Kernel;
 
-// Launch a kernel that does a vector weighted add
+// Launch a kernel that does a weighted vector add
 // result = a + (weights * b)
 void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &result) {
   sycl::range<1> io_range(kVectorSize);
@@ -74,7 +74,7 @@ int main() {
                   
     IntScalar a, b, result, host_weights;
 
-    // Periodically update the weights of the calculation
+    // Run the kernel with different sets of weights
     for (auto weight_increment = 0; weight_increment <= kNumWeightIncrements;
          weight_increment++) {
       host_weights.fill(weight_increment);
