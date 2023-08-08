@@ -29,25 +29,14 @@ class Kernel;
 
 // Launch a kernel that does a weighted vector add
 // result = a + (weights * b)
-void WeightedVectorAdd(sycl::queue q, std::array<int, kVectorSize> &a,
-                       std::array<int, kVectorSize> &b,
-                       std::array<int, kVectorSize> &result) {
-  sycl::range<1> io_range(kVectorSize);
-  sycl::buffer buffer_result{result.data(), io_range};
-  sycl::buffer buffer_a{a.data(), io_range};
-  sycl::buffer buffer_b{b.data(), io_range};
+void WeightedVectorAdd(sycl::queue q, int *a,
+                       int *b,
+                       int *result) {
 
-  q.submit([&](sycl::handler &h) {
-    sycl::accessor accessor_result{buffer_result, h, sycl::write_only,
-                                   sycl::no_init};
-    sycl::accessor accessor_a{buffer_a, h, sycl::read_only};
-    sycl::accessor accessor_b{buffer_b, h, sycl::read_only};
-
-    h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-      for (auto i = 0; i < kVectorSize; i++) {
-        accessor_result[i] = accessor_a[i] + (weights[i] * accessor_b[i]);
-      }
-    });
+  q.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
+    for (auto i = 0; i < kVectorSize; i++) {
+      result[i] = a[i] + (weights[i] * b[i]);
+    }
   });
   q.wait();
 }
@@ -73,7 +62,10 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    std::array<int, kVectorSize> a, b, result, host_weights;
+    std::array<int, kVectorSize> host_weights;
+    int *a = sycl::malloc_host<int>(kVectorSize, q);
+    int *b = sycl::malloc_host<int>(kVectorSize, q);
+    int *result = sycl::malloc_host<int>(kVectorSize, q);
 
     // Run the kernel with different sets of weights
     for (auto weight = 0; weight <= kNumWeightIncrements; weight++) {
@@ -83,8 +75,8 @@ int main() {
 
       // Update the input to the kernel and launch it
       for (auto index = 0; index < kNumIterations; index++) {
-        a.fill(index);
-        b.fill(index);
+        std::fill(a, a + kVectorSize, index);
+        std::fill(b, b + kVectorSize, index);
         WeightedVectorAdd(q, a, b, result);
 
         // verify the results are correct
