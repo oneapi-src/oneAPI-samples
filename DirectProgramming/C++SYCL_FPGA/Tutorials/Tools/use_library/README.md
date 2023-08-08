@@ -55,9 +55,17 @@ Find more information about how to navigate this part of the code samples in the
 You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 
+### Source Code Description
+
+We have 2 design in this tutorial, each lies in separate sub-folders. Both are taking two 27-bit inputs and perform multiplier to produce a 54-bit output.
+With RTL module, we are able to customize DSP block behaviour in SYCL application and observe the impact on area utilization and performance.
+In `part1_native` folder, we perform 27x27 multiplier with a native math implemation. This is the normal SYCL application we usually implemetion for FPGA application
+in `part2_libfunc_call` folder, we implement customised DSP block behaviour with a RTL-libary and use it in our SYCL application to perform 27x27 multiplier. Files needed are explained in [Use of RTL libraries in SYCL](#Use-of-RTL-libraries-in-SYCL).
+
+
 ### Use of RTL libraries in SYCL
 
-Files needed to create a SYCL target library from RTL source include:
+Files needed to create a SYCL target library from RTL source (as demostrated in `part2_libfunc_call` folder) include:
 - Verilog, System Verilog, or VHDL files that define the RTL component
 - An Object Manifest File (.xml) which contains properties needed to integrate RTL component into SYCL pipeline
 - A header file containing valid SYCL kernel language and declares the signatures of functions implemented by the RTL component.
@@ -71,7 +79,7 @@ Given a workable RTL module, one may need to apply some modifications in order t
 
     > **Note**: The signal names must match the ones specified in the .xml file. An error occurs during library creation if a signal name is inconsistent.
 
-2. RTL library’s characteristics needs to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, do refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
+2. RTL library’s characteristics needs to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, do refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/top/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
 
     > **Note**: It is challenging to debug an RTL module that works correctly on its own but works incorrectly as part of a SYCL kernel. Double-check all parameters under the ATTRIBUTES element in the object manifest file (.xml).
 
@@ -156,6 +164,8 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
+   >
+   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -196,6 +206,8 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
+   >
+   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -257,35 +269,19 @@ Note that the library files (\*.a) must be included after all of the cpp files i
 PASSED: result is correct!
 ```
 
-## Modifying Code Sample to implement DSP block customization in RTL module
-
-In previous section, we have performed the basic function of byteswaping in RTL module.
-With RTL module, we are able to customize DSP block behaviour in SYCL application and observe the impact on area utilization and performance.
-In `use_rtl_dsp` design, we perform 27x27 multiplier with a native math implemation and a RTL-libary customised DSP version. 
-
-To switch this sample to build with customised DSP RTL, you may change the SOURCE_FILES and LIB_FILENAME in the CMakeList.txt. 
-   ```
-   set(SOURCE_FILES src/use_rtl_dsp.cpp)
-   set(TARGET_NAME use_rtl_dsp)
-   set(LIB_FILENAME lib_rtl_dsp)
-   ```
-   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
-
-After modification, you may build and run the `use_rtl_dsp` sample just like `use_library`.
-
 ## Read the Reports
 
-Locate the `report.html` file in `use_rtl_dsp_report.prj` or `use_rtl_dsp.fpga_sim.prj`
+Locate the `report.html` file in `use_native_report.prj` or `use_native.fpga_sim.prj` for `part1_native`.
+Locate the `report.html` file in `use_library_report.prj` or `use_library.fpga_sim.prj` for `part2_libfunc_call`.
 
-Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of the customised DSP (KernelComputeRTL) should be lower than native design (KernelCompute).
+Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of `part2_libfunc_call` with customised DSP (KernelComputeRTL) should be lower than `part1_native` design (KernelCompute).
 
 Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**)
 By default, compiler area estimation tools assume that the RTL module area is 0.
 Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute.
-In this table, you can find the Compile Estimated: Kernel System used 2 DSP, one for each multiplier design.
+Then, you may find the Compile Estimated: Kernel System used 1 DSP in this table.
 
-In order to see the area utilization for each design implementation, you will have to compile only one implementation design at a time. See code comment for details.
-The following table compared the estimated area usage after compiling each kernel separately.
+The following table compared the estimated area usage for each kernel separately.
 
 |Compile Estimated: Kernel System
 |	 | Native Design | RTL with customised DSP

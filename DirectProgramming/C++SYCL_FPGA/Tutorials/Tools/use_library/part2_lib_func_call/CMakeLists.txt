@@ -20,13 +20,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-# To switch this sample to build with customised DSP RTL,
-# just target SOURCE_FILES "src/use_rtl_dsp.cpp" with LIB_FILENAME "lib_rtl_dsp" 
-# as below:
-#   set(SOURCE_FILES src/use_rtl_dsp.cpp)
-#   set(TARGET_NAME use_rtl_dsp)
-#   set(LIB_FILENAME lib_rtl_dsp)
-#
 set(SOURCE_FILES src/use_library.cpp)
 set(TARGET_NAME use_library)
 set(LIB_FILENAME lib_rtl)
@@ -68,7 +61,7 @@ set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ../../../include;${USER_INCLUDE_PATHS})
+set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 
 ###############################################################################
 ### no changes after here

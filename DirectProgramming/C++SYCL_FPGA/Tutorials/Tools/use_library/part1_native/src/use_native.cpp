@@ -5,20 +5,47 @@
 // =============================================================
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include "lib.hpp"
 #include "exception_handler.hpp"
+
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/experimental/pipe_properties.hpp>
+#include <sycl/ext/intel/experimental/pipes.hpp>
+#include <sycl/ext/intel/prototype/interfaces.hpp>
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
 class KernelCompute;
 
-// SYCL function to get the square a number
-SYCL_EXTERNAL float SyclSquare(float x) {
-  return x * x;
-}
+using MyInt27 = ac_int<27, false>;
+using MyInt54 = ac_int<54, false>;
 
+
+// Using host pipes to stream data in and out of kernal
+// IDPipeA and IDPipeB will be written at host, and then read data in kernel (device)
+// IDPipeC will be written at kernel (device) respectively, and then read data by host
+class IDPipeA;
+using InputPipeA = sycl::ext::intel::experimental::pipe<IDPipeA, unsigned>;
+class IDPipeB;
+using InputPipeB = sycl::ext::intel::experimental::pipe<IDPipeB, unsigned>;
+class IDPipeC;
+using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, unsigned long>;
+
+template <typename PipeIn1, typename PipeIn2, typename PipeOut>
+struct NativeMult27x27 {
+
+  streaming_interface void operator()() const {
+    MyInt27 a_val = PipeIn1::read();
+    MyInt27 b_val = PipeIn2::read();
+    MyInt54 res =(MyInt54)a_val * b_val;
+    PipeOut::write(res);
+  }
+};
+
+// This kernel compute result by performing the basic multipler soft logic
 int main() {
-  unsigned result = 0;
+  unsigned long result_native = 0;
+  unsigned kA = 134217727;
+  unsigned kB = 100;
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
 #if FPGA_SIMULATOR
@@ -37,33 +64,16 @@ int main() {
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
+    {
+      //write data to host-to-device hostpipe
+      InputPipeA::write(q, kA);
+      InputPipeB::write(q, kB);
+      //launch kernal that would compute multiplication as per compiler choice
+      q.single_task<KernelCompute>(NativeMult27x27<InputPipeA,InputPipeB,OutputPipeC>{}).wait();
+      //read data from device-to-host hostpipe
+      result_native = OutputPipeC::read(q);
+    }
 
-    // The scalar inputs are passed to the kernel using the lambda capture,
-    // but a SYCL buffer must be used to return a scalar from the kernel.
-    sycl::buffer<unsigned, 1> buffer_c(&result, 1);
-
-    //  Values used as input to the kernel
-    float kA = 2.0f;
-    float kB = 3.0f;
-
-
-    q.submit([&](sycl::handler &h) {
-      // Accessor to the scalar result
-      sycl::accessor accessor_c(buffer_c, h, sycl::write_only, sycl::no_init);
-
-      // Kernel
-      h.single_task<class KernelCompute>([=]() {
-        float a_sq = SyclSquare(kA);
-        float b_sq = SyclSquare(kB);
-
-        // RtlByteswap is an RTL library.
-        //  - When compiled for FPGA, Verilog module byteswap_uint in lib_rtl.v
-        //    is instantiated in the datapath by the compiler.
-        //  - When compiled for FPGA emulator (CPU), the C model of RtlByteSwap
-        //    in lib_rtl_model.cpp is used instead.
-        accessor_c[0] = RtlByteswap((unsigned)(a_sq + b_sq));
-      });
-    });
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
@@ -79,15 +89,12 @@ int main() {
     std::terminate();
   }
 
-  float kA = 2.0f;
-  float kB = 3.0f;
   // Compute the expected "golden" result
-  unsigned gold = (kA * kA) + (kB * kB);
-  gold = gold << 16 | gold >> 16;
-
+  unsigned long gold = (unsigned long) kA * kB;
+  
   // Check the results
-  if (result != gold) {
-    std::cout << "FAILED: result is incorrect!\n";
+  if (result_native != gold) {
+    std::cout << "FAILED: result (" << result_native << ") is incorrect! Expected " << gold << "\n";
     return -1;
   }
   std::cout << "PASSED: result is correct!\n";
