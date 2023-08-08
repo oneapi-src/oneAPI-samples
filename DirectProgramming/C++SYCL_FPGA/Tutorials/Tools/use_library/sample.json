@@ -20,23 +20,44 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part1_native",
+          "make fpga_emu",
+          "./use_native.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part2_lib_func_call",
           "make fpga_emu",
           "./use_library.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "report1",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part1_native",
+          "make report"
+        ]
+      },
+      {
+        "id": "report2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part2_lib_func_call",
           "make report"
         ]
       }
