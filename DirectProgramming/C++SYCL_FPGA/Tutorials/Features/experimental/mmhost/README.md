@@ -58,7 +58,7 @@ The compiler will infer Avalon memory-mapped host interfaces for your design whe
 struct PointerIP{
 
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   int *x; 
   int *y; 
   int *z;
@@ -82,7 +82,7 @@ You can override the default behaviour of a pointer argument by declaring an `an
 struct SingleMMIP{
   
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   annotated_ptr<int> x; 
   annotated_ptr<int> y; 
   annotated_ptr<int> z;
@@ -130,7 +130,7 @@ constexpr int kBL3 = 3;
 struct MultiMMIP {
 
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 
@@ -197,7 +197,7 @@ struct DDR_IP{
           });
 
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   annotated_ptr<int, params> x;
   annotated_ptr<int, params> y;
   annotated_ptr<int, decltype(properties{

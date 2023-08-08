@@ -9,7 +9,7 @@ using namespace ext::oneapi::experimental;
 struct SingleMMIP{
   
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   annotated_ptr<int> x; 
   annotated_ptr<int> y; 
   annotated_ptr<int> z;

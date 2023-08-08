@@ -8,7 +8,7 @@ using namespace sycl;
 struct PointerIP{
   
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   int *x; 
   int *y; 
   int *z;

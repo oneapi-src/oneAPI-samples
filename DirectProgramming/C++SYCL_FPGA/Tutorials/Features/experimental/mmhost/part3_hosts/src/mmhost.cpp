@@ -17,7 +17,7 @@ constexpr int kBL3 = 3;
 struct MultiMMIP {
 
   //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernals to compare the difference 
+  //look at the other kernels to compare the difference 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 
