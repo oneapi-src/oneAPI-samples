@@ -69,7 +69,7 @@ A `device_global` class is instantiated from a class template. The template is p
 
 * The `host_access` property tells the compiler how the host code accesses the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default). The `host_access` property makes no assertion on how the **device** can access the `device_global`: the device can always read and write to the `device_global` object.
 
-> **Note**: Further details on these and other properties can be found in the [Properties for `device_global` variables](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc#properties-for-device-global-variables) section of the [SYCL `device_global` Language Specification](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc). The language specification can also help you helps understand the API and of `device_globals` and restrictions on its usage.
+> **Note**: Further details on these and other properties can be found in the [device_global Extension](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/2023-2/device-global-ext.html) section of the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/2023-2/overview.html).
 
 A `device_global` instance can be used to store state across multiple relaunches of a kernel without having to pass in a `buffer` as a kernel argument. An example of an application that would benefit from such a state is where kernels are nodes in a state-machine.
 

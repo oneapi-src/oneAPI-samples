@@ -17,12 +17,11 @@ constexpr unsigned kVectorSize = 4;
 
 namespace exp = sycl::ext::oneapi::experimental;
 
-using IntScalar = std::array<int, kVectorSize>;
-using WeightsDeviceGlobalProperties=
+using WeightsDeviceGlobalProperties =
     decltype(exp::properties(exp::device_image_scope, exp::host_access_write));
 
 // globally declared weights for the calculation
-exp::device_global<int[kVectorSize], FPGAProperties> weights;
+exp::device_global<int[kVectorSize], WeightsDeviceGlobalProperties> weights;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -30,9 +29,11 @@ class Kernel;
 
 // Launch a kernel that does a weighted vector add
 // result = a + (weights * b)
-void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &result) {
+void WeightedVectorAdd(sycl::queue q, std::array<int, kVectorSize> &a,
+                       std::array<int, kVectorSize> &b,
+                       std::array<int, kVectorSize> &result) {
   sycl::range<1> io_range(kVectorSize);
-  sycl::buffer buffer_result {result.data(), io_range};
+  sycl::buffer buffer_result{result.data(), io_range};
   sycl::buffer buffer_a{a.data(), io_range};
   sycl::buffer buffer_b{b.data(), io_range};
 
@@ -43,7 +44,7 @@ void WeightedVectorAdd(sycl::queue q, IntScalar &a, IntScalar &b, IntScalar &res
     sycl::accessor accessor_b{buffer_b, h, sycl::read_only};
 
     h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-      for(auto i = 0; i < kVectorSize; i++) {
+      for (auto i = 0; i < kVectorSize; i++) {
         accessor_result[i] = accessor_a[i] + (weights[i] * accessor_b[i]);
       }
     });
@@ -70,14 +71,13 @@ int main() {
 
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
-              << std::endl;                  
-                  
-    IntScalar a, b, result, host_weights;
+              << std::endl;
+
+    std::array<int, kVectorSize> a, b, result, host_weights;
 
     // Run the kernel with different sets of weights
-    for (auto weight_increment = 0; weight_increment <= kNumWeightIncrements;
-         weight_increment++) {
-      host_weights.fill(weight_increment);
+    for (auto weight = 0; weight <= kNumWeightIncrements; weight++) {
+      host_weights.fill(weight);
       // Transfer data from the host to the device_global
       q.copy(host_weights.data(), weights).wait();
 
@@ -88,14 +88,13 @@ int main() {
         WeightedVectorAdd(q, a, b, result);
 
         // verify the results are correct
-        int expected_result = index + (weight_increment * index);
-        for (auto element = 0; element < kVectorSize; element++) { 
+        int expected_result = index + (weight * index);
+        for (auto element = 0; element < kVectorSize; element++) {
           if (result[element] != expected_result) {
-            std::cerr << "Error: for expession {" << index << " + (" 
-              << weight_increment << " x " << index << ")} expected all "
-              << kVectorSize 
-              << " indicies to be " << expected_result << " but got " 
-              << result[element] << " at index " << element << "\n";
+            std::cerr << "Error: for expession {" << index << " + (" << weight
+                      << " x " << index << ")} expected all " << kVectorSize
+                      << " indicies to be " << expected_result << " but got "
+                      << result[element] << " at index " << element << "\n";
             success = false;
           }
         }
