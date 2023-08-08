@@ -29,9 +29,7 @@ class Kernel;
 
 // Launch a kernel that does a weighted vector add
 // result = a + (weights * b)
-void WeightedVectorAdd(sycl::queue q, int *a,
-                       int *b,
-                       int *result) {
+void WeightedVectorAdd(sycl::queue q, int *a, int *b, int *result) {
 
   q.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
     for (auto i = 0; i < kVectorSize; i++) {
