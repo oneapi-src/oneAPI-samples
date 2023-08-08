@@ -6,50 +6,17 @@
 using namespace sycl;
 using namespace ext::oneapi::experimental;
 
-using usm_buffer_location =
-    ext::intel::experimental::property::usm::buffer_location;
-
-constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
-constexpr int kBL3 = 3;
-
-struct MultiMMIP {
-
+struct SingleMMIP{
+  
   //Declare the pointer interfaces to be used in this kernel,
   //look at the other kernals to compare the difference 
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL1>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
-  })> x;
-
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL2>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
-  })> y;
-
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL3>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<0>, 
-    read_write_mode_write,
-    maxburst<4>
-  })> z;
-
+  annotated_ptr<int> x; 
+  annotated_ptr<int> y; 
+  annotated_ptr<int> z;
   int size;
 
   void operator()() const {
-
-    #pragma unroll 4
-    for(int i = 0; i < size; i++){
+    for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }
   }
@@ -81,18 +48,17 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    // Host array must share the same buffer location property as defined in the kernel
     // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    auto *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
-    int *array_C = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL3)});
+    auto *array_A = malloc_shared<int>(kN, q);
+    auto *array_B = malloc_shared<int>(kN, q);
+    int *array_C = malloc_shared<int>(kN, q);
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;
         array_B[i] = 2*i;
     }
 
-    q.single_task(MultiMMIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(SingleMMIP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3*i;
       if (array_C[i] != golden) {

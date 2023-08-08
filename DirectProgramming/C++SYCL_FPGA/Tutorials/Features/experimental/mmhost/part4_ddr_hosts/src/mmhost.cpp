@@ -4,17 +4,39 @@
 #include "exception_handler.hpp"
 
 using namespace sycl;
+using namespace ext::oneapi::experimental;
+using namespace ext::intel::experimental;
 
-struct PointerIP{
-  
+using usm_buffer_location =
+    ext::intel::experimental::property::usm::buffer_location;
+
+constexpr int kBL1 = 1;
+constexpr int kBL2 = 2;
+
+struct DDR_IP{
+  using params = decltype(properties{
+          buffer_location<kBL1>,
+          latency<0>,
+          maxburst<8>,
+          dwidth<256>,
+          alignment<32>
+          });
+
   //Declare the pointer interfaces to be used in this kernel,
   //look at the other kernals to compare the difference 
-  int *x; 
-  int *y; 
-  int *z;
+  annotated_ptr<int, params> x;
+  annotated_ptr<int, params> y;
+  annotated_ptr<int, decltype(properties{
+          buffer_location<kBL2>,
+          latency<0>,
+          maxburst<8>,
+          dwidth<256>,
+          alignment<32>
+          })> z;   
   int size;
 
   void operator()() const {
+    #pragma unroll 4
     for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }
@@ -47,17 +69,18 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
+    // Host array must share the same buffer location property as defined in the kernel
     // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q);
-    auto *array_B = malloc_shared<int>(kN, q);
-    int *array_C = malloc_shared<int>(kN, q);
+    auto *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
+    auto *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
+    int *array_C = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;
         array_B[i] = 2*i;
     }
 
-    q.single_task(PointerIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(DDR_IP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3*i;
       if (array_C[i] != golden) {

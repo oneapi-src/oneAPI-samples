@@ -79,23 +79,21 @@ You can override the default behaviour of a pointer argument by declaring an `an
 
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
-struct SingleMMIP {
-  annotated_ptr<int, decltype(properties{
-    register_map,
-    buffer_location<kBL1>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<0>, 
-    read_write_mode<read>,
-    maxburst<4>
-  })> my_pointer; 
+struct SingleMMIP{
+  
+  //Declare the pointer interfaces to be used in this kernel,
+  //look at the other kernals to compare the difference 
+  annotated_ptr<int> x; 
+  annotated_ptr<int> y; 
+  annotated_ptr<int> z;
+  int size;
+
   void operator()() const {
-    ...
-    // Kernel code
-    my_pointer[x] = y;
-    ...
+    for (int i = 0; i < size; ++i) {
+      z[i] = x[i] + y[i];
+    }
   }
-}
+};
 ```
 
 The following table describes mutually exclusive properties you can use to customize the interface. Only one may be specified at a time. 
@@ -248,8 +246,9 @@ This design uses CMake to generate a build script for GNU/make.
    ```
    where `<partX_XXX>` is:
    - `part1_pointers`
-   - `part2_hosts`
-   - `part3_ddr_hosts`
+   - `part2_single_host`
+   - `part3_hosts`
+   - `part4_ddr_hosts`
 
 3. Configure the build system for the Agilex® 7 device family, which is the default.
 
@@ -282,8 +281,9 @@ This design uses CMake to generate a build script for  `nmake`.
    ```
    where `<partX_XXX>` is:
    - `part1_pointers`
-   - `part2_hosts`
-   - `part3_ddr_hosts`
+   - `part2_single_host`
+   - `part3_hosts`
+   - `part4_ddr_hosts`
 
 3. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
