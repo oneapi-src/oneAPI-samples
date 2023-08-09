@@ -24,7 +24,7 @@ endif()
 
 # Some tests in this sample require USM. Only enable those tests if the user
 # specifies that their board supports USM.
-# (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
+# (e.g., cmake .. -DSUPPORTS_USM=1)
 if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
     set(USM_FLAG "-DSUPPORTS_USM")
 endif()
