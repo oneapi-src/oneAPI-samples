@@ -22,6 +22,19 @@ if(NOT FPGA_DEVICE MATCHES ".*:.*")
     message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
 endif()
 
+# Some tests in this sample require USM. Only enable those tests if the user
+# specifies that their board supports USM.
+# (e.g., cmake .. -DSUPPORTS_USM=1)
+if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
+    set(USM_FLAG "-DSUPPORTS_USM")
+endif()
+
+if (SUPPORTS_USM)
+    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations.")
+else()
+    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled.")
+endif()
+
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall")
@@ -40,9 +53,9 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_EMULATOR -Wformat-security -Werror=format-security -Wall")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_EMULATOR -Wformat-security -Werror=format-security -Wall ${USM_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_HARDWARE")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_HARDWARE ${USM_FLAG}")
 # By default oneAPI compiler burst interleaves across same memory type,
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information

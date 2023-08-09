@@ -45,6 +45,7 @@ void PrintHelp(int details) {
               << "  4. Kernel Latency Measurement\n"
               << "  5. Kernel-to-Memory Read Write Test\n"
               << "  6. Kernel-to-Memory Bandwidth Test\n"
+              << "  7. Unified Shared Memory Bandwidth Test\n"
               << "Note: Kernel Clock Frequency is run along with all tests "
               << "except 1 (Host Speed and Host Read Write test)\n\n";
   } else {
@@ -83,7 +84,12 @@ void PrintHelp(int details) {
         << "  * 6. Kernel-to-Memory Bandwidth Test *\n"
         << "    Kernel-to-Memory Bandwidth test measures the kernel to device "
         << "global memory bandwidth and compares this with the theoretical "
-        << "bandwidth defined in board_spec.xml file in the oneAPI shim/BSP.\n\n"
+        << "bandwidth defined in board_spec.xml file in the oneAPI shim/BSP.\n"
+        << "  * 7. Unified Shared Memory (USM) Bandwidth Test *\n"
+        << "    Unified Shared Memory Bandwidth test measures and reports the "
+        << "average throughput of copying data between, reading data from, and "
+        << "writing data to host USM. The SUPPORTS_USM macro must be specified "
+        << "at compile-time in order to run this test. \n\n"
         << "    Note: This test assumes that design was compiled with "
         << "-Xsno-interleaving option\n\n"
         << "Please use the commands shown at the beginning of this help to run "
