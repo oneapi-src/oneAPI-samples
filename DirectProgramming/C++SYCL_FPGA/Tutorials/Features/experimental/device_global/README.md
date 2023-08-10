@@ -69,9 +69,9 @@ A `device_global` class is instantiated from a class template. The template is p
 
 * The `host_access` property tells the compiler how the host code accesses the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default). The `host_access` property makes no assertion on how the **device** can access the `device_global`: the device can always read and write to the `device_global` object.
 
-> **Note**: Further details on these and other properties can be found in the [device_global Extension](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/2023-2/device-global-ext.html) section of the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/2023-2/overview.html).
+> **Note**: Further details on these and other properties can be found in the [device_global Extension](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/device-global-ext.html) section of the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/overview.html).
 
-A `device_global` instance can be used to store state across multiple relaunches of a kernel without having to pass in a `buffer` as a kernel argument. An example of an application that would benefit from such a state is where kernels are nodes in a state-machine.
+A `device_global` instance can be used to store state across multiple relaunches of a kernel without needing a SYCL buffer or a Unified Shared Memory (USM) pointer. This can be useful for creating a finite state machine.
 
 ### Initialize a `device_global` Instance
 
@@ -81,6 +81,7 @@ A `device_global` instance is always zero-initialized, so the compiler cannot pr
 namespace exp = sycl::ext::oneapi::experimental;
 using FPGAProperties = decltype(exp::properties(
     exp::device_image_scope, exp::host_access_read_write));
+// Declared at namespace scope so visible to all kernels in that scope
 exp::device_global<int, FPGAProperties> val;
 int main () {
   sycl::queue q;
@@ -121,7 +122,7 @@ int main () {
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -155,7 +156,7 @@ int main () {
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
