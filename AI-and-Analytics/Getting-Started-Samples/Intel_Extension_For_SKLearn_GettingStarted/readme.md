@@ -15,7 +15,7 @@ The `Intel® Python Scikit-learn Extension Getting Started` sample demonstrates 
 | :---                     | :---
 | OS                       | Ubuntu* 20.04 (or newer)
 | Hardware                 | Intel Atom® processors <br> Intel® Core™ processor family  <br> Intel® Xeon® processor family  <br> Intel® Xeon® Scalable processor family
-| Software                 | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® oneAPI Data Analytics Library (oneDAL) <br> Pickle  <br> Pandas  <br> NumPy <br> Matplotlib
+| Software                 | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® oneAPI Data Analytics Library (oneDAL) <br> Joblib  <br> NumPy <br> Matplotlib
 
 You can refer to the oneAPI [product page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit *[Get Started with the Intel® AI Analytics Toolkit for Linux*
 ](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
@@ -49,6 +49,7 @@ This Getting Started sample code is implemented for CPU using the Python languag
 Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command.
 ```
 source activate base
+pip install -r requirements.txt
 ```
 
 #### Activate Conda without Root Access (Optional)
