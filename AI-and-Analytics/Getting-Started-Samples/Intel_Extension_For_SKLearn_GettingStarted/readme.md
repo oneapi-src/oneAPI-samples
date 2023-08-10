@@ -49,6 +49,7 @@ This Getting Started sample code is implemented for CPU using the Python languag
 Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command.
 ```
 source activate base
+pip install -r requirements.txt
 ```
 
 #### Activate Conda without Root Access (Optional)
