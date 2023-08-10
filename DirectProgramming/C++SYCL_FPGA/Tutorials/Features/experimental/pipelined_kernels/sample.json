@@ -1,6 +1,6 @@
 {
   "guid": "AF4D3C55-A79D-4A8E-96BD-84888A142502",
-  "name": "pipelined kernels",
+  "name": "Pipelined Kernels",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of kernel pipelining",
   "toolchain": ["icpx"],
