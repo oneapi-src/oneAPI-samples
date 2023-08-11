@@ -1,99 +1,116 @@
 #include <iostream>
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
-// Generate a arithmetic sequence to pipe
-template<typename sequence_out>
-struct ArithSequence {
+#define FACTORS 5
+
+// Forward declare the kernel and pipe names
+// (This prevents unwanted name mangling in the optimization report.)
+class ArithmeticSequence;
+class Sum;
+class OutputPipe;
+
+// Inter-kernel pipe
+using PipeOut = sycl::ext::intel::pipe<OutputPipe, int, 50>;
+
+// Computes and outputs the first "sequence_length" terms of the arithmetic
+// sequences with first term "first_term" and factors 1 through FACTORS.
+struct ArithmeticSequenceKernel {
   int first_term;
-  int length;
+  int sequence_length;
 
   void operator()() const {
-    for (int factor = 1; factor < 6; factor ++) {
-      // [[intel::max_reinvocation_delay(1)]]
-      for (int i = 0; i < length; i ++) {
-        int cur_term = first_term + factor * i;
-        sequence_out::write(cur_term);
+    for (int i = 0; i < FACTORS; i++) {
+      int factor = i + 1;
+      [[intel::max_reinvocation_delay(1)]] // NO-FORMAT: Attribute
+      for (int j = 0; j < sequence_length; j++) {
+        PipeOut::write(first_term + j * factor);
       }
     }
   }
 };
 
-// sum up the sequence from pipe
-template<typename sequence_in>
-struct Summing {
-  int* sum;
-  int length;
+// Sums up the first "sequence_length" terms for each sequence and writes the
+// results to global memory.
+struct SumKernel {
+  int sequence_length;
+  int *result;
 
   void operator()() const {
-    for (int f = 0; f < 5; f ++) {
-      int cur_sum = 0;
-      long int i = 1;
-      // [[intel::max_reinvocation_delay(1)]]
-      while (sycl::log10((double)(i)) < length) {
-        cur_sum += sequence_in::read();
-        i *= 10;
+    for (int i = 0; i < FACTORS; i++) {
+      int sum = 0;
+      for (int j = 0; j < sequence_length; j++) {
+        sum += PipeOut::read();
       }
-      sum[f] = cur_sum;
+      result[i] = sum;
     }
   }
 };
 
-int get_arithmetic_sum(int first_term, int factor, int length) {
-  return (int)((length / 2) * (2 * first_term + (length - 1) * factor));
+// Sums up the first "sequence_length" terms for the arithmetic sequence with
+// first term "first_term" and factor "factor" to compare to.
+int get_arithmetic_sum(int first_term, int factor, int sequence_length) {
+  return (int)((sequence_length / 2) *
+               (2 * first_term + (sequence_length - 1) * factor));
 }
 
-class SequencePipe;
-class SequenceGen;
-class SequenceSum;
-
 int main() {
-  int start_term = 0;
-  int seq_length = 10;
-  int final_sum[5];
+
+  try {
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else  // #if FPGA_EMULATOR
+#else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
-  // create the device queue
-  sycl::queue q(selector);
+    sycl::queue q(selector);
 
-  auto device = q.get_device();
+    auto device = q.get_device();
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
 
-  std::cout << "Running on device: "
-      << device.get_info<sycl::info::device::name>().c_str()
-      << std::endl;
+    int first_term = 0;
+    int sequence_length = 10;
 
-  using SeqPipe = sycl::ext::intel::pipe<SequencePipe, int, 10>;
+    int *result = sycl::malloc_shared<int>(FACTORS, q);
 
-  int* sum_shared = sycl::malloc_shared<int>(10, q);
-  
-  auto e = q.single_task<SequenceGen>(ArithSequence<SeqPipe>{start_term, seq_length});
+    q.single_task<ArithmeticSequence>(
+        ArithmeticSequenceKernel{first_term, sequence_length});
+    q.single_task<Sum>(SumKernel{sequence_length, result}).wait();
 
-  // q.single_task<class Consumer>([=]() {
-  //   while (1) {
-  //     SeqPipe::read();
-  //   }
-  // });
-
-  // e.wait();
-
-  q.single_task<SequenceSum>(Summing<SeqPipe>{sum_shared, seq_length}).wait();
-
-  q.memcpy(final_sum, sum_shared, 10 * sizeof(int)).wait();
-  // check for correctness
-  for (int f = 0; f < 5; f ++) {
-    int exp_sum = get_arithmetic_sum(start_term, f+1, seq_length);
-    if (final_sum[f] != exp_sum) {
-      std::cout << "Factor: " << (f+1) << " ,length: " << seq_length << std::endl;
-      std::cout << "FAILED, expect " << exp_sum << " get " << final_sum[f] << std::endl;
-    } else {
-      std::cout << "SUCCESS, sum = " << final_sum[f] << std::endl;
+    // Verify results
+    bool passed = true;
+    for (int i = 0; i < FACTORS; i++) {
+      int factor = i + 1;
+      std::cout << std::endl
+                << "Arithmetic sequence with factor = " << factor << std::endl;
+      std::cout << "Sum of first " << sequence_length
+                << " terms = " << result[i] << ".";
+      int expected = get_arithmetic_sum(first_term, factor, sequence_length);
+      bool compare = result[i] == expected;
+      passed &= compare;
+      if (!compare) {
+        std::cout << " Error! expected " << expected << std::endl;
+      } else {
+        std::cout << " OK" << std::endl;
+      }
     }
+    std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
+    sycl::free(result, q);
+
+  } catch (sycl::exception const &e) {
+    std::cerr << "Caught a synchronous SYCL exception: " << e.what()
+              << std::endl;
+    std::cerr << "   If you are targeting an FPGA hardware, "
+                 "ensure that your system is plugged to an FPGA board that is "
+                 "set up correctly"
+              << std::endl;
+    std::cerr << "   If you are targeting the FPGA emulator, compile with "
+                 "-DFPGA_EMULATOR"
+              << std::endl;
+
+    std::terminate();
   }
-  std::cout << "\nDone\n";
-  free(sum_shared, q);
 }
