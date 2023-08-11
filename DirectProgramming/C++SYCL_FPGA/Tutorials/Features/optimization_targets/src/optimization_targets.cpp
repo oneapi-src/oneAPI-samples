@@ -74,11 +74,6 @@ void RunKernel(const RGBVec &r, const RGBVec &g, const RGBVec &b,
       // Using kernel_args_restrict tells the compiler that the input
       // and output buffers won't alias.
       h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-#if defined(MANUAL_REVERT)
-#if defined(S10)
-        [[intel::speculated_iterations(4)]]
-#endif
-#endif
         for (size_t i = 0; i < kInputSize; i++) {
           out_acc[i] = Compute(r_acc[i], g_acc[i], b_acc[i]);
         }
