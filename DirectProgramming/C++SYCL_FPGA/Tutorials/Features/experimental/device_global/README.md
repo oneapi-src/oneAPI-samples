@@ -75,7 +75,7 @@ A `device_global` instance can be used to store state across multiple relaunches
 
 ### Initialize a `device_global` Instance
 
-A `device_global` instance is always zero-initialized, so the compiler cannot pre-initialize `device_global` memories to non-zero values for you at compile-time. However, if you are using a BSP that supports `device_global` memories with host access from a dedicated interfaces, you can use the `sycl::queue::copy()` function to copy values from the host to the `device_global` before you start your kernel. These copy operations get placed in the SYCL queue, but will not implicitly block any other operations on the queue.
+A `device_global` instance is always zero-initialized, so the compiler cannot pre-initialize `device_global` memories to non-zero values for you at compile-time. However, if you are using a BSP that supports `device_global` memories with host access from a dedicated interfaces, or if you are creating an FPGA IP, you can use the `sycl::queue::copy()` function to copy values from the host to the `device_global` before you start your kernel. These copy operations get placed in the SYCL queue, but will not implicitly block any other operations on the queue.
 
 ```cpp
 namespace exp = sycl::ext::oneapi::experimental;
@@ -93,7 +93,7 @@ int main () {
   q.copy(val, &x).wait(); // Read from device_global into x
 }
 ```
->**Note**: `sycl::queue::copy()` only works in IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
+>**Note**: `sycl::queue::copy()` currently only works in the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 ## Build the `device_global` Tutorial
 
