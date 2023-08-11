@@ -82,7 +82,7 @@ Applying `[[intel::max_reinvocation_delay(1)]]` to the inner loop allows us to r
 ```c++
 for (int i = 0; i < FACTORS; i++) {
   int factor = i + 1;
-  [[intel::max_reinvocation_delay(N)]]
+  [[intel::max_reinvocation_delay(1)]]
   for (int j = 0; j < sequence_length; j++) {
     PipeOut::write(first_term + j * factor);
   }
