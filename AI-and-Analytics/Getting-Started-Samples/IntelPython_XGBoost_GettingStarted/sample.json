@@ -9,17 +9,17 @@
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
+    "linux": [
     {
-  		"env": [
+      "env": [
         "source activate base",
         "pip install -r requirements.txt"
       ],
-  		"id": "IDP_XGBoost_GS_py",
-  		"steps": [
+      "id": "IDP_XGBoost_GS_py",
+      "steps": [
         "python IntelPython_XGBoost_GettingStarted.py"
-  	  ]
-  	}]
+      ]
+    }]
   },
   "expertise": "Getting Started"
 }
