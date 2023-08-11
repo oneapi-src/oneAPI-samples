@@ -61,40 +61,39 @@ This sample illustrates some key concepts.
 
 ### `device_global` Description
 
-The `device_global` class is an extension that introduces device scoped memory allocations into SYCL that can be accessed within a kernel using syntax similar to C++ global variables; the class has unique instances per `sycl::device`. Similar to C++ global variables, a `device_global` variable have a namespace scope and is visible to all kernels within that scope.
+The `device_global` class is an extension that introduces device-scoped memory allocations into SYCL that can be accessed within a kernel using syntax similar to C++ global variables; the class has unique instances per `sycl::device`. Similar to C++ global variables, a `device_global` variable has a namespace scope and is visible to all kernels within that scope.
 
-A `device_global` class is instantiated from a class template. The template is parameterized by the type of the underlying allocation, and a list of properties. The type of the allocation also encodes the size of the allocation for potentially multidimensional array types. The list of properties change the functional behavior of the `device_global` instance to enable compiler and runtime optimizations. In the code sample two properties are used, `device_image_scope` and `host_access_none`. The `device_image_scope` property limits the scope of a single instance of a `device_global` from a device to a `device_image`. The absence of the `device_image_scope` property is not supported by the compiler. The `host_access` property is an assertion by the user telling the implementation whether the host code copies to or from the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default), but only the `host_access_none` is supported currently. 
+A `device_global` class is instantiated from a class template. The template is parameterized by the type of the underlying allocation, and a list of properties. The type of the allocation also encodes the size of the allocation, for example in this code sample the `device_global` is templated on `int[kVectorSize]`, which will instantiate a memory of size `sizeof(int) * kVectorSize`. The list of properties lets you control the functional behavior of the `device_global` instance to enable compiler and runtime optimizations. In this code sample two properties are used, `device_image_scope` and `host_access_write`. 
 
-> **Note**: Further details on these and other properties can be found in the [Properties for `device_global` variables](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc#properties-for-device-global-variables) section of the [SYCL `device_global` Language Specification](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/proposed/sycl_ext_oneapi_device_global.asciidoc). The language specification can also help you helps understand the API and of `device_globals` and restrictions on its usage.
+* The `device_image_scope` property limits the scope of a single instance of a `device_global` from a device to a `device_image`. The `device_image_scope` property is required. 
 
-A `device_global` instance can be used to store state across multiple relaunches of a kernel without having to pass in a `buffer` as a kernel argument. An example of an application that would benefit from such a state is where kernels are nodes in a state-machine.
+* The `host_access` property tells the compiler how the host code accesses the `device_global`. The property comes in four variants `host_access_none`, `host_access_read`, `host_access_write`, and `host_access_read_write`(the default). The `host_access` property makes no assertion on how the **device** can access the `device_global`: the device can always read and write to the `device_global` object.
+
+> **Note**: Further details on these and other properties can be found in the [device_global Extension](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/device-global-ext.html) section of the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/overview.html).
+
+A `device_global` instance can be used to store state across multiple relaunches of a kernel without needing a SYCL buffer or a Unified Shared Memory (USM) pointer. This can be useful for creating a finite state machine.
 
 ### Initialize a `device_global` Instance
 
-A `device_global` instance is always zero-initialized. If you need the first usage of a `device_global` instance in device code to be initialized to a non-zero value, use the  technique show in the code example below.
-
-Instantiate a second `device_global<bool>` that represents a flag that controls when to initialize the `device_global` to a non-zero value. This flag is zero-initialized to `false`. Once initialization happens, the flag is set to `true` and initialization code does not execute on subsequent relaunches of the kernel.
+A `device_global` instance is always zero-initialized, so the compiler cannot pre-initialize `device_global` memories to non-zero values for you at compile-time. However, if you are using a BSP that supports `device_global` memories with host access from a dedicated interfaces, or if you are creating an FPGA IP, you can use the `sycl::queue::copy()` function to copy values from the host to the `device_global` before you start your kernel. These copy operations get placed in the SYCL queue, but will not implicitly block any other operations on the queue.
 
 ```cpp
 namespace exp = sycl::ext::oneapi::experimental;
 using FPGAProperties = decltype(exp::properties(
-    exp::device_image_scope, exp::host_access_none));
+    exp::device_image_scope, exp::host_access_read_write));
+// Declared at namespace scope so visible to all kernels in that scope
 exp::device_global<int, FPGAProperties> val;
-exp::device_global<bool, FPGAProperties> is_val_initialized;
 int main () {
   sycl::queue q;
-  q.submit([&](sycl::handler& h) {
-    h.single_task([=] {
-      // Initialization happens only once
-      if (!is_val_initialized) {
-        val.get() = 42;
-        is_val_initialized.get() = true;
-      }
-      // uses of `val`
-    });
-  });
+  int x = 42;
+  q.copy(&x, val).wait(); // Write to device_global from x
+  q.single_task([=] {
+   // Read or Write to device_global
+  }).wait();
+  q.copy(val, &x).wait(); // Read from device_global into x
 }
 ```
+>**Note**: `sycl::queue::copy()` currently only works in the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 ## Build the `device_global` Tutorial
 
@@ -124,13 +123,7 @@ int main () {
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
+   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -164,13 +157,7 @@ int main () {
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
+   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -204,10 +191,7 @@ int main () {
    ```bash
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./device_global.fpga_sim
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./device_global.fpga
-   ```
+   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
 
 ### On Windows
 
@@ -221,10 +205,8 @@ int main () {
    device_global.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   device_global.fpga.exe
-   ```
+   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+
 
 ## Example Output
 ```
