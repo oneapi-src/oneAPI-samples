@@ -13,6 +13,7 @@
         "env": ["source activate base"],
         "id": "skelarnex_svc",
         "steps": [
+           "pip install -r requirements.txt",
            "python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py"
          ]
       }
