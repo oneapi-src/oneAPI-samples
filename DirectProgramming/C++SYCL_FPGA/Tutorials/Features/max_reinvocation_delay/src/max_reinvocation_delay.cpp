@@ -30,28 +30,52 @@ struct ArithmeticSequenceKernel {
   }
 };
 
-// Sums up the first "sequence_length" terms for each sequence and writes the
-// results to global memory.
-struct SumKernel {
-  int sequence_length;
-  int *result;
-
-  void operator()() const {
-    for (int i = 0; i < FACTORS; i++) {
-      int sum = 0;
-      for (int j = 0; j < sequence_length; j++) {
-        sum += PipeOut::read();
-      }
-      result[i] = sum;
-    }
-  }
-};
+// Read terms from the pipe, sum them up for each sequence, write to "results"
+void collect(sycl::queue &q, std::vector<int> &results, int first_term,
+             int sequence_length) {
+  sycl::buffer results_buffer(results);
+  q.submit([&](sycl::handler &h) {
+     sycl::accessor results_accessor(results_buffer, h, sycl::write_only,
+                                     sycl::no_init);
+     h.single_task<Sum>([=]() [[intel::kernel_args_restrict]] {
+       for (int i = 0; i < FACTORS; i++) {
+         int sum = 0;
+         for (int j = 0; j < 10; j++) {
+           sum += PipeOut::read();
+         }
+         results_accessor[i] = sum;
+       }
+     });
+   })
+      .wait();
+}
 
 // Sums up the first "sequence_length" terms for the arithmetic sequence with
 // first term "first_term" and factor "factor" to compare to.
-int get_arithmetic_sum(int first_term, int factor, int sequence_length) {
+int get_arithmetic_sum(int factor, int first_term, int sequence_length) {
   return (int)((sequence_length / 2) *
                (2 * first_term + (sequence_length - 1) * factor));
+}
+
+// Verify functional correctness
+void verify(std::vector<int> &results, int first_term, int sequence_length) {
+  bool passed = true;
+  for (int i = 0; i < FACTORS; i++) {
+    int factor = i + 1;
+    std::cout << std::endl
+              << "Arithmetic sequence with factor = " << factor << std::endl;
+    std::cout << "Sum of first " << sequence_length << " terms = " << results[i]
+              << ".";
+    int expected = get_arithmetic_sum(factor, first_term, sequence_length);
+    bool compare = results[i] == expected;
+    passed &= compare;
+    if (!compare) {
+      std::cout << " Error! expected " << expected << std::endl;
+    } else {
+      std::cout << " OK" << std::endl;
+    }
+  }
+  std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
 }
 
 int main() {
@@ -74,31 +98,13 @@ int main() {
     int first_term = 0;
     int sequence_length = 10;
 
-    int *result = sycl::malloc_shared<int>(FACTORS, q);
+    std::vector<int> results(FACTORS);
 
     q.single_task<ArithmeticSequence>(
         ArithmeticSequenceKernel{first_term, sequence_length});
-    q.single_task<Sum>(SumKernel{sequence_length, result}).wait();
 
-    // Verify results
-    bool passed = true;
-    for (int i = 0; i < FACTORS; i++) {
-      int factor = i + 1;
-      std::cout << std::endl
-                << "Arithmetic sequence with factor = " << factor << std::endl;
-      std::cout << "Sum of first " << sequence_length
-                << " terms = " << result[i] << ".";
-      int expected = get_arithmetic_sum(first_term, factor, sequence_length);
-      bool compare = result[i] == expected;
-      passed &= compare;
-      if (!compare) {
-        std::cout << " Error! expected " << expected << std::endl;
-      } else {
-        std::cout << " OK" << std::endl;
-      }
-    }
-    std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
-    sycl::free(result, q);
+    collect(q, results, first_term, sequence_length);
+    verify(results, first_term, sequence_length);
 
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
@@ -110,7 +116,6 @@ int main() {
     std::cerr << "   If you are targeting the FPGA emulator, compile with "
                  "-DFPGA_EMULATOR"
               << std::endl;
-
     std::terminate();
   }
 }
