@@ -5,19 +5,21 @@
   "description": "This sample code illustrates how to train and predict with a distributed K-Means model with the Intel® Distribution of Python using the Python API package Daal4py powered by Intel® oneDAL",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["intelpython"], 
+  "dependencies": ["intelpython"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
+    "linux": [
     {
-  		"env": ["source activate base"],
-  		"id": "idp_d4p_KM_Dist",
-  		"steps": [
-         "mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py"
-  		 ]
-  	}
-    ]
-},
-"expertise": "Concepts and Functionality"
+      "env": [
+        "source activate base",
+        "pip install -r requirements.txt"
+      ],
+      "id": "idp_d4p_KM_Dist",
+      "steps": [
+        "mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py"
+      ]
+    }]
+  },
+  "expertise": "Concepts and Functionality"
 }
