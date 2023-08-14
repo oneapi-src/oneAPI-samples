@@ -1,10 +1,10 @@
 # `Board Test` Sample
 The `Board Test` sample is a reference design contains tests to check FPGA board interfaces and reports the following metrics:
 
-- Host to device global memory interface bandwidth
+- Host-to-device global memory interface bandwidth
 - Kernel clock frequency
 - Kernel launch latency
-- Kernel to device global memory bandwidth
+- Kernel-to-device global memory bandwidth
 - Unified Shared Memory bandwidth
 
 | Area                    | Description
@@ -13,7 +13,7 @@ The `Board Test` sample is a reference design contains tests to check FPGA board
 | Time to complete        | 30 minutes (not including compile time)
 
 ## Purpose
-This reference design implements tests to check FPGA board interfaces and measure host-to-device and kernel-to-global memory interface metrics. Custom platform developers can use this reference design as a starting point to validate custom platform interfaces.
+This reference design implements tests to check FPGA board interfaces and measure host-to-device and kernel-to-global memory interface metrics. Custom platform developers can Use this reference design as a starting point to validate custom platform interfaces when you customize a BSP.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Hardware                | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
@@ -98,12 +98,6 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 | Flag                  | Description
 |:---                   |:---
 `-Xsno-interleaving`    | By default oneAPI compiler burst interleaves across same memory type.  `-Xsno-interleaving` disables burst interleaving and enables testing each memory bank independently. (See the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html) for more information.)
-
-### Performance
-
-Performance results are based on testing as of Jan 31, 2022.
-
-> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 ## Build the `Board Test` Program
 
@@ -204,21 +198,6 @@ Performance results are based on testing as of Jan 31, 2022.
 
 ## Run the `Board Test` Executable
 
-The `Board Test` program checks following interfaces in a platform:
-
-- **Host-to-device global memory interface:** This interface is checked by performing explicit data movement between the host and device global memory. Host to device global memory bandwidth is measured and reported. As a part of this interface check, unaligned data transfers are also performed to verify that non-DMA transfers complete successfully.
-
-- **Kernel-to-device global memory interface:** This interface is checked by performing kernel to memory data transfers using simple read and write kernels. Kernel to memory bandwidth is measured and reported.
-
-- **Host-to-kernel interface:** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
-
-- **Unified shared memory (USM) interface:** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case. Applies only to board variants with USM support; to run this test you must specify the `SUPPORTS_USM` macro at compile-time; e.g., `cmake .. -DSUPPORTS_USM=1`.
-
-- **Kernel clock frequency:** The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.
-
-  >**Note**: Kernel clock frequency test measures the frequency that the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency. The test allows overriding this failure; however, overriding might lead to functional errors, and it is not recommended. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). To override, set the `report_chk` variable to `false` in `board_test.cpp` and recompile only the host code by using the `-reuse-exe=board_test.fpga` option in your compile command.
-
-
 ### Configurable Parameters
 
 The complete board test is divided into six subtests. By default, all tests run. You can choose to run a single test by using the `-test=<test number>` option. Refer to the [Running the Sample](#running-the-sample) section for test usage instructions.
@@ -236,6 +215,20 @@ The complete board test is divided into six subtests. By default, all tests run.
 >**Note:** You should run all tests at least once to ensure that the platform interfaces are fully functional.
 
 To view test details and usage information using the binary, use the `-help` option: `<program> -help`.
+
+The tests listed above check the following interfaces in a platform:
+
+- **Host-to-device global memory interface (Test 1):** This interface is checked by performing explicit data movement between the host and device global memory. Host to device global memory bandwidth is measured and reported. As a part of this interface check, unaligned data transfers are also performed to verify that non-DMA transfers complete successfully.
+
+- **Kernel clock frequency (Test 2):** The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.
+
+  >**Note**: The test allows overriding this failure; however, overriding might lead to functional errors, and it is not recommended. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). To override, set the `report_chk` variable to `false` in `board_test.cpp` and recompile only the host code by using the `-reuse-exe=board_test.fpga` option in your compile command.
+
+- **Host-to-kernel interface (Tests 3 & 4):** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
+
+- **Kernel-to-device global memory interface (Tests 5 & 6):** This interface is checked by performing kernel to memory data transfers using simple read and write kernels. Kernel to memory bandwidth is measured and reported.
+
+- **Unified shared memory (USM) interface (Test 7):** This interface is checked by copying data between, reading data from, and writing data to host USM. The bandwidth is measured and reported for each case. Applies only to board variants with USM support; to run this test you must specify the `SUPPORTS_USM` macro at compile-time; e.g., `cmake .. -DSUPPORTS_USM=1`.
 
 ### On Linux
 
@@ -270,9 +263,11 @@ To view test details and usage information using the binary, use the `-help` opt
     ./board_test.fpga.exe -test=<test_number>
     ```
 
-## Example Output
+## Example Output and Performance
 
-Running on FPGA device (Intel Stratix 10 SX platform).
+Running on FPGA device (Intel Stratix 10 SX platform). Performance results are based on testing as of Jan 31, 2022.
+
+> **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 ```
 *** Board_test usage information ***
