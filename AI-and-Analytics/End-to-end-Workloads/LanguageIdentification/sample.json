@@ -24,7 +24,7 @@
           "mv cv-corpus-11.0-2022-09-21 commonVoice/swedish",
           "cd $cwd",
           "docker pull intel/oneapi-aikit",
-          "./launch_docker.sh"
+          "sh ./launch_docker.sh"
         ],
         "steps": [
           "cd /Training",
