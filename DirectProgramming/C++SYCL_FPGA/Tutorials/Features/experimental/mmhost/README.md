@@ -51,7 +51,7 @@ When you design an IP component for an FPGA system, that system will often dicta
 
 ![](assets/basic_avhost.svg)
 
-The compiler will infer Avalon memory-mapped host interfaces for your design when your kernel includes one or more pointer arguments. As with scalar kernel arguments, pointer arguments can be passed to your kernel via a `conduit` interface or your component's control/status register (CSR). By default, pointer arguments will be passed to your IP component through the CSR. For more details on kernel arguments, please see `<Temporary: https://github.com/intel-sandbox/wenkaixu.ip-auth-demos/tree/2024_0/mm-host>`. By default, the Intel® oneAPI DPC++/C++ Compiler will produce a kernel with a single Avalon memory-mapped host interface that will be shared amongst those pointers. 
+The compiler will infer Avalon memory-mapped host interfaces for your design when your kernel includes one or more pointer arguments. As with scalar kernel arguments, pointer arguments can be passed to your kernel via a `conduit` interface or your component's control/status register (CSR). By default, pointer arguments will be passed to your IP component through the CSR. For more details on kernel arguments, please see `<Temporary: https://github.com/intel-sandbox/wenkaixu.ip-auth-demos/tree/main/mm-host>`. By default, the Intel® oneAPI DPC++/C++ Compiler will produce a kernel with a single Avalon memory-mapped host interface that will be shared amongst those pointers. 
 
 #### Example 1: A kernel with multiple pointer arguments
 ```c++
