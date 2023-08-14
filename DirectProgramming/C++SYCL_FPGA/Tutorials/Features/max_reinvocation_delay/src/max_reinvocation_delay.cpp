@@ -10,7 +10,7 @@ class ArithmeticSequence;
 class Sum;
 class OutputPipe;
 
-// Inter-kernel pipe
+// Pipe between kernels
 using PipeOut = sycl::ext::intel::pipe<OutputPipe, int, 50>;
 
 // Computes and outputs the first "sequence_length" terms of the arithmetic
@@ -37,7 +37,7 @@ void collect(sycl::queue &q, std::vector<int> &results, int first_term,
   q.submit([&](sycl::handler &h) {
      sycl::accessor results_accessor(results_buffer, h, sycl::write_only,
                                      sycl::no_init);
-     h.single_task<Sum>([=]() [[intel::kernel_args_restrict]] {
+     h.single_task<Sum>([=]() {
        for (int i = 0; i < FACTORS; i++) {
          int sum = 0;
          for (int j = 0; j < 10; j++) {
@@ -46,8 +46,7 @@ void collect(sycl::queue &q, std::vector<int> &results, int first_term,
          results_accessor[i] = sum;
        }
      });
-   })
-      .wait();
+   }).wait();
 }
 
 // Sums up the first "sequence_length" terms for the arithmetic sequence with
