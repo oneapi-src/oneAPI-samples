@@ -25,7 +25,7 @@
           "cd $cwd",
           "curl -fsSL https://get.docker.com/ | sh",
           "docker pull intel/oneapi-aikit",
-          "./launch_docker.sh"
+          "sh ./launch_docker.sh"
         ],
         "steps": [
           "cd /Training",
