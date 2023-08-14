@@ -36,16 +36,16 @@ class MatrixReadFromDDRToPipeA {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+  sycl::ext::oneapi::experimental::annotated_ptr<TT, 
       decltype(sycl::ext::oneapi::experimental::properties{
           sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_read,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
@@ -76,17 +76,6 @@ public:
     constexpr int kNumBanks =
         fpga_tools::Pow2(fpga_tools::CeilLog2(rows_a / elems_per_ddr_access));
 
-#if defined(IS_BSP)
-    // When targeting a BSP, we instruct the compiler that this pointer lives on
-    // the device.
-    // Knowing this, the compiler won't generate hardware to potentially get
-    // data from the host.
-    sycl::device_ptr<TT> a_ptr_located(a_ptr);
-#else
-    // Device pointers are not supported when targeting an FPGA family/part
-    TT *a_ptr_located(a_ptr);
-#endif
-
     // Local memory to store the matrices
     [[intel::numbanks(kNumBanks)]]   // NO-FORMAT: Attribute
     [[intel::bankwidth(kBankWidth)]] // NO-FORMAT: Attribute
@@ -111,7 +100,18 @@ public:
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * rows_a) +
                           (write_idx * elems_per_ddr_access) + k;
+#if defined(IS_BSP)
+            // When targeting a BSP, we instruct the compiler that this pointer
+            // lives on the device.
+            // Knowing this, the compiler won't generate hardware to potentially
+            // get data from the host.
+            sycl::device_ptr<TT> a_ptr_located(a_ptr);
             load_reg[k] = a_ptr_located[ptr_idx];
+#else
+            // When targeting an FPGA family/part, we just access the pointer
+            // directly
+            load_reg[k] = a_ptr[ptr_idx];
+#endif
           }
         });
         // Store the "elems_per_ddr_access" elements into on-chip memory
@@ -193,16 +193,16 @@ class MatrixReadFromDDRToPipeB {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+  sycl::ext::oneapi::experimental::annotated_ptr<TT, 
       decltype(sycl::ext::oneapi::experimental::properties{
           sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_read,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
@@ -233,17 +233,6 @@ public:
     constexpr int kNumBanks =
         fpga_tools::Pow2(fpga_tools::CeilLog2(cols_b / elems_per_ddr_access));
 
-#if defined(IS_BSP)
-    // When targeting a BSP, we instruct the compiler that this pointer lives on
-    // the device.
-    // Knowing this, the compiler won't generate hardware to potentially get
-    // data from the host.
-    sycl::device_ptr<TT> b_ptr_located(b_ptr);
-#else
-    // Device pointers are not supported when targeting an FPGA family/part
-    TT *b_ptr_located(b_ptr);
-#endif
-
     // Local memory to store the matrices
     [[intel::numbanks(kNumBanks)]]   // NO-FORMAT: Attribute
     [[intel::bankwidth(kBankWidth)]] // NO-FORMAT: Attribute
@@ -268,7 +257,18 @@ public:
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * cols_b) +
                           (write_idx * elems_per_ddr_access) + k;
+#if defined(IS_BSP)
+            // When targeting a BSP, we instruct the compiler that this pointer
+            // lives on the device.
+            // Knowing this, the compiler won't generate hardware to potentially
+            // get data from the host.
+            sycl::device_ptr<TT> b_ptr_located(b_ptr);
             load_reg[k] = b_ptr_located[ptr_idx];
+#else
+            // When targeting an FPGA family/part, we just access the pointer
+            // directly
+            load_reg[k] = b_ptr[ptr_idx];
+#endif
           }
         });
         // Store the "elems_per_ddr_access" elements into on-chip memory
@@ -342,16 +342,16 @@ class MatrixReadPipeToDDR {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+  sycl::ext::oneapi::experimental::annotated_ptr<TT, 
       decltype(sycl::ext::oneapi::experimental::properties{
           sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_write,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_write,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
@@ -381,17 +381,6 @@ public:
     constexpr short kBankWidth = elems_per_ddr_access * sizeof(TT);
     constexpr int kNumBanks =
         fpga_tools::Pow2(fpga_tools::CeilLog2(rows_a / elems_per_ddr_access));
-
-#if defined(IS_BSP)
-    // When targeting a BSP, we instruct the compiler that this pointer lives on
-    // the device.
-    // Knowing this, the compiler won't generate hardware to potentially get
-    // data from the host.
-    sycl::device_ptr<TT> c_ptr_located(c_ptr);
-#else
-    // Device pointers are not supported when targeting an FPGA family/part
-    TT *c_ptr_located(c_ptr);
-#endif
 
     // Local memory to store the matrices
     [[intel::numbanks(kNumBanks)]]   // NO-FORMAT: Attribute
@@ -461,7 +450,18 @@ public:
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * rows_a) +
                           (write_idx * elems_per_ddr_access) + k;
-            c_ptr_located[ptr_idx] = load_reg[k];
+#if defined(IS_BSP)
+            // When targeting a BSP, we instruct the compiler that this pointer
+            // lives on the device.
+            // Knowing this, the compiler won't generate hardware to potentially
+            // get data from the host.
+            sycl::device_ptr<TT> c_ptr_located(c_ptr);
+            load_reg[k] = c_ptr_located[ptr_idx];
+#else
+            // When targeting an FPGA family/part, we just access the pointer
+            // directly
+            c_ptr[ptr_idx] = load_reg[k];
+#endif
           }
         });
       } // end of i
