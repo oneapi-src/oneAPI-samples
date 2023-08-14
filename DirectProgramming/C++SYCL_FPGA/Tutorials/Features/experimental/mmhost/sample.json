@@ -20,48 +20,180 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part1_pointers",
           "make fpga_emu",
           "./mmhost.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../part2_single_host",
+          "make fpga_emu",
+          "./mmhost.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part3_hosts",
+          "make fpga_emu",
+          "./mmhost.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part4_ddr_hosts",
+          "make fpga_emu",
+          "./mmhost.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part_1_pointers",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part_2_single_host",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part_3_hosts",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ../part_4_ddr_hosts",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part1_pointers",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
       },
       {
-        "id": "report",
+        "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part2_single_host",
+          "nmake fpga_emu",
+          "mmhost.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part3_hosts",
+          "nmake fpga_emu",
+          "mmhost.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part4_ddr_hosts",
+          "nmake fpga_emu",
+          "mmhost.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part1_pointers",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part2_single_host",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part3_hosts",
+          "nmake report"
+        ]
+      }, 
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part4_ddr_hosts",
           "nmake report"
         ]
       }
