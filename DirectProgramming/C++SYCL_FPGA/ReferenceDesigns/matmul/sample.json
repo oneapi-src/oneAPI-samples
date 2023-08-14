@@ -1,6 +1,6 @@
 {
   "guid": "77C05AED-3CBF-4C3C-8E6E-28253893807D",
-  "name": "matmul",
+  "name": "Matrix Multiply",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL_FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance general matrix multiplication on an Intel® FPGA",
   "toolchain": ["icpx"],

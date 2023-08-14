@@ -10,13 +10,16 @@
   "ciTests": {
     "linux": [
       {
-        "env": ["source activate base"],
+        "env": [
+          "source activate base",
+          "pip install -r requirements.txt"
+        ],
         "id": "skelarnex_svc",
         "steps": [
-           "python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py"
-         ]
+          "python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py"
+        ]
       }
     ]
-},
-"expertise": "Concepts and Functionality"
+  },
+  "expertise": "Concepts and Functionality"
 }
