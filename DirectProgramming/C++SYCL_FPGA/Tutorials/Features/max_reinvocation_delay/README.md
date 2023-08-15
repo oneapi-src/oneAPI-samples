@@ -60,7 +60,7 @@ The sample illustrates the following important concepts.
 
 ### Description of the `max_reinvocation_delay` Attribute
 
-Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to a loop to restrict the delay between invocations of that loop. The attribute parameter `N` is required and must be a positive constant expression of integer type (currently, only `N=1` is supported). This parameter specifies the maximum number of clock cycles allowed between the last iteration of a loop invocation and the first iteration of the next invocation of the loop. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing.
+Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to a loop to restrict the delay between invocations of that loop. The attribute parameter `N` is required and must be a positive constant expression of integer type (currently, only `N=1` is supported, i.e., that there shall be no delay between invocations). This parameter specifies the maximum number of clock cycles allowed between the last iteration of a loop invocation and the first iteration of the next invocation of the loop. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing.
 
 The extra latency between invocations of a loop can have a significant impact in performance if the loop has a very small trip count. Consider the following nested loop:
 
