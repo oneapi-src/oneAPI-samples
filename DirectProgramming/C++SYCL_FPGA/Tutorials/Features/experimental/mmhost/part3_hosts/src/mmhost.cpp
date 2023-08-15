@@ -7,8 +7,7 @@ using namespace sycl;
 using namespace ext::oneapi::experimental;
 using namespace ext::intel::experimental;
 
-using usm_buffer_location =
-    ext::intel::experimental::property::usm::buffer_location;
+using usm_buffer_location = property::usm::buffer_location;
 
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
