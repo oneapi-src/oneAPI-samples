@@ -1,7 +1,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
-// #include "exception_handler.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl::ext::oneapi::experimental;
 using namespace sycl::ext::intel::experimental;
@@ -55,7 +55,7 @@ int main(void){
 
   try {
     // create the device queue
-    sycl::queue q(selector,
+    sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
     // Print out the device information.
