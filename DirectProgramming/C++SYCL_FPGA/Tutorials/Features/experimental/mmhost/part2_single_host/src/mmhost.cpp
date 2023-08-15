@@ -3,8 +3,7 @@
 
 #include "exception_handler.hpp"
 
-using namespace sycl;
-using namespace ext::oneapi::experimental;
+using namespace sycl::ext::oneapi::experimental;
 
 struct SingleMMIP{
   

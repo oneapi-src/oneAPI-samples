@@ -3,8 +3,6 @@
 
 #include "exception_handler.hpp"
 
-using namespace sycl;
-
 struct PointerIP{
   
   //Declare the pointer interfaces to be used in this kernel,

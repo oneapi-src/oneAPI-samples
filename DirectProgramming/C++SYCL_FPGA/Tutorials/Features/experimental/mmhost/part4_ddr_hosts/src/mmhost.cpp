@@ -1,17 +1,16 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
-#include "exception_handler.hpp"
+// #include "exception_handler.hpp"
 
-using namespace sycl;
-using namespace ext::oneapi::experimental;
-using namespace ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
+using namespace sycl::ext::intel::experimental;
 
-using usm_buffer_location =
-    ext::intel::experimental::property::usm::buffer_location;
+using usm_buffer_location = 
+  sycl::ext::intel::experimental::property::usm::buffer_location;
 
-constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
+constexpr int kBL1 = 0;
+constexpr int kBL2 = 1;
 
 struct DDR_IP{
   using params = decltype(properties{
@@ -56,7 +55,7 @@ int main(void){
 
   try {
     // create the device queue
-    sycl::queue q(selector, fpga_tools::exception_handler,
+    sycl::queue q(selector,
                   sycl::property::queue::enable_profiling{});
 
     // Print out the device information.
@@ -71,9 +70,9 @@ int main(void){
 
     // Host array must share the same buffer location property as defined in the kernel
     // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    auto *array_B = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL1)});
-    int *array_C = malloc_shared<int>(kN, q, property_list{usm_buffer_location(kBL2)});
+    auto *array_A = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    auto *array_B = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    int *array_C = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;
