@@ -1,68 +1,35 @@
-/*
-  Title:          Simple DMA Test
-
-
-  Important:
-
-  More details about the design are captured in the kernel file and the top
-  level readme.txt file.  At a minimum give readme.txt a look since I document
-  how to use the example and any limitations that you may need to be aware of.
-
-
-  Tool Versions:
-
-  The design was created with the following design environment:
-
-  1) Quartus 23.1 (Design includes Nios V/g which was released in 23.1)
-  2) Questasim Intel edition (Installed with Quartus)
-  3) oneAPI 2023.1.0
-  4) Linux development host (Ubuntu 22.04 was used, this design *should* work on
-     windows but build_software.sh does not)
-
-
-  Description:
-
-
-  This design leverages a simple DMA oneAPI kernel that has had its RTL
-  generated and integrated into the Nios V test system that will be used to
-  control the accelerator. The DMA kernel has been configured to read from
-  memory in memory location 0 (BL0) while writes to memory in memory location 1
-  (BL1). To see where this is important view the code that handles the second
-  write to the source and destination pointer registers.
-
-  The CPU is configured to have a single peripheral space located at 0x0010_0000
-  and it is 1MB in size.  So if you want to connect a different kernel/IP make
-  sure to place it between data master address 0x0010_0000-0x001F_FFFF.  If you
-  run out of room (doubtful but possible) go into the Nios V parameterization
-  GUI and add a second peripheral region. I think the way it works with Nios V
-  is if you deference a pointer to either peripheral region it automatically
-  bypasses the data cache.  I wanted to be backwards compatible with Nios II so
-  I reuse the old handy dandy IOWR_32DIRECT and IORD_32DIRECT macros to access
-  the peripheral region instead (see comments about the 12-bit offset
-  limitation).
-
-  Nios V is a 32-bit processor but oneAPIs types like pointers and 64-bit types
-  need to be written in two 32-bit parts.  Luckily bypassing the Nios V data
-  cache (D$) is as simple as dereferencing a pointer in the peripheral space
-  (0x0010_0000-0x001F_FFFF).  This code should be backwards compatible with Nios
-  II since I leveraged the IOWR_32DIRECT and IORD_32DIRECT macros.  According to
-  io.h there is a upper limitation of 12-bits of the offset field, so this code
-  instead does the safe thing and adds the offset to the base (first argument of
-  macro) and hardcodes the offset field to 0 (second argument of macro).
-
-
-  Author:         JCJB Date:           5/23/2023
-
-
-  Version:        0.1
-
-  Version History:
-
-    0.1:  Initial version of the design that has Nios V controlling a simple
-  oneAPI DMA kernel that copies data from source to destination four bytes at a
-  time.
-
-*/
+// Title:          Simple DMA Test
+//
+// Tool Versions:
+//
+// The design was created with the following design environment:
+// 1) Intel® Quartus® Prime 23.1 (Design includes Nios V/g which was released in
+//    23.1)
+// 2) Questasim Intel edition (Installed with Intel® Quartus® Prime)
+// 3) Intel® oneAPI DDPC++/C++ Compiler 2024.0
+// 4) Linux development host (Ubuntu* 22.04 was used, this design *should* work
+//    on Windows* but build_software.sh does not)
+//
+// Description:
+//
+// This design leverages a simple DMA oneAPI kernel that has had its RTL
+// generated and integrated into the Nios V test system that will be used to
+// control the accelerator. The DMA kernel has been configured to read from
+// memory in memory location 0 (Buffer Location 0) and write to memory in memory
+// location 1 (Buffer Location 1).
+//
+// The CPU is configured to have a single peripheral space located at
+// 0x0010_0000 and it is 1MB in size.  So if you want to connect a different
+// kernel/IP make sure to place it between data master address
+// 0x0010_0000-0x001F_FFFF.
+//
+// Author:         JCJB Date:           5/23/2023
+//
+// Version:        0.1
+//
+// Version History: 0.1:  Initial version of the design that has Nios V
+//   controlling a simple oneAPI DMA kernel that copies data from source to
+//   destination four bytes at a time.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,15 +48,13 @@
 // including the kernel register map directly from the kernel build directory
 #include "../../../kernels/simple_dma/build/simple_dma.report.prj/register_map_offsets.hpp"
 
-/*
-   In bytes, must be a multiple of 4.  Keep it a small number to shorten the
-   simulation time and do not exceed the 1MB memory size (remember this code is
-   in there too). Once the DMA gets going this buffer will fly by fast so
-   setting it too high mostly affects the memory initialization and the
-   correctness check at the end once the DMA gets going this buffer will fly by
-   fast so setting it too high mostly affects the memory initialization and the
-   correctness check at the end.
-*/
+// In bytes, must be a multiple of 4.  Keep it a small number to shorten the
+// simulation time and do not exceed the 1MB memory size (remember this code is
+// in there too). Once the DMA gets going this buffer will fly by fast so
+// setting it too high mostly affects the memory initialization and the
+// correctness check at the end once the DMA gets going this buffer will fly by
+// fast so setting it too high mostly affects the memory initialization and the
+// correctness check at the end.
 #define BUFFER_LENGTH 1024
 
 // Error numbers
@@ -114,12 +79,12 @@
 /// @brief configure and start the Simple DMA Accelerator IP
 ///
 /// @details `configure_and_start_dma` will accept the source, destination, and
-/// transfer length and write them into the kernel CSRs leveraging the old Nios
+/// transfer length and write them into the kernel CSRs using the old Nios
 /// IORW/IORD_32DIRECT macros, since those also work for Nios II.
 ///
 /// @note Since the kernel is located in the I/O space of the Nios V processor,
 /// you may choose to simply dereference a pointer to bypass the data cache but
-/// that doesn't port to Nios II directly so that has been avoided here
+/// that doesn't port to Nios II directly so that has been avoided here.
 ///
 /// @param[in] source Pointer to source memory to copy from
 ///
@@ -128,9 +93,15 @@
 /// @param[in] length Number of bytes of data to copy
 void configure_and_start_dma(unsigned int* source, unsigned int* destination,
                              unsigned int length) {
-  // (note:  Nios V/g is 32-bit so we have to write the source pointer 32 bits
-  // at a time. The source pointer needs to be cast to unsigned int since the
-  // Nios macros are not expecting a pointer.
+  // Nios V/g is 32-bit, but FPGA IP produced with the Intel® oneAPI DPC++/C++
+  // Compiler uses 64-bit pointers, so we have to write the source pointer 32
+  // bits at a time. The source pointer needs to be cast to unsigned int since
+  // the Nios macros are not expecting a pointer.
+
+  // According to io.h there is a upper limitation of 12-bits of the offset
+  // field, so this code instead does the safe thing and adds the offset to the
+  // base (first argument of macro) and hardcodes the offset field to 0 (second
+  // argument of macro).
 
   // DMA source
   IOWR_32DIRECT(REG_ARG_SOURCE_BASE, 0, (unsigned int)source);
@@ -180,10 +151,10 @@ int test_simple_dma() {
     destination[i] = 0;
   }
 
-  // main memory (code_data_ram) is *not* in a peripheral region so all those
+  // main memory (code_data_ram) is *not* in a peripheral region, so all the
   // writes to the source and destination need to be flushed from the data cache
   // to avoid cache coherency issues when the accelerator attempts to access
-  // memory
+  // memory.
 
   // make sure all that source data that was set gets flushed out to main memory
   alt_dcache_flush(source, BUFFER_LENGTH);
@@ -205,8 +176,8 @@ int test_simple_dma() {
   // correctness. Since the destination buffer was already flushed from the data
   // cache, software can safely read the destination without additional data
   // flushes. Since the source was previously flushed as well, it will get
-  // fetched from main memory and warm up the D$ just like the destination
-  // buffer in the correctness loop.
+  // fetched from main memory and warm up the data cache just like the
+  // destination buffer in the correctness loop.
 
   // test the results at the destination buffer, if a failure is detected set
   // pass to 0 and stop testing
