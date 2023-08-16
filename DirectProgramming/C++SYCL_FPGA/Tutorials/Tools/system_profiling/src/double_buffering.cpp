@@ -29,7 +29,7 @@ constexpr int kTimes = 3;
 constexpr int kSize = 4096;
 #else
 constexpr int kTimes = 3;  // originally 100
-constexpr int kSize = 2621440;
+constexpr int kSize = 262144;
 #endif
 
 // Kernel executes a power function (base^kPow). Must be

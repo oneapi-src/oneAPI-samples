@@ -1,6 +1,6 @@
 {
   "guid": "f0bf5cb2-59cb-488e-8f55-0752b8f55681",
-  "name": "CUDA_To_SYCL_Migration",
+  "name": "CUDA to SYCL Migration",
   "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
   "description": "CUDA_To_SYCL_Migration Tutorials using Jupyter Notebooks",
   "toolchain": [ "dpcpp" ],

@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/dpct_output/Common/helper_cuda.h'
+MainSourceFile:  '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/dpct_output/Common/helper_cuda.h'
 Replacements:
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          1793
     Length:          0
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          2210
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          2266
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -28,16 +28,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          2287
     Length:          0
-    ReplacementText: "  /*\n  DPCT1009:5: SYCL uses exceptions to report errors and does not use the error codes. The original code was commented out and a warning string was inserted. You need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1009:4: SYCL uses exceptions to report errors and does not use the error codes. The original code was commented out and a warning string was inserted. You need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          2296
     Length:          23
     ReplacementText: '"cudaGetErrorName is not supported"/*cudaGetErrorName(error)*/'
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7109
     Length:          14
     ReplacementText: int
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7161
     Length:          21
     ReplacementText: '0'
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7232
     Length:          30
     ReplacementText: '100'
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7321
     Length:          29
     ReplacementText: '101'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7408
     Length:          31
     ReplacementText: '102'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7499
     Length:          24
     ReplacementText: '103'
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7576
     Length:          26
     ReplacementText: '104'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7657
     Length:          33
     ReplacementText: '105'
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7752
     Length:          39
     ReplacementText: '106'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7859
     Length:          28
     ReplacementText: '201'
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          7944
     Length:          33
     ReplacementText: '202'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          8039
     Length:          35
     ReplacementText: '203'
@@ -154,7 +154,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          8138
     Length:          27
     ReplacementText: '204'
@@ -163,7 +163,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          8221
     Length:          28
     ReplacementText: '999'
@@ -172,7 +172,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          15785
     Length:          199
     ReplacementText: ''
@@ -181,7 +181,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          15995
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -190,16 +190,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          16461
     Length:          0
-    ReplacementText: "  /*\n  DPCT1010:6: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1010:5: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          16463
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -208,7 +208,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          16481
     Length:          18
     ReplacementText: '0'
@@ -217,7 +217,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          16504
     Length:          259
     ReplacementText: ''
@@ -226,16 +226,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          17099
     Length:          0
-    ReplacementText: "  /*\n  DPCT1010:8: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1010:7: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          17101
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -244,7 +244,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          17119
     Length:          18
     ReplacementText: '0'
@@ -253,7 +253,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          17142
     Length:          235
     ReplacementText: ''
@@ -262,25 +262,25 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          17829
     Length:          0
-    ReplacementText: ' dpct_type_148198'
+    ReplacementText: ' dpct_type_146989'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          19036
     Length:          0
-    ReplacementText: ' dpct_type_135042'
+    ReplacementText: ' dpct_type_101439'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          20194
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -289,16 +289,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          20313
     Length:          0
-    ReplacementText: "  /*\n  DPCT1003:10: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1003:9: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          20331
     Length:          33
     ReplacementText: '(device_count = dpct::dev_mgr::instance().device_count(), 0)'
@@ -307,16 +307,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          20960
     Length:          0
-    ReplacementText: "  /*\n  DPCT1035:11: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1035:10: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          20978
     Length:          67
     ReplacementText: '(computeMode = 1, 0)'
@@ -325,7 +325,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21066
     Length:          72
     ReplacementText: '(major = dpct::dev_mgr::instance().get_device(devID).get_major_version(), 0)'
@@ -334,7 +334,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21159
     Length:          72
     ReplacementText: '(minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version(), 0)'
@@ -343,16 +343,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21234
     Length:          0
-    ReplacementText: "  /*\n  DPCT1035:12: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1035:11: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21255
     Length:          25
     ReplacementText: '0'
@@ -361,16 +361,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21573
     Length:          0
-    ReplacementText: "  /*\n  DPCT1093:13: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n  */\n  /*\n  DPCT1003:14: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1093:12: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n  */\n  /*\n  DPCT1003:13: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21591
     Length:          13
     ReplacementText: '(dpct::select_device'
@@ -379,7 +379,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21611
     Length:          0
     ReplacementText: ', 0)'
@@ -388,7 +388,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21830
     Length:          0
     ReplacementText: ' try '
@@ -397,16 +397,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          21995
     Length:          0
-    ReplacementText: "  /*\n  DPCT1003:15: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1003:14: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22013
     Length:          33
     ReplacementText: '(device_count = dpct::dev_mgr::instance().device_count(), 0)'
@@ -415,16 +415,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22381
     Length:          0
-    ReplacementText: "    /*\n    DPCT1035:16: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1035:15: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22401
     Length:          76
     ReplacementText: '(computeMode = 1, 0)'
@@ -433,7 +433,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22500
     Length:          81
     ReplacementText: '(major = dpct::dev_mgr::instance().get_device(current_device).get_major_version(), 0)'
@@ -442,7 +442,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22604
     Length:          81
     ReplacementText: '(minor = dpct::dev_mgr::instance().get_device(current_device).get_minor_version(), 0)'
@@ -451,16 +451,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22789
     Length:          0
-    ReplacementText: "    /*\n    DPCT1035:17: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1035:16: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          22812
     Length:          25
     ReplacementText: '0'
@@ -469,7 +469,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          23085
     Length:          92
     ReplacementText: '(multiProcessorCount = dpct::dev_mgr::instance().get_device(current_device).get_max_compute_units(), 0)'
@@ -478,7 +478,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          23186
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -487,7 +487,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          23207
     Length:          72
     ReplacementText: '(clockRate = dpct::dev_mgr::instance().get_device(current_device).get_max_clock_frequency(), 0)'
@@ -496,7 +496,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          23287
     Length:          473
     ReplacementText: ''
@@ -505,7 +505,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          24298
     Length:          0
     ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
@@ -514,16 +514,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          24947
     Length:          0
-    ReplacementText: "    /*\n    DPCT1093:18: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:19: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1093:17: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n    /*\n    DPCT1003:18: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          24967
     Length:          13
     ReplacementText: '(dpct::select_device'
@@ -532,7 +532,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          24987
     Length:          0
     ReplacementText: ', 0)'
@@ -541,7 +541,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25040
     Length:          72
     ReplacementText: '(major = dpct::dev_mgr::instance().get_device(devID).get_major_version(), 0)'
@@ -550,7 +550,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25135
     Length:          72
     ReplacementText: '(minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version(), 0)'
@@ -559,16 +559,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25490
     Length:          0
-    ReplacementText: "  /*\n  DPCT1003:20: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1003:19: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25508
     Length:          33
     ReplacementText: '(device_count = dpct::dev_mgr::instance().device_count(), 0)'
@@ -577,16 +577,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25806
     Length:          0
-    ReplacementText: "    /*\n    DPCT1035:21: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1035:20: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25826
     Length:          76
     ReplacementText: '(computeMode = 1, 0)'
@@ -595,7 +595,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          25925
     Length:          74
     ReplacementText: '(integrated = dpct::dev_mgr::instance().get_device(current_device).get_integrated(), 0)'
@@ -604,16 +604,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26119
     Length:          0
-    ReplacementText: "    /*\n    DPCT1035:22: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1035:21: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26157
     Length:          25
     ReplacementText: '0'
@@ -622,16 +622,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26187
     Length:          0
-    ReplacementText: "      /*\n      DPCT1093:23: The \"current_device\" device may be not the one intended for use. Adjust the selected device if needed.\n      */\n      /*\n      DPCT1003:24: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1093:22: The \"current_device\" device may be not the one intended for use. Adjust the selected device if needed.\n      */\n      /*\n      DPCT1003:23: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26209
     Length:          13
     ReplacementText: '(dpct::select_device'
@@ -640,7 +640,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26238
     Length:          0
     ReplacementText: ', 0)'
@@ -649,7 +649,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26296
     Length:          81
     ReplacementText: '(major = dpct::dev_mgr::instance().get_device(current_device).get_major_version(), 0)'
@@ -658,7 +658,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          26402
     Length:          81
     ReplacementText: '(minor = dpct::dev_mgr::instance().get_device(current_device).get_minor_version(), 0)'
@@ -667,7 +667,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          27117
     Length:          19
     ReplacementText: 'dev = dpct::dev_mgr::instance().current_device_id()'
@@ -676,7 +676,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          27157
     Length:          70
     ReplacementText: '(major = dpct::dev_mgr::instance().get_device(dev).get_major_version(), 0)'
@@ -685,7 +685,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Offset:          27248
     Length:          70
     ReplacementText: '(minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version(), 0)'
@@ -695,9 +695,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+  - MainSourceFile:  '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
     Digest:          b335aa967b6d80921de9d6528e1564a5
-DpctVersion:     17.0.0
+DpctVersion:     2023.1.0
 MainHelperFileName: dpct
 USMLevel:        ''
 FeatureMap:
@@ -705,166 +705,228 @@ FeatureMap:
     destroy_event:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      FeatureName:     destroy_event
       SubFeatureMap:   {}
     dev_mgr:
       IsCalled:        false
+      FeatureName:     ''
       SubFeatureMap:
         dev_mgr_current_device_id:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::current_device_id'
           SubFeatureMap:   {}
         dev_mgr_device_count:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'dev_mgr::device_count'
           SubFeatureMap:   {}
         dev_mgr_get_device:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'dev_mgr::get_device'
           SubFeatureMap:   {}
     device_ext:
       IsCalled:        false
+      FeatureName:     ''
       SubFeatureMap:
         device_ext_create_queue:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_ext::create_queue'
           SubFeatureMap:   {}
         device_ext_destroy_queue:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_ext::destroy_queue'
           SubFeatureMap:   {}
         device_ext_get_device_info_return_info:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_ext::get_device_info'
           SubFeatureMap:   {}
         device_ext_get_integrated:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
           SubFeatureMap:   {}
         device_ext_get_major_version:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
           SubFeatureMap:   {}
         device_ext_get_max_clock_frequency:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
           SubFeatureMap:   {}
         device_ext_get_max_compute_units:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
           SubFeatureMap:   {}
         device_ext_get_minor_version:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
           SubFeatureMap:   {}
         device_ext_queues_wait_and_throw:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_ext::queues_wait_and_throw'
           SubFeatureMap:   {}
     device_info:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      FeatureName:     device_info
       SubFeatureMap:
         device_info_get_major_version:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_info::get_major_version'
           SubFeatureMap:   {}
         device_info_get_max_compute_units:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_info::get_max_compute_units'
           SubFeatureMap:   {}
         device_info_get_minor_version:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_info::get_minor_version'
           SubFeatureMap:   {}
         device_info_get_name:
           IsCalled:        true
           CallerSrcFiles:
-            - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+            - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+          FeatureName:     'device_info::get_name'
           SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
     select_device:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      FeatureName:     select_device
       SubFeatureMap:   {}
     typedef_event_ptr:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+      FeatureName:     typedef_event_ptr
       SubFeatureMap:   {}
     typedef_queue_ptr:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     queue_ptr
       SubFeatureMap:   {}
   memory.hpp:
+    async_dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
     dpct_memset:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     dpct_memset
       SubFeatureMap:   {}
     dpct_memset_2d:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     dpct_memset
       SubFeatureMap:   {}
     dpct_memset_3d:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     dpct_memset
       SubFeatureMap:   {}
     memcpy_direction:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     memcpy_direction
       SubFeatureMap:   {}
   rng_utils.hpp:
     create_host_rng:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      FeatureName:     create_host_rng
       SubFeatureMap:   {}
     rng_generator_generate:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+      FeatureName:     'rng_generator::generate'
       SubFeatureMap:   {}
     typedef_host_rng_ptr:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+      FeatureName:     typedef_host_rng_ptr
       SubFeatureMap:   {}
   util.hpp:
     err_types:
       IsCalled:        true
       CallerSrcFiles:
-        - '/home/tcs2/Manju/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs/Manjula_workspace/manju/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     err_types
       SubFeatureMap:   {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Manju/cuda-samples'
+    Value:           '/home/tcs/Manjula_workspace/manju/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -873,7 +935,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
+    Value:           '/home/tcs/Manjula_workspace/manju/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
     Specified:       true
   CtadEnabled:
     Value:           'false'

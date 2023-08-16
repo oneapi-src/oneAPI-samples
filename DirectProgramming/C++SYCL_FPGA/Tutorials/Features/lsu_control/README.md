@@ -10,7 +10,7 @@ This sample is an FPGA tutorial that demonstrates how to configure the load-stor
 
 ## Purpose
 
-The compiler creates load-store units (LSU) to access off-chip data. The compiler has many options to choose from when configuring each LSU. The SYCL*-compliant LSU controls extension allows you to override the compiler's internal heuristics and control the architecture of each LSU. An introduction to the extension in this tutorial will explain the available options, extension defaults, appropriate use cases, and area trade-offs.
+The compiler creates load-store units (LSU) to access memories, both on-chip and off-chip. The compiler has many options to choose from when configuring each LSU. The SYCL*-compliant LSU controls extension allows you to override the compiler's internal heuristics and control the architecture of individual LSUs that are used to access variable-latency off-chip memory. An introduction to the extension in this tutorial will explain the available options, extension defaults, appropriate use cases, and area trade-offs.
 
 ## Prerequisites
 
@@ -63,7 +63,7 @@ The sample illustrates the following important concepts.
 
 ### LSUs and LSU Styles
 
-An LSU is a block that handles loading and storing data to and from memory. Off-chip memory can have variable latency. To mitigate this, different LSU implementations, referred to as styles, are available.
+An LSU is a block that handles loading and storing data to and from memory. Off-chip memory can have variable latency. To mitigate this, different LSU styles are available.
 
 The two LSU styles used in this tutorial are listed below:
 
@@ -77,11 +77,15 @@ The best LSU style depends on the memory access pattern in your design. There ar
 
 In addition to these two styles, there are also LSU modifiers. LSU modifiers are add-ons that can be combined with LSU styles, such as caching, which can be combined with the burst-coalesced LSU style.
 
-For more details on LSU modifiers and LSU styles, refer to the Memory Accesses section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+For more details on LSU modifiers and LSU styles, refer to the *Memory Accesses* section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/memory-accesses.html).
 
 ### Introduction to the LSU Control Extension
 
-The class: ```ext::intel::lsu``` enables you to control the architecture of the LSU. The class has two member functions, `load()` and `store()`, which allow loading from and storing to a global pointer.
+The class: ```ext::intel::lsu``` enables you to control the architecture of the LSU. The class has two member functions, `load()` and `store()`, which allow loading from and storing to a global pointer (via `sycl::multi_ptr` rather than raw pointer).
+
+There are two steps to use the LSU control extension to optimize LSU behaviour:
+1. Get a `sycl::multi_ptr` representation of the memory you wish to access using the `get_multi_ptr<>()` function.
+2. Access this `sycl::multi_ptr` using one of the LSU control functions.
 
 The table below summarizes the LSU control extension parameters. The parameters will be respected to the extent possible.
 
@@ -97,17 +101,17 @@ If the default options are used, a pipelined LSU is implemented.
 #### Example: Controlling the `prefetch` and `statically_coalesce` Parameters
 
 ```c++
-//Creating typedefs using the LSU controls class
-//for each combination of LSU options desired.
+// Creating typedefs using the LSU controls class
+// for each combination of LSU options desired.
 using PrefetchingLSU = ext::intel::lsu<ext::intel::prefetch<true>,
-                                  ext::intel::statically_coalesce<false>>;
+                                       ext::intel::statically_coalesce<false>>;
 // ...
 q.submit([&](handler &h) {
   h.single_task<Kernel>([=] {
-    //Pointer to external memory
-    auto input_ptr = input_accessor.get_pointer();
+    // Pointer to external memory
+    auto input_ptr = input_accessor.template get_multi_ptr<access::decorated::no>();
 
-    //Compiler will use a Prefetch LSU for this load
+    // Compiler will use a Prefetch LSU for this load
     int in_data = PrefetchingLSU::load(input_ptr);
 
     //...
@@ -116,7 +120,7 @@ q.submit([&](handler &h) {
 ```
 
 Currently, not every combination of parameters is valid in the compiler.
-For more details on the descriptions of LSU controls, styles, and modifiers refer to the *FPGA LSU Controls* section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+For more details on the descriptions of LSU controls, styles, and modifiers refer to the *Load-Store Unit Controls* section in the [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/load-store-unit-controls.html).
 
 ### Tutorial Overview
 

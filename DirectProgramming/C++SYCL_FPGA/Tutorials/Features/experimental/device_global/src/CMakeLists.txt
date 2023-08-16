@@ -7,39 +7,27 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
-    set(DEVICE_FLAG "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
             \nConfiguring the design to the default FPGA family: ${FPGA_DEVICE}\
             \nPlease refer to the README for information on target selection.")
+    set(IS_BSP "0")
 else()
-    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
-    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
-      set(DEVICE_FLAG "A10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
-      set(DEVICE_FLAG "S10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "Agilex7")
-    endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
-endif()
-
-if(NOT DEFINED DEVICE_FLAG)
-    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or -DDEVICE_FLAG=Agilex7.")
+    # Check if the target is a BSP
+    if(IS_BSP MATCHES "1")
+        set(IS_BSP "1")
+        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as uses IPA flow only.")
+    else()
+        set(IS_BSP "0")
+        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
+        message(STATUS "This tutorial does not support a BSP target as it uses IPA flow only.")
+    endif()
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-endif()
-
-# Hyper-optimization is turned off to allow the same set of latency control parameters to work on both A10 and S10.
-# Users can turn it back on and try their own parameters on S10.
-if(DEVICE_FLAG MATCHES "A10")
-    set(HANDSHAKING "")
-else()
-    set(HANDSHAKING "-Xshyper-optimized-handshaking=off")
 endif()
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

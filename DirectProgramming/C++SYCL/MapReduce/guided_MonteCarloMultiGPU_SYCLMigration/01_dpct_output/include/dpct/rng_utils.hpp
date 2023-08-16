@@ -11,9 +11,7 @@
 
 #include <sycl/sycl.hpp>
 #include <oneapi/mkl.hpp>
-#ifdef __INTEL_MKL__ // The oneMKL Interfaces Project does not support this.
 #include <oneapi/mkl/rng/device.hpp>
-#endif
 
 #include "device.hpp"
 #include "lib_common_utils.hpp"
@@ -36,20 +34,16 @@ template <typename engine_t> class rng_generator {
           std::is_same<engine_t, oneapi::mkl::rng::device::mrg32k3a<1>>,
           std::is_same<engine_t, oneapi::mkl::rng::device::mrg32k3a<4>>,
           std::is_same<engine_t, oneapi::mkl::rng::device::philox4x32x10<1>>,
-          std::is_same<engine_t, oneapi::mkl::rng::device::philox4x32x10<4>>,
-          std::is_same<engine_t, oneapi::mkl::rng::device::mcg59<1>>>,
+          std::is_same<engine_t, oneapi::mkl::rng::device::philox4x32x10<4>>>,
       "engine_t can only be oneapi::mkl::rng::device::mrg32k3a<1> or "
       "oneapi::mkl::rng::device::mrg32k3a<4> or "
       "oneapi::mkl::rng::device::philox4x32x10<1> or "
-      "oneapi::mkl::rng::device::philox4x32x10<4> or "
-      "oneapi::mkl::rng::device::mcg59<1>.");
+      "oneapi::mkl::rng::device::philox4x32x10<4>.");
   static constexpr bool _is_engine_vec_size_one = std::disjunction_v<
       std::is_same<engine_t, oneapi::mkl::rng::device::mrg32k3a<1>>,
-      std::is_same<engine_t, oneapi::mkl::rng::device::philox4x32x10<1>>,
-      std::is_same<engine_t, oneapi::mkl::rng::device::mcg59<1>>>;
+      std::is_same<engine_t, oneapi::mkl::rng::device::philox4x32x10<1>>>;
   static constexpr std::uint64_t default_seed = 0;
   oneapi::mkl::rng::device::bits<std::uint32_t> _distr_bits;
-  oneapi::mkl::rng::device::uniform_bits<std::uint32_t> _distr_uniform_bits;
   oneapi::mkl::rng::device::gaussian<float> _distr_gaussian_float;
   oneapi::mkl::rng::device::gaussian<double> _distr_gaussian_double;
   oneapi::mkl::rng::device::lognormal<float> _distr_lognormal_float;
@@ -62,32 +56,19 @@ template <typename engine_t> class rng_generator {
 public:
   /// Default constructor of rng_generator
   rng_generator() { _engine = engine_t(default_seed); }
-  /// Constructor of rng_generator if engine type is not mcg59
+  /// Constructor of rng_generator
   /// \param [in] seed The seed to initialize the engine state.
   /// \param [in] num_to_skip Set the number of elements need to be skipped.
   /// The number is calculated as: num_to_skip[0] + num_to_skip[1] * 2^64 +
   /// num_to_skip[2] * 2^128 + ... + num_to_skip[n-1] * 2^(64*(n-1))
-  template <typename T = engine_t,
-            typename std::enable_if<!std::is_same_v<
-                T, oneapi::mkl::rng::device::mcg59<1>>>::type * = nullptr>
   rng_generator(std::uint64_t seed,
                 std::initializer_list<std::uint64_t> num_to_skip) {
-    _engine = engine_t(seed, num_to_skip);
-  }
-  /// Constructor of rng_generator if engine type is mcg59
-  /// \param [in] seed The seed to initialize the engine state.
-  /// \param [in] num_to_skip Set the number of elements need to be skipped.
-  template <typename T = engine_t,
-            typename std::enable_if<std::is_same_v<
-                T, oneapi::mkl::rng::device::mcg59<1>>>::type * = nullptr>
-  rng_generator(std::uint64_t seed, std::uint64_t num_to_skip) {
     _engine = engine_t(seed, num_to_skip);
   }
 
   /// Generate random number(s) obeys distribution \tparam distr_t.
   /// \tparam T The distribution of the random number. It can only be
   /// oneapi::mkl::rng::device::bits<std::uint32_t>,
-  /// oneapi::mkl::rng::device::uniform_bits<std::uint32_t>,
   /// oneapi::mkl::rng::device::gaussian<float>,
   /// oneapi::mkl::rng::device::gaussian<double>,
   /// oneapi::mkl::rng::device::lognormal<float>,
@@ -108,8 +89,6 @@ public:
         std::disjunction_v<
             std::is_same<distr_t,
                          oneapi::mkl::rng::device::bits<std::uint32_t>>,
-            std::is_same<distr_t,
-                         oneapi::mkl::rng::device::uniform_bits<std::uint32_t>>,
             std::is_same<distr_t, oneapi::mkl::rng::device::gaussian<float>>,
             std::is_same<distr_t, oneapi::mkl::rng::device::gaussian<double>>,
             std::is_same<distr_t, oneapi::mkl::rng::device::lognormal<float>>,
@@ -123,11 +102,6 @@ public:
     if constexpr (std::is_same_v<
                       distr_t, oneapi::mkl::rng::device::bits<std::uint32_t>>) {
       return generate_vec<vec_size>(_distr_bits);
-    }
-    if constexpr (std::is_same_v<
-                      distr_t,
-                      oneapi::mkl::rng::device::uniform_bits<std::uint32_t>>) {
-      return generate_vec<vec_size>(_distr_uniform_bits);
     }
     if constexpr (std::is_same_v<distr_t,
                                  oneapi::mkl::rng::device::gaussian<float>>) {
@@ -299,7 +273,7 @@ template <typename engine_t = oneapi::mkl::rng::philox4x32x10>
 class rng_generator : public rng_generator_base {
 public:
   /// Constructor of rng_generator.
-  rng_generator() : _engine(create_engine(_queue, _seed, _dimensions)) {}
+  rng_generator() : _engine(creat_engine(_queue, _seed, _dimensions)) {}
 
   /// Set the seed of host rng_generator.
   /// \param seed The engine seed.
@@ -308,7 +282,7 @@ public:
       return;
     }
     _seed = seed;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = creat_engine(_queue, _seed, _dimensions);
   }
 
   /// Set the dimensions of host rng_generator.
@@ -318,7 +292,7 @@ public:
       return;
     }
     _dimensions = dimensions;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = creat_engine(_queue, _seed, _dimensions);
   }
 
   /// Set the queue of host rng_generator.
@@ -328,21 +302,16 @@ public:
       return;
     }
     _queue = queue;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = creat_engine(_queue, _seed, _dimensions);
   }
 
   /// Generate unsigned int random number(s) with 'uniform_bits' distribution.
   /// \param output The pointer of the first random number.
   /// \param n The number of random numbers.
   inline void generate_uniform_bits(unsigned int *output, std::int64_t n) {
-#ifndef __INTEL_MKL__
-    throw std::runtime_error("The oneAPI Math Kernel Library (oneMKL) "
-                             "Interfaces Project does not support this API.");
-#else
     static_assert(sizeof(unsigned int) == sizeof(std::uint32_t));
     generate<oneapi::mkl::rng::uniform_bits<std::uint32_t>>(
         (std::uint32_t *)output, n);
-#endif
   }
 
   /// Generate unsigned long long random number(s) with 'uniform_bits'
@@ -351,14 +320,9 @@ public:
   /// \param n The number of random numbers.
   inline void generate_uniform_bits(unsigned long long *output,
                                     std::int64_t n) {
-#ifndef __INTEL_MKL__
-    throw std::runtime_error("The oneAPI Math Kernel Library (oneMKL) "
-                             "Interfaces Project does not support this API.");
-#else
     static_assert(sizeof(unsigned long long) == sizeof(std::uint64_t));
     generate<oneapi::mkl::rng::uniform_bits<std::uint64_t>>(
         (std::uint64_t *)output, n);
-#endif
   }
 
   /// Generate float random number(s) with 'lognormal' distribution.
@@ -427,27 +391,19 @@ public:
   /// Skip ahead several random number(s).
   /// \param num_to_skip The number of random numbers to be skipped.
   void skip_ahead(const std::uint64_t num_to_skip) {
-#ifndef __INTEL_MKL__
-    oneapi::mkl::rng::skip_ahead(_engine, num_to_skip);
-#else
     if constexpr (std::is_same_v<engine_t, oneapi::mkl::rng::mt2203>)
       throw std::runtime_error("no skip_ahead method of mt2203 engine.");
     else
       oneapi::mkl::rng::skip_ahead(_engine, num_to_skip);
-#endif
   }
 
 private:
-  static inline engine_t create_engine(sycl::queue *queue,
-                                       const std::uint64_t seed,
-                                       const std::uint32_t dimensions) {
-#ifdef __INTEL_MKL__
+  static inline engine_t creat_engine(sycl::queue *queue,
+                                      const std::uint64_t seed,
+                                      const std::uint32_t dimensions) {
     return std::is_same_v<engine_t, oneapi::mkl::rng::sobol>
                ? engine_t(*queue, dimensions)
                : engine_t(*queue, seed);
-#else
-    return engine_t(*queue, seed);
-#endif
   }
 
   template <typename distr_t, typename buffer_t, class... distr_params_t>
@@ -469,8 +425,7 @@ enum class random_engine_type {
   mrg32k3a,
   mt2203,
   mt19937,
-  sobol,
-  mcg59
+  sobol
 };
 
 typedef std::shared_ptr<rng::host::detail::rng_generator_base> host_rng_ptr;
@@ -486,10 +441,6 @@ inline host_rng_ptr create_host_rng(const random_engine_type type) {
   case random_engine_type::mrg32k3a:
     return std::make_shared<
         rng::host::detail::rng_generator<oneapi::mkl::rng::mrg32k3a>>();
-#ifndef __INTEL_MKL__
-    throw std::runtime_error("The oneAPI Math Kernel Library (oneMKL) "
-                             "Interfaces Project does not support this API.");
-#else
   case random_engine_type::mt2203:
     return std::make_shared<
         rng::host::detail::rng_generator<oneapi::mkl::rng::mt2203>>();
@@ -499,10 +450,6 @@ inline host_rng_ptr create_host_rng(const random_engine_type type) {
   case random_engine_type::sobol:
     return std::make_shared<
         rng::host::detail::rng_generator<oneapi::mkl::rng::sobol>>();
-  case random_engine_type::mcg59:
-    return std::make_shared<
-        rng::host::detail::rng_generator<oneapi::mkl::rng::mcg59>>();
-#endif
   }
 }
 
