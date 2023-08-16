@@ -65,10 +65,9 @@ Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to a loop to restrict
 The extra latency between invocations of a loop can have a significant impact in performance if the loop has a very small trip count. Consider the following nested loop:
 
 ```c++
-for (int i = 0; i < FACTORS; i++) {
-  int factor = i + 1;
-  for (int j = 0; j < sequence_length; j++) {
-    PipeOut::write(first_term + j * factor);
+for (int factor = 0; factor < FACTORS; factor++) {
+  for (int i = 0; i < sequence_length; i++) {
+    PipeOut::write(first_term + i * factor);
   }
 }
 ```
@@ -80,11 +79,10 @@ By default, the compiler will schedule the loops with a delay of a few cycles be
 Applying `[[intel::max_reinvocation_delay(1)]]` to the inner loop allows us to remove this delay between invocations. 
 
 ```c++
-for (int i = 0; i < FACTORS; i++) {
-  int factor = i + 1;
+for (int factor = 0; factor < FACTORS; factor++) {
   [[intel::max_reinvocation_delay(1)]]
-  for (int j = 0; j < sequence_length; j++) {
-    PipeOut::write(first_term + j * factor);
+  for (int i = 0; i < sequence_length; i++) {
+    PipeOut::write(first_term + i * factor);
   }
 }
 ```

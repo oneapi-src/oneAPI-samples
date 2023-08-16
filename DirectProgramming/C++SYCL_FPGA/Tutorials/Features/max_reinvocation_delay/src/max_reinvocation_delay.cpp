@@ -8,10 +8,10 @@
 // (This prevents unwanted name mangling in the optimization report.)
 class ArithmeticSequence;
 class Sum;
-class OutputPipe;
+class ResultsPipe;
 
-// Pipe between kernels
-using PipeOut = sycl::ext::intel::experimental::pipe<OutputPipe, int, 50>;
+// Results pipe from device back to host
+using PipeResults = sycl::ext::intel::experimental::pipe<ResultsPipe, int, 50>;
 
 // Computes and outputs the first "sequence_length" terms of the arithmetic
 // sequences with first term "first_term" and factors 1 through FACTORS.
@@ -20,11 +20,10 @@ struct ArithmeticSequenceKernel {
   int sequence_length;
 
   void operator()() const {
-    for (int i = 0; i < FACTORS; i++) {
-      int factor = i + 1;
+    for (int factor = 1; factor <= FACTORS; factor++) {
       [[intel::max_reinvocation_delay(1)]] // NO-FORMAT: Attribute
-      for (int j = 0; j < sequence_length; j++) {
-        PipeOut::write(first_term + j * factor);
+      for (int i = 0; i < sequence_length; i++) {
+        PipeResults::write(first_term + i * factor);
       }
     }
   }
@@ -33,6 +32,7 @@ struct ArithmeticSequenceKernel {
 int main() {
 
   try {
+
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -41,7 +41,6 @@ int main() {
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
     sycl::queue q(selector);
-
     auto device = q.get_device();
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
@@ -55,13 +54,12 @@ int main() {
 
     // Verify functional correctness
     bool passed = true;
-    for (int i = 0; i < FACTORS; i++) {
-      int factor = i + 1;
+    for (int factor = 1; factor <= FACTORS; factor++) {
       std::cout << "Calculating arithmetic sequence with factor = " << factor
                 << std::endl;
-      for (int j = 0; j < sequence_length; j++) {
-        int val_device = PipeOut::read(q);
-        int val_host = first_term + j * factor;
+      for (int i = 0; i < sequence_length; i++) {
+        int val_device = PipeResults::read(q);
+        int val_host = first_term + i * factor;
         bool compare = val_device == val_host;
         passed &= compare;
         if (!compare) {
