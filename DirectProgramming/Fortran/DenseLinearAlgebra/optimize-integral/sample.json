@@ -3,19 +3,28 @@
   "name": "Optimize Integral",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Sample - Simple Compiler Optimizations",
-  "toolchain": [ "ifort" ],
+  "toolchain": [ "ifx" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
-  "os": [ "darwin" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "make" ],
   "ciTests":{
-    "darwin": [
+    "linux": [
       {
-        "id": "fort_optsample_cpu",
+        "id": "ifx_optsample_cpu",
         "steps": [
           "make",
           "make run",
           "make clean"
+        ]
+       }
+    ],
+    "windows": [
+      {
+        "id": "ifx_optsample_cpu",
+        "steps": [
+          "build.bat",
+          "run.bat"
         ]
        }
     ]
