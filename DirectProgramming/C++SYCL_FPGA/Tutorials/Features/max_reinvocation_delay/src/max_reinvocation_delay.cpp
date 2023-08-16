@@ -60,9 +60,8 @@ int main() {
       for (int i = 0; i < sequence_length; i++) {
         int val_device = PipeResults::read(q);
         int val_host = first_term + i * factor;
-        bool compare = val_device == val_host;
-        passed &= compare;
-        if (!compare) {
+        passed &= (val_device == val_host);
+        if (val_device != val_host) {
           std::cout << "Error: expected " << val_host << ", got " << val_device
                     << std::endl;
         }
