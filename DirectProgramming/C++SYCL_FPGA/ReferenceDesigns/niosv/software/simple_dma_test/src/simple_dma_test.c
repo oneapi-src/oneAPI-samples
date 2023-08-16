@@ -46,7 +46,7 @@
 #include "system.h"
 
 // including the kernel register map directly from the kernel build directory
-#include "../../../kernels/simple_dma/build/simple_dma.report.prj/register_map_offsets.hpp"
+#include "../../../kernels/simple_dma/build/simple_dma.report.prj/include/register_map_offsets.hpp"
 
 // In bytes, must be a multiple of 4.  Keep it a small number to shorten the
 // simulation time and do not exceed the 1MB memory size (remember this code is
@@ -65,16 +65,15 @@
 /// add the offset to the base, since the base address parameter of the macro
 /// does not have the limitation.
 #define REG_ARG_SOURCE_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_SOURCE_REG)
-#define REG_ARG_DEST_BASE        \
-  (SIMPLE_DMA_ACCELERATOR_BASE + \
-   ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_DESTINATION_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_SOURCE_REG)
+#define REG_ARG_DEST_BASE \
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_DESTINATION_REG)
 #define REG_ARG_LENGTH_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_LENGTH_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_LENGTH_REG)
 #define REG_START_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_START_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_START_REG)
 #define REG_STATUS \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_STATUS_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_STATUS_REG)
 
 /// @brief configure and start the Simple DMA Accelerator IP
 ///
