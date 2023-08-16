@@ -120,13 +120,6 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -142,10 +135,6 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
       ```
       make fpga_sim
       ```
-   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
-      ```
-      make fpga
-      ```
 
 ### On Windows*
 
@@ -160,13 +149,6 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -182,10 +164,7 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
       ```
       nmake fpga_sim
       ```
-   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
-      ```
-      nmake fpga
-      ```
+
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Run the `max_reinvocation_delay` Sample
@@ -200,10 +179,6 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./max_reinvocation_delay.fpga_sim
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./max_reinvocation_delay.fpga
-   ```
 
 ### On Windows
 
@@ -217,33 +192,19 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    max_reinvocation_delay.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   max_reinvocation_delay.fpga.exe
-   ```
 
 ## Example Output
 
 ```
-Arithmetic sequence with factor = 1
-Sum of first 10 terms = 45. OK
-
-Arithmetic sequence with factor = 2
-Sum of first 10 terms = 90. OK
-
-Arithmetic sequence with factor = 3
-Sum of first 10 terms = 135. OK
-
-Arithmetic sequence with factor = 4
-Sum of first 10 terms = 180. OK
-
-Arithmetic sequence with factor = 5
-Sum of first 10 terms = 225. OK
-
+Calculating arithmetic sequence with factor = 1
+Calculating arithmetic sequence with factor = 2
+Calculating arithmetic sequence with factor = 3
+Calculating arithmetic sequence with factor = 4
+Calculating arithmetic sequence with factor = 5
 PASSED
 ```
 
-> **Note**: To observe the effect of `max_reinovcation_delay`, you can simulate the design and view the waveforms. The program output is only to verify functional correctness.
+> **Note**: To observe the effect of `max_reinovcation_delay`, you should simulate the design and view the waveforms. The program output is only to verify functional correctness.
 
 
 ## License
