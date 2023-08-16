@@ -7,11 +7,10 @@
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class ArithmeticSequence;
-class Sum;
 class ResultsPipe;
 
 // Results pipe from device back to host
-using PipeResults = sycl::ext::intel::experimental::pipe<ResultsPipe, int, 50>;
+using PipeResults = sycl::ext::intel::experimental::pipe<ResultsPipe, int>;
 
 // Computes and outputs the first "sequence_length" terms of the arithmetic
 // sequences with first term "first_term" and factors 1 through FACTORS.
