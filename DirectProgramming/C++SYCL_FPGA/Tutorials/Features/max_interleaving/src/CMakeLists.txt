@@ -50,10 +50,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR max_interleaving.cpp -o max_interleaving.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR max_interleaving.cpp -o max_interleaving.fpga_sim
 # CMake executes:
-#    [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o max_interleaving.cpp.o -c max_interleaving.cpp
-#    [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> max_interleaving.cpp.o -o max_interleaving.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o max_interleaving.cpp.o -c max_interleaving.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> max_interleaving.cpp.o -o max_interleaving.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
