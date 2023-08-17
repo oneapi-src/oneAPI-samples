@@ -4,13 +4,13 @@ This sample is an FPGA tutorial that explains how to use the `max_reinvocation_d
 
 | Area                 | Description
 |:--                   |:--
-| What you will learn  | How to use the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
+| What you will learn  | How and when to apply the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
 | Time to complete     | 15 minutes
 | Category             | Concepts and Functionality
 
 ## Purpose
 
-This tutorial demonstrates how to apply the `max_reinvocation_delay` attribute to a loop in your program to direct the Intel® oneAPI DPC++/C++ Compiler to implement that loop with a specified maximum loop reinvocation delay. The loop reinvocation delay is the delay between launching the last iteration of a loop invocation and launching the first iteration of the next loop invocation.
+This tutorial demonstrates how and when to apply the `max_reinvocation_delay` attribute to a loop in your program to direct the Intel® oneAPI DPC++/C++ Compiler to implement that loop with a specified maximum loop reinvocation delay. The loop reinvocation delay is the delay between launching the last iteration of a loop invocation and launching the first iteration of the next loop invocation.
 
 ## Prerequisites
 
@@ -56,13 +56,19 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The sample illustrates the following important concepts.
 
-- How to use the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
+- How and when to apply the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
 
 ### Description of the `max_reinvocation_delay` Attribute
 
-Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to a loop to restrict the delay between invocations of that loop. The attribute parameter `N` is required and must be a positive constant expression of integer type (currently, only `N=1` is supported, i.e., that there shall be no delay between invocations). This parameter specifies the maximum number of clock cycles allowed between the last iteration of a loop invocation and the first iteration of the next invocation of the loop. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing.
+Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to loops in your program on which you want to specify a maximum loop reinvocation delay. The *loop reinvocation delay* is defined as the latency between the last iteration of a loop invocation and the first iteration of the next invocation of that loop. 
 
-The extra latency between invocations of a loop can have a significant impact in performance if the loop has a very small trip count. Consider the following nested loop:
+> **Note:** For interleaved loops, the loop reinvocation delay is defined as the latency between the last iteration of a loop invocation and the first iteration of the next loop invocation immediately following it, which may not be the next loop invocation in the program order.
+
+The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter specifies the maximum loop reinvocation delay to be allowed, measured in clock cycles. Currently, only `N=1` is supported, i.e., the ability to state that there shall be no delay between invocations.
+
+#### Example 1.
+
+Consider the following nested loop:
 
 ```c++
 for (int factor = 0; factor < FACTORS; factor++) {
@@ -72,11 +78,11 @@ for (int factor = 0; factor < FACTORS; factor++) {
 }
 ```
 
-By default, the compiler will schedule the loops with a delay of a few cycles between invocations of the inner loop.
+By default, the compiler inserts a loop reinvocation delay of a few cycles on the inner loop. In general, the compiler may insert a higher loop reinvocation delay to better optimize a loop by enabling loop speculation or by pipelining the loop orchestration hardware, which can increase fMAX.
 
 ![default behavior with delay between invocations](assets/default.png)
 
-Applying `[[intel::max_reinvocation_delay(1)]]` to the inner loop allows us to remove this delay between invocations. 
+However, the extra latency between invocations of a loop can have a significant impact in performance if the loop has a very small trip count. Applying `[[intel::max_reinvocation_delay(1)]]` to the inner loop allows us to remove this delay between invocations. 
 
 ```c++
 for (int factor = 0; factor < FACTORS; factor++) {
@@ -120,18 +126,19 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
+   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile and run for emulation (fast compile time, targets emulates an FPGA device).
+   1. Compile and run for emulation (fast compile time, targets emulated FPGA device).
       ```
       make fpga_emu
       ```
-   2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+   2. Generate the optimization reports.
       ```
       make report
       ```
-   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+   3. Compile and run for simulation (fast compile time, targets simulated FPGA device).
       ```
       make fpga_sim
       ```
@@ -149,18 +156,19 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
+   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile and run for emulation (fast compile time, targets emulated FPGA device).
       ```
       nmake fpga_emu
       ```
-   2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+   2. Generate the optimization reports.
       ```
       nmake report
       ```
-   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
+   3. Compile and run for simulation (fast compile time, targets simulated FPGA device).
       ```
       nmake fpga_sim
       ```
