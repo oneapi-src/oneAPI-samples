@@ -69,7 +69,7 @@ int main() {
       }
     }
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
-    return passed;
+    return !passed;
 
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
