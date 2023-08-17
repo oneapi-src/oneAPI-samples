@@ -39,7 +39,7 @@ int main() {
 #else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
-    sycl::queue q(selector);
+    sycl::queue q(selector, fpga_tools::exception_handler);
     auto device = q.get_device();
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>().c_str()
