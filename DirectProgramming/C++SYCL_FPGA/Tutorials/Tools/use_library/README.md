@@ -21,9 +21,6 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-
-> :warning: When targeting an IP-only flow, the RTL library feature will not work when compiling to Quartus and will error out in the late-stage compile. RTL libraries will work in the simulation flow. This will be fixed in a future release. This is documented in the [compiler release notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
-
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
