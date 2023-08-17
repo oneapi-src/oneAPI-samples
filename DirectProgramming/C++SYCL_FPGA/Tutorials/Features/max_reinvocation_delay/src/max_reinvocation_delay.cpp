@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-
+#include "exception_handler.hpp"
 #define FACTORS 5
 
 // Forward declare the kernel and pipe names
