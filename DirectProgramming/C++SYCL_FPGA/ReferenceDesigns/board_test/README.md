@@ -1,5 +1,5 @@
 # `Board Test` Sample
-The `Board Test` sample is a reference design contains tests to check FPGA board interfaces and reports the following metrics:
+The `Board Test` sample is a reference design that contains tests to check FPGA board interfaces and reports the following metrics:
 
 - Host-to-device global memory interface bandwidth
 - Kernel clock frequency
@@ -13,7 +13,7 @@ The `Board Test` sample is a reference design contains tests to check FPGA board
 | Time to complete        | 30 minutes (not including compile time)
 
 ## Purpose
-This reference design implements tests to check FPGA board interfaces and measure host-to-device and kernel-to-global memory interface metrics. Custom platform developers can Use this reference design as a starting point to validate custom platform interfaces when you customize a BSP.
+This reference design implements tests to check FPGA board interfaces and measure host-to-device and kernel-to-global memory interface metrics. Use this reference design as a starting point to validate platform interfaces when you customize a BSP.
 
 ## Prerequisites
 
@@ -134,17 +134,17 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile and run for emulation (fast compile time, targets emulated FPGA device).
       ```
       make fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Generate the optimization report. 
       ```
       make report
       ```
       The report resides at `board_test.report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile and run for FPGA hardware (longer compile time, targets an FPGA device).
       ```
       make fpga
       ```
@@ -166,17 +166,17 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
-   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+   1. Compile and run for emulation (fast compile time, targets emulated FPGA device).
       ```
       nmake fpga_emu
       ```
-   2. Generate HTML performance report.
+   2. Generate the optimization report.
       ```
       nmake report
       ```
       The report resides at `board_test.report.prj/reports/report.html`.
 
-   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+   3. Compile and run for FPGA hardware (longer compile time, targets an FPGA device).
       ```
       nmake fpga
       ```
@@ -208,7 +208,7 @@ The tests listed above check the following interfaces in a platform:
 
 - **Kernel clock frequency (Test 2):** The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.
 
-  >**Note**: The test allows overriding this failure; however, overriding might lead to functional errors, and it is not recommended. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). To override, set the `report_chk` variable to `false` in `board_test.cpp` and recompile only the host code by using the `-reuse-exe=board_test.fpga` option in your compile command.
+  >**Note**: The test allows overriding this failure; however, overriding may lead to functional errors and is not recommended. The override option is provided to allow debugging in cases where platform design changes are done to force the kernel to run at a slower clock frequency (though this is not a common use case). To override, set the `report_chk` variable to `false` in `board_test.cpp` and recompile only the host code by using the `-reuse-exe=board_test.fpga` option in your compile command (this flag is added by default for you in the CMake file included with this code sample).
 
 - **Host-to-kernel interface (Tests 3 & 4):** The test ensures that the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
@@ -238,7 +238,7 @@ The tests listed above check the following interfaces in a platform:
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
     ```
-    board_test.exe            (Windows)
+    board_test.exe
     ```
     By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
     ```
@@ -253,7 +253,7 @@ The tests listed above check the following interfaces in a platform:
     board_test.fpga.exe -test=<test_number>
     ```
 
-## Example Output and Performance
+## Example Output
 
 Running on FPGA device (Intel Stratix 10 SX platform). Performance results are based on testing as of Jan 31, 2022.
 
