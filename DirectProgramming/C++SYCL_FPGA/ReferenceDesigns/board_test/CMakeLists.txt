@@ -35,12 +35,34 @@ if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
 endif()
 
+# Check if the target is a BSP
+if(NOT FPGA_DEVICE MATCHES ".*:.*")
+    message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
+endif()
+
+# Some tests in this sample require USM. Only enable those tests if the user
+# specifies that their board supports USM.
+# (e.g., cmake .. -DSUPPORTS_USM=1)
+if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
+    set(USM_FLAG "-DSUPPORTS_USM")
+endif()
+
+if (SUPPORTS_USM)
+    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations.")
+else()
+    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled.")
+endif()
+
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
-# compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
+# compilation.
+#
+# By default the oneAPI compiler burst interleaves across same memory type,
+# -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
+# Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} -Xsno-interleaving=default)
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
+set(USER_FLAGS ${USER_FLAGS} ${USM_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
@@ -62,19 +84,6 @@ set(FPGA_TARGET fpga)
 set(EMULATOR_OUTPUT_NAME ${TARGET_NAME}.${EMULATOR_TARGET})
 set(REPORT_OUTPUT_NAME ${TARGET_NAME}.${REPORT_TARGET})
 set(FPGA_OUTPUT_NAME ${TARGET_NAME}.${FPGA_TARGET})
-
-# Some tests in this sample require USM. Only enable those tests if the user
-# specifies that their board supports USM.
-# (e.g., cmake .. -DSUPPORTS_USM=1)
-if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
-    set(USM_FLAG "-DSUPPORTS_USM")
-endif()
-
-if (SUPPORTS_USM)
-    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations.")
-else()
-    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled.")
-endif()
 
 message(STATUS "Additional USER_FPGA_FLAGS=${USER_FPGA_FLAGS}")
 message(STATUS "Additional USER_FLAGS=${USER_FLAGS}")
@@ -98,8 +107,8 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${USM_FLAG})
-set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS} ${USM_FLAG})
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wformat-security -Werror=format-security -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS})
+set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate
@@ -108,13 +117,10 @@ set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS} ${USM_FLAG})
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR)
 set(EMULATOR_LINK_FLAGS )
-# By default the oneAPI compiler burst interleaves across same memory type,
-# -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
-# Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -Xsno-interleaving=default -fsycl-link=early)
+set(REPORT_LINK_FLAGS -Xshardware ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -Xsno-interleaving=default -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
 
 ###############################################################################
 ### FPGA Emulator

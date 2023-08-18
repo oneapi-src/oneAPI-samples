@@ -119,7 +119,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® 7 device family, which is the default.
+2. Configure the build system for the Intel® PAC with Intel Arria® 10 GX FPGA, which is the default.
 
    ```
    mkdir build
@@ -129,15 +129,8 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
-   >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
+   >  ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -149,7 +142,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
       ```
       make report
       ```
-      The report resides at `board_test.prj/reports/report.html`.
+      The report resides at `board_test.report.prj/reports/report.html`.
 
    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -159,7 +152,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Agilex® 7 device family, which is the default.
+2. Configure the build system for the Intel® PAC with Intel Arria® 10 GX FPGA, which is the default.
    ```
    mkdir build
    cd build
@@ -168,15 +161,8 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ``` 
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command: 
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ``` 
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -188,7 +174,7 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
       ```
       nmake report
       ```
-      The report resides at `board_test_report.prj/reports/report.html`.
+      The report resides at `board_test.report.prj/reports/report.html`.
 
    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -236,7 +222,11 @@ The tests listed above check the following interfaces in a platform:
     ```
     ./board_test.fpga_emu
     ```
- 2. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+    By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
+    ```
+    ./board_test.fpga_emu -test=<test_number>
+    ```
+ 2. Run the sample on the FPGA device.
     ```
     ./board_test.fpga
     ```
@@ -254,13 +244,13 @@ The tests listed above check the following interfaces in a platform:
     ```
     board_test.exe -test=<test_number>
     ```
- 2. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+ 2. Run the sample on the FPGA device.
     ```
-    ./board_test.fpga.exe
+    board_test.fpga.exe
     ```
     By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
     ```
-    ./board_test.fpga.exe -test=<test_number>
+    board_test.fpga.exe -test=<test_number>
     ```
 
 ## Example Output and Performance
