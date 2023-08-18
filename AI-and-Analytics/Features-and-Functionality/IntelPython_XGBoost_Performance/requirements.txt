@@ -1,0 +1,6 @@
+###### Requirements ######
+notebook
+matplot
+xgboost==0.81
+scikit-learn
+pandas
