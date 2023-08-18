@@ -38,14 +38,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
-          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_read,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
@@ -195,14 +194,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
-          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_read,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
@@ -344,14 +342,13 @@ public:
   // Customizing mmhost only supported when targetting an FPGA part/family
   sycl::ext::oneapi::experimental::annotated_arg<TT *, 
       decltype(sycl::ext::oneapi::experimental::properties{
-          sycl::ext::oneapi::experimental::alignment<datawidth / 8>,
-          sycl::ext::oneapi::experimental::awidth<28>,
-          sycl::ext::oneapi::experimental::buffer_location<aspace>,
-          sycl::ext::oneapi::experimental::dwidth<datawidth>,
-          sycl::ext::oneapi::experimental::latency<0>,
-          sycl::ext::oneapi::experimental::maxburst<1>,
-          sycl::ext::oneapi::experimental::read_write_mode_write,
-          sycl::ext::oneapi::experimental::wait_request_requested})>
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_write,
+          sycl::ext::intel::experimental::wait_request_requested})>
 #else
   TT *
 #endif
