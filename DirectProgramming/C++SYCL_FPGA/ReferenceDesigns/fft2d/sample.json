@@ -1,8 +1,8 @@
 {
   "guid": "6362F0D3-467B-4BFE-BE05-60B23989C8D5",
-  "name": "PCA",
+  "name": "FFT2D",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "Reference design implementing the Principle Component Analysis (PCA) of matrices on Intel® FPGAs",
+  "description": "Reference design implementing a 2D FFT on Intel® FPGAs",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/pca",
+      "ReferenceDesigns/fft2d",
       "include"
     ],
     "exclude": []
@@ -26,7 +26,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./pca.fpga_emu ../data/abalone.csv"
+          "./fft2d.fpga_emu"
         ]
       },
       {
@@ -48,9 +48,9 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/fft2d",
           "nmake fpga_emu",
-          "pca.fpga_emu.exe  ../ReferenceDesigns/pca/data/abalone.csv"
+          "fft2d.fpga_emu.exe"
         ]
       },
       {
@@ -60,7 +60,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/pca",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/fft2d",
           "nmake report"
         ]
       }
