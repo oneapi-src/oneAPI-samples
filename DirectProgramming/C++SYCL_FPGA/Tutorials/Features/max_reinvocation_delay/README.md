@@ -66,7 +66,7 @@ Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to loops in your prog
 
 The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing. Currently, only `N=1` is supported, i.e., that there should be no delay between invocations.
 
-#### Example 1.
+#### Example
 
 Consider the following nested loop:
 
