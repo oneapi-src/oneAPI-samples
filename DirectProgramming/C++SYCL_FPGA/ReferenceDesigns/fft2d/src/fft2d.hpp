@@ -6,84 +6,25 @@
 #include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/sycl.hpp>
 
-#include "pipe_utils.hpp"
-
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-
-using namespace sycl;
-
-#define PRINTF(format, ...)                                    \
-  {                                                            \
-    static const CL_CONSTANT char _format[] = format;          \
-    ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
-/*
- * A 2D FFT transform requires applying a 1D FFT transform to each matrix row
- * followed by a 1D FFT transform to each column of the intermediate result.
- *
- * A single FFT engine can process rows and columns back-to-back. However, as
- * matrix data is stored in global memory, the efficiency of memory accesses
- * will impact the overall performance. Accessing consecutive memory
- * locations leads to efficient access patterns. However, this is obviously
- * not possible when accessing both rows and columns.
- *
- * The implementation is divided between three concurrent SYCL kernels, as
- * depicted below:
- *
- *  ---------------------      ---------------      -------------------------
- *  | read matrix rows, | ---> |  FFT engine | ---> | bit-reverse, transpose |
- *  |  form 8 streams   |  x8  |    (task)   |  x8  |    and write matrix    |
- *  ---------------------      ---------------      --------------------------
- *
- * This sequence of kernels does back-to-back row processing followed by a
- * data transposition and writes the results back to memory. The host code
- * runs these kernels twice to produce the overall 2D FFT transform
- *
- *
- * These kernels transfer pipes.
- * This avoids the need to read and write intermediate data using global
- * memory.
- *
- * In many cases the FFT engine is a building block in a large application. In
- * this case, the memory layout of the matrix can be altered to achieve higher
- * memory transfer efficiency. This implementation demonstrates how an
- * alternative memory layout can improve performance. The host switches
- * between the two memory layouts using a kernel argument. See the
- * 'MangleBits' function for additional details.
- */
-
-// Include source code for an engine that produces 8 points each step
-///////////////////
-
-// Complex single-precision floating-point radix-4 feedforward FFT / iFFT engine
+// Complex single-precision floating-point feedforward FFT / iFFT engine
+// Configurable in 4 or 8-parallel versions.
 //
 // See Mario Garrido, Jesús Grajal, M. A. Sanchez, Oscar Gustafsson:
 // Pipeline Radix-2k Feedforward FFT Architectures.
 // IEEE Trans. VLSI Syst. 21(1): 23-32 (2013))
 //
-// The log(size) of the transform must be a compile-time constant argument.
-// This FFT engine processes 8 points for each invocation. The inputs are eight
-// ordered streams while the outputs are in bit reversed order.
+// The log(points) of the transform must be a compile-time constant argument.
+// This FFT engine processes 4 or 8 points for each invocation.
 //
 // The entry point of the engine is the 'FFTStep' function. This function
-// passes 8 data points through a fixed sequence of processing blocks
+// passes 4 or 8 data points through a fixed sequence of processing blocks
 // (butterfly, rotation, swap, reorder, multiplications, etc.) and produces
-// 8 output points towards the overall FFT transform.
+// 4 or 8 output points towards the overall FFT transform.
 //
 // The engine is designed to be invoked from a loop in a single work-item task.
 // When compiling a single work-item task, the compiler leverages pipeline
 // parallelism and overlaps the execution of multiple invocations of this
 // function. A new instance can start processing every clock cycle
-
-// Includes tabled twiddle factors - storing constants uses fewer resources
-// than instantiating 'cos' or 'sin' hardware
-// Twiddle factors for radix-4 FFTs
-// Precomputed for FFT sizes between 8 and 4096 points
 
 // FFT butterfly building block
 template <size_t points, typename T>
@@ -167,7 +108,6 @@ ac_complex<T> Delay(ac_complex<T> data, int depth, ac_complex<T> *shift_reg) {
 // Invocation count: 0123...          01234567...
 // data[0]         : GECA...   ---->      DBCA...
 // data[1]         : HFDB...   ---->      HFGE...
-
 template <size_t points, typename T>
 std::array<ac_complex<T>, points> ReorderData(
     std::array<ac_complex<T>, points> data, int depth, ac_complex<T> *shift_reg,
@@ -205,7 +145,6 @@ std::array<ac_complex<T>, points> ReorderData(
 // If there are precomputed twiddle factors for the given FFT size, uses them
 // This saves hardware resources, because it avoids evaluating 'cos' and 'sin'
 // functions
-
 template <int size, size_t points, typename T>
 ac_complex<T> Twiddle(int index, int stage, int stream) {
   ac_complex<T> twid;
@@ -359,20 +298,27 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
     };
   // clang-format on
 
-  // Use the precomputed twiddle fators, if available - otherwise, compute them
+  // Use the precomputed twiddle factors, if available - otherwise, compute them
   int twid_stage = stage >> 1;
   if constexpr (size <= (1 << (kTwiddleStages * 2 + 2))) {
     if constexpr (points == 8) {
-      twid.r() = twiddles_cos_8_points[twid_stage][stream]
-                             [index * ((1 << (kTwiddleStages * 2 + 2)) / size)];
-      twid.i() = twiddles_sin_8_points[twid_stage][stream]
-                             [index * ((1 << (kTwiddleStages * 2 + 2)) / size)];
-    }
-    else {
-      twid.r() = twiddles_cos_4_points[twid_stage][stream]
-                             [index * ((1 << (kTwiddleStages * 2 + 2)) / size)];
-      twid.i() = twiddles_sin_4_points[twid_stage][stream]
-                             [index * ((1 << (kTwiddleStages * 2 + 2)) / size)];      
+      twid.r() =
+          twiddles_cos_8_points[twid_stage][stream]
+                               [index *
+                                ((1 << (kTwiddleStages * 2 + 2)) / size)];
+      twid.i() =
+          twiddles_sin_8_points[twid_stage][stream]
+                               [index *
+                                ((1 << (kTwiddleStages * 2 + 2)) / size)];
+    } else {
+      twid.r() =
+          twiddles_cos_4_points[twid_stage][stream]
+                               [index *
+                                ((1 << (kTwiddleStages * 2 + 2)) / size)];
+      twid.i() =
+          twiddles_sin_4_points[twid_stage][stream]
+                               [index *
+                                ((1 << (kTwiddleStages * 2 + 2)) / size)];
     }
   } else {
     // This would generate hardware consuming a large number of resources
@@ -407,7 +353,6 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
     double theta = -1.0f * kTwoPi / size * (pos & (size - 1));
     twid.r() = cos(theta);
     twid.i() = sin(theta);
-
   }
   return twid;
 }
@@ -416,7 +361,6 @@ ac_complex<T> Twiddle(int index, int stage, int stream) {
 template <int size, size_t points, typename T>
 std::array<ac_complex<T>, points> ComplexRotate(
     std::array<ac_complex<T>, points> data, int index, int stage) {
-
 #pragma unroll
   for (int group = 0; group < points / 4; group++) {
 #pragma unroll
@@ -428,19 +372,17 @@ std::array<ac_complex<T>, points> ComplexRotate(
   return data;
 }
 
-// Process 8 input points towards and a FFT/iFFT of size N, N >= 8
-// (in order input, bit reversed output). Apply all input points in N / 8
+// Process "points" input points towards and a FFT/iFFT of size N, N >= points
+// (in order input, bit reversed output). Apply all input points in N / points
 // consecutive invocations. Obtain all outputs in N /8 consecutive invocations
-// starting with invocation N /8 - 1 (outputs are delayed). Multiple
+// starting with invocation N /points - 1 (outputs are delayed). Multiple
 // back-to-back transforms can be executed
 //
-// 'data' encapsulates 8 complex single-precision floating-point input points
-// 'step' specifies the index of the current invocation
+// 'data' encapsulates points complex single-precision floating-point input
+// points 'step' specifies the index of the current invocation
 // 'fft_delay_elements' is an array representing a sliding window of size
-// N+8*(log(N)-2) 'inverse' toggles between the direct and inverse transform
-// 'logn' should be a COMPILE TIME constant evaluating log(N) - the constant is
-//        propagated throughout the code to achieve efficient hardware
-//
+// N+points*(log(N)-2) 'inverse' toggles between the direct and inverse
+// transform
 template <int logn, size_t points, typename T>
 std::array<ac_complex<T>, points> FFTStep(
     std::array<ac_complex<T>, points> data, int step,
@@ -459,16 +401,14 @@ std::array<ac_complex<T>, points> FFTStep(
 
   int stage;
   constexpr int kInitStages = points == 8 ? 2 : 1;
-  if constexpr (points == 8){
-
+  if constexpr (points == 8) {
     // Stage 1
     data = Butterfly(data);
     data = ComplexRotate<size>(data, step & (size / points - 1), 1);
     data = Swap(data);
 
     stage = 2;
-  }
-  else{
+  } else {
     stage = 1;
   }
 
@@ -533,7 +473,6 @@ std::array<ac_complex<T>, points> FFTStep(
 }
 
 // This utility function bit-reverses an integer 'x' of width 'bits'.
-
 template <int bits>
 int BitReversed(int x) {
   int y = 0;
@@ -561,7 +500,6 @@ int BitReversed(int x) {
  * consecutive in memory, while the distance between locations from the same
  * column would be only 2^(N/2)
  */
-
 template <int logn>
 int MangleBits(int x) {
   constexpr int kNB = logn / 2;
@@ -573,12 +511,9 @@ int MangleBits(int x) {
   return (x & ~mask) | a95 | a1410;
 }
 
-/* This kernel reads the matrix data and provides 8 parallel streams to the
- * FFT engine. Each workgroup reads 8 matrix rows to local memory. Once this
- * data has been buffered, the workgroup produces 8 streams from strided
- * locations in local memory, according to the requirements of the FFT engine.
+/* This kernel reads the matrix data and provides "1<<log_points" data to the
+ * FFT engine.
  */
-
 template <int logn, size_t log_points, typename PipeOut, typename T>
 struct Fetch {
   ac_complex<T> *src;
@@ -596,16 +531,15 @@ struct Fetch {
     for (int i = 0; i < kIterations; i++) {
       // Local memory for storing 8 rows
       ac_complex<T> buf[kPoints * kN];
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
-
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
         // Each read fetches 8 matrix points
         int x = (i * kN + work_item) << log_points;
 
-        /* When using the alternative memory layout, each row consists of a set of
-         * segments placed far apart in memory. Instead of reading all segments from
-         * one row in order, read one segment from each row before switching to the
-         *  next segment. This requires swapping bits log(N) + 2 ... log(N) with
-         *  bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
+        /* When using the alternative memory layout, each row consists of a set
+         * of segments placed far apart in memory. Instead of reading all
+         * segments from one row in order, read one segment from each row before
+         * switching to the next segment. This requires swapping bits log(N) + 2
+         * ... log(N) with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
          */
 
         int where, where_global;
@@ -623,14 +557,14 @@ struct Fetch {
           where_global = where;
         }
 
-
 #pragma unroll
         for (int k = 0; k < kPoints; k++) {
-          buf[(where & ((1 << (logn + log_points)) - 1)) + k] = src[where_global + k];
+          buf[(where & ((1 << (logn + log_points)) - 1)) + k] =
+              src[where_global + k];
         }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
         int row = work_item >> (logn - log_points);
         int col = work_item & (kN / kPoints - 1);
 
@@ -639,86 +573,16 @@ struct Fetch {
         std::array<ac_complex<T>, kPoints> to_pipe;
 #pragma unroll
         for (int k = 0; k < kPoints; k++) {
-          to_pipe[k] = buf[row * kN + BitReversed<log_points>(k) * kN / kPoints + col];
+          to_pipe[k] =
+              buf[row * kN + BitReversed<log_points>(k) * kN / kPoints + col];
         }
         PipeOut::write(to_pipe);
       }
     }
-
-//     constexpr int kN = (1 << logn);
-//     constexpr int kPoints = (1 << log_points);
-
-//     constexpr int kWorkGroupSize = kN;
-//     constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
-
-//     for (int i = 0; i < kIterations; i++) {
-//       // Local memory for storing kPoints rows
-//       ac_complex<T> buf[kPoints * kN];
-
-//       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-//         // Each read fetches kPoints matrix points
-//         int x = (i * kN + work_item) << log_points;
-
-//         /* When using the alternative memory layout, each row consists of a set
-//          * of segments placed far apart in memory. Instead of reading all
-//          * segments from one row in order, read one segment from each row before
-//          * switching to the next segment. This requires swapping bits log(N) + 2
-//          * ... log(N) with bits log(N) / 2 + 2 ... log(N) / 2 in the offset.
-//          */
-
-//         int where, where_global;
-//         if (mangle) {
-//           constexpr int kNB = logn / 2;
-//           int a1210 = x & ((kPoints - 1) << (2 * kNB));
-//           int a75 = x & ((kPoints - 1) << kNB);
-//           int mask = ((kPoints - 1) << kNB) | ((kPoints - 1) << (2 * kNB));
-//           a1210 >>= kNB;
-//           a75 <<= kNB;
-//           where = (x & ~mask) | a1210 | a75;
-//           where_global = MangleBits<logn>(where);
-//         } else {
-//           where = x;
-//           where_global = where;
-//         }
-
-//         auto base_addr = (where & ((1 << (logn + log_points)) - 1));
-
-// #pragma unroll
-//         for (int k = 0; k < kPoints; k++) {
-//           buf[base_addr + k] = src[where_global + k];
-//         }
-//       }
-
-//       for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
-//            work_item++) {
-//         int row = (work_item * kPoints) >> (logn - log_points);
-//         int col = (work_item * kPoints) & (kN / kPoints - 1);
-
-//         [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
-//         ac_complex<T> local_buf[kPoints][kPoints];
-//         for (int wi = 0; wi < kPoints; wi++) {
-// #pragma unroll
-//           for (int k = 0; k < kPoints; k++) {
-//             local_buf[wi][k] = buf[row * kN + wi * kN / kPoints + col + k];
-//           }
-//         }
-
-//         for (int k = 0; k < kPoints; k++) {
-//           std::array<ac_complex<T>, kPoints> to_pipe;
-// #pragma unroll
-//           for (int kk = 0; kk < kPoints; kk++) {
-//             to_pipe[kk] = local_buf[BitReversed<log_points>(kk)][k];
-//           }
-
-//           // Stream fetched data to the FFT engine
-//           PipeOut::write(to_pipe);
-//         }
-//       }
-//     }
   }
 };
 
-/* This single work-item task wraps the FFT engine
+/* The FFT engine
  * 'inverse' toggles between the direct and the inverse transform
  */
 template <int logn, size_t log_points, typename PipeIn, typename PipeOut,
@@ -764,12 +628,12 @@ struct FFT {
   }
 };
 
-/* This kernel receives the FFT results, buffers 8 rows and then writes the
- * results transposed in memory. Because 8 rows are buffered, 8 consecutive
- * columns can be written at a time on each transposed row. This provides some
- * degree of locality. In addition, when using the alternative matrix format,
- * consecutive rows are closer in memory, and this is also beneficial for
- * higher memory access efficiency
+/* This kernel receives the FFT results, buffers "1<<log_points" rows and then
+ * writes the results transposed in memory. Because "1<<log_points" rows are
+ * buffered, "1<<log_points" consecutive columns can be written at a time on
+ * each transposed row. This provides some degree of locality. In addition, when
+ * using the alternative matrix format, consecutive rows are closer in memory,
+ * and this is also beneficial for higher memory access efficiency
  */
 using sycl::ext::intel::experimental::property::usm::buffer_location;
 template <int logn, size_t log_points, typename PipeIn, typename T>
@@ -790,8 +654,6 @@ struct Transpose {
   Transpose(ac_complex<T> *dest_, int mangle_) : dest(dest_), mangle(mangle_) {}
 
   void operator()() const {
-
-
     constexpr int kN = (1 << logn);
     constexpr int kWorkGroupSize = kN;
     constexpr int kPoints = (1 << log_points);
@@ -799,8 +661,7 @@ struct Transpose {
 
     for (int t = 0; t < kIterations; t++) {
       ac_complex<T> buf[kPoints * kN];
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
-
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
         std::array<ac_complex<T>, kPoints> from_pipe = PipeIn::read();
 
 #pragma unroll
@@ -809,8 +670,7 @@ struct Transpose {
         }
       }
 
-      for (int work_item = 0; work_item < kWorkGroupSize; work_item++){
-
+      for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
         int colt = work_item;
         int revcolt = BitReversed<logn>(colt);
         int i = (t * kN + work_item) >> logn;
@@ -823,56 +683,6 @@ struct Transpose {
         }
       }
     }
-
-
-//     constexpr int kN = (1 << logn);
-//     constexpr int kPoints = (1 << log_points);
-
-//     constexpr int kWorkGroupSize = kN;
-//     constexpr int kIterations = kN * kN / kPoints / kWorkGroupSize;
-
-//     // using BurstCoalescedLSU =
-//     // ext::intel::lsu<ext::intel::burst_coalesce<true>,
-//     //                                  ext::intel::statically_coalesce<true>>;
-
-//     for (int t = 0; t < kIterations; t++) {
-//       ac_complex<T> buf[kPoints * kN];
-//       for (int work_item = 0; work_item < kWorkGroupSize; work_item++) {
-//         std::array<ac_complex<T>, kPoints> from_pipe = PipeIn::read();
-
-// #pragma unroll
-//         for (int k = 0; k < kPoints; k++) {
-//           buf[kPoints * work_item + k] = from_pipe[k];
-//         }
-//       }
-
-//       for (int work_item = 0; work_item < kWorkGroupSize / kPoints;
-//            work_item++) {
-//         // int colt = work_item;
-
-//         [[intel::private_copies(kPoints)]] // NO-FORMAT: Attribute 
-//         ac_complex<T> local_buf[kPoints][kPoints];
-//         for (int wi = 0; wi < kPoints; wi++) {
-// #pragma unroll
-//           for (int k = 0; k < kPoints; k++) {
-//             local_buf[wi][k] = buf[wi * kN + work_item * kPoints + k];
-//           }
-//         }
-
-//         [[intel::ivdep]] // NO-FORMAT: Attribute 
-//         for (int k = 0; k < kPoints; k++) {
-//           int revcolt = BitReversed<logn>(work_item * kPoints + k);
-//           int i = (t * kN + revcolt) >> logn;
-//           int where = revcolt * kN + i * kPoints;
-//           if (mangle) where = MangleBits<logn>(where);
-
-// #pragma unroll
-//           for (int kk = 0; kk < kPoints; kk++) {
-//             dest[where + kk] = local_buf[kk][k];
-//           }
-//         }
-//       }
-//     }
   }
 };
 

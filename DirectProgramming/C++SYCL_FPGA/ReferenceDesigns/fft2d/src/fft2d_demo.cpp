@@ -6,7 +6,6 @@
 
 #include "exception_handler.hpp"
 #include "fft2d.hpp"
-#include "pipe_utils.hpp"
 
 // Forward declarations
 void TestFFT(bool mangle, bool inverse);
@@ -84,8 +83,8 @@ void TestFFT(bool mangle, bool inverse) {
     std::cout << "Running on device: "
               << device.get_info<sycl::info::device::name>() << std::endl;
 
-
-    // Define the log of the FFT size on each dimension and the level of parallelism to implement
+    // Define the log of the FFT size on each dimension and the level of
+    // parallelism to implement
 #if FPGA_SIMULATOR
     // Force small sizes in simulation mode to reduce simulation time
     constexpr int kLogN = 4;
@@ -170,15 +169,48 @@ void TestFFT(bool mangle, bool inverse) {
               << "FFT transform (" << (mangle ? "alternative" : "ordered")
               << " data layout)" << std::endl;
 
-    // A 2D FFT transform requires applying a 1D FFT transform to each matrix
-    // row followed by a 1D FFT transform to each column of the intermediate
-    // result.
+    /*
+     * A 2D FFT transform requires applying a 1D FFT transform to each matrix
+     * row followed by a 1D FFT transform to each column of the intermediate
+     * result.
+     * A single FFT engine can process rows and columns back-to-back. However,
+     * as matrix data is stored in global memory, the efficiency of memory
+     * accesses will impact the overall performance. Accessing consecutive
+     * memory locations leads to efficient access patterns. However, this is
+     * obviously not possible when accessing both rows and columns.
+     *
+     * The implementation is divided between three concurrent SYCL kernels, as
+     * depicted below:
+     *
+     *  --------------------      --------------      --------------------------
+     *  | read matrix rows | ---> | FFT engine | ---> | bit-reverse, transpose |
+     *  |                  |      |            |      |    and write matrix    |
+     *  --------------------      --------------      --------------------------
+     *
+     * This sequence of kernels does back-to-back row processing followed by a
+     * data transposition and writes the results back to memory. The host code
+     * runs these kernels twice to produce the overall 2D FFT transform
+     *
+     *
+     * These kernels transfer data through pipes.
+     * This avoids the need to read and write intermediate data using global
+     * memory.
+     *
+     * In many cases the FFT engine is a building block in a large application.
+     * In this case, the memory layout of the matrix can be altered to achieve
+     * higher memory transfer efficiency. This implementation demonstrates how
+     * an alternative memory layout can improve performance. The host switches
+     * between the two memory layouts using a kernel argument. See the
+     * 'MangleBits' function for additional details.
+     */
 
     double start_time{};
     double end_time{};
 
+    // This is a limitation of the design
     static_assert(kN / kParallelism >= kParallelism);
 
+    // Kernel to kernel pipes
     using FetchToFFT =
         sycl::ext::intel::pipe<class FetchToFFTPipe,
                                std::array<ac_complex<float>, kParallelism>, 0>;
@@ -223,16 +255,6 @@ void TestFFT(bool mangle, bool inverse) {
     // Copy the output data from the USM memory to the host DDR
     q.memcpy(host_output_data, output_data, sizeof(ac_complex<float>) * kN * kN)
         .wait();
-
-    // std::cout << "Output data from host\n";
-    // for(int row=0; row<kN; row++){
-    //   for(int col=0; col<kN; col++){
-    //     int where =  row*kN + col;
-    //     std::cout << "(" << host_output_data[where].r() << ", " <<
-    //     host_output_data[where].i() << ") " ;
-    //   }
-    //   std::cout << "\n";
-    // }
 
     std::cout << "Processing time = " << kernel_runtime << "s" << std::endl;
 
