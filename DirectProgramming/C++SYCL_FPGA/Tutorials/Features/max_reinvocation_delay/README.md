@@ -64,7 +64,7 @@ Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to loops in your prog
 
 > **Note:** For interleaved loops, the loop reinvocation delay is defined as the latency between the last iteration of a loop invocation and the first iteration of the next loop invocation immediately following it, which may not be the next loop invocation in the program order.
 
-The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing. Currently, only `N=1` is supported, i.e., the ability to indicate that there shall not be any delay between invocations.
+The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing. Currently, only `N=1` is supported, i.e., that there should be no delay between invocations.
 
 #### Example 1.
 
