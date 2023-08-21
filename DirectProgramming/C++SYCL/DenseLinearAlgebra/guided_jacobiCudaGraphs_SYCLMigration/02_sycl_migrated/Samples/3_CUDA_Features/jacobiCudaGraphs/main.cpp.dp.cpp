@@ -43,15 +43,13 @@
 // of all ones.
 // The dimension N_ROWS is included in jacobi.h
 
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <helper_cuda.h>
 #include <helper_timer.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <dpct/dpct.hpp>
-#include <sycl/sycl.hpp>
-
 #include "jacobi.h"
 
 // Run the Jacobi method for A*x = b on GPU with CUDA Graph -
@@ -60,12 +58,6 @@ extern double JacobiMethodGpuCudaGraphExecKernelSetParams(
     const float *A, const double *b, const float conv_threshold,
     const int max_iter, double *x, double *x_new, sycl::queue q);
 
-// Run the Jacobi method for A*x = b on GPU with Instantiated CUDA Graph Update
-// API - cudaGraphExecUpdate().
-/*extern double JacobiMethodGpuCudaGraphExecUpdate(
-    const float *A, const double *b, const float conv_threshold,
-    const int max_iter, double *x, double *x_new, dpct::queue_ptr stream);
-*/
 // Run the Jacobi method for A*x = b on GPU without CUDA Graph.
 extern double JacobiMethodGpu(const float *A, const double *b,
                               const float conv_threshold, const int max_iter,
@@ -85,10 +77,8 @@ int main(int argc, char **argv) {
     printf("Command line: jacobiCudaGraphs [-option]\n");
     printf("Valid options:\n");
     printf(
-        "-gpumethod=<0 or 1>  : 0 - [Default] "  //<0,1 or 2>
+        "-gpumethod=<0 or 1>  : 0 - [Default] "
         "JacobiMethodGpuCudaGraphExecKernelSetParams\n");
-    // printf("                       : 1 -
-    // JacobiMethodGpuCudaGraphExecUpdate\n");
     printf("                       : 1 - JacobiMethodGpu - Non CUDA Graph\n");
     printf("-device=device_num     : cuda device id");
     printf("-help         : Output a help message\n");
@@ -100,12 +90,12 @@ int main(int argc, char **argv) {
     gpumethod = getCmdLineArgumentInt(argc, (const char **)argv, "gpumethod");
 
     if (gpumethod < 0 || gpumethod > 1) {
-      printf("Error: gpumethod must be 0 or 1 , gpumethod=%d is invalid\n",
+      printf("Error: gpumethod must be 0 or 1 or 2, gpumethod=%d is invalid\n",
              gpumethod);
       exit(EXIT_SUCCESS);
     }
   }
-
+  
   sycl::queue q{aspect_selector(sycl::aspect::fp64),
                 sycl::property::queue::in_order()};
 
@@ -114,9 +104,12 @@ int main(int argc, char **argv) {
 
   double *b = NULL;
   float *A = NULL;
-  b = sycl::malloc_host<double>(N_ROWS, q);
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      b = sycl::malloc_host<double>(N_ROWS, q)));
   memset(b, 0, N_ROWS * sizeof(double));
-  A = sycl::malloc_host<float>(N_ROWS * N_ROWS, q);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(A = sycl::malloc_host<float>(
+                           N_ROWS * N_ROWS, q)));
   memset(A, 0, N_ROWS * N_ROWS * sizeof(float));
 
   createLinearSystem(A, b);
@@ -148,17 +141,25 @@ int main(int argc, char **argv) {
 
   float *d_A;
   double *d_b, *d_x, *d_x_new;
+  
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_b = sycl::malloc_device<double>(N_ROWS, q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS,
+                                         q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_x = sycl::malloc_device<double>(N_ROWS, q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_x_new = sycl::malloc_device<double>(
+                                       N_ROWS, q)));
 
-  d_b = sycl::malloc_device<double>(N_ROWS, q);
-
-  d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS, q);
-  d_x = sycl::malloc_device<double>(N_ROWS, q);
-  d_x_new = sycl::malloc_device<double>(N_ROWS, q);
-
-  q.memset(d_x, 0, sizeof(double) * N_ROWS);
-  q.memset(d_x_new, 0, sizeof(double) * N_ROWS);
-  q.memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS);
-  q.memcpy(d_b, b, sizeof(double) * N_ROWS);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(q.memset(d_x, 0, sizeof(double) * N_ROWS)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(q.memset(d_x_new, 0, sizeof(double) * N_ROWS)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      q.memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(q.memcpy(d_b, b, sizeof(double) * N_ROWS)));
 
   q.wait();
 
@@ -169,20 +170,22 @@ int main(int argc, char **argv) {
   if (gpumethod == 0) {
     sumGPU = JacobiMethodGpuCudaGraphExecKernelSetParams(
         d_A, d_b, conv_threshold, max_iter, d_x, d_x_new, q);
-
   } else if (gpumethod == 1) {
-    sumGPU =
-        JacobiMethodGpu(d_A, d_b, conv_threshold, max_iter, d_x, d_x_new, q);
+    sumGPU = JacobiMethodGpu(d_A, d_b, conv_threshold, max_iter, d_x, d_x_new,
+                             q);
   }
+
   sdkStopTimer(&timerGpu);
   printf("Device Processing time: %f (ms)\n", sdkGetTimerValue(&timerGpu));
 
-  sycl::free(d_b, q);
-  sycl::free(d_A, q);
-  sycl::free(d_x, q);
-  sycl::free(d_x_new, q);
-  sycl::free(A, q);
-  sycl::free(b, q);
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_b, q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_A, q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_x, q)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_x_new, q)));
+
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(A, q)));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(b, q)));
 
   printf("&&&& jacobiCudaGraphs %s\n",
          (fabs(sum - sumGPU) < conv_threshold) ? "PASSED" : "FAILED");
