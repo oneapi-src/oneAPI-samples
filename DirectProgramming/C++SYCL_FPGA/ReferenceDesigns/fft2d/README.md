@@ -255,7 +255,35 @@ Additionally, the `cmake` build system can be configured using the following par
 Example Output when running on the **Terasic DE10-Agilex Development Board**.
 
 ```
-TODO
+No program argument was passed, running all fft2d variants
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Using USM device allocations
+Launching a 1048576 points 8-parallel FFT transform (ordered data layout)
+Processing time = 0.00296994s
+Throughput = 0.353063 Gpoints / sec (35.3063 Gflops)
+Signal to noise ratio on output sample: 137.231
+ --> PASSED
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Using USM device allocations
+Launching a 1048576 points 8-parallel inverse FFT transform (ordered data layout)
+Processing time = 0.00277858s
+Throughput = 0.377378 Gpoints / sec (37.7378 Gflops)
+Signal to noise ratio on output sample: 136.861
+ --> PASSED
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Using USM device allocations
+Launching a 1048576 points 8-parallel FFT transform (alternative data layout)
+Processing time = 0.0027715s
+Throughput = 0.378343 Gpoints / sec (37.8343 Gflops)
+Signal to noise ratio on output sample: 137.436
+ --> PASSED
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Using USM device allocations
+Launching a 1048576 points 8-parallel inverse FFT transform (alternative data layout)
+Processing time = 0.00277509s
+Throughput = 0.377852 Gpoints / sec (37.7852 Gflops)
+Signal to noise ratio on output sample: 136.689
+ --> PASSED
 ```
 
 ## License
