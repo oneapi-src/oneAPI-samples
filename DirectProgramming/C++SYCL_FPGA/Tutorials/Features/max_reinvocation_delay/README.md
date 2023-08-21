@@ -142,6 +142,10 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
       ```
       make fpga_sim
       ```
+   4. Compile for FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      make fpga
+      ```
 
 ### On Windows*
 
@@ -172,6 +176,10 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
       ```
       nmake fpga_sim
       ```
+   4. Compile for FPGA hardware (longer compile time, targets an FPGA device).
+      ```
+      nmake fpga
+      ```
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
@@ -187,6 +195,7 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./max_reinvocation_delay.fpga_sim
    ```
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
 
 ### On Windows
 
@@ -200,6 +209,7 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    max_reinvocation_delay.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
 
 ## Example Output
 
