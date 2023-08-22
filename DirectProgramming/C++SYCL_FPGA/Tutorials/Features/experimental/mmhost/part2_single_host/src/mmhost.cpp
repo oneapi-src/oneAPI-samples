@@ -5,12 +5,11 @@
 
 using namespace sycl::ext::oneapi::experimental;
 
-struct SingleMMIP{
-  
+struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
   // specified, this kernel will result in the same IP component as Example 1.
-  annotated_ptr<int> x; 
-  annotated_ptr<int> y; 
+  annotated_ptr<int> x;
+  annotated_ptr<int> y;
   annotated_ptr<int> z;
   int size;
 
@@ -21,7 +20,7 @@ struct SingleMMIP{
   }
 };
 
-int main(void){
+int main(void) {
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -52,14 +51,14 @@ int main(void){
     auto *array_B = sycl::malloc_shared<int>(kN, q);
     int *array_C = sycl::malloc_shared<int>(kN, q);
 
-    for(int i = 0; i < kN; i++){
-        array_A[i] = i;
-        array_B[i] = 2*i;
+    for (int i = 0; i < kN; i++) {
+      array_A[i] = i;
+      array_B[i] = 2 * i;
     }
 
     q.single_task(SingleMMIP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
-      auto golden = 3*i;
+      auto golden = 3 * i;
       if (array_C[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
                   << " , found: " << array_C[i] << "\n";
@@ -74,8 +73,7 @@ int main(void){
     free(array_C, q);
 
     return passed ? EXIT_SUCCESS : EXIT_FAILURE;
-  }
-  catch(sycl::exception const &e){
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 

@@ -3,12 +3,11 @@
 
 #include "exception_handler.hpp"
 
-struct PointerIP{
-  
-  //Declare the pointer interfaces to be used in this kernel, look at the other
-  //kernels to compare the difference 
-  int *x; 
-  int *y; 
+struct PointerIP {
+  // Declare the pointer interfaces to be used in this kernel, look at the other
+  // kernels to compare the difference
+  int *x;
+  int *y;
   int *z;
   int size;
 
@@ -19,7 +18,7 @@ struct PointerIP{
   }
 };
 
-int main(void){
+int main(void) {
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -50,14 +49,14 @@ int main(void){
     auto *array_B = sycl::malloc_shared<int>(kN, q);
     int *array_C = sycl::malloc_shared<int>(kN, q);
 
-    for(int i = 0; i < kN; i++){
-        array_A[i] = i;
-        array_B[i] = 2*i;
+    for (int i = 0; i < kN; i++) {
+      array_A[i] = i;
+      array_B[i] = 2 * i;
     }
 
     q.single_task(PointerIP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
-      auto golden = 3*i;
+      auto golden = 3 * i;
       if (array_C[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
                   << " , found: " << array_C[i] << "\n";
@@ -72,8 +71,7 @@ int main(void){
     free(array_C, q);
 
     return passed ? EXIT_SUCCESS : EXIT_FAILURE;
-  }
-  catch(sycl::exception const &e){
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 

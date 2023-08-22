@@ -6,46 +6,35 @@
 using namespace sycl::ext::oneapi::experimental;
 using namespace sycl::ext::intel::experimental;
 
-using usm_buffer_location = 
-  sycl::ext::intel::experimental::property::usm::buffer_location;
+using usm_buffer_location =
+    sycl::ext::intel::experimental::property::usm::buffer_location;
 
 constexpr int kBL1 = 0;
 constexpr int kBL2 = 1;
 
-struct DDR_IP{
+struct DDR_IP {
+  using paramsBL1 =
+      decltype(properties{buffer_location<kBL1>, maxburst<8>, dwidth<256>,
+                          alignment<32>, awidth<32>, latency<0>});
 
-using paramsBL1 = decltype(properties{
-          buffer_location<kBL1>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>, 
-          awidth<32>, 
-          latency<0>
-          });
-          
-  using paramsBL2 = decltype(properties{
-          buffer_location<kBL2>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>,
-          awidth<32>, 
-          latency<0>
-          });
+  using paramsBL2 =
+      decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
+                          alignment<32>, awidth<32>, latency<0>});
 
   annotated_ptr<int, paramsBL1> x;
   annotated_ptr<int, paramsBL1> y;
-  annotated_ptr<int, paramsBL2> z;   
+  annotated_ptr<int, paramsBL2> z;
   int size;
 
   void operator()() const {
-    #pragma unroll 4
+#pragma unroll 4
     for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }
   }
 };
 
-int main(void){
+int main(void) {
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -73,18 +62,21 @@ int main(void){
 
     // Host array must share the same buffer location property as defined in the
     // kernel Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
-    auto *array_B = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
-    int *array_C = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
+    auto *array_A = sycl::malloc_shared<int>(
+        kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    auto *array_B = sycl::malloc_shared<int>(
+        kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    int *array_C = sycl::malloc_shared<int>(
+        kN, q, sycl::property_list{usm_buffer_location(kBL2)});
 
-    for(int i = 0; i < kN; i++){
-        array_A[i] = i;
-        array_B[i] = 2*i;
+    for (int i = 0; i < kN; i++) {
+      array_A[i] = i;
+      array_B[i] = 2 * i;
     }
 
     q.single_task(DDR_IP{array_A, array_B, array_C, kN}).wait();
     for (int i = 0; i < kN; i++) {
-      auto golden = 3*i;
+      auto golden = 3 * i;
       if (array_C[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
                   << " , found: " << array_C[i] << "\n";
@@ -99,8 +91,7 @@ int main(void){
     free(array_C, q);
 
     return passed ? EXIT_SUCCESS : EXIT_FAILURE;
-  }
-  catch(sycl::exception const &e){
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
