@@ -55,12 +55,11 @@ The compiler will infer Avalon memory-mapped host interfaces for your design whe
 
 #### Example 1: A kernel with multiple pointer arguments
 ```c++
-struct PointerIP{
-
-  //Declare the pointer interfaces to be used in this kernel, look at the other
-  //kernels to compare the difference 
-  int *x; 
-  int *y; 
+struct PointerIP {
+  // Declare the pointer interfaces to be used in this kernel, look at the other
+  // kernels to compare the difference
+  int *x;
+  int *y;
   int *z;
   int size;
 
@@ -79,12 +78,11 @@ You can override the default behaviour of a pointer argument by declaring an `an
 
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
-struct SingleMMIP{
-  
+struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
   // specified, this kernel will result in the same IP component as Example 1.
-  annotated_ptr<int> x; 
-  annotated_ptr<int> y; 
+  annotated_ptr<int> x;
+  annotated_ptr<int> y;
   annotated_ptr<int> z;
   int size;
 
@@ -123,44 +121,33 @@ These parameters can be used to improve the performance of `Example 1` by ensuri
 
 #### Example 3: A kernel with dedicated Avalon memory-mapped host interfaces
 ```c++
-constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
-constexpr int kBL3 = 3;
+constexpr int kBL1 = 0;
+constexpr int kBL2 = 1;
+constexpr int kBL3 = 2;
 
 struct MultiMMIP {
+  // Each annotated pointer is configured with a unique `buffer_location`,
+  // resulting in three unique Avalon memory-mapped host interfaces.
+  annotated_ptr<int, decltype(properties{buffer_location<kBL1>, awidth<32>,
+                                         dwidth<32>, latency<1>,
+                                         read_write_mode_read})>
+      x;
 
-// Each annotated pointer is configured with a unique `buffer_location`,
-// resulting in three unique Avalon memory-mapped host interfaces. 
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL1>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<1>, 
-    read_write_mode_read
-  })> x;
+  annotated_ptr<int, decltype(properties{buffer_location<kBL2>, awidth<32>,
+                                         dwidth<32>, latency<1>,
+                                         read_write_mode_read})>
+      y;
 
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL2>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<1>, 
-    read_write_mode_read
-  })> y;
-
-  annotated_ptr<int, decltype(properties{
-    buffer_location<kBL3>,
-    awidth<32>, 
-    dwidth<32>, 
-    latency<1>, 
-    read_write_mode_write
-  })> z;
+  annotated_ptr<int, decltype(properties{buffer_location<kBL3>, awidth<32>,
+                                         dwidth<32>, latency<1>,
+                                         read_write_mode_write})>
+      z;
 
   int size;
 
   void operator()() const {
-
-    #pragma unroll 4
-    for(int i = 0; i < size; i++){
+#pragma unroll 4
+    for (int i = 0; i < size; i++) {
       z[i] = x[i] + y[i];
     }
   }
@@ -184,33 +171,22 @@ We can make better use of the available memory bandwidth by coalescing the 32-bi
 constexpr int kBL1 = 0;
 constexpr int kBL2 = 1;
 
-struct DDR_IP{
+struct DDR_IP {
+  using paramsBL1 =
+      decltype(properties{buffer_location<kBL1>, maxburst<8>, dwidth<256>,
+                          alignment<32>, awidth<32>, latency<0>});
 
-using paramsBL1 = decltype(properties{
-          buffer_location<kBL1>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>, 
-          awidth<32>, 
-          latency<0>
-          });
-          
-  using paramsBL2 = decltype(properties{
-          buffer_location<kBL2>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>,
-          awidth<32>, 
-          latency<0>
-          });
+  using paramsBL2 =
+      decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
+                          alignment<32>, awidth<32>, latency<0>});
 
   annotated_ptr<int, paramsBL1> x;
   annotated_ptr<int, paramsBL1> y;
-  annotated_ptr<int, paramsBL2> z;   
+  annotated_ptr<int, paramsBL2> z;
   int size;
 
   void operator()() const {
-    #pragma unroll 4
+#pragma unroll 4
     for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }
