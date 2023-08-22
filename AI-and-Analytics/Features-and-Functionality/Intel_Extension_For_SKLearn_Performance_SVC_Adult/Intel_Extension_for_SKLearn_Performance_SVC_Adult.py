@@ -134,7 +134,7 @@ left = [1,2]
 pred_acc = [acc_opt, acc_unopt]
 tick_label = ['Intel Extension for SKLearn', 'Unoptimized SKLearn']
 plt.bar(left, pred_acc, tick_label = tick_label, width = 0.5, color = ['blue', 'red'])
-plt.xlabel('Training Method'); plt.ylabel('accuracy, %'); plt.title('SVC Training Time, %')
+plt.xlabel('Training Method'); plt.ylabel('accuracy, %'); plt.title('SVC Accuracy, %')
 plt.show()
 print("Accuracy Difference: ",acc_opt - acc_unopt)
 
