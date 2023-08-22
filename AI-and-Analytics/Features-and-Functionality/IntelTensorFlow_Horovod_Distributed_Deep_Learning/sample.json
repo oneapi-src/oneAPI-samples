@@ -16,12 +16,11 @@
                 "conda create --name tensorflow_horovod --clone tensorflow-gpu",
                 "conda activate tensorflow_horovod",
                 "pip install intel-optimization-for-horovod",
-                "~/.conda/envs/user_pytorch/bin/python -m ipykernel install --user --name=tensorflow_horovod"
+                 "~/.conda/envs/user_pytorch/bin/python -m ipykernel install --user --name=tensorflow_horovod"
             ],
             "id": "distributed_learning_tensorflow_horovod_py",
             "steps": [
-              "source activate tensorflow_horovod",
-				      "python scripts/ci_test.py"
+		    "python scripts/ci_test.py"
              ]
         }
       ]
