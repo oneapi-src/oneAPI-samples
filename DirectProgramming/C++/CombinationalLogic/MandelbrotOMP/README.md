@@ -19,7 +19,7 @@ Each point on the complex plane can be calculated independently, which make the 
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Ubuntu* 18.04 <br> macOS* Catalina or newer
+| OS                                | Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 
@@ -45,12 +45,12 @@ When working with the command-line interface (CLI), you should configure the one
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
-> Linux* and macOS*:
+> Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -66,7 +66,7 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the 
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On Linux* and macOS*
+### On Linux*
 1. Change to the sample directory.
 2. Build the program.
     ```
@@ -98,7 +98,7 @@ You can modify the Mandelbrot parameters near the head of the `main.cpp` source 
 
 In `mandelbrot.cpp`, the schedule(<static/dynamic>, <chunk_size>) pragmas in the OpenMP parallel for sections can be modified to change the parallelization parameters. changing between static and dynamic affects how work items are distributed between threads, and the chunk_size affects each work item's size. In `mandelbrot.cpp`, there is a preprocessor definition `NUM_THREADS` set to **8**. Changing this value affects the number of threads dedicated to each parallel section. The ideal number of threads will vary based on device hardware.
 
-### On Linux and macOS
+### On Linux
 
 1. Run the program.
    ```

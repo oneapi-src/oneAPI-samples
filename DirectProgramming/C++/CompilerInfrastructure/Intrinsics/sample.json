@@ -2,14 +2,14 @@
     "name": "Intrinsics",
     "categories": ["Toolkit/oneAPI Direct Programming/C++/Compiler Infrastructure"],
     "description": "Demonstrates the Intrinsic functions of the Intel® oneAPI C++ Compiler Classic",
-    "os": ["darwin"],
+    "os": ["linux"],
     "builder": ["make"],
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
     "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
     "targetDevice": [ "CPU" ],
     "ciTests": {
-        "darwin": [ 
+        "linux": [ 
             { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "debug", "steps": [ "make debug", "make debug_run", "make clean" ] }
         ]
