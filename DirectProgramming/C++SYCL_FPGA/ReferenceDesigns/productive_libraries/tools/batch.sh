@@ -56,7 +56,7 @@ while [ "$index" -lt "${#array[*]}" ]; do
     let index=original_index
 
     echo -e ${GREEN}Building tests of ${kernel}${NOCOLOR}
-    mv ../bin/tests.sh a.sh ; rm ../bin/test* ; mv a.sh ../bin/tests.sh
+    mv ../bin/tests.sh a.sh ; rm ../bin/test* >> ../../batch.out 2>&1 ; mv a.sh ../bin/tests.sh
     make tests  >> ../../batch.out 2>&1
 
     echo -e ${GREEN}Running tests of ${kernel}${NOCOLOR}
