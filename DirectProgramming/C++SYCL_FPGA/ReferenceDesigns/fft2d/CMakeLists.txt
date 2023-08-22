@@ -117,7 +117,7 @@ endif()
 message(STATUS "PARALLELISM=${PARALLELISM}")
 
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG} -DLOGN=${LOGN} -DPARALLELISM=${PARALLELISM} -DDISABLE_SYCL_EXT_ANNOTATED_INTERFACES)
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG} -DLOGN=${LOGN} -DPARALLELISM=${PARALLELISM})
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

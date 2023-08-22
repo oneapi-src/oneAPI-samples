@@ -3,7 +3,6 @@
 
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/sycl.hpp>
 
 // Complex single-precision floating-point feedforward FFT / iFFT engine
@@ -635,19 +634,9 @@ struct FFT {
  * using the alternative matrix format, consecutive rows are closer in memory,
  * and this is also beneficial for higher memory access efficiency
  */
-using sycl::ext::intel::experimental::property::usm::buffer_location;
 template <int logn, size_t log_points, typename PipeIn, typename T>
 struct Transpose {
-  // register_map_mmhost(0,    // buffer_location or aspace
-  //                     64,   // address width
-  //                     512,  // data width
-  //                     500,   // ! latency, must be at least 16
-  //                     2,    // read_write_mode, 0: ReadWrite, 1: Read, 2:
-  //                     Write 16,    // maxburst
-  //                      0,    // align, 0 defaults to Write alignment of the
-  //                      type
-  //                     1     // waitrequest, 0: false, 1: true
-  //                     )
+
   ac_complex<T> *dest;
   int mangle;
 

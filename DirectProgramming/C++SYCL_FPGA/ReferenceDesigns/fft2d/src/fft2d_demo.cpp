@@ -140,7 +140,7 @@ void TestFFT(bool mangle, bool inverse) {
       input_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
       output_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
       temp_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
-    } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
+    } else if (q.get_device().has(sycl::aspect::usm_host_allocations)) {
       std::cout << "Using USM host allocations" << std::endl;
       // No device allocations means that we are probably in an IP authoring
       // flow
@@ -220,7 +220,24 @@ void TestFFT(bool mangle, bool inverse) {
 
     for (int i = 0; i < 2; i++) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
-      ac_complex<float> *to_write = i == 0 ? temp_data : output_data;
+      ac_complex<float> *to_write_raw = i == 0 ? temp_data : output_data;
+
+      #if not defined IS_BSP
+        // In the IP authoring flow, the default interface uses a narrow data width
+        // (64 bits) However, this IP needs 512 bits, so we redefine the interface to
+        // match what's expected.
+        sycl::ext::oneapi::experimental::annotated_arg<
+            ac_complex<float> *, decltype(sycl::ext::oneapi::experimental::properties{
+                       sycl::ext::oneapi::experimental::buffer_location<1>,
+                       sycl::ext::oneapi::experimental::dwidth<512>,
+                       sycl::ext::oneapi::experimental::latency<0>,
+                       sycl::ext::oneapi::experimental::read_write_mode_write,
+                       sycl::ext::oneapi::experimental::wait_request_requested})>
+            to_write{to_write_raw};
+
+      #else
+            to_write = to_write_raw;
+      #endif
 
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
