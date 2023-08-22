@@ -15,33 +15,30 @@ constexpr int kBL3 = 2;
 
 struct MultiMMIP {
 
-  //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernels to compare the difference 
+// Each annotated pointer is configured with a unique `buffer_location`,
+// resulting in three unique Avalon memory-mapped host interfaces. 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_read
   })> x;
 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL2>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_read
   })> y;
 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL3>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_write,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_write
   })> z;
 
   int size;
@@ -81,11 +78,11 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    // Host array must share the same buffer location property as defined in the kernel
-    // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
-    auto *array_B = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
-    int *array_C = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL3)});
+    // Host array must share the same buffer location property as defined in the
+    // kernel Here we may use auto* or int* when declaring the pointer interface
+    auto *array_A = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    auto *array_B = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
+    int *array_C = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL3)});
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;

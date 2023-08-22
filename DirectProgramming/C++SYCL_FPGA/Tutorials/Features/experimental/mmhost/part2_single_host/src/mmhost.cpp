@@ -7,7 +7,8 @@ using namespace sycl::ext::oneapi::experimental;
 
 struct SingleMMIP{
   
-  // This kernel has 3 annotated pointers, but since they have no properties specified, this kernel will result in the same IP component as Example 1.
+  // This kernel has 3 annotated pointers, but since they have no properties
+  // specified, this kernel will result in the same IP component as Example 1.
   annotated_ptr<int> x; 
   annotated_ptr<int> y; 
   annotated_ptr<int> z;
@@ -47,9 +48,9 @@ int main(void){
     std::cout << "Elements in vector : " << kN << "\n";
 
     // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q);
-    auto *array_B = malloc_shared<int>(kN, q);
-    int *array_C = malloc_shared<int>(kN, q);
+    auto *array_A = sycl::malloc_shared<int>(kN, q);
+    auto *array_B = sycl::malloc_shared<int>(kN, q);
+    int *array_C = sycl::malloc_shared<int>(kN, q);
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;

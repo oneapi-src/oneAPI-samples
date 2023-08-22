@@ -1,4 +1,4 @@
-# Memory-Mapped Interfaces (mmhost)
+# Avalon Memory-Mapped Host Interfaces (mmhost)
 This tutorial demonstrates how to configure Avalon memory-mapped host data interfaces for IP components produced with the Intel® oneAPI DPC++/C++ Compiler.
 
 | Optimized for                     | Description
@@ -57,8 +57,8 @@ The compiler will infer Avalon memory-mapped host interfaces for your design whe
 ```c++
 struct PointerIP{
 
-  //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernels to compare the difference 
+  //Declare the pointer interfaces to be used in this kernel, look at the other
+  //kernels to compare the difference 
   int *x; 
   int *y; 
   int *z;
@@ -81,7 +81,8 @@ You can override the default behaviour of a pointer argument by declaring an `an
 ```c++
 struct SingleMMIP{
   
-// This kernel has 3 annotated pointers, but since they have no properties specified, this kernel will result in the same IP component as Example 1.
+  // This kernel has 3 annotated pointers, but since they have no properties
+  // specified, this kernel will result in the same IP component as Example 1.
   annotated_ptr<int> x; 
   annotated_ptr<int> y; 
   annotated_ptr<int> z;
@@ -95,7 +96,7 @@ struct SingleMMIP{
 };
 ```
 
-The following table describes mutually exclusive properties you can use to customize the interface. Only one may be specified at a time. 
+The following table describes the properties you can use to customize how the pointer argument is passed to your component. Only one may be specified at a time. 
 
 | Parameter                 | Description
 |---                        |---
@@ -116,7 +117,7 @@ You can use the following parameters to configure your IP component's Avalon mem
 | `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
 | `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to further optimize the kernel.
 
-We can use some of these parameters to improve the performance of `Example 1`. Re-structure the design so that each pointer has exclusive access to a dedicated Avalon memory-mapped agent memory, like this:
+These parameters can be used to improve the performance of `Example 1` by ensuring that each pointer points to data in a dedicated Avalon memory-mapped agent memory, like this:
 
 ![](assets/dedicated_avhost.svg)
 
@@ -128,31 +129,30 @@ constexpr int kBL3 = 3;
 
 struct MultiMMIP {
 
+// Each annotated pointer is configured with a unique `buffer_location`,
+// resulting in three unique Avalon memory-mapped host interfaces. 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL1>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_read
   })> x;
 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL2>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_read,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_read
   })> y;
 
   annotated_ptr<int, decltype(properties{
     buffer_location<kBL3>,
     awidth<32>, 
     dwidth<32>, 
-    latency<0>, 
-    read_write_mode_write,
-    maxburst<4>
+    latency<1>, 
+    read_write_mode_write
   })> z;
 
   int size;
@@ -169,38 +169,44 @@ struct MultiMMIP {
 
 ### Interfacing with off-chip memory
 
-Most of the time, a component's interfaces will be subject to system constraints. Assume that the input and output vectors are too large for on-chip memory. Instead, assume a memory system with the following constraints:
+If the input and output vectors are too large for on-chip memory, larger off-chip memories can be used. Consider the parameterization of a system with the following off-chip memory interfaces:
 
-* Two banks of DDR
+* Two banks of DDR SDRAM
 * Data bus of 256 bits
 * bursts of up to 8 requests
 
 ![](assets/ddr_avhost.svg)
 
-We can make better use of the available DDR bandwidth by coalescing the 32-bit wide load-store units into wider 256-bit load-store units to match the memory interface.
+We can make better use of the available memory bandwidth by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface.
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 ```c++
-constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
+constexpr int kBL1 = 0;
+constexpr int kBL2 = 1;
 
 struct DDR_IP{
 
-  using params = decltype(properties{
+using paramsBL1 = decltype(properties{
           buffer_location<kBL1>,
           maxburst<8>,
           dwidth<256>,
-          alignment<32>
+          alignment<32>, 
+          awidth<32>, 
+          latency<0>
           });
-
-  annotated_ptr<int, params> x;
-  annotated_ptr<int, params> y;
-  annotated_ptr<int, decltype(properties{
+          
+  using paramsBL2 = decltype(properties{
           buffer_location<kBL2>,
           maxburst<8>,
           dwidth<256>,
-          alignment<32>
-          })> z;   
+          alignment<32>,
+          awidth<32>, 
+          latency<0>
+          });
+
+  annotated_ptr<int, paramsBL1> x;
+  annotated_ptr<int, paramsBL1> y;
+  annotated_ptr<int, paramsBL2> z;   
   int size;
 
   void operator()() const {
@@ -299,10 +305,13 @@ This design uses CMake to generate a build script for  `nmake`.
    | FPGA Hardware       | `nmake fpga`
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Examining the Reports
-Locate `report.html` in the `<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
+## Examining the Generated RTL
+Locate _di_inst.v in the <source_file>.prj/ directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
-Navigate to the Area Analysis section of the optimization report. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes way less area under all categories than the `PointerIP` kernel. This is due to stall free memory accesses and the removal of arbitration logic, both of which come from separating the accesses into their own interfaces.
+## Examining the Reports
+Locate `report.html` in the `build/<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report. You can compare multiple reports by opening them in multiple browser windows/tabs.
+
+Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
 Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 

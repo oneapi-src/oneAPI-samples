@@ -1,8 +1,8 @@
 {
   "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
-  "name": "MMHost",
+  "name": "Avalon Memory-Mapped Host Interfaces",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
-  "description": "An Intel® FPGA tutorial demonstrating the usage of mmhost macros",
+  "description": "An Intel® FPGA tutorial demonstrating how to use annotated pointers to customize Avalon memory-mapped host interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

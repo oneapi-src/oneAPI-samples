@@ -5,8 +5,8 @@
 
 struct PointerIP{
   
-  //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernels to compare the difference 
+  //Declare the pointer interfaces to be used in this kernel, look at the other
+  //kernels to compare the difference 
   int *x; 
   int *y; 
   int *z;
@@ -46,9 +46,9 @@ int main(void){
     std::cout << "Elements in vector : " << kN << "\n";
 
     // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q);
-    auto *array_B = malloc_shared<int>(kN, q);
-    int *array_C = malloc_shared<int>(kN, q);
+    auto *array_A = sycl::malloc_shared<int>(kN, q);
+    auto *array_B = sycl::malloc_shared<int>(kN, q);
+    int *array_C = sycl::malloc_shared<int>(kN, q);
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;

@@ -13,25 +13,28 @@ constexpr int kBL1 = 0;
 constexpr int kBL2 = 1;
 
 struct DDR_IP{
-  using params = decltype(properties{
+
+using paramsBL1 = decltype(properties{
           buffer_location<kBL1>,
-          latency<0>,
           maxburst<8>,
           dwidth<256>,
-          alignment<32>
+          alignment<32>, 
+          awidth<32>, 
+          latency<0>
+          });
+          
+  using paramsBL2 = decltype(properties{
+          buffer_location<kBL2>,
+          maxburst<8>,
+          dwidth<256>,
+          alignment<32>,
+          awidth<32>, 
+          latency<0>
           });
 
-  //Declare the pointer interfaces to be used in this kernel,
-  //look at the other kernels to compare the difference 
-  annotated_ptr<int, params> x;
-  annotated_ptr<int, params> y;
-  annotated_ptr<int, decltype(properties{
-          buffer_location<kBL2>,
-          latency<0>,
-          maxburst<8>,
-          dwidth<256>,
-          alignment<32>
-          })> z;   
+  annotated_ptr<int, paramsBL1> x;
+  annotated_ptr<int, paramsBL1> y;
+  annotated_ptr<int, paramsBL2> z;   
   int size;
 
   void operator()() const {
@@ -68,11 +71,11 @@ int main(void){
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    // Host array must share the same buffer location property as defined in the kernel
-    // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
-    auto *array_B = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
-    int *array_C = malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
+    // Host array must share the same buffer location property as defined in the
+    // kernel Here we may use auto* or int* when declaring the pointer interface
+    auto *array_A = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    auto *array_B = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+    int *array_C = sycl::malloc_shared<int>(kN, q, sycl::property_list{usm_buffer_location(kBL2)});
 
     for(int i = 0; i < kN; i++){
         array_A[i] = i;
