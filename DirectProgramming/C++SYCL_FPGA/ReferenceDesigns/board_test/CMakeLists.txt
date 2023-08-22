@@ -31,16 +31,8 @@ set(TARGET_NAME board_test)
 # Note that depending on your installation, you may need to specify the full 
 # path to the board support package (BSP), this usually is in your install 
 # folder.
-#
-# You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
-# specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
-endif()
-
-# Check if the target is a BSP
-if(NOT FPGA_DEVICE MATCHES ".*:.*")
-    message(STATUS "This sample is made to target BSPs as this is a benchmarking sample.")
+    message(FATAL_ERROR "You must set FPGA_DEVICE to point to your BSP in order to build this sample.\ne.g. cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>")
 endif()
 
 # Some tests in this sample require USM. Only enable those tests if the user
@@ -49,11 +41,10 @@ endif()
 if((DEFINED SUPPORTS_USM AND SUPPORTS_USM STREQUAL "1"))
     set(USM_FLAG "-DSUPPORTS_USM")
 endif()
-
 if (SUPPORTS_USM)
-    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations.")
+    message(STATUS "Assuming board ${FPGA_DEVICE} has support for USM host allocations. To disable these tests: cmake .. -DSUPPORTS_USM=0")
 else()
-    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled.")
+    message(STATUS "Assuming board ${FPGA_DEVICE} does not have support for USM host allocations; tests which require USM have been disabled. To enable these tests: cmake .. -DSUPPORTS_USM=1")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
