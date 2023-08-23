@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +26,7 @@
  */
 
 #include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include "common.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +59,8 @@ static void Add(const float *op1, const float *op2, int count, float *sum, sycl:
   sycl::range<3> threads(1, 1, 256);
   sycl::range<3> blocks(1, 1, iDivUp(count, threads[2]));
 
-  q.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
+  q.parallel_for(
+      sycl::nd_range<3>(blocks * threads, threads),
       [=](sycl::nd_item<3> item_ct1) {
         AddKernel(op1, op2, count, sum, item_ct1);
       });
