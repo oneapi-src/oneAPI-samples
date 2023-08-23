@@ -236,7 +236,7 @@ void TestFFT(bool mangle, bool inverse) {
             to_write{to_write_raw};
 
       #else
-            to_write = to_write_raw;
+            ac_complex<float> *to_write = to_write_raw;
       #endif
 
       // Start a 1D FFT on the matrix rows/columns

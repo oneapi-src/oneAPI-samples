@@ -42,8 +42,24 @@ endif()
 # compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
+set(LOGN "10")
+
+if(DEFINED SET_LOGN)
+    set(LOGN ${SET_LOGN})
+endif()
+
+message(STATUS "LOGN=${LOGN}")
+
+set(PARALLELISM "8")
+
+if(DEFINED SET_PARALLELISM)
+    set(PARALLELISM ${SET_PARALLELISM})
+endif()
+
+message(STATUS "PARALLELISM=${PARALLELISM}")
+
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
+set(USER_FLAGS ${USER_FLAGS};-DLOGN=${LOGN};-DPARALLELISM=${PARALLELISM})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
@@ -100,24 +116,7 @@ else()
     message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1 to pass the IS_BSP macro to your C++ code.")
 endif()
 
-set(LOGN "10")
-
-if(DEFINED SET_LOGN)
-    set(LOGN ${SET_LOGN})
-endif()
-
-message(STATUS "LOGN=${LOGN}")
-
-set(PARALLELISM "8")
-
-if(DEFINED SET_PARALLELISM)
-    set(PARALLELISM ${SET_PARALLELISM})
-endif()
-
-message(STATUS "PARALLELISM=${PARALLELISM}")
-
-
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG} -DLOGN=${LOGN} -DPARALLELISM=${PARALLELISM})
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG})
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
@@ -129,7 +128,7 @@ set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR)
 set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
-set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
+set(SIMULATOR_COMPILE_FLAGS -DFPGA_SIMULATOR)
 set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})

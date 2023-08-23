@@ -72,14 +72,6 @@ To optimize the performance-critical parts of the algorithm, the design leverage
 - **Explicit data movement** (explicit_data_movement)
 - **Data Transfers Using Pipes** (pipes)
 
-### Compiler Flags Used
-
-| Flag                   | Description
-|:---                    |:---
-| `-Xshardware`          | Target FPGA hardware (as opposed to FPGA emulator)
-| `-Xssimulation`        | Target FPGA simulator (as opposed to FPGA emulator)
-| `-Xsparallel=2`        | Use 2 cores when compiling the bitstream through Intel® Quartus®
-
 Additionally, the `cmake` build system can be configured using the following parameters:
 
 | `cmake` option               | Description
@@ -141,7 +133,7 @@ Additionally, the `cmake` build system can be configured using the following par
       ```
       make report
       ```
-      The report resides at `fft2d_report/reports/report.html`.
+      The report resides at `fft2d_report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
