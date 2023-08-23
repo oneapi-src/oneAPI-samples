@@ -106,7 +106,7 @@ int main() {
     passed &= (out_beat.data <= THRESHOLD);
   }
 
-  std::cout << std::endl << (passed ? "PASSED" : "FAILED") << std::endl;
+  std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
   return passed ? EXIT_SUCCESS : EXIT_FAILURE;
 
   } catch (sycl::exception const &e) {
