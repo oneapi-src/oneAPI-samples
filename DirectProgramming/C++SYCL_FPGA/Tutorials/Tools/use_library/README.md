@@ -283,8 +283,7 @@ Then, you may find the Compile Estimated: Kernel System used 1 DSP in this table
 
 The following table compared the estimated area usage for each kernel separately.
 
-|Compile Estimated: Kernel System
-|	 | Native Design | RTL with customised DSP
+| Resource | Native Design | RTL with customized DSP
 |:--- 	 |:---           |:---
 |ALM	 | 80.5          | 66
 |-ALUT   | 161           | 132
