@@ -4,7 +4,7 @@ This sample is an FPGA tutorial that explains how to use the `max_reinvocation_d
 
 | Area                 | Description
 |:--                   |:--
-| What you will learn  | How and when to apply the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
+| What you will learn  | How and when to apply the `max_reinvocation_delay` attribute when optimizing loop throughput
 | Time to complete     | 15 minutes
 | Category             | Concepts and Functionality
 
@@ -54,21 +54,15 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Key Implementation Details
 
-The sample illustrates the following important concepts.
-
-- How and when to apply the `max_reinvocation_delay` attribute to restrict the maximum delay between loop invocations.
-
-### Description of the `max_reinvocation_delay` Attribute
-
 Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to loops in your program on which you want to specify a maximum loop reinvocation delay. The *loop reinvocation delay* is defined as the latency between the last iteration of a loop invocation and the first iteration of the next invocation of that loop. 
 
 > **Note:** For interleaved loops, the loop reinvocation delay is defined as the latency between the last iteration of a loop invocation and the first iteration of the next loop invocation immediately following it, which may not be the next loop invocation in the program order.
+> **Note**:  A loop **invocation** begins when the program flow enters a loop for the first time, while an **iteration** begins each time the program flow enters the loop body. In the example below, the `i` loop will have `sequence_length` iterations for each invocation. It will be invoked once for each **iteration** of the outer `factor` loop.
+The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. Currently, only `N=1` is supported, i.e., that there should be no delay between invocations. If you do not specify this attribute, the compiler may insert some delay to improve fMAX as shown in the following example.
 
-The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. The higher the maximum reinvocation delay allowed, the longer the wait before the next loop invocation can start executing. Currently, only `N=1` is supported, i.e., that there should be no delay between invocations.
+### Example
 
-#### Example
-
-Consider the following nested loop:
+Consider the following loop nest:
 
 ```c++
 for (int factor = 0; factor < FACTORS; factor++) {
@@ -78,7 +72,7 @@ for (int factor = 0; factor < FACTORS; factor++) {
 }
 ```
 
-By default, the compiler inserts a loop reinvocation delay of a few cycles on the inner loop. In general, the compiler may insert a higher loop reinvocation delay to better optimize a loop by enabling loop speculation or by pipelining the loop orchestration hardware, which can increase fMAX.
+By default, the compiler inserts a loop reinvocation delay of a few cycles on the inner loop. In general, the compiler may insert a higher loop reinvocation delay to better optimize a loop by enabling loop speculation or by pipelining the loop orchestration hardware, which can increase fMAX. This delay can be seen by observing the transactions coming out of the streaming interface associated with `PipeOut`.
 
 ![default behavior with delay between invocations](assets/default.png)
 
@@ -93,7 +87,7 @@ for (int factor = 0; factor < FACTORS; factor++) {
 }
 ```
 
-Now, the first iteration of the `i + 1` st invocation of the inner loop will launch immediately following the last iteration of the `i` th invocation of the inner loop. 
+Now, the first iteration of the `i+1`th  invocation of the inner loop will launch immediately following the final iteration of the `i`th invocation of the inner loop. 
 
 ![applying max_reinvocation_delay to remove delay between invocations](assets/max_reinvocation_delay(1).png)
 
@@ -126,7 +120,7 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > For simplicity, this tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -160,7 +154,7 @@ Now, the first iteration of the `i + 1` st invocation of the inner loop will lau
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > For simplicity, this tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
