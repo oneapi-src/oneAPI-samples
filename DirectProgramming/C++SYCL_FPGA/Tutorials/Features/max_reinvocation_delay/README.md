@@ -89,7 +89,7 @@ for (int factor = 0; factor < FACTORS; factor++) {
 
 Now, the first iteration of the `i+1`th  invocation of the inner loop will launch immediately following the final iteration of the `i`th invocation of the inner loop. 
 
-![applying max_reinvocation_delay to remove delay between invocations](assets/max_reinvocation_delay(1).png)
+![applying max_reinvocation_delay to remove delay between invocations](assets/max_reinvocation_delay_1.png)
 
 
 ## Build the `max_reinvocation_delay` Tutorial
