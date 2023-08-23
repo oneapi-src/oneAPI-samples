@@ -4,9 +4,9 @@
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools"],
   "description": "An Intel® FPGA Tutorial demonstrating how to create Intel® FPGA libraries and to incorporate them in a Intel® oneAPI SYCL project",
   "toolchain": ["icpx"],
-  "os": ["linux"],
+  "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
-  "builder": ["cmake"],
+  "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
   "commonFolder": {
     "base": "../../..",
@@ -61,6 +61,55 @@
           "make report"
         ]
       }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_native",
+          "nmake fpga_emu",
+          "use_native.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part2_lib_func_call",
+          "nmake fpga_emu",
+          "use_library.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_native",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_lib_func_call",
+          "nmake report"
+        ]
+      }
     ]
-  }
+  },
+  "expertise": "Getting Started"
 }

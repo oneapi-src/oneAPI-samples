@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include "exception_handler.hpp"
-
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include <sycl/ext/intel/experimental/pipe_properties.hpp>
-#include <sycl/ext/intel/experimental/pipes.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+// oneAPI headers
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/experimental/fpga_kernel_properties.hpp>
+#include <sycl/ext/oneapi/annotated_arg/annotated_arg.hpp>
+#include <sycl/sycl.hpp>
+
+#include "exception_handler.hpp"
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
@@ -33,7 +33,13 @@ using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, unsigned long>
 template <typename PipeIn1, typename PipeIn2, typename PipeOut>
 struct NativeMult27x27 {
 
-  streaming_interface void operator()() const {
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall, 
+        sycl::ext::intel::experimental::pipelined<1>};
+  }
+  
+   void operator()() const {
     MyInt27 a_val = PipeIn1::read();
     MyInt27 b_val = PipeIn2::read();
     MyInt54 res =(MyInt54)a_val * b_val;

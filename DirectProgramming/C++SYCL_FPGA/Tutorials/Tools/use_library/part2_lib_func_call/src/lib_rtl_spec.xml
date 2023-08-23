@@ -4,7 +4,7 @@
       <IS_STALL_FREE value="yes"/>
       <IS_FIXED_LATENCY value="yes"/>
       <EXPECTED_LATENCY value="2"/>
-      <CAPACITY value="0"/>
+      <CAPACITY value="2"/>
       <HAS_SIDE_EFFECTS value="no"/>
       <ALLOW_MERGING value="yes"/>
     </ATTRIBUTES>
