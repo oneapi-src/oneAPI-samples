@@ -32,7 +32,7 @@ This tutorial demonstrates how and when to apply the `max_reinvocation_delay` at
 > **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that demonstrates a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
 ```mermaid
 flowchart LR
@@ -44,8 +44,8 @@ flowchart LR
    tier1 --> tier2 --> tier3 --> tier4
 
    style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
-   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
@@ -56,8 +56,8 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 Apply the `[[intel::max_reinvocation_delay(N)]]` attribute to loops in your program on which you want to specify a maximum loop reinvocation delay. The *loop reinvocation delay* is defined as the latency between the last iteration of a loop invocation and the first iteration of the next invocation of that loop. 
 
-> **Note:** For interleaved loops, the loop reinvocation delay is defined as the latency between the last iteration of a loop invocation and the first iteration of the next loop invocation immediately following it, which may not be the next loop invocation in the program order.
 > **Note**:  A loop **invocation** begins when the program flow enters a loop for the first time, while an **iteration** begins each time the program flow enters the loop body. In the example below, the `i` loop will have `sequence_length` iterations for each invocation. It will be invoked once for each **iteration** of the outer `factor` loop.
+
 The attribute parameter `N` is required and must be a positive constant expression of integer type. This parameter controls the maximum loop reinvocation delay allowed, measured in clock cycles. Currently, only `N=1` is supported, i.e., that there should be no delay between invocations. If you do not specify this attribute, the compiler may insert some delay to improve fMAX as shown in the following example.
 
 ### Example
