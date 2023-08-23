@@ -62,6 +62,8 @@ With RTL module, we are able to customize DSP block behaviour in SYCL applicatio
 In `part1_native` folder, we perform 27x27 multiplier with a native math implemation. This is the normal SYCL application we usually implemetion for FPGA application
 in `part2_libfunc_call` folder, we implement customised DSP block behaviour with a RTL-libary and use it in our SYCL application to perform 27x27 multiplier. Files needed are explained in [Use of RTL libraries in SYCL](#Use-of-RTL-libraries-in-SYCL).
 
+The graphical illustrated the Library Toolchain Creation Process:
+![](assets/lib_toolchain.svg)
 
 ### Use of RTL libraries in SYCL
 
@@ -73,13 +75,15 @@ Files needed to create a SYCL target library from RTL source (as demostrated in 
 
 The RTL is used when compiling for hardware whereas the emulation model is used when the oneAPI program is run on the FPGA emulator.
 After having created the library file, the function in the library can be called from the SYCL kernel, without the need to know the hardware design or implementation details on underlying functions in the library.
+
 Given a workable RTL module, one may need to apply some modifications in order to integrate it into oneAPI program.
 1. An RTL module must use a single input Avalon® streaming interface. 
     Besides RTL library's interface, you must include a `clock` port, a `resetn` port, and Avalon® streaming interface input and output ports (that is: `ivalid`, `ovalid`, `iready`, `oready`) into your RTL module. 
 
     > **Note**: The signal names must match the ones specified in the .xml file. An error occurs during library creation if a signal name is inconsistent.
+    > You may find full list of RTL support constraints in [Restrictions and Limitations in RTL Support](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/restrictions-and-limitations-in-rtl-support.html).
 
-2. RTL library’s characteristics needs to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, do refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/top/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
+2. RTL library’s characteristics needs to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, do refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
 
     > **Note**: It is challenging to debug an RTL module that works correctly on its own but works incorrectly as part of a SYCL kernel. Double-check all parameters under the ATTRIBUTES element in the object manifest file (.xml).
 
@@ -276,21 +280,16 @@ Locate the `report.html` file in `use_library_report.prj` or `use_library.fpga_s
 
 Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of `part2_libfunc_call` with customised DSP (KernelComputeRTL) should be lower than `part1_native` design (KernelCompute).
 
+![](assets/loop_analysis_comparison.svg)
+
 Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**)
 By default, compiler area estimation tools assume that the RTL module area is 0.
 Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute.
 Then, you may find the Compile Estimated: Kernel System used 1 DSP in this table.
 
-The following table compared the estimated area usage for each kernel separately.
+The following table shows comparison of the estimated area usage for each design separately.
 
-| Resource | Native Design | RTL with customized DSP
-|:--- 	 |:---           |:---
-|ALM	 | 80.5          | 66
-|-ALUT   | 161           | 132
-|-REG    | 408           | 406
-|-MLAB   | 0             | 0
-|RAM     | 6             | 6
-|DSP     | 1             | 1
+![](assets/resource_comparison.svg)
 
 ## License
 
