@@ -31,11 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <chrono>
-#include <dpct/dpct.hpp>
 #include <sycl/sycl.hpp>
-#include <taskflow/sycl/syclflow.hpp>
+#include <dpct/dpct.hpp>
+#include <helper_cuda.h>
 #include <vector>
+#include <chrono>
+#include <taskflow/sycl/syclflow.hpp>
 
 using Time = std::chrono::steady_clock;
 using ms = std::chrono::milliseconds;
@@ -51,7 +52,9 @@ typedef struct callBackData {
 } callBackData_t;
 
 void reduce(float *inputVec, double *outputVec, size_t inputSize,
-            size_t outputSize, sycl::nd_item<3> item_ct1, double *tmp) {
+                       size_t outputSize, const sycl::nd_item<3> &item_ct1,
+                       double *tmp) {
+
   auto cta = item_ct1.get_group();
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
@@ -70,7 +73,8 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
   double beta = temp_sum;
   double temp;
 
-  for (int i = tile_sg.get_local_linear_range() / 2; i > 0; i >>= 1) {
+  for (int i = tile_sg.get_local_linear_range() / 2; i > 0;
+       i >>= 1) {
     if (tile_sg.get_local_linear_id() < i) {
       temp = tmp[item_ct1.get_local_linear_id() + i];
       beta += temp;
@@ -78,25 +82,25 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
     }
     tile_sg.barrier();
   }
-
   item_ct1.barrier();
 
   if (item_ct1.get_local_linear_id() == 0 &&
       item_ct1.get_group(2) < outputSize) {
     beta = 0.0;
-
     int cta_size = cta.get_local_linear_range();
 
-    for (int i = 0; i < cta_size; i += tile_sg.get_local_linear_range()) {
+    for (int i = 0; i < cta_size;
+         i += tile_sg.get_local_linear_range()) {
       beta += tmp[i];
     }
     outputVec[item_ct1.get_group(2)] = beta;
   }
 }
 
-void reduceFinal(double *inputVec, double *result, size_t inputSize,
-                 sycl::nd_item<3> item_ct1, double *tmp) {
-  auto cta = item_ct1.get_group();
+void reduceFinal(double *inputVec, double *result,
+                            size_t inputSize, const sycl::nd_item<3> &item_ct1,
+                            double *tmp) {
+
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
 
@@ -138,13 +142,14 @@ void reduceFinal(double *inputVec, double *result, size_t inputSize,
 
   if (item_ct1.get_local_linear_id() < 32) {
     // Fetch final intermediate sum from 2nd warp
-    if (item_ct1.get_local_range(2) >= 64)
-      temp_sum += tmp[item_ct1.get_local_linear_id() + 32];
+    if (item_ct1.get_local_range(2) >= 64) temp_sum +=
+        tmp[item_ct1.get_local_linear_id() + 32];
     // Reduce final warp using shuffle
-    for (int offset = tile_sg.get_local_linear_range() / 2; offset > 0;
-         offset /= 2) {
-      temp_sum += tile_sg.shuffle_down(temp_sum, offset);
-    }
+    for (int offset = tile_sg.get_local_linear_range() / 2;
+         offset > 0; offset /= 2) {
+      temp_sum +=
+       sycl::shift_group_left(tile_sg, temp_sum, offset);   
+}
   }
   // write result for this block to global mem
   if (item_ct1.get_local_linear_id() == 0) result[0] = temp_sum;
@@ -157,6 +162,7 @@ void init_input(float *a, size_t size) {
 void myHostNodeCallback(void *data) {
   // Check status of GPU after stream operations are done
   callBackData_t *tmp = (callBackData_t *)(data);
+  // checkCudaErrors(tmp->status);
 
   double *result = (double *)(tmp->data);
   char *function = (char *)(tmp->fn_name);
@@ -260,7 +266,8 @@ void syclTaskFlowManual(float *inputVec_h, float *inputVec_d,
 }
 
 int main(int argc, char **argv) {
-  sycl::queue q_ct1{sycl::default_selector_v};
+
+  sycl::queue q_ct1{aspect_selector(sycl::aspect::fp64)};
   std::cout << "Device: "
             << q_ct1.get_device().get_info<sycl::info::device::name>() << "\n";
 
@@ -274,10 +281,14 @@ int main(int argc, char **argv) {
   float *inputVec_d = NULL, *inputVec_h = NULL;
   double *outputVec_d = NULL, *result_d;
 
-  inputVec_h = sycl::malloc_host<float>(size, q_ct1);
-  inputVec_d = sycl::malloc_device<float>(size, q_ct1);
-  outputVec_d = sycl::malloc_device<double>(maxBlocks, q_ct1);
-  result_d = sycl::malloc_device<double>(1, q_ct1);
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      inputVec_h = sycl::malloc_host<float>(size, q_ct1)));
+  checkCudaErrors(DPCT_CHECK_ERROR(inputVec_d = sycl::malloc_device<float>(
+                                       size, q_ct1)));
+  checkCudaErrors(DPCT_CHECK_ERROR(outputVec_d = sycl::malloc_device<double>(
+                                       maxBlocks, q_ct1)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      result_d = sycl::malloc_device<double>(1, q_ct1)));
 
   init_input(inputVec_h, size);
 
@@ -289,9 +300,13 @@ int main(int argc, char **argv) {
       std::chrono::duration_cast<float_ms>(stopTimer1 - startTimer1).count();
   printf("Elapsed Time of SYCL TaskFlow Manual : %f (ms)\n", Timer_duration1);
 
-  sycl::free(inputVec_d, q_ct1);
-  sycl::free(outputVec_d, q_ct1);
-  sycl::free(result_d, q_ct1);
-  sycl::free(inputVec_h, q_ct1);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(inputVec_d, q_ct1)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(outputVec_d, q_ct1)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(result_d, q_ct1)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(inputVec_h, q_ct1)));
   return EXIT_SUCCESS;
 }
