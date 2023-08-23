@@ -84,128 +84,52 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
 
   const int dataSize = stride * height * sizeof(float);
 
-  /*
-  DPCT1003:41: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_tmp = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:42: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_du0 = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_dv0 = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_du1 = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_dv1 = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-      0));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_tmp = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_du0 = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_dv0 = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_du1 = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_dv1 = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
 
-  /*
-  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_Ix = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_Iy = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_Iz = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_Ix = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_Iy = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_Iz = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
 
-  /*
-  DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_u = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:50: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_v = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:51: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_nu = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:52: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_nv = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue()),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_u = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_v = (float *)sycl::malloc_device(dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_nu = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_nv = (float *)sycl::malloc_device(
+                                       dataSize, dpct::get_default_queue())));
 
   // prepare pyramid
 
   int currentLevel = nLevels - 1;
   // allocate GPU memory for input images
-  /*
-  DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((*(pI0 + currentLevel) = (const float *)sycl::malloc_device(
-                       dataSize, dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:54: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((*(pI1 + currentLevel) = (const float *)sycl::malloc_device(
-                       dataSize, dpct::get_default_queue()),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      *(pI0 + currentLevel) = (const float *)sycl::malloc_device(
+          dataSize, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      *(pI1 + currentLevel) = (const float *)sycl::malloc_device(
+          dataSize, dpct::get_default_queue())));
 
-  /*
-  DPCT1003:55: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memcpy((void *)pI0[currentLevel], I0, dataSize)
-                       .wait(),
-                   0));
-  /*
-  DPCT1003:56: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memcpy((void *)pI1[currentLevel], I1, dataSize)
-                       .wait(),
-                   0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_default_queue()
+                           .memcpy((void *)pI0[currentLevel], I0, dataSize)
+                           .wait()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_default_queue()
+                           .memcpy((void *)pI1[currentLevel], I1, dataSize)
+                           .wait()));
 
   pW[currentLevel] = width;
   pH[currentLevel] = height;
@@ -216,22 +140,12 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     int nh = pH[currentLevel] / 2;
     int ns = iAlignUp(nw);
 
-    /*
-    DPCT1003:57: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors(
-        (*(pI0 + currentLevel - 1) = (const float *)sycl::malloc_device(
-             ns * nh * sizeof(float), dpct::get_default_queue()),
-         0));
-    /*
-    DPCT1003:58: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors(
-        (*(pI1 + currentLevel - 1) = (const float *)sycl::malloc_device(
-             ns * nh * sizeof(float), dpct::get_default_queue()),
-         0));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        *(pI0 + currentLevel - 1) = (const float *)sycl::malloc_device(
+            ns * nh * sizeof(float), dpct::get_default_queue())));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        *(pI1 + currentLevel - 1) = (const float *)sycl::malloc_device(
+            ns * nh * sizeof(float), dpct::get_default_queue())));
 
     Downscale(pI0[currentLevel], pW[currentLevel], pH[currentLevel],
               pS[currentLevel], nw, nh, ns, (float *)pI0[currentLevel - 1]);
@@ -244,51 +158,27 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     pS[currentLevel - 1] = ns;
   }
 
-  /*
-  DPCT1003:59: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memset(d_u, 0, stride * height * sizeof(float))
-                       .wait(),
-                   0));
-  /*
-  DPCT1003:60: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memset(d_v, 0, stride * height * sizeof(float))
-                       .wait(),
-                   0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_default_queue()
+                           .memset(d_u, 0, stride * height * sizeof(float))
+                           .wait()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_default_queue()
+                           .memset(d_v, 0, stride * height * sizeof(float))
+                           .wait()));
 
   // compute flow
   for (; currentLevel < nLevels; ++currentLevel) {
     for (int warpIter = 0; warpIter < nWarpIters; ++warpIter) {
-      /*
-      DPCT1003:61: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors(
-          (dpct::get_default_queue().memset(d_du0, 0, dataSize).wait(), 0));
-      /*
-      DPCT1003:62: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors(
-          (dpct::get_default_queue().memset(d_dv0, 0, dataSize).wait(), 0));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          dpct::get_default_queue().memset(d_du0, 0, dataSize).wait()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          dpct::get_default_queue().memset(d_dv0, 0, dataSize).wait()));
 
-      /*
-      DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors(
-          (dpct::get_default_queue().memset(d_du1, 0, dataSize).wait(), 0));
-      /*
-      DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors(
-          (dpct::get_default_queue().memset(d_dv1, 0, dataSize).wait(), 0));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          dpct::get_default_queue().memset(d_du1, 0, dataSize).wait()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          dpct::get_default_queue().memset(d_dv1, 0, dataSize).wait()));
 
       // on current level we compute optical flow
       // between frame 0 and warped frame 1
@@ -330,31 +220,17 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     }
   }
 
-  /*
-  DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue().memcpy(u, d_u, dataSize).wait(), 0));
-  /*
-  DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue().memcpy(v, d_v, dataSize).wait(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue().memcpy(u, d_u, dataSize).wait()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue().memcpy(v, d_v, dataSize).wait()));
 
   // cleanup
   for (int i = 0; i < nLevels; ++i) {
-    /*
-    DPCT1003:67: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((sycl::free((void *)pI0[i], dpct::get_default_queue()), 0));
-    /*
-    DPCT1003:68: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((sycl::free((void *)pI1[i], dpct::get_default_queue()), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        sycl::free((void *)pI0[i], dpct::get_default_queue())));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        sycl::free((void *)pI1[i], dpct::get_default_queue())));
   }
 
   delete[] pI0;
@@ -363,64 +239,26 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
   delete[] pH;
   delete[] pS;
 
-  /*
-  DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_tmp, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:70: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_du0, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_dv0, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_du1, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_dv1, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Ix, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:75: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Iy, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:76: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Iz, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:77: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_nu, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_nv, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:79: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_u, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:80: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_v, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_tmp, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_du0, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_dv0, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_du1, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_dv1, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Ix, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Iy, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Iz, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_nu, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_nv, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_u, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_v, dpct::get_default_queue())));
 }

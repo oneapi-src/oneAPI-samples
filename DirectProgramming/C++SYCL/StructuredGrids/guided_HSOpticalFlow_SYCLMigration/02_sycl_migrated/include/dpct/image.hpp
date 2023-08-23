@@ -11,7 +11,6 @@
 
 #include <sycl/sycl.hpp>
 
-#include "device.hpp"
 #include "memory.hpp"
 #include "util.hpp"
 
@@ -24,11 +23,8 @@ enum class image_channel_data_type {
 };
 
 class image_channel;
-
 class image_wrapper_base;
-
 namespace detail {
-
 /// Image object type traits, with accessor type and sampled data type defined.
 /// The data type of an image accessor must be one of sycl::int4, sycl::uint4,
 /// sycl::float4 and sycl::half4. The data type of accessors with 8bits/16bits
@@ -154,7 +150,6 @@ class image_channel {
   unsigned _channel_size = 0;
 
 public:
-
   /// Create image channel info according to template argument \p T.
   template <class T> static image_channel create() {
     image_channel channel;
@@ -167,12 +162,12 @@ public:
 
   image_channel() = default;
 
+  image_channel_data_type get_channel_data_type() { return _type; }
   void set_channel_data_type(image_channel_data_type type) { _type = type; }
 
   unsigned get_total_size() { return _total_size; }
 
   unsigned get_channel_num() { return _channel_num; }
-
   void set_channel_num(unsigned channel_num) {
     _channel_num = channel_num;
     _total_size = _channel_size * _channel_num;
@@ -227,7 +222,6 @@ public:
     assert(false && "unexpected channel data kind and channel size");
     return sycl::image_channel_type::signed_int32;
   }
-
   void set_channel_type(sycl::image_channel_type type) {
     switch (type) {
     case sycl::image_channel_type::unsigned_int8:
@@ -282,6 +276,8 @@ public:
       return sycl::image_channel_order::r;
     }
   }
+  /// Get the size for each channel in bits.
+  unsigned get_channel_size() const { return _channel_size * 8; }
 
   /// Set channel size.
   /// \param in_channel_num Channels number to set.
@@ -294,7 +290,6 @@ public:
     _channel_size = channel_size / 8;
     _total_size = _channel_size * _channel_num;
   }
-
 };
 
 /// 2D or 3D matrix data for image.
@@ -338,6 +333,10 @@ public:
   }
 
   /// Construct a new image class with the matrix data.
+  template <int dimensions> sycl::image<dimensions> *create_image() {
+    return create_image<dimensions>(_channel);
+  }
+  /// Construct a new image class with the matrix data.
   template <int dimensions>
   sycl::image<dimensions> *create_image(image_channel channel) {
     return new sycl::image<dimensions>(
@@ -348,9 +347,16 @@ public:
 
   /// Get channel info.
   inline image_channel get_channel() { return _channel; }
-
+  /// Get range of the image.
+  sycl::range<3> get_range() {
+    return sycl::range<3>(_range[0], _range[1], _range[2]);
+  }
   /// Get matrix dims.
   inline int get_dims() { return _dims; }
+  /// Convert to pitched data.
+  pitched_data to_pitched_data() {
+    return pitched_data(_host_data, _range[0], _range[0], _range[1]);
+  }
 
   ~image_matrix() {
     if (_host_data)
@@ -358,7 +364,6 @@ public:
     _host_data = nullptr;
   }
 };
-
 using image_matrix_p = image_matrix *;
 
 enum class image_data_type { matrix, linear, pitch, unsupport };
@@ -375,7 +380,6 @@ public:
              image_channel channel) {
     set_data(data_ptr, x_size, y_size, pitch_size, channel);
   }
-
   void set_data(image_matrix_p matrix_data) {
     _type = image_data_type::matrix;
     _data = matrix_data;
@@ -398,33 +402,45 @@ public:
   }
 
   image_data_type get_data_type() const { return _type; }
-
   void set_data_type(image_data_type type) { _type = type; }
 
   void *get_data_ptr() const { return _data; }
-
   void set_data_ptr(void *data) { _data = data; }
 
   size_t get_x() const { return _x; }
-
   void set_x(size_t x) { _x = x; }
 
   size_t get_y() const { return _y; }
-
   void set_y(size_t y) { _y = y; }
 
   size_t get_pitch() const { return _pitch; }
-
   void set_pitch(size_t pitch) { _pitch = pitch; }
 
   image_channel get_channel() const { return _channel; }
-
   void set_channel(image_channel channel) { _channel = channel; }
 
+  image_channel_data_type get_channel_data_type() {
+    return _channel.get_channel_data_type();
+  }
+  void set_channel_data_type(image_channel_data_type type) {
+    _channel.set_channel_data_type(type);
+  }
+
+  unsigned get_channel_size() { return _channel.get_channel_size(); }
+  void set_channel_size(unsigned channel_num, unsigned channel_size) {
+    return _channel.set_channel_size(channel_num, channel_size);
+  }
+
   unsigned get_channel_num() { return _channel.get_channel_num(); }
+  void set_channel_num(unsigned num) {
+    return _channel.set_channel_num(num);
+  }
 
   sycl::image_channel_type get_channel_type() {
     return _channel.get_channel_type();
+  }
+  void set_channel_type(sycl::image_channel_type type) {
+    return _channel.set_channel_type(type);
   }
 
 private:
@@ -444,21 +460,28 @@ class sampling_info {
       sycl::coordinate_normalization_mode::unnormalized;
 
 public:
-
+  sycl::addressing_mode get_addressing_mode() { return _addressing_mode; }
   void set(sycl::addressing_mode addressing_mode) { _addressing_mode = addressing_mode; }
 
+  sycl::filtering_mode get_filtering_mode() { return _filtering_mode; }
   void set(sycl::filtering_mode filtering_mode) { _filtering_mode = filtering_mode; }
 
+  sycl::coordinate_normalization_mode get_coordinate_normalization_mode() {
+    return _coordinate_normalization_mode;
+  }
   void set(sycl::coordinate_normalization_mode coordinate_normalization_mode) {
     _coordinate_normalization_mode = coordinate_normalization_mode;
   }
 
+  bool is_coordinate_normalized() {
+    return _coordinate_normalization_mode ==
+           sycl::coordinate_normalization_mode::normalized;
+  }
   void set_coordinate_normalization_mode(int is_normalized) {
     _coordinate_normalization_mode =
         is_normalized ? sycl::coordinate_normalization_mode::normalized
                       : sycl::coordinate_normalization_mode::unnormalized;
   }
-
   void
   set(sycl::addressing_mode addressing_mode,
       sycl::filtering_mode filtering_mode,
@@ -467,7 +490,6 @@ public:
     set(filtering_mode);
     set(coordinate_normalization_mode);
   }
-
   void set(sycl::addressing_mode addressing_mode,
            sycl::filtering_mode filtering_mode, int is_normalized) {
     set(addressing_mode);
@@ -479,7 +501,6 @@ public:
     return sycl::sampler(_coordinate_normalization_mode, _addressing_mode,
                              _filtering_mode);
   }
-
 };
 
 /// Image base class.
@@ -518,42 +539,62 @@ public:
   void attach(const void *data, size_t x, size_t y, size_t pitch,
               image_channel channel) {
     detach();
-    image_wrapper_base::set_data(image_data(const_cast<void *>(data),
-                                            x * channel.get_total_size(), y,
-                                            pitch, channel));
+    image_wrapper_base::set_data(
+        image_data(const_cast<void *>(data), x, y, pitch, channel));
   }
   /// Detach data.
   virtual void detach() {}
 
+  sampling_info get_sampling_info() { return _sampling_info; }
   void set_sampling_info(sampling_info info) {
     _sampling_info = info;
   }
-
   const image_data &get_data() { return _data; }
-
   void set_data(image_data data) { _data = data; }
 
   image_channel get_channel() { return _data.get_channel(); }
-
   void set_channel(image_channel channel) { _data.set_channel(channel); }
 
+  image_channel_data_type get_channel_data_type() {
+    return _data.get_channel_data_type();
+  }
+  void set_channel_data_type(image_channel_data_type type) {
+    _data.set_channel_data_type(type);
+  }
+
+  unsigned get_channel_size() { return _data.get_channel_size(); }
+  void set_channel_size(unsigned channel_num, unsigned channel_size) {
+    return _data.set_channel_size(channel_num, channel_size);
+  }
+
+  sycl::addressing_mode get_addressing_mode() {
+    return _sampling_info.get_addressing_mode();
+  }
   void set(sycl::addressing_mode addressing_mode) {
     _sampling_info.set(addressing_mode);
   }
 
+  sycl::filtering_mode get_filtering_mode() {
+    return _sampling_info.get_filtering_mode();
+  }
   void set(sycl::filtering_mode filtering_mode) {
     _sampling_info.set(filtering_mode);
   }
 
+  sycl::coordinate_normalization_mode get_coordinate_normalization_mode() {
+    return _sampling_info.get_coordinate_normalization_mode();
+  }
   void
   set(sycl::coordinate_normalization_mode coordinate_normalization_mode) {
     _sampling_info.set(coordinate_normalization_mode);
   }
 
+  bool is_coordinate_normalized() {
+    return _sampling_info.is_coordinate_normalized();
+  }
   void set_coordinate_normalization_mode(int is_normalized) {
     _sampling_info.set_coordinate_normalization_mode(is_normalized);
   }
-
   void
   set(sycl::addressing_mode addressing_mode,
       sycl::filtering_mode filtering_mode,
@@ -562,7 +603,6 @@ public:
     set(filtering_mode);
     set(coordinate_normalization_mode);
   }
-
   void set(sycl::addressing_mode addressing_mode,
            sycl::filtering_mode filtering_mode, int is_normalized) {
     set(addressing_mode);
@@ -570,11 +610,21 @@ public:
     set_coordinate_normalization_mode(is_normalized);
   }
 
-  sycl::sampler get_sampler() { return _sampling_info.get_sampler(); }
+  unsigned get_channel_num() { return _data.get_channel_num(); }
+  void set_channel_num(unsigned num) {
+    return _data.set_channel_num(num);
+  }
 
+  sycl::image_channel_type get_channel_type() {
+    return _data.get_channel_type();
+  }
+  void set_channel_type(sycl::image_channel_type type) {
+    return _data.set_channel_type(type);
+  }
+
+  sycl::sampler get_sampler() { return _sampling_info.get_sampler(); }
 };
 inline image_wrapper_base::~image_wrapper_base() {}
-
 using image_wrapper_base_p = image_wrapper_base *;
 
 template <class T, int dimensions, bool IsImageArray> class image_accessor_ext;
@@ -583,8 +633,9 @@ template <class T, int dimensions, bool IsImageArray> class image_accessor_ext;
 template <class T, int dimensions, bool IsImageArray = false> class image_wrapper : public image_wrapper_base {
   sycl::image<dimensions> *_image = nullptr;
 
-
+#ifndef DPCT_USM_LEVEL_NONE
   std::vector<char> _host_buffer;
+#endif
 
   void create_image(sycl::queue q) {
     auto &data = get_data();
@@ -594,17 +645,23 @@ template <class T, int dimensions, bool IsImageArray = false> class image_wrappe
       return;
     }
     auto ptr = data.get_data_ptr();
+    auto channel = data.get_channel();
 
     if (detail::get_pointer_attribute(q, ptr) == detail::pointer_access_attribute::device_only) {
+#ifdef DPCT_USM_LEVEL_NONE
+      ptr = get_buffer(ptr)
+                .template get_access<sycl::access_mode::read_write>()
+                .get_pointer();
+#else
       auto sz = data.get_x();
       if (data.get_data_type() == image_data_type::pitch)
-        sz *= data.get_y();
+        sz *= channel.get_total_size() * data.get_y();
       _host_buffer.resize(sz);
       q.memcpy(_host_buffer.data(), ptr, sz).wait();
       ptr = _host_buffer.data();
+#endif
     }
 
-    auto channel = data.get_channel();
     if constexpr (dimensions == 1) {
       assert(data.get_data_type() == image_data_type::linear);
       _image = new sycl::image<1>(
@@ -612,11 +669,10 @@ template <class T, int dimensions, bool IsImageArray = false> class image_wrappe
         sycl::range<1>(data.get_x() / channel.get_total_size()));
     } else if constexpr (dimensions == 2) {
       assert(data.get_data_type() == image_data_type::pitch);
-      _image = new sycl::image<2>(
-        ptr, channel.get_channel_order(), channel.get_channel_type(),
-        sycl::range<2>(data.get_x() / channel.get_total_size(),
-                           data.get_y()),
-        sycl::range<1>(data.get_pitch()));
+      _image = new sycl::image<2>(ptr, channel.get_channel_order(),
+                                  channel.get_channel_type(),
+                                  sycl::range<2>(data.get_x(), data.get_y()),
+                                  sycl::range<1>(data.get_pitch()));
     } else {
       throw std::runtime_error("3D image only support matrix data");
     }
@@ -775,7 +831,6 @@ static inline image_wrapper_base *create_image_wrapper(image_data data,
 }
 
 namespace detail {
-
 /// Create image according with given type \p T and \p dims.
 template <class T> static image_wrapper_base *create_image_wrapper(int dims) {
   switch (dims) {
@@ -829,9 +884,8 @@ static image_wrapper_base *create_image_wrapper(image_channel channel, int dims)
     return nullptr;
   }
 }
-
 } // namespace detail
 
 } // namespace dpct
 
-#endif // __DPCT_IMAGE_HPP__
+#endif // !__DPCT_IMAGE_HPP__

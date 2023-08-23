@@ -102,11 +102,8 @@ static void Downscale(const float *src, int width, int height, int stride,
   */
   texDescr.readMode = cudaReadModeElementType;
 
-  /*
-  DPCT1003:3: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((texFine = dpct::create_image_wrapper(texRes, texDescr), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(texFine = dpct::create_image_wrapper(texRes, texDescr)));
 
   /*
   DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the

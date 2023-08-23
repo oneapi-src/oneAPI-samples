@@ -81,7 +81,7 @@ static void Upscale(const float *src, int width, int height, int stride,
   texRes.set_data_type(dpct::image_data_type::pitch);
   texRes.set_data_ptr((void *)src);
   /*
-  DPCT1059:5: SYCL only supports 4-channel image format. Adjust the code.
+  DPCT1059:4: SYCL only supports 4-channel image format. Adjust the code.
   */
   texRes.set_channel(dpct::image_channel::create<float>());
   texRes.set_x(width);
@@ -95,19 +95,15 @@ static void Upscale(const float *src, int width, int height, int stride,
                sycl::filtering_mode::linear,
                sycl::coordinate_normalization_mode::normalized);
   /*
-  DPCT1007:6: Migration of cudaTextureDesc::readMode is not supported.
+  DPCT1007:5: Migration of cudaTextureDesc::readMode is not supported.
   */
   texDescr.readMode = cudaReadModeElementType;
 
-  /*
-  DPCT1003:7: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (texCoarse = dpct::create_image_wrapper(texRes, texDescr), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      texCoarse = dpct::create_image_wrapper(texRes, texDescr)));
 
   /*
-  DPCT1049:4: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
