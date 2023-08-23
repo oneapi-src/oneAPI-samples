@@ -3,15 +3,16 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include "lib_rtl.hpp"
-#include "exception_handler.hpp"
-
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include <sycl/ext/intel/experimental/pipe_properties.hpp>
-#include <sycl/ext/intel/experimental/pipes.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+// oneAPI headers
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/experimental/fpga_kernel_properties.hpp>
+#include <sycl/ext/oneapi/annotated_arg/annotated_arg.hpp>
+#include <sycl/sycl.hpp>
+
+#include "lib_rtl.hpp"
+
+#include "exception_handler.hpp"
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
@@ -35,7 +36,13 @@ using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, unsigned long>
 template <typename PipeIn1, typename PipeIn2, typename PipeOut>
 struct RtlMult27x27 {
 
-  streaming_interface void operator()() const {
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall, 
+        sycl::ext::intel::experimental::pipelined<1>};
+  }
+  
+  void operator()() const {
     unsigned a_val = PipeIn1::read();
     unsigned b_val = PipeIn2::read();
     MyInt27 a = a_val;
@@ -72,7 +79,7 @@ int main() {
       //write data to host-to-device hostpipes
       InputPipeA::write(q, kA);
       InputPipeB::write(q, kB);
-      // launch a kernel to call RTL library
+      // launch a kernel to that uses a multiplier defined in RTL
       q.single_task<KernelComputeRTL>(RtlMult27x27<InputPipeA,InputPipeB,OutputPipeC>{}).wait();
       //read data from device-to-host hostpipe
       result_rtl = OutputPipeC::read(q);

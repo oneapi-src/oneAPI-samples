@@ -65,10 +65,10 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
     {
-      //write data to host-to-device hostpipe
+      // write data to host-to-device hostpipe
       InputPipeA::write(q, kA);
       InputPipeB::write(q, kB);
-      //launch kernal that would compute multiplication as per compiler choice
+      // launch kernel that infers a multiplier automatically
       q.single_task<KernelCompute>(NativeMult27x27<InputPipeA,InputPipeB,OutputPipeC>{}).wait();
       //read data from device-to-host hostpipe
       result_native = OutputPipeC::read(q);
