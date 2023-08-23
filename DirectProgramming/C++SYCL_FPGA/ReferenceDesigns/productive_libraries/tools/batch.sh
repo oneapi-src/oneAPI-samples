@@ -12,9 +12,10 @@ array=(dot     3 sdot   ddot  dsdot
        axpy    4 saxpy  daxpy caxpy  zaxpy
        scal    4 sscal  dscal cscal  zscal
        copy    4 scopy  dcopy ccopy  zcopy
-       gemm    4 sgemm  dgemm cgemm  zgemm
-       symm    4 ssymm  dsymm csymm  zsymm
-       hemm    2 chemm  zhemm)
+       gemm    3 sgemm  dgemm cgemm  #zgemm
+       symm    3 ssymm  dsymm csymm  #zsymm
+       hemm    1 chemm  #zhemm
+      )
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
