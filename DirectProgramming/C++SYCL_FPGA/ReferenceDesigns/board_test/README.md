@@ -119,18 +119,14 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 ### On Linux*
 
 1. Change to the sample directory.
-2. Configure the build system for the Intel® PAC with Intel Arria® 10 GX FPGA, which is the default.
+2. Configure the build system for your BSP.
 
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
-
-   > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
+   > **Note**: You must set FPGA_DEVICE to point to your BSP in order to build this sample.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -142,8 +138,6 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
       ```
       make report
       ```
-      The report resides at `board_test.report.prj/reports/report.html`.
-
    3. Compile and run for FPGA hardware (longer compile time, targets an FPGA device).
       ```
       make fpga
@@ -152,17 +146,13 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
 ### On Windows*
 
 1. Change to the sample directory.
-2. Configure the build system for the Intel® PAC with Intel Arria® 10 GX FPGA, which is the default.
+2. Configure the build system for your BSP.
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
-
-   > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
+   > **Note**: You must set FPGA_DEVICE to point to your BSP in order to build this sample.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -174,8 +164,6 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
       ```
       nmake report
       ```
-      The report resides at `board_test.report.prj/reports/report.html`.
-
    3. Compile and run for FPGA hardware (longer compile time, targets an FPGA device).
       ```
       nmake fpga
