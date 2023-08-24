@@ -47,7 +47,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 
 ## Purpose
-When you design an IP component for an FPGA system, that system will often dictate the interface requirements of your IP component. This tutorial shows how to use `annotated_ptr` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows your IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, please refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/memory-mapped-interfaces.html). 
+When you design an IP component for an FPGA system, that system will often dictate the interface requirements of your IP component. This tutorial shows how to use `annotated_arg` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows your IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, please refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/memory-mapped-interfaces.html). 
 
 ![](assets/basic_avhost.svg)
 
@@ -72,9 +72,9 @@ struct PointerIP {
 ```
 ![](assets/visio-naive.svg)
 
-### Using `annotated_ptr` to configure Avalon memory-mapped host interfaces
+### Using `annotated_arg` to configure Avalon memory-mapped host interfaces
 
-You can override the default behaviour of a pointer argument by declaring an `annotated_ptr` kernel argument instead.
+You can override the default behaviour of a pointer argument by declaring an `annotated_arg` kernel argument instead.
 
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
