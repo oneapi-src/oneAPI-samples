@@ -21,9 +21,9 @@ struct DDR_IP {
       decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
                           alignment<32>, awidth<32>, latency<0>});
 
-  annotated_ptr<int, paramsBL1> x;
-  annotated_ptr<int, paramsBL1> y;
-  annotated_ptr<int, paramsBL2> z;
+  annotated_arg<int*, paramsBL1> x;
+  annotated_arg<int*, paramsBL1> y;
+  annotated_arg<int*, paramsBL2> z;
   int size;
 
   void operator()() const {

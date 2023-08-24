@@ -81,9 +81,9 @@ You can override the default behaviour of a pointer argument by declaring an `an
 struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
   // specified, this kernel will result in the same IP component as Example 1.
-  annotated_ptr<int> x;
-  annotated_ptr<int> y;
-  annotated_ptr<int> z;
+  annotated_arg<int*> x;
+  annotated_arg<int*> y;
+  annotated_arg<int*> z;
   int size;
 
   void operator()() const {
@@ -128,17 +128,17 @@ constexpr int kBL3 = 2;
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  annotated_ptr<int, decltype(properties{buffer_location<kBL1>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL1>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_read})>
       x;
 
-  annotated_ptr<int, decltype(properties{buffer_location<kBL2>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL2>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_read})>
       y;
 
-  annotated_ptr<int, decltype(properties{buffer_location<kBL3>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL3>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_write})>
       z;
@@ -180,9 +180,9 @@ struct DDR_IP {
       decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
                           alignment<32>, awidth<32>, latency<0>});
 
-  annotated_ptr<int, paramsBL1> x;
-  annotated_ptr<int, paramsBL1> y;
-  annotated_ptr<int, paramsBL2> z;
+  annotated_arg<int*, paramsBL1> x;
+  annotated_arg<int*, paramsBL1> y;
+  annotated_arg<int*, paramsBL2> z;
   int size;
 
   void operator()() const {

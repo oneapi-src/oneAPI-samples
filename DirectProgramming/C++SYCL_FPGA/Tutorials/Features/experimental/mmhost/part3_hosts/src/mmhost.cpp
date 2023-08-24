@@ -16,17 +16,17 @@ constexpr int kBL3 = 2;
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  annotated_ptr<int, decltype(properties{buffer_location<kBL1>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL1>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_read})>
       x;
 
-  annotated_ptr<int, decltype(properties{buffer_location<kBL2>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL2>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_read})>
       y;
 
-  annotated_ptr<int, decltype(properties{buffer_location<kBL3>, awidth<32>,
+  annotated_arg<int*, decltype(properties{buffer_location<kBL3>, awidth<32>,
                                          dwidth<32>, latency<1>,
                                          read_write_mode_write})>
       z;
