@@ -636,8 +636,19 @@ struct FFT {
  */
 template <int logn, size_t log_points, typename PipeIn, typename T>
 struct Transpose {
+#if not defined IS_BSP
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ac_complex<T> *,
+      decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::oneapi::experimental::buffer_location<1>,
+          sycl::ext::oneapi::experimental::dwidth<512>,
+          sycl::ext::oneapi::experimental::latency<0>})>
+      dest;
 
+#else
   ac_complex<T> *dest;
+#endif
+
   int mangle;
 
   Transpose(ac_complex<T> *dest_, int mangle_) : dest(dest_), mangle(mangle_) {}

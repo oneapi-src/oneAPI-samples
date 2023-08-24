@@ -144,11 +144,18 @@ void TestFFT(bool mangle, bool inverse) {
       std::cout << "Using USM host allocations" << std::endl;
       // No device allocations means that we are probably in an IP authoring
       // flow
+
+      #if defined IS_BSP
+        auto prop_list = sycl::property_list{};
+      #else
+        auto prop_list = sycl::property_list{sycl::ext::intel::experimental::property::usm::buffer_location(1)};
+      #endif
+
       input_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
-      output_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
-      temp_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q);
+      output_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q, prop_list);
+      temp_data = sycl::malloc_host<ac_complex<float>>(kN * kN, q, prop_list);
     } else {
-      std::cerr << "USM device allocations or USM shared allocations must be "
+      std::cerr << "USM device allocations or USM host allocations must be "
                    "supported to run this sample."
                 << std::endl;
       std::terminate();
@@ -222,22 +229,22 @@ void TestFFT(bool mangle, bool inverse) {
       ac_complex<float> *to_read = i == 0 ? input_data : temp_data;
       ac_complex<float> *to_write_raw = i == 0 ? temp_data : output_data;
 
-      #if not defined IS_BSP
-        // In the IP authoring flow, the default interface uses a narrow data width
-        // (64 bits) However, this IP needs 512 bits, so we redefine the interface to
-        // match what's expected.
-        sycl::ext::oneapi::experimental::annotated_arg<
-            ac_complex<float> *, decltype(sycl::ext::oneapi::experimental::properties{
-                       sycl::ext::oneapi::experimental::buffer_location<1>,
-                       sycl::ext::oneapi::experimental::dwidth<512>,
-                       sycl::ext::oneapi::experimental::latency<0>,
-                       sycl::ext::oneapi::experimental::read_write_mode_write,
-                       sycl::ext::oneapi::experimental::wait_request_requested})>
-            to_write{to_write_raw};
+      // #if not defined IS_BSP
+      //   // In the IP authoring flow, the default interface uses a narrow data width
+      //   // (64 bits) However, this IP needs 512 bits, so we redefine the interface to
+      //   // match what's expected.
+      //   sycl::ext::oneapi::experimental::annotated_arg<
+      //       ac_complex<float> *, decltype(sycl::ext::oneapi::experimental::properties{
+      //                  sycl::ext::oneapi::experimental::buffer_location<1>,
+      //                  sycl::ext::oneapi::experimental::dwidth<512>,
+      //                  sycl::ext::oneapi::experimental::latency<0>,
+      //                  sycl::ext::oneapi::experimental::read_write_mode_write,
+      //                  sycl::ext::oneapi::experimental::wait_request_requested})>
+      //       to_write{to_write_raw};
 
-      #else
+      // #else
             ac_complex<float> *to_write = to_write_raw;
-      #endif
+      // #endif
 
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>([=
@@ -250,11 +257,16 @@ void TestFFT(bool mangle, bool inverse) {
             inverse}();
       });
 
-      auto transpose_event = q.single_task<class TransposeKernel>([=
-      ]() [[intel::kernel_args_restrict]] {
+      auto transpose_event = q.single_task<class TransposeKernel>(
         Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
-                                                                 mangle}();
-      });
+                                                                 mangle}
+      );
+
+      // auto transpose_event = q.single_task<class TransposeKernel>([=
+      // ]() [[intel::kernel_args_restrict]] {
+      //   Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
+      //                                                            mangle}();
+      // });      
 
       transpose_event.wait();
 
