@@ -251,7 +251,7 @@ In `threshold_packets.cpp`, two pipes are declared for implementing the streamin
 
 ### Reading the Reports
 
-After compiling in the report flow, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information for these interfaces in the Details pane. This pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 24 bits (corresponding to the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
+After compiling in the report flow, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information for these interfaces in the Details pane. This pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
 
 <p align="center">
   <img src=assets/kernel.png />
