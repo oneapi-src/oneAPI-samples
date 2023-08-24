@@ -1,10 +1,10 @@
-# `Streaming Interfaces` Sample
+# `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to use pipes to implement streaming interfaces on IP components. If you have not already gone over the IP Authoring Interfaces Overview Tutorial, it is recommended that you do so before continuing with this tutorial.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. If you have not already gone over the IP Authoring Interfaces Overview Tutorial, it is recommended that you do so before continuing with this tutorial.
 
 | Area                  | Description
 |:--                    |:--
-| What you will learn   | How to use pipes to implement streaming interfaces on IP components
+| What you will learn   | How to use pipes to implement streaming data interfaces on an IP component
 | Time to complete      | 30 minutes
 | Category              | Concepts and Functionality
 
@@ -12,7 +12,7 @@ This FPGA sample is a tutorial that demonstrates how to use pipes to implement s
 
 Pipes are a first-in first-out (FIFO) buffer construct that provide links between elements of a design. They are accessed through read and write APIs without the notion of a memory address or pointer to elements within the FIFO.
 
-The concept of a pipe provides us with a mechanism for specifying and configuring streaming interfaces on an IP component. This tutorial will demonstrate how to declare and configure a pipe to implement a streaming interface on an IP component.
+The concept of a pipe provides us with a mechanism for specifying streaming data interfaces on an IP component. This tutorial will demonstrate how to declare and configure a pipe to implement your desired interface.
 
 ## Prerequisites
 
@@ -56,15 +56,16 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Key Implementation Details
 
-### Configuring a Pipe to Implement a Streaming Interface
+### Configuring a Pipe to Implement a Streaming Data Interface
 
 Each individual pipe is a function scope class declaration of the templated `pipe` class.
 - The first template parameter is a user-defined type that differentiates this particular pipe from the others and provides a name for the interface in the  RTL.
 - The second template parameter defines the datatype of elements carried by the interface.
+> :warning: There is currently a known issue with using struct types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (e.g., `unsigned char`). For the time being, please use a wider datatype where applicable (e.g., 16-bits).
 - The third template parameter allows you to optionally specify a non-negative integer representing the capacity of the buffer on the input. This can help avoid some amount of bubbles in the pipeline in case the component itself stalls.
-- The fourth template parameter uses the oneAPI properties class to allow users to optionally define additional semantic properties for a pipe. **The `protocol` property is what will allow us to configure a pipe to implement a streaming interface.** A list of those properties relevant to this sample is given in Table 1 (please note that this table is *not* complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications).
+- The fourth template parameter uses the oneAPI properties class to allow users to optionally define additional semantic properties for a pipe. **The `protocol` property is what will allow us to configure a pipe to implement a streaming data interface.** A list of those properties relevant to this sample is given in Table 1 (please note that this table is *not* complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications).
 
-#### Table 1. Properties used to Configure a Pipe to Implement a Streaming Interface
+#### Table 1. Properties used to Configure a Pipe to Implement a Streaming Data Interface
 
 | Property | Valid Values | Default Value |
 | ---------| ------------ | ------------- |
@@ -78,7 +79,7 @@ Each individual pipe is a function scope class declaration of the templated `pip
 
 #### Example 1.
 
-The following example declares a pipe to implement a streaming interface with  `ready` and `valid` signals, using the defaults for all parameters.
+The following example declares a pipe to implement a streaming data interface with  `ready` and `valid` signals, using the defaults for all other parameters.
 
 ```c++
 // Unique user-defined types
@@ -90,9 +91,8 @@ using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::ready_latency<0>,
     sycl::ext::intel::experimental::bits_per_symbol<8>,
     sycl::ext::intel::experimental::uses_valid<true>,
-    sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>),
-    sycl::ext::intel::experimental::protocol_avalon_streaming_uses_ready
-);
+    sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>,
+    sycl::ext::intel::experimental::protocol_avalon_streaming_uses_ready));
 
 using FirstPipeInstance = sycl::ext::intel::experimental::pipe<
     FirstPipeT,      // An identifier for the pipe
@@ -108,7 +108,7 @@ You can enable Avalon streaming sideband signal support by using the special `St
 
 The `StreamingBeat` struct is templated on three parameters.
 - The first template parameter defines the type of the data being communicated through the interface.
-- The second parameter is used to enable additional `start_of_packet` (`sop`) and `end_of_packet` (`eop`) signals to the Avalon interface.
+- The second parameter is used to enable additional `startofpacket` (`sop`) and `endofpacket` (`eop`) signals to the Avalon interface.
 - The third template parameter is used to enable the `empty` signal, which indicates the number of symbols that are empty during the `eop` cycle.
 
 #### Example 2.
@@ -132,7 +132,7 @@ SecondPipeInstance::write(out_beat);
 
 The read and write APIs are the same as for all pipes. See the IP Authoring Interfaces Overview Tutorial for more information.
 
-## Build the `Streaming Interfaces with Pipes` Tutorial
+## Build the `Streaming Data Interfaces` Tutorial
 
 >**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
@@ -218,7 +218,7 @@ The read and write APIs are the same as for all pipes. See the IP Authoring Inte
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-## Run the `Streaming Interfaces with Pipes` Tutorial
+## Run the `Streaming Data Interfaces` Tutorial
 
 ### On Linux
 
