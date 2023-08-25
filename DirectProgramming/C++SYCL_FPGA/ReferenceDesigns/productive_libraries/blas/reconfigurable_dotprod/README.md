@@ -157,11 +157,11 @@ After unsigning the image (for A10 FPGA only), the demo can run on a hardware, w
 </tr>
 <tr>
     <td>D, S <br>16, 64</td>
-    <td>98,123 / 427,200 ( 23 % )</td>
+    <td>98,093 / 427,200 ( 23 % )</td>
     <td>76 / 1,518 ( 5 % )</td>
-    <td>489 / 2,713 ( 18 % )</td>
-    <td>258</td>
-    <td>3.0 GFLOPS<br>(35% peak)<br>(<a href="https://github.com/haoxiaochen/t2sp/issues/39">perf issue to adress in next release</a>)</td>
+    <td>437 / 2,713 ( 16 % )</td>
+    <td>257</td>
+    <td>7.5 GFLOPS<br>(88% peak)</td>
     <td>256M, 256M</td>
     <td>blas/dot/bin/demo_dsdot_large_a10.unsigned<br> or blas/sdsdot/bin/demo_sdsdot_large_a10.unsigned</td>
 </tr>

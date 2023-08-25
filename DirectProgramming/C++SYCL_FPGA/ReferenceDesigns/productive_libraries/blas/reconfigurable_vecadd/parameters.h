@@ -13,7 +13,7 @@
         #elif defined(T2SP_ZVECADD)
             #define KK 4
         #endif
-    #else // A10
+    #elif defined(A10) // A10
         #ifdef T2SP_SVECADD
             #define KK 16
         #elif defined(T2SP_DVECADD)
@@ -23,6 +23,8 @@
         #elif defined(T2SP_ZVECADD)
             #define KK 4
         #endif
+    #else
+        #error No FPGA hardware platform (A10 or S10) specified
     #endif
 #endif
 

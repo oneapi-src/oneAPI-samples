@@ -14,6 +14,8 @@ if(NOT DEFINED FPGA_DEVICE)
     # For whatever reason, it is faster to synthesize with OpenCL 1.2.1 BSP.
     # set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
     set(FPGA_DEVICE "${OPENCL_1_2_1_BSP}:pac_a10")
+    set(HW "a10")
+    set(UPPER_HW "A10")
     message(STATUS "FPGA_DEVICE was not specified. "
                    "Configuring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). "
                    "Please refer to the README for information on board selection.")
@@ -21,6 +23,8 @@ else()
     if((NOT("${FPGA_DEVICE}" STREQUAL "intel_s10sx_pac:pac_s10")) AND (NOT("${FPGA_DEVICE}" STREQUAL "${OPENCL_1_2_1_BSP}:pac_a10")))
         message(FATAL_ERROR "Unsupported device ${FPGA_DEVICE}")
     endif()
+    set(HW "s10")
+    set(UPPER_HW "S10")
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
@@ -72,83 +76,80 @@ add_custom_target(compiler_tools DEPENDS ${HALIDE_TOOLS_PATH}/lib/libHalide.a)
 
 foreach(TYPEA ${TYPES})
     foreach(SIZE "tiny" "large")
-        foreach(HW "a10" "s10")
-            string(TOUPPER ${SIZE}   UPPER_SIZE)
-            string(TOUPPER ${HW}     UPPER_HW)
-            string(TOUPPER ${TYPEA}  UPPER_TYPE)
+        string(TOUPPER ${SIZE}   UPPER_SIZE)
+        string(TOUPPER ${TYPEA}  UPPER_TYPE)
     
-            # Generate OneAPI files
-            add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
-                               COMMAND ${CMAKE_CXX_COMPILER} 
-                                       -DKERNEL="t2sp::blas::row_major::${TYPEA}dotprod::${TYPEA}dotprod"
-                                       -DOUTPUT_FILE="${TYPEA}dotprod_${SIZE}_${HW}.cpp"
-                                       -I${HALIDE_TOOLS_PATH}/include
-                                       -std=gnu++11 -O0 -g
-                                       -Wno-tautological-constant-compare
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/spec.cpp
-                                       -L${HALIDE_TOOLS_PATH}/lib -lpthread -lz -ldl -lHalide
-                                       -D${UPPER_SIZE} -DT2SP_${UPPER_TYPE}DOTPROD
-                                       -o ${RECONFIGURABLE_DOTPROD_PATH}/bin/oneapi_${TYPEA}dotprod_${SIZE}_${HW}
-                               COMMAND env CLEARCODE=1 ${RECONFIGURABLE_DOTPROD_PATH}/bin/oneapi_${TYPEA}dotprod_${SIZE}_${HW}
-                               COMMAND mv ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.cpp ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/
-                               DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/spec.cpp
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/parameters.h
-                                       ${HALIDE_TOOLS_PATH}/include/Halide.h
-                               WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
-                               COMMENT "Generating OneAPI files"
-                               VERBATIM)
-            add_custom_target(oneapi_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
-                                                                           compiler_tools)
+        # Generate OneAPI files
+        add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
+                           COMMAND ${CMAKE_CXX_COMPILER} 
+                                   -DKERNEL="t2sp::blas::row_major::${TYPEA}dotprod::${TYPEA}dotprod"
+                                   -DOUTPUT_FILE="${TYPEA}dotprod_${SIZE}_${HW}.cpp"
+                                   -I${HALIDE_TOOLS_PATH}/include
+                                   -std=gnu++11 -O0 -g
+                                   -Wno-tautological-constant-compare
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/spec.cpp
+                                   -L${HALIDE_TOOLS_PATH}/lib -lpthread -lz -ldl -lHalide
+                                   -D${UPPER_SIZE} -DT2SP_${UPPER_TYPE}DOTPROD -D${UPPER_HW}
+                                   -o ${RECONFIGURABLE_DOTPROD_PATH}/bin/oneapi_${TYPEA}dotprod_${SIZE}_${HW}
+                           COMMAND env CLEARCODE=1 ${RECONFIGURABLE_DOTPROD_PATH}/bin/oneapi_${TYPEA}dotprod_${SIZE}_${HW}
+                           COMMAND mv ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.cpp ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/
+                           DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/spec.cpp
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/parameters.h
+                                   ${HALIDE_TOOLS_PATH}/include/Halide.h
+                           WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
+                           COMMENT "Generating OneAPI files"
+                           VERBATIM)
+        add_custom_target(oneapi_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
+                                                                       compiler_tools)
     
-            # Generate a report
-            file(MAKE_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW})
-            add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/report.html
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/resources
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       -Xshardware -Xstarget=${FPGA_DEVICE}
-                                       -Wno-tautological-constant-compare
-                                       -Xsffp-reassociate -Xsffp-contract=fast -Xsdsp-mode=prefer-dsp -Xsprofile -Xsclock=360MHz
-                                       -fsycl -fintelfpga -fsycl-link=early -o ${TYPEA}dotprod_${SIZE}_${HW}.early
-                               COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.early.prj/reports/report.html ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
-                               COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.early.prj/reports/resources   ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
-                               DEPENDS ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
-                                       oneapi_${TYPEA}dotprod_${SIZE}_${HW}
-                               WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
-                               COMMENT "Generating a report"
-                               VERBATIM)
-            add_custom_target(report_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/report.html
-                                                                                                  ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/resources)
+        # Generate a report
+        file(MAKE_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW})
+        add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/report.html
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/resources
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   -Xshardware -Xstarget=${FPGA_DEVICE}
+                                   -Wno-tautological-constant-compare
+                                   -Xsffp-reassociate -Xsffp-contract=fast -Xsdsp-mode=prefer-dsp -Xsprofile -Xsclock=360MHz
+                                   -fsycl -fintelfpga -fsycl-link=early -o ${TYPEA}dotprod_${SIZE}_${HW}.early
+                           COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.early.prj/reports/report.html ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
+                           COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.early.prj/reports/resources   ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
+                           DEPENDS ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
+                                   oneapi_${TYPEA}dotprod_${SIZE}_${HW}
+                           WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
+                           COMMENT "Generating a report"
+                           VERBATIM)
+        add_custom_target(report_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/report.html
+                                                                                              ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/resources)
     
-            # Generate an image
-            add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.a
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/acl_quartus_report.txt
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       -Xshardware -Xstarget=${FPGA_DEVICE}
-                                       -Wno-tautological-constant-compare
-                                       -Xsffp-reassociate -Xsffp-contract=fast -Xsdsp-mode=prefer-dsp -Xsprofile -Xsclock=360MHz -Xsseed=${SEED}
-                                       -fsycl -fintelfpga -fsycl-link=image -o ${TYPEA}dotprod_${SIZE}_${HW}.a
-                               COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/reports/report.html    ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
-                               COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/reports/resources      ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
-                               COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/acl_quartus_report.txt ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
-                               DEPENDS ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
-                                       oneapi_${TYPEA}dotprod_${SIZE}_${HW}
-                               WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
-                               COMMENT "Generating an image"
-                               VERBATIM)
-            add_custom_target(synthesize_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.a)
-        endforeach()
+        # Generate an image
+        add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.a
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}/acl_quartus_report.txt
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${TYPEA}dotprod_${SIZE}_${HW}.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   -Xshardware -Xstarget=${FPGA_DEVICE}
+                                   -Wno-tautological-constant-compare
+                                   -Xsffp-reassociate -Xsffp-contract=fast -Xsdsp-mode=prefer-dsp -Xsprofile -Xsclock=360MHz -Xsseed=${SEED}
+                                   -fsycl -fintelfpga -fsycl-link=image -o ${TYPEA}dotprod_${SIZE}_${HW}.a
+                           COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/reports/report.html    ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
+                           COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/reports/resources      ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
+                           COMMAND cp -rf ${TYPEA}dotprod_${SIZE}_${HW}.prj/acl_quartus_report.txt ${RECONFIGURABLE_DOTPROD_PATH}/reports/${TYPEA}dotprod_${SIZE}_${HW}
+                           DEPENDS ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
+                                   oneapi_${TYPEA}dotprod_${SIZE}_${HW}
+                           WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
+                           COMMENT "Generating an image"
+                           VERBATIM)
+        add_custom_target(synthesize_${TYPEA}dotprod_${SIZE}_${HW} DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/bin/${TYPEA}dotprod_${SIZE}_${HW}.a)
     endforeach()
 endforeach()
 
@@ -209,47 +210,44 @@ foreach(PRECISION ${PRECISIONS})
     string(TOUPPER ${KERNEL} UPPER_KERNEL)
     foreach(SIZE "tiny" "large")
         string(TOUPPER ${SIZE} UPPER_SIZE)
-        foreach(HW "a10" "s10")
-            string(TOUPPER ${HW} UPPER_HW)
-            add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -I${HALIDE_TOOLS_PATH}/include -I$ENV{MKLROOT}/include
-                                       -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${CPP_SYCL_FPGA_PATH}/include
-                                       -I${GOOGLE_TEST_PATH}/include -I${GOOGLE_TEST_PATH}/googletest/include
-                                       -D${UPPER_SIZE} -D${UPPER_HW}
-                                       -DMKL_ILP64 -DT2SP_NDEBUG -DT2SP_${UPPER_PRECISION}${UPPER_KERNEL}
-                                       -fsycl -fintelfpga
-                                       -Wno-tautological-constant-compare
-                                       -c ${CURRENT_KERNEL_PATH}/demo.cpp
-                                       -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                               DEPENDS ${CURRENT_KERNEL_PATH}/demo.cpp
-                                       ${CURRENT_KERNEL_PATH}/api.hpp
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/api.hpp
-                                       ${HALIDE_TOOLS_PATH}/include/Halide.h
-                                       ${HALIDE_TOOLS_PATH}/include/HalideRuntime.h
-                                       ${HALIDE_TOOLS_PATH}/include/HalideBuffer.h
-                               WORKING_DIRECTORY ${CURRENT_KERNEL_PATH}/bin
-                               COMMENT "Generating a demo application on ${HW}"
-                               VERBATIM)
-            add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -fsycl -fintelfpga
-                                       ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                                       ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.a
-                                       -L${HALIDE_TOOLS_PATH}/lib -lHalide -lpthread -lz
-                                       -Wno-tautological-constant-compare
-                                       -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                               DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
-                                       synthesize_${dotprod_type}dotprod_${SIZE}_${HW}
-                               WORKING_DIRECTORY ${CURRENT_KERNEL_PATH}/bin
-                               COMMENT "Linking the demo application with the device image"
-                               VERBATIM)
-            add_custom_target(demo_${PRECISION}${KERNEL}_${SIZE}_${HW} DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW})
-        endforeach()
+        add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -I${HALIDE_TOOLS_PATH}/include -I$ENV{MKLROOT}/include
+                                   -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${CPP_SYCL_FPGA_PATH}/include
+                                   -I${GOOGLE_TEST_PATH}/include -I${GOOGLE_TEST_PATH}/googletest/include
+                                   -D${UPPER_SIZE} -D${UPPER_HW}
+                                   -DMKL_ILP64 -DT2SP_NDEBUG -DT2SP_${UPPER_PRECISION}${UPPER_KERNEL}
+                                   -fsycl -fintelfpga
+                                   -Wno-tautological-constant-compare
+                                   -c ${CURRENT_KERNEL_PATH}/demo.cpp
+                                   -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                           DEPENDS ${CURRENT_KERNEL_PATH}/demo.cpp
+                                   ${CURRENT_KERNEL_PATH}/api.hpp
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/api.hpp
+                                   ${HALIDE_TOOLS_PATH}/include/Halide.h
+                                   ${HALIDE_TOOLS_PATH}/include/HalideRuntime.h
+                                   ${HALIDE_TOOLS_PATH}/include/HalideBuffer.h
+                           WORKING_DIRECTORY ${CURRENT_KERNEL_PATH}/bin
+                           COMMENT "Generating a demo application on ${HW}"
+                           VERBATIM)
+        add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -fsycl -fintelfpga
+                                   ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                                   ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.a
+                                   -L${HALIDE_TOOLS_PATH}/lib -lHalide -lpthread -lz
+                                   -Wno-tautological-constant-compare
+                                   -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                           DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
+                                   synthesize_${dotprod_type}dotprod_${SIZE}_${HW}
+                           WORKING_DIRECTORY ${CURRENT_KERNEL_PATH}/bin
+                           COMMENT "Linking the demo application with the device image"
+                           VERBATIM)
+        add_custom_target(demo_${PRECISION}${KERNEL}_${SIZE}_${HW} DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW})
     endforeach()
 endforeach()
 
@@ -258,65 +256,60 @@ foreach(PRECISION ${PRECISIONS})
     get_dotprod_type(${PRECISION} dotprod_type)
     foreach(SIZE "tiny" "large")
         string(TOUPPER ${SIZE} UPPER_SIZE)
-        foreach(HW "a10" "s10")
-            string(TOUPPER ${HW} UPPER_HW)
-            add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx
-                               COMMAND $ENV{INTELFPGAOCLSDKROOT}/host/linux64/bin/aocl-extract-aocx
-                                       -i ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                                       -o ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.aocx
-                               COMMAND bash -c "rm -rf temp* signed*" # clean up
-                               COMMAND bash -c "yes Y | source ${OPENCL_1_2_1_BSP}/linux64/libexec/sign_aocx.sh -H openssl_manager \
-                                       -i ${dotprod_type}dotprod_${SIZE}_${HW}.aocx -r NULL -k NULL \
-                                       -o ${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx"
-                               DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                               WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
-                               COMMENT "Extracting and unsigning the bitstream"
-                               VERBATIM)
-            add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include
-                                       -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
-                                       -c ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       -Wno-tautological-constant-compare
-                                       -fsycl -fintelfpga -o halide_runtime_etc.o
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include
-                                       -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
-                                       -c ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${dotprod_type}dotprod_${SIZE}_${HW}.cpp
-                                       -Wno-tautological-constant-compare
-                                       -fsycl -fintelfpga -o ${dotprod_type}dotprod_${SIZE}_${HW}.o
-                               COMMAND ${CMAKE_CXX_COMPILER}
-                                       # sign_aocx.sh seems to have a bug: its input seems to be turned into unsigned,
-                                       # while its output seems signed, as can be verified by running aocl program
-                                       -fsycl -fsycl-add-targets=spir64_fpga-unknown-unknown:${dotprod_type}dotprod_${SIZE}_${HW}.aocx
-                                       ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                                       ${dotprod_type}dotprod_${SIZE}_${HW}.o
-                                       halide_runtime_etc.o
-                                       -L${HALIDE_TOOLS_PATH}/lib -lHalide -lpthread -lz
-                                       -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned
-                                       -lOpenCL -lsycl
-                               DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx
-                                       ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
-                                       ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
-                                       demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                               WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
-                               COMMENT "Adding the bitstream back to the image"
-                               VERBATIM)
-            add_custom_target(unsign_${PRECISION}${KERNEL}_${SIZE}_${HW} DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned)
-        endforeach()
+        add_custom_command(OUTPUT  ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx
+                           COMMAND $ENV{INTELFPGAOCLSDKROOT}/host/linux64/bin/aocl-extract-aocx
+                                   -i ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                                   -o ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.aocx
+                           COMMAND bash -c "rm -rf temp* signed*" # clean up
+                           COMMAND bash -c "yes Y | source ${OPENCL_1_2_1_BSP}/linux64/libexec/sign_aocx.sh -H openssl_manager \
+                                   -i ${dotprod_type}dotprod_${SIZE}_${HW}.aocx -r NULL -k NULL \
+                                   -o ${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx"
+                           DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                           WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
+                           COMMENT "Extracting and unsigning the bitstream"
+                           VERBATIM)
+        add_custom_command(OUTPUT  ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include
+                                   -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
+                                   -c ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   -Wno-tautological-constant-compare
+                                   -fsycl -fintelfpga -o halide_runtime_etc.o
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   -I${RECONFIGURABLE_DOTPROD_PATH}/oneapi -I${CPP_SYCL_FPGA_PATH}/include
+                                   -I${PRODUCTIVE_LIBRARIES_PATH}/include -I${HALIDE_TOOLS_PATH}/include
+                                   -c ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${dotprod_type}dotprod_${SIZE}_${HW}.cpp
+                                   -Wno-tautological-constant-compare
+                                   -fsycl -fintelfpga -o ${dotprod_type}dotprod_${SIZE}_${HW}.o
+                           COMMAND ${CMAKE_CXX_COMPILER}
+                                   # sign_aocx.sh seems to have a bug: its input seems to be turned into unsigned,
+                                   # while its output seems signed, as can be verified by running aocl program
+                                   -fsycl -fsycl-add-targets=spir64_fpga-unknown-unknown:${dotprod_type}dotprod_${SIZE}_${HW}.aocx
+                                   ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                                   ${dotprod_type}dotprod_${SIZE}_${HW}.o
+                                   halide_runtime_etc.o
+                                   -L${HALIDE_TOOLS_PATH}/lib -lHalide -lpthread -lz
+                                   -o ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned
+                                   -lOpenCL -lsycl
+                           DEPENDS ${RECONFIGURABLE_DOTPROD_PATH}/bin/${dotprod_type}dotprod_${SIZE}_${HW}.unsigned.aocx
+                                   ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.o
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.cpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/halide_runtime_etc.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/complex_helper.hpp
+                                   ${PRODUCTIVE_LIBRARIES_PATH}/include/pipe_wrapper.hpp
+                                   demo_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                           WORKING_DIRECTORY ${RECONFIGURABLE_DOTPROD_PATH}/bin
+                           COMMENT "Adding the bitstream back to the image"
+                           VERBATIM)
+        add_custom_target(unsign_${PRECISION}${KERNEL}_${SIZE}_${HW} DEPENDS ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}.unsigned)
     endforeach()
 endforeach()
 
 # Install pre-generated files
 foreach(PRECISION ${PRECISIONS})
     foreach(SIZE "tiny" "large")
-        foreach(HW "a10" "s10")
-            add_custom_target(install_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                              COMMAND bash -c "${PRODUCTIVE_LIBRARIES_PATH}/tools/install_pre_gen.sh ${PRECISION}${KERNEL}_${SIZE}_${HW}")
-        endforeach()
+        add_custom_target(install_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                          COMMAND bash -c "${PRODUCTIVE_LIBRARIES_PATH}/tools/install_pre_gen.sh ${PRECISION}${KERNEL}_${SIZE}_${HW}")
     endforeach()
 endforeach()
 
@@ -324,12 +317,10 @@ endforeach()
 foreach(PRECISION ${PRECISIONS})
     get_dotprod_type(${PRECISION} dotprod_type)
     foreach(SIZE "tiny" "large")
-        foreach(HW "a10" "s10")
-            add_custom_target(clean_${PRECISION}${KERNEL}_${SIZE}_${HW}
-                              COMMAND bash -c "rm -rf ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}*"
-                              COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/bin/*${dotprod_type}dotprod_${SIZE}_${HW}* "
-                              COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${dotprod_type}dotprod_${SIZE}_${HW}*"
-                              COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/reports/${dotprod_type}dotprod_${SIZE}_${HW}/*")
-        endforeach()
+        add_custom_target(clean_${PRECISION}${KERNEL}_${SIZE}_${HW}
+                          COMMAND bash -c "rm -rf ${CURRENT_KERNEL_PATH}/bin/demo_${PRECISION}${KERNEL}_${SIZE}_${HW}*"
+                          COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/bin/*${dotprod_type}dotprod_${SIZE}_${HW}* "
+                          COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/oneapi/${dotprod_type}dotprod_${SIZE}_${HW}*"
+                          COMMAND bash -c "rm -rf ${RECONFIGURABLE_DOTPROD_PATH}/reports/${dotprod_type}dotprod_${SIZE}_${HW}/*")
     endforeach()
 endforeach()

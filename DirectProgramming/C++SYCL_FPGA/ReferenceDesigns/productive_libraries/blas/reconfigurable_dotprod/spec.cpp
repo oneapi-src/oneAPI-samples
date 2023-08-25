@@ -35,11 +35,11 @@ int main()
 
     // UREs
     Var kkk("kkk"), kk("kk"), k("k"), b("b");
-    URE uY("uY", TTYPE, {P_1}), uX("uX", TTYPE, {P_1}), uZ_1("uZ_1", TTYPE, {P_1}), Z("Z");
+    URE uY("uY", ITYPE, {P_1}), uX("uX", ITYPE, {P_1}), uZ_1("uZ_1", TTYPE, {P_1}), Z("Z");
     URE uZ_2("uZ_2", TTYPE, {P_2}), Out("Out");
 
-    Expr Check_Load_X = select(addr_in_range, conditional_conjugate(ConjugateX, cast(TTYPE, X(total_k, b))), 0);
-    Expr Check_Load_Y = select(addr_in_range, conditional_signbit(SignBitY, cast(TTYPE, Y(total_k, b))), 0);
+    Expr Check_Load_X = select(addr_in_range, conditional_conjugate(ConjugateX, X(total_k, b)), 0);
+    Expr Check_Load_Y = select(addr_in_range, conditional_signbit(SignBitY, Y(total_k, b)), 0);
 
     // Divide each input into KK parts, each part with KKK*K elements. Calculate the dot products of the KK parts interleavingly:
     // reduce KKK elements of part 1, then reduce KKK elements of part 2, ..., and finally, reduce KKK elements of part KK;
@@ -51,7 +51,8 @@ int main()
     // First, calculate the dot product for every part, indexed by loop kk.
     uX(P_1) = Check_Load_X;
     uY(P_1) = Check_Load_Y;
-    uZ_1(P_1) = select(k == 0 && kkk == 0, 0, select(kkk == 0, uZ_1(P_1_k_minus_1), uZ_1(P_1_kkk_minus_1))) + uX(P_1) * uY(P_1);
+    uZ_1(P_1) = select(k == 0 && kkk == 0, 0, select(kkk == 0, uZ_1(P_1_k_minus_1), uZ_1(P_1_kkk_minus_1)))
+                + cast(TTYPE, uX(P_1)) * cast(TTYPE, uY(P_1));
     Z(P_2) = select(k == K - 1 && kkk == KKK - 1, uZ_1(P_1));
 
     // Second, sum up the dot product of all the parts.

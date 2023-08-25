@@ -24,7 +24,7 @@
             #define KK 64
             #define KKK 32
         #endif
-    #else // A10
+    #elif defined(A10) // A10
         #ifdef T2SP_DDOTPROD
             #define KK 64
             #define KKK 8
@@ -44,6 +44,8 @@
             #define KK 64
             #define KKK 16
         #endif
+    #else
+        #error No FPGA hardware platform (A10 or S10) specified
     #endif
 #endif
 
