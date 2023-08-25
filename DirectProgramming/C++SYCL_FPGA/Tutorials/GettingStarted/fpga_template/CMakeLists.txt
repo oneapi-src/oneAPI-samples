@@ -90,8 +90,9 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
+string(TOLOWER "${CMAKE_BUILD_TYPE}" LOWER_BUILD_TYPE)
+if(LOWER_BUILD_TYPE MATCHES debug)
 # Set debug flags
-if(CMAKE_BUILD_TYPE MATCHES DEBUG OR CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES debug)
     if(WIN32)
         set(DEBUG_FLAGS /DEBUG /Od)
     else()
@@ -131,7 +132,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${EMULATOR_OUTPU
 ###############################################################################
 ### FPGA Simulator
 ###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILES})
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${SIMULATOR_COMPILE_FLAGS})
 target_link_libraries(${SIMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -141,7 +142,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${SIMULATOR_OUT
 ###############################################################################
 ### Generate Report
 ###############################################################################
-add_executable(${REPORT_TARGET} ${SOURCE_FILES})
+add_executable(${REPORT_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${REPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${REPORT_TARGET} PRIVATE ${REPORT_COMPILE_FLAGS})
 
