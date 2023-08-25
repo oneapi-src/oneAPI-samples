@@ -1,6 +1,6 @@
 # `FPGA Template` Sample
 
-This project serves as a template for Intel® oneAPI FPGA designs.
+This project serves as a template for Intel® oneAPI FPGA designs, and demonstrates the features of the base CMake build system in our code samples.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -48,15 +48,15 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-Use this project as a starting point when you build designs for the Intel® oneAPI DPC++/C++ compiler when targeting FPGAs. It includes a CMake build system to automate selecting the various command-line flags for the oneAPI DPC++/C++ compiler, and a simple single-source design to serve as an example. You can customize the build flags by modifying the top part of `CMakeLists.txt`: if you want to pass additional flags to the Intel® oneAPI DPC++/C++ compiler, you can change the `USER_FLAGS` and `USER_HARDWARE_FLAGS` variables defined in `CMakeLists.txt`. Similarly, you can add additional include paths to the `USER_INCLUDE_PATHS` variable. You can also explicitly define these variables at the command-line if you don't want to make change to the CMake build system.
+Use this project as a starting point when you build designs for the Intel® oneAPI DPC++/C++ compiler when targeting FPGAs. It includes a CMake build system to automate selecting the various command-line flags for the oneAPI DPC++/C++ compiler, and a simple single-source design to serve as an example. You can customize the build flags by modifying the top part of `CMakeLists.txt`: if you want to pass additional flags to the Intel® oneAPI DPC++/C++ compiler, you can change the `USER_FLAGS` and `USER_FPGA_FLAGS` variables defined in `CMakeLists.txt`. Similarly, you can add additional include paths to the `USER_INCLUDE_PATHS` variable. You can also explicitly define these variables at the command-line if you want to perform a quick test without changing the CMake build system.
 
-> **Note**: The code sample in this design only uses USM for improved code simplicity as compared with buffers/accessors. The included CMake build system can also be used for designs that do not use USM.
+> **Note**: The code sample in this design uses USM shared allocations for improved code simplicity as compared with buffers/accessors. The included CMake build system can also be used for designs that use buffers and accessors or USM device allocations.
 
 | Variable              | Description
 |:---                   |:---
-| `USER_HARDWARE_FLAGS` | This semicolon-separated list of flags applies only to flows that generate FPGA hardware (i.e. report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
-| `USER_FLAGS`          | This semicolon-separated list of flags applies to all flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
-| `USER_INCLUDE_PATHS`  | This semicolon-separated list of include paths applies  to all flows, including emulation. Specify include paths relative to the `CMakeLists.txt` file, or using absolute paths in the filesystem.
+| `USER_FPGA_FLAGS` | This semicolon-separated list of flags will be applied **only** to flows that generate FPGA hardware (namely report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
+| `USER_FLAGS`          | This semicolon-separated list of flags applies to **all** flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
+| `USER_INCLUDE_PATHS`  | This semicolon-separated list of include paths applies to all flows, including emulation. Specify include paths relative to the `CMakeLists.txt` file, or using absolute paths in the filesystem.
 
 ```bash
 ###############################################################################
@@ -71,18 +71,18 @@ set(TARGET_NAME fpga_template)
 #   intel_s10sx_pac:pac_s10
 #   intel_s10sx_pac:pac_s10_usm
 #   intel_a10gx_pac:pac_a10
-# Note that depending on your installation, you may need to specify the full
-# path to the board support package (BSP), this usually is in your install
+# Note that depending on your installation, you may need to specify the full 
+# path to the board support package (BSP), this usually is in your install 
 # folder.
 #
 # You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
 # specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_s10sx_pac:pac_s10_usm")
+    set(FPGA_DEVICE "Agilex7")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
-# compilation.
+# compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
@@ -90,7 +90,7 @@ set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
+set(USER_INCLUDE_PATHS ../../../include;${USER_INCLUDE_PATHS})
 ```
 
 Everything below this in the `CMakeLists.txt` is necessary for selecting the compiler flags that are necessary to support the build targets specified below, and should not need to be modified.
@@ -127,6 +127,20 @@ This design uses CMake to generate a build script for GNU/make.
    cmake ..
    ```
 
+   You can create a debuggable binary by setting `CMAKE_BUILD_TYPE` to `Debug`:
+
+   ```
+   mkdir build
+   cd build
+   cmake .. -DCMAKE_BUILD_TYPE=Debug
+   ```
+
+   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release`:
+
+   ```
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   ```
+
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -139,7 +153,7 @@ This design uses CMake to generate a build script for GNU/make.
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    | Target          | Expected Time  | Output                                                                       | Description
    |:---             |:---            |:---                                                                          |:---
@@ -150,16 +164,46 @@ This design uses CMake to generate a build script for GNU/make.
 
    The `fpga_emu`, `fpga_sim` and `fpga` targets produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu`, `TARGET_NAME.fpga_sim`, and `TARGET_NAME.fpga`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
 
+   You can see a listing of the commands that are run:
+
+   ```bash
+   build $> make report
+   [ 33%] To compile manually:
+   /[ ... ]/linux64/bin/icpx -I../../../../include -fsycl -fintelfpga    -Wall -qactypes -DFPGA_HARDWARE -c ../src/fpga_template.cpp -o CMakeFiles/report.dir/src/ fpga_template.cpp.o
+
+   To link manually:
+   /[ ... ]/linux64/bin/icpx -fsycl -fintelfpga -Xshardware  -Xstarget=Agilex7 -fsycl-link=early -o fpga_template.report CMakeFiles/report.dir/src/  fpga_template.cpp.o
+   
+   [ ... ]
+
+   [100%] Built target report
+   ```
+
 ### On a Windows* System
 This design uses CMake to generate a build script for  `nmake`.
 
 1. Change to the sample directory.
 
 2. Configure the build system for the Agilex® 7 device family, which is the default.
+
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
+   ```
+
+   You can create a debuggable binary by setting `CMAKE_BUILD_TYPE` to `Debug`:
+
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" .. -DCMAKE_BUILD_TYPE=Debug
+   ```
+
+   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release``:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DCMAKE_BUILD_TYPE=Release
    ```
 
    > **Note**: You can change the default target by using the command:
@@ -174,7 +218,7 @@ This design uses CMake to generate a build script for  `nmake`.
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    | Target           | Expected Time  | Output                                                                       | Description
    |:---              |:---            |:---                                                                          |:---
@@ -186,6 +230,22 @@ This design uses CMake to generate a build script for  `nmake`.
    The `fpga_emu`, `fpga_sim`, and `fpga` targets also produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu.exe`, `TARGET_NAME.fpga_sim.exe`, and `TARGET_NAME.fpga.exe`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
 
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+   You can see a listing of the commands that are run:
+
+   ```bash
+   build> nmake report
+
+   [ 33%] To compile manually:
+   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -I../../../../include   -fsycl -fintelfpga -Wall /EHsc -Qactypes -DFPGA_HARDWARE -c ../src/fpga_template.cpp -o  CMakeFiles/report.dir/src/fpga_template.cpp.obj
+
+   To link manually:
+   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -fsycl -fintelfpga   -Xshardware -Xstarget=Agilex7 -fsycl-link=early -o fpga_template.report.exe   CMakeFiles/report.dir/src/fpga_template.cpp.obj
+   
+   [ ... ]
+
+   [100%] Built target report
+   ```
 
 ## Run the `fpga_template` Executable
 
