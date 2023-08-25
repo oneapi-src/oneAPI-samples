@@ -135,7 +135,11 @@ This design uses CMake to generate a build script for GNU/make.
    cmake .. -DCMAKE_BUILD_TYPE=Debug
    ```
 
-   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release`.
+   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release`:
+
+   ```
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   ```
 
    > **Note**: You can change the default target by using the command:
    >  ```
@@ -196,7 +200,11 @@ This design uses CMake to generate a build script for  `nmake`.
    cmake -G "NMake Makefiles" .. -DCMAKE_BUILD_TYPE=Debug
    ```
 
-   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release`.
+   If you want to use the `report`, `fpga_sim`, or `fpga` flows, you should switch the `CMAKE_BUILD_TYPE` back to `Release``:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DCMAKE_BUILD_TYPE=Release
+   ```
 
    > **Note**: You can change the default target by using the command:
    >  ```
