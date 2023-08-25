@@ -6,44 +6,31 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/ext/intel/experimental/pipes.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
-// use host pipes to write into registers in the CSR address space
+// use pipes to write into registers in the CSR address space
 class OutputPipeID;
 
-// using protocol avalon_mm or avalon_mm_uses_ready allows this host pipe to
-// output to the CSR
-
-// WORKAROUND: protocol_name::avalon_mm does not currently work with simulation,
-// so simulate with avalon_mm_uses_ready for now. avalon_mm works in hardware.
-#if FPGA_SIMULATOR
-using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
-    sycl::ext::intel::experimental::protocol<
-        sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>));
-#else
 using OutputPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
         sycl::ext::intel::experimental::protocol_name::avalon_mm>));
-#endif
 
 using OutputPipe =
-    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 1, OutputPipeProps>;
+    sycl::ext::intel::experimental::pipe<OutputPipeID, int, 0, OutputPipeProps>;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
-class AdderID;
+class IDAdder;
 
-struct Adder {
+struct AdderKernel {
   int a;
   int b;
 
   void operator()() const {
     int sum = a + b;
-
     OutputPipe::write(sum);
   }
 };
@@ -79,9 +66,7 @@ int main() {
 
     std::cout << "add two integers using CSR for input." << std::endl;
 
-    // no need to wait() since the pipe read will block until `Adder` has some
-    // output.
-    q.single_task<AdderID>(Adder{a, b});
+    q.single_task<IDAdder>(AdderKernel{a, b}).wait();
 
     // verify that outputs are correct
     passed = true;
