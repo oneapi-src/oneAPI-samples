@@ -6,7 +6,6 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/ext/intel/experimental/pipes.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
