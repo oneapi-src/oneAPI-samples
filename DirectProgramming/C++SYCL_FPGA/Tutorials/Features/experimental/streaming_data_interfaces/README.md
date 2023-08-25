@@ -67,12 +67,12 @@ Each individual pipe is a function scope class declaration of the templated `pip
 
 #### Table 1. Properties used to Configure a Pipe to Implement a Streaming Data Interface
 
-| Property | Valid Values | Default Value |
-| ---------| ------------ | ------------- |
-| `ready_latency<int>`                    | non-negative integer | 0 |
-| `bits_per_symbol<int>`                  | non-negative integer that divides the size of the data type | 8 |
-| `uses_valid<bool>`                      | boolean      | `true` |
-| `first_symbol_in_high_order_bits<bool>` | boolean      | `true` |
+| Property                                | Valid Values                                                         | Default Value                          |
+| ----------------------------------------| -------------------------------------------------------------------- | -------------------------------------- |
+| `ready_latency<int>`                    | non-negative integer                                                 | 0                                      |
+| `bits_per_symbol<int>`                  | non-negative integer that divides the size of the data type          | 8                                      |
+| `uses_valid<bool>`                      | boolean                                                              | `true`                                 |
+| `first_symbol_in_high_order_bits<bool>` | boolean                                                              | `true`                                 |
 | `protocol`                              | `protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready` | `protocol_avalon_streaming_uses_ready` |
 
 > **Note:** These properties may be specified in *any* order within the oneAPI `properties` object. Omitting a single property from the properties class instructs the compiler to assume the default value for that property (i.e., you can just define the properties you would like to change from the default). Omitting the properties template parameter entirely instructs the compiler to assume the default values for *all* properties.
