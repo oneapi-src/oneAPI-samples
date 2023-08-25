@@ -1,6 +1,6 @@
 # `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. If you have not already gone over the IP Authoring Interfaces Overview Tutorial, it is recommended that you do so before continuing with this tutorial.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the IP Authoring Interfaces Overview Tutorial before continuing with this tutorial.
 
 | Area                  | Description
 |:--                    |:--
@@ -10,16 +10,16 @@ This FPGA sample is a tutorial that demonstrates how to implement streaming data
 
 ## Purpose
 
-Pipes are a first-in first-out (FIFO) buffer construct that provide links between elements of a design. They are accessed through read and write APIs without the notion of a memory address or pointer to elements within the FIFO.
+Pipes are a first-in first-out (FIFO) buffer construct that provide data links between elements of a design. They are accessed through read and write APIs without the notion of a memory address or pointers to elements within the FIFO.
 
-The concept of a pipe provides us with a mechanism for specifying streaming data interfaces on an IP component. This tutorial will demonstrate how to declare and configure a pipe to implement your desired interface.
+The concept of a pipe is an intuitive mechanism for specifying streaming data interfaces on an IP component. This tutorial demonstrates how to declare and configure a pipe to configure an Avalon streaming interface.
 
 ## Prerequisites
 
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Cyclone 10® GX, Cyclone V®, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -67,22 +67,23 @@ Each individual pipe is a function scope class declaration of the templated `pip
 
 #### Table 1. Properties used to Configure a Pipe to Implement a Streaming Data Interface
 
-| Property                                | Valid Values                                                         | Default Value                          |
-| ----------------------------------------| -------------------------------------------------------------------- | -------------------------------------- |
-| `ready_latency<int>`                    | non-negative integer                                                 | 0                                      |
-| `bits_per_symbol<int>`                  | non-negative integer that divides the size of the data type          | 8                                      |
-| `uses_valid<bool>`                      | boolean                                                              | `true`                                 |
-| `first_symbol_in_high_order_bits<bool>` | boolean                                                              | `true`                                 |
-| `protocol`                              | `protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready` | `protocol_avalon_streaming_uses_ready` |
+| Property                                | Default Value                          |Valid Values
+| ---                                     | ---                                    |---
+| `ready_latency<int>`                    | 0                                      |non-negative integer
+| `bits_per_symbol<int>`                  | 8                                      |non-negative integer that divides the size of the data type
+| `uses_valid<bool>`                      | `true`                                 |boolean
+| `first_symbol_in_high_order_bits<bool>` | `true`                                 |boolean
+| `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
 
-> **Note:** These properties may be specified in *any* order within the oneAPI `properties` object. Omitting a single property from the properties class instructs the compiler to assume the default value for that property (i.e., you can just define the properties you would like to change from the default). Omitting the properties template parameter entirely instructs the compiler to assume the default values for *all* properties.
+> **Note:** These properties may be specified in any order within the oneAPI `properties` list. Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for *all* properties.
 
 #### Example 1.
 
-The following example declares a pipe to implement a streaming data interface with  `ready` and `valid` signals, using the defaults for all other parameters.
+The following example explicitly declares a pipe that implements a streaming data interface with  `ready` and `valid` signals, using the defaults for all other parameters.
 
 ```c++
-// Unique user-defined types
+// Forward declare the pipe name in the global scope. This is an FPGA best
+// practice that reduces name mangling in the optimization reports.
 class FirstPipeT;
 
 // Pipe properties (listed here are the defaults; this achieves the same
@@ -97,7 +98,7 @@ using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
 using FirstPipeInstance = sycl::ext::intel::experimental::pipe<
     FirstPipeT,      // An identifier for the pipe
     int,             // The type of data in the pipe
-    8,               // The capacity of the pipe
+    8,               // Minimum capacity of the pipe (buffer depth)
     PipePropertiesT  // Customizable pipe properties
     >;
 ```
@@ -113,14 +114,14 @@ The `StreamingBeat` struct is templated on three parameters.
 
 #### Example 2.
 
-The following example shows how to configure a `StreamingBeat` struct to use `sop`, `eop` and `empty` by setting the second and third template parameters to `true`. Using the `StreamingBeatT` type defined here in a pipe will result in additional `startofpacket`, `endofpacket`, and `empty` signals on the interface.
+The following example shows how to configure a `StreamingBeat` structure to use `sop`, `eop` and `empty` by setting the second and third template parameters to `true`. Using the `StreamingBeatT` type defined here in a pipe will result in `startofpacket`, `endofpacket`, and `empty` signals appearing on the resulting Avalon streaming interface.
 
 ```c++
 #include <sycl/ext/intel/prototype/pipes_ext.hpp>
 
 ...
 
-using StreamingBeatDataT = sycl::ext::intel::experimental::StreamingBeat<unsigned char, true, true>;
+using StreamingBeatDataT = sycl::ext::intel::experimental::StreamingBeat<unsigned short, true, true>;
 
 ...
 
@@ -251,7 +252,7 @@ In `threshold_packets.cpp`, two pipes are declared for implementing the streamin
 
 ### Reading the Reports
 
-After compiling in the report flow, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information for these interfaces in the Details pane. This pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
+After compiling the `report` target, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information for these interfaces in the Details pane. This pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
 
 <p align="center">
   <img src=assets/kernel.png />
