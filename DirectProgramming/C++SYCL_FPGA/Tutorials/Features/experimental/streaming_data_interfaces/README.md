@@ -1,6 +1,6 @@
 # `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the IP Authoring Interfaces Overview Tutorial before continuing with this tutorial.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/component_interfaces_comparison) tutorial before continuing with this one.
 
 | Area                  | Description
 |:--                    |:--
@@ -58,24 +58,35 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Configuring a Pipe to Implement a Streaming Data Interface
 
-Each individual pipe is a function scope class declaration of the templated `pipe` class.
-- The first template parameter is a user-defined type that differentiates this particular pipe from the others and provides a name for the interface in the  RTL.
-- The second template parameter defines the datatype of elements carried by the interface.
-> :warning: There is currently a known issue with using struct types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (e.g., `unsigned char`). For the time being, please use a wider datatype where applicable (e.g., 16-bits).
-- The third template parameter allows you to optionally specify a non-negative integer representing the capacity of the buffer on the input. This can help avoid some amount of bubbles in the pipeline in case the component itself stalls.
-- The fourth template parameter uses the oneAPI properties class to allow users to optionally define additional semantic properties for a pipe. **The `protocol` property is what will allow us to configure a pipe to implement a streaming data interface.** A list of those properties relevant to this sample is given in Table 1 (please note that this table is *not* complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications).
+Each individual pipe is a function scope class declaration of the templated `pipe` class. It takes two mandatory and two optional parameters, as summarized in Table 1.
 
-#### Table 1. Properties used to Configure a Pipe to Implement a Streaming Data Interface
+#### Table 1. Template Parameters of the `pipe` Class
 
-| Property                                | Default Value                          |Valid Values
-| ---                                     | ---                                    |---
-| `ready_latency<int>`                    | 0                                      |non-negative integer
-| `bits_per_symbol<int>`                  | 8                                      |non-negative integer that divides the size of the data type
-| `uses_valid<bool>`                      | `true`                                 |boolean
-| `first_symbol_in_high_order_bits<bool>` | `true`                                 |boolean
+| Template Parameter                      | Description
+| ---                                     | ---
+| `name`                                  | A user-defined type that differentiates this particular pipe from the others and provides a name for the interface in the RTL.
+| `dataT`                                 | The datatype of elements carried by the interface.*
+| `min_capacity`                          | A non-negative integer representing the capacity of the buffer on the input. This can help avoid some amount of bubbles in the pipeline in case the component itself stalls. This parameter is optional, and defaults to 0.
+| `properties`                            | An unordered list of SYCL properties that define additional semantic properties for a pipe. This parameter is optional.**
+
+> :warning: * There is currently a known issue with using structure types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (for example, `unsigned char`). For the time being, please use a wider datatype where applicable (for example, `unsigned short`).
+
+Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications).
+
+
+#### Table 2. Properties used to Configure a Pipe to Implement a Streaming Data Interface
+
+| Property                                | Default Value                          | Valid Values
+| ---                                     | ---                                    | ---
+| `ready_latency<int>`                    | 0                                      | non-negative integer
+| `bits_per_symbol<int>`                  | 8                                      | non-negative integer that divides the size of the data type
+| `uses_valid<bool>`                      | `true`                                 | boolean
+| `first_symbol_in_high_order_bits<bool>` | `true`                                 | boolean
 | `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
 
-> **Note:** These properties may be specified in any order within the oneAPI `properties` list. Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for *all* properties.
+
+** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
+
 
 #### Example 1.
 
@@ -105,12 +116,17 @@ using FirstPipeInstance = sycl::ext::intel::experimental::pipe<
 
 ### Avalon Streaming Sideband Signals
 
-You can enable Avalon streaming sideband signal support by using the special `StreamingBeat` struct provided by the `pipes_ext.hpp` header file (`sycl/ext/intel/prototype/pipes_ext.hpp`) as the data type to your pipe. Only the `StreamingBeat` struct generates sideband signals when used with a pipe.
+You can enable Avalon streaming sideband signal support by using the special `StreamingBeat` structure provided by the `pipes_ext.hpp` header file (`sycl/ext/intel/prototype/pipes_ext.hpp`) as the data type to your pipe. Only the `StreamingBeat` structure generates sideband signals when used with a pipe.
 
-The `StreamingBeat` struct is templated on three parameters.
-- The first template parameter defines the type of the data being communicated through the interface.
-- The second parameter is used to enable additional `startofpacket` (`sop`) and `endofpacket` (`eop`) signals to the Avalon interface.
-- The third template parameter is used to enable the `empty` signal, which indicates the number of symbols that are empty during the `eop` cycle.
+The `StreamingBeat` structure is templated on three parameters, as summarized in Table 3.
+
+#### Table 3. Template Parameters of the `StreamingBeat` Structure
+
+| Template Parameter                      | Description
+| ---                                     | ---
+| `dataT`                                 | The datatype of elements carried by the interface.
+| `uses_packets`                          | A boolean to indicate whether to enable additional `startofpacket` (`sop`) and `endofpacket` (`eop`) signals to the Avalon interface.
+| `uses_empty`                            | A boolean to indicate whether to enables the `empty` signal, which indicates the number of symbols that are empty during the `eop` cycle.
 
 #### Example 2.
 
@@ -131,7 +147,7 @@ SecondPipeInstance::write(out_beat);
 
 ### Read and Write APIs
 
-The read and write APIs are the same as for all pipes. See the IP Authoring Interfaces Overview Tutorial for more information.
+The read and write APIs are the same as for all pipes. See the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/component_interfaces_comparison) Tutorial for more information.
 
 ## Build the `Streaming Data Interfaces` Tutorial
 

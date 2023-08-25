@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/prototype/pipes_ext.hpp>
 #include <sycl/sycl.hpp>
@@ -16,7 +15,7 @@ class Threshold;
 
 // StreamingBeat struct to support Avalon packet sideband signals
 using StreamingBeatT = sycl::ext::intel::experimental::StreamingBeat<
-    ac_int<16, false>, true, false>;
+    unsigned short, true, false>;
 
 // A kernel that thresholds pixel values in an image over a stream. Uses start
 // of packet and end of packet signals on the streams to determine the beginning
