@@ -7,7 +7,6 @@
 // oneAPI headers
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/experimental/fpga_kernel_properties.hpp>
-#include <sycl/ext/oneapi/annotated_arg/annotated_arg.hpp>
 #include <sycl/sycl.hpp>
 
 #include "lib_rtl.hpp"

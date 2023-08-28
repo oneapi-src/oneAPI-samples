@@ -130,18 +130,21 @@ set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reu
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} COPYONLY)
 
+set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --emulation_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT})
+
 # Create RTL source object
 add_custom_target(
     create_rtl_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --emulation_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT}
+    COMMAND ${FPGA_CROSSGEN_COMMAND}
 )
 
 # Create library archive
 # This executes:
 # fpga_libtool lib_rtl.o --target sycl --create lib.a
 add_custom_target(create_library_archive DEPENDS ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
+set(FPGA_LIBTOOL_COMMAND fpga_libtool ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
 add_custom_command(OUTPUT ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
-                   COMMAND fpga_libtool ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
+                   COMMAND ${FPGA_LIBTOOL_COMMAND}
                    DEPENDS create_rtl_source_object)
 
 # Tell CMake to recognize our custom library
@@ -163,7 +166,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${EMULATOR_OUTPU
 ###############################################################################
 ### FPGA Simulator
 ###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILES})
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${SIMULATOR_COMPILE_FLAGS})
 target_link_libraries(${SIMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -174,7 +177,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${SIMULATOR_OUT
 ###############################################################################
 ### Generate Report
 ###############################################################################
-add_executable(${REPORT_TARGET} ${SOURCE_FILES})
+add_executable(${REPORT_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${REPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${REPORT_TARGET} PRIVATE ${REPORT_COMPILE_FLAGS})
 
@@ -313,7 +316,7 @@ endif()
 # Display the compile instructions in the emulation flow
 getCompileCommands("${COMMON_COMPILE_FLAGS}" "${EMULATOR_COMPILE_FLAGS}" "${COMMON_LINK_FLAGS}" "${EMULATOR_LINK_FLAGS}" "${EMULATOR_TARGET}" "${EMULATOR_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
 
-add_custom_target(  displayEmulationCompileCommands ALL
+add_custom_target(  displayEmulationCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
                     COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${EMULATOR_TARGET} displayEmulationCompileCommands)
@@ -321,7 +324,7 @@ add_dependencies(${EMULATOR_TARGET} displayEmulationCompileCommands)
 # Display the compile instructions in the simulation flow
 getCompileCommands("${COMMON_COMPILE_FLAGS}" "${SIMULATOR_COMPILE_FLAGS}" "${COMMON_LINK_FLAGS}" "${SIMULATOR_LINK_FLAGS}" "${SIMULATOR_TARGET}" "${SIMULATOR_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
 
-add_custom_target(  displaySimulationCompileCommands ALL
+add_custom_target(  displaySimulationCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
                     COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${SIMULATOR_TARGET} displaySimulationCompileCommands)
@@ -329,7 +332,7 @@ add_dependencies(${SIMULATOR_TARGET} displaySimulationCompileCommands)
 # Display the compile instructions in the report flow
 getCompileCommands("${COMMON_COMPILE_FLAGS}" "${REPORT_COMPILE_FLAGS}" "${MODIFIED_COMMON_LINK_FLAGS_REPORT}" "${REPORT_LINK_FLAGS}" "${REPORT_TARGET}" "${REPORT_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
 
-add_custom_target(  displayReportCompileCommands ALL
+add_custom_target(  displayReportCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
                     COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${REPORT_TARGET} displayReportCompileCommands)
@@ -337,7 +340,32 @@ add_dependencies(${REPORT_TARGET} displayReportCompileCommands)
 # Display the compile instructions in the fpga flow
 getCompileCommands("${COMMON_COMPILE_FLAGS}" "${FPGA_COMPILE_FLAGS}" "${COMMON_LINK_FLAGS}" "${FPGA_LINK_FLAGS}" "${FPGA_TARGET}" "${FPGA_OUTPUT_NAME}${EXECUTABLE_EXTENSION}")
 
-add_custom_target(  displayFPGACompileCommands ALL
+add_custom_target(  displayFPGACompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
                     COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${FPGA_TARGET} displayFPGACompileCommands)
+
+
+
+########## Special commands for printing the fpga_crossgen and fpga_libtool compile instructions
+
+set(COMPILE_COMMAND )
+foreach(ARG ${FPGA_CROSSGEN_COMMAND})
+ set(COMPILE_COMMAND "${COMPILE_COMMAND} ${ARG}")
+endforeach()
+
+add_custom_target(  displayFpgaCrossgenCommand
+                    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
+                    COMMENT "To run fpga_crossgen manually:\n${COMPILE_COMMAND}\n")
+add_dependencies(create_rtl_source_object displayFpgaCrossgenCommand)
+
+
+set(COMPILE_COMMAND )
+foreach(ARG ${FPGA_LIBTOOL_COMMAND})
+ set(COMPILE_COMMAND "${COMPILE_COMMAND} ${ARG}")
+endforeach()
+
+add_custom_target(  displayFpgaLibtoolCommand
+                    ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
+                    COMMENT "To run fpga_libtool manually:\n${COMPILE_COMMAND}\n")
+add_dependencies(create_library_archive displayFpgaLibtoolCommand)
