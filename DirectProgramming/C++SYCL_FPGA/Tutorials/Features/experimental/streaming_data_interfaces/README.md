@@ -58,7 +58,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Configuring a Pipe to Implement a Streaming Data Interface
 
-Each individual pipe is a function scope class declaration of the templated `pipe` class. It takes two mandatory and two optional parameters, as summarized in Table 1.
+Each individual pipe is a declaration of the templated `pipe` class. It takes two mandatory and two optional parameters, as summarized in Table 1.
 
 #### Table 1. Template Parameters of the `pipe` Class
 
