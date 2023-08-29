@@ -1,6 +1,6 @@
 # `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/component_interfaces_comparison) tutorial before continuing with this one.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) tutorial before continuing with this one.
 
 | Area                  | Description
 |:--                    |:--
@@ -145,7 +145,7 @@ SecondPipeInstance::write(out_beat);
 
 ### Read and Write APIs
 
-The read and write APIs are the same as for all pipes. See the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/component_interfaces_comparison) Tutorial for more information.
+The read and write APIs are the same as for all pipes. See the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) Tutorial for more information.
 
 ## Build the `Streaming Data Interfaces` Tutorial
 
