@@ -10,32 +10,28 @@ constexpr int kBL3 = 2;
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int *, decltype(sycl::ext::oneapi::experimental::properties{
-                 sycl::ext::intel::experimental::buffer_location<kBL1>,
-                 sycl::ext::intel::experimental::awidth<32>,
-                 sycl::ext::intel::experimental::dwidth<32>,
-                 sycl::ext::intel::experimental::latency<1>,
-                 sycl::ext::intel::experimental::read_write_mode_read})>
-      x;
+  using x_props = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL1>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::dwidth<32>,
+      sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::intel::experimental::read_write_mode_read});
+  using y_props = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL2>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::dwidth<32>,
+      sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::intel::experimental::read_write_mode_read});
+  using z_props = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL3>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::dwidth<32>,
+      sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::intel::experimental::read_write_mode_read});
 
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int *, decltype(sycl::ext::oneapi::experimental::properties{
-                 sycl::ext::intel::experimental::buffer_location<kBL2>,
-                 sycl::ext::intel::experimental::awidth<32>,
-                 sycl::ext::intel::experimental::dwidth<32>,
-                 sycl::ext::intel::experimental::latency<1>,
-                 sycl::ext::intel::experimental::read_write_mode_read})>
-      y;
-
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int *, decltype(sycl::ext::oneapi::experimental::properties{
-                 sycl::ext::intel::experimental::buffer_location<kBL3>,
-                 sycl::ext::intel::experimental::awidth<32>,
-                 sycl::ext::intel::experimental::dwidth<32>,
-                 sycl::ext::intel::experimental::latency<1>,
-                 sycl::ext::intel::experimental::read_write_mode_write})>
-      z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, x_props> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, y_props> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, z_props> z;
 
   int size;
 
