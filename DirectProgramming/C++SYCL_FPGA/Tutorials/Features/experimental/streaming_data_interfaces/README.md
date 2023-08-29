@@ -71,7 +71,7 @@ Each individual pipe is a declaration of the templated `pipe` class. It takes tw
 
 > :warning: * There is currently a known issue with using structure types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (for example, `unsigned char`). For the time being, please use a wider datatype where applicable (for example, `unsigned short`).
 
-Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications).
+Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications.
 
 
 #### Table 2. Properties used to Configure a Pipe to Implement a Streaming Data Interface
