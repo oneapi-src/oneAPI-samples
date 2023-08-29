@@ -6,5 +6,5 @@ transcript
 *.wlf
 *.vstf
 
-# ignore the NIOS hex file
+# ignore the Nios hex file
 *.hex

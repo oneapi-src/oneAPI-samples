@@ -1,8 +1,8 @@
 {
     "guid": "22B9A56C-ACF6-45C1-923B-EA95A07083BC",
-    "name": "NIOS V - oneAPI IP Authoring",
+    "name": "Nios V",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
-    "description": "A demonstration system with a NIOS V soft CPU controlling a oneAPI IP component.",
+    "description": "Simulate a system with an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, and a Nios® V softcore processor.",
     "toolchain": ["icpx"],
     "os": ["linux", "windows"],
     "targetDevice": ["FPGA"],
@@ -67,6 +67,6 @@
         }
       ]
     },
-    "expertise": "Getting Started"
+    "expertise": "Reference Designs and End to End"
   }
   

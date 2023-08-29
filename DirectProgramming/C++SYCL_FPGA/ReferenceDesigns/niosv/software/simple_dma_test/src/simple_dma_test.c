@@ -61,7 +61,7 @@
 #define TEST_PASS 0
 #define TEST_FAIL 1
 
-/// NIOS V limits the offset of the `IOWR32...` macros to 12 bits, so explicitly
+/// Nios V limits the offset of the `IOWR32...` macros to 12 bits, so explicitly
 /// add the offset to the base, since the base address parameter of the macro
 /// does not have the limitation.
 #define REG_ARG_SOURCE_BASE \

@@ -1,5 +1,5 @@
 # launch this script from an environment containing Intel® Quartus® Prime,
-# Platform Designer, and the NIOS V tools (via niosv-shell).
+# Platform Designer, and the Nios V tools (via niosv-shell).
 
 # get the base directory of the design
 set EXAMPLE_ROOT_DIR [pwd]
@@ -33,7 +33,7 @@ echoAndEval "cd $EXAMPLE_ROOT_DIR"
 post_message -type info  "2. Build sim testbench with platform designer"
 echoAndExec "qsys-generate pd_system.qsys --testbench --testbench-simulation --clear-output-directory"
 
-post_message -type info  "3. Build NIOSV program"
+post_message -type info  "3. Build Nios V program"
 echoAndEval "cd software/simple_dma_test"
 echoAndEval "source software_build.tcl"
 echoAndEval "cd $EXAMPLE_ROOT_DIR"

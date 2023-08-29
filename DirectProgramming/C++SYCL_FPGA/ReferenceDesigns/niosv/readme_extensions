@@ -1,7 +1,0 @@
-- qualify target audience (users familiar with NIOs/embedded tools who are looking to intergrate a oneAPI kernel)
-- document the gotchas jarrod encountered
-- document build steps without going into detail (e.g. explaining NIOS V HAL generation)
-
-tutorial:
-
-Tutorials/Tools/EmbeddedDesign
