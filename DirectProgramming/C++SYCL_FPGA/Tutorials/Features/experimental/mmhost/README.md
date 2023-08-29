@@ -146,7 +146,7 @@ struct MultiMMIP {
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
-      sycl::ext::intel::experimental::read_write_mode_read});
+      sycl::ext::intel::experimental::read_write_mode_write});
 
   sycl::ext::oneapi::experimental::annotated_arg<int *, x_props> x;
   sycl::ext::oneapi::experimental::annotated_arg<int *, y_props> y;
