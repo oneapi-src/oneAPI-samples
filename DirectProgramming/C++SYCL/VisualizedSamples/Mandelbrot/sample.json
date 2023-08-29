@@ -1,0 +1,30 @@
+{
+  "guid": "CD49AB2C-D298-4AAB-8A0A-E7734323FBDB",	
+  "name": "Mandelbrot",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Visual Samples"],
+  "description": "The visualization of Mandelbrot Set - a fractal example in mathematics",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+			"cd build",
+			"cmake ..",
+			"make"
+		 ]
+	}],
+	"windows": [{
+		"steps": [
+			"MSBuild MandelbrotSDL.sln /t:Rebuild /p:Configuration=\"Release\"",
+			"cd x64/Release",
+			"MandelbrotSDL.exe"
+		]
+	}]
+
+  },
+  "expertise": "Getting Started"
+}
