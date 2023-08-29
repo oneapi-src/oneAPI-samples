@@ -95,7 +95,7 @@ struct SingleMMIP {
 };
 ```
 
-The following table describes the properties you can use to customize how the pointer argument is passed to your component. Only one may be specified at a time. 
+The following table describes the properties under `sycl::ext::intel::experimental` that you can use to customize how the pointer argument is passed to your component. Only one may be specified at a time. 
 
 | Parameter                 | Description
 |---                        |---
@@ -103,7 +103,7 @@ The following table describes the properties you can use to customize how the po
 | `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface 
 
 
-You can use the following parameters to configure your IP component's Avalon memory-mapped host interfaces:
+You can use the following parameters found under `sycl::ext::intel::experimental` and `sycl::ext::oneapi::experimental` to configure your IP component's Avalon memory-mapped host interfaces:
 
 | Parameter                | Default Value | Description
 |---                       |---            |---
@@ -296,7 +296,7 @@ This design uses CMake to generate a build script for  `nmake`.
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
-Locate _di_inst.v in the <source_file>.prj/ directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
+Locate `<source_file>_di_inst.v` in the `build/<source_file>.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
 ## Examining the Reports
 Locate `report.html` in the `build/<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report. You can compare multiple reports by opening them in multiple browser windows/tabs.
