@@ -56,9 +56,9 @@ The compiler will infer Avalon memory-mapped host interfaces for your design whe
 #### Example 1: A kernel with multiple pointer arguments
 ```c++
 struct PointerIP {
-// Pointer kernel arguments will be passed through the component's CSR. They
-// will refer to data accessible through a shared Avalon memory-mapped host
-// interface.
+  // Pointer kernel arguments will be passed through the component's CSR. They
+  // will refer to data accessible through a shared Avalon memory-mapped host
+  // interface.
   int *x;
   int *y;
   int *z;
@@ -82,9 +82,9 @@ You can override the default behaviour of a pointer argument by declaring an `an
 struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
   // specified, this kernel will result in the same IP component as Example 1.
-  annotated_arg<int*> x;
-  annotated_arg<int*> y;
-  annotated_arg<int*> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> z;
   int size;
 
   void operator()() const {
@@ -129,19 +129,31 @@ constexpr int kBL3 = 2;
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  annotated_arg<int*, decltype(properties{buffer_location<kBL1>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_read})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL1>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_read})>
       x;
 
-  annotated_arg<int*, decltype(properties{buffer_location<kBL2>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_read})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL2>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_read})>
       y;
 
-  annotated_arg<int*, decltype(properties{buffer_location<kBL3>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_write})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL3>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_write})>
       z;
 
   int size;
@@ -169,21 +181,26 @@ We can make better use of the available memory bandwidth by coalescing the 32-bi
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 ```c++
-constexpr int kBL1 = 0;
-constexpr int kBL2 = 1;
-
 struct DDR_IP {
-  using paramsBL1 =
-      decltype(properties{buffer_location<kBL1>, maxburst<8>, dwidth<256>,
-                          alignment<32>, awidth<32>, latency<0>});
+  using paramsBL1 = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL1>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::latency<0>});
 
-  using paramsBL2 =
-      decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
-                          alignment<32>, awidth<32>, latency<0>});
+  using paramsBL2 = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL2>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::latency<0>});
 
-  annotated_arg<int*, paramsBL1> x;
-  annotated_arg<int*, paramsBL1> y;
-  annotated_arg<int*, paramsBL2> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL2> z;
   int size;
 
   void operator()() const {
