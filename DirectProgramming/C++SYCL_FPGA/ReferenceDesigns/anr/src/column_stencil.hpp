@@ -150,13 +150,16 @@ void ColumnStencil(IndexT rows, IndexT cols, const InType zero_val,
       // │   ◄─  ◄─  ◄─────────────────Input
       // └───┴───┴───┘
 
-      fpga_tools::UnrolledLoop<0, filter_size>([&](auto stencil_row) {
-        if constexpr (stencil_row != (filter_size - 1)) {
+      // The attribute [[intel::ivdep(array)]] cannot penetrate lambdas, so we 
+      // use #pragma unroll instead of fpga_tools::UnrolledLoop(). 
+#pragma unroll
+      for(size_t stencil_row = 0; stencil_row < filter_size; ++stencil_row){
+        if (stencil_row != (filter_size - 1)) {
           pixel_column[stencil_row] = line_buffer_FIFO[fifo_idx][stencil_row];
         } else {
           pixel_column[stencil_row] = input_val;
         }
-      });
+      }
       shifty_2d.template ShiftCols<parallel_cols>(pixel_column);
 
       // Continue processing through FIFOs
@@ -169,13 +172,16 @@ void ColumnStencil(IndexT rows, IndexT cols, const InType zero_val,
       //      └─────────────┘   │
       //                        └─Input
 
-      fpga_tools::UnrolledLoop<0, (filter_size - 1)>([&](auto fifo_row) {
-        if constexpr (fifo_row != (filter_size - 2)) {
+      // The attribute [[intel::ivdep(array)]] cannot penetrate lambdas, so we 
+      // use #pragma unroll instead of fpga_tools::UnrolledLoop(). 
+#pragma unroll
+      for(size_t fifo_row = 0; fifo_row < filter_size - 1; ++fifo_row){
+        if (fifo_row != (filter_size - 2)) {
           line_buffer_FIFO[fifo_idx][fifo_row] = pixel_column[fifo_row + 1];
         } else {
           line_buffer_FIFO[fifo_idx][(filter_size - 2)] = input_val;
         }
-      });
+      }
 
       // Perform the convolution on the 1D window
       OutPipeT out_data((OutType)0);
