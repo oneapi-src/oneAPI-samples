@@ -6,7 +6,6 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 // oneAPI headers
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/experimental/fpga_kernel_properties.hpp>
 #include <sycl/sycl.hpp>
 
 #include "lib_rtl.hpp"
