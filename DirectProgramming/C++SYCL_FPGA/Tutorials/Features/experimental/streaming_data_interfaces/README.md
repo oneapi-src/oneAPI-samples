@@ -71,6 +71,8 @@ Each individual pipe is a declaration of the templated `pipe` class. It takes tw
 
 > :warning: * There is currently a known issue with using structure types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (for example, `unsigned char`). For the time being, please use a wider datatype where applicable (for example, `unsigned short`).
 
+> *Note*: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
+
 Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications.
 
 
@@ -83,10 +85,6 @@ Below is a summary of all relevant SYCL properties which can be applied to a `pi
 | `uses_valid<bool>`                      | `true`                                 | boolean
 | `first_symbol_in_high_order_bits<bool>` | `true`                                 | boolean
 | `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
-
-
-> *Note*: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
-
 
 #### Example 1.
 
