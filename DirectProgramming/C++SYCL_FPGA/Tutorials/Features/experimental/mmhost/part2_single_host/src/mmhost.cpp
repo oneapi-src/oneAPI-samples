@@ -3,14 +3,12 @@
 
 #include "exception_handler.hpp"
 
-using namespace sycl::ext::oneapi::experimental;
-
 struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
   // specified, this kernel will result in the same IP component as Example 1.
-  annotated_arg<int*> x;
-  annotated_arg<int*> y;
-  annotated_arg<int*> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *> z;
   int size;
 
   void operator()() const {

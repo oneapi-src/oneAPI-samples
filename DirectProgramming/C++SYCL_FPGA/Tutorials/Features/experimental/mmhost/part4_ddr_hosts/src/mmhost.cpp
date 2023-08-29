@@ -3,27 +3,29 @@
 
 #include "exception_handler.hpp"
 
-using namespace sycl::ext::oneapi::experimental;
-using namespace sycl::ext::intel::experimental;
-
-using usm_buffer_location =
-    sycl::ext::intel::experimental::property::usm::buffer_location;
-
 constexpr int kBL1 = 0;
 constexpr int kBL2 = 1;
 
 struct DDR_IP {
-  using paramsBL1 =
-      decltype(properties{buffer_location<kBL1>, maxburst<8>, dwidth<256>,
-                          alignment<32>, awidth<32>, latency<0>});
+  using paramsBL1 = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL1>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::latency<0>});
 
-  using paramsBL2 =
-      decltype(properties{buffer_location<kBL2>, maxburst<8>, dwidth<256>,
-                          alignment<32>, awidth<32>, latency<0>});
+  using paramsBL2 = decltype(sycl::ext::oneapi::experimental::properties{
+      sycl::ext::intel::experimental::buffer_location<kBL2>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::latency<0>});
 
-  annotated_arg<int*, paramsBL1> x;
-  annotated_arg<int*, paramsBL1> y;
-  annotated_arg<int*, paramsBL2> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL2> z;
   int size;
 
   void operator()() const {
@@ -63,11 +65,20 @@ int main(void) {
     // Host array must share the same buffer location property as defined in the
     // kernel Here we may use auto* or int* when declaring the pointer interface
     auto *array_A = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL1)});
     auto *array_B = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL1)});
     int *array_C = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL2)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL2)});
 
     for (int i = 0; i < kN; i++) {
       array_A[i] = i;

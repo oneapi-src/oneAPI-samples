@@ -3,12 +3,6 @@
 
 #include "exception_handler.hpp"
 
-using namespace sycl::ext::oneapi::experimental;
-using namespace sycl::ext::intel::experimental;
-
-using usm_buffer_location =
-    sycl::ext::intel::experimental::property::usm::buffer_location;
-
 constexpr int kBL1 = 0;
 constexpr int kBL2 = 1;
 constexpr int kBL3 = 2;
@@ -16,19 +10,31 @@ constexpr int kBL3 = 2;
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  annotated_arg<int*, decltype(properties{buffer_location<kBL1>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_read})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL1>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_read})>
       x;
 
-  annotated_arg<int*, decltype(properties{buffer_location<kBL2>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_read})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL2>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_read})>
       y;
 
-  annotated_arg<int*, decltype(properties{buffer_location<kBL3>, awidth<32>,
-                                         dwidth<32>, latency<1>,
-                                         read_write_mode_write})>
+  sycl::ext::oneapi::experimental::annotated_arg<
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::buffer_location<kBL3>,
+                 sycl::ext::intel::experimental::awidth<32>,
+                 sycl::ext::intel::experimental::dwidth<32>,
+                 sycl::ext::intel::experimental::latency<1>,
+                 sycl::ext::intel::experimental::read_write_mode_write})>
       z;
 
   int size;
@@ -70,11 +76,20 @@ int main(void) {
     // Host array must share the same buffer location property as defined in the
     // kernel Here we may use auto* or int* when declaring the pointer interface
     auto *array_A = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL1)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL1)});
     auto *array_B = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL2)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL2)});
     int *array_C = sycl::malloc_shared<int>(
-        kN, q, sycl::property_list{usm_buffer_location(kBL3)});
+        kN, q,
+        sycl::property_list{
+            sycl::ext::intel::experimental::property::usm::buffer_location(
+                kBL3)});
 
     for (int i = 0; i < kN; i++) {
       array_A[i] = i;

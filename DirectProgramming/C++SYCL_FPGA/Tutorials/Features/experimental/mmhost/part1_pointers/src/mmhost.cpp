@@ -4,9 +4,9 @@
 #include "exception_handler.hpp"
 
 struct PointerIP {
-// Pointer kernel arguments will be passed through the component's CSR. They
-// will refer to data accessible through a shared Avalon memory-mapped host
-// interface.
+  // Pointer kernel arguments will be passed through the component's CSR. They
+  // will refer to data accessible through a shared Avalon memory-mapped host
+  // interface.
   int *x;
   int *y;
   int *z;
