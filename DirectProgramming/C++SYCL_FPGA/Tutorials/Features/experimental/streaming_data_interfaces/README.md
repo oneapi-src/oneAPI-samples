@@ -71,7 +71,7 @@ Each individual pipe is a declaration of the templated `pipe` class. It takes tw
 
 > :warning: * There is currently a known issue with using structure types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (for example, `unsigned char`). For the time being, please use a wider datatype where applicable (for example, `unsigned short`).
 
-> *Note*: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
+> **Note**: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
 
 Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications.
 
@@ -266,7 +266,7 @@ In `threshold_packets.cpp`, two pipes are declared to implement the input and ou
 
 ### Reading the Reports
 
-After compiling the `report` target, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information about these interfaces in the 'details' pane. The 'details' pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to size of the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
+After compiling the `report` target, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information about these interfaces in the 'details' pane. The 'details' pane will identify that the read is coming from `InStream`, and that the write is going to `OutStream`, as well as verifying that both interfaces have a width of 32 bits (corresponding to size of the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
 
 <p align="center">
   <img src=assets/kernel.png />
@@ -274,7 +274,7 @@ After compiling the `report` target, locate and open the `report.html` file in t
 
 ### Viewing the Simulation Waveform
 
-After compiling in the simulation flow and running the resulting executable, locate and run the `view_waveforms.sh` script in the `threshold_packets.fpga_sim.prj/` directory. Here you can see the `ready`, `valid` and `data` signals of the streaming input and streaming output interfaces (`InPixel` and `OutPixel` respectively). You can also see the `startofpacket` and `endofpacket` sideband signals that were added to the interface.
+After compiling in the simulation flow and running the resulting executable, locate and run the `view_waveforms.sh` script in the `threshold_packets.fpga_sim.prj/` directory. Here you can see the `ready`, `valid` and `data` signals of the streaming input and streaming output interfaces (`InStream` and `OutStream` respectively). You can also see the `startofpacket` and `endofpacket` sideband signals that were added to the interface.
 
 <p align="center">
   <img src=assets/sim_waveform.png />
