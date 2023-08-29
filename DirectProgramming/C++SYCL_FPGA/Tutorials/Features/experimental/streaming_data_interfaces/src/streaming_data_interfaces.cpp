@@ -5,6 +5,7 @@
 
 #include "exception_handler.hpp"
 
+// limit pixel values to this value, or less
 #define THRESHOLD 200
 
 // Forward declare the kernel and pipe names
@@ -13,9 +14,11 @@ class InPixel;
 class OutPixel;
 class Threshold;
 
-// StreamingBeat struct to support Avalon packet sideband signals
+// StreamingBeat struct enables sideband signals in Avalon streaming interface
 using StreamingBeatT = sycl::ext::intel::experimental::StreamingBeat<
-    unsigned short, true, false>;
+    unsigned short, // type carried over this Avalon streaming interface's data signal
+    true,         // enable startofpacket and endofpacket signals
+    false>;      // disable the empty signal
 
 // A kernel that thresholds pixel values in an image over a stream. Uses start
 // of packet and end of packet signals on the streams to determine the beginning
@@ -28,7 +31,6 @@ struct ThresholdKernel {
     bool end_of_packet = false;
 
     while (!end_of_packet) {
-
       // Read in next pixel
       StreamingBeatT in_beat = InPixelPipe::read();
       auto pixel = in_beat.data;
@@ -41,7 +43,6 @@ struct ThresholdKernel {
       // Write out result
       StreamingBeatT out_beat(pixel, start_of_packet, end_of_packet);
       OutPixelPipe::write(out_beat);
-
     }
   }
 };
@@ -78,13 +79,13 @@ int main() {
 
   // Image streams
   using InPixelPipe = sycl::ext::intel::experimental::pipe<
-      InPixel,        // An identifier for the pipe
+      InStream,        // An identifier for the pipe
       StreamingBeatT, // The type of data in the pipe
       0,              // The capacity of the pipe
       PipePropertiesT // Customizable pipe properties
       >;
   using OutPixelPipe = sycl::ext::intel::experimental::pipe<
-      OutPixel,       // An identifier for the pipe
+      OutStream,       // An identifier for the pipe
       StreamingBeatT, // The type of data in the pipe
       0,              // The capacity of the pipe
       PipePropertiesT // Customizable pipe properties

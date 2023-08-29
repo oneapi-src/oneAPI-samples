@@ -12,7 +12,7 @@ This FPGA sample is a tutorial that demonstrates how to implement streaming data
 
 Pipes are a first-in first-out (FIFO) buffer construct that provide data links between elements of a design. They are accessed through read and write APIs without the notion of a memory address or pointers to elements within the FIFO.
 
-The concept of a pipe is an intuitive mechanism for specifying streaming data interfaces on an IP component. This tutorial demonstrates how to declare and configure a pipe to configure an Avalon streaming interface.
+The concept of a pipe is an intuitive mechanism for specifying streaming data interfaces on an IP component. This tutorial demonstrates how to use the pipe API to configure an Avalon streaming interface.
 
 ## Prerequisites
 
@@ -64,9 +64,9 @@ Each individual pipe is a declaration of the templated `pipe` class. It takes tw
 
 | Template Parameter                      | Description
 | ---                                     | ---
-| `name`                                  | A user-defined type that differentiates this particular pipe from the others and provides a name for the interface in the RTL.
-| `dataT`                                 | The datatype of elements carried by the interface.*
-| `min_capacity`                          | A non-negative integer representing the capacity of the buffer on the input. This can help avoid some amount of bubbles in the pipeline in case the component itself stalls. This parameter is optional, and defaults to 0.
+| `name`                                  | A user-defined type that uniquely identifies this pipe. The name of this type is also used to identify the interface in the generated RTL.
+| `dataT`                                 | The type of data that passes through the pipe*. This is the data type that is read during a successful pipe read() operation, or written during a successful pipe write() operation. The type must have a standard layout and be trivially copyable.
+| `min_capacity`                          | User-defined minimum number of words (in units of `dataT`) that the pipe must be able to store without any being read out. This parameter is optional, and defaults to 0.
 | `properties`                            | An unordered list of SYCL properties that define additional semantic properties for a pipe. This parameter is optional.**
 
 > :warning: * There is currently a known issue with using structure types whose first field is 8-bits wide, and hence also data types which are themselves 8-bits wide (for example, `unsigned char`). For the time being, please use a wider datatype where applicable (for example, `unsigned short`).
@@ -85,7 +85,7 @@ Below is a summary of all relevant SYCL properties which can be applied to a `pi
 | `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
 
 
-** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
+> *Note*: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
 
 
 #### Example 1.
@@ -106,7 +106,7 @@ using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>,
     sycl::ext::intel::experimental::protocol_avalon_streaming_uses_ready));
 
-using FirstPipeInstance = sycl::ext::intel::experimental::pipe<
+using FirstPipe = sycl::ext::intel::experimental::pipe<
     FirstPipeT,      // An identifier for the pipe
     int,             // The type of data in the pipe
     8,               // Minimum capacity of the pipe (buffer depth)
@@ -116,7 +116,7 @@ using FirstPipeInstance = sycl::ext::intel::experimental::pipe<
 
 ### Avalon Streaming Sideband Signals
 
-You can enable Avalon streaming sideband signal support by using the special `StreamingBeat` structure provided by the `pipes_ext.hpp` header file (`sycl/ext/intel/prototype/pipes_ext.hpp`) as the data type to your pipe. Only the `StreamingBeat` structure generates sideband signals when used with a pipe.
+Pipes support a subset of Avalon streaming sideband signals. You can add these to your pipe interface by using the special `StreamingBeat` structure provided by the `pipes_ext.hpp` header file (`sycl/ext/intel/prototype/pipes_ext.hpp`) as the `dataT` of your pipe. Only the `StreamingBeat` structure generates sideband signals when used with a pipe.
 
 The `StreamingBeat` structure is templated on three parameters, as summarized in Table 3.
 
@@ -124,9 +124,9 @@ The `StreamingBeat` structure is templated on three parameters, as summarized in
 
 | Template Parameter                      | Description
 | ---                                     | ---
-| `dataT`                                 | The datatype of elements carried by the interface.
-| `uses_packets`                          | A boolean to indicate whether to enable additional `startofpacket` (`sop`) and `endofpacket` (`eop`) signals to the Avalon interface.
-| `uses_empty`                            | A boolean to indicate whether to enables the `empty` signal, which indicates the number of symbols that are empty during the `eop` cycle.
+| `dataT`                                 | The datatype of elements carried by the `data` signal of the Avalon streaming interface.
+| `uses_packets`                          | A boolean that indicates whether to enable the `startofpacket` (`sop`) and `endofpacket` (`eop`) sideband signals on the Avalon streaming interface.
+| `uses_empty`                            | A boolean that indicates whether to enable the `empty` sideband signal on the Avalon streaming interface
 
 #### Example 2.
 
@@ -263,12 +263,12 @@ The read and write APIs are the same as for all pipes. See the [Component Interf
 
 ## Understanding the Tutorial
 
-In `threshold_packets.cpp`, two pipes are declared for implementing the streaming input and streaming output interfaces on a kernel which thresholds pixel values in an image. The streams use start of packet and end of packet signals to determine the beginning and end of the image.
+In `threshold_packets.cpp`, two pipes are declared to implement the input and output streaming interfaces on a kernel which thresholds pixel values in an image. The streams use `startofpacket` and `endofpacket` signals to determine the beginning and end of the image.
 
 
 ### Reading the Reports
 
-After compiling the `report` target, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information for these interfaces in the Details pane. This pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
+After compiling the `report` target, locate and open the `report.html` file in the `threshold_packets.report.prj/reports/` directory. Under the `Threshold` kernel in the System Viewer, the streaming in and streaming out interfaces can be seen, shown by the pipe read and pipe write nodes respectively. Clicking on either of these nodes gives further information about these interfaces in the 'details' pane. The 'details' pane will identify that the read is coming from `InPixel`, and that the write is going to `OutPixel`, as well as verifying that both interfaces have a width of 32 bits (corresponding to size of the `StreamingBeatT` type) and depth of 8 (which is the capacity that each pipe was declared with).
 
 <p align="center">
   <img src=assets/kernel.png />
