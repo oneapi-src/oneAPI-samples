@@ -17,7 +17,7 @@ struct SimpleDMA {
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::maxburst<15>,
       // 4 bytes per line
-      sycl::ext::intel::experimental::alignment<4>,
+      sycl::ext::oneapi::experimental::alignment<4>,
       // latency (choose 0-latency so that waitrequest will work)
       sycl::ext::intel::experimental::latency<0>,
       sycl::ext::intel::experimental::read_write_mode_read});
@@ -29,15 +29,16 @@ struct SimpleDMA {
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::maxburst<15>,
       // 4 bytes per line
-      sycl::ext::intel::experimental::alignment<4>,
+      sycl::ext::oneapi::experimental::alignment<4>,
       // latency (choose 0-latency so that waitrequest will work)
       sycl::ext::intel::experimental::latency<0>,
       sycl::ext::intel::experimental::read_write_mode_read});
 
   // Struct members will be interpreted as kernel arguments. The pointers are
   // declared first since they are 64-bit types and won't get split up
-  sycl::ext::oneapi::experimental::annotated_arg<unsigned int*, params1> source;
-  sycl::ext::oneapi::experimental::annotated_arg<unsigned int*, params2> dest;
+  sycl::ext::oneapi::experimental::annotated_arg<unsigned int *, params1>
+      source;
+  sycl::ext::oneapi::experimental::annotated_arg<unsigned int *, params2> dest;
 
   // measured in bytes, must be a multiple of 4. This is only 32 bits wide so if
   // it was declared first it would result in the pointers getting split across
@@ -82,12 +83,12 @@ int main() {
   std::cout << "Running on device: "
             << device.get_info<sycl::info::device::name>().c_str() << std::endl;
 
-  // define with old property_list syntax until mm_host gets support for the new
-  // properties syntax
-  unsigned int* src = sycl::malloc_shared<unsigned int>(
-      kLen, q, property_list{buffer_location(kBL0)});
-  unsigned int* dest = sycl::malloc_shared<unsigned int>(
-      kLen, q, property_list{buffer_location(kBL1)});
+  unsigned int *src = sycl::malloc_shared<unsigned int>(
+      kLen, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
+  unsigned int *dest = sycl::malloc_shared<unsigned int>(
+      kLen, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
   unsigned int len = kLen;
 
   // pre-load
