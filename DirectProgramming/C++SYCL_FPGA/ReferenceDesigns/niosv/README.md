@@ -100,14 +100,14 @@ Although FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler does not su
 
 The software directory for the Nios V/g core has the following structure:
 
-| Directory              | Description
-|------------------------|------------
-|`/software`             | Top level of the software directory
-|`--/simple_dma_test`    | Test software that interacts with the DMA IP component in a cosimulation environment
-|`----/app`              | (generated directory) Application directory where the Nios V executable (.elf) and memory initialization (.hex) files will be generated
-|`----/bsp`              | (generated directory) BSP directory where all the Nios V drivers, library, and HAL files will be generated (do not touch the contents here)
-|`----/src`              | Source directory for simple_dma_test
-|`----software_build.tcl`| Build script that creates the /app and /bsp directories and populates them.  Edit the top of this file to port it to other projects.
+| Directory            | Description
+|----------------------|------------
+|`/software`           | Top level of the software directory
+|`-/simple_dma_test`   | Test software that interacts with the DMA IP component in a cosimulation environment
+|`--/app`              | (generated directory) Application directory where the Nios V executable (.elf) and memory initialization (.hex) files will be generated
+|`--/bsp`              | (generated directory) BSP directory where all the Nios V drivers, library, and HAL files will be generated (do not touch the contents here)
+|`--/src`              | Source directory for simple_dma_test
+|`--software_build.tcl`| Build script that creates the /app and /bsp directories and populates them.  Edit the top of this file to port it to other projects.
 
 The test program exercises the simple DMA accelerator in the following phases:
 
