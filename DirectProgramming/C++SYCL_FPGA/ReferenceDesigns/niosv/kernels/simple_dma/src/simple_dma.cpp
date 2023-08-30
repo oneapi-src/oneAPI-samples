@@ -93,6 +93,19 @@ int main() {
       sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
   unsigned int len = kLen;
 
+  // ensure that shared pointers are successfully allocated
+  if (nullptr == src) {
+    std::cerr << "failed to allocate pointer src: make sure that awidth is "
+                 "sufficient for the allocation size."
+              << std::endl;
+    return;
+  }
+  if (nullptr == dest) {
+    std::cerr << "failed to allocate pointer dest: make sure that awidth is "
+                 "sufficient for the allocation size."
+              << std::endl;
+  }
+
   // pre-load
   for (int i = 0; i < len; i++) {
     src[i] = len - i;
