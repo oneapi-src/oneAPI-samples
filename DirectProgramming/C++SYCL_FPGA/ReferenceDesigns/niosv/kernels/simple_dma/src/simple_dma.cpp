@@ -9,30 +9,32 @@
 static constexpr int kBL1 = 1;
 static constexpr int kBL2 = 2;
 
+// define alignment of Avalon memory-mapped host interfaces to be 4 bytes per
+// read
+static constexpr int kAlignment = 4;
+
 struct SimpleDMA {
-  using params1 = decltype(sycl::ext::oneapi::experimental::properties{
+  using params1 = decltype(sycl::ext::oneapi::experimental::properties(
       // give this a unique Avalon memory-mapped host interface
       sycl::ext::intel::experimental::buffer_location<kBL1>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::maxburst<15>,
-      // 4 bytes per line
-      sycl::ext::oneapi::experimental::alignment<4>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       // latency (choose 0-latency so that waitrequest will work)
       sycl::ext::intel::experimental::latency<0>,
-      sycl::ext::intel::experimental::read_write_mode_read});
+      sycl::ext::intel::experimental::read_write_mode_read));
 
-  using params2 = decltype(sycl::ext::oneapi::experimental::properties{
+  using params2 = decltype(sycl::ext::oneapi::experimental::properties(
       // give this a unique Avalon memory-mapped host interface
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::maxburst<15>,
-      // 4 bytes per line
-      sycl::ext::oneapi::experimental::alignment<4>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       // latency (choose 0-latency so that waitrequest will work)
       sycl::ext::intel::experimental::latency<0>,
-      sycl::ext::intel::experimental::read_write_mode_read});
+      sycl::ext::intel::experimental::read_write_mode_write));
 
   // Struct members will be interpreted as kernel arguments. The pointers are
   // declared first since they are 64-bit types and won't get split up
@@ -83,11 +85,11 @@ int main() {
   std::cout << "Running on device: "
             << device.get_info<sycl::info::device::name>().c_str() << std::endl;
 
-  unsigned int *src = sycl::malloc_shared<unsigned int>(
-      kLen, q,
+  unsigned int *src = sycl::aligned_alloc_shared<unsigned int>(
+      kAlignment, kLen, q,
       sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
-  unsigned int *dest = sycl::malloc_shared<unsigned int>(
-      kLen, q,
+  unsigned int *dest = sycl::aligned_alloc_shared<unsigned int>(
+      kAlignment, kLen, q,
       sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
   unsigned int len = kLen;
 

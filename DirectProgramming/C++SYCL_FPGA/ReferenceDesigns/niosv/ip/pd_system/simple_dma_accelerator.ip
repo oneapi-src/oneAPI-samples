@@ -177,7 +177,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>avm_mem_gmem0_0_port_0_0_rw</ipxact:name>
+      <ipxact:name>avm_mem_gmem0_1_port_0_0_rw</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -188,7 +188,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>address</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_address</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_address</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -196,7 +196,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>byteenable</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_byteenable</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_byteenable</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -204,7 +204,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdatavalid</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_readdatavalid</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_readdatavalid</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -212,7 +212,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>read</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_read</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_read</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -220,7 +220,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_readdata</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_readdata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -228,7 +228,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>waitrequest</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_waitrequest</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_waitrequest</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -236,7 +236,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>burstcount</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_burstcount</ipxact:name>
+                <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_burstcount</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -422,7 +422,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>avm_mem_gmem1_1_port_0_0_rw</ipxact:name>
+      <ipxact:name>avm_mem_gmem1_2_port_0_0_rw</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -433,7 +433,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>address</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_address</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_address</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -441,7 +441,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>byteenable</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_byteenable</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_byteenable</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -449,7 +449,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>write</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_write</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_write</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -457,7 +457,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>writedata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_writedata</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_writedata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -465,7 +465,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>waitrequest</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_waitrequest</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_waitrequest</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -473,7 +473,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>burstcount</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_burstcount</ipxact:name>
+                <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_burstcount</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -1045,7 +1045,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_address</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_address</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1063,7 +1063,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_byteenable</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_byteenable</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1081,7 +1081,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_readdatavalid</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1094,7 +1094,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_read</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1107,7 +1107,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_readdata</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_readdata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -1125,7 +1125,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_waitrequest</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1138,7 +1138,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem0_0_port_0_0_rw_burstcount</ipxact:name>
+        <ipxact:name>avm_mem_gmem0_1_port_0_0_rw_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1156,7 +1156,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_address</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_address</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1174,7 +1174,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_byteenable</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_byteenable</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1192,7 +1192,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_write</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1205,7 +1205,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_writedata</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_writedata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1223,7 +1223,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_waitrequest</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1236,7 +1236,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>avm_mem_gmem1_1_port_0_0_rw_burstcount</ipxact:name>
+        <ipxact:name>avm_mem_gmem1_2_port_0_0_rw_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -1591,12 +1591,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw&lt;/name&gt;
+            &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_address&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -1605,7 +1605,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_byteenable&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -1614,7 +1614,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1623,7 +1623,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_read&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1632,7 +1632,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_readdata&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -1641,7 +1641,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_waitrequest&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1650,7 +1650,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_0_port_0_0_rw_burstcount&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -1807,12 +1807,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw&lt;/name&gt;
+            &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_address&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -1821,7 +1821,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_byteenable&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -1830,7 +1830,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_write&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1839,7 +1839,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_writedata&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -1848,7 +1848,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_waitrequest&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1857,7 +1857,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_1_port_0_0_rw_burstcount&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -2318,22 +2318,24 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem0_0_port_0_0_rw" altera:type="avalon" altera:dir="start">
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_address" altera:internal="avm_mem_gmem0_0_port_0_0_rw_address"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_burstcount" altera:internal="avm_mem_gmem0_0_port_0_0_rw_burstcount"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_byteenable" altera:internal="avm_mem_gmem0_0_port_0_0_rw_byteenable"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_read" altera:internal="avm_mem_gmem0_0_port_0_0_rw_read"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_readdata" altera:internal="avm_mem_gmem0_0_port_0_0_rw_readdata"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_readdatavalid" altera:internal="avm_mem_gmem0_0_port_0_0_rw_readdatavalid"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw_waitrequest" altera:internal="avm_mem_gmem0_0_port_0_0_rw_waitrequest"></altera:port_mapping>
+      <altera:interface_mapping altera:name="avm_mem_gmem0_0_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem0_0_port_0_0_rw"></altera:interface_mapping>
+      <altera:interface_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw" altera:type="avalon" altera:dir="start">
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_address" altera:internal="avm_mem_gmem0_1_port_0_0_rw_address"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_burstcount" altera:internal="avm_mem_gmem0_1_port_0_0_rw_burstcount"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_byteenable" altera:internal="avm_mem_gmem0_1_port_0_0_rw_byteenable"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_read" altera:internal="avm_mem_gmem0_1_port_0_0_rw_read"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_readdata" altera:internal="avm_mem_gmem0_1_port_0_0_rw_readdata"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_readdatavalid" altera:internal="avm_mem_gmem0_1_port_0_0_rw_readdatavalid"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem0_1_port_0_0_rw_waitrequest" altera:internal="avm_mem_gmem0_1_port_0_0_rw_waitrequest"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem1_1_port_0_0_rw" altera:type="avalon" altera:dir="start">
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_address" altera:internal="avm_mem_gmem1_1_port_0_0_rw_address"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_burstcount" altera:internal="avm_mem_gmem1_1_port_0_0_rw_burstcount"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_byteenable" altera:internal="avm_mem_gmem1_1_port_0_0_rw_byteenable"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_waitrequest" altera:internal="avm_mem_gmem1_1_port_0_0_rw_waitrequest"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_write" altera:internal="avm_mem_gmem1_1_port_0_0_rw_write"></altera:port_mapping>
-        <altera:port_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw_writedata" altera:internal="avm_mem_gmem1_1_port_0_0_rw_writedata"></altera:port_mapping>
+      <altera:interface_mapping altera:name="avm_mem_gmem1_1_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem1_1_port_0_0_rw"></altera:interface_mapping>
+      <altera:interface_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw" altera:internal="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw" altera:type="avalon" altera:dir="start">
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_address" altera:internal="avm_mem_gmem1_2_port_0_0_rw_address"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_burstcount" altera:internal="avm_mem_gmem1_2_port_0_0_rw_burstcount"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_byteenable" altera:internal="avm_mem_gmem1_2_port_0_0_rw_byteenable"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_waitrequest" altera:internal="avm_mem_gmem1_2_port_0_0_rw_waitrequest"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_write" altera:internal="avm_mem_gmem1_2_port_0_0_rw_write"></altera:port_mapping>
+        <altera:port_mapping altera:name="avm_mem_gmem1_2_port_0_0_rw_writedata" altera:internal="avm_mem_gmem1_2_port_0_0_rw_writedata"></altera:port_mapping>
       </altera:interface_mapping>
       <altera:interface_mapping altera:name="clock" altera:internal="simple_dma_accelerator.clock" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clock" altera:internal="clock"></altera:port_mapping>

@@ -4565,12 +4565,12 @@ https://fpgasoftware.intel.com/eula.-->
                 </parameters>
             </interface>
             <interface>
-                <name>avm_mem_gmem0_0_port_0_0_rw</name>
+                <name>avm_mem_gmem0_1_port_0_0_rw</name>
                 <type>avalon</type>
                 <isStart>true</isStart>
                 <ports>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_address</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_address</name>
                         <role>address</role>
                         <direction>Output</direction>
                         <width>32</width>
@@ -4579,7 +4579,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_byteenable</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_byteenable</name>
                         <role>byteenable</role>
                         <direction>Output</direction>
                         <width>4</width>
@@ -4588,7 +4588,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_readdatavalid</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_readdatavalid</name>
                         <role>readdatavalid</role>
                         <direction>Input</direction>
                         <width>1</width>
@@ -4597,7 +4597,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_read</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_read</name>
                         <role>read</role>
                         <direction>Output</direction>
                         <width>1</width>
@@ -4606,7 +4606,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_readdata</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_readdata</name>
                         <role>readdata</role>
                         <direction>Input</direction>
                         <width>32</width>
@@ -4615,7 +4615,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_waitrequest</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_waitrequest</name>
                         <role>waitrequest</role>
                         <direction>Input</direction>
                         <width>1</width>
@@ -4624,7 +4624,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem0_0_port_0_0_rw_burstcount</name>
+                        <name>avm_mem_gmem0_1_port_0_0_rw_burstcount</name>
                         <role>burstcount</role>
                         <direction>Output</direction>
                         <width>4</width>
@@ -4781,12 +4781,12 @@ https://fpgasoftware.intel.com/eula.-->
                 </parameters>
             </interface>
             <interface>
-                <name>avm_mem_gmem1_1_port_0_0_rw</name>
+                <name>avm_mem_gmem1_2_port_0_0_rw</name>
                 <type>avalon</type>
                 <isStart>true</isStart>
                 <ports>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_address</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_address</name>
                         <role>address</role>
                         <direction>Output</direction>
                         <width>32</width>
@@ -4795,7 +4795,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_byteenable</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_byteenable</name>
                         <role>byteenable</role>
                         <direction>Output</direction>
                         <width>4</width>
@@ -4804,7 +4804,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_write</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_write</name>
                         <role>write</role>
                         <direction>Output</direction>
                         <width>1</width>
@@ -4813,7 +4813,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_writedata</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_writedata</name>
                         <role>writedata</role>
                         <direction>Output</direction>
                         <width>32</width>
@@ -4822,7 +4822,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_waitrequest</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_waitrequest</name>
                         <role>waitrequest</role>
                         <direction>Input</direction>
                         <width>1</width>
@@ -4831,7 +4831,7 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
-                        <name>avm_mem_gmem1_1_port_0_0_rw_burstcount</name>
+                        <name>avm_mem_gmem1_2_port_0_0_rw_burstcount</name>
                         <role>burstcount</role>
                         <direction>Output</direction>
                         <width>4</width>
@@ -5441,12 +5441,12 @@ https://fpgasoftware.intel.com/eula.-->
             </parameters>
         </interface>
         <interface>
-            <name>avm_mem_gmem0_0_port_0_0_rw</name>
+            <name>avm_mem_gmem0_1_port_0_0_rw</name>
             <type>avalon</type>
             <isStart>true</isStart>
             <ports>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_address</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_address</name>
                     <role>address</role>
                     <direction>Output</direction>
                     <width>32</width>
@@ -5455,7 +5455,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_byteenable</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_byteenable</name>
                     <role>byteenable</role>
                     <direction>Output</direction>
                     <width>4</width>
@@ -5464,7 +5464,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_readdatavalid</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_readdatavalid</name>
                     <role>readdatavalid</role>
                     <direction>Input</direction>
                     <width>1</width>
@@ -5473,7 +5473,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_read</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_read</name>
                     <role>read</role>
                     <direction>Output</direction>
                     <width>1</width>
@@ -5482,7 +5482,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_readdata</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_readdata</name>
                     <role>readdata</role>
                     <direction>Input</direction>
                     <width>32</width>
@@ -5491,7 +5491,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_waitrequest</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_waitrequest</name>
                     <role>waitrequest</role>
                     <direction>Input</direction>
                     <width>1</width>
@@ -5500,7 +5500,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem0_0_port_0_0_rw_burstcount</name>
+                    <name>avm_mem_gmem0_1_port_0_0_rw_burstcount</name>
                     <role>burstcount</role>
                     <direction>Output</direction>
                     <width>4</width>
@@ -5657,12 +5657,12 @@ https://fpgasoftware.intel.com/eula.-->
             </parameters>
         </interface>
         <interface>
-            <name>avm_mem_gmem1_1_port_0_0_rw</name>
+            <name>avm_mem_gmem1_2_port_0_0_rw</name>
             <type>avalon</type>
             <isStart>true</isStart>
             <ports>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_address</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_address</name>
                     <role>address</role>
                     <direction>Output</direction>
                     <width>32</width>
@@ -5671,7 +5671,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_byteenable</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_byteenable</name>
                     <role>byteenable</role>
                     <direction>Output</direction>
                     <width>4</width>
@@ -5680,7 +5680,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_write</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_write</name>
                     <role>write</role>
                     <direction>Output</direction>
                     <width>1</width>
@@ -5689,7 +5689,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_writedata</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_writedata</name>
                     <role>writedata</role>
                     <direction>Output</direction>
                     <width>32</width>
@@ -5698,7 +5698,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_waitrequest</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_waitrequest</name>
                     <role>waitrequest</role>
                     <direction>Input</direction>
                     <width>1</width>
@@ -5707,7 +5707,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
-                    <name>avm_mem_gmem1_1_port_0_0_rw_burstcount</name>
+                    <name>avm_mem_gmem1_2_port_0_0_rw_burstcount</name>
                     <role>burstcount</role>
                     <direction>Output</direction>
                     <width>4</width>
@@ -7258,7 +7258,7 @@ https://fpgasoftware.intel.com/eula.-->
  <connection
    kind="avalon"
    version="23.1"
-   start="simple_dma_accelerator.avm_mem_gmem0_0_port_0_0_rw"
+   start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -7283,7 +7283,7 @@ https://fpgasoftware.intel.com/eula.-->
  <connection
    kind="avalon"
    version="23.1"
-   start="simple_dma_accelerator.avm_mem_gmem1_1_port_0_0_rw"
+   start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
