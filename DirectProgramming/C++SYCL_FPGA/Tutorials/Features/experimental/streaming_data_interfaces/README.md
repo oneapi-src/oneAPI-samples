@@ -86,6 +86,8 @@ Below is a summary of all relevant SYCL properties which can be applied to a `pi
 | `first_symbol_in_high_order_bits<bool>` | `true`                                 | boolean
 | `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
 
+See [this page](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/st-interface-properties.html) for more information on the Avalon interface specifications.
+
 #### Example 1.
 
 The following example explicitly declares a pipe that implements a streaming data interface with  `ready` and `valid` signals, using the defaults for all other parameters.
