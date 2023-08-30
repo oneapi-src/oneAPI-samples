@@ -58,7 +58,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Configuring a Pipe to Implement a Streaming Data Interface
 
-Each individual pipe is a declaration of the templated `pipe` class. It takes two mandatory and two optional parameters, as summarized in Table 1.
+Each pipe is a class declaration of the templated `pipe` class. A pipe declaration takes two mandatory and two optional parameters, as summarized in Table 1.
 
 #### Table 1. Template Parameters of the `pipe` Class
 
@@ -73,7 +73,7 @@ Each individual pipe is a declaration of the templated `pipe` class. It takes tw
 
 > **Note**: ** Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
 
-Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the fourth template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications.
+Below is a summary of all relevant SYCL properties which can be applied to a `pipe` using the `properties` template parameter. Please note that this table is not complete; see the [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/host-pipe-declaration.html) for more information on how to use pipes in other applications.
 
 
 #### Table 2. Properties used to Configure a Pipe to Implement a Streaming Data Interface
@@ -85,6 +85,8 @@ Below is a summary of all relevant SYCL properties which can be applied to a `pi
 | `uses_valid<bool>`                      | `true`                                 | boolean
 | `first_symbol_in_high_order_bits<bool>` | `true`                                 | boolean
 | `protocol`                              | `protocol_avalon_streaming_uses_ready` |`protocol_avalon_streaming` / `protocol_avalon_streaming_uses_ready`
+
+See [this page](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/st-interface-properties.html) for more information on the Avalon interface specifications.
 
 #### Example 1.
 
