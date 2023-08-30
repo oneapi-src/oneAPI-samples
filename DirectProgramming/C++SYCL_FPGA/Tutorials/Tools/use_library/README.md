@@ -10,6 +10,7 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 ## Purpose
 
 This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design. An RTL library is useful for embedding high performance FPGA code, handwritten in Verilog into your oneAPI program.
+
 ## Prerequisites
 | Optimized for                     | Description
 |:---                               |:---
@@ -57,12 +58,10 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Source Code Description
 
-We have 2 design in this tutorial, each lies in separate sub-folders. Both are taking two 27-bit inputs and perform multiplier to produce a 54-bit output.
-With RTL module, we are able to customize DSP block behaviour in SYCL application and observe the impact on area utilization and performance.
-In `part1_native` folder, we perform 27x27 multiplier with a native math implemation. This is the normal SYCL application we usually implemetion for FPGA application
-in `part2_libfunc_call` folder, we implement customised DSP block behaviour with a RTL-libary and use it in our SYCL application to perform 27x27 multiplier. Files needed are explained in [Use of RTL libraries in SYCL](#Use-of-RTL-libraries-in-SYCL).
+This tutorial includes two designs, each in separate sub-directories. Both designs multiply two 27-bit inputs together to produce a 54-bit output. In `part1_native`, a 27x27 multiplication is described with native C++ code. 
+In `part2_libfunc_call` folder, RTL code is used to customize a DSP block to perform the multiplication more optimally. You can observe the impact on area utilization and performance by comparing the two designs.
 
-The graphical illustrated the Library Toolchain Creation Process:
+This graphic illustrates the Library Toolchain Creation Process:
 ![](assets/lib_toolchain.svg)
 
 ### Use of RTL libraries in SYCL
@@ -73,7 +72,7 @@ Files needed to create a SYCL target library from RTL source (as demostrated in 
 - A header file containing valid SYCL kernel language and declares the signatures of functions implemented by the RTL component.
 - A SYCL based emulation model file for RTL component
 
-The RTL is used when compiling for hardware whereas the emulation model is used when the oneAPI program is run on the FPGA emulator.
+The RTL is used when compiling for hardware and simulation, and the emulation model is used when compiling for the FPGA emulator.
 After having created the library file, the function in the library can be called from the SYCL kernel, without the need to know the hardware design or implementation details on underlying functions in the library.
 
 Given a workable RTL module, one may need to apply some modifications in order to integrate it into oneAPI program.
@@ -83,7 +82,7 @@ Given a workable RTL module, one may need to apply some modifications in order t
     > **Note**: The signal names must match the ones specified in the .xml file. An error occurs during library creation if a signal name is inconsistent.
     > You may find full list of RTL support constraints in [Restrictions and Limitations in RTL Support](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/restrictions-and-limitations-in-rtl-support.html).
 
-2. RTL library’s characteristics needs to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, do refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
+2. The RTL library’s characteristics need to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
 
     > **Note**: It is challenging to debug an RTL module that works correctly on its own but works incorrectly as part of a SYCL kernel. Double-check all parameters under the ATTRIBUTES element in the object manifest file (.xml).
 

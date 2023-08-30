@@ -6,8 +6,6 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 // oneAPI headers
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/experimental/fpga_kernel_properties.hpp>
-#include <sycl/ext/oneapi/annotated_arg/annotated_arg.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
@@ -19,10 +17,9 @@ class KernelCompute;
 using MyInt27 = ac_int<27, false>;
 using MyInt54 = ac_int<54, false>;
 
-
-// Using host pipes to stream data in and out of kernal
-// IDPipeA and IDPipeB will be written at host, and then read data in kernel (device)
-// IDPipeC will be written at kernel (device) respectively, and then read data by host
+// Using host pipes to stream data in and out of kernel
+// IDPipeA and IDPipeB will be written to by the host, and then read by the kernel (device)
+// IDPipeC will be written to by the kernel (device), and then read by the host
 class IDPipeA;
 using InputPipeA = sycl::ext::intel::experimental::pipe<IDPipeA, unsigned>;
 class IDPipeB;
@@ -30,9 +27,12 @@ using InputPipeB = sycl::ext::intel::experimental::pipe<IDPipeB, unsigned>;
 class IDPipeC;
 using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, unsigned long>;
 
+// This kernel computes multiplier result by using the C++ '*' operator
 template <typename PipeIn1, typename PipeIn2, typename PipeOut>
 struct NativeMult27x27 {
 
+  // use a streaming pipelined invocation interface to minimize hardware
+  // overhead
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
         sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall, 
@@ -50,7 +50,7 @@ struct NativeMult27x27 {
 // This kernel compute result by performing the basic multipler soft logic
 int main() {
   unsigned long result_native = 0;
-  unsigned kA = 134217727;
+  unsigned kA = 134217727;  // 0x7FFFFFF is the largest possible ac_int<27, false>.
   unsigned kB = 100;
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
@@ -71,12 +71,12 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
     {
-      // write data to host-to-device hostpipe
+      // write data to host-to-device pipes
       InputPipeA::write(q, kA);
       InputPipeB::write(q, kB);
       // launch kernel that infers a multiplier automatically
       q.single_task<KernelCompute>(NativeMult27x27<InputPipeA,InputPipeB,OutputPipeC>{}).wait();
-      //read data from device-to-host hostpipe
+      // read data from device-to-host pipe
       result_native = OutputPipeC::read(q);
     }
 
@@ -95,12 +95,10 @@ int main() {
     std::terminate();
   }
 
-  // Compute the expected "golden" result
-  unsigned long gold = (unsigned long) kA * kB;
-  
   // Check the results
-  if (result_native != gold) {
-    std::cout << "FAILED: result (" << result_native << ") is incorrect! Expected " << gold << "\n";
+  unsigned long expected_result = (unsigned long) kA * kB;
+  if (result_native != expected_result) {
+    std::cout << "FAILED: result (" << result_native << ") is incorrect! Expected " << expected_result << "\n";
     return -1;
   }
   std::cout << "PASSED: result is correct!\n";
