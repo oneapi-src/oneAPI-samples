@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
-using MyInt27 = ac_int<27, false>;
-using MyInt54 = ac_int<54, false>;
+#include "lib_rtl.hpp"
+
+// This emulation model is only used during emulation, so it should functionally
+// match the RTL in lib_rtl.v.
 
 SYCL_EXTERNAL extern "C" MyInt54 RtlDSPm27x27u (MyInt27 x, MyInt27 y) {
   return (x * y);

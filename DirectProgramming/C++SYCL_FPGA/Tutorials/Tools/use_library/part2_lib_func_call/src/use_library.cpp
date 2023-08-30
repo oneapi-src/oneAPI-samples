@@ -10,30 +10,32 @@
 
 #include "lib_rtl.hpp"
 
+// RTL Library will use the Verilog model during hardware generation, and the
+// c++ model during emulation.
 #include "exception_handler.hpp"
-
+#include <stdint.h>
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
 class KernelComputeRTL;
 
-using MyInt27 = ac_int<27, false>;
-using MyInt54 = ac_int<54, false>;
 
 
 // Using host pipes to stream data in and out of kernal
-// IDPipeA and IDPipeB will be written at host, and then read data in kernel (device)
-// IDPipeC will be written at kernel (device) respectively, and then read data by host
+// IDPipeA and IDPipeB will be written to by the host, and then read by the kernel (device)
+// IDPipeC will be written to by the kernel (device), and then read by the host
 class IDPipeA;
-using InputPipeA = sycl::ext::intel::experimental::pipe<IDPipeA, unsigned>;
+using InputPipeA = sycl::ext::intel::experimental::pipe<IDPipeA, uint32_t>;
 class IDPipeB;
-using InputPipeB = sycl::ext::intel::experimental::pipe<IDPipeB, unsigned>;
+using InputPipeB = sycl::ext::intel::experimental::pipe<IDPipeB, uint32_t>;
 class IDPipeC;
-using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, unsigned long>;
+using OutputPipeC = sycl::ext::intel::experimental::pipe<IDPipeC, uint64_t>;
 
-// This kernel compute multiplier result by call RTL function RtlDSPm27x27u
+// This kernel computes multiplier result by calling RTL function RtlDSPm27x27u
 template <typename PipeIn1, typename PipeIn2, typename PipeOut>
 struct RtlMult27x27 {
 
+  // use a streaming pipelined invocation interface to minimize hardware
+  // overhead
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
         sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall, 
@@ -41,19 +43,16 @@ struct RtlMult27x27 {
   }
   
   void operator()() const {
-    unsigned a_val = PipeIn1::read();
-    unsigned b_val = PipeIn2::read();
-    MyInt27 a = a_val;
-    MyInt27 b = b_val;
-    MyInt54 res = RtlDSPm27x27u(a, b);
+    MyInt27 a_val = PipeIn1::read();
+    MyInt27 b_val = PipeIn2::read();
+    MyInt54 res = RtlDSPm27x27u(a_val, b_val);
     PipeOut::write(res);
   }
 };
 
-// This kernel compute result by performing the basic multipler soft logic
 int main() {
   unsigned long result_rtl = 0;
-  unsigned kA = 134217727;
+  unsigned kA = 134217727; // 0x7FFFFFF is the largest possible ac_int<27, false>.
   unsigned kB = 100;
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
@@ -74,12 +73,12 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
     {
-      //write data to host-to-device hostpipes
+      // write data to host-to-device pipes
       InputPipeA::write(q, kA);
       InputPipeB::write(q, kB);
       // launch a kernel to that uses a multiplier defined in RTL
       q.single_task<KernelComputeRTL>(RtlMult27x27<InputPipeA,InputPipeB,OutputPipeC>{}).wait();
-      //read data from device-to-host hostpipe
+      // read data from device-to-host pipe
       result_rtl = OutputPipeC::read(q);
     }
 
@@ -98,12 +97,10 @@ int main() {
     std::terminate();
   }
 
-  // Compute the expected "golden" result
-  unsigned long gold = (unsigned long) kA * kB;
-  
   // Check the results
-  if (result_rtl != gold) {
-    std::cout << "FAILED: result (" << result_rtl << ") is incorrect! Expected " << gold << "\n";
+  unsigned long expected_result = (unsigned long) kA * kB;
+  if (result_rtl != expected_result) {
+    std::cout << "FAILED: result (" << result_rtl << ") is incorrect! Expected " << expected_result << "\n";
     return -1;
   }
   std::cout << "PASSED: result is correct!\n";

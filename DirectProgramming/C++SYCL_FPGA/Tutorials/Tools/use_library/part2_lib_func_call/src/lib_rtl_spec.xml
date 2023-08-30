@@ -24,6 +24,8 @@
     </REQUIREMENTS>
     <RESOURCES>
       <DSPS value="1"/>
+      <ALUTS value="0"/>
+      <FFS  value="0"/>
     </RESOURCES>
   </FUNCTION>
 </RTL_SPEC>

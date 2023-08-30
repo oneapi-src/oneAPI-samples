@@ -60,7 +60,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 This tutorial includes two designs, each in separate sub-directories. Both designs multiply two 27-bit inputs together to produce a 54-bit output. In `part1_native`, a 27x27 multiplication is described with native C++ code. 
 In `part2_libfunc_call` folder, RTL code is used to customize a DSP block to perform the multiplication more optimally. You can observe the impact on area utilization and performance by comparing the two designs.
-
+This code sample demonstrates how to use a simple RTL library in a simple FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, since the area changes in this sample are quite small. You can use the `fpga_crossgen` and `fpga_libtool` commands to generate RTL libraries for multiarchitecture binary kernel (full system) designs as well.
 This graphic illustrates the Library Toolchain Creation Process:
 ![](assets/lib_toolchain.svg)
 
@@ -186,7 +186,7 @@ Note that the library files (\*.a) must be included after all of the cpp files i
       ```
       make fpga_sim
       ```
-   4. Compile and run on FPGA hardware (longer compile time, targets an FPGA device).
+   4. Compile for FPGA hardware (longer compile time, runs Intel® Quartus® Prime to get accurate area estimates).
       ```
       make fpga
       ```
@@ -205,13 +205,6 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
-   >
    > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
@@ -228,7 +221,7 @@ Note that the library files (\*.a) must be included after all of the cpp files i
       ```
       nmake fpga_sim
       ```
-   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+   4. Compile for FPGA hardware (longer compile time, runs Intel® Quartus® Prime to get accurate area estimates).
       ```
       nmake fpga
       ```
@@ -246,10 +239,6 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./use_library.fpga
-   ```
 
 ### On Windows
 
@@ -262,10 +251,6 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    use_library.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-   ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   use_library.fpga.exe
    ```
 
 ### Example of Output
