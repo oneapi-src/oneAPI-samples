@@ -1,26 +1,19 @@
 #  Copyright (c) 2022 Intel Corporation
 #  SPDX-License-Identifier: MIT
 
-# Author:       whitepau
-# Date:         2023-06-09
+# Description: 
+#
+# This script will create and generate the application and BSPs in the software
+# directory, build the software, generate the memory initialization file. Ensure
+# this script is in the software directory under the Quartus project. This
+# script will *only* build Nios V HAL programs. To use this script in your own
+# project change the variables below (hardware/software locations and simulation
+# settings)
 
-# Description:  This script will create and generate the application and BSPs in
-#               the software directory, build the software, generate the memory
-#               initialization file.  Ensure this script is in the software
-#               directory under the Quartus project.  This script will *only*
-#               build Nios V HAL programs. To use this script in your own
-#               project change the variables below (hardware/software locations
-#               and simulation settings)
-
-# Usage:        Run "sh software_build.sh" from the Nios V command shell
-#               (ensures Nios V environment is setup correctly first)
-
-# Todo:
-#  1)  Add additional BSP flags to control which memory is populated and other
-#      settings
-#  2)  Add -h argument to list out usage and other helpful info
-#  3)  Create a simulation script that will copy hex file over, ld_debug,
-#      etc.... (this can be a .tcl file that Questa can consume)
+# Usage: 
+#
+# Run "sh software_build.sh" from the Nios V command shell (ensures Nios V
+# environment is setup correctly first)
 
 # Hardware locations:  change these to point at the Quartus and Platform
 # Designer project files, if using relative paths base them from the /software

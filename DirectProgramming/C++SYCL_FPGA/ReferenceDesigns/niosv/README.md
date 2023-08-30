@@ -57,7 +57,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-## Overview of Nios V Design
+## Key Implementation Details
 
 The design has the following directory structure after you compile it:
 
@@ -93,11 +93,7 @@ There are three important IPs in this system:
 
 3. **Simple DMA Accelerator** This FPGA IP is produced with the Intel® oneAPI DPC++/C++ Compiler
 
-Although FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler does not support AXI4 interfaces, Platform Designer is able to generate a bridge for you. Click `System` -> `Show System with Platform Designer Interconnect` to see how the Platform Designer interconnect adapts your component's Avalon memory-mapped interfaces to AXI4 interfaces.
-
-![](assets/platform-designer_show-interconnect.png)
-
-![](assets/platform-designer_interconnect.png)
+Although FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler does not support AXI4 interfaces, Platform Designer is able to generate an interconnect that supports both for you. 
 
 
 ### Nios V Software Overview
@@ -180,7 +176,7 @@ $> quartus_sh -t build_and_sim_testsystem.tcl
 4. Compile the DMA IP. Generate an IP component and optimization report:
 
       ```
-      cmake --build . --target report
+      make report
       ```
 
    You can emulate and simulate this design as well, but that is not necessary for this procedure. 
@@ -219,7 +215,7 @@ You can manually follow the steps below, or run the `build_and_sim_testsystem.tc
 4. Compile the DMA IP. Generate an IP component and optimization report:
 
       ```
-      cmake --build . --target report
+      nmake report
       ```
 
    You can emulate and simulate this design as well, but that is not necessary for this procedure. 
@@ -260,24 +256,24 @@ You can manually follow the steps below, or run the `build_and_sim_testsystem.tc
 
 ### On both Linux* and Windows*
 
-    1. Navigate to the `/simulation_files` directory
+1. Navigate to the `/simulation_files` directory
 
-    2. Run the simluation script:
+2. Run the simluation script:
 
-        ```bash
-        vsim -c -do test_nios_commandline.tcl
-        ```
+    ```bash
+    vsim -c -do test_nios_commandline.tcl
+    ```
 
-    3. You can tell if the simulation succeeded by looking for this text in the output transcript:
+3. You can tell if the simulation succeeded by looking for this text in the output transcript:
 
-        ```
-        # Initializing memory contents for pd_system_tb.pd_system_inst.code_data_ram.code_data_ram.altera_syncram_component.initialize_mem_contents with code_data_ram_init.ver
-        #               990000: INFO: pd_system_tb.pd_system_inst_reset_bfm.pd_system_inst_reset_bfm.reset_deassert: Reset deasserted
-        # Test design for the simple DMA kernel
-        # 
-        # Test will initialize 256 incrementing four byte unsigned integers, have the accelerator DMA copy the data to a destination and then check the destination for correctness.
-        # Test Pass:  All the data at the destination matches the source.
-        # Software will now exit.
+    ```
+    # Initializing memory contents for pd_system_tb.pd_system_inst.code_data_ram.code_data_ram.altera_syncram_component.initialize_mem_contents with code_data_ram_init.ver
+    #               990000: INFO: pd_system_tb.pd_system_inst_reset_bfm.pd_system_inst_reset_bfm.reset_deassert: Reset deasserted
+    # Test design for the simple DMA kernel
+    # 
+    # Test will initialize 256 incrementing four byte unsigned integers, have the accelerator DMA copy the data to a destination and then check the destination for correctness.
+    # Test Pass:  All the data at the destination matches the source.
+    # Software will now exit.
         ```
 
 >**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.

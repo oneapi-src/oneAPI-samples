@@ -1,16 +1,5 @@
-// Title:          Simple DMA Test
-//
-// Tool Versions:
-//
-// The design was created with the following design environment:
-// 1) Intel® Quartus® Prime 23.1 (Design includes Nios V/g which was released in
-//    23.1)
-// 2) Questasim Intel edition (Installed with Intel® Quartus® Prime)
-// 3) Intel® oneAPI DDPC++/C++ Compiler 2024.0
-// 4) Linux development host (Ubuntu* 22.04 was used, this design *should* work
-//    on Windows* but build_software.sh does not)
-//
-// Description:
+//  Copyright (c) 2022 Intel Corporation
+//  SPDX-License-Identifier: MIT
 //
 // This design leverages a simple DMA oneAPI kernel that has had its RTL
 // generated and integrated into the Nios V test system that will be used to
@@ -22,14 +11,6 @@
 // 0x0010_0000 and it is 1MB in size.  So if you want to connect a different
 // kernel/IP make sure to place it between data master address
 // 0x0010_0000-0x001F_FFFF.
-//
-// Author:         JCJB Date:           5/23/2023
-//
-// Version:        0.1
-//
-// Version History: 0.1:  Initial version of the design that has Nios V
-//   controlling a simple oneAPI DMA kernel that copies data from source to
-//   destination four bytes at a time.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,17 +42,21 @@
 #define TEST_PASS 0
 #define TEST_FAIL 1
 
-/// Nios V limits the offset of the `IOWR32...` macros to 12 bits, so explicitly
-/// add the offset to the base, since the base address parameter of the macro
-/// does not have the limitation.
+/// Calculate DMA kernel register offsets from system.h, and the kernel register
+/// offsets from register_map_offsets.hpp
+
 #define REG_ARG_SOURCE_BASE \
   (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_SOURCE_REG)
+
 #define REG_ARG_DEST_BASE \
   (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_DESTINATION_REG)
+
 #define REG_ARG_LENGTH_BASE \
   (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_LENGTH_REG)
+
 #define REG_START_BASE \
   (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_START_REG)
+
 #define REG_STATUS \
   (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_STATUS_REG)
 
@@ -89,18 +74,17 @@
 ///
 /// @param[in] destination Pointer to which to copy data
 ///
-/// @param[in] length Number of bytes of data to copy
+/// @param[in] length_bytes Number of bytes of data to copy
 void configure_and_start_dma(unsigned int* source, unsigned int* destination,
-                             unsigned int length) {
+                             unsigned int length_bytes) {
   // Nios V/g is 32-bit, but FPGA IP produced with the Intel® oneAPI DPC++/C++
   // Compiler uses 64-bit pointers, so we have to write the source pointer 32
   // bits at a time. The source pointer needs to be cast to unsigned int since
-  // the Nios macros are not expecting a pointer.
+  // the Nios macros do not expect a pointer.
 
-  // According to io.h there is a upper limitation of 12-bits of the offset
-  // field, so this code instead does the safe thing and adds the offset to the
-  // base (first argument of macro) and hardcodes the offset field to 0 (second
-  // argument of macro).
+  // According to io.h there is an upper limitation of 12-bits of the offset
+  // field, so this code instead adds the offset to the base (first argument of
+  // macro) and hardcodes the offset field to 0 (second argument of macro).
 
   // DMA source
   IOWR_32DIRECT(REG_ARG_SOURCE_BASE, 0, (unsigned int)source);
@@ -165,8 +149,8 @@ int test_simple_dma() {
   //  Configure and start the DMA kernel
   configure_and_start_dma(source, destination, BUFFER_LENGTH);
 
-  // spin waiting for the accelerator to complete (kernel will fire off
-  // interrupt as well but there is no register as of 2023.1.0 to clear it)
+  // Busy-waiting for the accelerator to complete (kernel will fire off
+  // interrupt as well but there is no register as of 2024.0 to clear it)
   while ((IORD_32DIRECT(REG_STATUS, 0) & KERNEL_REGISTER_MAP_DONE_MASK) !=
          KERNEL_REGISTER_MAP_DONE_MASK) {
   }
