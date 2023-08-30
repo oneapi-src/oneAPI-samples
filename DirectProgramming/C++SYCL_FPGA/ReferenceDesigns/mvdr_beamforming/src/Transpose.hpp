@@ -45,12 +45,7 @@ event SubmitTransposeKernel(queue& q) {
                 "k_num_cols_in must be evenly divisible by k_pipe_width");
 
   return q.submit([&](handler& h) {
-    h.single_task<TransposeKernelName>([=]() {
-      // start the transposer
-      Transposer<T, k_num_cols_in, k_pipe_width, MatrixInPipe, MatrixOutPipe>
-          TheTransposer;
-      TheTransposer();
-    });
+    h.single_task<TransposeKernelName>(Transposer<T, k_num_cols_in, k_pipe_width, MatrixInPipe, MatrixOutPipe>);
   });
 }
 
