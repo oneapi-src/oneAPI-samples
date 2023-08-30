@@ -1,4 +1,4 @@
-# Avalon Memory-Mapped Host Interfaces (mmhost)
+# Avalon Memory-Mapped Host Interfaces (mmhost) Sample
 This tutorial demonstrates how to configure Avalon memory-mapped host data interfaces for IP components produced with the Intel® oneAPI DPC++/C++ Compiler.
 
 | Optimized for                     | Description
@@ -20,7 +20,7 @@ This tutorial demonstrates how to configure Avalon memory-mapped host data inter
 
 > **Note**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: This tutorial will not work for a Full System compile. 
+> **Note**: This tutorial will not work for a Full System compile as it demonstrates an IP Authoring specific feature.
 
 ## Prerequisites
 
@@ -47,11 +47,11 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 
 ## Purpose
-When you design an IP component for an FPGA system, that system will often dictate the interface requirements of your IP component. This tutorial shows how to use `annotated_arg` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows your IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, please refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/memory-mapped-interfaces.html). 
+When designing an IP component for an FPGA system, that system will often dictate the interface requirements of the IP component. This tutorial shows how to use `annotated_arg` to configure Avalon memory-mapped host data interfaces. An Avalon memory-mapped host interface allows an IP component to send read or write requests to one or more Avalon memory-mapped agent interfaces. To learn more about Avalon memory-mapped host interfaces and Avalon memory-mapped agent interfaces, refer to the appropriate section of the [Avalon Interface Specifications](https://www.intel.com/content/www/us/en/docs/programmable/683091/current/memory-mapped-interfaces.html).
 
 ![](assets/basic_avhost.svg)
 
-The compiler will infer Avalon memory-mapped host interfaces for your design when your kernel includes one or more pointer arguments. As with scalar kernel arguments, pointer arguments can be passed to your kernel via a `conduit` interface or your component's control/status register (CSR). By default, pointer arguments will be passed to your IP component through the CSR. For more details on kernel arguments, please see `<Temporary: https://github.com/intel-sandbox/wenkaixu.ip-auth-demos/tree/main/mm-host>`. By default, the Intel® oneAPI DPC++/C++ Compiler will produce a kernel with a single Avalon memory-mapped host interface that will be shared amongst those pointers. 
+The compiler will infer Avalon memory-mapped host interfaces for a design when the kernel includes one or more pointer arguments. As with scalar kernel arguments, pointer arguments can be passed to the kernel via a `conduit` interface or the component's control/status register (CSR). By default, pointer arguments will be passed to the IP component through the CSR. For more details on kernel arguments, see `<Temporary: https://github.com/intel-sandbox/wenkaixu.ip-auth-demos/tree/main/mm-host>`. By default, the Intel® oneAPI DPC++/C++ Compiler will produce a kernel with a single Avalon memory-mapped host interface that will be shared amongst those pointers. 
 
 #### Example 1: A kernel with multiple pointer arguments
 ```c++
@@ -75,7 +75,7 @@ struct PointerIP {
 
 ### Using `annotated_arg` to configure Avalon memory-mapped host interfaces
 
-You can override the default behaviour of a pointer argument by declaring an `annotated_arg` kernel argument instead.
+The default behaviour of a pointer argument can be overridden by declaring an `annotated_arg` kernel argument.
 
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
 ```c++
@@ -95,7 +95,7 @@ struct SingleMMIP {
 };
 ```
 
-The following table describes the properties under `sycl::ext::intel::experimental` that you can use to customize how the pointer argument is passed to your component. Only one may be specified at a time. 
+The following table describes the properties under `sycl::ext::intel::experimental` that can be used to customize how the pointer argument is passed to the component. Only one may be specified at a time. 
 
 | Parameter                 | Description
 |---                        |---
@@ -103,7 +103,7 @@ The following table describes the properties under `sycl::ext::intel::experiment
 | `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface 
 
 
-You can use the following parameters found under `sycl::ext::intel::experimental` and `sycl::ext::oneapi::experimental` to configure your IP component's Avalon memory-mapped host interfaces:
+The following parameters found under `sycl::ext::intel::experimental` and `sycl::ext::oneapi::experimental` can be used to configure an IP component's Avalon memory-mapped host interfaces:
 
 | Parameter                | Default Value | Description
 |---                       |---            |---
@@ -173,7 +173,7 @@ If the input and output vectors are too large for on-chip memory, larger off-chi
 
 ![](assets/ddr_avhost.svg)
 
-We can make better use of the available memory bandwidth by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface.
+The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface.
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 ```c++
@@ -208,7 +208,7 @@ struct DDR_IP {
 };
 ```
 
-## Building the `mmhost` Tutorial
+## Building the `mmhost` Sample
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
@@ -224,9 +224,8 @@ struct DDR_IP {
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-Use these commands to run the design, depending on your OS.
 
-### On a Linux* System
+### On Linux*
 This design uses CMake to generate a build script for GNU/make.
 
 1. Change to the sample directory.
@@ -255,15 +254,25 @@ This design uses CMake to generate a build script for GNU/make.
    >  ```
 
 4. Compile the design using `make`.
-   | Compilation Type    | Command
-   |:---                 |:---
-   | FPGA Emulator       | `make fpga_emu`
-   | Optimization Report | `make report`
-   | FPGA Simulator      | `make fpga_sim`
-   | FPGA Hardware       | `make fpga`
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      make fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `xxx_report.prj/reports/report.html`.
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      make fpga
+      ```
 
-### On a Windows* System
-This design uses CMake to generate a build script for  `nmake`.
+### On Windows*
 
 1. Change to the sample directory.
 2. For different parts of this tutorial, navigate to the appropriate sub-folder.
@@ -287,12 +296,23 @@ This design uses CMake to generate a build script for  `nmake`.
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
 3. Compile the design using `nmake`.
-   | Compilation Type    | Command (Windows)
-   |:---                 |:---
-   | FPGA Emulator       | `nmake fpga_emu`
-   | Optimization Report | `nmake report`
-   | FPGA Simulator      | `nmake fpga_sim`
-   | FPGA Hardware       | `nmake fpga`
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Compile for simulation (fast compile time, targets simulator FPGA device):
+      ```
+      nmake fpga_sim
+      ```
+   3. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `xxx_report.a.prj/reports/report.html`.
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      nmake fpga
+      ```
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
@@ -303,12 +323,12 @@ Locate `report.html` in the `build/<source_file>.prj/reports/` directory. Open t
 
 Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
-Navigate to the Loop Throughput section under Throughput Analysis, and you will see that the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
+Navigate to the Loop Throughput section under Throughput Analysis: the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 
-Observe how the 32-bit LSUs are coalesced for you, after unrolling the for-loop.
+Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
 
 
-## Running the Sample
+## Run the `mmhost` Sample
 
 ### On Linux
 
