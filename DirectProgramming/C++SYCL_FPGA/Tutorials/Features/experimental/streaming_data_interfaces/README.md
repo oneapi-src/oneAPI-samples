@@ -143,9 +143,11 @@ StreamingBeatT out_beat(data, sop, eop, empty);
 SecondPipeInstance::write(out_beat);
 ```
 
-### Read and Write APIs
+### Pipe API
 
-The read and write APIs are the same as for all pipes. See the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) Tutorial for more information.
+Pipes expose read and write interfaces that allow a single element to be read or written in FIFO order to the pipe.
+
+See the [Host Pipes](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/hostpipes) code sample for more details on the read and write APIs.
 
 ## Build the `Streaming Data Interfaces` Tutorial
 
