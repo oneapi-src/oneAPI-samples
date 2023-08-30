@@ -162,13 +162,6 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
-   >
    > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
