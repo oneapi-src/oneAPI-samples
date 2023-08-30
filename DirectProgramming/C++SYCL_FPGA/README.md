@@ -96,7 +96,7 @@ flowchart LR
 | [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to declare and use `printf` in program
 | [register_map_and_streaming_interfaces (experimental)](Tutorials/Features/experimental/register_map_and_streaming_interfaces) | [Tutorials/Features](Tutorials/Features)             | How to specify the kernel invocation interface and kernel argument interfaces
 | [pipelined_kernels (experimental)](Tutorials/Features/experimental/pipelined_kernels)                                         | [Tutorials/Features](Tutorials/Features)             | Basics of declaring and launching a pipelined kernel
-| [streaming_data_interfaces (experimental)](Tutorials/Features/experimental/streaming_data_interfaces)                         | [Tutorials/Features](Tutorials/Features)             | How to use pipes to implement streaming data interfaces on an IP component
+| [streaming_data_interfaces](Tutorials/Features/ip_authoring_interfaces/streaming_data_interfaces)                             | [Tutorials/Features](Tutorials/Features)             | How to use pipes to implement streaming data interfaces on an IP component
 
 
 #### Tier 3: Explore the Advanced Techniques
