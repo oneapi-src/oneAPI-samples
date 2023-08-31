@@ -206,7 +206,7 @@ The double-buffering optimization can help minimize or remove gaps between conse
 
 For a more detailed explanation of the optimization, refer to the FPGA tutorial "Double Buffering to Overlap Kernel Execution with Buffer Transfers and Host Processing".
 
-In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
+In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Arria® 10 FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
 
 ![](with_and_without_double_buffering.PNG)
 

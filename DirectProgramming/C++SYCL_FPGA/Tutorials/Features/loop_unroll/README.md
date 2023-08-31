@@ -109,22 +109,27 @@ In an FPGA design, unrolling loops is a common strategy to directly trade-off on
 
 This tutorial demonstrates this trade off with a simple vector add kernel. The tutorial shows how increasing the unroll factor on a loop increases throughput until another bottleneck is encountered. This example is constructed to run up against global memory bandwidth constraints.
 
-For this example, let us consider the Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA. The memory bandwidth of this FPGA board is about 6 GB/second. The tutorial design will likely run at around 300 MHz when targeting this BSP. In this design, the FPGA design processes a new iteration every cycle in a pipeline-parallel fashion. The theoretical computation limit for one adder is:
+For this example, let us consider the Terasic's DE10-Agilex Development Board. 
+The tutorial design will likely run at around 600 MHz when targeting this BSP. 
+The memory bandwidth of this FPGA board is about 21 GB/second per DDR bank.
+It is reasonable to assume that one can reach about 90% of the peak theoretical throughput value (21 * 90% = 18.9 GB/s) 
+In this design, the FPGA design processes a new iteration every cycle in a pipeline-parallel fashion. 
+The theoretical computation limit for one adder is:
 
-- **GFlops**: 300 MHz \* 1 float = 0.3 GFlops
-- **Computation Bandwidth**: 300 MHz \* 1 float * 4 Bytes   = 1.2 GB/s
+- **GFlops**: 600 MHz \* 1 float = 0.6 GFlops
+- **Computation Bandwidth**: 600 MHz \* 1 float * 4 Bytes   = 2.4 GB/s
 
 You repeat this back-of-the-envelope calculation for different unroll factors:
 
 |Unroll Factor  | GFlops (GB/s) | Computation Bandwidth (GB/s)
 |:---           |:---           |:---
-|1              | 0.3           | 1.2
-|2              | 0.6           | 2.4
-|4              | 1.2           | 4.8
-|8              | 2.4           | 9.6
-|16             | 4.8           | 19.2
+|1              | 0.6           | 2.4
+|2              | 1.2           | 4.8
+|4              | 2.4           | 9.6
+|8              | 4.8           | 19.2
+|16             | 9.6           | 38.4
 
-On an Intel® Programmable Acceleration Card with Intel Arria® 10 GX FPGA, you can reasonably predict that the program will become memory-bandwidth limited when the unroll factor grows from 4 to 8. If you have access to such an FPGA board, check this prediction by running the design following the instructions below (providing the appropriate BSP when running `cmake`).
+On a Terasic's DE10-Agilex Development Board, one can reasonably predict that the program will become memory-bandwidth limited when the unroll factor grows between 4 and 8. If you have access to such an FPGA board, check this prediction by running the design following the instructions below (providing the appropriate BSP when running `cmake`).
 
 ## Build the `Loop Unroll` Tutorial
 
@@ -267,28 +272,38 @@ You can also check the achieved system f<sub>MAX</sub> to verify the earlier cal
 
 ```
 Input Array Size:  67108864
-UnrollFactor 1 kernel time : 255.749 ms
-Throughput for kernel with UnrollFactor 1: 0.262 GFlops
-UnrollFactor 2 kernel time : 140.285 ms
-Throughput for kernel with UnrollFactor 2: 0.478 GFlops
-UnrollFactor 4 kernel time : 68.296 ms
-Throughput for kernel with UnrollFactor 4: 0.983 GFlops
-UnrollFactor 8 kernel time : 44.567 ms
-Throughput for kernel with UnrollFactor 8: 1.506 GFlops
-UnrollFactor 16 kernel time : 39.175 ms
-Throughput for kernel with UnrollFactor 16: 1.713 GFlops
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+unroll_factor 1 kernel time : 111.944 ms
+Throughput for kernel with unroll_factor 1: 0.599 GFlops
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+unroll_factor 2 kernel time : 56.939 ms
+Throughput for kernel with unroll_factor 2: 1.179 GFlops
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+unroll_factor 4 kernel time : 30.151 ms
+Throughput for kernel with unroll_factor 4: 2.226 GFlops
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+unroll_factor 8 kernel time : 16.637 ms
+Throughput for kernel with unroll_factor 8: 4.034 GFlops
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+unroll_factor 16 kernel time : 14.954 ms
+Throughput for kernel with unroll_factor 16: 4.488 GFlops
 PASSED: The results are correct
+Checking realtive throughput
+UNROLL_FACTOR2 PASSED
+UNROLL_FACTOR4 PASSED
+UNROLL_FACTOR8 PASSED
+UNROLL_FACTOR16 PASSED
 ```
 
-The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
+The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on Terasic's DE10-Agilex Development Board:
 
 Unroll Factor  | Kernel Time (ms) | Throughput (GFlops) | Num of DSPs
 |:---          |:---              |:---                 |:---
-|1             | 242              | 0.277               | 1
-|2             | 127              | 0.528               | 2
-|4             | 63               | 1.065               | 4
-|8             | 46               | 1.459               | 8
-|16            | 44               | 1.525               | 16
+|1             | 111              | 0.599               | 1
+|2             | 56               | 1.179               | 2
+|4             | 30               | 2.226               | 4
+|8             | 16               | 4.034               | 8
+|16            | 14               | 4.488               | 16
 
 Notice that when the unroll factor increases from 1 to 2 and from 2 to 4, the kernel execution time decreases by a factor of two. Correspondingly, the kernel throughput doubles. However, when the unroll factor is increased from 4 to 8 or from 8 to 16, the throughput no longer scales by a factor of two at each step. The design is now bound by memory bandwidth limitations instead of compute unit limitations, even though the hardware is replicated.
 
