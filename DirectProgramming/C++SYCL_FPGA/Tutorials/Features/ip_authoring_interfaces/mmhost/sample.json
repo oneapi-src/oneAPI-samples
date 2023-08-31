@@ -1,7 +1,7 @@
 {
   "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
   "name": "Avalon Memory-Mapped Host Interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/ip_authoring_interfaces"],
   "description": "An Intel® FPGA tutorial demonstrating how to use annotated pointers to customize Avalon memory-mapped host interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/experimental/mmhost",
+      "Tutorials/Features/ip_authoring_interfaces/mmhost",
       "include"
     ],
     "exclude": []
@@ -23,9 +23,9 @@
         "id": "fpga_emu_1",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part1_pointers",
+          "mkdir build1",
+          "cd build1",
+          "cmake .. -DTYPE=PART1",
           "make fpga_emu",
           "./mmhost.fpga_emu"
         ]
@@ -34,9 +34,9 @@
         "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part2_single_host",
+          "mkdir build2",
+          "cd build2",
+          "cmake .. -DTYPE=PART2",
           "make fpga_emu",
           "./mmhost.fpga_emu"
         ]
@@ -45,9 +45,9 @@
         "id": "fpga_emu_3",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part3_hosts",
+          "mkdir build3",
+          "cd build3",
+          "cmake .. -DTYPE=PART3",
           "make fpga_emu",
           "./mmhost.fpga_emu"
         ]
@@ -56,9 +56,9 @@
         "id": "fpga_emu_4",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part4_ddr_hosts",
+          "mkdir build4",
+          "cd build4",
+          "cmake .. -DTYPE=PART4",
           "make fpga_emu",
           "./mmhost.fpga_emu"
         ]
@@ -67,9 +67,9 @@
         "id": "report_1",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part_1_pointers",
+          "mkdir build1",
+          "cd build1",
+          "cmake .. -DTYPE=PART1",
           "make report"
         ]
       },
@@ -77,9 +77,9 @@
         "id": "report_2",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part_2_single_host",
+          "mkdir build2",
+          "cd build2",
+          "cmake .. -DTYPE=PART2",
           "make report"
         ]
       },
@@ -87,9 +87,9 @@
         "id": "report_3",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part_3_hosts",
+          "mkdir build3",
+          "cd build3",
+          "cmake .. -DTYPE=PART3",
           "make report"
         ]
       },
@@ -97,9 +97,9 @@
         "id": "report_4",
         "steps": [
           "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part_4_ddr_hosts",
+          "mkdir build4",
+          "cd build4",
+          "cmake .. -DTYPE=PART4",
           "make report"
         ]
       }
@@ -110,9 +110,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part1_pointers",
+          "mkdir build1",
+          "cd build1",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART1",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
@@ -122,9 +122,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part2_single_host",
+          "mkdir build2",
+          "cd build2",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART2",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
@@ -134,9 +134,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part3_hosts",
+          "mkdir build3",
+          "cd build3",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART3",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
@@ -146,9 +146,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part4_ddr_hosts",
+          "mkdir build4",
+          "cd build4",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART4",
           "nmake fpga_emu",
           "mmhost.fpga_emu.exe"
         ]
@@ -158,9 +158,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part1_pointers",
+          "mkdir build1",
+          "cd build1",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART1",
           "nmake report"
         ]
       },
@@ -169,9 +169,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part2_single_host",
+          "mkdir build2",
+          "cd build2",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART2",
           "nmake report"
         ]
       },
@@ -180,9 +180,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part3_hosts",
+          "mkdir build3",
+          "cd build3",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART3",
           "nmake report"
         ]
       }, 
@@ -191,9 +191,9 @@
         "steps": [
           "icpx --version",
           "cd ../../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/mmhost/part4_ddr_hosts",
+          "mkdir build4",
+          "cd build4",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART4",
           "nmake report"
         ]
       }

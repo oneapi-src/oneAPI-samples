@@ -54,6 +54,7 @@ When designing an IP component for an FPGA system, that system will often dictat
 The compiler will infer Avalon memory-mapped host interfaces for a design when the kernel includes one or more pointer arguments. As with scalar kernel arguments, pointer arguments can be passed to the kernel via a `conduit` interface or the component's control/status register (CSR). By default, pointer arguments will be passed to the IP component through the CSR. For more details on kernel arguments, see `<Temporary: https://github.com/intel-sandbox/wenkaixu.ip-auth-demos/tree/main/mm-host>`. By default, the Intel® oneAPI DPC++/C++ Compiler will produce a kernel with a single Avalon memory-mapped host interface that will be shared amongst those pointers. 
 
 #### Example 1: A kernel with multiple pointer arguments
+(Code can be found under `part1_pointers`)
 ```c++
 struct PointerIP {
   // Pointer kernel arguments will be passed through the component's CSR. They
@@ -78,6 +79,7 @@ struct PointerIP {
 The default behaviour of a pointer argument can be overridden by declaring an `annotated_arg` kernel argument.
 
 #### Example 2: A kernel with a single customized Avalon memory-mapped host interface
+(Code can be found under `part2_single_host`).
 ```c++
 struct SingleMMIP {
   // This kernel has 3 annotated pointers, but since they have no properties
@@ -121,6 +123,7 @@ These parameters can be used to improve the performance of `Example 1` by ensuri
 ![](assets/dedicated_avhost.svg)
 
 #### Example 3: A kernel with dedicated Avalon memory-mapped host interfaces
+(Code can be found under `part3_hosts`).
 ```c++
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
@@ -176,6 +179,7 @@ If the input and output vectors are too large for on-chip memory, larger off-chi
 The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface.
 
 #### Example 4: A kernel that interfaces with two off-chip memories
+(Code can be found under `part4_ddr_hosts`).
 ```c++
 struct DDRIP {
   using ParamsBl1 = decltype(sycl::ext::oneapi::experimental::properties{
@@ -243,7 +247,7 @@ This design uses CMake to generate a build script for GNU/make.
    - `2` for `part2_single_host`
    - `3` for `part3_hosts`
    - `4` for `part4_ddr_hosts`
-
+   
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=PART<N>
@@ -262,7 +266,7 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       make report
       ```
-      The report resides at `mmhost_report.prj/reports/report.html`.
+      The report resides at `mmhost.report.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
@@ -274,13 +278,20 @@ This design uses CMake to generate a build script for GNU/make.
 
 2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
-   mkdir build
-   cd build
-   cmake -G "NMake Makefiles" ..
+   mkdir build<N>
+   cd build<N>
+   cmake -G "NMake Makefiles" .. -DTYPE=PART<N>
    ```
+
+   where `<N>` is: 
+   - `1` for `part1_pointers`
+   - `2` for `part2_single_host`
+   - `3` for `part3_hosts`
+   - `4` for `part4_ddr_hosts`
+
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=PART<N>
    >  ```
 3. Compile the design using `nmake`.
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -295,7 +306,7 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       nmake report
       ```
-      The report resides at `mmhost_report.a.prj/reports/report.html`.
+      The report resides at `mmhost.report.a.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
@@ -303,10 +314,10 @@ This design uses CMake to generate a build script for GNU/make.
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
-Locate `mmhost_report_di_inst.v` in the `build/mmhost_report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
+Locate `mmhost_report_di_inst.v` in the `build/mmhost.report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
 ## Read the Reports
-Locate `report.html` in the `build/mmhost_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report under its own build directory. You can compare multiple reports by opening them in multiple browser windows/tabs.
+Locate `report.html` in the `build/mmhost.report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report under its own build directory. You can compare multiple reports by opening them in multiple browser windows/tabs.
 
 Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
@@ -314,7 +325,7 @@ Navigate to the Loop Throughput section under Throughput Analysis: the `MultiMMI
 
 Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
 
-   > **Note**: you will need to create separate build directories and build the reports for each part
+   > **Note**: You will need to create separate build directories and build the reports for each part
 
 
 ## Run the `mmhost` Sample
