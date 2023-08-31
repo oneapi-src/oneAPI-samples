@@ -1,15 +1,43 @@
+# Direct CMake to use icpx rather than the default C++ compiler/linker on Linux
+# and icx-cl on Windows
+if(UNIX)
+    set(CMAKE_CXX_COMPILER icpx)
+else() # Windows
+    include (CMakeForceCompiler)
+    CMAKE_FORCE_CXX_COMPILER (icx-cl IntelDPCPP)
+    include (Platform/Windows-Clang)
+endif()
+
+cmake_minimum_required (VERSION 3.7.2)
+
+project(component_interfaces CXX)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-set(SOURCE_FILES mmhost.cpp)
+if(${TYPE} MATCHES PART1)
+    set(SOURCE_FILES part1_pointers/src/mmhost.cpp)
+elseif(${TYPE} MATCHES PART2)
+    set(SOURCE_FILES part2_single_host/src/mmhost.cpp)
+elseif(${TYPE} MATCHES PART3)
+    set(SOURCE_FILES part3_hosts/src/mmhost.cpp)
+elseif(${TYPE} MATCHES PART4)
+    set(SOURCE_FILES part4_ddr_hosts/src/mmhost.cpp)
+else()
+    message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
+Valid types -DTYPE=[ PART1 / PART2 / PART3 / PART4 ]")
+endif()
 set(TARGET_NAME mmhost)
 
-# FPGA board selection
+# Use cmake -DFPGA_DEVICE=<device_family> to choose a
+# different device family (E.g. "Arria10" or "Stratix10") or a
+# specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
-    message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA family: ${FPGA_DEVICE} \
-                    \nPlease refer to the README for information on target selection.")
 else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
@@ -27,13 +55,6 @@ if((IS_BSP STREQUAL "1"))
     message(FATAL_ERROR "ERROR: This tutorial is only supported in the IP Authoring flow and therefore does not support BSPs as a target.")
 endif()
 
-# This is for finding the install path to the necessary include files
-if(DEFINED ENV{INTELFPGAOCLSDKROOT})
-   set(SDK_ROOT_PATH $ENV{INTELFPGAOCLSDKROOT})
-else()
-   message(FATAL_ERROR "The INTELFPGAOCLSDKROOT environment variable must be defined for this tutorial to compile.")
-endif()
-
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
@@ -43,12 +64,14 @@ set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ../../../../../../include;${USER_INCLUDE_PATHS})
+set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 
 ###############################################################################
 ### no changes after here
 ###############################################################################
 
+# Print the sources being used for the compiles
+message(STATUS "Sources file ${SOURCE_FILES}")
 # Print the device being used for the compiles
 message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 
@@ -116,7 +139,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${EMULATOR_OUTPU
 ###############################################################################
 ### FPGA Simulator
 ###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILES})
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${SIMULATOR_COMPILE_FLAGS})
 target_link_libraries(${SIMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -126,7 +149,7 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${SIMULATOR_OUT
 ###############################################################################
 ### Generate Report
 ###############################################################################
-add_executable(${REPORT_TARGET} ${SOURCE_FILES})
+add_executable(${REPORT_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
 target_compile_options(${REPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${REPORT_TARGET} PRIVATE ${REPORT_COMPILE_FLAGS})
 
@@ -172,7 +195,7 @@ function(getCompileCommands common_compile_flags special_compile_flags common_li
         # Get the relative path to the source and object files
         file(RELATIVE_PATH CURRENT_SOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_LIST_DIR}/${source})
         file(RELATIVE_PATH OBJ_FILE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/${source}.${OBJ_EXTENSION})
-        
+
         # Creating a string that contains the compile command
         # Start by the compiler invocation
         set(COMPILE_COMMAND "${COMPILE_COMMAND}${CMAKE_CXX_COMPILER}")

@@ -230,30 +230,20 @@ This design uses CMake to generate a build script for GNU/make.
 
 1. Change to the sample directory.
 
-2. For different parts of this tutorial, navigate to the appropriate sub-folder.
-   ```
-   cd <partX_XXX>
-   ```
-   where `<partX_XXX>` is:
-   - `part1_pointers`
-   - `part2_single_host`
-   - `part3_hosts`
-   - `part4_ddr_hosts`
-
-3. Configure the build system for the Agilex® 7 device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DTYPE=<PART1/PART2/PART3/PART4>
    ```
 
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<PART1/PART2/PART3/PART4>
    >  ```
 
-4. Compile the design using `make`.
+3. Compile the design using `make`.
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
       ```
       make fpga_emu
@@ -262,11 +252,11 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       make fpga_sim
       ```
-   3. Generate HTML performance report.
+   3. Generate HTML performance report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
       ```
       make report
       ```
-      The report resides at `xxx_report.prj/reports/report.html`.
+      The report resides at `mmhost_report.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
@@ -275,17 +265,8 @@ This design uses CMake to generate a build script for GNU/make.
 ### On Windows*
 
 1. Change to the sample directory.
-2. For different parts of this tutorial, navigate to the appropriate sub-folder.
-   ```
-   cd <partX_XXX>
-   ```
-   where `<partX_XXX>` is:
-   - `part1_pointers`
-   - `part2_single_host`
-   - `part3_hosts`
-   - `part4_ddr_hosts`
 
-3. Configure the build system for the Agilex® 7 device family, which is the default.
+2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
@@ -304,11 +285,11 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       nmake fpga_sim
       ```
-   3. Generate HTML performance report.
+   3. Generate HTML performance report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
       ```
       nmake report
       ```
-      The report resides at `xxx_report.a.prj/reports/report.html`.
+      The report resides at `mmhost_report.a.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
@@ -316,16 +297,18 @@ This design uses CMake to generate a build script for GNU/make.
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
-Locate `<source_file>_di_inst.v` in the `build/<source_file>.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
+Locate `<source_file>_di_inst.v` in the `build/mmhost_report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
-## Examining the Reports
-Locate `report.html` in the `build/<source_file>.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report. You can compare multiple reports by opening them in multiple browser windows/tabs.
+## Read the Reports
+Locate `report.html` in the `build/mmhost_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report. You can compare multiple reports by opening them in multiple browser windows/tabs.
 
 Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
 Navigate to the Loop Throughput section under Throughput Analysis: the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 
 Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
+
+   > **Note**: you will need to create separate build directories for each part
 
 
 ## Run the `mmhost` Sample
