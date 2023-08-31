@@ -383,6 +383,7 @@ struct Fetch {
 
   Fetch(ac_complex<T> *src_, int mangle_) : src(src_), mangle(mangle_) {}
 
+  [[intel::kernel_args_restrict]]  // NO-FORMAT: Attribute
   void operator()() const {
     constexpr int kN = (1 << logn);
     constexpr int kPoints = (1 << log_points);
@@ -499,23 +500,27 @@ struct FFT {
  */
 template <int logn, size_t log_points, typename PipeIn, typename T>
 struct Transpose {
-#if not defined IS_BSP
-  sycl::ext::oneapi::experimental::annotated_arg<
-      ac_complex<T> *,
-      decltype(sycl::ext::oneapi::experimental::properties{
-          sycl::ext::oneapi::experimental::buffer_location<1>,
-          sycl::ext::oneapi::experimental::dwidth<512>,
-          sycl::ext::oneapi::experimental::latency<0>})>
-      dest;
-
-#else
+#if defined IS_BSP
   ac_complex<T> *dest;
+#else
+  // Specify the memory interface when in the IP Authoring flow
+  // The buffer location is set to 1 (identical as the malloc performed in
+  // fft2d_demo.cpp)
+  // The data width is equal to width of the DDR burst performed by the function
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ac_complex<T> *, decltype(sycl::ext::oneapi::experimental::properties{
+                           sycl::ext::oneapi::experimental::buffer_location<1>,
+                           sycl::ext::oneapi::experimental::dwidth<
+                               sizeof(ac_complex<T>) * (1 << log_points)>,
+                           sycl::ext::oneapi::experimental::latency<0>})>
+      dest;
 #endif
 
   int mangle;
 
   Transpose(ac_complex<T> *dest_, int mangle_) : dest(dest_), mangle(mangle_) {}
 
+  [[intel::kernel_args_restrict]]  // NO-FORMAT: Attribute
   void operator()() const {
     constexpr int kN = (1 << logn);
     constexpr int kWorkGroupSize = kN;
