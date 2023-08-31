@@ -1,9 +1,10 @@
 //  Copyright (c) 2022 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
+#include <stdlib.h>
+
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-#include <stdlib.h>
 
 // define buffer locations so the IP can have two unique Avalon memory-mapped
 // host interfaces
