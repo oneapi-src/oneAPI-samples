@@ -1,5 +1,5 @@
 # `FPGA Compile` Sample
-
+  
 This sample is an FPGA tutorial that demonstrates how to compile SYCL*-compliant code for FPGAs through a simple vector addition example. If you are new to SYCL* for FPGAs, start with this sample.
 
 | Area                 | Description
