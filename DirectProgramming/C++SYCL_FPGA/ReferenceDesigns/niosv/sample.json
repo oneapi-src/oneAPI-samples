@@ -9,7 +9,7 @@
     "builder": ["cmake"],
     "languages": [{"cpp":{}}],
     "commonFolder": {
-      "base": "../../../../",
+      "base": "../../",
       "include": [
         "README.md",
         "ReferenceDesigns/niosv",
@@ -46,10 +46,10 @@
           "id": "fpga_emu",
           "steps": [
             "icx-cl --version",
-            "cd ../../../..",
+            "cd ../../",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/niosv/kernels/simple_dma",
+            "cmake -G \"NMake Makefiles\" ./ReferenceDesigns/niosv/kernels/simple_dma",
             "nmake fpga_emu",
             "simple_dma.fpga_emu.exe"
           ]
@@ -58,10 +58,10 @@
           "id": "report",
           "steps": [
             "icx-cl --version",
-            "cd ../../../..",
+            "cd ../../",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/niosv/kernels/simple_dma",
+            "cmake -G \"NMake Makefiles\" ./ReferenceDesigns/niosv/kernels/simple_dma",
             "nmake report"
           ]
         }
