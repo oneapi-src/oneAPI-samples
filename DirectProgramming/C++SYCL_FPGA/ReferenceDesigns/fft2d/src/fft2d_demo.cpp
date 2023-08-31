@@ -234,11 +234,11 @@ void TestFFT(bool mangle, bool inverse) {
 
       // Start a 1D FFT on the matrix rows/columns
       auto fetch_event = q.single_task<class FetchKernel>(
-          Fetch<kLogN, kLogParallelism, FetchToFFT, float>{to_read, mangle}(););
+          Fetch<kLogN, kLogParallelism, FetchToFFT, float>{to_read, mangle});
 
       q.single_task<class FFTKernel>(
           FFT<kLogN, kLogParallelism, FetchToFFT, FFTToTranspose, float>{
-              inverse}(););
+              inverse});
 
       auto transpose_event = q.single_task<class TransposeKernel>(
           Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
