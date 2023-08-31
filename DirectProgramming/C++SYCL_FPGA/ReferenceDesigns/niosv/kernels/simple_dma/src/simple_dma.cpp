@@ -3,6 +3,7 @@
 
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <stdlib.h>
 
 // define buffer locations so the IP can have two unique Avalon memory-mapped
 // host interfaces
@@ -98,12 +99,13 @@ int main() {
     std::cerr << "failed to allocate pointer src: make sure that awidth is "
                  "sufficient for the allocation size."
               << std::endl;
-    return;
+    return EXIT_FAILURE;
   }
   if (nullptr == dest) {
     std::cerr << "failed to allocate pointer dest: make sure that awidth is "
                  "sufficient for the allocation size."
               << std::endl;
+    return EXIT_FAILURE;
   }
 
   // pre-load
@@ -130,4 +132,6 @@ int main() {
   std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
   sycl::free(src, q);
   sycl::free(dest, q);
+
+  return EXIT_SUCCESS;
 }
