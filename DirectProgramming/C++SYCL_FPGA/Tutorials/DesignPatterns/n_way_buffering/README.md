@@ -290,22 +290,20 @@ After each kernel is launched, the host-side operations (that occur *after* the 
 
 ### Example Output on FPGA Device
 
-> **Note**: A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 340 MHz on the Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA. The table shows the results.
+> **Note**: A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 602 MHz on Terasic’s DE10-Agilex Development Board. The table shows the results.
 >
 >Configuration                     | Overall Execution Time (ms) | Total Kernel Execution time (ms)
 >|:--                              |:--                          |:--
->|1-way buffering, single-threaded | 64401                       | 15187
->|1-way buffering, multi-threaded  | 53540                       | 15187
->|2-way buffering, multi-threaded  | 27281                       | 15187
->|5-way buffering, multi-threaded  | 16284                       | 15188
+>|1-way buffering, single-threaded | 14157                       | 8312
+>|1-way buffering, multi-threaded  | 9698                        | 8308
+>|2-way buffering, multi-threaded  | 8608                        | 8312
+>|5-way buffering, multi-threaded  | 8530                        | 8309
 >
 >In all runs, the total kernel execution time is similar as expected. In the first three configurations, the overall execution time exceeds the total kernel execution time, implying there is downtime between kernel executions. However, as we switch from single-threaded to multi-threaded host operations and increase the number of buffer sets used, the overall execution time approaches the kernel execution time.
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_ec00000)
-
-
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Executing kernel 100 times in each round.
 
 *** Beginning execution, 1-way buffering, single-threaded host operations
@@ -320,9 +318,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 65915 ms
-Total kernel-only execution time = 17852 ms
-Throughput = 15.907802 MB/s
+Overall execution time = 14157 ms
+Total kernel-only execution time = 8312 ms
+Throughput = 74.063652 MB/s
 
 
 *** Beginning execution, 1-way buffering, multi-threaded host operations.
@@ -337,12 +335,12 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 51814 ms
-Total kernel-only execution time = 17852 ms
-Throughput = 20.237082 MB/s
+Overall execution time = 9698 ms
+Total kernel-only execution time = 8308 ms
+Throughput = 108.11652 MB/s
 
 
-*** Beginning execution, 2-way buffering, multi-threaded host operations
+*** Beginning execution, 2-way buffering, multi-threaded host operationss
 Launching kernel #0
 Launching kernel #10
 Launching kernel #20
@@ -354,9 +352,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 26109 ms
-Total kernel-only execution time = 17852 ms
-Throughput = 40.160442 MB/s
+Overall execution time = 8608 ms
+Total kernel-only execution time = 8312 ms
+Throughput = 121.80763 MB/s
 
 
 *** Beginning execution, N=5-way buffering, multi-threaded host operations
@@ -371,9 +369,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time with N-way buffering = 18763 ms
-Total kernel-only execution time with N-way buffering = 17851 ms
-Throughput = 55.884682 MB/s
+Overall execution time with N-way buffering = 8530 ms
+Total kernel-only execution time with N-way buffering = 8309 ms
+Throughput = 122.91462 MB/s
 
 
 Verification PASSED

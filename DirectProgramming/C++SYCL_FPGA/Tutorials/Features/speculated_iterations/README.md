@@ -204,13 +204,13 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 
 Locate `report.html` in the `speculated_iterations_report.prj/reports/` directory.
 
-In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on the Intel® PAC with Intel Arria® 10 GX FPGA.
+In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on Agilex7.
 
-- When the number of `speculated iterations` is set to 0, loop II is 27.
-- Setting the `speculated iterations` to 27 yielded an II of 1.
-- Setting the `speculated iterations` to an intermediate value of 10 results in an II of 3.
+- When the number of `speculated iterations` is set to 0, loop II is 39.
+- Setting the `speculated iterations` to 50 yielded an II of 1.
+- Setting the `speculated iterations` to an intermediate value of 10 results in an II of 4.
 
-These results make sense when you recall that the loop exit computation has a latency of 27 cycles (suggested by looking at loop II with 0 speculation). With no speculation, a new iteration can only be launched every 27 cycles. Increasing the speculation to 27 enables a new iteration to launch every cycle. Reducing the speculation to 10 results in an II of 3 because 10 speculated iterations multiplied by 3 cycles between iterations leave 30 cycles in which to compute the exit condition, sufficient to cover the 27-cycle exit condition.
+These results make sense when you recall that the loop exit computation has a latency of 39 cycles (suggested by looking at loop II with 0 speculation). With no speculation, a new iteration can only be launched every 39 cycles. Increasing the speculation to 50 enables a new iteration to launch every cycle. Reducing the speculation to 10 results in an II of 4 because 10 speculated iterations multiplied by 4 cycles between iterations leave 40 cycles in which to compute the exit condition, sufficient to cover the 39-cycle exit condition.
 
 ## Run the `Speculated Iterations` Sample
 
@@ -249,12 +249,13 @@ These results make sense when you recall that the loop exit computation has a la
 ## Example of Output
 
 ```
-Speculated Iterations: 0 -- kernel time: 8564.98 ms
-Performance for kernel with 0 speculated iterations: 11675 MFLOPs
-Speculated Iterations: 10 -- kernel time: 952 ms
-Performance for kernel with 10 speculated iterations: 105076 MFLOPs
-Speculated Iterations: 27 -- kernel time: 317 ms
-Performance for kernel with 27 speculated iterations: 315181 MFLOPs
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Speculated Iterations: 0 -- kernel time: 6333.5 ms
+Performance for kernel with 0 speculated iterations: 15789 MFLOPs
+Speculated Iterations: 10 -- kernel time: 667 ms
+Performance for kernel with 10 speculated iterations: 149973 MFLOPs
+Speculated Iterations: 50 -- kernel time: 167 ms
+Performance for kernel with 50 speculated iterations: 599893 MFLOPs
 PASSED: The results are correct
 ```
 

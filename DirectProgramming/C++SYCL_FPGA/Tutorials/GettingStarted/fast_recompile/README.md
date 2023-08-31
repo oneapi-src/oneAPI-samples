@@ -13,7 +13,7 @@ This sample is an FPGA tutorial that demonstrates how to separate program compil
 
 Intel® oneAPI DPC++/C++ Compiler only supports ahead-of-time (AoT) compilation for FPGA, which means that an FPGA device image is generated at compile time. The FPGA device image generation process can take hours to complete. Suppose you make a change that is exclusive to the host code. In that case, it is more efficient to recompile your host code only, re-using the existing FPGA device image and circumventing the time-consuming device compilation process.
 
-When targeting an FPGA family/part, no FPGA executable is generated. So this sample is really meant to be used when targeting a device with a BSP (for example, the Intel® PAC with Intel Arria® 10 GX FPGA) where an FPGA executable would be produced.
+When targeting an FPGA family/part, no FPGA executable is generated. So this sample is really meant to be used when targeting a device with a BSP where an FPGA executable would be produced.
 
 >**Note**: Throughout the sample, the compiler is referred to by the Linux* invocation: `icpx`. On Windows*, use `icx-cl` instead.
 

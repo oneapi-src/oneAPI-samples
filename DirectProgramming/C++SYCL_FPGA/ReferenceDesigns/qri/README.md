@@ -275,27 +275,15 @@ You can perform the QR-based inversion of the set of matrices repeatedly, as sho
 
 ## Example Output
 
-Example output when running the emulator on 8 matrices (each consisting of 32 x 32 real numbers).
+Example output when running on **Terasic’s DE10-Agilex Development Board** for 8 matrices (each consisting of 32 x 32 real numbers).
 
 ```
-Device name: Intel(R) FPGA Emulation Device
-Generating 8 random real matrices of size 32x32
-Running QR inversion of 8 matrices 16 times
-   Total duration:   0.50876 s
-Throughput: 0.251592k matrices/s
-Verifying results...
-PASSED
-```
-
-Example output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for 8 matrices (each consisting of 32 x 32 real numbers).
-
-```
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Generating 8 random real matrices of size 32x32 
 Running QR inversion of 8 matrices 6553600 times
-   Total duration:   267.352 s
-Throughput: 196.104k matrices/s
-Verifying results...
+   Total duration:   170.299 s
+Throughput: 307.864k matrices/s
+Verifying results... 
 PASSED
 ```
 

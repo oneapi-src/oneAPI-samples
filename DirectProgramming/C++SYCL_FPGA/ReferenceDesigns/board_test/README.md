@@ -243,7 +243,7 @@ The tests listed above check the following interfaces in a platform:
 
 ## Example Output
 
-Running on FPGA device (Intel Stratix 10 SX platform). Performance results are based on testing as of August 14, 2023.
+Running on FPGA device (Terasic’s DE10-Agilex Development Board). Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -266,21 +266,21 @@ The tests are:
 Note: Kernel Clock Frequency is run along with all tests except 1 (Host Speed and Host Read Write test)
 
 Running all tests 
-Running on device: pac_s10_usm : Intel PAC Platform (pac_f300000)
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 
-clGetDeviceInfo CL_DEVICE_GLOBAL_MEM_SIZE = 34359738368
-clGetDeviceInfo CL_DEVICE_MAX_MEM_ALLOC_SIZE = 34359738368
-Device buffer size available for allocation = 34359738368 bytes
+clGetDeviceInfo CL_DEVICE_GLOBAL_MEM_SIZE = 34359737344
+clGetDeviceInfo CL_DEVICE_MAX_MEM_ALLOC_SIZE = 34359737344
+Device buffer size available for allocation = 34359737344 bytes
 
 *****************************************************************
 *********************** Host Speed Test *************************
 *****************************************************************
 
-Size of buffer created = 34359738368 bytes
-Writing 32768 MB to device global memory ... 5467.71 MB/s
-Reading 32768 MB from device global memory ... 5418.46 MB/s
+Size of buffer created = 34359737344 bytes
+Writing 32767 MB to device global memory ... 8776.42 MB/s
+Reading 32767 MB from device global memory ... 9743.93 MB/s
 Verifying data ...
-Successfully wrote and readback 32768 MB buffer
+Successfully wrote and readback 32767 MB buffer
 
 Transferring 8192 KBs in 256 32 KB blocks ...
 Transferring 8192 KBs in 128 64 KB blocks ...
@@ -295,34 +295,34 @@ Transferring 8192 KBs in 1 8192 KB blocks ...
 Writing 8192 KBs with block size (in bytes) below:
 
 Block_Size Avg Max Min End-End (MB/s)
-   32768 728.06 957.68 450.37 612.81 
-   65536 1206.82 1545.84 742.51 1039.50 
-  131072 1904.39 2219.85 1218.16 1690.47 
-  262144 2641.81 3139.88 2090.79 2451.81 
-  524288 3402.66 3630.32 3048.84 3232.47 
- 1048576 3741.77 4034.06 3270.88 3635.78 
- 2097152 3856.43 4146.10 3397.37 3807.60 
- 4194304 4297.57 5006.66 3764.43 4276.62 
- 8388608 4699.70 4699.70 4699.70 4699.70 
+   32768 428.07 435.44 382.82 395.97 
+   65536 783.64 793.81 665.47 730.92 
+  131072 1325.34 1343.33 1165.79 1250.47 
+  262144 1984.22 2016.88 1776.27 1903.43 
+  524288 3507.84 3588.65 3165.04 3385.12 
+ 1048576 4845.12 4982.59 4533.71 4730.02 
+ 2097152 5741.51 5758.96 5719.79 5656.95 
+ 4194304 6695.96 6869.04 6531.39 6652.06 
+ 8388608 7585.54 7585.54 7585.54 7585.54 
 
 Reading 8192 KBs with block size (in bytes) below:
 
 Block_Size Avg Max Min End-End (MB/s)
-   32768 1284.84 1416.59 862.47 853.33 
-   65536 2105.26 2245.54 780.54 1612.20 
-  131072 2801.30 2989.72 1904.53 2424.31 
-  262144 3451.71 3592.88 2760.14 3117.73 
-  524288 3857.30 3969.04 3550.99 3651.80 
- 1048576 4043.79 4099.79 3841.44 3926.42 
- 2097152 3864.89 3953.67 3773.29 3835.53 
- 4194304 4551.54 4842.46 4293.59 4532.24 
- 8388608 4856.18 4856.18 4856.18 4856.18 
+   32768 477.89 492.37 430.08 436.84 
+   65536 869.03 896.61 814.20 799.03 
+  131072 1464.26 1504.16 1384.23 1363.57 
+  262144 2201.40 2237.72 2136.42 2090.72 
+  524288 3869.46 3966.81 3728.03 3697.54 
+ 1048576 5318.21 5457.59 5197.05 5171.01 
+ 2097152 6325.13 6432.15 6175.55 6217.27 
+ 4194304 7577.67 7609.52 7546.07 7526.88 
+ 8388608 8441.18 8441.18 8441.18 8441.18 
 
-Host write top speed = 5006.66 MB/s
-Host read top speed = 4856.18 MB/s
+Host write top speed = 7585.54 MB/s
+Host read top speed = 8441.18 MB/s
 
 
-HOST-TO-MEMORY BANDWIDTH = 4931 MB/s
+HOST-TO-MEMORY BANDWIDTH = 8013 MB/s
 
 
 *****************************************************************
@@ -330,7 +330,13 @@ HOST-TO-MEMORY BANDWIDTH = 4931 MB/s
 *****************************************************************
 
 --- Running host read write test with device offset 0
+** WARNING: [aclde10_agilex0] NOT using DMA to transfer 1024 bytes from host to device because of lack of alignment
+**                 host ptr (0x1688a3f5) and/or dev offset (0x400) is not aligned to 4 bytes
 --- Running host read write test with device offset 3
+** WARNING: [aclde10_agilex0] NOT using DMA to transfer 1024 bytes from host to device because of lack of alignment
+**                 host ptr (0x1688a3f5) and/or dev offset (0x403) is not aligned to 4 bytes
+** WARNING: [aclde10_agilex0] NOT using DMA to transfer 1024 bytes from device to host because of lack of alignment
+**                 host ptr (0x16893cb8) and/or dev offset (0x403) is not aligned to 4 bytes
 
 HOST READ-WRITE TEST PASSED!
 
@@ -338,8 +344,8 @@ HOST READ-WRITE TEST PASSED!
 *******************  Kernel Clock Frequency Test  ***************
 *****************************************************************
 
-Measured Frequency    =   357.478 MHz 
-Quartus Compiled Frequency  =   358 MHz 
+Measured Frequency    =   598.905 MHz 
+Quartus Compiled Frequency  =   600 MHz 
 
 Measured Clock frequency is within 2 percent of Quartus compiled frequency. 
 
@@ -359,16 +365,16 @@ KERNEL_LAUNCH_TEST PASSED
 ********************  Kernel Latency  **************************
 *****************************************************************
 
-Processed 10000 kernels in 245.4532 ms
-Single kernel round trip time = 24.5453 us
-Throughput = 40.7410 kernels/ms
+Processed 10000 kernels in 217.0312 ms
+Single kernel round trip time = 21.7031 us
+Throughput = 46.0763 kernels/ms
 Kernel execution is complete
 
 *****************************************************************
 *************  Kernel-to-Memory Read Write Test  ***************
 *****************************************************************
 
-Maximum device global memory allocation size is 34359738368 bytes 
+Maximum device global memory allocation size is 34359737344 bytes 
 Finished host memory allocation for input and output data
 Creating device buffer
 Finished writing to device buffers 
@@ -398,40 +404,19 @@ Launching kernel MemReadStream ...
 Launching kernel MemReadWriteStream ... 
 
 Summarizing bandwidth in MB/s/bank for banks 1 to 8
- 16115.8  16130  16116.6  16135.7  16115.7  16130  16116.2  16115.6  MemWriteStream
- 17339.4  17339.4  17339.4  17339.6  17339.2  17339.1  17339.4  17339.3  MemReadStream
- 16080.5  16082.8  16080  16084.2  16080.2  16082.8  16079.7  16079.9  MemReadWriteStream
+ 19307.6  19312.5  19309.3  19309.4  19309.2  19309.4  19311.3  19309.2  MemWriteStream
+ 19337.7  19339.8  19337.7  19341.4  19340.3  19338.3  19337.7  19339.3  MemReadStream
+ 17657.3  17657.1  17657.5  17657.4  17656.7  17657.7  17657.6  17657.5  MemReadWriteStream
 
-KERNEL-TO-MEMORY BANDWIDTH = 16514.2 MB/s/bank
+KERNEL-TO-MEMORY BANDWIDTH = 18768.7 MB/s/bank
 
 *****************************************************************
 ***********************  USM Bandwidth  *************************
 *****************************************************************
 
-Iterations: 1
-Data size: 1024 MB
-Data type size: 64 bytes
-Case: Full Duplex
-Average Time: 98856.4 ns	
-Average Throughput: 20.2314 GB/s	
-
-Iterations: 1
-Data size: 1024 MB
-Data type size: 64 bytes
-Case: From Host to Device
-Average Time: 86983.6 ns	
-Average Throughput: 11.4964 GB/s	
-
-Iterations: 1
-Data size: 1024 MB
-Data type size: 64 bytes
-Case: From Device to Host
-Average Time: 84260.1 ns	
-Average Throughput: 11.868 GB/s	
-
+Board does not support USM, skipping this test.
 
 BOARD TEST PASSED
-
 ```
 
 ## License
