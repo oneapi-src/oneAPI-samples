@@ -3,35 +3,35 @@
 
 #include "exception_handler.hpp"
 
-constexpr int kBL1 = 0;
-constexpr int kBL2 = 1;
-constexpr int kBL3 = 2;
+constexpr int kBL1 = 1;
+constexpr int kBL2 = 2;
+constexpr int kBL3 = 3;
 
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  using x_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using XProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL1>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_read});
-  using y_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using YProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_read});
-  using z_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using ZProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL3>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_write});
 
-  sycl::ext::oneapi::experimental::annotated_arg<int *, x_props> x;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, y_props> y;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, z_props> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, XProps> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, YProps> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, ZProps> z;
 
   int size;
 
@@ -70,43 +70,47 @@ int main(void) {
     std::cout << "Elements in vector : " << kN << "\n";
 
     // Host array must share the same buffer location property as defined in the
-    // kernel Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = sycl::malloc_shared<int>(
+    // kernel
+    int *array_a = sycl::malloc_shared<int>(
         kN, q,
         sycl::property_list{
             sycl::ext::intel::experimental::property::usm::buffer_location(
                 kBL1)});
-    auto *array_B = sycl::malloc_shared<int>(
+    int *array_b = sycl::malloc_shared<int>(
         kN, q,
         sycl::property_list{
             sycl::ext::intel::experimental::property::usm::buffer_location(
                 kBL2)});
-    int *array_C = sycl::malloc_shared<int>(
+    int *array_c = sycl::malloc_shared<int>(
         kN, q,
         sycl::property_list{
             sycl::ext::intel::experimental::property::usm::buffer_location(
                 kBL3)});
 
+    assert(array_a);
+    assert(array_b);
+    assert(array_c);
+
     for (int i = 0; i < kN; i++) {
-      array_A[i] = i;
-      array_B[i] = 2 * i;
+      array_a[i] = i;
+      array_b[i] = 2 * i;
     }
 
-    q.single_task(MultiMMIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(MultiMMIP{array_a, array_b, array_c, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3 * i;
-      if (array_C[i] != golden) {
+      if (array_c[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
-                  << " , found: " << array_C[i] << "\n";
+                  << " , found: " << array_c[i] << "\n";
         passed = false;
       }
     }
 
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
-    free(array_A, q);
-    free(array_B, q);
-    free(array_C, q);
+    free(array_a, q);
+    free(array_b, q);
+    free(array_c, q);
 
     return passed ? EXIT_SUCCESS : EXIT_FAILURE;
   } catch (sycl::exception const &e) {

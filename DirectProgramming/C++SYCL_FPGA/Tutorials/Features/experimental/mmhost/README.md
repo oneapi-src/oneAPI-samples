@@ -122,35 +122,35 @@ These parameters can be used to improve the performance of `Example 1` by ensuri
 
 #### Example 3: A kernel with dedicated Avalon memory-mapped host interfaces
 ```c++
-constexpr int kBL1 = 0;
-constexpr int kBL2 = 1;
-constexpr int kBL3 = 2;
+constexpr int kBL1 = 1;
+constexpr int kBL2 = 2;
+constexpr int kBL3 = 3;
 
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
   // resulting in three unique Avalon memory-mapped host interfaces.
-  using x_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using XProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL1>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_read});
-  using y_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using YProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_read});
-  using z_props = decltype(sycl::ext::oneapi::experimental::properties{
+  using ZProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL3>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
       sycl::ext::intel::experimental::read_write_mode_write});
 
-  sycl::ext::oneapi::experimental::annotated_arg<int *, x_props> x;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, y_props> y;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, z_props> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, XProps> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, YProps> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, ZProps> z;
 
   int size;
 
@@ -177,26 +177,26 @@ The available memory bandwidth can be better used by coalescing the 32-bit wide 
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 ```c++
-struct DDR_IP {
-  using paramsBL1 = decltype(sycl::ext::oneapi::experimental::properties{
+struct DDRIP {
+  using ParamsBl1 = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL1>,
       sycl::ext::intel::experimental::maxburst<8>,
       sycl::ext::intel::experimental::dwidth<256>,
-      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::latency<0>});
 
-  using paramsBL2 = decltype(sycl::ext::oneapi::experimental::properties{
+  using ParamsBl2 = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::maxburst<8>,
       sycl::ext::intel::experimental::dwidth<256>,
       sycl::ext::oneapi::experimental::alignment<32>,
-      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::awidth<kAlignment>,
       sycl::ext::intel::experimental::latency<0>});
 
-  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> x;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL1> y;
-  sycl::ext::oneapi::experimental::annotated_arg<int *, paramsBL2> z;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, ParamsBl1> x;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, ParamsBl1> y;
+  sycl::ext::oneapi::experimental::annotated_arg<int *, ParamsBl2> z;
   int size;
 
   void operator()() const {
@@ -233,14 +233,20 @@ This design uses CMake to generate a build script for GNU/make.
 2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
-   mkdir build
-   cd build
-   cmake .. -DTYPE=<PART1/PART2/PART3/PART4>
+   mkdir build<N>
+   cd build<N>
+   cmake .. -DTYPE=PART<N>
    ```
+
+   where `<N>` is: 
+   - `1` for `part1_pointers`
+   - `2` for `part2_single_host`
+   - `3` for `part3_hosts`
+   - `4` for `part4_ddr_hosts`
 
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<PART1/PART2/PART3/PART4>
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=PART<N>
    >  ```
 
 3. Compile the design using `make`.
@@ -297,10 +303,10 @@ This design uses CMake to generate a build script for GNU/make.
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
-Locate `<source_file>_di_inst.v` in the `build/mmhost_report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
+Locate `mmhost_report_di_inst.v` in the `build/mmhost_report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
 ## Read the Reports
-Locate `report.html` in the `build/mmhost_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report. You can compare multiple reports by opening them in multiple browser windows/tabs.
+Locate `report.html` in the `build/mmhost_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report under its own build directory. You can compare multiple reports by opening them in multiple browser windows/tabs.
 
 Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
@@ -308,7 +314,7 @@ Navigate to the Loop Throughput section under Throughput Analysis: the `MultiMMI
 
 Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
 
-   > **Note**: you will need to create separate build directories for each part
+   > **Note**: you will need to create separate build directories and build the reports for each part
 
 
 ## Run the `mmhost` Sample

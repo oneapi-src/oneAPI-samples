@@ -44,31 +44,34 @@ int main(void) {
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
 
-    // Here we may use auto* or int* when declaring the pointer interface
-    auto *array_A = sycl::malloc_shared<int>(kN, q);
-    auto *array_B = sycl::malloc_shared<int>(kN, q);
-    int *array_C = sycl::malloc_shared<int>(kN, q);
+    int *array_a = sycl::malloc_shared<int>(kN, q);
+    int *array_b = sycl::malloc_shared<int>(kN, q);
+    int *array_c = sycl::malloc_shared<int>(kN, q);
+
+    assert(array_a);
+    assert(array_b);
+    assert(array_c);
 
     for (int i = 0; i < kN; i++) {
-      array_A[i] = i;
-      array_B[i] = 2 * i;
+      array_a[i] = i;
+      array_b[i] = 2 * i;
     }
 
-    q.single_task(SingleMMIP{array_A, array_B, array_C, kN}).wait();
+    q.single_task(SingleMMIP{array_a, array_b, array_c, kN}).wait();
     for (int i = 0; i < kN; i++) {
       auto golden = 3 * i;
-      if (array_C[i] != golden) {
+      if (array_c[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
-                  << " , found: " << array_C[i] << "\n";
+                  << " , found: " << array_c[i] << "\n";
         passed = false;
       }
     }
 
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
-    free(array_A, q);
-    free(array_B, q);
-    free(array_C, q);
+    free(array_a, q);
+    free(array_b, q);
+    free(array_c, q);
 
     return passed ? EXIT_SUCCESS : EXIT_FAILURE;
   } catch (sycl::exception const &e) {
