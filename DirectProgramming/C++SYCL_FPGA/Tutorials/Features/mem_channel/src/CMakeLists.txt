@@ -34,9 +34,9 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE}
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING")
-if (FPGA_DEVICE STREQUAL "intel_a10gx_pac:pac_a10")
+if (FPGA_DEVICE MATCHES ".*a10.*")
   string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DTWO_CHANNELS")
-elseif (FPGA_DEVICE STREQUAL "intel_s10sx_pac:pac_s10")
+else ()
   string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DFOUR_CHANNELS")
 endif()
 

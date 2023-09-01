@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
 
   // Here, we start the noop kernel and wait for it to finish.
   // By waiting on the finish we assure that the FPGA has been programmed with
-  // the image and the setting of CSRs SetupPAC will not be undone with by the
+  // the image and the setting of CSRs SetupFPGA will not be undone with by the
   // runtime reprogramming the FPGA.
   std::cout << "Starting and waiting on Noop kernel to ensure "
             << "that the FPGA is programmed \n";
@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
   // Setup CSRs on FPGA (this function is in UDP.hpp)
   // NOTE: this must be done AFTER programming the FPGA, which happens
   // when the kernel is launched (if it is not already programmed)
-  SetupPAC(fpga_mac_adr, fpga_ip_address, fpga_udp_port, fpga_netmask,
+  SetupFPGA(fpga_mac_adr, fpga_ip_address, fpga_udp_port, fpga_netmask,
            host_mac_adr, host_ip_address, host_udp_port);
   std::this_thread::sleep_for(10ms);
 

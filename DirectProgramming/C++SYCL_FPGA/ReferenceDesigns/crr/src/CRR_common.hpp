@@ -54,13 +54,12 @@ constexpr size_t kOpt0 = 2;
 // in parallel in a SIMD fashion (number of CRRS must be >= OUTER_UNROLL). 
 // This is ideally a power of two, but does not have to be. Since 
 // the DRAM bandwidth requirement is low, increasing OUTER_UNROLL 
-// should result in fairly linear speedup. (max: 32 on PAC A10)
-
+// should result in fairly linear speedup.
 // INNER_UNROLL controls the degree of parallelization within
 // the calculation of a single CRR. This must be a power of two. Increasing
 // INNER_UNROLL has a lower area overhead than increasing OUTER_UNROLL;
 // however, there are diminishing returns as INNER_UNROLL is increased with
-// respect to the number of time steps. (max: 128 on PAC A10)
+// respect to the number of time steps.
 
 
 // Data structure for original input data.
