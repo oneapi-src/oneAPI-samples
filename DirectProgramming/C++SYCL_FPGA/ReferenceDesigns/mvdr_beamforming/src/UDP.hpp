@@ -48,8 +48,8 @@ constexpr size_t kUDPDataSize = 4096;                            // bytes
 constexpr size_t kUDPHeaderSize = 2;                             // bytes
 constexpr size_t kUDPTotalSize = kUDPDataSize + kUDPHeaderSize;  // bytes
 
-// setting IP/gateway/netmask to PAC
-void SetupPAC(unsigned long fpga_mac_adr, char *fpga_ip_adr,
+// setting IP/gateway/netmask to the FPGA
+void SetupFPGA(unsigned long fpga_mac_adr, char *fpga_ip_adr,
               unsigned int fpga_udp_port, char *fpga_netmask,
               unsigned long host_mac_adr, char *host_ip_adr,
               unsigned int host_udp_port) {

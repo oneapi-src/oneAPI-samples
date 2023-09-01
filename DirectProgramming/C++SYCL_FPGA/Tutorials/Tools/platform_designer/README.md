@@ -20,7 +20,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 >
 > To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
-> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are supported only by Board Support Packages (BSPs) with USM support (for example the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`). Kernels that use these types of allocations can always be used to generate standalone IPs.
+> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are supported only by Board Support Packages (BSPs) with USM support. Kernels that use these types of allocations can always be used to generate standalone IPs.
 
 ## Prerequisites
 

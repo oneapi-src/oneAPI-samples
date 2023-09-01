@@ -260,32 +260,35 @@ cache has been created.
 ### Example Output for `./read_only_cache_disabled.fpga`
 
 ```
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.003377 seconds
-Kernel throughput: 148.06 MB/s
+Kernel execution time: 0.001677 seconds
+Kernel throughput: 298.184355 MB/s
 ```
 
 ### Example Output for `./read_only_cache_disabled.fpga`
 
 ```
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.001675 seconds
-Kernel throughput with the read-only cache: 298.51 MB/s
+Kernel execution time: 0.000849 seconds
+Kernel throughput with the read-only cache: 589.155069 MB/s
 ```
 
-A test compile of this tutorial design achieved the following results on the
-Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
+A test compile of this tutorial design achieved the following results on Terasic's DE10-Agilex Development Board:
 
 |Configuration    | Execution Time (ms) | Throughput (MB/s)
 |:---             |:---                 |:---
-|Without caching  | 3.377               | 148.06
-|With caching     | 1.675               | 298.51
+|Without caching  | 1.677               | 298.18
+|With caching     | 0.849               | 589.15
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (for example, non-contiguous), enabling the read-only cache and sizing it correctly may allow

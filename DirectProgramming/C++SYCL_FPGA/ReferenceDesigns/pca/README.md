@@ -67,7 +67,6 @@ Performance results are based on testing as of June 1st, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | 7.7k matrices/s for matrices of size 8 features * 4176 samples
 | Terasic DE10-Agilex Development Board             | 16k matrices/s for matrices of size 8 features * 4176 samples
 
 ## Key Implementation Details
@@ -454,21 +453,6 @@ Additionally, the `cmake` build system can be configured using the following par
    ```
 
 ## Example Output
-
-Example Output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA**.
-
-```
-Running on device: pac_a10 : Intel PAC Platform (pac_f300000)
-Reading the input data from file.
-Features count: 8
-Samples count: 4176
-Running Principal Component analysis of 1 matrix 4096 times
-Using device allocations
-   Total duration:   0.531844 s
-Throughput: 7.70151k matrices/s
-Verifying results...
-All the tests passed.
-```
 
 Example Output when running on the **Terasic DE10-Agilex Development Board**.
 

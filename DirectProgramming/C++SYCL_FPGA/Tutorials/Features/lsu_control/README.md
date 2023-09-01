@@ -322,7 +322,7 @@ PASSED: all kernel results are correct.
 
 The throughput observed when running all three kernels, `KernelPrefetch`, `KernelBurst`, and `KernelDefault`, is printed to the standard out. The throughput values are comparable among these; however from the reports, we see an area savings for the `KernelPrefetch`. Therefore, you can use the area savings of the `KernelPrefetch` safely knowing it will not compromise throughput.
 
-> **Note**: The numbers shown are from a compile and run on the Intel® PAC with Intel Arria® 10 GX FPGA. The performance difference will be apparent only when running on FPGA hardware. The emulator and simulator do not reflect the design's hardware memory system performance.
+> **Note**: The performance difference will be apparent only when running on FPGA hardware. The emulator and simulator do not reflect the design's hardware memory system performance.
 
 ## License
 

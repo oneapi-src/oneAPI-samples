@@ -317,7 +317,7 @@ int main(int argc, char *argv[]) {
     // Start the host producer for the sin theta data
     // By waiting on this kernel to finish, we are assuring that the runtime
     // has already programmed the FPGA with the image for this kernel. This
-    // makes calling SetupPAC below safe (for the real IO pipes).
+    // makes calling SetupFPGA below safe (for the real IO pipes).
     event steer_dma_event, steer_kernel_event;
     std::tie(steer_dma_event, steer_kernel_event) =
       SinThetaProducer::Start(q, kNumSteer);
@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
     // NOTE: this must be done AFTER programming the FPGA, which happens
     // when the kernel is launched (if it is not already programmed)
 #if defined(REAL_IO_PIPES)
-    SetupPAC(udp_args.fpga_mac_addr, udp_args.fpga_ip_addr,
+    SetupFPGA(udp_args.fpga_mac_addr, udp_args.fpga_ip_addr,
              udp_args.fpga_udp_port, udp_args.fpga_netmask,
              udp_args.host_mac_addr, udp_args.host_ip_addr,
              udp_args.host_udp_port);

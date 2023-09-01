@@ -21,7 +21,7 @@ This project serves as a template for Intel® oneAPI FPGA designs, and demonstra
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support (e.g. the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) `intel_s10sx_pac:pac_s10_usm`). Kernels that use these types of allocations can always be used to generate standalone IPs.
+> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support. Kernels that use these types of allocations can always be used to generate standalone IPs.
 
 ## Prerequisites
 
@@ -66,11 +66,7 @@ set(SOURCE_FILES src/fpga_template.cpp)
 set(TARGET_NAME fpga_template)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
-# different device. Here are a few device examples (this list is not
-# exhaustive):
-#   intel_s10sx_pac:pac_s10
-#   intel_s10sx_pac:pac_s10_usm
-#   intel_a10gx_pac:pac_a10
+# different device. 
 # Note that depending on your installation, you may need to specify the full 
 # path to the board support package (BSP), this usually is in your install 
 # folder.

@@ -257,20 +257,21 @@ Next, look at the loop details of the *KernelArgsRestrict* kernel. You will noti
 ## Example Output
 
 ```
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Size of vector: 5000000 elements
-Kernel throughput without attribute: 8.06761 MB/s
-Kernel throughput with attribute: 766.873 MB/s
+Kernel throughput without attribute: 13.2721 MB/s
+Kernel throughput with attribute: 2249.82 MB/s
 PASSED
 ```
 
 ### Results Explained
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on Terasic's DE10-Agilex Development Board) is shown.
 
 |Attribute used?  | II    | Kernel Throughput (MB/s)
 |:---             |:---   |:---
-|No               | ~187  | 8
-|Yes              | ~1    | 767
+|No               | ~849  | 13
+|Yes              | ~1    | 2249
 
 > **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance of the memory system.
 
