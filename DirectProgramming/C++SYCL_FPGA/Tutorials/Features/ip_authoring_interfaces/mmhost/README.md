@@ -241,20 +241,20 @@ This design uses CMake to generate a build script for GNU/make.
 2. Configure the build system for the Agilex® 7 device family, which is the default.
 
    ```
-   mkdir build<N>
-   cd build<N>
-   cmake .. -DTYPE=PART<N>
+   mkdir build
+   cd build
+   cmake .. -DTYPE=<TYPE>
    ```
 
-   where `<N>` is: 
-   - `1` for `part1_pointers`
-   - `2` for `part2_single_host`
-   - `3` for `part3_hosts`
-   - `4` for `part4_ddr_hosts`
+   where `<TYPE>` is: 
+   - `PART1` for `part1_pointers`
+   - `PART2` for `part2_single_host`
+   - `PART3` for `part3_hosts`
+   - `PART4` for `part4_ddr_hosts`
    
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=PART<N>
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<TYPE>
    >  ```
 
 3. Compile the design using `make`.
@@ -270,7 +270,6 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       make report
       ```
-      The report resides at `mmhost.report.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       make fpga
@@ -282,20 +281,20 @@ This design uses CMake to generate a build script for GNU/make.
 
 2. Configure the build system for the Agilex® 7 device family, which is the default.
    ```
-   mkdir build<N>
-   cd build<N>
-   cmake -G "NMake Makefiles" .. -DTYPE=PART<N>
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" .. -DTYPE=<TYPE>
    ```
 
-   where `<N>` is: 
-   - `1` for `part1_pointers`
-   - `2` for `part2_single_host`
-   - `3` for `part3_hosts`
-   - `4` for `part4_ddr_hosts`
+   where `<TYPE>` is: 
+   - `PART1` for `part1_pointers`
+   - `PART2` for `part2_single_host`
+   - `PART3` for `part3_hosts`
+   - `PART4` for `part4_ddr_hosts`
 
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=PART<N>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<TYPE>
    >  ```
 3. Compile the design using `nmake`.
    1. Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -310,7 +309,6 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       nmake report
       ```
-      The report resides at `mmhost.report.a.prj/reports/report.html`.
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
       nmake fpga
@@ -318,18 +316,16 @@ This design uses CMake to generate a build script for GNU/make.
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ## Examining the Generated RTL
-Locate `mmhost_report_di_inst.v` in the `build/mmhost.report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
+Locate `mmhost_partx_report_di_inst.v` in the `build/mmhost_partx.report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
 ## Read the Reports
-Locate `report.html` in the `build/mmhost.report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx_xxx` will have its own report under its own build directory. You can compare multiple reports by opening them in multiple browser windows/tabs.
+Locate `report.html` in the `build/mmhost_partx.report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. Each `partx` will have its own report under its own build directory. You can compare multiple reports by opening them in multiple browser windows/tabs.
 
-Navigate to the Area Analysis section of the optimization reports for `part1_pointers` and `part3_hosts`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
+Navigate to the Area Analysis section of the optimization reports for `mmhost_part1` and `mmhost_part3`. The Kernel System section displays the area consumption of each kernel. Notice that the `MultiMMIP` kernel consumes less area under all categories than the `PointerIP` kernel. This is due to stall-free memory accesses and the removal of arbitration logic. The fixed-latency on-chip block RAMs can be accessed with stall-free load/store units (LSUs), and giving each memory access a single dedicated interface allows the removal of arbitration logic.
 
 Navigate to the Loop Throughput section under Throughput Analysis: the `MultiMMIP` kernel has a lower latency than the `PointerIP` kernel, and there are less blocks being scheduled. This is because the kernel has access to all 3 memories in parallel without contention.
 
 Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
-
-   > **Note**: You will need to create separate build directories and build the reports for each part
 
 
 ## Run the `mmhost` Sample
@@ -338,25 +334,25 @@ Observe how the 32-bit LSUs are now coalesced, after unrolling the for-loop.
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
    ```
-   ./mmhost.fpga_emu
+   ./mmhost_partx.fpga_emu
    ```
 
 2. Run the sample on the FPGA simulator device (the kernel executes in a simulator):
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mmhost.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./mmhost_partx.fpga_sim
    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
    ```
-   mmhost.fpga_emu.exe
+   mmhost_partx.fpga_emu.exe
    ```
 
 2. Run the sample on the FPGA simulator device (the kernel executes in a simulator):
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   mmhost.fpga_sim.exe
+   mmhost_partx.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 

@@ -21,17 +21,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 if(${TYPE} MATCHES PART1)
     set(SOURCE_FILES part1_pointers/src/mmhost.cpp)
+    set(TARGET_NAME mmhost_part1)
 elseif(${TYPE} MATCHES PART2)
     set(SOURCE_FILES part2_single_host/src/mmhost.cpp)
+    set(TARGET_NAME mmhost_part2)
 elseif(${TYPE} MATCHES PART3)
     set(SOURCE_FILES part3_hosts/src/mmhost.cpp)
+    set(TARGET_NAME mmhost_part3)
 elseif(${TYPE} MATCHES PART4)
     set(SOURCE_FILES part4_ddr_hosts/src/mmhost.cpp)
+    set(TARGET_NAME mmhost_part4)
 else()
     message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
 Valid types -DTYPE=[ PART1 / PART2 / PART3 / PART4 ]")
 endif()
-set(TARGET_NAME mmhost)
 
 # Use cmake -DFPGA_DEVICE=<device_family> to choose a
 # different device family (E.g. "Arria10" or "Stratix10") or a
