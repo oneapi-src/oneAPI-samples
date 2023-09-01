@@ -6,6 +6,7 @@
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 constexpr int kBL3 = 3;
+constexpr int kAlignment = 4;
 
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
@@ -15,18 +16,21 @@ struct MultiMMIP {
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_read});
   using YProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_read});
   using ZProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL3>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_write});
 
   sycl::ext::oneapi::experimental::annotated_arg<int *, XProps> x;
@@ -56,8 +60,7 @@ int main(void) {
 
   try {
     // create the device queue
-    sycl::queue q(selector, fpga_tools::exception_handler,
-                  sycl::property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler);
 
     // Print out the device information.
     sycl::device device = q.get_device();
@@ -70,22 +73,18 @@ int main(void) {
     std::cout << "Elements in vector : " << kN << "\n";
 
     // Host array must share the same buffer location property as defined in the
-    // kernel
-    int *array_a = sycl::malloc_shared<int>(
-        kN, q,
-        sycl::property_list{
-            sycl::ext::intel::experimental::property::usm::buffer_location(
-                kBL1)});
-    int *array_b = sycl::malloc_shared<int>(
-        kN, q,
-        sycl::property_list{
-            sycl::ext::intel::experimental::property::usm::buffer_location(
-                kBL2)});
-    int *array_c = sycl::malloc_shared<int>(
-        kN, q,
-        sycl::property_list{
-            sycl::ext::intel::experimental::property::usm::buffer_location(
-                kBL3)});
+    // kernel. Since we are specifiying alignment on the kernal argument, we
+    // need to also specify that to the allocation call by using
+    // alighned_alloc_shared API
+    int *array_a = sycl::aligned_alloc_shared<int>(
+        kAlignment, kN, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
+    int *array_b = sycl::aligned_alloc_shared<int>(
+        kAlignment, kN, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
+    int *array_c = sycl::aligned_alloc_shared<int>(
+        kAlignment, kN, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL3));
 
     assert(array_a);
     assert(array_b);

@@ -102,10 +102,11 @@ The following table describes the properties under `sycl::ext::intel::experiment
 | Parameter                 | Description
 |---                        |---
 | `register_map`            | Pass the pointer for this memory-mapped host interface through the IP component's control/status register
-| `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface 
+| `conduit`                 | Pass the pointer for this memory-mapped host interface through a conduit interface
+| `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to further optimize the kernel.
 
 
-The following parameters found under `sycl::ext::intel::experimental` and `sycl::ext::oneapi::experimental` can be used to configure an IP component's Avalon memory-mapped host interfaces:
+The following parameters are found under `sycl::ext::intel::experimental`, with the exception of `alignment` under `sycl::ext::oneapi::experimental`. They can be used to configure an IP component's Avalon memory-mapped host interfaces:
 
 | Parameter                | Default Value | Description
 |---                       |---            |---
@@ -116,7 +117,6 @@ The following parameters found under `sycl::ext::intel::experimental` and `sycl:
 | `read_write_mode<mode>`  | `read_write`  | Port direction of the interface. (`read_write`, `read` or `write`) 
 | `maxburst<value>`        | 1             | Maximum number of data transfers that can associate with a read or write request. 
 | `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
-| `stable`                 | N/A | User guarantee that the pointer will not change between pipelined invocations of the kernel. The compiler uses this to further optimize the kernel.
 
 These parameters can be used to improve the performance of `Example 1` by ensuring that each pointer points to data in a dedicated Avalon memory-mapped agent memory, like this:
 
@@ -128,6 +128,7 @@ These parameters can be used to improve the performance of `Example 1` by ensuri
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 constexpr int kBL3 = 3;
+constexpr int kAlignment = 4;
 
 struct MultiMMIP {
   // Each annotated pointer is configured with a unique `buffer_location`,
@@ -137,18 +138,21 @@ struct MultiMMIP {
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_read});
   using YProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_read});
   using ZProps = decltype(sycl::ext::oneapi::experimental::properties{
       sycl::ext::intel::experimental::buffer_location<kBL3>,
       sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::dwidth<32>,
       sycl::ext::intel::experimental::latency<1>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
       sycl::ext::intel::experimental::read_write_mode_write});
 
   sycl::ext::oneapi::experimental::annotated_arg<int *, XProps> x;

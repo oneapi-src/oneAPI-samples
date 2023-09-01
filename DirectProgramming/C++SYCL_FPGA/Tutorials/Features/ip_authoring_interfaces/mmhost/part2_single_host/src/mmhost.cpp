@@ -31,8 +31,7 @@ int main(void) {
 
   try {
     // create the device queue
-    sycl::queue q(selector, fpga_tools::exception_handler,
-                  sycl::property::queue::enable_profiling{});
+    sycl::queue q(selector, fpga_tools::exception_handler);
 
     // Print out the device information.
     sycl::device device = q.get_device();
