@@ -9,6 +9,14 @@ using ValueT = int;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class LambdaStreamingIP;
 
+// Create a properties object containing the
+// kernel invocation interface property 'streaming_interface_remove_downstream_stall'
+// and pipelined property
+sycl::ext::oneapi::experimental::properties kernel_properties{
+  sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
+  sycl::ext::intel::experimental::pipelined<>
+};
+
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 
@@ -18,7 +26,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out,
                                size_t count) {
   // In the Lambda programming model, all kernel arguments will have the same
   // interface as the kernel invocation interface.
-  q.single_task<LambdaStreamingIP>([=] streaming_interface {
+  q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
      for (int i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }

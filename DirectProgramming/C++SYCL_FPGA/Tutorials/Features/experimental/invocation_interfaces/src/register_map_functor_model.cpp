@@ -1,7 +1,6 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+// oneAPI headers
 #include <sycl/sycl.hpp>
-
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include "exception_handler.hpp"
 
 using ValueT = int;
@@ -14,15 +13,24 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 struct FunctorRegisterMapIP {
   // Use the 'register_map' annotation on a kernel argument to specify it to be
   // a register map kernel argument.
-  register_map ValueT *input;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      input;
+      
   // Without the annotations, kernel arguments will be inferred to be register
   // map kernel arguments if the kernel invocation interface is register mapped,
   // and vise-versa.
   ValueT *output;
+
   // A kernel with a register map invocation interface can also independently
   // have streaming kernel arguments, when annotated by 'conduit'.
-  conduit size_t n;
-  register_map_interface void operator()() const {
+  sycl::ext::oneapi::experimental::annotated_arg<
+    size_t, decltype(sycl::ext::oneapi::experimental::properties{
+                  sycl::ext::intel::experimental::conduit})>  
+    n;
+
+  void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
     }

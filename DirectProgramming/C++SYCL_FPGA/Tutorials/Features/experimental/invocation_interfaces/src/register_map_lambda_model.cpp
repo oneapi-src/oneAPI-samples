@@ -1,13 +1,19 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+// oneAPI headers
 #include <sycl/sycl.hpp>
-
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include "exception_handler.hpp"
 
 using ValueT = int;
+
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class LambdaRegisterMapIP;
+
+// Create a properties object containing the
+// kernel invocation interface property 'register_map'
+sycl::ext::oneapi::experimental::properties kernel_properties{
+  sycl::ext::intel::experimental::register_map
+};
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
@@ -18,12 +24,11 @@ void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out,
                                  size_t count) {
   // In the Lambda programming model, all kernel arguments will have the same
   // interface as the kernel invocation interface.
-  q.single_task<LambdaRegisterMapIP>([=] register_map_interface {
+  q.single_task<LambdaRegisterMapIP>(kernel_properties, [=] {
      for (int i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }
-   })
-      .wait();
+   }).wait();
 
   std::cout << "\t Done" << std::endl;
 }

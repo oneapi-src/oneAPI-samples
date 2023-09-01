@@ -1,7 +1,6 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
+// oneAPI headers
 #include <sycl/sycl.hpp>
-
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include "exception_handler.hpp"
 
 using ValueT = int;
@@ -14,17 +13,32 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 struct FunctorStreamingIP {
   // Use the 'conduit' annotation on a kernel argument to specify it to be
   // a streaming kernel argument.
-  conduit ValueT *input;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::conduit})>                    
+      input;
+
   // A kernel with a streaming invocation interface can also independently
   // have register map kernel arguments, when annotated by 'register_map'.
-  register_map ValueT *output;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      output;
+
   // Without the annotations, kernel arguments will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
   // vise-versa.
   size_t n;
-  // Use the 'streaming_interface' annotation on a kernel to specify it to be
-  // a kernel with a streaming kernel invocation interface.
-  streaming_interface void operator()() const {
+
+  // Kernel property method to configure the kernel to be a kernel with 
+  // 'streaming_interface_remove_downstream_stall' invocation interface
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
+        sycl::ext::intel::experimental::pipelined<>};
+  }
+
+  void operator()() const {
     for (int i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
     }
