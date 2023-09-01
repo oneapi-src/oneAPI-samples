@@ -10,7 +10,13 @@ This sample is an FPGA tutorial that explains how to use the `max_interleaving` 
 
 ## Purpose
 
-This tutorial demonstrates a method to reduce the area usage of inner loops that cannot realize throughput increases through interleaved execution. By default, the compiler will generate loop datapaths that enable multiple invocations of the same loop to execute simultaneously, called interleaving, in order to maximize throughput when II is greater than 1. In cases where interleaving is dynamically prohibited. For example, due to data dependency preservation, hardware resources are wasted when used to enable interleaving. The `max_interleaving` attribute can instruct the compiler to limit allocation of these hardware resources in these cases.
+This tutorial demonstrates a method to reduce the area usage of inner loops by disabling interleaved execution. 
+
+When possible, the compiler will generate loop datapaths that enable multiple invocations of the same loop to execute simultaneously, called interleaving, in order to maximize throughput when II is greater than 1. 
+
+Though the extra hardware generated is usually minor, disabling interleaving is an easy way to save area, for example, in non performance-critical paths.
+
+The `[[intel::max_interleaving(0 or 1)]]` attribute can instruct the compiler to limit allocation of these hardware resources in these cases.
 
 ## Prerequisites
 
@@ -62,22 +68,57 @@ The sample illustrates the following important concepts.
 
 ### Description of the `max_interleaving` Attribute
 
-Consider a pipelined inner loop `i` with an II > 1 contained inside a pipelined outer loop `j`. If the trip count of the `i` loop does not vary with respect to the iterations of the `j` loop, the compiler will automatically generate hardware that allows the `i` loop to interleave iterations from different invocations of itself. That is, each iteration of the outer `j` loop will contain a different invocation of the inner `i` loop. Each of these invocations of the `i` loop will issue iterations every II cycles, leaving II-1 cycles in between these iterations empty. These empty cycles can be used to issue iterations of a different invocation of `i` (corresponding to a different iteration of the `j` loop), which we called interleaving. Interleaving allows the generated design to have a high occupancy despite a high II, which improves throughput.
+In short, place the `[[intel::max_interleaving(0 or 1)]]` attribute above a loop that you want to control interleaving. A parameter of `0` (the default if the attribute is not used) enables interleaving when possible, and `1` forcibly disables interleaving, even if it is possible.  
 
-Although interleaving will generally improve throughput, there may be some scenarios where you might not want to incur the hardware cost of generating a pipelined datapath that allows interleaving. For example, in a nest of pipelined loops, pipelined iterations of an outer loop may be serialized by the compiler across an inner loop if the inner loop imposes a data dependency on the containing loop. For such scenarios, the generation of a loop datapath that supports interleaving iterations of the containing pipelined loop yields little to no benefit in throughput because the serialization to preserve the data dependency will prevent interleaving from occurring. Manually restricting or disabling the amount of interleaving on the inner loop reduces the area overhead imposed by a datapath generated to handle interleaved invocations. Users can mark a loop with the `max_interleaving` pragma to limit the number of interleaved invocations supported by the generated loop datapath.
+Consider the following pipelined doubly nested loops: 
+```cpp
+float temp_r[kSize] = ...;
+float temp_a[kSize * kSize] = ...;
 
-See the following example:
-
-```
-L1: for (size_t i = 0; i < kSize; i++) {
-  L2: for (size_t j = 0; j < kSize; j++) {
-        temp_r[j] = SomethingComplicated(temp_a[i][j], temp_r[j]);
-  }
-  temp_r[i] += temp_b[i];
+for (int i = kSize - 1; i >= 0; i--) {
+   [[intel::max_interleaving(0 or 1)]] // Controls if interleaving is enabled or disabled on the loop below
+   for (int j = kSize - 1; j >= 0; j--) {
+      temp_r[i] += SomethingComplicated(temp_a[i * kSize + j], temp_r[i]);
+   }
 }
 ```
 
-In this loop nest, pipelined iterations of L1 are serialized across L2 to preserve the data dependency on the array variable 'temp_r'. This means that one invocation of the `j` loop can be executing at any time; therefore, no dynamic interleaving of iterations from different invocations of the `j` loop can occur. By default, the compiler will generate a datapath that includes the capacity to run multiple interleaved iterations simultaneously. Since the data dependency prevents dynamic interleaving, the resources spent on an interleaving-capable datapath are wasted. Applying the `max_interleaving` attribute with an argument of `1` will instruct the compiler generate a datapath that restricts the interleaving capacity to a single `j` loop invocation.
+Notice how `temp_r[i]` is a loop carried dependency in the inner loop. **Crucially, the dependency is with respect to the inner loop and *not* the outer loop.** The same `temp_r[i]` is updated in every inner iteration, but a different element of `temp_r` is updated in different outer iterations. As a result of the loop carried dependency with respect to the inner loop, the II of the inner loop will be very high as a new iteration of the inner loop cannot be invoked until the previous one finishes. 
+
+Without interleaving, this is what the pipelined registers of the inner loop will look like, for II of the inner loop = 5 and II of the outer loop = 1. Each cell shows the (i, j) iteration that is currently in that stage of the inner loop:
+
+| Cycle | Stage 1 | Stage 2 | Stage 3 | Stage 4 | Stage 5 |
+|---|---|---|---|---|---|
+|1|(0, 0)|
+|2||(0, 0)|
+|3|||(0, 0)|
+|4||||(0, 0)|
+|5|||||(0, 0)|
+|6|(0, 1)
+
+Notice how the majority of the stages are empty, caused by the loop carried dependency.
+
+With interleaving, we get the following: 
+
+| Cycle | Stage 1 | Stage 2 | Stage 3 | Stage 4 | Stage 5 |
+|---|---|---|---|---|---|
+|1|(0, 0)|
+|2|(1, 0)|(0, 0)|
+|3|(2, 0)|(1, 0)|(0, 0)|
+|4|(3, 0)|(2, 0)|(1, 0)|(0, 0)|
+|5|(4, 0)|(3, 0)|(2, 0)|(1, 0)|(0, 0)|
+|6|(0, 1)|(4, 0)|(3, 0)|(2, 0)|(1, 0)|
+
+Since the loop carried dependency is not with respect to the outer loop, different *invocations* of the inner loop can be pipelined into the inner loop. Notice how after an initial ramp-up period, the inner loop hardware reaches full occupancy - which will correspond to a higher throughput. 
+
+While interleaving is desired in most situations, there may be some scenarios where you might not want to incur the hardware cost of generating a pipelined datapath that allows interleaving. 
+
+For example, if a loop is non-performance critical and area savings are paramount, interleaving can be disabled. 
+
+Another use case is if loop-carried memory dependencies cannot be determined at compile-time (such as dynamic array index accesses). By default, the compiler will conservatively assume interleaving may happen as to maximize throughput, and supporting hardware will be generated. If the user knows that interleaving cannot or does not frequently happen, they can manually disable interleaving. 
+
+To disable interleaving on a loop, place `[[intel::max_interleaving(1)]]` above that loop, as shown in the example above. 
+
 
 ## Build the `max_interleaving` Tutorial
 
@@ -179,18 +220,24 @@ In this loop nest, pipelined iterations of L1 are serialized across L2 to preser
 
 Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 
+#### Verify That Interleaving Is Enabled/Disabled
+1. Go to `Throughput Analysis` (dropdown) -> `Loop Analysis`.
+2. Under `Loop List`, the 4 loops of interest are:
+   1. `KernelCompute_0.inner` - inner loop of interleaving **enabled** kernel
+   2. `KernelCompute_1.inner` - inner loop of interleaving **disabled** kernel
+3. Find the row in the `Loop Analysis` pane corresponding to `KernelCompute_0.inner`. Notice how the II is high (>> 1) and `Max Interleaving Iterations` is greater than 1, meaning interleaving is enabled.
+4. Find the row in the `Loop Analysis` pane corresponding to `KernelCompute_1.inner`. Notice how the II is high (>> 1) but the `Max Interleaving Iterations` is 1, meaning interleaving is disabled due to the attribute.
+
+**IMPORTANT**: As mentioned above, the compiler will do some memory dependency analysis on loops. If it can determine that interleaving cannot happen, interleaving will automatically be disabled (which can be verified in the reports) and the attribute will have no effect. 
+
 In the "Loops analysis" view from the "Throughput Analysis" drop-down menu, in the Details pane for loop L1 (choose either Compute<0>.B6 or Compute<1>.B6 from the "Loop List" pane, then the click the "Source Location" link in the "Loop Analysis" pane):
 
 Iteration executed serially across KernelCompute<0>.B8. Only a single loop iteration will execute inside this region due to data dependency on variable(s):
 
-```
-temp_r (max_interleaving.cpp: 56)
-```
-As described in the Example section above, generating a loop datapath that supports interleaving iterations of the containing pipelined loop in this scenario yields little to no benefit in throughput because preservation of the data dependency on `temp_r` requires that only one invocation of the inner loop be executed at a time. Adding the `max_interleaving(1)` attribute informs the compiler to not allocated hardware resources for interleaving on the inner loop, reducing the area overhead.
-
-Referring to the generated report again, choose the "Summary" view, expand the "System Resource Utilization Summary" section in the Summary pane, and select the "Compile Estimated Kernel Resource Utilization Summary" subsection. In this subsection, you will see resource utilization estimates for two kernels: Compute<0> and Compute<1>. These correspond to two nearly-identical kernels, with the only difference being the `max_interleaving` attribute applied to the inner loop at line 58 taking either a 0 or 1 as its argument (`max_interleaving(0)` specifies unlimited interleaving, which is the same as the default `max_interleaving` limit when no attribute is set). Note that Compute<1>, which has restricted interleaving, uses fewer ALUTs, REGs, and MLABs than Compute<0>.
-
-The area usage information can also be accessed on the main report page in the Summary pane. Scroll down to the section titled "System Resource Utilization Summary". Each kernel name ends in the `max_interleaving` attribute argument used for that kernel, e.g., `KernelCompute<1>` uses a `max_interleaving` attribute value of 1. You can verify that the number of ALUTs, REGs, and MLABs used for each kernel decreases when `max_interleaving` is limited to 1 compared to unlimited interleaving when `max_interleaving` is set to 0.
+#### View the Hardware Area Savings
+**NOTE**: For the most accurate numbers, you must compile to hardware so that `Quartus®` can decide where to place each hardware unit on the board.
+1. Go to `Summary` (top navigation bar). In the `Summary` pane, go to `Quartus® Fitter Resource Utilization Summary`. For less accurate estimates (but you can obtain these numbers after compiling to report instead of the full hardware flow), go to `Compile Estimated Kernel Resource Utilization Summary`.
+2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). 
 
 ## Run the `max_interleaving` Sample
 
