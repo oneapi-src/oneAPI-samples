@@ -4,6 +4,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <math.h>
 
 // Large twiddle factors tables
 #include "twiddle_factors.hpp"

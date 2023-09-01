@@ -3,6 +3,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <math.h>
 
 #include "exception_handler.hpp"
 #include "fft2d.hpp"
