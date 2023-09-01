@@ -57,6 +57,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsoptimize=latency)
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
+# use -Wno-return-type-c-linkage to disable warnings caused by using ac_int types in the emulation model
 set(USER_FLAGS ${USER_FLAGS};-Wno-return-type-c-linkage)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general

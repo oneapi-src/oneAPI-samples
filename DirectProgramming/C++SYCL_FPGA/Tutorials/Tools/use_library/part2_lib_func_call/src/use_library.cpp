@@ -51,9 +51,9 @@ struct RtlMult27x27 {
 };
 
 int main() {
-  unsigned long result_rtl = 0;
-  unsigned kA = 134217727; // 0x7FFFFFF is the largest possible ac_int<27, false>.
-  unsigned kB = 100;
+  uint64_t result_rtl = 0;
+  uint32_t kA = 134217727; // 0x7FFFFFF is the largest possible ac_int<27, false>.
+  uint32_t kB = 100;
 
   // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
 #if FPGA_SIMULATOR
@@ -98,7 +98,7 @@ int main() {
   }
 
   // Check the results
-  unsigned long expected_result = (unsigned long) kA * kB;
+  uint64_t expected_result = (uint64_t ) kA * kB;
   if (result_rtl != expected_result) {
     std::cout << "FAILED: result (" << result_rtl << ") is incorrect! Expected " << expected_result << "\n";
     return -1;

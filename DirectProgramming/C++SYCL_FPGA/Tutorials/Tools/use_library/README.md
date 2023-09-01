@@ -74,8 +74,8 @@ The RTL is used when compiling for hardware and simulation, and the emulation mo
 After having created the library file, the function in the library can be called from the SYCL kernel, without the need to know the hardware design or implementation details on underlying functions in the library.
 
 Given a workable RTL module, one may need to apply some modifications in order to integrate it into oneAPI program.
-1. An RTL module must use a single input Avalon® streaming interface. 
-    Besides RTL library's interface, you must include a `clock` port, a `resetn` port, and Avalon® streaming interface input and output ports (that is: `ivalid`, `ovalid`, `iready`, `oready`) into your RTL module. 
+1. An RTL module must use a single Avalon® streaming input interface. Multiple input signals are allowed, but they must synchronize with a single ready/valid handshake.
+Your RTL library's interface must include a `clock` port, a `resetn` port, and a single Avalon® streaming interface input and single output port (that is: `ivalid`, `ovalid`, `iready`, `oready`). Your RTL module may have multiple input data signals, but only a single output.
 
     ![](assets/rtl_library.svg)
 
