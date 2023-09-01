@@ -1,9 +1,10 @@
 // oneAPI headers
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include "exception_handler.hpp"
 
-using ValueT = int;
+using ValueT = ac_int<5, true>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]) {
     }
 
     // validation lambda
-    auto validate = [](auto &in, auto &out, size_t size) {
+    auto validate = [](ValueT *in, ValueT *out, size_t size) {
       for (int i = 0; i < size; i++) {
         if (out[i] != in[i]) {
           std::cout << "out[" << i << "] != in[" << i << "]"
