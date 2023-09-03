@@ -4,7 +4,8 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include "exception_handler.hpp"
 
-using ValueT = ac_int<5, true>;
+using ValueT = int;
+using MyUInt5 = ac_int<5, false>;
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
@@ -27,12 +28,12 @@ struct FunctorRegisterMapIP {
   // A kernel with a register map invocation interface can also independently
   // have streaming kernel arguments, when annotated by 'conduit'.
   sycl::ext::oneapi::experimental::annotated_arg<
-    size_t, decltype(sycl::ext::oneapi::experimental::properties{
+    MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
                   sycl::ext::intel::experimental::conduit})>  
     n;
 
   void operator()() const {
-    for (int i = 0; i < n; i++) {
+    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) {
       output[i] = SomethingComplicated(input[i]); //TODO
     }
   }
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  size_t count = 16;
+  MyUInt5 count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {

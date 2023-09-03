@@ -4,7 +4,9 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include "exception_handler.hpp"
 
-using ValueT = ac_int<5, true>;
+using ValueT = int;
+using MyUInt5 = ac_int<5, false>;
+
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class LambdaStreamingIP;
@@ -23,11 +25,11 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
 /////////////////////////////////////////
 
 void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out,
-                               size_t count) {
+                               MyUInt5 count) {
   // In the Lambda programming model, all kernel arguments will have the same
   // interface as the kernel invocation interface.
   q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
-     for (int i = 0; i < count; i++) {
+     for (MyUInt5 i = 0; i < count; i++) {
        out[i] = SomethingComplicated(in[i]);
      }
    })
@@ -47,7 +49,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  size_t count = 16;
+  MyUInt5 count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {

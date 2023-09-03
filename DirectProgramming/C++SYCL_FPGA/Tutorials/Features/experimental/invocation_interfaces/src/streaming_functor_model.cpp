@@ -4,7 +4,8 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include "exception_handler.hpp"
 
-using ValueT = ac_int<5, true>;
+using ValueT = int;
+using MyUInt5 = ac_int<5, false>;
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
@@ -29,7 +30,7 @@ struct FunctorStreamingIP {
   // Without the annotations, kernel arguments will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
   // vise-versa.
-  size_t n;
+  MyUInt5 n;
 
   // Kernel property method to configure the kernel to be a kernel with 
   // 'streaming_interface_remove_downstream_stall' invocation interface
@@ -40,7 +41,7 @@ struct FunctorStreamingIP {
   }
 
   void operator()() const {
-    for (int i = 0; i < n; i++) {
+    for (MyUInt5 i = 0; i < n; i++) {
       output[i] = SomethingComplicated(input[i]);
     }
   }
@@ -57,7 +58,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  size_t count = 16;
+  MyUInt5 count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
