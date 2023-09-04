@@ -3,9 +3,12 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
+#include "lib_rtl.hpp"
 
-SYCL_EXTERNAL extern "C" unsigned RtlByteswap (unsigned x) {
-  return x << 16 | x >> 16;
+// This emulation model is only used during emulation, so it should functionally
+// match the RTL in lib_rtl.v.
+
+SYCL_EXTERNAL extern "C" MyInt54 RtlDSPm27x27u (MyInt27 x, MyInt27 y) {
+  return (x * y);
 }
 
