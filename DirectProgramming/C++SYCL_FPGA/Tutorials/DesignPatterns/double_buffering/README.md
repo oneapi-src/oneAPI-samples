@@ -210,9 +210,7 @@ The key concepts discussed in this sample are as followed:
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_ee00000)
-
-
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Executing kernel 100 times in each round.
 
 *** Beginning execution, without double buffering
@@ -227,9 +225,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time without double buffering = 29742 ms
-Total kernel-only execution time without double buffering = 17856 ms
-Throughput = 35.255249 MB/s
+Overall execution time without double buffering = 12715 ms
+Total kernel-only execution time without double buffering = 8310 ms
+Throughput = 82.465027 MB/s
 
 
 *** Beginning execution, with double buffering.
@@ -244,9 +242,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time with double buffering = 17967 ms
-Total kernel-only execution time with double buffering = 17869 ms
-Throughput = 58.35976 MB/s
+Overall execution time with double buffering = 8309 ms
+Total kernel-only execution time with double buffering = 8303 ms
+Throughput = 126.18566 MB/s
 
 
 Verification PASSED
@@ -328,12 +326,12 @@ The basic implementation flow is as follows:
 
 ### Impact of Double Buffering
 
-A test compile of this tutorial design achieved a maximum frequency (f<sub>MAX</sub>) of approximately 340 MHz on the Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The results with and without double buffering are shown in the following table:
+A test compile of this tutorial design achieved a maximum frequency (f<sub>MAX</sub>) of approximately 602 MHz on Terasic’s DE10-Agilex Development Board. The results with and without double buffering are shown in the following table:
 
 | Configuration             | Overall Execution Time (ms)  | Total Kernel Execution time (ms)
 |:--                        |:--                           |:--
-| Without double buffering  | 23462                        | 15187
-| With double buffering     | 15145                        | 15034
+| Without double buffering  | 56                           | 3
+| With double buffering     | 6                            | 2
 
 In both runs, the total kernel execution time is similar as expected; however, without double buffering, the overall execution time exceeds the total kernel execution time, implying there is downtime between kernel executions. With double buffering, the overall execution time is close to the total kernel execution time.
 

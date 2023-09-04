@@ -3,6 +3,10 @@
 
 #include "host_speed.hpp"
 
+#if defined(SUPPORTS_USM)
+#include "usm_speed.hpp"
+#endif
+
 // Pre-declare kernel name to prevent name mangling
 // This is an FPGA best practice that makes it easier to identify the kernel in
 // the optimization reports.
@@ -80,6 +84,9 @@ class ShimMetrics {
   int KernelLatency(sycl::queue &q);
   int KernelMemRW(sycl::queue &q);
   int KernelMemBW(sycl::queue &q);
+#if defined(SUPPORTS_USM)
+  int USMBWTest(sycl::queue &q);
+#endif
   void ReadBinary();
 
  private:
@@ -1499,6 +1506,35 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
   return 0;
 }
+
+#if defined(SUPPORTS_USM)
+
+////////////////////////////////////
+// ****** USMMemBW function ***** //
+////////////////////////////////////
+
+// Inputs:
+// queue &q - queue to submit operation
+// Returns:
+// 0 if test passes, 1 if memory allocation or verification fails
+
+// The function does the following tasks, for each test (memcopy, read, write):
+// 1. Allocate host USM for input and output. Initialize input with random
+// values and initialize output with zero.
+// 2. Launch a kernel to perform one of the following tests:
+//      - Memcopy: copy data from input USM pointer to output USM pointer
+//      - Read: read data from input USM pointer
+//      - Write: write data to output USM pointer
+// 3. Host verifies the output data is correct
+// 4. Rerun the kernel from several more times to measure bandwidth (the first
+// iteration is slow due to one time tasks).
+// 5. Calculate and report bandwidth.
+
+int ShimMetrics::USMBWTest(sycl::queue &q) {
+  return run_test(q, MEMCOPY) | run_test(q, READ) | run_test(q, WRITE);
+}
+
+#endif
 
 ///////////////////////////////////
 // **** ReadBinary function **** //

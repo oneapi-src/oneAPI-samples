@@ -1,6 +1,6 @@
 {
   "guid": "E17DC0AF-780B-41CE-9F44-36A06960C73F",
-  "name": "guided_oddEvenMergeSort_SYCLMigration",
+  "name": "Odd Even Merge Sort",
   "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL/GraphTraversal"],
   "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.",
   "toolchain": [ "dpcpp" ],

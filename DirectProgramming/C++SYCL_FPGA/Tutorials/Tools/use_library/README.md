@@ -30,8 +30,6 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 
-## Prerequisites
-
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
 

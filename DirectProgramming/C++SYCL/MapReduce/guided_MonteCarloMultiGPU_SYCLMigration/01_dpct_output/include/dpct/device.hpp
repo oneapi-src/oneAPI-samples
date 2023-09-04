@@ -11,7 +11,6 @@
 
 #include <sycl/sycl.hpp>
 #include <algorithm>
-#include <array>
 #include <cstring>
 #include <iostream>
 #include <mutex>
@@ -33,7 +32,7 @@
 namespace dpct {
 
 /// SYCL default exception handler
-inline auto exception_handler = [](sycl::exception_list exceptions) {
+auto exception_handler = [](sycl::exception_list exceptions) {
   for (std::exception_ptr const &e : exceptions) {
     try {
       std::rethrow_exception(e);
@@ -144,14 +143,6 @@ public:
     _max_register_size_per_work_group = max_register_size_per_work_group;
   }
 
-  void set_device_id(uint32_t device_id) {
-    _device_id = device_id;
-  }
-
-  void set_uuid(std::array<unsigned char, 16> uuid) {
-    _uuid = std::move(uuid);
-  }
-
 private:
   char _name[256];
   sycl::id<3> _max_work_item_sizes;
@@ -174,23 +165,24 @@ private:
   size_t _local_mem_size;
   size_t _max_nd_range_size[3];
   int _max_nd_range_size_i[3];
-  uint32_t _device_id;
-  std::array<unsigned char, 16> _uuid;
 };
 
 /// dpct device extension
 class device_ext : public sycl::device {
-  typedef std::mutex mutex_type;
-
 public:
   device_ext() : sycl::device(), _ctx(*this) {}
   ~device_ext() {
-    std::lock_guard<mutex_type> lock(m_mutex);
-    clear_queues();
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    for (auto &task : _tasks) {
+      if (task.joinable())
+        task.join();
+    }
+    _tasks.clear();
+    _queues.clear();
   }
-  device_ext(const sycl::device &base) : sycl::device(base), _ctx(*this) {
-    std::lock_guard<mutex_type> lock(m_mutex);
-    init_queues();
+  device_ext(const sycl::device &base)
+      : sycl::device(base), _ctx(*this) {
+    _saved_queue = _default_queue = create_queue(true);
   }
 
   int get_major_version() const {
@@ -209,7 +201,6 @@ public:
     return get_device_info().get_max_compute_units();
   }
 
-  /// Return the maximum clock frequency of this device in KHz.
   int get_max_clock_frequency() const {
     return get_device_info().get_max_clock_frequency();
   }
@@ -237,7 +228,7 @@ public:
         this->has(sycl::aspect::usm_host_allocations));
 
     prop.set_max_clock_frequency(
-        get_info<sycl::info::device::max_clock_frequency>() * 1000);
+        get_info<sycl::info::device::max_clock_frequency>());
 
     prop.set_max_compute_units(
         get_info<sycl::info::device::max_compute_units>());
@@ -257,14 +248,6 @@ public:
     if (this->has(sycl::aspect::ext_intel_memory_bus_width)) {
       prop.set_memory_bus_width(
           this->get_info<sycl::ext::intel::info::device::memory_bus_width>());
-    }
-    if (this->has(sycl::aspect::ext_intel_device_id)) {
-      prop.set_device_id(
-          this->get_info<sycl::ext::intel::info::device::device_id>());
-    }
-    if (this->has(sycl::aspect::ext_intel_device_info_uuid)) {
-      prop.set_uuid(
-          this->get_info<sycl::ext::intel::info::device::uuid>());
     }
 #elif defined(_MSC_VER) && !defined(__clang__)
 #pragma message("get_device_info: querying memory_clock_rate and \
@@ -307,14 +290,10 @@ Use 64 bits as memory_bus_width default value."
     return prop;
   }
 
-  sycl::queue &in_order_queue() { return *_q_in_order; }
-
-  sycl::queue &default_queue() {
-    return in_order_queue();
-  }
+  sycl::queue &default_queue() { return *_default_queue; }
 
   void queues_wait_and_throw() {
-    std::unique_lock<mutex_type> lock(m_mutex);
+    std::unique_lock<std::recursive_mutex> lock(m_mutex);
     std::vector<std::shared_ptr<sycl::queue>> current_queues(
         _queues);
     lock.unlock();
@@ -326,17 +305,20 @@ Use 64 bits as memory_bus_width default value."
   }
 
   sycl::queue *create_queue(bool enable_exception_handler = false) {
-    return create_in_order_queue(enable_exception_handler);
-  }
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    sycl::async_handler eh = {};
+    if (enable_exception_handler) {
+      eh = exception_handler;
+    }
+    auto property = get_default_property_list_for_queue();
+    _queues.push_back(std::make_shared<sycl::queue>(
+        _ctx, *this, eh, property));
 
-  sycl::queue *create_in_order_queue(bool enable_exception_handler = false) {
-    std::lock_guard<mutex_type> lock(m_mutex);
-    return create_queue_impl(enable_exception_handler,
-                             sycl::property::queue::in_order());
+    return _queues.back().get();
   }
 
   void destroy_queue(sycl::queue *&queue) {
-    std::lock_guard<mutex_type> lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     _queues.erase(std::remove_if(_queues.begin(), _queues.end(),
                                   [=](const std::shared_ptr<sycl::queue> &q) -> bool {
                                     return q.get() == queue;
@@ -346,34 +328,17 @@ Use 64 bits as memory_bus_width default value."
   }
 
 private:
-  void clear_queues() {
-    _queues.clear();
-    _q_in_order = _q_out_of_order = _saved_queue = nullptr;
-  }
 
-  void init_queues() {
-    _q_in_order = create_queue_impl(true, sycl::property::queue::in_order());
-    _q_out_of_order = create_queue_impl(true);
-    _saved_queue = &default_queue();
-  }
-
-  /// Caller should acquire resource \p m_mutex before calling this function.
-  template <class... Properties>
-  sycl::queue *create_queue_impl(bool enable_exception_handler,
-                                 Properties... properties) {
-    sycl::async_handler eh = {};
-    if (enable_exception_handler) {
-      eh = exception_handler;
-    }
-    _queues.push_back(std::make_shared<sycl::queue>(
-        _ctx, *this, eh,
-        sycl::property_list(
+  sycl::property_list get_default_property_list_for_queue() const {
 #ifdef DPCT_PROFILING_ENABLED
-            sycl::property::queue::enable_profiling(),
+    auto property =
+        sycl::property_list{sycl::property::queue::enable_profiling(),
+                            sycl::property::queue::in_order()};
+#else
+    auto property =
+        sycl::property_list{sycl::property::queue::in_order()};
 #endif
-            properties...)));
-
-    return _queues.back().get();
+    return property;
   }
 
   void get_version(int &major, int &minor) const {
@@ -398,11 +363,12 @@ private:
     minor = std::stoi(&(ver[i]));
   }
 
-  sycl::queue *_q_in_order, *_q_out_of_order;
+  sycl::queue *_default_queue;
   sycl::queue *_saved_queue;
   sycl::context _ctx;
   std::vector<std::shared_ptr<sycl::queue>> _queues;
-  mutable mutex_type m_mutex;
+  mutable std::recursive_mutex m_mutex;
+  std::vector<std::thread> _tasks;
 };
 
 static inline unsigned int get_tid() {
@@ -497,11 +463,15 @@ private:
   int _cpu_device = -1;
 };
 
-/// Util function to get the default queue of current selected device depends on
-/// the USM config. Return the default out-of-ordered queue when USM-none is
-/// enabled, otherwise return the default in-ordered queue.
+/// Util function to get the default queue of current device in
+/// dpct device manager.
 static inline sycl::queue &get_default_queue() {
   return dev_mgr::instance().current_device().default_queue();
+}
+
+/// Util function to get the current device.
+static inline device_ext &get_current_device() {
+  return dev_mgr::instance().current_device();
 }
 
 static inline unsigned int select_device(unsigned int id) {

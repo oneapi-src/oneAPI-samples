@@ -211,12 +211,8 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
 
   double sum = 0.0;
   double *d_sum = NULL;
-  /*
-  DPCT1003:54: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue())));
 
   std::vector<cudaGraphNode_t> nodeDependencies;
   cudaGraphNode_t memcpyNode, jacobiKernelNode, memsetNode;
@@ -236,18 +232,18 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   memsetParams.height = 1;
 
   /*
-  DPCT1007:55: Migration of cudaGraphCreate is not supported.
+  DPCT1007:30: Migration of cudaGraphCreate is not supported.
   */
   checkCudaErrors(cudaGraphCreate(&graph, 0));
   /*
-  DPCT1007:56: Migration of cudaGraphAddMemsetNode is not supported.
+  DPCT1007:31: Migration of cudaGraphAddMemsetNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemsetNode(&memsetNode, graph, NULL, 0, &memsetParams));
   nodeDependencies.push_back(memsetNode);
 
   /*
-  DPCT1082:57: Migration of cudaKernelNodeParams type is not supported.
+  DPCT1082:32: Migration of cudaKernelNodeParams type is not supported.
   */
   cudaKernelNodeParams NodeParams0, NodeParams1;
   NodeParams0.func = (void *)JacobiMethod;
@@ -260,7 +256,7 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   NodeParams0.extra = NULL;
 
   /*
-  DPCT1007:58: Migration of cudaGraphAddKernelNode is not supported.
+  DPCT1007:33: Migration of cudaGraphAddKernelNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddKernelNode(&jacobiKernelNode, graph, nodeDependencies.data(),
@@ -279,14 +275,14 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   memcpyParams_direction_ct1 = dpct::device_to_host;
 
   /*
-  DPCT1007:59: Migration of cudaGraphAddMemcpyNode is not supported.
+  DPCT1007:34: Migration of cudaGraphAddMemcpyNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemcpyNode(&memcpyNode, graph, nodeDependencies.data(),
                              nodeDependencies.size(), &memcpyParams));
 
   /*
-  DPCT1007:60: Migration of cudaGraphInstantiate is not supported.
+  DPCT1007:35: Migration of cudaGraphInstantiate is not supported.
   */
   checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
 
@@ -302,27 +298,20 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   int k = 0;
   for (k = 0; k < max_iter; k++) {
     /*
-    DPCT1007:61: Migration of cudaGraphExecKernelNodeSetParams is not supported.
+    DPCT1007:36: Migration of cudaGraphExecKernelNodeSetParams is not supported.
     */
     checkCudaErrors(cudaGraphExecKernelNodeSetParams(
         graphExec, jacobiKernelNode,
         ((k & 1) == 0) ? &NodeParams0 : &NodeParams1));
     /*
-    DPCT1007:62: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:37: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, stream));
-    /*
-    DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->wait(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
 
     if (sum <= conv_threshold) {
-      /*
-      DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
       nblocks[2] = (N_ROWS / nthreads[2]) + 1;
       /*
       DPCT1083:4: The size of local memory in the migrated code may be different
@@ -370,27 +359,17 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
         });
       }
 
-      /*
-      DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-      /*
-      DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->wait(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+      checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
       printf("GPU iterations : %d\n", k + 1);
       printf("GPU error : %.3e\n", sum);
       break;
     }
   }
 
-  /*
-  DPCT1003:67: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_sum, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_sum, dpct::get_default_queue())));
   return sum;
 }
 
@@ -408,25 +387,17 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
 
   double sum = 0.0;
   double *d_sum;
-  /*
-  DPCT1003:68: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue())));
 
   int k = 0;
   for (k = 0; k < max_iter; k++) {
     /*
-    DPCT1027:69: The call to cudaStreamBeginCapture was replaced with 0 because
+    DPCT1027:38: The call to cudaStreamBeginCapture was replaced with 0 because
     SYCL currently does not support capture operations on queues.
     */
     checkCudaErrors(0);
-    /*
-    DPCT1003:70: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
     if ((k & 1) == 0) {
       /*
       DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the
@@ -436,14 +407,14 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
       dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:91: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:46: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:92: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:47: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -467,14 +438,14 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
       dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:93: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:48: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:94: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:49: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -490,60 +461,50 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
             });
       });
     }
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
     /*
-    DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-    /*
-    DPCT1027:72: The call to cudaStreamEndCapture was replaced with 0 because
+    DPCT1027:39: The call to cudaStreamEndCapture was replaced with 0 because
     SYCL currently does not support capture operations on queues.
     */
     checkCudaErrors(0);
 
     if (graphExec == NULL) {
       /*
-      DPCT1007:73: Migration of cudaGraphInstantiate is not supported.
+      DPCT1007:40: Migration of cudaGraphInstantiate is not supported.
       */
       checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
     } else {
       cudaGraphExecUpdateResult updateResult_out;
       /*
-      DPCT1007:74: Migration of cudaGraphExecUpdate is not supported.
+      DPCT1007:41: Migration of cudaGraphExecUpdate is not supported.
       */
       checkCudaErrors(
           cudaGraphExecUpdate(graphExec, graph, NULL, &updateResult_out));
       if (updateResult_out != cudaGraphExecUpdateSuccess) {
         if (graphExec != NULL) {
           /*
-          DPCT1007:75: Migration of cudaGraphExecDestroy is not supported.
+          DPCT1007:42: Migration of cudaGraphExecDestroy is not supported.
           */
           checkCudaErrors(cudaGraphExecDestroy(graphExec));
         }
         printf("k = %d graph update failed with error - %d\n", k,
                updateResult_out);
         /*
-        DPCT1007:76: Migration of cudaGraphInstantiate is not supported.
+        DPCT1007:43: Migration of cudaGraphInstantiate is not supported.
         */
         checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
       }
     }
     /*
-    DPCT1007:77: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:44: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, stream));
-    /*
-    DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->wait(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
 
     if (sum <= conv_threshold) {
-      /*
-      DPCT1003:79: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
       nblocks[2] = (N_ROWS / nthreads[2]) + 1;
       /*
       DPCT1083:9: The size of local memory in the migrated code may be different
@@ -591,27 +552,17 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
         });
       }
 
-      /*
-      DPCT1003:80: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-      /*
-      DPCT1003:81: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->wait(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+      checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
       printf("GPU iterations : %d\n", k + 1);
       printf("GPU error : %.3e\n", sum);
       break;
     }
   }
 
-  /*
-  DPCT1003:82: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_sum, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_sum, dpct::get_default_queue())));
   return sum;
 }
 
@@ -625,20 +576,12 @@ double JacobiMethodGpu(const float *A, const double *b,
 
   double sum = 0.0;
   double *d_sum;
-  /*
-  DPCT1003:83: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue())));
   int k = 0;
 
   for (k = 0; k < max_iter; k++) {
-    /*
-    DPCT1003:84: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
     if ((k & 1) == 0) {
       /*
       DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the
@@ -648,14 +591,14 @@ double JacobiMethodGpu(const float *A, const double *b,
       dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:95: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:50: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:96: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:51: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -679,14 +622,14 @@ double JacobiMethodGpu(const float *A, const double *b,
       dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:97: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:52: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:98: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:53: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -702,23 +645,13 @@ double JacobiMethodGpu(const float *A, const double *b,
             });
       });
     }
-    /*
-    DPCT1003:85: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-    /*
-    DPCT1003:86: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->wait(), 0));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
 
     if (sum <= conv_threshold) {
-      /*
-      DPCT1003:87: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
       nblocks[2] = (N_ROWS / nthreads[2]) + 1;
       /*
       DPCT1083:14: The size of local memory in the migrated code may be
@@ -766,26 +699,16 @@ double JacobiMethodGpu(const float *A, const double *b,
         });
       }
 
-      /*
-      DPCT1003:88: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-      /*
-      DPCT1003:89: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->wait(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+      checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
       printf("GPU iterations : %d\n", k + 1);
       printf("GPU error : %.3e\n", sum);
       break;
     }
   }
 
-  /*
-  DPCT1003:90: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_sum, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_sum, dpct::get_default_queue())));
   return sum;
 }

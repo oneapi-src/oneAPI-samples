@@ -1,0 +1,598 @@
+---
+MainSourceFile:  '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/dpct_output/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.dp.hpp'
+Replacements:
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          1964
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2075
+    Length:          19
+    ReplacementText: 'dpct::image_accessor_ext<float, 2>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2102
+    Length:          0
+    ReplacementText: ",\n                                const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2123
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2137
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2150
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2179
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2193
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2206
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2453
+    Length:          40
+    ReplacementText: 'texFine.read(x - dx * 0.25f, y)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2531
+    Length:          40
+    ReplacementText: 'texFine.read(x + dx * 0.25f, y)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2609
+    Length:          40
+    ReplacementText: 'texFine.read(x, y - dy * 0.25f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          2687
+    Length:          40
+    ReplacementText: 'texFine.read(x, y + dy * 0.25f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3265
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3278
+    Length:          5
+    ReplacementText: 1, 8, 32
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3288
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3300
+    Length:          57
+    ReplacementText: '1, iDivUp(newHeight, threads[1]), iDivUp(newWidth, threads[2])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3363
+    Length:          19
+    ReplacementText: 'dpct::image_wrapper_base_p'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3394
+    Length:          16
+    ReplacementText: 'dpct::image_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3447
+    Length:          16
+    ReplacementText: 'dpct::image_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3477
+    Length:          33
+    ReplacementText: 'set_data_type(dpct::image_data_type::pitch)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3521
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3524
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3525
+    Length:          7
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3532
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3533
+    Length:          20
+    ReplacementText: 'set_data_ptr((void *)src)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3557
+    Length:          0
+    ReplacementText: "/*\n  DPCT1059:1: SYCL only supports 4-channel image format. Adjust the code.\n  */\n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3564
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3567
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3568
+    Length:          7
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3575
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3576
+    Length:          37
+    ReplacementText: 'set_channel(dpct::image_channel::create<float>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3624
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3627
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3628
+    Length:          7
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3635
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3636
+    Length:          13
+    ReplacementText: 'set_x(width)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3660
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3663
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3664
+    Length:          7
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3671
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3672
+    Length:          15
+    ReplacementText: 'set_y(height)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3698
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3701
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3702
+    Length:          7
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3709
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3710
+    Length:          37
+    ReplacementText: 'set_pitch(stride * sizeof(float))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3752
+    Length:          15
+    ReplacementText: 'dpct::sampling_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3808
+    Length:          15
+    ReplacementText: 'dpct::sampling_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3828
+    Length:          36
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3864
+    Length:          46
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3910
+    Length:          51
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          3963
+    Length:          47
+    ReplacementText: 'texDescr.set(sycl::addressing_mode::mirrored_repeat, sycl::filtering_mode::linear, sycl::coordinate_normalization_mode::normalized)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          4012
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:2: Migration of cudaTextureDesc::readMode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          4078
+    Length:          59
+    ReplacementText: 'DPCT_CHECK_ERROR(texFine = dpct::create_image_wrapper(texRes, texDescr))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          4141
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          4143
+    Length:          121
+    ReplacementText: "dpct::get_default_queue().submit(\n    [&](sycl::handler &cgh) {\n      auto texFine_acc = static_cast<dpct::image_wrapper<float, 2> *>(texFine)->get_access(cgh);\n\n      auto texFine_smpl = texFine->get_sampler();\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(blocks * threads, threads), \n        [=](sycl::nd_item<3> item_ct1) {\n          DownscaleKernel(newWidth, newHeight, newStride, out, dpct::image_accessor_ext<float, 2>(texFine_smpl, texFine_acc), item_ct1);\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Offset:          4264
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/downscaleKernel.cuh'
+    Digest:          9dd5af34a642b33377630369f1c8ae7f
+DpctVersion:     17.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '8'
+    Specified:       true
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

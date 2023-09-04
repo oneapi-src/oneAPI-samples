@@ -16,8 +16,8 @@ if (CMAKE_HOST_WIN32)
       set(CMAKE_Fortran_COMPILER ifx)
     endif()
 else()
-    # CMake 3.20.5 is the minimum recommended for IntelLLVM on Linux
-    cmake_minimum_required(VERSION 3.20.5)
+    # CMake 3.22.1 is the minimum recommended for IntelLLVM on Linux
+    cmake_minimum_required(VERSION 3.22.1)
     if( NOT DEFINED CMAKE_C_COMPILER)
       set(CMAKE_C_COMPILER icx)
     endif()

@@ -1,0 +1,508 @@
+---
+MainSourceFile:  '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/dpct_output/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.dp.hpp'
+Replacements:
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          1583
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          1616
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2571
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2842
+    Length:          0
+    ReplacementText: ",\n                                const sycl::nd_item<3> &item_ct1,\n                                volatile float *du, volatile float *dv"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2882
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2905
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2933
+    Length:          50
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          2986
+    Length:          50
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3055
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3069
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3082
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3111
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3125
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3138
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3210
+    Length:          14
+    ReplacementText: 'sycl::min(ix, w - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3227
+    Length:          14
+    ReplacementText: 'sycl::min(iy, h - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3312
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3331
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3664
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3733
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3746
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3778
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3791
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3974
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1064:30: Migrated min call is used in a macro/template definition and may not be valid for all macro/template uses. Adjust the code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          3982
+    Length:          29
+    ReplacementText: 'dpct::min((unsigned int)(bsx + item_ct1.get_local_id(2)), w - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4052
+    Length:          15
+    ReplacementText: 'sycl::max(bsy - 1, 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4104
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4212
+    Length:          20
+    ReplacementText: 'sycl::min(bsy + by, h - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4360
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4429
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4442
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4474
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4487
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4670
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1064:31: Migrated min call is used in a macro/template definition and may not be valid for all macro/template uses. Adjust the code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4678
+    Length:          29
+    ReplacementText: 'dpct::min((unsigned int)(bsy + item_ct1.get_local_id(2)), h - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4743
+    Length:          15
+    ReplacementText: 'sycl::max(bsx - 1, 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4781
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4872
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          4991
+    Length:          20
+    ReplacementText: 'sycl::min(bsx + bx, w - 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          5132
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:13: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          5134
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6807
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6820
+    Length:          5
+    ReplacementText: 1, 6, 32
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6845
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6857
+    Length:          42
+    ReplacementText: '1, iDivUp(h, threads[1]), iDivUp(w, threads[2])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6903
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          6905
+    Length:          137
+    ReplacementText: "dpct::get_default_queue().submit(\n    [&](sycl::handler &cgh) {\n      sycl::local_accessor<float, 1> du_acc_ct1(sycl::range<1>((32 + 2) * (6 + 2)), cgh);\n      sycl::local_accessor<float, 1> dv_acc_ct1(sycl::range<1>((32 + 2) * (6 + 2)), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(blocks * threads, threads), \n        [=](sycl::nd_item<3> item_ct1) {\n          JacobiIteration<32, 6>(du0, dv0, Ix, Iy, Iz, w, h, s, alpha, du1, dv1, item_ct1, du_acc_ct1.get_pointer(), dv_acc_ct1.get_pointer());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Offset:          7042
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/solverKernel.cuh'
+    Digest:          f784192345300fd669a63239a8f1e21e
+DpctVersion:     17.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/workspace_shwetha/july_revisit/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '8'
+    Specified:       true
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

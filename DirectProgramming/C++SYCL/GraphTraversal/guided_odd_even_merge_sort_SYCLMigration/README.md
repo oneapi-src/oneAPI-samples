@@ -107,7 +107,7 @@ For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA cod
      ```
    Run `02_sycl_migrated` for  CPU.
      ```
-    export ONEAPI_DEVICE_SELECTOR =cpu
+    export ONEAPI_DEVICE_SELECTOR=cpu
     make run
     ```
 

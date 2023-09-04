@@ -25,7 +25,7 @@ else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 
     # Check if the target is a BSP
-    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
+    if(IS_BSP MATCHES "1")
         set(BSP_FLAG "-DIS_BSP")
     else()
         set(BSP_FLAG "")

@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +48,7 @@ inline float Tex2D(const float *t, int w, int h, int s, float x, float y) {
 
   x -= 0.5f;
   y -= 0.5f;
-  
+
   // get fractional parts of coordinates
   float dx = fabsf(modff(x, &intPartX));
   float dy = fabsf(modff(y, &intPartY));
@@ -405,8 +399,6 @@ void ComputeFlowGold(const float *I0, const float *I1, int width, int height,
                          pH[currentLevel], pS[currentLevel], Ix, Iy, Iz);
 
       for (int iter = 0; iter < nSolverIters; ++iter) {
-        //   printf("\ncurrentlevel = %d, warpiter = %d, Solver Iteration value
-        //   = %d ",currentLevel, warpIter, iter);
         SolveForUpdate(du0, dv0, Ix, Iy, Iz, pW[currentLevel], pH[currentLevel],
                        pS[currentLevel], alpha, du1, dv1);
         Swap(du0, du1);

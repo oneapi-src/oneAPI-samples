@@ -60,14 +60,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of July 29, 2020.
+Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | 24k matrices/s for complex matrices of size 128 * 128
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 7k matrices/s for complex matrices of size 256 * 256
+| Terasic’s DE10-Agilex Development Board           | 15k matrices/s for complex matrices of size 256 * 256
 
 
 ## Key Implementation Details
@@ -285,26 +284,14 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
 
 ## Example Output
 
-Example Output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for 8 matrices 819200 times (each matrix consisting of 128x128 complex numbers).
+Example output when running on **Terasic’s DE10-Agilex Development Board** for the decomposition of 8 matrices 819200 times (each matrix consisting of 256x256 complex numbers).
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 8 random complex matrices of size 128x128
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Generating 8 random complex matrices of size 256x256 
 Running QR decomposition of 8 matrices 819200 times
- Total duration:   268.733 s
-Throughput: 24.387k matrices/s
-Verifying results...
-PASSED
-```
-
-Example output when running on **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)** for the decomposition of 8 matrices 819200 times (each matrix consisting of 256x256 complex numbers).
-
-```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 256x256
-Running QR decomposition of 8 matrices 819200 times
- Total duration:   888.077 s
-Throughput: 7.37954k matrices/s
+   Total duration:   427.655 s
+Throughput: 15.3245k matrices/s
 Verifying results...
 PASSED
 ```

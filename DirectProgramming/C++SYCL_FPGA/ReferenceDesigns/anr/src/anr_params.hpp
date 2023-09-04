@@ -5,6 +5,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <utility>
 

@@ -27,7 +27,6 @@
 
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
-#include <cooperative_groups.h>
 #include <helper_cuda.h>
 #include <vector>
 #include <chrono>
@@ -41,7 +40,7 @@ typedef struct callBackData {
 } callBackData_t;
 
 void reduce(float *inputVec, double *outputVec, size_t inputSize,
-                       size_t outputSize, sycl::nd_item<3> item_ct1,
+                       size_t outputSize, const sycl::nd_item<3> &item_ct1,
                        double *tmp) {
 
   auto cta = item_ct1.get_group();
@@ -91,10 +90,7 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
   if (item_ct1.get_local_linear_id() == 0 &&
       item_ct1.get_group(2) < outputSize) {
     beta = 0.0;
-    /*
-    DPCT1007:3: Migration of size is not supported.
-    */
-    for (int i = 0; i < cta.size();
+    for (int i = 0; i < item_ct1.get_group().get_local_linear_range();
          i += item_ct1.get_sub_group().get_local_linear_range()) {
       beta += tmp[i];
     }
@@ -103,7 +99,7 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
 }
 
 void reduceFinal(double *inputVec, double *result,
-                            size_t inputSize, sycl::nd_item<3> item_ct1,
+                            size_t inputSize, const sycl::nd_item<3> &item_ct1,
                             double *tmp) {
 
   auto cta = item_ct1.get_group();
@@ -118,7 +114,7 @@ void reduceFinal(double *inputVec, double *result,
   tmp[item_ct1.get_local_linear_id()] = temp_sum;
 
   /*
-  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:3: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -134,7 +130,7 @@ void reduceFinal(double *inputVec, double *result,
   }
 
   /*
-  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -147,7 +143,7 @@ void reduceFinal(double *inputVec, double *result,
   }
 
   /*
-  DPCT1065:6: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -160,7 +156,7 @@ void reduceFinal(double *inputVec, double *result,
   }
 
   /*
-  DPCT1065:7: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:6: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -173,10 +169,8 @@ void reduceFinal(double *inputVec, double *result,
     // Reduce final warp using shuffle
     for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
          offset > 0; offset /= 2) {
-      /*
-      DPCT1007:8: Migration of shfl_down is not supported.
-      */
-      temp_sum += tile32.shfl_down(temp_sum, offset);
+      temp_sum +=
+          sycl::shift_group_left(item_ct1.get_sub_group(), temp_sum, offset);
     }
   }
   // write result for this block to global mem
@@ -206,14 +200,13 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   cudaGraphNode_t memcpyNode, kernelNode, memsetNode;
   double result_h = 0.0;
 
-  /*
-  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (streamForGraph = dpct::get_current_device().create_queue(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      streamForGraph = dpct::get_current_device().create_queue()));
 
-  cudaKernelNodeParams kernelNodeParams = { 0sycl ::range<3>(1, 1, 1);
+  /*
+  DPCT1082:23: Migration of cudaKernelNodeParams type is not supported.
+  */
+  cudaKernelNodeParams kernelNodeParams = {0};
   dpct::pitched_data memcpyParams_from_data_ct1, memcpyParams_to_data_ct1;
   sycl::id<3> memcpyParams_from_pos_ct1(0, 0, 0),
       memcpyParams_to_pos_ct1(0, 0, 0);
@@ -240,16 +233,16 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   memsetParams.height = 1;
 
   /*
-  DPCT1007:32: Migration of cudaGraphCreate is not supported.
+  DPCT1007:24: Migration of cudaGraphCreate is not supported.
   */
   checkCudaErrors(cudaGraphCreate(&graph, 0));
   /*
-  DPCT1007:33: Migration of cudaGraphAddMemcpyNode is not supported.
+  DPCT1007:25: Migration of cudaGraphAddMemcpyNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemcpyNode(&memcpyNode, graph, NULL, 0, &memcpyParams));
   /*
-  DPCT1007:34: Migration of cudaGraphAddMemsetNode is not supported.
+  DPCT1007:26: Migration of cudaGraphAddMemsetNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemsetNode(&memsetNode, graph, NULL, 0, &memsetParams));
@@ -268,7 +261,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   kernelNodeParams.extra = NULL;
 
   /*
-  DPCT1007:35: Migration of cudaGraphAddKernelNode is not supported.
+  DPCT1007:27: Migration of cudaGraphAddKernelNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddKernelNode(&kernelNode, graph, nodeDependencies.data(),
@@ -284,7 +277,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   memsetParams.width = 2;
   memsetParams.height = 1;
   /*
-  DPCT1007:36: Migration of cudaGraphAddMemsetNode is not supported.
+  DPCT1007:28: Migration of cudaGraphAddMemsetNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemsetNode(&memsetNode, graph, NULL, 0, &memsetParams));
@@ -302,7 +295,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   kernelNodeParams.extra = NULL;
 
   /*
-  DPCT1007:37: Migration of cudaGraphAddKernelNode is not supported.
+  DPCT1007:29: Migration of cudaGraphAddKernelNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddKernelNode(&kernelNode, graph, nodeDependencies.data(),
@@ -323,7 +316,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   memcpyParams_size_ct1 = sycl::range<3>(sizeof(double), 1, 1);
   memcpyParams_direction_ct1 = dpct::device_to_host;
   /*
-  DPCT1007:38: Migration of cudaGraphAddMemcpyNode is not supported.
+  DPCT1007:30: Migration of cudaGraphAddMemcpyNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemcpyNode(&memcpyNode, graph, nodeDependencies.data(),
@@ -340,7 +333,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   hostParams.userData = &hostFnData;
 
   /*
-  DPCT1007:39: Migration of cudaGraphAddHostNode is not supported.
+  DPCT1007:31: Migration of cudaGraphAddHostNode is not supported.
   */
   checkCudaErrors(cudaGraphAddHostNode(&hostNode, graph,
                                        nodeDependencies.data(),
@@ -349,77 +342,65 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   cudaGraphNode_t *nodes = NULL;
   size_t numNodes = 0;
   /*
-  DPCT1007:40: Migration of cudaGraphGetNodes is not supported.
+  DPCT1007:32: Migration of cudaGraphGetNodes is not supported.
   */
   checkCudaErrors(cudaGraphGetNodes(graph, nodes, &numNodes));
   printf("\nNum of nodes in the graph created manually = %zu\n", numNodes);
 
   cudaGraphExec_t graphExec;
   /*
-  DPCT1007:41: Migration of cudaGraphInstantiate is not supported.
+  DPCT1007:33: Migration of cudaGraphInstantiate is not supported.
   */
   checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
 
   cudaGraph_t clonedGraph;
   cudaGraphExec_t clonedGraphExec;
   /*
-  DPCT1007:42: Migration of cudaGraphClone is not supported.
+  DPCT1007:34: Migration of cudaGraphClone is not supported.
   */
   checkCudaErrors(cudaGraphClone(&clonedGraph, graph));
   /*
-  DPCT1007:43: Migration of cudaGraphInstantiate is not supported.
+  DPCT1007:35: Migration of cudaGraphInstantiate is not supported.
   */
   checkCudaErrors(
       cudaGraphInstantiate(&clonedGraphExec, clonedGraph, NULL, NULL, 0));
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     /*
-    DPCT1007:44: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:36: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, streamForGraph));
   }
 
-  /*
-  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((streamForGraph->wait(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   printf("Cloned Graph Output.. \n");
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     /*
-    DPCT1007:46: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:37: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(clonedGraphExec, streamForGraph));
   }
-  /*
-  DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((streamForGraph->wait(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   /*
-  DPCT1007:48: Migration of cudaGraphExecDestroy is not supported.
+  DPCT1007:38: Migration of cudaGraphExecDestroy is not supported.
   */
   checkCudaErrors(cudaGraphExecDestroy(graphExec));
   /*
-  DPCT1007:49: Migration of cudaGraphExecDestroy is not supported.
+  DPCT1007:39: Migration of cudaGraphExecDestroy is not supported.
   */
   checkCudaErrors(cudaGraphExecDestroy(clonedGraphExec));
   /*
-  DPCT1007:50: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:40: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(graph));
   /*
-  DPCT1007:51: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:41: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(clonedGraph));
-  /*
-  DPCT1003:52: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_current_device().destroy_queue(streamForGraph), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_current_device().destroy_queue(streamForGraph)));
 }
 
 void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
@@ -433,182 +414,150 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   cudaGraph_t graph;
   double result_h = 0.0;
 
-  /*
-  DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1 = dpct::get_current_device().create_queue(), 0));
-  /*
-  DPCT1003:54: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream2 = dpct::get_current_device().create_queue(), 0));
-  /*
-  DPCT1003:55: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream3 = dpct::get_current_device().create_queue(), 0));
-  /*
-  DPCT1003:56: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   checkCudaErrors(
-      (streamForGraph = dpct::get_current_device().create_queue(), 0));
+      DPCT_CHECK_ERROR(stream1 = dpct::get_current_device().create_queue()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream2 = dpct::get_current_device().create_queue()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream3 = dpct::get_current_device().create_queue()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      streamForGraph = dpct::get_current_device().create_queue()));
+
+  checkCudaErrors(DPCT_CHECK_ERROR(forkStreamEvent = new sycl::event()));
+  checkCudaErrors(DPCT_CHECK_ERROR(memsetEvent1 = new sycl::event()));
+  checkCudaErrors(DPCT_CHECK_ERROR(memsetEvent2 = new sycl::event()));
 
   /*
-  DPCT1003:57: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((forkStreamEvent = new sycl::event(), 0));
-  /*
-  DPCT1003:58: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((memsetEvent1 = new sycl::event(), 0));
-  /*
-  DPCT1003:59: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((memsetEvent2 = new sycl::event(), 0));
-
-  /*
-  DPCT1027:60: The call to cudaStreamBeginCapture was replaced with 0 because
+  DPCT1027:42: The call to cudaStreamBeginCapture was replaced with 0 because
   SYCL currently does not support capture operations on queues.
   */
   checkCudaErrors(0);
 
   /*
-  DPCT1012:61: Detected kernel execution time measurement pattern and generated
+  DPCT1012:43: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:62: The original code returned the error code that was further
+  DPCT1024:44: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
   forkStreamEvent_ct1 = std::chrono::steady_clock::now();
-  checkCudaErrors((*forkStreamEvent = stream1->ext_oneapi_submit_barrier(), 0));
-  /*
-  DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream2->ext_oneapi_submit_barrier({*forkStreamEvent}), 0));
-  /*
-  DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream3->ext_oneapi_submit_barrier({*forkStreamEvent}), 0));
-
-  /*
-  DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+  checkCudaErrors(DPCT_CHECK_ERROR(*forkStreamEvent =
+                                       stream1->ext_oneapi_submit_barrier()));
   checkCudaErrors(
-      (stream1->memcpy(inputVec_d, inputVec_h, sizeof(float) * inputSize), 0));
-
-  /*
-  DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+      DPCT_CHECK_ERROR(stream2->ext_oneapi_submit_barrier({*forkStreamEvent})));
   checkCudaErrors(
-      (stream2->memset(outputVec_d, 0, sizeof(double) * numOfBlocks), 0));
+      DPCT_CHECK_ERROR(stream3->ext_oneapi_submit_barrier({*forkStreamEvent})));
+
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream1->memcpy(inputVec_d, inputVec_h, sizeof(float) * inputSize)));
+
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream2->memset(outputVec_d, 0, sizeof(double) * numOfBlocks)));
 
   /*
-  DPCT1012:67: Detected kernel execution time measurement pattern and generated
+  DPCT1012:45: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:68: The original code returned the error code that was further
+  DPCT1024:46: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
   memsetEvent1_ct1 = std::chrono::steady_clock::now();
-  checkCudaErrors((*memsetEvent1 = stream2->ext_oneapi_submit_barrier(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(*memsetEvent1 = stream2->ext_oneapi_submit_barrier()));
 
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream3->memset(result_d, 0, sizeof(double))));
   /*
-  DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream3->memset(result_d, 0, sizeof(double)), 0));
-  /*
-  DPCT1012:70: Detected kernel execution time measurement pattern and generated
+  DPCT1012:47: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:71: The original code returned the error code that was further
+  DPCT1024:48: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
   memsetEvent2_ct1 = std::chrono::steady_clock::now();
-  checkCudaErrors((*memsetEvent2 = stream3->ext_oneapi_submit_barrier(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(*memsetEvent2 = stream3->ext_oneapi_submit_barrier()));
+
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream1->ext_oneapi_submit_barrier({*memsetEvent1})));
 
   /*
-  DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1->ext_oneapi_submit_barrier({*memsetEvent1}), 0));
-
-  /*
-  DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:7: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
-  stream1->submit([&](sycl::handler &cgh) {
-    sycl::local_accessor<double, 1> tmp_acc_ct1(sycl::range<1>(512 /*512*/),
-                                                cgh);
+  {
+    dpct::has_capability_or_fail(stream1->get_device(), {sycl::aspect::fp64});
+    stream1->submit([&](sycl::handler &cgh) {
+      /*
+      DPCT1101:61: 'THREADS_PER_BLOCK' expression was replaced with a value.
+      Modify the code to use the original expression, provided in comments, if
+      it is correct.
+      */
+      sycl::local_accessor<double, 1> tmp_acc_ct1(
+          sycl::range<1>(512 /*THREADS_PER_BLOCK*/), cgh);
 
-    cgh.parallel_for(
-        sycl::nd_range<3>(sycl::range<3>(1, 1, numOfBlocks) *
-                              sycl::range<3>(1, 1, THREADS_PER_BLOCK),
-                          sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
-        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
-          reduce(inputVec_d, outputVec_d, inputSize, numOfBlocks, item_ct1,
-                 tmp_acc_ct1.get_pointer());
-        });
-  });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, numOfBlocks) *
+                                sycl::range<3>(1, 1, THREADS_PER_BLOCK),
+                            sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
+          [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            reduce(inputVec_d, outputVec_d, inputSize, numOfBlocks, item_ct1,
+                   tmp_acc_ct1.get_pointer());
+          });
+    });
+  }
+
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream1->ext_oneapi_submit_barrier({*memsetEvent2})));
 
   /*
-  DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1->ext_oneapi_submit_barrier({*memsetEvent2}), 0));
-
-  /*
-  DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
-  stream1->submit([&](sycl::handler &cgh) {
-    sycl::local_accessor<double, 1> tmp_acc_ct1(sycl::range<1>(512 /*512*/),
-                                                cgh);
+  {
+    dpct::has_capability_or_fail(stream1->get_device(), {sycl::aspect::fp64});
+    stream1->submit([&](sycl::handler &cgh) {
+      /*
+      DPCT1101:62: 'THREADS_PER_BLOCK' expression was replaced with a value.
+      Modify the code to use the original expression, provided in comments, if
+      it is correct.
+      */
+      sycl::local_accessor<double, 1> tmp_acc_ct1(
+          sycl::range<1>(512 /*THREADS_PER_BLOCK*/), cgh);
 
-    cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, THREADS_PER_BLOCK),
-                                       sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
-                     [=](sycl::nd_item<3> item_ct1)
-                         [[intel::reqd_sub_group_size(32)]] {
-                           reduceFinal(outputVec_d, result_d, numOfBlocks,
-                                       item_ct1, tmp_acc_ct1.get_pointer());
-                         });
-  });
-  /*
-  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1->memcpy(&result_h, result_d, sizeof(double)), 0));
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, THREADS_PER_BLOCK),
+                            sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
+          [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            reduceFinal(outputVec_d, result_d, numOfBlocks, item_ct1,
+                        tmp_acc_ct1.get_pointer());
+          });
+    });
+  }
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream1->memcpy(&result_h, result_d, sizeof(double))));
 
   callBackData_t hostFnData = {0};
   hostFnData.data = &result_h;
   hostFnData.fn_name = "cudaGraphsUsingStreamCapture";
   cudaHostFn_t fn = myHostNodeCallback;
   /*
-  DPCT1007:75: Migration of cudaLaunchHostFunc is not supported.
+  DPCT1007:49: Migration of cudaLaunchHostFunc is not supported.
   */
   checkCudaErrors(cudaLaunchHostFunc(stream1, fn, &hostFnData));
   /*
-  DPCT1027:76: The call to cudaStreamEndCapture was replaced with 0 because SYCL
+  DPCT1027:50: The call to cudaStreamEndCapture was replaced with 0 because SYCL
   currently does not support capture operations on queues.
   */
   checkCudaErrors(0);
@@ -616,7 +565,7 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   cudaGraphNode_t *nodes = NULL;
   size_t numNodes = 0;
   /*
-  DPCT1007:77: Migration of cudaGraphGetNodes is not supported.
+  DPCT1007:51: Migration of cudaGraphGetNodes is not supported.
   */
   checkCudaErrors(cudaGraphGetNodes(graph, nodes, &numNodes));
   printf("\nNum of nodes in the graph created using stream capture API = %zu\n",
@@ -624,81 +573,63 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
 
   cudaGraphExec_t graphExec;
   /*
-  DPCT1007:78: Migration of cudaGraphInstantiate is not supported.
+  DPCT1007:52: Migration of cudaGraphInstantiate is not supported.
   */
   checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
 
   cudaGraph_t clonedGraph;
   cudaGraphExec_t clonedGraphExec;
   /*
-  DPCT1007:79: Migration of cudaGraphClone is not supported.
+  DPCT1007:53: Migration of cudaGraphClone is not supported.
   */
   checkCudaErrors(cudaGraphClone(&clonedGraph, graph));
   /*
-  DPCT1007:80: Migration of cudaGraphInstantiate is not supported.
+  DPCT1007:54: Migration of cudaGraphInstantiate is not supported.
   */
   checkCudaErrors(
       cudaGraphInstantiate(&clonedGraphExec, clonedGraph, NULL, NULL, 0));
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     /*
-    DPCT1007:81: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:55: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, streamForGraph));
   }
 
-  /*
-  DPCT1003:82: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((streamForGraph->wait(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   printf("Cloned Graph Output.. \n");
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     /*
-    DPCT1007:83: Migration of cudaGraphLaunch is not supported.
+    DPCT1007:56: Migration of cudaGraphLaunch is not supported.
     */
     checkCudaErrors(cudaGraphLaunch(clonedGraphExec, streamForGraph));
   }
 
-  /*
-  DPCT1003:84: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((streamForGraph->wait(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   /*
-  DPCT1007:85: Migration of cudaGraphExecDestroy is not supported.
+  DPCT1007:57: Migration of cudaGraphExecDestroy is not supported.
   */
   checkCudaErrors(cudaGraphExecDestroy(graphExec));
   /*
-  DPCT1007:86: Migration of cudaGraphExecDestroy is not supported.
+  DPCT1007:58: Migration of cudaGraphExecDestroy is not supported.
   */
   checkCudaErrors(cudaGraphExecDestroy(clonedGraphExec));
   /*
-  DPCT1007:87: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:59: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(graph));
   /*
-  DPCT1007:88: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:60: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(clonedGraph));
-  /*
-  DPCT1003:89: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().destroy_queue(stream1), 0));
-  /*
-  DPCT1003:90: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().destroy_queue(stream2), 0));
-  /*
-  DPCT1003:91: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   checkCudaErrors(
-      (dpct::get_current_device().destroy_queue(streamForGraph), 0));
+      DPCT_CHECK_ERROR(dpct::get_current_device().destroy_queue(stream1)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().destroy_queue(stream2)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_current_device().destroy_queue(streamForGraph)));
 }
 
 int main(int argc, char **argv) {
@@ -715,33 +646,14 @@ int main(int argc, char **argv) {
   float *inputVec_d = NULL, *inputVec_h = NULL;
   double *outputVec_d = NULL, *result_d;
 
-  /*
-  DPCT1003:92: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (inputVec_h = sycl::malloc_host<float>(size, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:93: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (inputVec_d = sycl::malloc_device<float>(size, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:94: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((outputVec_d = sycl::malloc_device<double>(
-                       maxBlocks, dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:95: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      result_d = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      inputVec_h = sycl::malloc_host<float>(size, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(inputVec_d = sycl::malloc_device<float>(
+                                       size, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(outputVec_d = sycl::malloc_device<double>(
+                                       maxBlocks, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      result_d = sycl::malloc_device<double>(1, dpct::get_default_queue())));
 
   init_input(inputVec_h, size);
 
@@ -750,25 +662,13 @@ int main(int argc, char **argv) {
   cudaGraphsUsingStreamCapture(inputVec_h, inputVec_d, outputVec_d, result_d,
                                size, maxBlocks);
 
-  /*
-  DPCT1003:96: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(inputVec_d, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:97: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(outputVec_d, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:98: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(result_d, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:99: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(inputVec_h, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(inputVec_d, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(outputVec_d, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(result_d, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(inputVec_h, dpct::get_default_queue())));
   return EXIT_SUCCESS;
 }

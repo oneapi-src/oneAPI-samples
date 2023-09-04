@@ -30,6 +30,7 @@
 
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
+//#include <cooperative_groups.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // This function calculates total sum for each of the two input arrays.

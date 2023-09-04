@@ -286,16 +286,18 @@ Examine the loop attributes for the three different versions of the `Producer` k
 
 ### FPGA Device Output
     ```
-    generating 5000000 random numbers in the range [0,3]
-    Running kernel 0
-    Running kernel 1
-    Running kernel 2
-    Kernel 0 throughput: 192.19 MB/s
-    Kernel 1 throughput: 359.47 MB/s
-    Kernel 2 throughput: 636.29 MB/s
-    PASSED
+generating 5000000 random numbers in the range [0,3]
+Running kernel 0
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running kernel 1
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running kernel 2
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Kernel 0 throughput: 745.57 MB/s 
+Kernel 1 throughput: 750.70 MB/s 
+Kernel 2 throughput: 1328.99 MB/s 
+PASSED
     ```
-    NOTE: These throughput numbers were collected using the Intel® PAC with Intel Arria® 10 GX FPGA.
 
 ## License
 
