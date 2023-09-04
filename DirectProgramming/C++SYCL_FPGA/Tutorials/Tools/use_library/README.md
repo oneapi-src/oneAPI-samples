@@ -56,15 +56,15 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Source Code Description
 
-This tutorial includes two designs, each in separate sub-directories. Both designs multiply two 27-bit inputs together to produce a 54-bit output. In `part1_native`, a 27x27 multiplication is described with native C++ code. 
-In `part2_libfunc_call` folder, RTL code is used to customize a DSP block to perform the multiplication more optimally. You can observe the impact on area utilization and performance by comparing the two designs.
+This tutorial includes two designs, each in separate kernel. Both designs multiply two 27-bit inputs together to produce a 54-bit output. In `NativeMult27x27` functor, a 27x27 multiplication is described with native C++ code. 
+In `RtlMult27x27` functor, RTL code is used to customize a DSP block to perform the multiplication more optimally. You can observe the impact on area utilization and performance by comparing the two designs.
 This code sample demonstrates how to use a simple RTL library in a simple FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, since the area changes in this sample are quite small. You can use the `fpga_crossgen` and `fpga_libtool` commands to generate RTL libraries for multiarchitecture binary kernel (full system) designs as well.
 This graphic illustrates the Library Toolchain Creation Process:
 ![](assets/lib_toolchain.svg)
 
 ### Use of RTL libraries in SYCL
 
-Files needed to create a SYCL target library from RTL source (as demostrated in `part2_libfunc_call` folder) include:
+Files needed to create a SYCL target library from RTL source include:
 - Verilog, System Verilog, or VHDL files that define the RTL component
 - An Object Manifest File (.xml) which contains properties needed to integrate RTL component into SYCL pipeline
 - A header file containing valid SYCL kernel language and declares the signatures of functions implemented by the RTL component.
@@ -258,19 +258,21 @@ PASSED: result is correct!
 
 ## Read the Reports
 
-Locate the `report.html` file in `use_native_report.prj` or `use_native.fpga_sim.prj` for `part1_native`.
-Locate the `report.html` file in `use_library_report.prj` or `use_library.fpga_sim.prj` for `part2_libfunc_call`.
+Locate the `report.html` file in `use_library_report.prj` or `use_library.fpga_sim.prj`.
 
-Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of `part2_libfunc_call` with customised DSP (KernelComputeRTL) should be lower than `part1_native` design (KernelCompute).
+Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of `KernelComputeRTL` with customised DSP should be lower than `KernelCompute` design.
 
 ![](assets/loop_analysis_comparison.svg)
 
-Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**)
+Locate the `report.html` file in `use_library.fpga.prj` and `use_library.fpga.prj_1`.
+
+Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**) and compare both reports.
+
 By default, compiler area estimation tools assume that the RTL module area is 0.
 Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute.
 Then, you may find the Compile Estimated: Kernel System used 1 DSP in this table.
 
-The following table shows comparison of the estimated area usage for each design separately.
+The following table shows comparison of the estimated and generated area usage for each design separately.
 
 ![](assets/resource_comparison.svg)
 
