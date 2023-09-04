@@ -20,7 +20,7 @@ class KernelComputeRTL;
 
 
 
-// Using host pipes to stream data in and out of kernal
+// Using pipes to stream data in and out of kernel
 // IDPipeA and IDPipeB will be written to by the host, and then read by the kernel (device)
 // IDPipeC will be written to by the kernel (device), and then read by the host
 class IDPipeA;
