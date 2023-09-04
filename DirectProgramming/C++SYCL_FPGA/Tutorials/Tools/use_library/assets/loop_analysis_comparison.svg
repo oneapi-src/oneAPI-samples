@@ -24,10 +24,10 @@
 		</v:userDefs>
 		<title>latency compare</title>
 		<v:pageProperties v:drawingScale="1" v:pageScale="1" v:drawingUnits="19" v:shadowOffsetX="9" v:shadowOffsetY="-9"/>
-		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(18,-260.175)">
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(18,-254.106)">
 			<title>Sheet.1</title>
-			<rect v:rectContext="foreign" x="0" y="278.175" width="1485" height="333.825" class="st1"/>
-			<image x="0" y="278.175" width="1485" height="333.825" preserveAspectRatio="none" xlink:href="data:image/png;base64,
+			<rect v:rectContext="foreign" x="0" y="272.106" width="1512" height="339.894" class="st1"/>
+			<image x="0" y="272.106" width="1512" height="339.894" preserveAspectRatio="none" xlink:href="data:image/png;base64,
 						iVBORw0KGgoAAAANSUhEUgAABz8AAAGhCAYAAAD/f3nbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYl
 						AUlSJPAAAMNNSURBVHhe7P2Pc1zlmed/P//A1k5tTW1t7Ww9u6r58t2eaBYT73e8YR5QpsDK8ENQMQqQVRYHTRyirCdWgDiOwVE8EOGQ
 						FXbwCLMeYYbIZonQhhl5xkHF47JCjDUEI5MY+QFHDhgZMBFgRiSGhpV0Pec659zdp0/fLfVpH0n3kd+v1KeCWv3b96Vu9UfnnP+XAAAA
@@ -671,7 +671,7 @@
 						AAAAAAAA9fKFlWk3wk8AAAAAAAAAAAAAc84XVqbdCD8BAAAAAAAAAAAAzDlfWJl2I/wEAAAAAAAAAAAAMOd8YWXajfATAAAAAAAAAAAA
 						wJzzhZVpN8JPAAAAAAAAAAAAAHPOF1am3Qg/AQAAAAAAAAAAAMw5X1iZdiP8BAAAAAAAAAAAADDnfGFl2o3wEwAAAAAAAAAAAMCc84WV
 						abeZuabZ/wPk96uayDtoagAAAABJRU5ErkJggg=="/>
-			<rect v:rectContext="foreign" x="0" y="278.175" width="1485" height="333.825" class="st1"/>
+			<rect v:rectContext="foreign" x="0" y="272.106" width="1512" height="339.894" class="st1"/>
 		</g>
 	</g>
 </svg>
