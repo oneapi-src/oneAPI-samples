@@ -3,7 +3,9 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
-#include <math.h>
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 #include "exception_handler.hpp"
 #include "fft2d.hpp"
