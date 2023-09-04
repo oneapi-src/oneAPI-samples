@@ -17,18 +17,15 @@ sycl::ext::oneapi::experimental::properties kernel_properties{
   sycl::ext::intel::experimental::register_map
 };
 
-// offloaded computation
-ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
-
 /////////////////////////////////////////
 
-void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out,
-                                 MyUInt5 count) {
+void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
+                                 MyUInt5 n) {
   // In the Lambda programming model, all kernel arguments will have the same
   // interface as the kernel invocation interface.
   q.single_task<LambdaRegisterMapIP>(kernel_properties, [=] {
-     for (MyUInt5 i = 0; i < count; i++) {
-       out[i] = SomethingComplicated(in[i]);
+     for (MyUInt5 i = 0; i < n; i++) {
+       output[i] = (ValueT)(input[i] * (input[i] + 1));
      }
    }).wait();
 
@@ -72,23 +69,23 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *in = sycl::malloc_host<ValueT>(count, q);
+    ValueT *input = sycl::malloc_host<ValueT>(count, q);
     ValueT *lambda_register_map_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden = sycl::malloc_host<ValueT>(count, q);
+    ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
-    for (int i = 0; i < count; i++) {
-      in[i] = rand() % 77;
-      golden[i] = SomethingComplicated(in[i]);
+    for (MyUInt5 i = 0; i < count; i++) {
+      input[i] = rand() % 77;
+      golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
       lambda_register_map_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](ValueT *in, ValueT *out, size_t size) {
-      for (int i = 0; i < size; i++) {
-        if (out[i] != in[i]) {
-          std::cout << "out[" << i << "] != in[" << i << "]"
-                    << " (" << out[i] << " != " << in[i] << ")" << std::endl;
+    auto validate = [](ValueT *golden_out, ValueT *lambda_register_map_out, MyUInt5 count) {
+      for (MyUInt5 i = 0; i < count; i++) {
+        if (lambda_register_map_out[i] != golden_out[i]) {
+          std::cout << "lambda_register_map_out[" << i << "] != golden_out[" << i << "]"
+                    << " (" << lambda_register_map_out[i] << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
@@ -101,13 +98,13 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaRegisterMapKernel(q, in, lambda_register_map_out, count);
-    passed &= validate(golden, lambda_register_map_out, count);
+    TestLambdaRegisterMapKernel(q, input, lambda_register_map_out, count);
+    passed &= validate(golden_out, lambda_register_map_out, count);
     std::cout << std::endl;
 
-    sycl::free(in, q);
+    sycl::free(input, q);
     sycl::free(lambda_register_map_out, q);
-    sycl::free(golden, q);
+    sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";

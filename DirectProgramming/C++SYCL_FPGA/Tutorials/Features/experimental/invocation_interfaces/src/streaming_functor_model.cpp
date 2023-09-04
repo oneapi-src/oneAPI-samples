@@ -7,8 +7,10 @@
 using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
-// offloaded computation
-ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
+struct a_s {
+  int x;
+  char y;
+};
 
 /////////////////////////////////////////
 
@@ -16,14 +18,14 @@ struct FunctorStreamingIP {
   // Use the 'conduit' annotation on a kernel argument to specify it to be
   // a streaming kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+      a_s, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::conduit})>                    
       input;
 
   // A kernel with a streaming invocation interface can also independently
   // have register map kernel arguments, when annotated by 'register_map'.
   sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+      a_s *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::register_map})>                    
       output;
 
@@ -36,14 +38,20 @@ struct FunctorStreamingIP {
   // 'streaming_interface_remove_downstream_stall' invocation interface
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
         sycl::ext::intel::experimental::pipelined<>};
   }
 
   void operator()() const {
-    for (MyUInt5 i = 0; i < n; i++) {
-      output[i] = SomethingComplicated(input[i]);
-    }
+      struct a_s ret;
+      ret.x = 0;
+      ret.y = ((a_s)input).y;
+
+      for(MyUInt5 i = 0; i < n; i++)
+      {
+        ret.x += ((a_s)input).x;
+        ret.y += 1;
+      }
+      *output = ret;
   }
 };
 
@@ -84,25 +92,42 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *in = sycl::malloc_host<ValueT>(count, q);
-    ValueT *functor_streaming_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden = sycl::malloc_host<ValueT>(count, q);
+    struct a_s input;
+    input.x = 1;
+    input.y = 'a';
 
-    // create input and golden output data
-    for (int i = 0; i < count; i++) {
-      in[i] = rand() % 77;
-      golden[i] = SomethingComplicated(in[i]);
-      functor_streaming_out[i] = 0;
+    a_s *functor_streaming_out0 = sycl::malloc_host<a_s>(count, q);
+    a_s *functor_streaming_out1 = sycl::malloc_host<a_s>(count, q);
+    a_s *golden_out = sycl::malloc_host<a_s>(count, q);
+
+    // Compute golden output data
+    struct a_s ret;
+    ret.x = 0;
+    ret.y = input.y;
+
+    for(MyUInt5 i = 0; i < (count); i++)
+    {
+      ret.x += input.x;
+      ret.y += 1;
     }
+    *golden_out = ret;
 
     // validation lambda
-    auto validate = [](auto *in, auto *out, size_t size) {
-      for (int i = 0; i < size; i++) {
-        if (out[i] != in[i]) {
-          std::cout << "out[" << i << "] != in[" << i << "]"
-                    << " (" << out[i] << " != " << in[i] << ")" << std::endl;
+    auto validate = [](auto *golden_out, auto *functor_streaming_out0, auto *functor_streaming_out1) {
+      if (functor_streaming_out0->x != golden_out->x || functor_streaming_out0->y != golden_out->y ||
+        functor_streaming_out1->x != golden_out->x || functor_streaming_out1->y != golden_out->y) {
+          std::cout << "Expected: \n";
+          std::cout << "functor_streaming_out0->x = " << golden_out->x << "\n";
+          std::cout << "functor_streaming_out0->y = " << golden_out->y << "\n";
+          std::cout << "functor_streaming_out1->x = " << golden_out->x << "\n";
+          std::cout << "functor_streaming_out1->y = " << golden_out->y << "\n";
+          std::cout << "Got: \n";
+          std::cout << "functor_streaming_out0->x = " << functor_streaming_out0->x << "\n";
+          std::cout << "functor_streaming_out0->y = " << functor_streaming_out0->y << "\n";
+          std::cout << "functor_streaming_out1->x = " << functor_streaming_out1->x << "\n";
+          std::cout << "functor_streaming_out1->y = " << functor_streaming_out0->y << "\n";
+          std::cout << "FAILED\n";
           return false;
-        }
       }
       return true;
     };
@@ -113,15 +138,17 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingIP{in, functor_streaming_out, count}).wait();
+    q.single_task(FunctorStreamingIP{input, functor_streaming_out0, count});
+    q.single_task(FunctorStreamingIP{input, functor_streaming_out1, count});
+    q.wait();
     std::cout << "\t Done" << std::endl;
 
-    passed &= validate(golden, functor_streaming_out, count);
+    passed &= validate(golden_out, functor_streaming_out0, functor_streaming_out1);
     std::cout << std::endl;
 
-    sycl::free(in, q);
-    sycl::free(functor_streaming_out, q);
-    sycl::free(golden, q);
+    sycl::free(functor_streaming_out0, q);
+    sycl::free(functor_streaming_out1, q);
+    sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
