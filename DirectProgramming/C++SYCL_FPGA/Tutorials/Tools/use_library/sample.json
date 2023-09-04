@@ -20,92 +20,48 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu_1",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part1_native",
-          "make fpga_emu",
-          "./use_native.fpga_emu"
-        ]
-      },
-      {
         "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part2_lib_func_call",
+          "cmake ..",
           "make fpga_emu",
           "./use_library.fpga_emu"
         ]
       },
       {
-        "id": "report1",
+        "id": "report",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part1_native",
-          "make report"
-        ]
-      },
-      {
-        "id": "report2",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ../part2_lib_func_call",
+          "cmake ..",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu_1",
+        "id": "fpga_emu",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_native",
-          "nmake fpga_emu",
-          "use_native.fpga_emu.exe"
-        ]
-      },
-      {
-        "id": "fpga_emu_2",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part2_lib_func_call",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library",
           "nmake fpga_emu",
           "use_library.fpga_emu.exe"
         ]
       },
       {
-        "id": "report_1",
+        "id": "report",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_native",
-          "nmake report"
-        ]
-      },
-      {
-        "id": "report_2",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library/part1_lib_func_call",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library",
           "nmake report"
         ]
       }
