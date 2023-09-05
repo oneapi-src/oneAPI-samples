@@ -10,7 +10,7 @@ This sample is an FPGA tutorial that demonstrates how to specify the kernel invo
 
 ## Purpose
 
-The sample demonstrates the differences between streaming interfaces that use a ready/valid handshake and register-mapped interfaces that exist in the control/status register (CSR) of the kernel.
+The sample demonstrates the differences between streaming invocation interfaces that use a ready/valid handshake and register-mapped invocation interfaces that exist in the control/status register (CSR) of the kernel.
 
 Use the `get` kernel properties method to specify how the kernel invocation handshaking is performed and `annotated_arg` to specify how the kernel argument data is passed in to the kernel.
 
@@ -58,24 +58,24 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The sample illustrates the key concepts about the basics of declaring kernel invocation interfaces and kernel argument interfaces.
 
-### Understanding Register Map and Streaming Interfaces
+### Understanding Register-Mapped and Streaming Interfaces
 
-The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is //TODO::not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
+The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
 
 | Invocation Interface    | Argument Interface    | Argument Interface Synchronization
 |:---                     |:---                   |:---
 | Streaming               | Streaming             | Synchronized with `start` and `ready_out`
-| Streaming               | Register mapped       | N/A
-| Register mapped         | Streaming             | *No synchronization possible*
-| Register mapped         | Register mapped       | N/A
+| Streaming               | Register-mapped       | N/A
+| Register-mapped         | Streaming             | *No synchronization possible*
+| Register-mapped         | Register -mapped       | N/A
 
 If you would like an argument to have its own dedicated ready/valid handshake, implement that argument using a [Host Pipe](../hostpipes/).
 
->**Warning**: The register map and streaming interface features are only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to stand-alone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP.
+>**Warning**: The register-mapped and streaming interface features are only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to stand-alone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP.
 >
->You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the FPGA four executables generated in this tutorial are ***not*** supported to be run on FPGA devices directly.
+>You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the five FPGA executables generated in this tutorial are ***not*** supported to be run on FPGA devices directly.
 
-### Declaring a Register Map Kernel Interface
+### Declaring a Register-Mapped Kernel Interface
 
 #### Example Functor
 
@@ -122,8 +122,16 @@ q.single_task(kernel_properties, [=] streaming_interface {
   ...
 })
 ```
+The property `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
 
-### Declaring a Register Map Kernel Argument Interface
+The property `sycl::ext::intel::experimental::pipelined<>` specifies that this streaming interface is pipelined with an lowest possible II at target fMAX. Other valid parameterizations are:
+- **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
+- **0**: Do not pipeline the kernel.
+- **N (N> 0)**: Pipeline the kernel, and force the II of the kernel to be N.
+> **Note**: `sycl::ext::intel::experimental::pipelined<>` property only supports kernels with a streaming invocation interface.
+
+
+### Declaring a Register-Mapped Kernel Argument Interface
 
 #### Example Functor
 
@@ -156,11 +164,11 @@ If no annotation is specified for the kernel invocation interface, then a regist
 
 ### Testing the Tutorial
 
-A total of five sources files are in the `src/` directory, declaring a total of five kernels. Three use the functor programming model, and the other use the lambda programming model. 
+A total of five source files are in the `src/` directory, declaring a total of five kernels. Three use the functor programming model, and the other two use the lambda programming model. 
 
-For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are explicitly declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
-For Lambda programming model, one kernel is declared with the register map kernel invocation interface inferred by default by the compiler and the other kernel is declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+For Lambda programming model, one kernel is declared with the register-mapped kernel invocation interface inferred by default by the compiler and the other kernel is explicitly declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
 ```c++
 struct FunctorRegisterMapIP {
@@ -255,6 +263,7 @@ q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count}).wait
 ```c++
 q.single_task(FunctorStreamingIP{input, functor_streaming_out0, count});
 q.single_task(FunctorStreamingIP{input, functor_streaming_out1, count});
+q.wait();
 ```
 
 ```c++
@@ -262,7 +271,7 @@ q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_do
 	count}).wait();
 ```
 
-Properties argument can be passed into the SYCL `queue` `single_task` to overwrite the default `register-mapped` kernel invocation interface inferred by the compiler.
+Kernel properties argument can be passed into the SYCL `queue` `single_task` to overwrite the default register-mapped kernel invocation interface inferred by the compiler.
 
 ```c++
 void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output, MyUInt5 n) {
@@ -438,7 +447,7 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
 
 ## Example Output
 
-### Register Map Functor Example Output
+### Register-Mapped Functor Example Output
 
 ```
 Running the kernel with register map invocation interface implemented in the functor programming model
@@ -459,7 +468,7 @@ Running the kernel with streaming invocation interface without downstream 'ready
 	 Done
 PASSED
 ```
-### Register Map Lambda Example Output
+### Register-Mapped Lambda Example Output
 
 ```
 Running kernel with register map invocation interface implemented in the lambda programming model
