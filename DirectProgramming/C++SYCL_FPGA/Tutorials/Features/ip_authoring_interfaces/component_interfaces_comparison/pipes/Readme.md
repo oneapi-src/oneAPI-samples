@@ -14,7 +14,7 @@ Each pipe is a declaration of the templated `pipe` class:
 ```cpp
 sycl::ext::intel::experimental::pipe<id, type, min_capacity, properties>;
 ```
-Detailed explanation for each parameters and a list of properties can be found in this dedicated [Streaming Data Interfaces](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/streaming_data_interfaces) code sample.
+Detailed explanation for each parameters and a list of properties can be found in this dedicated [Streaming Data Interfaces](DirectProgramming/C++SYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/streaming_data_interfaces) code sample.
 
 ### Example of Pipe Declaration
 ```cpp

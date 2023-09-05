@@ -68,8 +68,8 @@ int main() {
 
     int count = VECT_SIZE;  // pass array size by value
 
-    // declare arrays and fill them
-    // allocate in shared memory so the kernel can see them
+    // Create USM shared allocations in the specified buffer_location. 
+    // You can also use host allocations with malloc_host(...) API
     int *a = sycl::malloc_shared<int>(count, q);
     int *b = sycl::malloc_shared<int>(count, q);
     int *c = sycl::malloc_shared<int>(count, q);
