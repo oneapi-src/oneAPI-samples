@@ -82,6 +82,16 @@ For this sample, the SYCLomatic tool automatically migrates ~80% of the CUDA run
    c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
 
+### Manual workarounds
+    
+CUDA code includes a custom API `findCUDADevice` in helper_cuda file to find the best CUDA Device available.
+   
+   ```
+    findCudaDevice (argc, (const char **) argv);
+   ```
+Since its a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the `sycl get_device()` API
+
+
 ## Build and Run the `Odd-Even Mergesort` Sample
 
 >  **Note**: If you have not already done so, set up your CLI
