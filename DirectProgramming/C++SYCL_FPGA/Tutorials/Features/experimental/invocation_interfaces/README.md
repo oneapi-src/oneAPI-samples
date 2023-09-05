@@ -12,7 +12,7 @@ This sample is an FPGA tutorial that demonstrates how to specify the kernel invo
 
 The sample demonstrates the differences between streaming interfaces that use a ready/valid handshake and register-mapped interfaces that exist in the control/status register (CSR) of the kernel.
 
-Use register map and streaming interface annotations to specify how the kernel invocation handshaking is performed, as well as how the kernel argument data is passed in to the kernel.
+Use the `get` kernel properties method to specify how the kernel invocation handshaking is performed and `annotated_arg` to specify how the kernel argument data is passed in to the kernel.
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ The sample illustrates the key concepts about the basics of declaring kernel inv
 
 ### Understanding Register Map and Streaming Interfaces
 
-The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
+The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. All argument interfaces that are implemented as conduits will be synchronized to the ready/valid handshake of the kernel invocation interface. This means that it is //TODO::not possible to configure a kernel with a register-mapped invocation interface and conduit arguments. The following table lists valid kernel argument interface synchronizations.
 
 | Invocation Interface    | Argument Interface    | Argument Interface Synchronization
 |:---                     |:---                   |:---
@@ -81,8 +81,8 @@ If you would like an argument to have its own dedicated ready/valid handshake, i
 
 ```c++
 struct MyIP {
-  MyIP() {}
-  register_map_interface void operator()() const {
+  ...
+  void operator()() const {
     ...
   }
 };
@@ -90,7 +90,7 @@ struct MyIP {
 
 #### Example Lambda
 ```c++
-q.single_task([=] register_map_interface {
+q.single_task([=] {
   ...
 })
 ```
@@ -101,8 +101,12 @@ q.single_task([=] register_map_interface {
 
 ```c++
 struct MyIP {
-  MyIP() {}
-  streaming_interface void operator()() const {
+  ...
+auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
+        sycl::ext::intel::experimental::pipelined<>};
+  void operator()() const {
     ...
   }
 };
@@ -110,7 +114,11 @@ struct MyIP {
 
 #### Example Lambda
 ```c++
-q.single_task([=] streaming_interface {
+sycl::ext::oneapi::experimental::properties kernel_properties {
+  sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
+  sycl::ext::intel::experimental::pipelined<>
+};
+q.single_task(kernel_properties, [=] streaming_interface {
   ...
 })
 ```
@@ -121,8 +129,8 @@ q.single_task([=] streaming_interface {
 
 ```c++
 struct MyIP {
-  register_map int arg1;
-  register_map_interface void operator()() const {
+  int arg1;
+  void operator()() const {
     ...
   }
 };
@@ -132,8 +140,11 @@ struct MyIP {
 
 ```c++
 struct MyIP {
-  conduit int arg1;
-  register_map_interface void operator()() const {
+  sycl::ext::oneapi::experimental::annotated_arg<
+    int, decltype(sycl::ext::oneapi::experimental::properties {
+                  sycl::ext::intel::experimental::conduit})>
+  arg1;
+  void operator()() const {
     ...
   }
 };
@@ -141,20 +152,33 @@ struct MyIP {
 
 ### Default Interfaces
 
-If no annotation is specified for the kernel invocation interface, then a register map kernel invocation interface will be inferred by the compiler. If no annotation is specified for the kernel argument, then that kernel argument will have the same interface as the kernel invocation interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel invocation interface.
+If no annotation is specified for the kernel invocation interface, then a register-mapped kernel invocation interface will be inferred by the compiler. If no annotation is specified for the kernel argument, then that kernel argument will have the same interface as the kernel invocation interface. In the Lambda programming model, all kernel arguments will have the same interface as the kernel invocation interface.
 
 ### Testing the Tutorial
 
-A total of four sources files are in the `src/` directory, declaring a total of four kernels. Two use the functor programming model, and the other use the lambda programming model. For each programming model, one kernel is declared with the register map kernel invocation interface and the other kernel is declared with the streaming kernel invocation interface.
+A total of five sources files are in the `src/` directory, declaring a total of five kernels. Three use the functor programming model, and the other use the lambda programming model. 
+
+For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+
+For Lambda programming model, one kernel is declared with the register map kernel invocation interface inferred by default by the compiler and the other kernel is declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
 ```c++
 struct FunctorRegisterMapIP {
-  register_map ValueT *input;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      input;
+
   ValueT *output;
-  conduit size_t n;
-  register_map_interface void operator()() const {
-    for (int i = 0; i < n; i++) {
-      output[i] = SomethingComplicated(input[i]);
+
+  sycl::ext::oneapi::experimental::annotated_arg<
+    MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
+                  sycl::ext::intel::experimental::conduit})>
+    n;
+
+  void operator()() const {
+    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { //TODO::comment
+      output[i] = (ValueT)(input[i] * (input[i] + 1));
     }
   }
 };
@@ -162,46 +186,101 @@ struct FunctorRegisterMapIP {
 
 ```c++
 struct FunctorStreamingIP {
-  conduit ValueT *input;
-  conduit ValueT *output;
-  size_t n;
-  streaming_interface void operator()() const {
-    for (int i = 0; i < n; i++) {
-      output[i] = SomethingComplicated(input[i]);
+  sycl::ext::oneapi::experimental::annotated_arg<
+      a_s, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::conduit})>                    
+      input;
+
+  sycl::ext::oneapi::experimental::annotated_arg<
+      a_s *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      output;
+
+  MyUInt5 n;
+
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
+        sycl::ext::intel::experimental::pipelined<>};
+  }
+
+  void operator()() const {
+      struct a_s ret;
+      ret.x = 0;
+      ret.y = ((a_s)input).y;
+
+      for(MyUInt5 i = 0; i < n; i++) {
+        ret.x += ((a_s)input).x;
+        ret.y += 1;
+      }
+      *output = ret;
+  }
+};
+```
+
+```c++
+struct FunctorStreamingRmDownstreamStallIP {
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::conduit})>                    
+      input;
+
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      output;
+
+  MyUInt5 n;
+
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
+        sycl::ext::intel::experimental::pipelined<>};
+  }
+
+  void operator()() const {
+    for (MyUInt5 i = 0; i < n; i++) {
+      output[i] = (ValueT)(input[i] * (input[i] + 1));
     }
   }
 };
 ```
 
-These two functor kernels are invoked in the same way in the host code, by constructing the struct and submitting a `single_task` into the SYCL `queue`.
+These three functor kernels are invoked in the same way in the host code, by constructing the struct and submitting `single_task` into the SYCL `queue`.
 
 ```c++
-q.single_task(FunctorRegisterMapIP{in, functor_register_map_out, count}).wait();
+q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count}).wait();
 ```
 
 ```c++
-q.single_task(FunctorStreamingIP{in, functor_streaming_out, count}).wait();
+q.single_task(FunctorStreamingIP{input, functor_streaming_out0, count});
+q.single_task(FunctorStreamingIP{input, functor_streaming_out1, count});
 ```
 
-The two lambda kernels are annotated directly on the lambda function body and submitted into the SYCL `queue` as a `single_task`.
+```c++
+q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out,
+	count}).wait();
+```
+
+Properties argument can be passed into the SYCL `queue` `single_task` to overwrite the default `register-mapped` kernel invocation interface inferred by the compiler.
 
 ```c++
-void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task<LambdaRegisterMapIP>([=] register_map_interface  {
-    for (int i = 0; i < count; i++) {
-      out[i] = SomethingComplicated(in[i]);
-    }
-  }).wait();
+void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output, MyUInt5 n) {
+  q.single_task<LambdaRegisterMapIP>([=] {
+     for (MyUInt5 i = 0; i < n; i++) {
+       output[i] = (ValueT)(input[i] * (input[i] + 1));
+     }
+   }).wait();
 }
 ```
 
 ```c++
-void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out, size_t count) {
-  q.single_task<LambdaStreamingIP>([=] streaming_interface  {
-    for (int i = 0; i < count; i++) {
-      out[i] = SomethingComplicated(in[i]);
-    }
-  }).wait();
+void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output, MyUInt5 n) {
+  q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
+     for (MyUInt5 i = 0; i < n; i++) {
+       output[i] = (ValueT)(input[i] * (input[i] + 1));
+     }
+   }).wait();
 }
 ```
 
@@ -311,9 +390,9 @@ In the left-hand pane, select **FunctorRegisterMapIP** or **LambdaRegisterMapIP*
 
 In the main **System Viewer** pane, the kernel invocation interfaces and kernel argument interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMapIP**, and in a register map interface in the **LambdaRegisterMapIP**.
 
-Similarly, in the left-hand pane, select **FunctorStreamingIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
+Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStreamingRmDownstreamStallIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interface and kernel argument interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces, and the `arg_input` and `arg_n` kernel arguments are implemented in streaming interfaces. The `arg_output` kernel argument is implemented in a register map interface in the **FunctorStreamingIP**, and in a streaming interface in the **LambdaStreamingIP**.
+In the main **System Viewer** pane, the kernel invocation interface and kernel argument interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces, and the `arg_input` and `arg_n` kernel arguments are implemented in streaming interfaces. The `arg_output` kernel argument is implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **LambdaStreamingIP**.
 
 ## Run the `Invocation Interfaces` Sample
 
@@ -323,6 +402,7 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
    ```
    ./register_map_functor_model.fpga_emu
    ./streaming_functor_model.fpga_emu
+   ./streaming_remove_downstream_stall_functor_model.fpga_emu
    ./register_map_lambda_model.fpga_emu
    ./streaming_lambda_model.fpga_emu
    ```
@@ -330,6 +410,7 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor_model.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_remove_downstream_stall_functor_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda_model.fpga_sim
    ```
@@ -340,6 +421,7 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
    ```
    register_map_functor_model.fpga_emu.exe
    streaming_functor_model.fpga_emu.exe
+   streaming_remove_downstream_stall_functor_model.fpga_emu.exe
    register_map_lambda_model.fpga_emu.exe
    streaming_lambda_model.fpga_emu.exe
    ```
@@ -348,6 +430,7 @@ In the main **System Viewer** pane, the kernel invocation interface and kernel a
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    register_map_functor_model.fpga_sim.exe
    streaming_functor_model.fpga_sim.exe
+   streaming_remove_downstream_stall_functor_model.fpga_sim.exe
    register_map_lambda_model.fpga_sim.exe
    streaming_lambda_model.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
@@ -366,6 +449,13 @@ PASSED
 
 ```
 Running the kernel with streaming invocation interface implemented in the functor programming model
+	 Done
+PASSED
+```
+### Streaming Remove Downstream Stall Functor Example Output
+
+```
+Running the kernel with streaming invocation interface without downstream 'ready_in' interface implemented in the functor programming model
 	 Done
 PASSED
 ```
