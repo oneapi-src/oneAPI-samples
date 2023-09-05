@@ -13,7 +13,11 @@
 
 using namespace sycl;
 
+#if FPGA_SIMULATOR
+constexpr size_t kSize = 32;
+#else
 constexpr size_t kSize = 512;
+#endif
 constexpr float kErrorThreshold = 0.5;
 constexpr int kTotalOps = 4 * kSize * kSize;
 
