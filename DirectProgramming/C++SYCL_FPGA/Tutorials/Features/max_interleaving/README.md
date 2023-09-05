@@ -90,26 +90,26 @@ Notice how `temp_r[i]` is a loop carried dependency in the inner loop. **Crucial
 Without interleaving, this is what the pipelined registers of the inner loop will look like, for II of the inner loop = 5 and II of the outer loop = 1. Each cell shows the (i, j) iteration that is currently in that stage of the inner loop:
 
 | Cycle | Stage 1 | Stage 2 | Stage 3 | Stage 4 | Stage 5 |
-|---|---|---|---|---|---|
-|1|(0, 0)|
-|2||(0, 0)|
-|3|||(0, 0)|
-|4||||(0, 0)|
-|5|||||(0, 0)|
-|6|(0, 1)
+| ---   | ---     | ---     | ---     | ---     | ---     |
+| 1     | (0, 0)  |
+| 2     |         | (0, 0)  |
+| 3     |         |         | (0, 0)  |
+| 4     |         |         |         | (0, 0)  |
+| 5     |         |         |         |         | (0, 0)  |
+| 6     | (0, 1)  |
 
 Notice how the majority of the stages are empty, caused by the loop carried dependency.
 
 With interleaving, we get the following: 
 
 | Cycle | Stage 1 | Stage 2 | Stage 3 | Stage 4 | Stage 5 |
-|---|---|---|---|---|---|
-|1|(0, 0)|
-|2|(1, 0)|(0, 0)|
-|3|(2, 0)|(1, 0)|(0, 0)|
-|4|(3, 0)|(2, 0)|(1, 0)|(0, 0)|
-|5|(4, 0)|(3, 0)|(2, 0)|(1, 0)|(0, 0)|
-|6|(0, 1)|(4, 0)|(3, 0)|(2, 0)|(1, 0)|
+| ---   | ---     | ---     | ---     | ---     | ---     |
+| 1     | (0, 0)  | 
+| 2     | (1, 0)  | (0, 0)  |
+| 3     | (2, 0)  | (1, 0)  | (0, 0)  |
+| 4     | (3, 0)  | (2, 0)  | (1, 0)  | (0, 0)  |
+| 5     | (4, 0)  | (3, 0)  | (2, 0)  | (1, 0)  | (0, 0)  |
+| 6     | (0, 1)  | (4, 0)  | (3, 0)  | (2, 0)  | (1, 0)  |
 
 Since the loop carried dependency is not with respect to the outer loop, different *invocations* of the inner loop can be pipelined into the inner loop. Notice how after an initial ramp-up period, the inner loop hardware reaches full occupancy - which will correspond to a higher throughput. 
 
@@ -237,10 +237,10 @@ Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 1. Go to `Summary` (top navigation bar). In the `Summary` pane, go to `Quartus® Fitter Resource Utilization Summary`. For less accurate estimates (but you can obtain these numbers after compiling to report instead of the full hardware flow), go to `Compile Estimated Kernel Resource Utilization Summary`.
 2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). For example, at the time of writing this tutorial, this is the final resource usage when compiling for the Terasic DE10-Agilex Development Board:
 
-| | ALM | ALUT | REG | MLAB | RAM | DSP |
-|---|---|---|---|---|---|---|
-KernelCompute_0 | 3564 | 3957 | 11898 | 38 | 66 | 6 |
-KernelCompute_1 | 3380 | 3768 | 11177| 35 | 66 | 6 | 
+|                 | ALM  | ALUT | REG   | MLAB | RAM | DSP |
+| ---             | ---  | ---  | ---   | ---  | --- | --- |
+| KernelCompute_0 | 3564 | 3957 | 11898 | 38   | 66  | 6   |
+| KernelCompute_1 | 3380 | 3768 | 11177 | 35   | 66  | 6   | 
 
 ## Run the `max_interleaving` Sample
 
