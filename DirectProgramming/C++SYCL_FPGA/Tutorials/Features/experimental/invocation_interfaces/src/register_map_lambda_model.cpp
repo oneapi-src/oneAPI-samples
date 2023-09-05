@@ -11,19 +11,13 @@ using MyUInt5 = ac_int<5, false>;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class LambdaRegisterMapIP;
 
-// Create a properties object containing the
-// kernel invocation interface property 'register_map'
-sycl::ext::oneapi::experimental::properties kernel_properties{
-  sycl::ext::intel::experimental::register_map
-};
-
 /////////////////////////////////////////
 
 void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
                                  MyUInt5 n) {
   // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
   // interface. All kernel arguments will have the same interface as the kernel invocation interface.
-  q.single_task<LambdaRegisterMapIP>(kernel_properties, [=] {
+  q.single_task<LambdaRegisterMapIP>([=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }
