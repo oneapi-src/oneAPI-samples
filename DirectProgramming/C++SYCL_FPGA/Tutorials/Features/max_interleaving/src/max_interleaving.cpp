@@ -102,7 +102,7 @@ void Transform(const TwoDimFloatArray &array_a, FloatArray &array_r) {
           // One final note - the loop induction variables decrease (i--) instead of increase (i++)
           // in these two loops to prevent loop fusion optimizations, which makes it harder to 
           // keep track of loops in the optimization reports. Interleaving will still occur if  
-          // `i` and `j` were incremented instead.
+          // `i` and `j` were instead incremented.
         }
 
         for (size_t i = 0; i < kSize; i++) {

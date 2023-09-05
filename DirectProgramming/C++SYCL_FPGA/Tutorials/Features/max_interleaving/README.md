@@ -68,8 +68,10 @@ The sample illustrates the following important concepts.
 
 ### Description of the `max_interleaving` Attribute
 
-In short, place the `[[intel::max_interleaving(0 or 1)]]` attribute above a loop that you want to control interleaving. A parameter of `0` (the default if the attribute is not used) enables interleaving when possible, and `1` forcibly disables interleaving, even if it is possible.  
+#### Quick Reference
+Place the `[[intel::max_interleaving(0 or 1)]]` attribute above a loop that you want to control interleaving. A parameter of `0` (the default if the attribute is not used) enables interleaving when possible, and `1` forcibly disables interleaving, even if it is possible.  
 
+#### Detailed Explanation
 Consider the following pipelined doubly nested loops: 
 ```cpp
 float temp_r[kSize] = ...;
@@ -222,7 +224,7 @@ Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 
 #### Verify That Interleaving Is Enabled/Disabled
 1. Go to `Throughput Analysis` (dropdown) -> `Loop Analysis`.
-2. Under `Loop List`, the 4 loops of interest are:
+2. Under `Loop List`, the 2 loops of interest are:
    1. `KernelCompute_0.inner` - inner loop of interleaving **enabled** kernel
    2. `KernelCompute_1.inner` - inner loop of interleaving **disabled** kernel
 3. Find the row in the `Loop Analysis` pane corresponding to `KernelCompute_0.inner`. Notice how the II is high (>> 1) and `Max Interleaving Iterations` is greater than 1, meaning interleaving is enabled.
@@ -230,14 +232,15 @@ Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 
 **IMPORTANT**: As mentioned above, the compiler will do some memory dependency analysis on loops. If it can determine that interleaving cannot happen, interleaving will automatically be disabled (which can be verified in the reports) and the attribute will have no effect. 
 
-In the "Loops analysis" view from the "Throughput Analysis" drop-down menu, in the Details pane for loop L1 (choose either Compute<0>.B6 or Compute<1>.B6 from the "Loop List" pane, then the click the "Source Location" link in the "Loop Analysis" pane):
-
-Iteration executed serially across KernelCompute<0>.B8. Only a single loop iteration will execute inside this region due to data dependency on variable(s):
-
 #### View the Hardware Area Savings
 **NOTE**: For the most accurate numbers, you must compile to hardware so that `Quartus®` can decide where to place each hardware unit on the board.
 1. Go to `Summary` (top navigation bar). In the `Summary` pane, go to `Quartus® Fitter Resource Utilization Summary`. For less accurate estimates (but you can obtain these numbers after compiling to report instead of the full hardware flow), go to `Compile Estimated Kernel Resource Utilization Summary`.
-2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). 
+2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). For example, at the time of writing this tutorial, this is the final resource usage when compiling for the Terasic DE10-Agilex Development Board:
+
+| | ALM | ALUT | REG | MLAB | RAM | DSP |
+|---|---|---|---|---|---|---|
+KernelCompute_0 | 3564 | 3957 | 11898 | 38 | 66 | 6 |
+KernelCompute_1 | 3380 | 3768 | 11177| 35 | 66 | 6 | 
 
 ## Run the `max_interleaving` Sample
 
@@ -273,23 +276,25 @@ Iteration executed serially across KernelCompute<0>.B8. Only a single loop itera
    max_interleaving.fpga.exe
    ```
 
-## Example Output
+## Example Output On FPGA Hardware
 
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 0 kernel time : 0.054452 ms
-Throughput for kernel with max_interleaving 0: 0.002 GFlops
+Max interleaving 0 kernel time : 1.00186 ms
+Throughput for kernel with max_interleaving 0: 1.047 GFlops
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 1 kernel time : 0.051 ms
-Throughput for kernel with max_interleaving 1: 0.003 GFlops
+Max interleaving 1 kernel time : 14.467 ms
+Throughput for kernel with max_interleaving 1: 0.072 GFlops
 PASSED: The results are correct
 ```
 
 The stdout output shows the giga-floating point operations per second (GFlops) for each kernel.
 
-When run on Terasic's DE10-Agilex Development Board, we see that the throughput remains unchanged when using `max_interleaving(0)` or `max_interleaving(1)`. However, the kernel using `max_interleaving(1)` uses fewer hardware resources, as shown in the reports.
+When run on Terasic's DE10-Agilex Development Board, we see that the throughput is significantly higher for `max_interleaving(0)` (interleaving enabled) than `max_interleaving(1)`, showing the effectiveness of interleaving. However, the kernel using `max_interleaving(1)` uses slightly fewer hardware resources, as shown in the reports. 
 
-When run on the FPGA emulator, the `max_interleaving` attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This anomaly occurs because this trivial example uses only a tiny fraction of the compute resources available on the FPGA.
+While the throughput differences are substantial, if the interleaving loops were a small part of a kernel whose total runtime was an order of magnitude greater than these loops, it may be worth it to disable interleaving for hardware savings.
+
+When run on the FPGA emulator, the `max_interleaving` attribute has no effect on runtime. Additionally, the emulator may sometimes achieve higher throughput than the FPGA. This is especially true if the kernel uses a tiny fraction of the compute resources available on the FPGA.
 
 ## License
 
