@@ -10,25 +10,27 @@ using MyUInt5 = ac_int<5, false>;
 /////////////////////////////////////////
 
 struct FunctorRegisterMapIP {
-  // Use the 'register_map' annotation on a kernel argument to specify it to be
-  // a register map kernel argument.
+  // Annotate kernel argument with 'register_map' property 
+  // to specify it to be a register-mapped kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
       ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::register_map})>                    
       input;
       
-  // Without the annotations, kernel arguments will be inferred to be register
-  // map kernel arguments if the kernel invocation interface is register mapped,
-  // and vise-versa.
+  // Without the annotation, kernel argument will be inferred to be register-mapped
+  // kernel arguments if the kernel invocation interface is register-mapped,
+  // and vice-versa.
   ValueT *output;
 
   // A kernel with a register map invocation interface can also independently
-  // have streaming kernel arguments, when annotated by 'conduit'.
+  // have streaming kernel arguments, when annotated by 'conduit' property.
   sycl::ext::oneapi::experimental::annotated_arg<
     MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
                   sycl::ext::intel::experimental::conduit})>
     n;
 
+  // Without kernel invocation interface annotation, register-mapped invocation
+  // interface will be inferred by the compiler.
   void operator()() const {
     for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { //TODO::comment
       output[i] = (ValueT)(input[i] * (input[i] + 1));
@@ -99,8 +101,7 @@ int main(int argc, char *argv[]) {
     // Launch the kernel with a register map invocation interface implemented in
     // the functor programming model
     std::cout << "Running the kernel with a register map invocation interface "
-                 "implemented in "
-                 "the functor programming model"
+                 "implemented in the functor programming model"
               << std::endl;
     q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count})
         .wait();

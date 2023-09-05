@@ -21,8 +21,8 @@ sycl::ext::oneapi::experimental::properties kernel_properties{
 
 void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
                                  MyUInt5 n) {
-  // In the Lambda programming model, all kernel arguments will have the same
-  // interface as the kernel invocation interface.
+  // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
+  // interface. All kernel arguments will have the same interface as the kernel invocation interface.
   q.single_task<LambdaRegisterMapIP>(kernel_properties, [=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));

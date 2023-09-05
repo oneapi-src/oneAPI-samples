@@ -15,29 +15,30 @@ struct a_s {
 /////////////////////////////////////////
 
 struct FunctorStreamingIP {
-  // Use the 'conduit' annotation on a kernel argument to specify it to be
-  // a streaming kernel argument.
+  // Annotate kernel argument with 'conduit' property 
+  // to specify it to be a streaming kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
       a_s, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::conduit})>                    
       input;
 
   // A kernel with a streaming invocation interface can also independently
-  // have register map kernel arguments, when annotated by 'register_map'.
+  // have register-mapped kernel arguments, when annotated by 'register_map' property.
   sycl::ext::oneapi::experimental::annotated_arg<
       a_s *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::register_map})>                    
       output;
 
-  // Without the annotations, kernel arguments will be inferred to be streaming
+  // Without the annotation, kernel argument will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
-  // vise-versa.
+  // vice-versa.
   MyUInt5 n;
 
-  // Kernel property method to configure the kernel to be a kernel with 
-  // 'streaming_interface_remove_downstream_stall' invocation interface
+  // Kernel properties method to configure the kernel to be a kernel with 
+  // streaming pipelined invocation interface.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
         sycl::ext::intel::experimental::pipelined<>};
   }
 
@@ -132,9 +133,9 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernel with a streaming invocation interface implemented in
+    // Launch the kernels with streaming invocation interface implemented in
     // the functor programming model
-    std::cout << "Running the kernel with a streaming invocation interface "
+    std::cout << "Running the kernels with streaming invocation interface "
                  "implemented in the "
                  "functor programming model"
               << std::endl;

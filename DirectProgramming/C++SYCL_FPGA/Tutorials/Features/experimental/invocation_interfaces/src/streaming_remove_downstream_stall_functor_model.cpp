@@ -10,27 +10,27 @@ using MyUInt5 = ac_int<5, false>;
 /////////////////////////////////////////
 
 struct FunctorStreamingRmDownstreamStallIP {
-  // Use the 'conduit' annotation on a kernel argument to specify it to be
-  // a streaming kernel argument.
+  // Annotate kernel argument with 'conduit' property 
+  // to specify it to be a streaming kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
       ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::conduit})>                    
       input;
 
   // A kernel with a streaming invocation interface can also independently
-  // have register map kernel arguments, when annotated by 'register_map'.
+  // have register map kernel arguments, when annotated by 'register_map' property.
   sycl::ext::oneapi::experimental::annotated_arg<
       ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::register_map})>                    
       output;
 
-  // Without the annotations, kernel arguments will be inferred to be streaming
+  // Without the annotation, kernel argument will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
-  // vise-versa.
+  // vice-versa.
   MyUInt5 n;
 
-  // Kernel property method to configure the kernel to be a kernel with 
-  // 'streaming_interface_remove_downstream_stall' invocation interface
+  // Kernel properties method to configure the kernel to be a kernel with 
+  // streaming pipelined invocation interface without downstream 'ready_in' interface
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
         sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
@@ -110,7 +110,8 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out, count}).wait();
+    q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out, count})
+        .wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden_out, functor_streaming_rm_downstream_stall_out, count);
