@@ -28,7 +28,9 @@
 #include <random>
 
 #include <image.hpp>
+
 #include <fstream>
+
 namespace dpct {
 
 typedef void (*kernel_functor)(sycl::queue &, const sycl::nd_range<3> &,

@@ -38,8 +38,11 @@ This sample contains three versions in the following folders:
 | Optimized for              | Description
 |:---                        |:---
 | OS                         | Ubuntu* 22.04
-| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Data Center GPU Max
-| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1
+| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Data Center GPU Max <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100 
+| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPUs plugin (version 2023.2.0) from Codeplay
+
+For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
+Refer [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute sample on NVIDIA GPU.
 
 ## Key Implementation Details
 
@@ -110,9 +113,9 @@ For this sample, the SYCLomatic tool automatically migrates ~80% of the CUDA run
    ```
    The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the SYCLomatic tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated. The `--use-custom-helper` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as `include` folder. The `--use-experimental-features` option specifies experimental helper function used to logically group work-items.
+4. Pass the JSON file as input to the SYCLomatic tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated. The `--gen-helper-function` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as `include` folder. The `--use-experimental-features` option specifies experimental helper function used to logically group work-items.
    ```
-   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api --use-experimental-features=logical-group
+   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function --use-experimental-features=logical-group
    ```
 
 ### Manual Workarounds 
@@ -239,16 +242,18 @@ Once you migrate the CUDA code to SYCL successfully and you have functional code
     ```
     for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
          offset > 0; offset /= 2) {
-      rowThreadSum += tile32.shuffle_down(rowThreadSum, offset);
+      rowThreadSum += sycl::shift_group_left(item_ct1.get_sub_group(),
+                                             rowThreadSum, offset);
     }
     ```
     
-The sub-group function `shuffle_down` works by exchanging values between work-items in the sub-group via a shift. But needs to be looped to iterate among the sub-groups. 
+The sub-group function `shift_group_left` works by exchanging values between work-items in the sub-group via a shift. But needs to be looped to iterate among the sub-groups. 
     
     ```
     rowThreadSum = sycl::reduce_over_group(tile32, rowThreadSum, sycl::plus<double>());
     ```
-The migrated code snippet with `shuffle_down` API can be replaced with `reduce_over_group` to get better performance. The reduce_over_group implements the generalized sum of the array elements internally by combining values held directly by the work-items in a group. The work-group reduces a number of values equal to the size of the group and each work-item provides one value.
+
+The migrated code snippet with `sshift_group_left` API can be replaced with `reduce_over_group` to get better performance. The reduce_over_group implements the generalized sum of the array elements internally by combining values held directly by the work-items in a group. The work-group reduces a number of values equal to the size of the group and each work-item provides one value.
 
 #### Atomic operation optimization
    
@@ -260,6 +265,7 @@ The migrated code snippet with `shuffle_down` API can be replaced with `reduce_o
     ```
     
 The `atomic_fetch_add` operation calls automatically add on SYCL atomic object. Here, the atomic_fetch_add is used to sum all the subgroup values into rowThreadSum variable. This can be optimized by replacing the atomic_fetch_add with atomic_ref from sycl namespace.
+   
     ```
     if (tile32.get_local_linear_id() == 0) {
        sycl::atomic_ref<double, sycl::memory_order::relaxed, sycl::memory_scope::device,
@@ -296,9 +302,14 @@ These optimization changes are performed in JacobiMethod and FinalError Kernels 
    ```
    $ mkdir build
    $ cd build
-   $ cmake ..
+   $ cmake .. or ( cmake -D INTEL_MAX_GPU=1 .. ) or ( cmake -D NVIDIA_GPU=1 .. )
    $ make
    ```
+
+   **Note**: By default, no flag are enabled during build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU. <br>
+    Enable **INTEL_MAX_GPU** flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performace. <br>
+    Enable **NVIDIA_GPU** flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs ) <br>
+
    By default, this command sequence will build the `02_sycl_migrated` and `03_sycl_migrated_optimized` versions of the program.
    
 3. Run the program.
