@@ -13,7 +13,10 @@
 
 using namespace sycl;
 
-#if FPGA_SIMULATOR
+#if defined(FPGA_SIMULATOR) || defined(FPGA_EMULATOR)
+// Simulator runs too slowly for large array sizes
+// Emulator has stack issues for large array sizes -
+// (malloc can be used but is out of scope of this tutorial)
 constexpr size_t kSize = 32;
 #else
 constexpr size_t kSize = 512;
