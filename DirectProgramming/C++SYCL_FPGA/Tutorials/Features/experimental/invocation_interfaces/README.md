@@ -466,7 +466,7 @@ PASSED
 ### Streaming Remove Downstream Stall Functor Example Output
 
 ```
-Running the kernel with streaming invocation interface without downstream 'ready_in' interface implemented in the functor programming model
+Running the kernel with a streaming invocation interface implemented in the functor programming model
 	 Done
 PASSED
 ```
