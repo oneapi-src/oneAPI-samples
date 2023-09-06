@@ -1,6 +1,6 @@
 # `Invocation Interfaces` Sample
 
-This sample is an FPGA tutorial that demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces.
+This sample is a FPGA tutorial that demonstrates how to specify the kernel invocation interfaces and kernel argument interfaces.
 
 | Area                 | Description
 |:--                   |:--
@@ -12,7 +12,7 @@ This sample is an FPGA tutorial that demonstrates how to specify the kernel invo
 
 The sample demonstrates the differences between streaming invocation interfaces that use a ready/valid handshake and register-mapped invocation interfaces that exist in the control/status register (CSR) of the kernel.
 
-Use the `get` kernel properties method to specify how the kernel invocation handshaking is performed and `annotated_arg` to specify how the kernel argument data is passed in to the kernel.
+Use the `get` kernel properties method to specify how the kernel invocation handshaking is performed and `annotated_arg` wrapper to specify how the kernel argument data is passed in to the kernel.
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ The kernel invocation interface (namely, the `start` and `done` signals) can be 
 | Streaming               | Streaming             | Synchronized with `start` and `ready_out`
 | Streaming               | Register-mapped       | N/A
 | Register-mapped         | Streaming             | *No synchronization possible*
-| Register-mapped         | Register -mapped       | N/A
+| Register-mapped         | Register-mapped       | N/A
 
 If you would like an argument to have its own dedicated ready/valid handshake, implement that argument using a [Host Pipe](../hostpipes/).
 
@@ -164,11 +164,13 @@ If no annotation is specified for the kernel invocation interface, then a regist
 
 ### Testing the Tutorial
 
-A total of five source files are in the `src/` directory, declaring a total of five kernels. Three use the functor programming model, and the other two use the lambda programming model. 
+A total of five source files are in the `src/` directory, declaring a total of five kernels. Three kernels use the functor programming model, and the other two use the lambda programming model. 
 
-For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are explicitly declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are explicitly declared with streaming pipelined kernel invocation interface, one demonstrates streaming pipelined kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming pipelined kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
-For Lambda programming model, one kernel is declared with the register-mapped kernel invocation interface inferred by default by the compiler and the other kernel is explicitly declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+For lambda programming model, one kernel is declared with the register-mapped kernel invocation interface inferred by default by the compiler and the other kernel is explicitly declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+
+> **Note**: For annotated_arg of ac_int, ac_complex or struct type, explicitly cast away the annotated_arg to prevent compiler error.
 
 ```c++
 struct FunctorRegisterMapIP {
@@ -185,7 +187,7 @@ struct FunctorRegisterMapIP {
     n;
 
   void operator()() const {
-    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { //TODO::comment
+    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) {
       output[i] = (ValueT)(input[i] * (input[i] + 1));
     }
   }
