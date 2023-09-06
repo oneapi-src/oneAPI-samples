@@ -11,7 +11,7 @@ using MyUInt5 = ac_int<5, false>;
 
 struct FunctorRegisterMapIP {
   // Annotate kernel argument with 'register_map' property 
-  // to specify it to be a register-mapped kernel argument.
+  // to explicitly specify it to be a register-mapped kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
       ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
                     sycl::ext::intel::experimental::register_map})>                    
@@ -32,7 +32,9 @@ struct FunctorRegisterMapIP {
   // Without kernel invocation interface annotation, register-mapped invocation
   // interface will be inferred by the compiler.
   void operator()() const {
-    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { //TODO::comment
+    // For annotated_arg of ac_int type, explicitly cast away the annotated_arg
+    // to prevent compiler error.
+    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { 
       output[i] = (ValueT)(input[i] * (input[i] + 1));
     }
   }

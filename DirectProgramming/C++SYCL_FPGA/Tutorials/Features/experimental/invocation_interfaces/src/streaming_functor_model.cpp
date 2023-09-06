@@ -43,6 +43,8 @@ struct FunctorStreamingIP {
   }
 
   void operator()() const {
+      // For annotated_arg of struct type, explicitly cast away the annotated_arg
+      // to prevent compiler error.
       struct a_s ret;
       ret.x = 0;
       ret.y = ((a_s)input).y;
