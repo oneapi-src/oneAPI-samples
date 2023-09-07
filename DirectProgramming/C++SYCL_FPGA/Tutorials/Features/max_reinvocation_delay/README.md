@@ -79,7 +79,7 @@ By default, the compiler inserts a loop reinvocation delay of a few cycles on th
 However, the extra latency between invocations of a loop can have a significant impact in performance if the loop has a very small trip count. Applying `[[intel::max_reinvocation_delay(1)]]` to the inner loop allows us to remove this delay between invocations. 
 
 ```c++
-for (int factor = 0; factor < FACTORS; factor++) {
+for (int factor = 0; factor < kFactors; factor++) {
   [[intel::max_reinvocation_delay(1)]]
   for (int i = 0; i < sequence_length; i++) {
     PipeOut::write(first_term + i * factor);
