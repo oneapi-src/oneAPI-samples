@@ -28,6 +28,12 @@ set(STREAMING_LAMBDA_EMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_emu)
 set(STREAMING_LAMBDA_SIMULATOR_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga_sim)
 set(STREAMING_LAMBDA_FPGA_TARGET ${STREAMING_LAMBDA_TARGET_NAME}.fpga)
 
+set(STREAMING_PIPELINED_SOURCE_FILE streaming_pipelined_model.cpp)
+set(STREAMING_PIPELINED_TARGET_NAME streaming_pipelined_model)
+set(STREAMING_PIPELINED_EMULATOR_TARGET ${STREAMING_PIPELINED_TARGET_NAME}.fpga_emu)
+set(STREAMING_PIPELINED_SIMULATOR_TARGET ${STREAMING_PIPELINED_TARGET_NAME}.fpga_sim)
+set(STREAMING_PIPELINED_FPGA_TARGET ${STREAMING_PIPELINED_TARGET_NAME}.fpga)
+
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
@@ -82,17 +88,23 @@ set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE}
 # To compile in a single command:
 #    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_functor_model.cpp -o register_map_functor_model.fpga_emu
 #    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_functor_model.cpp -o streaming_functor_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_remove_downstream_stall_functor_model.cpp -o streaming_remove_downstream_stall_functor_model.fpga_emu
 #    icpx -fsycl -fintelfpga -DFPGA_EMULATOR register_map_lambda_model.cpp -o register_map_lambda_model.fpga_emu
 #    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_lambda_model.cpp -o streaming_lambda_model.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR streaming_pipelined_model.cpp -o streaming_pipelined_model.fpga_emu
 # CMake executes:
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
 #    [link]    icpx -fsycl -fintelfpga register_map_functor_model.cpp.o -o register_map_functor_model.fpga_emu
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_functor_model.cpp.o -c streaming_functor_model.cpp
 #    [link]    icpx -fsycl -fintelfpga streaming_functor_model.cpp.o -o streaming_functor_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_remove_downstream_stall_functor_model.cpp.o -c streaming_remove_downstream_stall_functor_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_remove_downstream_stall_functor_model.cpp.o -o streaming_remove_downstream_stall_functor_model.fpga_emu
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o register_map_lambda_model.cpp.o -c register_map_lambda_model.cpp
 #    [link]    icpx -fsycl -fintelfpga register_map_lambda_model.cpp.o -o register_map_lambda_model.fpga_emu
 #    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
 #    [link]    icpx -fsycl -fintelfpga streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o streaming_pipelined_model.cpp.o -c streaming_pipelined_model.cpp
+#    [link]    icpx -fsycl -fintelfpga streaming_pipelined_model.cpp.o -o streaming_pipelined_model.fpga_emu
 add_executable(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -118,7 +130,12 @@ target_include_directories(${STREAMING_LAMBDA_EMULATOR_TARGET} PRIVATE ../../../
 set_target_properties(${STREAMING_LAMBDA_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${STREAMING_LAMBDA_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
-add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_EMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} ${STREAMING_LAMBDA_EMULATOR_TARGET})
+add_executable(${STREAMING_PIPELINED_EMULATOR_TARGET} ${STREAMING_PIPELINED_SOURCE_FILE})
+target_include_directories(${STREAMING_PIPELINED_EMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_PIPELINED_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_PIPELINED_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+
+add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_EMULATOR_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_EMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_EMULATOR_TARGET} ${STREAMING_LAMBDA_EMULATOR_TARGET} ${STREAMING_PIPELINED_EMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Simulator
@@ -126,17 +143,23 @@ add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${STR
 # To compile in a single command:
 #   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_functor_model.cpp -o register_map_functor_model.fpga_sim
 #   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_functor_model.cpp -o streaming_functor_model.fpga_sim
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_remove_downstream_stall_functor_model.cpp -o streaming_remove_downstream_stall_functor_model.fpga_sim
 #   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_lambda_model.cpp -o register_map_lambda_model.fpga_sim
 #   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp -o streaming_lambda_model.fpga_sim
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_model.cpp -o streaming_pipelined_model.fpga_sim
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_functor_model.cpp.o -o register_map_functor_model.fpga_sim
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_functor_model.cpp.o -c streaming_functor_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_functor_model.cpp.o -o streaming_functor_model.fpga_sim
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_remove_downstream_stall_functor_model.cpp.o -c streaming_remove_downstream_stall_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_remove_downstream_stall_functor_model.cpp.o -o streaming_remove_downstream_stall_functor_model.fpga_sim
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o register_map_lambda_model.cpp.o -c register_map_lambda_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_lambda_model.cpp.o -o register_map_lambda_model.fpga_sim
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga_sim
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o streaming_pipelined_model.cpp.o -c streaming_pipelined_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_model.cpp.o -o streaming_pipelined_model.fpga_sim
 add_executable(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
@@ -162,7 +185,12 @@ target_include_directories(${STREAMING_LAMBDA_SIMULATOR_TARGET} PRIVATE ../../..
 set_target_properties(${STREAMING_LAMBDA_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${STREAMING_LAMBDA_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
-add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_SIMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} ${STREAMING_LAMBDA_SIMULATOR_TARGET})
+add_executable(${STREAMING_PIPELINED_SIMULATOR_TARGET} ${STREAMING_PIPELINED_SOURCE_FILE})
+target_include_directories(${STREAMING_PIPELINED_SIMULATOR_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_PIPELINED_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_PIPELINED_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+
+add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_SIMULATOR_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_SIMULATOR_TARGET} ${REGISTER_MAP_LAMBDA_SIMULATOR_TARGET} ${STREAMING_LAMBDA_SIMULATOR_TARGET} ${STREAMING_PIPELINED_SIMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Hardware
@@ -170,17 +198,23 @@ add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${ST
 # To compile in a single command:
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_functor_model.cpp -o register_map_functor_model.fpga
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_functor_model.cpp -o streaming_functor_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_remove_downstream_stall_functor_model.cpp -o streaming_remove_downstream_stall_functor_model.fpga
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_lambda_model.cpp -o register_map_lambda_model.fpga
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp -o streaming_lambda_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_model.cpp -o streaming_pipelined_model.fpga
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_functor_model.cpp.o -o register_map_functor_model.fpga
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_functor_model.cpp.o -c streaming_functor_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_functor_model.cpp.o -o streaming_functor_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_remove_downstream_stall_functor_model.cpp.o -c streaming_remove_downstream_stall_functor_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_remove_downstream_stall_functor_model.cpp.o -o streaming_remove_downstream_stall_functor_model.fpga
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o register_map_lambda_model.cpp.o -c register_map_lambda_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_lambda_model.cpp.o -o register_map_lambda_model.fpga
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_pipelined_model.cpp.o -c streaming_pipelined_model.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_model.cpp.o -o streaming_pipelined_model.fpga
 add_executable(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -194,7 +228,7 @@ set_target_properties(${STREAMING_FUNCTOR_FPGA_TARGET} PROPERTIES LINK_FLAGS "${
 add_executable(${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} ${STREAMING_FUNCTOR_SOURCE_FILE})
 target_include_directories(${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${STREAMING_FUNCTOR_FPGA_TARGET}")
+set_target_properties(${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET}")
 
 add_executable(${REGISTER_MAP_LAMBDA_FPGA_TARGET} ${REGISTER_MAP_LAMBDA_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_LAMBDA_FPGA_TARGET} PRIVATE ../../../../../include)
@@ -206,7 +240,12 @@ target_include_directories(${STREAMING_LAMBDA_FPGA_TARGET} PRIVATE ../../../../.
 set_target_properties(${STREAMING_LAMBDA_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${STREAMING_LAMBDA_FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${STREAMING_LAMBDA_FPGA_TARGET}")
 
-add_custom_target(fpga DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${STREAMING_FUNCTOR_FPGA_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} ${REGISTER_MAP_LAMBDA_FPGA_TARGET} ${STREAMING_LAMBDA_FPGA_TARGET})
+add_executable(${STREAMING_PIPELINED_FPGA_TARGET} ${STREAMING_LAMBDA_SOURCE_FILE})
+target_include_directories(${STREAMING_PIPELINED_FPGA_TARGET} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_PIPELINED_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_PIPELINED_FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${STREAMING_PIPELINED_FPGA_TARGET}")
+
+add_custom_target(fpga DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${STREAMING_FUNCTOR_FPGA_TARGET} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_TARGET} ${REGISTER_MAP_LAMBDA_FPGA_TARGET} ${STREAMING_LAMBDA_FPGA_TARGET} ${STREAMING_PIPELINED_FPGA_TARGET})
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See C++SYCL_FPGA/GettingStarted/fast_recompile for details.
 
@@ -216,8 +255,10 @@ add_custom_target(fpga DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${STREAMING_F
 # To compile manually:
 #   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early register_map_functor_model.cpp -o register_map_functor_model.a
 #   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early streaming_functor_model.cpp -o streaming_functor_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early streaming_remove_downstream_stall_functor_model.cpp -o streaming_remove_downstream_stall_functor_model.a
 #   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early register_map_lambda_model.cpp -o register_map_lambda_model.a
 #   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early streaming_lambda_model.cpp -o streaming_lambda_model.a
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early streaming_pipelined_model.cpp -o streaming_pipelined_model.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 set(REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE ${REGISTER_MAP_FUNCTOR_TARGET_NAME}_report.a)
 add_executable(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
@@ -249,5 +290,11 @@ target_include_directories(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PRIVATE ../../..
 set_target_properties(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 
-add_custom_target(report DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_EARLY_IMAGE} ${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_LAMBDA_FPGA_EARLY_IMAGE})
+set(STREAMING_PIPELINED_FPGA_EARLY_IMAGE ${STREAMING_PIPELINED_TARGET_NAME}_report.a)
+add_executable(${STREAMING_PIPELINED_FPGA_EARLY_IMAGE} ${STREAMING_PIPELINED_SOURCE_FILE})
+target_include_directories(${STREAMING_PIPELINED_FPGA_EARLY_IMAGE} PRIVATE ../../../../../include)
+set_target_properties(${STREAMING_PIPELINED_FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${STREAMING_PIPELINED_FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+
+add_custom_target(report DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_FPGA_EARLY_IMAGE} ${STREAMING_FUNCTOR_RM_DOWNSTREAM_STALL_FPGA_EARLY_IMAGE} ${REGISTER_MAP_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_LAMBDA_FPGA_EARLY_IMAGE} ${STREAMING_PIPELINED_FPGA_EARLY_IMAGE})
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
