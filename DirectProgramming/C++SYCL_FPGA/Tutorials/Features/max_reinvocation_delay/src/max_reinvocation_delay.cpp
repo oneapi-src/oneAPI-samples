@@ -21,7 +21,7 @@ struct ArithmeticSequenceKernel {
   int sequence_length;
 
   void operator()() const {
-    for (int factor = 1; factor <= FACTORS; factor++) {
+    for (int factor = 1; factor <= kFactors; factor++) {
       [[intel::max_reinvocation_delay(1)]] // NO-FORMAT: Attribute
       for (int i = 0; i < sequence_length; i++) {
         PipeResults::write(first_term + i * factor);
