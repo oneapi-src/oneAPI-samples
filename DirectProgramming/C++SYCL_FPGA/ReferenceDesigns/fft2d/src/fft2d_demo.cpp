@@ -375,7 +375,7 @@ void FourierTransformGold(ac_complex<double> *data, bool inverse) {
 
 template <int lognr_points>
 void FourierStage(ac_complex<double> *data) {
-  if constexpr (lognr_points > 0) {
+  static_assert(lognr_points > 0, "The log of the number of points must be positive");
     constexpr int kNrPoints = 1 << lognr_points;
 
     ac_complex<double> *half1 = (ac_complex<double> *)malloc(
