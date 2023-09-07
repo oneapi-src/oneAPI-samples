@@ -55,7 +55,7 @@ int main() {
 
     // Verify functional correctness
     bool passed = true;
-    for (int factor = 1; factor <= FACTORS; factor++) {
+    for (int factor = 1; factor <= kFactors; factor++) {
       std::cout << "Calculating arithmetic sequence with factor = " << factor
                 << std::endl;
       for (int i = 0; i < sequence_length; i++) {
