@@ -122,12 +122,33 @@ q.single_task(kernel_properties, [=] {
   ...
 })
 ```
+
+### Declaring a Streaming Pipelined Kernel Interface
+
+#### Example Functor
+
+```c++
+struct MyIP {
+  ...
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface<>,
+        sycl::ext::intel::experimental::pipelined<>
+    };
+  }
+  void operator()() const {
+    ...
+  }
+};
+```
 Using the property `sycl::ext::intel::experimental::streaming_interface<>` or `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
 
-The property sycl::ext::intel::experimental::pipelined takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
+The property `sycl::ext::intel::experimental::pipelined` takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
 - **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
 - **0**: Do not pipeline the kernel.
 - **N (N> 0)**: Pipeline the kernel, and force the II of the kernel to be N.
+>
+If a parameter is not specified, the default behaviour of -1 will be inferred.
 > **Note**: `sycl::ext::intel::experimental::pipelined<>` property only supports kernels with a streaming invocation interface.
 
 
@@ -164,9 +185,9 @@ If no annotation is specified for the kernel invocation interface, then a regist
 
 ### Testing the Tutorial
 
-A total of five source files are in the `src/` directory, declaring a total of five kernels. Three kernels use the functor programming model, and the other two use the lambda programming model. 
+A total of six source files are in the `src/` directory, declaring a total of six kernels. Four kernels use the functor programming model, and the other two use the lambda programming model. 
 
-For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other two are explicitly declared with streaming pipelined kernel invocation interface, one demonstrates streaming pipelined kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure while the other demonstrates the streaming pipelined kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
+For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other three are explicitly declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure, the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure and another demonstrates the streaming pipelined kernel invocation interface.
 
 For lambda programming model, one kernel is declared with the register-mapped kernel invocation interface inferred by default by the compiler and the other kernel is explicitly declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
@@ -209,9 +230,9 @@ struct FunctorStreamingIP {
   MyUInt5 n;
 
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-    return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
-        sycl::ext::intel::experimental::pipelined<>};
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall
+    };
   }
 
   void operator()() const {
@@ -219,7 +240,8 @@ struct FunctorStreamingIP {
       ret.x = 0;
       ret.y = ((a_s)input).y;
 
-      for(MyUInt5 i = 0; i < n; i++) {
+      for(MyUInt5 i = 0; i < n; i++)
+      {
         ret.x += ((a_s)input).x;
         ret.y += 1;
       }
@@ -243,9 +265,9 @@ struct FunctorStreamingRmDownstreamStallIP {
   MyUInt5 n;
 
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-    return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
-        sycl::ext::intel::experimental::pipelined<>};
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
+    };
   }
 
   void operator()() const {
@@ -256,21 +278,49 @@ struct FunctorStreamingRmDownstreamStallIP {
 };
 ```
 
-These three functor kernels are invoked in the same way in the host code, by constructing the struct and submitting `single_task` into the SYCL `queue`.
+```c++
+struct FunctorStreamingPipelinedIP {      
+  ValueT* input;
+
+  sycl::ext::oneapi::experimental::annotated_arg<
+      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
+                    sycl::ext::intel::experimental::register_map})>                    
+      output;
+
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface<>,
+        sycl::ext::intel::experimental::pipelined<>
+    };
+  }
+
+  void operator()() const {
+    ValueT val = *input;
+    *output = (ValueT)(val * (val + 1));
+  }
+};
+```
+
+These four functor kernels are invoked in the same way in the host code, by constructing the struct and submitting `single_task` into the SYCL `queue`.
 
 ```c++
 q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count}).wait();
 ```
 
 ```c++
-q.single_task(FunctorStreamingIP{input, functor_streaming_out0, count});
-q.single_task(FunctorStreamingIP{input, functor_streaming_out1, count});
-q.wait();
+q.single_task(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
 ```
 
 ```c++
 q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out,
 	count}).wait();
+```
+
+```c++
+for (int i = 0; i < count; i++) {
+	q.single_task(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
+}
+q.wait();
 ```
 
 Kernel properties argument can be passed into the SYCL `queue` `single_task` to overwrite the default register-mapped kernel invocation interface inferred by the compiler.
@@ -468,6 +518,14 @@ PASSED
 ```
 Running the kernel with streaming invocation interface implemented in the functor programming model
 	 Done
+PASSED
+```
+### Streaming Pipelined Functor Example Output
+
+```
+Launching pipelined kernels consecutively
+         Done
+
 PASSED
 ```
 ### Register-Mapped Lambda Example Output
