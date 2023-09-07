@@ -124,7 +124,7 @@ q.single_task(kernel_properties, [=] {
 ```
 Using the property `sycl::ext::intel::experimental::streaming_interface<>` or `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
 
-The property `sycl::ext::intel::experimental::pipelined<>` specifies that this streaming interface is pipelined with an lowest possible II at target fMAX. Other valid parameterizations are:
+The property sycl::ext::intel::experimental::pipelined takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
 - **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
 - **0**: Do not pipeline the kernel.
 - **N (N> 0)**: Pipeline the kernel, and force the II of the kernel to be N.
