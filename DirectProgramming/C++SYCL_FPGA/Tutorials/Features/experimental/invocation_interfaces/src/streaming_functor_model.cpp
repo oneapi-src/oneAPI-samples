@@ -99,8 +99,7 @@ int main(int argc, char *argv[]) {
     input.x = 1;
     input.y = 'a';
 
-    a_s *functor_streaming_out0 = sycl::malloc_host<a_s>(count, q);
-    a_s *functor_streaming_out1 = sycl::malloc_host<a_s>(count, q);
+    a_s *functor_streaming_out = sycl::malloc_host<a_s>(count, q);
     a_s *golden_out = sycl::malloc_host<a_s>(count, q);
 
     // Compute golden output data
@@ -116,19 +115,14 @@ int main(int argc, char *argv[]) {
     *golden_out = ret;
 
     // validation lambda
-    auto validate = [](auto *golden_out, auto *functor_streaming_out0, auto *functor_streaming_out1) {
-      if (functor_streaming_out0->x != golden_out->x || functor_streaming_out0->y != golden_out->y ||
-        functor_streaming_out1->x != golden_out->x || functor_streaming_out1->y != golden_out->y) {
+    auto validate = [](auto *golden_out, auto *functor_streaming_out) {
+      if (functor_streaming_out->x != golden_out->x || functor_streaming_out->y != golden_out->y) {
           std::cout << "Expected: \n";
-          std::cout << "functor_streaming_out0->x = " << golden_out->x << "\n";
-          std::cout << "functor_streaming_out0->y = " << golden_out->y << "\n";
-          std::cout << "functor_streaming_out1->x = " << golden_out->x << "\n";
-          std::cout << "functor_streaming_out1->y = " << golden_out->y << "\n";
+          std::cout << "functor_streaming_out->x = " << golden_out->x << "\n";
+          std::cout << "functor_streaming_out->y = " << golden_out->y << "\n";
           std::cout << "Got: \n";
-          std::cout << "functor_streaming_out0->x = " << functor_streaming_out0->x << "\n";
-          std::cout << "functor_streaming_out0->y = " << functor_streaming_out0->y << "\n";
-          std::cout << "functor_streaming_out1->x = " << functor_streaming_out1->x << "\n";
-          std::cout << "functor_streaming_out1->y = " << functor_streaming_out0->y << "\n";
+          std::cout << "functor_streaming_out->x = " << functor_streaming_out->x << "\n";
+          std::cout << "functor_streaming_out->y = " << functor_streaming_out->y << "\n";
           std::cout << "FAILED\n";
           return false;
       }
@@ -141,16 +135,13 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingIP{input, functor_streaming_out0, count});
-    q.single_task(FunctorStreamingIP{input, functor_streaming_out1, count});
-    q.wait();
+    q.single_task(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
     std::cout << "\t Done" << std::endl;
 
-    passed &= validate(golden_out, functor_streaming_out0, functor_streaming_out1);
+    passed &= validate(golden_out, functor_streaming_out);
     std::cout << std::endl;
 
-    sycl::free(functor_streaming_out0, q);
-    sycl::free(functor_streaming_out1, q);
+    sycl::free(functor_streaming_out, q);
     sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code

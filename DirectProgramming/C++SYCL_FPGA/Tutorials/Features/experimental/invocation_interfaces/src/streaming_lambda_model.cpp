@@ -11,18 +11,16 @@ using MyUInt5 = ac_int<5, false>;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class LambdaStreamingIP;
 
-// Create a properties object containing the kernel invocation interface
-// property 'streaming_interface_remove_downstream_stall'
-// and pipelined property
-sycl::ext::oneapi::experimental::properties kernel_properties{
-  sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
-  sycl::ext::intel::experimental::pipelined<>
-};
-
 /////////////////////////////////////////
 
 void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output,
                                MyUInt5 n) {
+  // Create a properties object containing the kernel invocation interface
+  // property 'streaming_interface_remove_downstream_stall'.
+  sycl::ext::oneapi::experimental::properties kernel_properties {
+    sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
+  };
+
   // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
   // interface. All kernel arguments will have the same interface as the kernel invocation interface.
   q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
