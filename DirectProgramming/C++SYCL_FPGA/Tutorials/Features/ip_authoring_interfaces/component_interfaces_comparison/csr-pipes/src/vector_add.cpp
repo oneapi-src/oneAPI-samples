@@ -27,7 +27,7 @@ using InputPipeB =
                                          PipeProps>;
 
 using CSRPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
-    sycl::ext::intel::experimental::protocol_avalon_mm));
+    sycl::ext::intel::experimental::protocol_avalon_mm_uses_ready));
 
 // this csr pipe will only be read from and written to once
 using OutputPipeC =
