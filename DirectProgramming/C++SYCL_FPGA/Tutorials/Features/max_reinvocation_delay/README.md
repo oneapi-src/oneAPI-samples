@@ -65,7 +65,7 @@ The attribute parameter `N` is required and must be a positive constant expressi
 Consider the following loop nest:
 
 ```c++
-for (int factor = 0; factor < FACTORS; factor++) {
+for (int factor = 0; factor < kFactors; factor++) {
   for (int i = 0; i < sequence_length; i++) {
     PipeOut::write(first_term + i * factor);
   }
