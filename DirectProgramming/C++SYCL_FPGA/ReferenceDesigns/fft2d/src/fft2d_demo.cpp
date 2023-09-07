@@ -414,7 +414,4 @@ void FourierStage(ac_complex<double> *data) {
 
     free(half1);
     free(half2);
-  } else {
-    return;
-  }
 }
