@@ -30,11 +30,11 @@ struct FunctorStreamingRmDownstreamStallIP {
   MyUInt5 n;
 
   // Kernel properties method to configure the kernel to be a kernel with 
-  // streaming pipelined invocation interface without downstream 'ready_in' interface
+  // streaming invocation interface without downstream 'ready_in' interface.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-    return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall,
-        sycl::ext::intel::experimental::pipelined<>};
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
+    };
   }
 
   void operator()() const {

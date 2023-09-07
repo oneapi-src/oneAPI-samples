@@ -35,11 +35,11 @@ struct FunctorStreamingIP {
   MyUInt5 n;
 
   // Kernel properties method to configure the kernel to be a kernel with 
-  // streaming pipelined invocation interface.
+  // streaming invocation interface.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-    return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
-        sycl::ext::intel::experimental::pipelined<>};
+    return sycl::ext::oneapi::experimental::properties {
+        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall
+    };
   }
 
   void operator()() const {

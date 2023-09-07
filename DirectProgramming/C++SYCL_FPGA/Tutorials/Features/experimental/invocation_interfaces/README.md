@@ -103,8 +103,10 @@ q.single_task([=] {
 struct MyIP {
   ...
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-      return sycl::ext::oneapi::experimental::properties{
-          sycl::ext::intel::experimental::streaming_interface<>};
+      return sycl::ext::oneapi::experimental::properties {
+          sycl::ext::intel::experimental::streaming_interface<>
+      };
+  }
   void operator()() const {
     ...
   }
@@ -115,7 +117,6 @@ struct MyIP {
 ```c++
 sycl::ext::oneapi::experimental::properties kernel_properties {
   sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall,
-  sycl::ext::intel::experimental::pipelined<>
 };
 q.single_task(kernel_properties, [=] {
   ...
