@@ -217,8 +217,8 @@ void TestFFT(bool mangle, bool inverse) {
      * 'MangleBits' function for additional details.
      */
 
-    double start_time{};
-    double end_time{};
+    double start_time;
+    double end_time;
 
     // This is a limitation of the design
     static_assert(kN / kParallelism >= kParallelism);
