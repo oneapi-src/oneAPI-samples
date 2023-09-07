@@ -60,8 +60,8 @@ struct ThresholdKernel {
       end_of_packet = in_beat.eop;
 
       // Threshold
-      if (pixel > THRESHOLD)
-        pixel = THRESHOLD;
+      if (pixel > kThreshold)
+        pixel = kThreshold;
 
       // Write out result
       StreamingBeatT out_beat(pixel, start_of_packet, end_of_packet);
