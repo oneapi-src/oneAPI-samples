@@ -107,7 +107,7 @@ int main() {
     bool passed = true;
     for (int i = 0; i < (width * height); ++i) {
       StreamingBeatT out_beat = OutPixelPipe::read(q);
-      passed &= (out_beat.data <= THRESHOLD);
+      passed &= (out_beat.data <= kThreshold);
     }
 
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
