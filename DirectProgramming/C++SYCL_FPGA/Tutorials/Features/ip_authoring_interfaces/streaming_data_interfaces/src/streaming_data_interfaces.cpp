@@ -6,7 +6,7 @@
 #include "exception_handler.hpp"
 
 // limit pixel values to this value, or less
-#define THRESHOLD 200
+constexpr int kThreshold = 200;
 
 // Forward declare the kernel and pipe names
 // (this prevents unwanted name mangling in the optimization report)
