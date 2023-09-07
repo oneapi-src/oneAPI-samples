@@ -110,13 +110,13 @@ The following parameters are found under `sycl::ext::intel::experimental`, with 
 
 | Parameter                | Default Value | Description
 |---                       |---            |---
-|  `buffer_location<id>`   | N/A           | The address space of the interface that associates with the host. Each unique buffer location will result in a unique Avalon memory-mapped host interface. When `buffer_location` is not specified, then corresponding LSUs will connect to all of the IP's Avalon memory-mapped host interfaces.
+|  `buffer_location<id>`   | N/A           | The address space of the interface that associates with the host. Each unique buffer location will result in a unique Avalon memory-mapped host interface. When `buffer_location` is not specified, then the pointer can be used to access any of the IP's Avalon memory-mapped host interfaces depending on which memory the pointer points to.
 | `awidth<width>`          | 41            | Width of the Avalon memory-mapped host address bus in bits. 
 | `dwidth<width>`          | 64            | Width of the Avalon memory-mapped host data bus in bits. 
 | `latency<value>`         | 1             | Read/Write latency for downstream fixed-latency Avalon memory-mapped agent. For a variable-latency Avalon memory-mapped agent, set `latency<0>`. 
 | `read_write_mode<mode>`  | `read_write`  | Port direction of the interface. (`read_write`, `read` or `write`) 
 | `maxburst<value>`        | 1             | Maximum number of data transfers that can associate with a read or write request. 
-| `alignment<alignment>`   | 1          | Alignment of the Avalon memory-mapped host interface
+| `alignment<alignment>`   | 1          | Alignment of the pointer.
 
 These parameters can be used to improve the performance of `Example 1` by ensuring that each pointer points to data in a dedicated Avalon memory-mapped agent memory, like this:
 
@@ -180,7 +180,7 @@ If the input and output vectors are too large for on-chip memory, larger off-chi
 
 ![](assets/ddr_avhost.svg)
 
-The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface.
+The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface. By specifying the `alignment` property, the compiler can assume the specified `alignment` and infer an optimized LSU. Without this property, a non-aligned LSU is inferred requiring additional logic to handle potential unaligned accesses. When the alignment property is specified on the kernel argument, the same alignment must be specified to the SYCL runtime using `aligned_alloc_shared` as shown in the codesample. 
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 (Code can be found under `part4_ddr_hosts`).

@@ -73,9 +73,9 @@ int main(void) {
     std::cout << "Elements in vector : " << kN << "\n";
 
     // Host array must share the same buffer location property as defined in the
-    // kernel. Since we are specifiying alignment on the kernal argument, we
+    // kernel. Since we are specifying alignment on the kernel argument, we
     // need to also specify that to the allocation call by using
-    // alighned_alloc_shared API
+    // aligned_alloc_shared API
     int *array_a = sycl::aligned_alloc_shared<int>(
         kAlignment, kN, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
