@@ -15,7 +15,7 @@ class ResultsPipe;
 using PipeResults = sycl::ext::intel::experimental::pipe<ResultsPipe, int>;
 
 // Computes and outputs the first "sequence_length" terms of the arithmetic
-// sequences with first term "first_term" and factors 1 through FACTORS.
+// sequences with first term "first_term" and factors 1 through kFactors.
 struct ArithmeticSequenceKernel {
   int first_term;
   int sequence_length;
