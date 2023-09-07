@@ -4,7 +4,7 @@
 
 #include "exception_handler.hpp"
 
-#define FACTORS 5
+constexpr int kFactors 5
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
