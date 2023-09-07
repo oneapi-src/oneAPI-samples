@@ -162,7 +162,6 @@ struct MultiMMIP {
   int size;
 
   void operator()() const {
-#pragma unroll 4
     for (int i = 0; i < size; i++) {
       z[i] = x[i] + y[i];
     }
@@ -180,7 +179,7 @@ If the input and output vectors are too large for on-chip memory, larger off-chi
 
 ![](assets/ddr_avhost.svg)
 
-The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface. By specifying the `alignment` property, the compiler can assume the specified `alignment` and infer an optimized LSU. Without this property, a non-aligned LSU is inferred requiring additional logic to handle potential unaligned accesses. When the alignment property is specified on the kernel argument, the same alignment must be specified to the SYCL runtime using `aligned_alloc_shared` as shown in the codesample. 
+The available memory bandwidth can be better used by coalescing the 32-bit wide load-store units into wider 256-bit wide load-store units to match the memory interface. By choosing an unroll factor of 8, the compiler may coalesce 8 memory accesses into a single 256 bit access. By specifying the `alignment` property, the compiler can assume the specified `alignment` and infer an optimized LSU. Without this property, a non-aligned LSU is inferred requiring additional logic to handle potential unaligned accesses. When the alignment property is specified on the kernel argument, the same alignment must be specified to the SYCL runtime using `aligned_alloc_shared` as shown in the codesample. 
 
 #### Example 4: A kernel that interfaces with two off-chip memories
 (Code can be found under `part4_ddr_hosts`).
@@ -208,7 +207,7 @@ struct DDRIP {
   int size;
 
   void operator()() const {
-#pragma unroll 4
+#pragma unroll 8
     for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }

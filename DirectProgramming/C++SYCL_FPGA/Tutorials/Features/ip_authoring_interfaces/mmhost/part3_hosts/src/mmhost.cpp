@@ -40,7 +40,6 @@ struct MultiMMIP {
   int size;
 
   void operator()() const {
-#pragma unroll 4
     for (int i = 0; i < size; i++) {
       z[i] = x[i] + y[i];
     }

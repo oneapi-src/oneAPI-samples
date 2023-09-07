@@ -30,7 +30,7 @@ struct DDRIP {
   int size;
 
   void operator()() const {
-#pragma unroll 4
+#pragma unroll 8
     for (int i = 0; i < size; ++i) {
       z[i] = x[i] + y[i];
     }
