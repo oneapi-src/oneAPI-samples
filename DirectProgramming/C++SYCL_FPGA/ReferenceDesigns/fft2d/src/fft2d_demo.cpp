@@ -327,7 +327,7 @@ void TestFFT(bool mangle, bool inverse) {
     std::cout << "Signal to noise ratio on output sample: " << db << std::endl;
     std::cout << " --> " << (db > 120 ? "PASSED" : "FAILED") << std::endl;
 
-    free(input_data, q);
+    sycl::free(input_data, q);
     free(output_data, q);
     free(temp_data, q);
 
