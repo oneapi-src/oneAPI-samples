@@ -24,7 +24,7 @@ struct SimpleVAddKernel {
   }
 };
 
-#define VECT_SIZE 256
+constexpr int kVectorSize = 256;
 
 int main() {
 
@@ -44,7 +44,7 @@ int main() {
     // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler);
 
-    int count = VECT_SIZE;  // pass array size by value
+    int count = kVectorSize;  // pass array size by value
 
     // Create USM shared allocations in the specified buffer_location. 
     // You can also use host allocations with malloc_host(...) API

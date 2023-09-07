@@ -55,7 +55,7 @@ struct SimpleVAddKernel {
   }
 };
 
-#define VECT_SIZE 256
+constexpr int kVectorSize = 256;
 
 int main() {
   try {
@@ -80,7 +80,7 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    int count = VECT_SIZE;  // pass array size by value
+    int count = kVectorSize;  // pass array size by value
 
     // declare arrays and fill them
     // Create USM shared allocations in the specified buffer_location. 
