@@ -5,7 +5,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include "exception_handler.hpp"
 
-#define VECT_SIZE 256
+constexpr int kVectorSize = 256;
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
 class IDSimpleVAddPipes;
@@ -58,7 +58,7 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    int count = VECT_SIZE;  // pass array size by value
+    int count = kVectorSize;  // pass array size by value
 
     // push data into pipes before invoking kernel
     int *a = new int[count];

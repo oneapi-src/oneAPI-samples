@@ -14,7 +14,7 @@ class IDPipeA;
 class IDPipeB;
 class IDPipeC;
 
-#define VECT_SIZE 256
+constexpr int kVectorSize = 256;
 
 using PipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::ready_latency<0>));
@@ -69,7 +69,7 @@ int main() {
     // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler);
 
-    int count = VECT_SIZE;  // pass array size by value
+    int count = kVectorSize;  // pass array size by value
 
     int expected_sum = 0;
 
