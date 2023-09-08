@@ -460,11 +460,11 @@ CRRArrayEles PrepareArrData(const CRRInParams &in) {
   // Write in reverse t-direction to match kernel access pattern
   for (int i = 0; i <= in.n_steps + kOpt0; ++i) {
     for (int inner_func_index = 0; inner_func_index < 3; ++inner_func_index) {
-      arr.array_eles[i][inner_func_index].u2 = sycl::pow(in.u2[inner_func_index], (float) i);
+      arr.array_eles[i][inner_func_index].u2 = sycl::pow(in.u2[inner_func_index], (double) i);
       arr.array_eles[i][inner_func_index].p1powu =
-          in.param_1[inner_func_index] * sycl::pow(in.u[inner_func_index], (float) (i + 1));
+          in.param_1[inner_func_index] * sycl::pow(in.u[inner_func_index], (double) (i + 1));
       arr.array_eles[i][inner_func_index].init_optval =
-          sycl::fmax(in.param_1[inner_func_index] * sycl::pow(in.u2[inner_func_index], (float) i) -
+          sycl::fmax(in.param_1[inner_func_index] * sycl::pow(in.u2[inner_func_index], (double) i) -
                    in.param_2, 0.0);
     }
   }
