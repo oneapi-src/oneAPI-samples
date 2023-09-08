@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <random>
+#include <fstream>
 
 /*
 This file implements the steps to
