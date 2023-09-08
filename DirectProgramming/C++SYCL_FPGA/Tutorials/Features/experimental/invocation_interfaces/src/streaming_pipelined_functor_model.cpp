@@ -17,6 +17,11 @@ struct FunctorStreamingPipelinedIP {
 
   // Kernel properties method to configure the kernel to be a kernel with 
   // streaming pipelined invocation interface.
+  // The property `sycl::ext::intel::experimental::pipelined` takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
+  // -1: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
+  // 0: Do not pipeline the kernel.
+  // N (N> 0): Pipeline the kernel, and force the II of the kernel to be N.
+  // If a parameter is not specified, the default behaviour of -1 will be inferred.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties {
         sycl::ext::intel::experimental::streaming_interface<>,
