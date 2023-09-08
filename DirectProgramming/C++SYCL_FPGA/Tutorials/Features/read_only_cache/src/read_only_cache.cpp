@@ -78,7 +78,7 @@ int main() {
   std::vector<float> sqrt_lut_vec(kLUTSize);
   std::vector<float> output_vec(kNumOutputs);
   for (int i = 0; i < kLUTSize; ++i) {
-    sqrt_lut_vec[i] = sqrt(i);
+    sqrt_lut_vec[i] = sycl::sqrt((float) i);
   }
 
 // Create queue, get platform and device

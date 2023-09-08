@@ -32,7 +32,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// This design implments simple Cox-Ross-Rubinstein(CRR) binomial tree model
+// This design implements simple Cox-Ross-Rubinstein(CRR) binomial tree model
 // with Greeks for American exercise options.
 //
 //
@@ -185,7 +185,7 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               intel::private_copies(
                   8)]] double init_optval[kMaxNSteps3][OUTER_UNROLL_POW2];
 
-            // u2_array precalculates the power function of u2.
+            // u2_array pre-calculates the power function of u2.
             [[intel::fpga_memory, intel::singlepump,
               intel::bankwidth(sizeof(double)),
               intel::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
@@ -310,7 +310,7 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               }
             }
 
-            // L5: transfer crr_res_paramss to DRAM
+            // L5: transfer crr_res_params to DRAM
             #pragma unroll
             for (short ic = 0; ic < OUTER_UNROLL; ++ic) {
               const int c = oc * OUTER_UNROLL + ic;
@@ -420,27 +420,27 @@ CRRInParams PrepareData(const InputData &inp) {
   in_params.n_steps = inp.n_steps;
 
   double r[2];
-  r[0] = pow(inp.df, 1.0 / inp.n_steps);
-  double d_df = exp(-inp.t * kEpsilon);
-  r[1] = pow(inp.df * d_df, 1.0 / inp.n_steps);
-  in_params.u[0] = exp(inp.vol * sqrt(inp.t / inp.n_steps));
+  r[0] = sycl::pow(inp.df, 1.0 / inp.n_steps);
+  double d_df = sycl::exp(-inp.t * kEpsilon);
+  r[1] = sycl::pow(inp.df * d_df, 1.0 / inp.n_steps);
+  in_params.u[0] = sycl::exp(inp.vol * sycl::sqrt(inp.t / inp.n_steps));
   in_params.u[1] = in_params.u[0];
-  in_params.u[2] = exp((inp.vol + kEpsilon) * sqrt(inp.t / inp.n_steps));
+  in_params.u[2] = sycl::exp((inp.vol + kEpsilon) * sycl::sqrt(inp.t / inp.n_steps));
 
   in_params.u2[0] = in_params.u[0] * in_params.u[0];
   in_params.u2[1] = in_params.u[1] * in_params.u[1];
   in_params.u2[2] = in_params.u[2] * in_params.u[2];
-  in_params.umin[0] = inp.spot * pow(1 / in_params.u[0], inp.n_steps + kOpt0);
-  in_params.umin[1] = inp.spot * pow(1 / in_params.u[1], inp.n_steps);
-  in_params.umin[2] = inp.spot * pow(1 / in_params.u[2], inp.n_steps);
+  in_params.umin[0] = inp.spot * sycl::pow(1 / in_params.u[0], inp.n_steps + kOpt0);
+  in_params.umin[1] = inp.spot * sycl::pow(1 / in_params.u[1], inp.n_steps);
+  in_params.umin[2] = inp.spot * sycl::pow(1 / in_params.u[2], inp.n_steps);
   in_params.c1[0] =
-      r[0] * (in_params.u[0] - pow(inp.fwd / inp.spot, 1.0 / inp.n_steps)) /
+      r[0] * (in_params.u[0] - sycl::pow(inp.fwd / inp.spot, 1.0 / inp.n_steps)) /
       (in_params.u[0] - 1 / in_params.u[0]);
   in_params.c1[1] =
-      r[1] *(in_params.u[1] - pow((inp.fwd / d_df) / inp.spot, 1.0 / inp.n_steps)) /
+      r[1] *(in_params.u[1] - sycl::pow((inp.fwd / d_df) / inp.spot, 1.0 / inp.n_steps)) /
       (in_params.u[1] - 1 / in_params.u[1]);
   in_params.c1[2] =
-      r[0] * (in_params.u[2] - pow(inp.fwd / inp.spot, 1.0 / inp.n_steps)) /
+      r[0] * (in_params.u[2] - sycl::pow(inp.fwd / inp.spot, 1.0 / inp.n_steps)) /
       (in_params.u[2] - 1 / in_params.u[2]);
   in_params.c2[0] = r[0] - in_params.c1[0];
   in_params.c2[1] = r[1] - in_params.c1[1];
@@ -460,11 +460,11 @@ CRRArrayEles PrepareArrData(const CRRInParams &in) {
   // Write in reverse t-direction to match kernel access pattern
   for (int i = 0; i <= in.n_steps + kOpt0; ++i) {
     for (int inner_func_index = 0; inner_func_index < 3; ++inner_func_index) {
-      arr.array_eles[i][inner_func_index].u2 = pow(in.u2[inner_func_index], i);
+      arr.array_eles[i][inner_func_index].u2 = sycl::pow(in.u2[inner_func_index], (double) i);
       arr.array_eles[i][inner_func_index].p1powu =
-          in.param_1[inner_func_index] * pow(in.u[inner_func_index], i + 1);
+          in.param_1[inner_func_index] * sycl::pow(in.u[inner_func_index], (double) (i + 1));
       arr.array_eles[i][inner_func_index].init_optval =
-          fmax(in.param_1[inner_func_index] * pow(in.u2[inner_func_index], i) -
+          sycl::fmax(in.param_1[inner_func_index] * sycl::pow(in.u2[inner_func_index], (double) i) -
                    in.param_2, 0.0);
     }
   }
@@ -473,7 +473,7 @@ CRRArrayEles PrepareArrData(const CRRInParams &in) {
 }
 
 // Metadata, used in the Kernel, is generated from the input data
-// Each CRR problem is split into 3 subproblems to calculate
+// Each CRR problem is split into 3 sub-problems to calculate
 // each required option price separately
 void PrepareKernelData(vector<CRRInParams> &in_params,
                        vector<CRRArrayEles> &array_params,
@@ -561,7 +561,7 @@ OutputRes ComputeOutput(const InputData &inp, const CRRInParams &in_params,
   return res;
 }
 
-// Perform CRR solving using the CPU and compare FPGA resutls with CPU results
+// Perform CRR solving using the CPU and compare FPGA results with CPU results
 // to test correctness.
 void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
                      CRRInParams &vals, const OutputRes &fpga_res) {
@@ -587,7 +587,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
   // option value computed at each final node
   x = vals.umin[0];
   for (i = 0; i <= m; i++, x *= vals.u2[0]) {
-    pvalue[i] = fmax(inp.cp * (x - inp.strike), 0.0);
+    pvalue[i] = sycl::fmax(inp.cp * (x - inp.strike), 0.0);
   }
 
   // backward recursion to evaluate option price
@@ -595,7 +595,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
     vals.umin[0] *= vals.u[0];
     x = vals.umin[0];
     for (j = 0; j <= i; j++, x *= vals.u2[0]) {
-      pvalue[j] = fmax(vals.c1[0] * pvalue[j] + vals.c2[0] * pvalue[j + 1],
+      pvalue[j] = sycl::fmax(vals.c1[0] * pvalue[j] + vals.c2[0] * pvalue[j + 1],
                        inp.cp * (x - inp.strike));
     }
     if (i == 4) {
@@ -612,7 +612,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
   // the above computation is repeated for each option price
   x = vals.umin[1];
   for (i = 0; i <= n_steps; i++, x *= vals.u2[1]) {
-    pvalue_1[i] = fmax(inp.cp * (x - inp.strike), 0.0);
+    pvalue_1[i] = sycl::fmax(inp.cp * (x - inp.strike), 0.0);
   }
 
   for (i = n_steps - 1; i >= 0; i--) {
@@ -621,7 +621,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
 
     for (j = 0; j <= i; j++, x *= vals.u2[1]) {
       pvalue_1[j] =
-          fmax(vals.c1[1] * pvalue_1[j] + vals.c2[1] * pvalue_1[j + 1],
+          sycl::fmax(vals.c1[1] * pvalue_1[j] + vals.c2[1] * pvalue_1[j + 1],
                inp.cp * (x - inp.strike));
     }
   }
@@ -629,7 +629,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
 
   x = vals.umin[2];
   for (i = 0; i <= n_steps; i++, x *= vals.u2[2]) {
-    pvalue_2[i] = fmax(inp.cp * (x - inp.strike), 0.0);
+    pvalue_2[i] = sycl::fmax(inp.cp * (x - inp.strike), 0.0);
   }
 
   for (i = n_steps - 1; i >= 0; i--) {
@@ -637,7 +637,7 @@ void TestCorrectness(int k, int n_crrs, bool &pass, const InputData &inp,
     x = vals.umin[2];
     for (j = 0; j <= i; j++, x *= vals.u2[2]) {
       pvalue_2[j] =
-          fmax(vals.c1[2] * pvalue_2[j] + vals.c2[2] * pvalue_2[j + 1],
+          sycl::fmax(vals.c1[2] * pvalue_2[j] + vals.c2[2] * pvalue_2[j + 1],
                inp.cp * (x - inp.strike));
     }
   }
@@ -746,7 +746,7 @@ int main(int argc, char *argv[]) {
     device device = q.get_device();
 
     std::cout << "Running on device: "
-              << device.get_info<info::device::name>().c_str() 
+              << device.get_info<info::device::name>().c_str()
               << std::endl;
 
     vector<InputData> inp;
@@ -839,7 +839,7 @@ int main(int argc, char *argv[]) {
                              in_buff2_params, q);
     bool pass = true;
 
-    // Postprocessing step
+    // Post-processing step
     // process_res used to compute final results
     vector<InterRes> process_res(n_crrs);
     ProcessKernelResult(res_params, process_res, n_crrs);
