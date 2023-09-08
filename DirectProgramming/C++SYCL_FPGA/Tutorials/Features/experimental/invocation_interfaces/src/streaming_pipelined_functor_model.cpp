@@ -12,13 +12,8 @@ struct FunctorStreamingPipelinedIP {
   // kernel arguments if the kernel invocation interface is streaming, and
   // vice-versa.             
   ValueT* input;
-
-  // Annotate kernel argument with 'register_map' property 
-  // to explicitly specify it to be a register-mapped kernel argument.
-  sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::register_map})>                    
-      output;
+                 
+  ValueT* output;
 
   // Kernel properties method to configure the kernel to be a kernel with 
   // streaming pipelined invocation interface.

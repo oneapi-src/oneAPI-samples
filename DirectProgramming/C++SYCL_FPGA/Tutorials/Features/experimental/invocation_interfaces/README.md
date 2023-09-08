@@ -337,6 +337,9 @@ void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output, 
 
 ```c++
 void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output, MyUInt5 n) {
+  sycl::ext::oneapi::experimental::properties kernel_properties {
+    sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
+  };
   q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
@@ -464,6 +467,7 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
    ./register_map_functor_model.fpga_emu
    ./streaming_functor_model.fpga_emu
    ./streaming_remove_downstream_stall_functor_model.fpga_emu
+   ./streaming_pipelined_functor_model.fpga_emu
    ./register_map_lambda_model.fpga_emu
    ./streaming_lambda_model.fpga_emu
    ```
@@ -472,6 +476,7 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_remove_downstream_stall_functor_model.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_pipelined_functor_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda_model.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda_model.fpga_sim
    ```
@@ -483,6 +488,7 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
    register_map_functor_model.fpga_emu.exe
    streaming_functor_model.fpga_emu.exe
    streaming_remove_downstream_stall_functor_model.fpga_emu.exe
+   streaming_pipelined_functor_model.fpga_emu.exe
    register_map_lambda_model.fpga_emu.exe
    streaming_lambda_model.fpga_emu.exe
    ```
@@ -492,6 +498,7 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
    register_map_functor_model.fpga_sim.exe
    streaming_functor_model.fpga_sim.exe
    streaming_remove_downstream_stall_functor_model.fpga_sim.exe
+   streaming_pipelined_functor_model.fpga_sim
    register_map_lambda_model.fpga_sim.exe
    streaming_lambda_model.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=

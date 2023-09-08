@@ -129,9 +129,9 @@ int main(int argc, char *argv[]) {
       return true;
     };
 
-    // Launch the kernels with streaming invocation interface implemented in
+    // Launch the kernel with a streaming invocation interface implemented in
     // the functor programming model
-    std::cout << "Running the kernels with streaming invocation interface "
+    std::cout << "Running the kernel with streaming invocation interface "
                  "implemented in the "
                  "functor programming model"
               << std::endl;
