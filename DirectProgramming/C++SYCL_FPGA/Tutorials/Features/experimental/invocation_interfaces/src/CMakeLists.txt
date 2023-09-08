@@ -201,7 +201,7 @@ add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${ST
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_remove_downstream_stall_functor_model.cpp -o streaming_remove_downstream_stall_functor_model.fpga
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_lambda_model.cpp -o register_map_lambda_model.fpga
 #   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp -o streaming_lambda_model.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_functor_model.cpp -o streaming_pipelined_model.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_functor_model.cpp -o streaming_pipelined_functor_model.fpga
 # CMake executes:
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o register_map_functor_model.cpp.o -c register_map_functor_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> register_map_functor_model.cpp.o -o register_map_functor_model.fpga
@@ -214,7 +214,7 @@ add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${ST
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_lambda_model.cpp.o -c streaming_lambda_model.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_lambda_model.cpp.o -o streaming_lambda_model.fpga
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o streaming_pipelined_functor_model.cpp.o -c streaming_pipelined_functor_model.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_functor_model.cpp.o -o streaming_pipelined_model.fpga
+#   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> streaming_pipelined_functor_model.cpp.o -o streaming_pipelined_functor_model.fpga
 add_executable(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
