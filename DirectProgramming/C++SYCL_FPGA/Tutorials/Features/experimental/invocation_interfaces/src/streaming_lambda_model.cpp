@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 
     // Launch the kernel with a streaming invocation interface implemented in
     // the lambda programming model
-    std::cout << "Running kernel with streaming invocation interface "
+    std::cout << "Running the kernel with streaming invocation interface "
                  "implemented in the "
                  "lambda programming model"
               << std::endl;

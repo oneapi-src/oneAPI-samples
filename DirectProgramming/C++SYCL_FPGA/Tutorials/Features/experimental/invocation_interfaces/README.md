@@ -530,7 +530,7 @@ PASSED
 ### Streaming Pipelined Functor Example Output
 
 ```
-Launching pipelined kernels consecutively
+Launching streaming pipelined kernels consecutively
          Done
 
 PASSED
@@ -538,7 +538,7 @@ PASSED
 ### Register-Mapped Lambda Example Output
 
 ```
-Running kernel with register map invocation interface implemented in the lambda programming model
+Running the kernel with register map invocation interface implemented in the lambda programming model
 	 Done
 PASSED
 ```
@@ -546,7 +546,7 @@ PASSED
 ### Streaming Lambda Example Output
 
 ```
-Running kernel with streaming invocation interface implemented in the lambda programming model
+Running the kernel with streaming invocation interface implemented in the lambda programming model
 	 Done
 PASSED
 ```

@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 
     // Launch the kernel with a register map invocation interface implemented in
     // the lambda programming model
-    std::cout << "Running kernel with register map invocation interface "
+    std::cout << "Running the kernel with register map invocation interface "
                  "implemented in the "
                  "lambda programming model"
               << std::endl;

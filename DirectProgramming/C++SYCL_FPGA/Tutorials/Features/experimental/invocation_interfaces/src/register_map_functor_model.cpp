@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
     // Launch the kernel with a register map invocation interface implemented in
     // the functor programming model
-    std::cout << "Running the kernel with a register map invocation interface "
+    std::cout << "Running the kernel with register map invocation interface "
                  "implemented in the functor programming model"
               << std::endl;
     q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count})
