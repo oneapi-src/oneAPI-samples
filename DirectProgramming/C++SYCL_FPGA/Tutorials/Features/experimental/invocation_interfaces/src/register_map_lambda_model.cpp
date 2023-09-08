@@ -15,8 +15,8 @@ class LambdaRegisterMapIP;
 
 void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
                                  MyUInt5 n) {
-  // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
-  // interface. All kernel arguments will have the same interface as the kernel invocation interface.
+  // Without passing a properties object argument, register-mapped 
+  // invocation interface will be inferred by the compiler.
   q.single_task<LambdaRegisterMapIP>([=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));

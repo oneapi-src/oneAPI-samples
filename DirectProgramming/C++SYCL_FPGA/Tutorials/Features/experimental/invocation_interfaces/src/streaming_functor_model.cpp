@@ -4,7 +4,6 @@
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include "exception_handler.hpp"
 
-using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
 struct a_s {

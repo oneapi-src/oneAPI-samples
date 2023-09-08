@@ -73,7 +73,7 @@ If you would like an argument to have its own dedicated ready/valid handshake, i
 
 >**Warning**: The register-mapped and streaming interface features are only supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to stand-alone IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP.
 >
->You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the five FPGA executables generated in this tutorial are ***not*** supported to be run on FPGA devices directly.
+>You can run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the six FPGA executables generated in this tutorial are ***not*** supported to be run on FPGA devices directly.
 
 ### Declaring a Register-Mapped Kernel Interface
 
