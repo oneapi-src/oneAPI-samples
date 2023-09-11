@@ -30,7 +30,9 @@
           "./register_map_functor.fpga_emu",
           "./streaming_functor.fpga_emu",
           "./register_map_lambda.fpga_emu",
-          "./streaming_lambda.fpga_emu"
+          "./streaming_lambda.fpga_emu",
+          "./streaming_pipelined_functor.fpga_emu",
+          "./streaming_remove_stall_functor.fpga_emu"
         ]
       },
       {
@@ -57,7 +59,9 @@
           "register_map_functor.fpga_emu.exe",
           "streaming_functor.fpga_emu.exe",
           "register_map_lambda.fpga_emu.exe",
-          "streaming_lambda.fpga_emu.exe"
+          "streaming_lambda.fpga_emu.exe",
+          "streaming_pipelined_functor.fpga_emu.exe",
+          "streaming_remove_stall_functor.fpga_emu.exe"
         ]
       },
       {
