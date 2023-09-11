@@ -12,11 +12,6 @@ The `QuasirandomGenerator` sample implements Niederreiter Quasirandom Sequence G
 
 The sample is based on the Niederreiter sequence, which is a type of low-discrepancy sequence that has better properties than pseudorandom sequences for certain applications, such as Monte Carlo integration.
 
->**Note:** 
-> - By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU.
-> - Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
-> - Enable NVIDIA_GPU flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs plugin from Codeplay](https://developer.codeplay.com/products/oneapi/nvidia/)  is required to build for NVIDIA GPUs)
-
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
@@ -108,7 +103,10 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
    $ cmake .. or ( cmake -D INTEL_MAX_GPU=1 .. ) or ( cmake -D NVIDIA_GPU=1 .. )
    $ make
    ```
-**Note:** By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU. Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.  Enable NVIDIA_GPU flag during the build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin from Codeplay is required to build for NVIDIA GPUs)
+>**Note:** 
+> - By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU.
+> - Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
+> - Enable NVIDIA_GPU flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs plugin from Codeplay](https://developer.codeplay.com/products/oneapi/nvidia/)  is required to build for NVIDIA GPUs)
    
 By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated_optimized` version of the program.
 
