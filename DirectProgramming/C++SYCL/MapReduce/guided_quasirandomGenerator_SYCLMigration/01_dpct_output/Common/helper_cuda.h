@@ -52,7 +52,7 @@
 
 // CUDA Runtime error messages
 #ifdef __DPCT_HPP__
-static const char *_cudaGetErrorEnum(int error) {
+static const char *_cudaGetErrorEnum(dpct::err0 error) {
   /*
   DPCT1009:1: SYCL uses exceptions to report errors and does not use the error
   codes. The original code was commented out and a warning string was inserted.
@@ -605,7 +605,7 @@ inline void __getLastCudaError(const char *errorMessage, const char *file,
   DPCT1010:2: SYCL uses exceptions to report errors and does not use the error
   codes. The call was replaced with 0. You need to rewrite this code.
   */
-  int err = 0;
+  dpct::err0 err = 0;
 }
 
 // This will only print the proper error string when calling cudaGetLastError
@@ -618,7 +618,7 @@ inline void __printLastCudaError(const char *errorMessage, const char *file,
   DPCT1010:4: SYCL uses exceptions to report errors and does not use the error
   codes. The call was replaced with 0. You need to rewrite this code.
   */
-  int err = 0;
+  dpct::err0 err = 0;
 }
 #endif
 
@@ -636,7 +636,7 @@ inline int ftoi(float value) {
 inline int _ConvertSMVer2Cores(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the # of cores per SM
-  typedef struct dpct_type_962194 {
+  typedef struct dpct_type_175225 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
     int Cores;
@@ -685,7 +685,7 @@ inline int _ConvertSMVer2Cores(int major, int minor) {
 inline const char* _ConvertSMVer2ArchName(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the GPU Arch name)
-  typedef struct dpct_type_197131 {
+  typedef struct dpct_type_319217 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
     const char* name;
@@ -736,11 +736,8 @@ inline const char* _ConvertSMVer2ArchName(int major, int minor) {
 // General GPU Device CUDA Initialization
 inline int gpuDeviceInit(int devID) {
   int device_count;
-  /*
-  DPCT1003:6: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((device_count = dpct::dev_mgr::instance().device_count(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      device_count = dpct::dev_mgr::instance().device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -767,19 +764,17 @@ inline int gpuDeviceInit(int devID) {
 
   int computeMode = -1, major = 0, minor = 0;
   /*
-  DPCT1035:7: All SYCL devices can be used by host to submit tasks. You may need
-  to adjust this code.
+  DPCT1035:6: All SYCL devices can be used by the host to submit tasks. You may
+  need to adjust this code.
   */
-  checkCudaErrors((computeMode = 1, 0));
-  checkCudaErrors(
-      (major = dpct::dev_mgr::instance().get_device(devID).get_major_version(),
-       0));
-  checkCudaErrors(
-      (minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      major = dpct::dev_mgr::instance().get_device(devID).get_major_version()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
   /*
-  DPCT1035:8: All SYCL devices can be used by host to submit tasks. You may need
-  to adjust this code.
+  DPCT1035:7: All SYCL devices can be used by the host to submit tasks. You may
+  need to adjust this code.
   */
   if (computeMode == 0) {
     fprintf(stderr,
@@ -794,14 +789,10 @@ inline int gpuDeviceInit(int devID) {
   }
 
   /*
-  DPCT1093:9: The "devID" may not be the best XPU device. Adjust the selected
-  device if needed.
+  DPCT1093:8: The "devID" device may be not the one intended for use. Adjust the
+  selected device if needed.
   */
-  /*
-  DPCT1003:10: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::select_device(devID), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(devID)));
   printf("gpuDeviceInit() CUDA Device [%d]: \"%s\n", devID, _ConvertSMVer2ArchName(major, minor));
 
   return devID;
@@ -815,11 +806,8 @@ inline int gpuGetMaxGflopsDeviceId() try {
   int devices_prohibited = 0;
 
   uint64_t max_compute_perf = 0;
-  /*
-  DPCT1003:11: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((device_count = dpct::dev_mgr::instance().device_count(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      device_count = dpct::dev_mgr::instance().device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -834,24 +822,22 @@ inline int gpuGetMaxGflopsDeviceId() try {
   while (current_device < device_count) {
     int computeMode = -1, major = 0, minor = 0;
     /*
-    DPCT1035:12: All SYCL devices can be used by host to submit tasks. You may
-    need to adjust this code.
+    DPCT1035:9: All SYCL devices can be used by the host to submit tasks. You
+    may need to adjust this code.
     */
-    checkCudaErrors((computeMode = 1, 0));
-    checkCudaErrors((major = dpct::dev_mgr::instance()
-                                 .get_device(current_device)
-                                 .get_major_version(),
-                     0));
-    checkCudaErrors((minor = dpct::dev_mgr::instance()
-                                 .get_device(current_device)
-                                 .get_minor_version(),
-                     0));
+    checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
+    checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
+                                                 .get_device(current_device)
+                                                 .get_major_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
+                                                 .get_device(current_device)
+                                                 .get_minor_version()));
 
     // If this GPU is not running on Compute Mode prohibited,
     // then we can add it to the list
     /*
-    DPCT1035:13: All SYCL devices can be used by host to submit tasks. You may
-    need to adjust this code.
+    DPCT1035:10: All SYCL devices can be used by the host to submit tasks. You
+    may need to adjust this code.
     */
     if (computeMode != 0) {
       if (major == 9999 && minor == 9999) {
@@ -861,14 +847,14 @@ inline int gpuGetMaxGflopsDeviceId() try {
             _ConvertSMVer2Cores(major,  minor);
       }
       int multiProcessorCount = 0, clockRate = 0;
-      checkCudaErrors((multiProcessorCount = dpct::dev_mgr::instance()
-                                                 .get_device(current_device)
-                                                 .get_max_compute_units(),
-                       0));
-      int result = (clockRate = dpct::dev_mgr::instance()
-                                    .get_device(current_device)
-                                    .get_max_clock_frequency(),
-                    0);
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(multiProcessorCount = dpct::dev_mgr::instance()
+                                                     .get_device(current_device)
+                                                     .get_max_compute_units()));
+      dpct::err0 result =
+          DPCT_CHECK_ERROR(clockRate = dpct::dev_mgr::instance()
+                                           .get_device(current_device)
+                                           .get_max_clock_frequency());
 
       uint64_t compute_perf = (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
 
@@ -921,21 +907,17 @@ inline int findCudaDevice(int argc, const char **argv) {
     // Otherwise pick the device with highest Gflops/s
     devID = gpuGetMaxGflopsDeviceId();
     /*
-    DPCT1093:14: The "devID" may not be the best XPU device. Adjust the selected
-    device if needed.
+    DPCT1093:11: The "devID" device may be not the one intended for use. Adjust
+    the selected device if needed.
     */
-    /*
-    DPCT1003:15: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(devID), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(devID)));
     int major = 0, minor = 0;
-    checkCudaErrors((
-        major = dpct::dev_mgr::instance().get_device(devID).get_major_version(),
-        0));
-    checkCudaErrors((
-        minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version(),
-        0));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        major =
+            dpct::dev_mgr::instance().get_device(devID).get_major_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        minor =
+            dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
     printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
            devID, _ConvertSMVer2ArchName(major, minor), major, minor);
 
@@ -949,11 +931,8 @@ inline int findIntegratedGPU() {
   int device_count = 0;
   int devices_prohibited = 0;
 
-  /*
-  DPCT1003:16: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((device_count = dpct::dev_mgr::instance().device_count(), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      device_count = dpct::dev_mgr::instance().device_count()));
 
   if (device_count == 0) {
     fprintf(stderr, "CUDA error: no devices supporting CUDA.\n");
@@ -964,40 +943,34 @@ inline int findIntegratedGPU() {
   while (current_device < device_count) {
     int computeMode = -1, integrated = -1;
     /*
-    DPCT1035:17: All SYCL devices can be used by host to submit tasks. You may
-    need to adjust this code.
+    DPCT1035:12: All SYCL devices can be used by the host to submit tasks. You
+    may need to adjust this code.
     */
-    checkCudaErrors((computeMode = 1, 0));
-    checkCudaErrors((integrated = dpct::dev_mgr::instance()
-                                      .get_device(current_device)
-                                      .get_integrated(),
-                     0));
+    checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(integrated = dpct::dev_mgr::instance()
+                                          .get_device(current_device)
+                                          .get_integrated()));
     // If GPU is integrated and is not running on Compute Mode prohibited,
     // then cuda can map to GLES resource
     /*
-    DPCT1035:18: All SYCL devices can be used by host to submit tasks. You may
-    need to adjust this code.
+    DPCT1035:13: All SYCL devices can be used by the host to submit tasks. You
+    may need to adjust this code.
     */
     if (integrated && (computeMode != 0)) {
       /*
-      DPCT1093:19: The "current_device" may not be the best XPU device. Adjust
-      the selected device if needed.
+      DPCT1093:14: The "current_device" device may be not the one intended for
+      use. Adjust the selected device if needed.
       */
-      /*
-      DPCT1003:20: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::select_device(current_device), 0));
+      checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(current_device)));
 
       int major = 0, minor = 0;
-      checkCudaErrors((major = dpct::dev_mgr::instance()
-                                   .get_device(current_device)
-                                   .get_major_version(),
-                       0));
-      checkCudaErrors((minor = dpct::dev_mgr::instance()
-                                   .get_device(current_device)
-                                   .get_minor_version(),
-                       0));
+      checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
+                                                   .get_device(current_device)
+                                                   .get_major_version()));
+      checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
+                                                   .get_device(current_device)
+                                                   .get_minor_version()));
       printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
              current_device, _ConvertSMVer2ArchName(major, minor), major, minor);
 
@@ -1025,12 +998,10 @@ inline bool checkCudaCapabilities(int major_version, int minor_version) {
   int major = 0, minor = 0;
 
   checkCudaErrors(dev = dpct::dev_mgr::instance().current_device_id());
-  checkCudaErrors(
-      (major = dpct::dev_mgr::instance().get_device(dev).get_major_version(),
-       0));
-  checkCudaErrors(
-      (minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      major = dpct::dev_mgr::instance().get_device(dev).get_major_version()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version()));
 
   if ((major > major_version) ||
       (major == major_version &&

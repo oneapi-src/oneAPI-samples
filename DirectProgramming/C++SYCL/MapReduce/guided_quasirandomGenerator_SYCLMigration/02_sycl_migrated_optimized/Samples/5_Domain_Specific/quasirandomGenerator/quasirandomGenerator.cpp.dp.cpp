@@ -27,7 +27,7 @@
 
 // CUDA Runtime
 #include <sycl/sycl.hpp>
-//#include <dpct/dpct.hpp>
+#include <dpct/dpct.hpp>
 
 // Utilities and system includes
 #include <helper_functions.h>
@@ -52,11 +52,11 @@ extern "C" double MoroInvCNDcpu(unsigned int p);
 // GPU code
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" void initTableGPU(
-    unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION],sycl::queue q_ct1);
+    unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION], sycl::queue q_ct1);
 extern "C" void quasirandomGeneratorGPU(float *d_Output, unsigned int seed,
-                                        unsigned int N,sycl::queue q_ct1);
+                                        unsigned int N, sycl::queue q_ct1);
 extern "C" void inverseCNDgpu(float *d_Output, unsigned int *d_Input,
-                              unsigned int N,sycl::queue q_ct1);
+                              unsigned int N, sycl::queue q_ct1);
 
 const int N = 1048576;
 
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
   // Start logs
   sycl::queue q_ct1 = sycl::queue(sycl::default_selector_v);
   printf("%s Starting...\n\n", argv[0]);
-  std::cout << "\nRunning on " << q_ct1.get_device().get_info<info::device::name>()
+   std::cout << "\nRunning on " << q_ct1.get_device().get_info<info::device::name>()
             << "\n";
   unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION];
 
@@ -83,9 +83,9 @@ int main(int argc, char **argv) {
   sdkCreateTimer(&hTimer);
 
   printf("Allocating GPU memory...\n");
-  
-  d_Output = sycl::malloc_device<float>(
-                       QRNG_DIMENSIONS * N, q_ct1);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
+                           QRNG_DIMENSIONS * N, q_ct1)));
 
   printf("Allocating CPU memory...\n");
   h_OutputGPU = (float *)malloc(QRNG_DIMENSIONS * N * sizeof(float));
@@ -93,27 +93,27 @@ int main(int argc, char **argv) {
   printf("Initializing QRNG tables...\n\n");
   initQuasirandomGenerator(tableCPU);
 
-  initTableGPU(tableCPU,q_ct1);
+  initTableGPU(tableCPU, q_ct1);
 
   printf("Testing QRNG...\n\n");
- 
-  q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-                       .wait();
+  checkCudaErrors(DPCT_CHECK_ERROR(
+          q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
   int numIterations = 20;
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-     
-      q_ct1.wait_and_throw();
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
 
-    quasirandomGeneratorGPU(d_Output, 0, N,q_ct1);
+    quasirandomGeneratorGPU(d_Output, 0, N, q_ct1);
   }
 
-  
-  q_ct1.wait_and_throw();
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -122,10 +122,10 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1.0E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128 * QRNG_DIMENSIONS);
 
-  printf("\nReading Device results...\n");
-  
-  q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-           .wait();
+  printf("\nReading GPU results...\n");
+  checkCudaErrors(DPCT_CHECK_ERROR(
+          q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
 
   printf("Comparing to the CPU results...\n\n");
   sumDelta = 0;
@@ -142,14 +142,14 @@ int main(int argc, char **argv) {
   printf("L1 norm: %E\n", sumDelta / sumRef);
 
   printf("\nTesting inverseCNDgpu()...\n\n");
-  
-  q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-                       .wait();
+  checkCudaErrors(DPCT_CHECK_ERROR(
+          q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-     
-      q_ct1.wait_and_throw();
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
@@ -157,8 +157,8 @@ int main(int argc, char **argv) {
     inverseCNDgpu(d_Output, NULL, QRNG_DIMENSIONS * N,q_ct1);
   }
 
- 
-  q_ct1.wait_and_throw();
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -167,11 +167,10 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128);
 
-  printf("Reading Device results...\n");
-  
-  q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-           .wait();
-
+  printf("Reading GPU results...\n");
+  checkCudaErrors(DPCT_CHECK_ERROR(
+          q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
   printf("\nComparing to the CPU results...\n");
   sumDelta = 0;
   sumRef = 0;
@@ -190,8 +189,8 @@ int main(int argc, char **argv) {
   printf("Shutting down...\n");
   sdkDeleteTimer(&hTimer);
   free(h_OutputGPU);
-  
-  sycl::free(d_Output, q_ct1);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Output, q_ct1)));
 
   exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

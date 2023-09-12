@@ -37,8 +37,8 @@
 
 // Fast integer multiplication
 /*
-DPCT1064:31: Migrated __umul24 call is used in a macro definition and is not
-valid for all macro uses. Adjust the code.
+DPCT1064:15: Migrated __umul24 call is used in a macro/template definition and
+may not be valid for all macro/template uses. Adjust the code.
 */
 #define MUL(a, b) sycl::mul24((unsigned int)a, (unsigned int)b)
 
@@ -51,7 +51,7 @@ static dpct::constant_memory<unsigned int, 2> c_Table(QRNG_DIMENSIONS,
 static void quasirandomGeneratorKernel(float *d_Output,
                                                   unsigned int seed,
                                                   unsigned int N,
-                                                  sycl::nd_item<3> item_ct1,
+                                                  const sycl::nd_item<3> &item_ct1,
                                                   dpct::accessor<unsigned int, dpct::constant, 2> c_Table) {
   unsigned int *dimBase = &c_Table[item_ct1.get_local_id(1)][0];
   unsigned int tid = MUL(item_ct1.get_local_range(2), item_ct1.get_group(2)) +
@@ -76,16 +76,11 @@ static void quasirandomGeneratorKernel(float *d_Output,
 // Table initialization routine
 extern "C" void initTableGPU(
     unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION]) {
-  /*
-  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memcpy(c_Table.get_ptr(), tableCPU,
-                   QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int))
-           .wait(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memcpy(c_Table.get_ptr(), tableCPU,
+                  QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int))
+          .wait()));
 }
 
 // Host-side interface
@@ -183,7 +178,7 @@ inline float MoroInvCNDgpu(unsigned int x) {
 ////////////////////////////////////////////////////////////////////////////////
 static void inverseCNDKernel(float *d_Output, unsigned int *d_Input,
                                         unsigned int pathN,
-                                        sycl::nd_item<3> item_ct1) {
+                                        const sycl::nd_item<3> &item_ct1) {
   unsigned int distance = ((unsigned int)-1) / (pathN + 1);
   unsigned int tid = MUL(item_ct1.get_local_range(2), item_ct1.get_group(2)) +
                      item_ct1.get_local_id(2);
