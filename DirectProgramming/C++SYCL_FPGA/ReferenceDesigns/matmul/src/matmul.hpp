@@ -5,7 +5,6 @@
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/sycl.hpp>
 
 #include "memory_transfers.hpp"
@@ -63,9 +62,9 @@ void MatmulImpl(sycl::queue &q,            // Device queue
   constexpr int kMatsizeC = rows_a * cols_b;
 
   // Buffer locations for mmhost interfaces
-  constexpr int kBL1 = 0;
-  constexpr int kBL2 = 1;
-  constexpr int kBL3 = 2;
+  constexpr int kBL1 = 1;
+  constexpr int kBL2 = 2;
+  constexpr int kBL3 = 3;
 
   // Allocate FPGA DDR memory
 #if defined(IS_BSP)

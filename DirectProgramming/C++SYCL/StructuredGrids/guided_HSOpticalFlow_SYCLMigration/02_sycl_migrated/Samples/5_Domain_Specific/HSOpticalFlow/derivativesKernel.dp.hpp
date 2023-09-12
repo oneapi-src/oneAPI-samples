@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +26,7 @@
  */
 
 #include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include "common.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,13 +41,15 @@
 /// \param[out] Iz      temporal derivative
 ///////////////////////////////////////////////////////////////////////////////
 void ComputeDerivativesKernel(int width, int height, int stride, float *Ix,
-                              float *Iy, float *Iz, sycl::accessor<sycl::float4, 2, sycl::access::mode::read,
+                              float *Iy, float *Iz,
+                              sycl::accessor<sycl::float4, 2, sycl::access::mode::read,
              sycl::access::target::image>
         texSource,
     sycl::accessor<sycl::float4, 2, sycl::access::mode::read,
              sycl::access::target::image>
         texTarget,
-    sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
+    sycl::sampler texDesc,
+                              const sycl::nd_item<3> &item_ct1) {
   const int ix = item_ct1.get_local_id(2) +
                  item_ct1.get_group(2) * item_ct1.get_local_range(2);
   const int iy = item_ct1.get_local_id(1) +
@@ -121,8 +118,7 @@ void ComputeDerivativesKernel(int width, int height, int stride, float *Ix,
 /// \param[out] Iy  y derivative
 /// \param[out] Iz  temporal derivative
 ///////////////////////////////////////////////////////////////////////////////
-static void ComputeDerivatives(const float *I0, const float *I1, int w, int h,
-                               int s, float *Ix, float *Iy, float *Iz, sycl::queue q) {
+static void ComputeDerivatives(const float *I0, const float *I1, int w, int h, int s, float *Ix, float *Iy, float *Iz, sycl::queue q) {
   sycl::range<3> threads(1, 6, 32);
   sycl::range<3> blocks(1, iDivUp(h, threads[1]), iDivUp(w, threads[2]));
 

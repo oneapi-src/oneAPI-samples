@@ -57,14 +57,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of July 20, 2020.
+Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                              | Throughput
 |:---                                                 |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA             | 118 assets/s
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)   | 243 assets/s
+| Terasic’s DE10-Agilex Development Board             | 653 assets/s
 
 
 ## Key Implementation Details
@@ -276,12 +275,14 @@ This design measures the FPGA performance to determine how many assets can be pr
 ## Example Output
 
 ```
-============ Correctness Test =============
-Running analytical correctness checks...
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+
+============= Correctness Test ============= 
+Running analytical correctness checks... 
 CPU-FPGA Equivalence: PASS
 
-============ Throughput Test =============
-Avg throughput: 66.2 assets/s
+============= Throughput Test =============
+   Avg throughput:   653.9 assets/s
 ```
 
 ## License

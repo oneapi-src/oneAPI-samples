@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright � 2022 Intel Corporation
+// Copyright   2022 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -7,6 +7,7 @@
 #include <sycl/sycl.hpp>
 #include <chrono>
 #include <string>
+#include <fstream>
 
 #include "Utils.hpp"
 

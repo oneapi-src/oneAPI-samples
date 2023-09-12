@@ -36,7 +36,7 @@ This sample demonstrates how to take advantage of zero-copy host memory for the 
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
->**Notice**: SYCL USM host allocations, used in this tutorial, are only supported on FPGA boards that have a USM capable BSP (for example, the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: **intel_s10sx_pac:pac_s10_usm**) or when targeting an FPGA family/part number.
+>**Notice**: SYCL USM host allocations, used in this tutorial, are only supported on FPGA boards that have a USM capable BSP or when targeting an FPGA family/part number.
 
 This sample is part of the FPGA code samples. It is categorized as a Tier 3 sample that demonstrates a design pattern.
 

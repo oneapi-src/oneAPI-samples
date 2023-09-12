@@ -33,7 +33,7 @@
 namespace dpct {
 
 /// SYCL default exception handler
-auto exception_handler = [](sycl::exception_list exceptions) {
+inline auto exception_handler = [](sycl::exception_list exceptions) {
   for (std::exception_ptr const &e : exceptions) {
     try {
       std::rethrow_exception(e);
@@ -46,17 +46,89 @@ auto exception_handler = [](sycl::exception_list exceptions) {
   }
 };
 
+typedef sycl::event *event_ptr;
+
 typedef sycl::queue *queue_ptr;
+
+typedef char *device_ptr;
+
+/// Destroy \p event pointed memory.
+///
+/// \param event Pointer to the sycl::event address.
+static void destroy_event(event_ptr event) {
+    delete event;
+}
 
 class device_info {
 public:
-
+  // get interface
+  const char *get_name() const { return _name; }
+  char *get_name() { return _name; }
+  template <typename WorkItemSizesTy = sycl::id<3>,
+            std::enable_if_t<std::is_same_v<WorkItemSizesTy, sycl::id<3>> ||
+                                 std::is_same_v<WorkItemSizesTy, int *>,
+                             int> = 0>
+  auto get_max_work_item_sizes() const {
+    if constexpr (std::is_same_v<WorkItemSizesTy, sycl::id<3>>)
+      return _max_work_item_sizes;
+    else
+      return _max_work_item_sizes_i;
+  }
+  template <typename WorkItemSizesTy = sycl::id<3>,
+            std::enable_if_t<std::is_same_v<WorkItemSizesTy, sycl::id<3>> ||
+                                 std::is_same_v<WorkItemSizesTy, int *>,
+                             int> = 0>
+  auto get_max_work_item_sizes() {
+    if constexpr (std::is_same_v<WorkItemSizesTy, sycl::id<3>>)
+      return _max_work_item_sizes;
+    else
+      return _max_work_item_sizes_i;
+  }
+  bool get_host_unified_memory() const { return _host_unified_memory; }
+  int get_major_version() const { return _major; }
+  int get_minor_version() const { return _minor; }
   int get_integrated() const { return _integrated; }
-
   int get_max_clock_frequency() const { return _frequency; }
-
   int get_max_compute_units() const { return _max_compute_units; }
-
+  int get_max_work_group_size() const { return _max_work_group_size; }
+  int get_max_sub_group_size() const { return _max_sub_group_size; }
+  int get_max_work_items_per_compute_unit() const {
+    return _max_work_items_per_compute_unit;
+  }
+  int get_max_register_size_per_work_group() const {
+    return _max_register_size_per_work_group;
+  }
+  template <typename NDRangeSizeTy = size_t *,
+            std::enable_if_t<std::is_same_v<NDRangeSizeTy, size_t *> ||
+                                 std::is_same_v<NDRangeSizeTy, int *>,
+                             int> = 0>
+  auto get_max_nd_range_size() const {
+    if constexpr (std::is_same_v<NDRangeSizeTy, size_t *>)
+      return _max_nd_range_size;
+    else
+      return _max_nd_range_size_i;
+  }
+  template <typename NDRangeSizeTy = size_t *,
+            std::enable_if_t<std::is_same_v<NDRangeSizeTy, size_t *> ||
+                                 std::is_same_v<NDRangeSizeTy, int *>,
+                             int> = 0>
+  auto get_max_nd_range_size() {
+    if constexpr (std::is_same_v<NDRangeSizeTy, size_t *>)
+      return _max_nd_range_size;
+    else
+      return _max_nd_range_size_i;
+  }
+  size_t get_global_mem_size() const { return _global_mem_size; }
+  size_t get_local_mem_size() const { return _local_mem_size; }
+  /// Returns the maximum clock rate of device's global memory in kHz. If
+  /// compiler does not support this API then returns default value 3200000 kHz.
+  unsigned int get_memory_clock_rate() const { return _memory_clock_rate; }
+  /// Returns the maximum bus width between device and memory in bits. If
+  /// compiler does not support this API then returns default value 64 bits.
+  unsigned int get_memory_bus_width() const { return _memory_bus_width; }
+  uint32_t get_device_id() const { return _device_id; }
+  std::array<unsigned char, 16> get_uuid() const { return _uuid; }
+  // set interface
   void set_name(const char* name) {
     size_t length = strlen(name);
     if (length < 256) {
@@ -66,76 +138,59 @@ public:
       _name[255] = '\0';
     }
   }
-
   void set_max_work_item_sizes(const sycl::id<3> max_work_item_sizes) {
     _max_work_item_sizes = max_work_item_sizes;
     for (int i = 0; i < 3; ++i)
       _max_work_item_sizes_i[i] = max_work_item_sizes[i];
   }
-
   void set_host_unified_memory(bool host_unified_memory) {
     _host_unified_memory = host_unified_memory;
   }
-
   void set_major_version(int major) { _major = major; }
-
   void set_minor_version(int minor) { _minor = minor; }
-
+  void set_integrated(int integrated) { _integrated = integrated; }
   void set_max_clock_frequency(int frequency) { _frequency = frequency; }
-
   void set_max_compute_units(int max_compute_units) {
     _max_compute_units = max_compute_units;
   }
-
   void set_global_mem_size(size_t global_mem_size) {
     _global_mem_size = global_mem_size;
   }
-
   void set_local_mem_size(size_t local_mem_size) {
     _local_mem_size = local_mem_size;
   }
-
   void set_max_work_group_size(int max_work_group_size) {
     _max_work_group_size = max_work_group_size;
   }
-
   void set_max_sub_group_size(int max_sub_group_size) {
     _max_sub_group_size = max_sub_group_size;
   }
-
   void
   set_max_work_items_per_compute_unit(int max_work_items_per_compute_unit) {
     _max_work_items_per_compute_unit = max_work_items_per_compute_unit;
   }
-
   void set_max_nd_range_size(int max_nd_range_size[]) {
     for (int i = 0; i < 3; i++) {
       _max_nd_range_size[i] = max_nd_range_size[i];
       _max_nd_range_size_i[i] = max_nd_range_size[i];
     }
   }
-
   void set_memory_clock_rate(unsigned int memory_clock_rate) {
     _memory_clock_rate = memory_clock_rate;
   }
-
   void set_memory_bus_width(unsigned int memory_bus_width) {
     _memory_bus_width = memory_bus_width;
   }
-
   void
   set_max_register_size_per_work_group(int max_register_size_per_work_group) {
     _max_register_size_per_work_group = max_register_size_per_work_group;
   }
-
   void set_device_id(uint32_t device_id) {
     _device_id = device_id;
   }
-
   void set_uuid(std::array<unsigned char, 16> uuid) {
     _uuid = std::move(uuid);
   }
-
 private:
   char _name[256];
   sycl::id<3> _max_work_item_sizes;
@@ -177,6 +232,7 @@ public:
     init_queues();
   }
 
+  int is_native_atomic_supported() { return 0; }
   int get_major_version() const {
     int major, minor;
     get_version(major, minor);
@@ -199,6 +255,49 @@ public:
   }
 
   int get_integrated() const { return get_device_info().get_integrated(); }
+
+  int get_max_sub_group_size() const {
+    return get_device_info().get_max_sub_group_size();
+  }
+
+  int get_max_register_size_per_work_group() const {
+    return get_device_info().get_max_register_size_per_work_group();
+  }
+
+  int get_max_work_group_size() const {
+    return get_device_info().get_max_work_group_size();
+  }
+
+  int get_mem_base_addr_align() const {
+    return get_info<sycl::info::device::mem_base_addr_align>();
+  }
+
+  size_t get_global_mem_size() const {
+    return get_device_info().get_global_mem_size();
+  }
+
+  /// Get the number of bytes of free and total memory on the SYCL device.
+  /// \param [out] free_memory The number of bytes of free memory on the SYCL device.
+  /// \param [out] total_memory The number of bytes of total memory on the SYCL device.
+  void get_memory_info(size_t &free_memory, size_t &total_memory) {
+#if (defined(__SYCL_COMPILER_VERSION) && __SYCL_COMPILER_VERSION >= 20221105)
+    if (!has(sycl::aspect::ext_intel_free_memory)) {
+      std::cerr << "get_memory_info: ext_intel_free_memory is not supported." << std::endl;
+      free_memory = 0;
+    } else {
+      free_memory = get_info<sycl::ext::intel::info::device::free_memory>();
+    }
+#else
+    std::cerr << "get_memory_info: ext_intel_free_memory is not supported." << std::endl;
+    free_memory = 0;
+#if defined(_MSC_VER) && !defined(__clang__)
+#pragma message("Querying the number of bytes of free memory is not supported")
+#else
+#warning "Querying the number of bytes of free memory is not supported"
+#endif
+#endif
+    total_memory = get_device_info().get_global_mem_size();
+  }
 
   void get_device_info(device_info &out) const {
     device_info prop;
@@ -291,14 +390,42 @@ Use 64 bits as memory_bus_width default value."
     return prop;
   }
 
+  void reset() {
+    std::lock_guard<mutex_type> lock(m_mutex);
+    clear_queues();
+    init_queues();
+  }
+
   sycl::queue &in_order_queue() { return *_q_in_order; }
 
+  sycl::queue &out_of_order_queue() { return *_q_out_of_order; }
+
   sycl::queue &default_queue() {
+#ifdef DPCT_USM_LEVEL_NONE
+    return out_of_order_queue();
+#else
     return in_order_queue();
+#endif // DPCT_USM_LEVEL_NONE
+  }
+
+  void queues_wait_and_throw() {
+    std::unique_lock<mutex_type> lock(m_mutex);
+    std::vector<std::shared_ptr<sycl::queue>> current_queues(
+        _queues);
+    lock.unlock();
+    for (const auto &q : current_queues) {
+      q->wait_and_throw();
+    }
+    // Guard the destruct of current_queues to make sure the ref count is safe.
+    lock.lock();
   }
 
   sycl::queue *create_queue(bool enable_exception_handler = false) {
+#ifdef DPCT_USM_LEVEL_NONE
+    return create_out_of_order_queue(enable_exception_handler);
+#else
     return create_in_order_queue(enable_exception_handler);
+#endif // DPCT_USM_LEVEL_NONE
   }
 
   sycl::queue *create_in_order_queue(bool enable_exception_handler = false) {
@@ -306,6 +433,30 @@ Use 64 bits as memory_bus_width default value."
     return create_queue_impl(enable_exception_handler,
                              sycl::property::queue::in_order());
   }
+
+  sycl::queue *create_out_of_order_queue(bool enable_exception_handler = false) {
+    std::lock_guard<mutex_type> lock(m_mutex);
+    return create_queue_impl(enable_exception_handler);
+  }
+
+  void destroy_queue(sycl::queue *&queue) {
+    std::lock_guard<mutex_type> lock(m_mutex);
+    _queues.erase(std::remove_if(_queues.begin(), _queues.end(),
+                                  [=](const std::shared_ptr<sycl::queue> &q) -> bool {
+                                    return q.get() == queue;
+                                  }),
+                   _queues.end());
+    queue = nullptr;
+  }
+  void set_saved_queue(sycl::queue* q) {
+    std::lock_guard<mutex_type> lock(m_mutex);
+    _saved_queue = q;
+  }
+  sycl::queue *get_saved_queue() const {
+    std::lock_guard<mutex_type> lock(m_mutex);
+    return _saved_queue;
+  }
+  sycl::context get_context() const { return _ctx; }
 
 private:
   void clear_queues() {
@@ -359,7 +510,6 @@ private:
     i++;
     minor = std::stoi(&(ver[i]));
   }
-
   sycl::queue *_q_in_order, *_q_out_of_order;
   sycl::queue *_saved_queue;
   sycl::context _ctx;
@@ -379,21 +529,25 @@ static inline unsigned int get_tid() {
 
 /// device manager
 class dev_mgr {
-
 public:
-
   device_ext &current_device() {
     unsigned int dev_id=current_device_id();
     check_id(dev_id);
     return *_devs[dev_id];
   }
-
+  device_ext &cpu_device() const {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    if (_cpu_device == -1) {
+      throw std::runtime_error("no valid cpu device");
+    } else {
+      return *_devs[_cpu_device];
+    }
+  }
   device_ext &get_device(unsigned int id) const {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     check_id(id);
     return *_devs[id];
   }
-
   unsigned int current_device_id() const {
    std::lock_guard<std::recursive_mutex> lock(m_mutex);
    auto it=_thread2dev_map.find(get_tid());
@@ -402,13 +556,35 @@ public:
     return DEFAULT_DEVICE_ID;
   }
 
+/// Select device with a device ID.
+/// \param [in] id The id of the device which can
+/// be obtained through get_device_id(const sycl::device).
   void select_device(unsigned int id) {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     check_id(id);
     _thread2dev_map[get_tid()]=id;
   }
-
   unsigned int device_count() { return _devs.size(); }
+
+  unsigned int get_device_id(const sycl::device &dev) {
+    unsigned int id = 0;
+    for(auto dev_item : _devs) {
+      if (*dev_item == dev) {
+        break;
+      }
+      id++;
+    }
+    return id;
+  }
+
+  template <class DeviceSelector>
+  std::enable_if_t<
+      std::is_invocable_r_v<int, DeviceSelector, const sycl::device &>>
+  select_device(const DeviceSelector &selector = sycl::gpu_selector_v) {
+    sycl::device selected_device = sycl::device(selector);
+    unsigned int selected_device_id = get_device_id(selected_device);
+    select_device(selected_device_id);
+  }
 
   /// Returns the instance of device manager singleton.
   static dev_mgr &instance() {
@@ -442,13 +618,11 @@ private:
       }
     }
   }
-
   void check_id(unsigned int id) const {
     if (id >= _devs.size()) {
       throw std::runtime_error("invalid device id");
     }
   }
-
   std::vector<std::shared_ptr<device_ext>> _devs;
   /// DEFAULT_DEVICE_ID is used, if current_device_id() can not find current
   /// thread id in _thread2dev_map, which means default device should be used
@@ -466,9 +640,59 @@ static inline sycl::queue &get_default_queue() {
   return dev_mgr::instance().current_device().default_queue();
 }
 
+/// Util function to get the default in-ordered queue of current device in
+/// dpct device manager.
+static inline sycl::queue &get_in_order_queue() {
+  return dev_mgr::instance().current_device().in_order_queue();
+}
+
+/// Util function to get the default out-of-ordered queue of current device in
+/// dpct device manager.
+static inline sycl::queue &get_out_of_order_queue() {
+  return dev_mgr::instance().current_device().out_of_order_queue();
+}
+
+/// Util function to get the id of current device in
+/// dpct device manager.
+static inline unsigned int get_current_device_id() {
+  return dev_mgr::instance().current_device_id();
+}
+
+/// Util function to get the current device.
+static inline device_ext &get_current_device() {
+  return dev_mgr::instance().current_device();
+}
+
+/// Util function to get a device by id.
+static inline device_ext &get_device(unsigned int id) {
+  return dev_mgr::instance().get_device(id);
+}
+
+/// Util function to get the context of the default queue of current
+/// device in dpct device manager.
+static inline sycl::context get_default_context() {
+  return dpct::get_current_device().get_context();
+}
+
+/// Util function to get a CPU device.
+static inline device_ext &cpu_device() {
+  return dev_mgr::instance().cpu_device();
+}
+
 static inline unsigned int select_device(unsigned int id) {
   dev_mgr::instance().select_device(id);
   return id;
+}
+
+template <class DeviceSelector>
+static inline std::enable_if_t<
+    std::is_invocable_r_v<int, DeviceSelector, const sycl::device &>>
+select_device(const DeviceSelector &selector = sycl::gpu_selector_v) {
+  dev_mgr::instance().select_device(selector);
+}
+
+static inline unsigned int get_device_id(const sycl::device &dev){
+  return dev_mgr::instance().get_device_id(dev);
 }
 
 /// Util function to check whether a device supports some kinds of sycl::aspect.
@@ -513,7 +737,6 @@ has_capability_or_fail(const sycl::device &dev,
     break;
   }
 }
-
 } // namespace dpct
 
 #endif // __DPCT_DEVICE_HPP__

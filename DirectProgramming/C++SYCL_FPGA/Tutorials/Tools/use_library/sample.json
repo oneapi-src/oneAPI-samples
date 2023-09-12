@@ -4,9 +4,9 @@
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools"],
   "description": "An Intel® FPGA Tutorial demonstrating how to create Intel® FPGA libraries and to incorporate them in a Intel® oneAPI SYCL project",
   "toolchain": ["icpx"],
-  "os": ["linux"],
+  "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
-  "builder": ["cmake"],
+  "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
   "commonFolder": {
     "base": "../../..",
@@ -20,7 +20,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
           "mkdir build",
@@ -40,6 +40,32 @@
           "make report"
         ]
       }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library",
+          "nmake fpga_emu",
+          "use_library.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/use_library",
+          "nmake report"
+        ]
+      }
     ]
-  }
+  },
+  "expertise": "Getting Started"
 }

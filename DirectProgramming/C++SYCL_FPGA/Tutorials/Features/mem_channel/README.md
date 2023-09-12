@@ -85,9 +85,7 @@ To disable burst-interleaving, you need to pass the
 case of targeting a BSP, the global memory type is indicated in the board 
 specification XML file for the Board Support Package (BSP) that you're using. 
 The board specification XML file, called `board_spec.xml`, can be found in the 
-root directory of your BSP. For example, for the Intel® PAC with Intel Arria® 10 
-GX FPGA BSP, the location of this file is:
-`$INTELFPGAOCLSDKROOT/board/intel_a10gx_pac/hardware/pac_a10/board_spec.xml`.
+root directory of your BSP.
 Note that this BSP only has a single memory type available as indicated in its
 `board_spec.xml` file: `<global_mem name="DDR"`. The appropriate flag to pass
 in this case is `-Xsno-interleaving=DDR`. Another option would be
@@ -137,9 +135,8 @@ created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
 `TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
-defined when the design is compiled for an Intel® Arria® GX FPGA as the 
-Intel® PAC with Arria® 10 GX FPGA has an external memory with two available 
-channels. In that case, the 4 buffers are evenly assigned to the available 
+defined when the design is compiled for an Intel® Arria® GX FPGA. 
+In that case, the 4 buffers are evenly assigned to the available 
 channels on that board. When the design is compiled for an Intel® Stratix® or
 Agilex® FPGA, the 4 buffers are assigned to the 4 available channels.
 This can be parametrize by setting the correct macro (or create your
@@ -307,39 +304,36 @@ significantly lower than the case where burst-interleaving is enabled.
 
 Running `./mem_channel_interleaving.fpga`:
 ```
-Vector size: 100000
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+
+Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.004004 seconds
-Kernel throughput: 749.230914 MB/s
+Kernel execution time: 0.001760 seconds
+Kernel throughput: 1704.945536 MB/s
 ```
 
 Running `./mem_channel_no_interleaving.fpga`:
 ```
-Vector size: 100000
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+
+Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.003767 seconds
-Kernel throughput without burst-interleaving: 796.379552 MB/s
+Kernel execution time: 0.001692 seconds
+Kernel throughput without burst-interleaving: 1772.869425 MB/s
 ```
 
 ### Discussion of Results
 
-A test compile of this tutorial design achieved the following results on the
-Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The table
+A test compile of this tutorial design achieved the following results on Terasic's 
+DE10-Agilex Development Board. The table
 below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
-|Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0
-|With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
-
-Similarly, when compiled for the Intel® Programmable Acceleration Card with
-Intel® Stratix® 10 SX FPGA, the tutorial design achieved the following results:
-Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
-|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
-|Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0
-|With `-Xsno-interleaving` | 2.913 | 1029.77 | 9,564.1 | 28,616 | 11 | 186 | 0
+|Without `-Xsno-interleaving` | 1.760 | 1704 | 9795 | 50875  | 10 | 245 | 0
+|With `-Xsno-interleaving` | 1.692 | 1772 | 6745  | 29592  | 10 | 186  | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource

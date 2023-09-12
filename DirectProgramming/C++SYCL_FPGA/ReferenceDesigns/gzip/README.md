@@ -112,14 +112,13 @@ Additionaly, the cmake build system can be configured using the following parame
 
 ### Performance
 
-Performance results are based on testing as of October 27, 2020.
+Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                                                              | Throughput
 |:---                                                                                 |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA                                            | 1 engine @ 3.4 GB/s
-| Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)  | 2 engines @ 4.5 GB/s each = 9.0 GB/s total (High Bandwidth variant) using 120MB+ input <br> 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80 KB input
+| Terasic’s DE10-Agilex Development Board                                             | 2 engines @ 4.6 GB/s
 
 ## Build the `GZIP` Design
 
@@ -259,7 +258,6 @@ Performance results are based on testing as of October 27, 2020.
     ```
  3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
-   aocl initialize acl0 pac_s10_usm
    ./gzip.fpga <input_file> -o=<output_file>
    ```
 ### On Windows
@@ -282,16 +280,47 @@ Performance results are based on testing as of October 27, 2020.
     ```
  3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
-    aocl initialize acl0 pac_s10_usm
     gzip.fpga.exe <input_file> -o=<output_file>
     ```
 
 ## Example Output
 
 ```
-Running on device:  pac_a10 : Intel PAC Platform (pac_ee00000)
-Throughput: 3.4321 GB/s
-Compression Ratio 33.2737%
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Launching High-Bandwidth DMA GZIP application with 2 engines
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+outputSize: 145706366 Prepin: 0
+kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
+Throughput: 4.62197 GB/s
+
+TP breakdown for engine #0 (GB/s)
+CRC = 9.58499
+LZ77 = 9.22334
+Huffman Encoding = 4.51518
+DMA host-to-device = 8.92087
+DMA device-to-host = 9.85465
+
+TP breakdown for engine #1 (GB/s)
+CRC = 9.58543
+LZ77 = 9.23241
+Huffman Encoding = 4.50995
+DMA host-to-device = 8.93201
+DMA device-to-host = 9.86107
+
+Compression Ratio 43.9262%
 PASSED
 ```
 

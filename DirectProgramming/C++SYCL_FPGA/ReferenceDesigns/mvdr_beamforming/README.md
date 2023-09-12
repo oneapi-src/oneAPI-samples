@@ -263,7 +263,7 @@ This section describes how to build and run this reference design on a BSP with 
    ```
    mkdir build
    cd build
-   cmake .. -DREAL_IO_PIPES=1 -DFPGA_DEVICE=pac_s10_usm_udp
+   cmake .. -DREAL_IO_PIPES=1 -DFPGA_DEVICE=<your_io_pipe_capable_bsp>
    ```
    The `REAL_IO_PIPES` cmake flag defines a variable that is used *exclusively* in `mvdr_beamforming.cpp` to create a kernel system using real IO pipes, as opposed to the fake IO pipes described earlier in this document.
 
@@ -326,6 +326,7 @@ Matrices:         1024
 Input Directory:  '../data'
 Output Directory: '.'
 
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
 Launched MVDR kernels
@@ -336,7 +337,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Streaming pipe width          : 4
-Throughput: 177299 matrices/second
+Throughput: 357351 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED

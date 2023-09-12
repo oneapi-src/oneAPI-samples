@@ -60,9 +60,7 @@ Performance results are based on testing as of March 6, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel® Arria® 10 GX FPGA          | 75k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using a systolic array of 8 * 8 PEs (64 DSPs)
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 90k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using a systolic array of 8 * 8 PEs (64 DSPs)
-
+| Terasic’s DE10-Agilex Development Board           | 144k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using a systolic array of 8 * 8 PEs (64 DSPs)
 
 ## Key Implementation Details
 
@@ -335,30 +333,16 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 ## Example Output
 
-Example output when running on **Intel® PAC with Intel® Arria® 10 GX FPGA** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
+Example output when running on **Terasic’s DE10-Agilex Development Board** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
 
 ```
-Running on device: pac_a10 : Intel PAC Platform (pac_f100000)
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
  Matrix A size: 64 x 64 (tile: 8 x 64)
  Matrix B size: 64 x 64 (tile: 64 x 8)
  Systolic array size: 8 x 8 PEs
 Running matrix multiplication of 2 matrices 819200 times
-   Total duration:   21.8446 s
-Throughput: 75.0025k matrices/s
-
-PASSED
-```
-
-Example output when running on **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
-
-```
-Running on device: pac_s10 : Intel PAC Platform (pac_f100000)
- Matrix A size: 64 x 64 (tile: 8 x 64)
- Matrix B size: 64 x 64 (tile: 64 x 8)
- Systolic array size: 8 x 8 PEs
-Running matrix multiplication of 2 matrices 819200 times
-   Total duration:   18.1147 s
-Throughput: 90.4456k matrices/s
+   Total duration:   11.3746 s
+Throughput: 144.04k matrices/s
 
 PASSED
 ```

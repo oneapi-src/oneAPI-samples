@@ -18,7 +18,7 @@
 		 "conda create --name xgb0.81 --clone base --y",
 		 "source activate xgb0.81",
 		 "conda remove xgboost --y",
-		 "pip install xgboost==0.81",
+		 "pip install -r requirements.txt",
 		 "python IntelPython_XGBoost_Performance.py"
 		 
   		 ]
