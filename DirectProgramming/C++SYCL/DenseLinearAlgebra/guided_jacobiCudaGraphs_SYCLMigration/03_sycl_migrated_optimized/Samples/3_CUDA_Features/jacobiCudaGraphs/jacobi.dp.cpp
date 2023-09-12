@@ -67,7 +67,9 @@ static void JacobiMethod(const float *A, const double *b,
                                     double *x_new, double *sum,
                                     const sycl::nd_item<3> &item_ct1,
                                     double *x_shared, double *b_shared) {
-    
+  // Handle to thread block group
+  auto cta = item_ct1.get_group();
+  
   for (int i = item_ct1.get_local_id(2); i < N_ROWS;
        i += item_ct1.get_local_range(2)) {
     x_shared[i] = x[i];
