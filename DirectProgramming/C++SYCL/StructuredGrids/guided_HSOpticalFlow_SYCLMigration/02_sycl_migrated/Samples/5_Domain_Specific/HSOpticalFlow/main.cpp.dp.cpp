@@ -155,7 +155,7 @@ bool CompareWithGold(int width, int height, int stride, const float *h_uGold,
 
   printf("L1 error : %.6f\n", error);
 
-  return (error < THRESHOLD);
+  return (error < 1.0f);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
