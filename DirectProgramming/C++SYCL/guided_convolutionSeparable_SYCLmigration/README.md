@@ -1,15 +1,16 @@
 ﻿# `convolutionSeparable` Sample
 
-The convolution separable is a process in which a single convolution can be divided into two or more convolutions to produce the same output. This sample is implemented using SYCL* by migrating code from original CUDA source code and offloading computations to a GPU/CPU.
+The convolution separable is a process in which a single convolution can be divided into two or more convolutions to produce the same output. This sample is implemented using SYCL* by migrating code from the original CUDA source code and offloading computations to a CPU, GPU, or accelerator.
 
-| Property              | Description
+| Area              | Description
 |:---                   |:---
 | What you will learn              | Migrate convolutionSeparable from CUDA to SYCL and optimize it
 | Time to complete              | 15 minutes
+| Category                      | Code Optimization
 
 ## Purpose
 
-The sample shows the migration of convolutionSeperable from CUDA to SYCL using SYCLomatic tool and optimizing the migrated sycl code further to acheive good results.
+The sample shows the migration of convolutionSeperable from CUDA to SYCL using SYCLomatic tool and optimizing the migrated sycl code further to achieve good results.
 
 
 >**Note**: We use Intel® open-sources SYCLomatic migration tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. Users can also use Intel® DPC++ Compatibility Tool which comes along with the Intel® oneAPI Base Toolkit.
@@ -18,7 +19,7 @@ This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
 |:---                           |:---
-| `01_dpct_output`              | Contains output of SYCLomatic Tool which is fully migrated version of CUDA code.
+| `01_dpct_output`              | Contains the output of SYCLomatic Tool which is a fully migrated version of CUDA code.
 | `02_sycl_migrated_optimized`            | Contains the optimized sycl code
 
 ## Workflow For CUDA to SYCL migration
@@ -29,17 +30,18 @@ Refer [Workflow](https://www.intel.com/content/www/us/en/developer/tools/oneapi/
 
 A Separable Convolution is a process in which a single convolution can be divided into two or more convolutions to produce the same output. This sample implements a separable convolution filter of a 2D image with an arbitrary kernel. There are two functions in the code named convolutionRowsGPU and convolutionColumnsGPU in which the kernel functions (convolutionRowsKernel & convolutionColumnsKernel) are called where the loading of the input data and computations are performed. We validate the results with reference CPU separable convolution implementation by calculating the relative L2 norm.
 
-This sample is migrated from NVIDIA CUDA sample. See the sample [convolutionSeparable](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/convolutionSeparable) in the NVIDIA/cuda-samples GitHub.
+This sample is migrated from the NVIDIA CUDA sample. See the sample [convolutionSeparable](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/convolutionSeparable) in the NVIDIA/cuda-samples GitHub.
 
 ## Prerequisites
 
 | Optimized for              | Description
 |:---                   |:---
-| OS                    | Ubuntu* 20.04
-| Hardware              | Intel® Gen9, Gen11 and Xeon CPU 
-| Software              | SYCLomatic version 2023.0, Intel oneAPI Base Toolkit version 2023.0
+| OS                    | Ubuntu* 22.04
+| Hardware              | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon CPU <br> Intel® Data Center GPU Max <br> NVIDIA Tesla P100 <br> NVIDIA A100 <br> NVIDIA H100
+| Software                | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit version 2023.2.1 <br> oneAPI for NVIDIA GPUs" plugin from Codeplay
 
-For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy).
+For more information on how to install Syclomatic Tool & DPC++ CUDA® plugin, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
+[Install oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/)
 
 ## Key Implementation Details
 
@@ -74,14 +76,19 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA run
 4. The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 5. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated.
    ```
-   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api
+   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
-   
+#### Manual Workaround
+To find the device on which the code is getting executed replace the `findCudaDevice (argc, (const char **) argv);` with the following sycl get_device() API
+```
+std::cout << "\nRunning on " << dpct::get_default_queue().get_device().get_info<sycl::info::device::name>()
+<<"\n";   
+```
 ### Optimizations
 
 The migrated code can be optimized by using profiling tools which helps in identifying the hotspots (in this case convolutionRowsKernel() and convolutionColumnsKernel()).
  
-If we observe the migrated SYCL code, especially in the above-mentioned function calls we see many ‘for’ loops which are being unrolled.
+If we observe the migrated SYCL code, especially in the above-mentioned function calls we see many ‘for’ loops that are being unrolled.
 Although loop unrolling exposes opportunities for instruction scheduling optimization by the compiler and thus can improve performance, sometimes it may increase pressure on register allocation and cause register spilling. 
 
 So, it is always a good idea to compare the performance with and without loop unrolling along with different times of unrolls to decide if a loop should be unrolled or how many times to unroll it.
@@ -113,13 +120,17 @@ We can separate the array and load it into another new array and use it in place
    ```
    $ mkdir build
    $ cd build
-   $ cmake ..
+   $ cmake .. or ( cmake -D INTEL_MAX_GPU=1 .. ) or ( cmake -D NVIDIA_GPU=1 .. )
    $ make
    ```
+>**Note:** 
+> - By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU.
+> - Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
+> - Enable NVIDIA_GPU flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs plugin from Codeplay](https://developer.codeplay.com/products/oneapi/nvidia/)  is required to build for NVIDIA GPUs)
+   
+By default, this command sequence will build the `dpct_output` as well as `sycl_migrated_optimized` versions of the program.
 
-   By default, this command sequence will build the `dpct_output` as well as `sycl_migrated_optimized` versions of the program.
-
-3. Run the code
+4. Run the code
 
    You can run the programs for CPU and GPU. The commands indicate the device target.
 
@@ -129,9 +140,9 @@ We can separate the array and load it into another new array and use it in place
       ```
       Run `dpct_output` on CPU.
       ```
-      export SYCL_DEVICE_FILTER=cpu
+      export ONEAPI_DEVICE_SELECTOR=cpu
       make run
-      unset SYCL_DEVICE_FILTER
+      unset ONEAPI_DEVICE_SELECTOR
       ```
       Run `sycl_migrated_optimized` on GPU.
       ```
@@ -139,9 +150,9 @@ We can separate the array and load it into another new array and use it in place
       ```
       Run `sycl_migrated_optimized` on CPU.
       ```
-      export SYCL_DEVICE_FILTER=cpu
+      export ONEAPI_DEVICE_SELECTOR=cpu
       make run_smo
-      unset SYCL_DEVICE_FILTER
+      unset ONEAPI_DEVICE_SELECTOR
       ```
 #### Troubleshooting
 
@@ -164,7 +175,7 @@ Allocating and initializing host arrays...
 Allocating and initializing CUDA arrays...
 Running GPU convolution (16 identical iterations)...
 
-convolutionSeparable, Throughput = 3222.8755 MPixels/sec, Time = 0.00293 s, Size = 9437184 Pixels, NumDevsUsed = 1, Workgroup = 0
+convolutionSeparable, Throughput = 8516.3535 MPixels/sec, Time = 0.00111 s, Size = 9437184 Pixels, NumDevsUsed = 1, Workgroup = 0
 
 Reading back GPU results...
 
@@ -176,7 +187,7 @@ Checking the results...
 
 Shutting down...
 Test passed
-Built target run_gpu
+Built target run
 ```
 
 sycl_migrated_optimized
@@ -188,7 +199,7 @@ Allocating and initializing host arrays...
 Allocating and initializing CUDA arrays...
 Running GPU convolution (16 identical iterations)...
 
-convolutionSeparable, Throughput = 21469.4930 MPixels/sec, Time = 0.00044 s, Size = 9437184 Pixels, NumDevsUsed = 1, Workgroup = 0
+convolutionSeparable, Throughput = 18253.7401 MPixels/sec, Time = 0.00052 s, Size = 9437184 Pixels, NumDevsUsed = 1, Workgroup = 0
 
 Reading back GPU results...
 
@@ -200,7 +211,7 @@ Checking the results...
 
 Shutting down...
 Test passed
-Built target run_cmo_gpu
+Built target run_smo
 ```
 
 ## License
