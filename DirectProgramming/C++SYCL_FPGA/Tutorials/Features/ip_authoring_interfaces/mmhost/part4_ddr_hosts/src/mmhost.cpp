@@ -20,8 +20,8 @@ struct DDRIP {
       sycl::ext::intel::experimental::buffer_location<kBL2>,
       sycl::ext::intel::experimental::maxburst<8>,
       sycl::ext::intel::experimental::dwidth<256>,
-      sycl::ext::oneapi::experimental::alignment<32>,
-      sycl::ext::intel::experimental::awidth<kAlignment>,
+      sycl::ext::oneapi::experimental::alignment<kAlignment>,
+      sycl::ext::intel::experimental::awidth<32>,
       sycl::ext::intel::experimental::latency<0>});
 
   sycl::ext::oneapi::experimental::annotated_arg<int *, ParamsBl1> x;
