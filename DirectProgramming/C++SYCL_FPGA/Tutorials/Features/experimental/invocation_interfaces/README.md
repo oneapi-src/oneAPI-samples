@@ -464,43 +464,43 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./register_map_functor_model.fpga_emu
-   ./streaming_functor_model.fpga_emu
-   ./streaming_remove_downstream_stall_functor_model.fpga_emu
-   ./streaming_pipelined_functor_model.fpga_emu
-   ./register_map_lambda_model.fpga_emu
-   ./streaming_lambda_model.fpga_emu
+   ./register_map_functor.fpga_emu
+   ./streaming_functor.fpga_emu
+   ./streaming_rm_stall_in_functor.fpga_emu
+   ./streaming_pipelined_functor.fpga_emu
+   ./register_map_lambda.fpga_emu
+   ./streaming_lambda.fpga_emu
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_remove_downstream_stall_functor_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_pipelined_functor_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda_model.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda_model.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_rm_stall_in_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_pipelined_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda.fpga_sim
    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   register_map_functor_model.fpga_emu.exe
-   streaming_functor_model.fpga_emu.exe
-   streaming_remove_downstream_stall_functor_model.fpga_emu.exe
-   streaming_pipelined_functor_model.fpga_emu.exe
-   register_map_lambda_model.fpga_emu.exe
-   streaming_lambda_model.fpga_emu.exe
+   register_map_functor.fpga_emu.exe
+   streaming_functor.fpga_emu.exe
+   streaming_rm_stall_in_functor.fpga_emu.exe
+   streaming_pipelined_functor.fpga_emu.exe
+   register_map_lambda.fpga_emu.exe
+   streaming_lambda.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   register_map_functor_model.fpga_sim.exe
-   streaming_functor_model.fpga_sim.exe
-   streaming_remove_downstream_stall_functor_model.fpga_sim.exe
-   streaming_pipelined_functor_model.fpga_sim
-   register_map_lambda_model.fpga_sim.exe
-   streaming_lambda_model.fpga_sim.exe
+   register_map_functor.fpga_sim.exe
+   streaming_functor.fpga_sim.exe
+   streaming_rm_stall_in_functor.fpga_sim.exe
+   streaming_pipelined_functor.fpga_sim
+   register_map_lambda.fpga_sim.exe
+   streaming_lambda.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
