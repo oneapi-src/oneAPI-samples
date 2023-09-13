@@ -64,10 +64,10 @@ The kernel invocation interface (namely, the `start` and `done` signals) can be 
 
 | Invocation Interface    | Argument Interface    | Argument Interface Synchronization
 |:---                     |:---                   |:---
-| Streaming               | Streaming             | Synchronized with `start` and `ready_out`
-| Streaming               | Register-mapped       | N/A
-| Register-mapped         | Streaming             | *No synchronization possible*
-| Register-mapped         | Register-mapped       | N/A
+| Streaming               | Streaming             | Consumed when <kernel_name>_streaming_start=1 and <kernel_name>_streaming_ready_out=0 
+| Streaming               | Register-mapped       | Consumed if written one clock cycle before <kernel_name>_streaming_start=1 and <kernel_name>_streaming_ready_out=0 
+| Register-mapped         | Streaming             | Consumed one clock cycle after writing to the start register 
+| Register-mapped         | Register-mapped       | Consumed if written before writing to the start register 
 
 If you would like an argument to have its own dedicated ready/valid handshake, implement that argument using a [Host Pipe](../hostpipes/).
 
@@ -141,7 +141,7 @@ struct MyIP {
   }
 };
 ```
-Using the property `sycl::ext::intel::experimental::streaming_interface<>` or `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
+Using the property `sycl::ext::intel::experimental::streaming_interface<>` or `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface<remove_downstream_stall>` or `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
 
 The property `sycl::ext::intel::experimental::pipelined` takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
 - **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
@@ -187,7 +187,7 @@ If no annotation is specified for the kernel invocation interface, then a regist
 
 A total of six source files are in the `src/` directory, declaring a total of six kernels. Four kernels use the functor programming model, and the other two use the lambda programming model. 
 
-For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other three are explicitly declared with streaming kernel invocation interface, one demonstrates streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure, the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure and another demonstrates the streaming pipelined kernel invocation interface.
+For functor programming model, one kernel is declared with register-mapped kernel invocation interface inferred by default by the compiler and the other three are explicitly declared with streaming kernel invocation interface, two demonstrate streaming kernel invocation interface with a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface<>` and `sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall` property that allows down-stream components to backpressure, the other demonstrates the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure and another demonstrates the streaming pipelined kernel invocation interface.
 
 For lambda programming model, one kernel is declared with the register-mapped kernel invocation interface inferred by default by the compiler and the other kernel is explicitly declared with the streaming kernel invocation interface without a `ready_in` interface through `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` property that does not allows down-stream components to backpressure.
 
@@ -281,11 +281,8 @@ struct FunctorStreamingRmDownstreamStallIP {
 ```c++
 struct FunctorStreamingPipelinedIP {      
   ValueT* input;
-
-  sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::register_map})>                    
-      output;
+        
+  ValueT* output;
 
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties {
@@ -454,9 +451,9 @@ In the left-hand pane, select **FunctorRegisterMapIP** or **LambdaRegisterMapIP*
 
 In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMapIP**, and in a register map interface in the **LambdaRegisterMapIP**.
 
-Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStreamingRmDownstreamStallIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
+Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStreamingRmDownstreamStallIP**, **FunctorStreamingPipelinedIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces, and the `arg_input` and `arg_n` kernel arguments are implemented in streaming interfaces. The `arg_output` kernel argument is implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **LambdaStreamingIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **FunctorStreamingPipelinedIP** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **FunctorStreamingPipelinedIP** and **LambdaStreamingIP**.
 
 ## Run the `Invocation Interfaces` Sample
 
