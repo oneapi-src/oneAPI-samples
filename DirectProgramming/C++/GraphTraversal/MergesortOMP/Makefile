@@ -1,9 +1,9 @@
-CXX := icpx
+CXX := icpc
 SRCDIR := src
 BUILDDIR := release
-CFLAGS := -O3 -flto -qopenmp -std=c++11
+CFLAGS := -O3 -ipo -qopenmp -std=c++11
 EXTRA_CFLAGS :=
-LIBFLAGS := -flto -qopenmp
+LIBFLAGS := -qopenmp
 
 ifdef perf_num
 	EXTRA_CFLAGS += -D PERF_NUM

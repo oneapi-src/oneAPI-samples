@@ -46,7 +46,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1",
           "make fpga_emu",
           "./gzip.fpga_emu ../src/gzip.cpp -o=test.gz"
         ]
@@ -57,7 +57,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1",
           "make report"
         ]
       }
@@ -95,7 +95,7 @@
           "mkdir build",
           "cd build",
           "xcopy /E ..\\ReferenceDesigns\\gzip\\src ..\\src\\",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1",
           "nmake fpga_emu",
           "gzip.fpga_emu.exe ../src/gzip.cpp -o=test.gz"
         ]
@@ -107,7 +107,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1",
           "nmake report"
         ]
       }

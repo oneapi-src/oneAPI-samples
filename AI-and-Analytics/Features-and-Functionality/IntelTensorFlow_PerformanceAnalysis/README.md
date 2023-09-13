@@ -261,10 +261,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 You should see diagrams for performance comparison and analysis. 
 
-One example of performance comparison diagrams:
-
-![](images/perf_comparison.png)
-
 For performance analysis, users can also see pie charts for top hotspots of Tensorflow* operations among Stock and Intel® Optimization for TensorFlow*.
 One example of performance analysis diagrams:
 

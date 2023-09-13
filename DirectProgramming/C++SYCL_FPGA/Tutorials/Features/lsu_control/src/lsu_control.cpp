@@ -79,8 +79,10 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
 
       // Kernel that uses the prefetch LSU
       h.single_task<KernelPrefetch>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_a.get_pointer();
-        auto output_ptr = output_a.get_pointer();
+        auto input_ptr =
+            input_a.template get_multi_ptr<access::decorated::no>();
+        auto output_ptr = 
+            output_a.template get_multi_ptr<access::decorated::no>();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {
@@ -96,8 +98,10 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
       
       // Kernel that uses the burst-coalesced LSU
       h.single_task<KernelBurst>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_a.get_pointer();
-        auto output_ptr = output_a.get_pointer();
+        auto input_ptr =
+            input_a.template get_multi_ptr<access::decorated::no>();
+        auto output_ptr = 
+            output_a.template get_multi_ptr<access::decorated::no>();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {
@@ -113,8 +117,10 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
       
       // Kernel that uses the default LSUs
       h.single_task<KernelDefault>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_a.get_pointer();
-        auto output_ptr = output_a.get_pointer();
+        auto input_ptr = 
+            input_a.template get_multi_ptr<access::decorated::no>();
+        auto output_ptr = 
+            output_a.template get_multi_ptr<access::decorated::no>();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {

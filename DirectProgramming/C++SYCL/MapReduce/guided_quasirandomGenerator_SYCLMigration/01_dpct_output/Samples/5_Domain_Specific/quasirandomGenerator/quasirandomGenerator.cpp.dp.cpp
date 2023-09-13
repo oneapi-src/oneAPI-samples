@@ -63,8 +63,7 @@ const int N = 1048576;
 int main(int argc, char **argv) {
   // Start logs
   printf("%s Starting...\n\n", argv[0]);
-  std::cout << "\nRunning on "
-            << dpct::get_default_queue().get_device().get_info<sycl::info::device::name>() << "\n";
+
   unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION];
 
   float *h_OutputGPU, *d_Output;
@@ -81,14 +80,10 @@ int main(int argc, char **argv) {
 
   sdkCreateTimer(&hTimer);
 
-  printf("Allocating Device memory...\n");
-  /*
-  DPCT1003:21: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((d_Output = sycl::malloc_device<float>(
-                       QRNG_DIMENSIONS * N, dpct::get_default_queue()),
-                   0));
+  printf("Allocating GPU memory...\n");
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
+                           QRNG_DIMENSIONS * N, dpct::get_default_queue())));
 
   printf("Allocating CPU memory...\n");
   h_OutputGPU = (float *)malloc(QRNG_DIMENSIONS * N * sizeof(float));
@@ -99,23 +94,16 @@ int main(int argc, char **argv) {
   initTableGPU(tableCPU);
 
   printf("Testing QRNG...\n\n");
-  /*
-  DPCT1003:22: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-                       .wait(),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
   int numIterations = 20;
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-      /*
-      DPCT1003:23: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
@@ -123,11 +111,8 @@ int main(int argc, char **argv) {
     quasirandomGeneratorGPU(d_Output, 0, N);
   }
 
-  /*
-  DPCT1003:24: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -136,16 +121,11 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1.0E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128 * QRNG_DIMENSIONS);
 
-  printf("\nReading Device results...\n");
-  /*
-  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-           .wait(),
-       0));
+  printf("\nReading GPU results...\n");
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
 
   printf("Comparing to the CPU results...\n\n");
   sumDelta = 0;
@@ -162,22 +142,15 @@ int main(int argc, char **argv) {
   printf("L1 norm: %E\n", sumDelta / sumRef);
 
   printf("\nTesting inverseCNDgpu()...\n\n");
-  /*
-  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_default_queue()
-                       .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-                       .wait(),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-      /*
-      DPCT1003:27: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
@@ -185,11 +158,8 @@ int main(int argc, char **argv) {
     inverseCNDgpu(d_Output, NULL, QRNG_DIMENSIONS * N);
   }
 
-  /*
-  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -198,16 +168,11 @@ int main(int argc, char **argv) {
       (double)QRNG_DIMENSIONS * (double)N * 1E-9 / gpuTime, gpuTime,
       QRNG_DIMENSIONS * N, 1, 128);
 
-  printf("Reading Device results...\n");
-  /*
-  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-           .wait(),
-       0));
+  printf("Reading GPU results...\n");
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
+          .wait()));
 
   printf("\nComparing to the CPU results...\n");
   sumDelta = 0;
@@ -227,11 +192,8 @@ int main(int argc, char **argv) {
   printf("Shutting down...\n");
   sdkDeleteTimer(&hTimer);
   free(h_OutputGPU);
-  /*
-  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Output, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Output, dpct::get_default_queue())));
 
   exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

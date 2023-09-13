@@ -1,31 +1,36 @@
-// Copyright 2009-2021 Intel Corporation
+// Copyright 2018 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
+#include "common/platform.h"
 #include <chrono>
 
-#include "platform.h"
+OIDN_NAMESPACE_BEGIN
 
-namespace oidn {
+  class Timer
+  {
+  public:
+    Timer()
+    {
+      reset();
+    }
 
-class Timer {
- private:
-  using clock = std::chrono::high_resolution_clock;
+    void reset()
+    {
+      start = clock::now();
+    }
 
-  std::chrono::time_point<clock> start;
+    double query() const
+    {
+      auto end = clock::now();
+      return std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+    }
 
- public:
-  Timer() { reset(); }
+  private:
+    using clock = std::chrono::steady_clock;
 
-  void reset() { start = clock::now(); }
+    std::chrono::time_point<clock> start;
+  };
 
-  double query() const {
-    auto end = clock::now();
-    return std::chrono::duration_cast<std::chrono::duration<double>>(end -
-                                                                     start)
-        .count();
-  }
-};
-
-}  // namespace oidn
+OIDN_NAMESPACE_END

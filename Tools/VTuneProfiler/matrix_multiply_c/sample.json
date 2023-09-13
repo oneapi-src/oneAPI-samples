@@ -1,0 +1,33 @@
+{
+	"guid": "5542E63E-6B64-44AF-BAE7-6AD4BBC80636",
+	"name": "Matrix Multiply VTune™ Profiler - C",
+	"categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
+	"description": "Simple program that shows how to improve the C language (CPU only) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
+	"toolchain": ["dpcpp"],
+	"dependencies": ["compiler|icc", "compiler|icx", "mkl", "vtune"],
+	"languages": [{
+		"c": {}
+	}],
+	"os": ["linux", "windows"],
+	"targetDevice": ["CPU"],
+	"builder": ["ide", "make"],
+	"ciTests": {
+		"linux": [{
+			"id": "icx",
+			"steps": [
+				"cd linux",
+				"make icx",
+				"make run"
+			]
+		}],
+		"windows": [{
+			"steps": [
+				"cd vc16",
+				"MSBuild matrix.sln /t:Rebuild /p:Configuration=\"Release\"",
+				"cd x64/Release",
+				"matrix.exe"
+			]
+		}]
+	},
+	"expertise": "Getting Started"
+}

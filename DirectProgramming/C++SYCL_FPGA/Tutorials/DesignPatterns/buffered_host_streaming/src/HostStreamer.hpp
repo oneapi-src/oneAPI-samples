@@ -618,7 +618,7 @@ public:
     flush_ = true;
   }
 
-  // This synchronizes with the KernelLaunchAndWaitThread. This should be called
+  // This synchronizes with the KernelLaunchAndWaitThread.
   // This should be called once the user is done performing ALL request
   // (i.e. both Produce and Consume request).
   // NOTE: this API call is blocking. It will block until all of the kernels
@@ -627,8 +627,10 @@ public:
     // flush the launch queue
     Flush();
 
-    // wait until the launch queue is empty
-    while (!LaunchQueueEmpty()){}
+    // wait until the all of the queues are empty
+    while (
+      !(LaunchQueueEmpty() && ProducerQueueEmpty() && ConsumerQueueEmpty())) {
+    }
   }
   //////////////////////////////////////////////////////////////////////////////
 

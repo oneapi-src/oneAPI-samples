@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.4.0)
 
 set(CMAKE_CXX_COMPILER "icpx")
 
-project (guided_concurrentKernels_SYCLMigration)
+project (Concurrentkernel_Revisit)
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
 	message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")
@@ -13,12 +13,12 @@ endif ()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject 03_sycl_migrated" ON)
-option (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject 02_sycl_dpct_migrated" ON)
+option (BUILD_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject 01_dpct_output" ON)
+option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject 02_sycl_migrated" ON)
 
-if (BUILD_SYCL_MIGRATED_SUBPROJECT)
-	add_subdirectory (03_sycl_migrated)
+if (BUILD_DPCT_MIGRATED_SUBPROJECT)
+	add_subdirectory (01_dpct_output)
 endif ()
-if (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT)
-	add_subdirectory (02_sycl_dpct_migrated)
+if (BUILD_SYCL_MIGRATED_SUBPROJECT)
+    add_subdirectory (02_sycl_migrated)
 endif ()

@@ -406,18 +406,17 @@ PASSED
 ```
 Generating input data
 Computing golden result
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Running 5 iterations of kernel 0 with |A|=16384 and |B|=32768
-Kernel 0 average throughput: 248.460 MB/s
+Kernel 0 average throughput: 338.588 MB/s
 Running 5 iterations of kernel 1 with |A|=16384 and |B|=32768
-Kernel 1 average throughput: 372.191 MB/s
+Kernel 1 average throughput: 445.205 MB/s
 Running 5 iterations of kernel 2 with |A|=16384 and |B|=32768
-Kernel 2 average throughput: 372.279 MB/s
+Kernel 2 average throughput: 388.668 MB/s
 Running 5 iterations of kernel 3 with |A|=16384 and |B|=32768
-Kernel 2 average throughput: 742.257 MB/s
+Kernel 3 average throughput: 731.052 MB/s
 PASSED
 ```
-
-> **Note**: These throughput numbers were collected using the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX.
 
 ## License
 

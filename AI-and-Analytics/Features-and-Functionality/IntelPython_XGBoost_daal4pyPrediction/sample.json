@@ -4,21 +4,24 @@
   "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
   "description": "This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction",
   "builder": ["cli"],
-  "languages": [{"python":{}}],
-  "dependencies": ["intelpython"], 
-  "os":["linux"],
+  "languages": [{"python": {}}],
+  "dependencies": ["intelpython"],
+  "os": ["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
-    {
-  		"id": "idp_xgb_d4p_prediction",
-  		"steps": [
-        "source activate base",
-		    "python -m ipykernel install --user --name=xgboost",
-		    "python ci_test.py"
-  		 ]
-  	}
+    "linux": [
+      {
+        "id": "idp_xgb_d4p_prediction",
+        "steps": [
+          "source activate base",
+          "pip install ipykernel",
+          "pip install nbformat",
+          "pip install nbconvert",
+          "python -m ipykernel install --user --name=xgboost",
+          "python ci_test.py"
+        ]
+      }
     ]
-},
-"expertise": "Code Optimization"
+  },
+  "expertise": "Code Optimization"
 }

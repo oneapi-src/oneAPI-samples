@@ -249,7 +249,7 @@ Run:
 	04_SYCL_Sub_Groups/prog57
 	04_SYCL_Sub_Groups/prog58
 	04_SYCL_Sub_Groups/prog59
-	11_Intel_Distribution_for_GDB/prog60 host
+	11_Intel_Distribution_for_GDB/prog60 gpu
 	08_SYCL_Reduction/prog61
 	12_SYCL_Local_Memory_And_Atomics/prog62
 	12_SYCL_Local_Memory_And_Atomics/prog63

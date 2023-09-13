@@ -1,0 +1,90 @@
+all:
+	icpx -fsycl -o 02_Thread_Mapping_and_Occupancy/vec_add 02_Thread_Mapping_and_Occupancy/lab/vec_add.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_access_modes 03_Memory_Optimization/lab/buffer_access_modes.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_host_ptr 03_Memory_Optimization/lab/buffer_host_ptr.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_loop 03_Memory_Optimization/lab/buffer_loop.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_mem_move_0 03_Memory_Optimization/lab/buffer_mem_move_0.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_mem_move_1 03_Memory_Optimization/lab/buffer_mem_move_1.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_mem_move_2 03_Memory_Optimization/lab/buffer_mem_move_2.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffer_mem_move_3 03_Memory_Optimization/lab/buffer_mem_move_3.cpp
+	icpx -fsycl -o 03_Memory_Optimization/buffers 03_Memory_Optimization/lab/buffers.cpp
+	icpx -fsycl -o 03_Memory_Optimization/usm_copy_partial 03_Memory_Optimization/lab/usm_copy_partial.cpp
+	icpx -fsycl -o 03_Memory_Optimization/usm_device 03_Memory_Optimization/lab/usm_device.cpp
+	icpx -fsycl -o 03_Memory_Optimization/usm_memcpy 03_Memory_Optimization/lab/usm_memcpy.cpp
+	icpx -fsycl -o 03_Memory_Optimization/usm_overlap_copy 03_Memory_Optimization/lab/usm_overlap_copy.cpp
+	icpx -fsycl -o 03_Memory_Optimization/usm_shared 03_Memory_Optimization/lab/usm_shared.cpp
+	icpx -fsycl -o 04_Kernel_Submission/kernel_launch 04_Kernel_Submission/lab/kernel_launch.cpp
+	icpx -fsycl -o 04_Kernel_Submission/kernel_multiple 04_Kernel_Submission/lab/kernel_multiple.cpp
+	icpx -fsycl -o 04_Kernel_Submission/kernel_multiple_queues 04_Kernel_Submission/lab/kernel_multiple_queues.cpp
+	icpx -fsycl -o 04_Kernel_Submission/kernel_profiling 04_Kernel_Submission/lab/kernel_profiling.cpp
+	icpx -fsycl -o 04_Kernel_Submission/kernel_redundant_queue 04_Kernel_Submission/lab/kernel_redundant_queue.cpp
+	icpx -fsycl -o 05_Kernel_Programming/convolution_global 05_Kernel_Programming/lab/convolution_global.cpp
+	icpx -fsycl -o 05_Kernel_Programming/convolution_global_conditionals 05_Kernel_Programming/lab/convolution_global_conditionals.cpp
+	icpx -fsycl -o 05_Kernel_Programming/convolution_global_conditionals_minmax 05_Kernel_Programming/lab/convolution_global_conditionals_minmax.cpp
+	icpx -fsycl -o 05_Kernel_Programming/wg_reduction 05_Kernel_Programming/lab/wg_reduction.cpp
+	icpx -fsycl -o 05_Kernel_Programming/wg_vec_copy 05_Kernel_Programming/lab/wg_vec_copy.cpp
+	icpx -fsycl -o 06_Shared_Local_Memory/convolution_slm 06_Shared_Local_Memory/lab/convolution_slm.cpp
+	icpx -fsycl -o 06_Shared_Local_Memory/histogram_256_int 06_Shared_Local_Memory/lab/histogram_256_int.cpp
+	icpx -fsycl -o 06_Shared_Local_Memory/histogram_256_slm 06_Shared_Local_Memory/lab/histogram_256_slm.cpp
+	icpx -fsycl -o 06_Shared_Local_Memory/slm_bank 06_Shared_Local_Memory/lab/slm_bank.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_size 07_Sub_Groups/lab/sg_size.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_max_size 07_Sub_Groups/lab/sg_max_size.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_mem_access_0 07_Sub_Groups/lab/sg_mem_access_0.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_mem_access_1 07_Sub_Groups/lab/sg_mem_access_1.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_mem_access_2 07_Sub_Groups/lab/sg_mem_access_2.cpp
+	icpx -fsycl -o 07_Sub_Groups/sg_shuffle 07_Sub_Groups/lab/sg_shuffle.cpp
+	icpx -fsycl -o 08_Atomic_Operations/atomics_data_type 08_Atomic_Operations/lab/atomics_data_type.cpp
+	icpx -fsycl -o 08_Atomic_Operations/atomics_global 08_Atomic_Operations/lab/atomics_global.cpp
+	icpx -fsycl -o 08_Atomic_Operations/atomics_local 08_Atomic_Operations/lab/atomics_local.cpp
+	icpx -fsycl -o 09_Kernel_Reduction/reduction_atomics 09_Kernel_Reduction/lab/reduction_atomics.cpp
+	icpx -fsycl -o 09_Kernel_Reduction/reduction_sg 09_Kernel_Reduction/lab/reduction_sg.cpp
+	icpx -fsycl -o 09_Kernel_Reduction/reduction_slm 09_Kernel_Reduction/lab/reduction_slm.cpp
+	icpx -fsycl -o 09_Kernel_Reduction/reduction_sycl 09_Kernel_Reduction/lab/reduction_sycl.cpp
+	icpx -fsycl -o 09_Kernel_Reduction/reduction_sycl_blocks 09_Kernel_Reduction/lab/reduction_sycl_blocks.cpp
+
+run:
+	02_Thread_Mapping_and_Occupancy/vec_add
+	03_Memory_Optimization/buffer_access_modes
+	03_Memory_Optimization/buffer_host_ptr
+	03_Memory_Optimization/buffer_loop
+	03_Memory_Optimization/buffer_mem_move_0
+	03_Memory_Optimization/buffer_mem_move_1
+	03_Memory_Optimization/buffer_mem_move_2
+	03_Memory_Optimization/buffer_mem_move_3
+	03_Memory_Optimization/buffers
+	03_Memory_Optimization/usm_copy_partial
+	03_Memory_Optimization/usm_device
+	03_Memory_Optimization/usm_memcpy
+	03_Memory_Optimization/usm_overlap_copy
+	03_Memory_Optimization/usm_shared
+	04_Kernel_Submission/kernel_launch
+	04_Kernel_Submission/kernel_multiple
+	04_Kernel_Submission/kernel_multiple_queues
+	04_Kernel_Submission/kernel_profiling
+	04_Kernel_Submission/kernel_redundant_queue
+	05_Kernel_Programming/wg_vec_copy
+	05_Kernel_Programming/wg_reduction
+	05_Kernel_Programming/convolution_global
+	05_Kernel_Programming/convolution_global_conditionals
+	05_Kernel_Programming/convolution_global_conditionals_minmax
+	06_Shared_Local_Memory/convolution_slm
+	06_Shared_Local_Memory/histogram_256_int
+	06_Shared_Local_Memory/histogram_256_slm
+	06_Shared_Local_Memory/slm_bank
+	07_Sub_Groups/sg_size
+	07_Sub_Groups/sg_max_size
+	07_Sub_Groups/sg_mem_access_0
+	07_Sub_Groups/sg_mem_access_1
+	07_Sub_Groups/sg_mem_access_2
+	07_Sub_Groups/sg_shuffle
+	08_Atomic_Operations/atomics_data_type
+	08_Atomic_Operations/atomics_global
+	08_Atomic_Operations/atomics_local
+	09_Kernel_Reduction/reduction_atomics
+	09_Kernel_Reduction/reduction_sg
+	09_Kernel_Reduction/reduction_slm
+	09_Kernel_Reduction/reduction_sycl
+	09_Kernel_Reduction/reduction_sycl_blocks
+
+clean:
+	rm -rf 02_Thread_Mapping_and_Occupancy/vec_add 03_Memory_Optimization/buffer_access_modes 03_Memory_Optimization/buffer_host_ptr 03_Memory_Optimization/buffer_loop 03_Memory_Optimization/buffer_mem_move_0 03_Memory_Optimization/buffer_mem_move_1 03_Memory_Optimization/buffer_mem_move_2 03_Memory_Optimization/buffer_mem_move_3 03_Memory_Optimization/buffers 03_Memory_Optimization/usm_copy_partial 03_Memory_Optimization/usm_device 03_Memory_Optimization/usm_memcpy 03_Memory_Optimization/usm_overlap_copy 03_Memory_Optimization/usm_shared 04_Kernel_Submission/kernel_launch 04_Kernel_Submission/kernel_multiple 04_Kernel_Submission/kernel_multiple_queues 04_Kernel_Submission/kernel_profiling 04_Kernel_Submission/kernel_redundant_queue 05_Kernel_Programming/convolution_global_conditionals 05_Kernel_Programming/convolution_global_conditionals_minmax 05_Kernel_Programming/convolution_global 05_Kernel_Programming/wg_reduction 05_Kernel_Programming/wg_vec_copy 06_Shared_Local_Memory/convolution_slm 06_Shared_Local_Memory/histogram_256_int 06_Shared_Local_Memory/histogram_256_slm 06_Shared_Local_Memory/slm_bank 07_Sub_Groups/sg_size 07_Sub_Groups/sg_max_size 07_Sub_Groups/sg_mem_access_0 07_Sub_Groups/sg_mem_access_1 07_Sub_Groups/sg_mem_access_2 07_Sub_Groups/sg_shuffle 08_Atomic_Operations/atomics_data_type 08_Atomic_Operations/atomics_global 08_Atomic_Operations/atomics_local 09_Kernel_Reduction/reduction_atomics 09_Kernel_Reduction/reduction_sg 09_Kernel_Reduction/reduction_slm 09_Kernel_Reduction/reduction_sycl 09_Kernel_Reduction/reduction_sycl_blocks

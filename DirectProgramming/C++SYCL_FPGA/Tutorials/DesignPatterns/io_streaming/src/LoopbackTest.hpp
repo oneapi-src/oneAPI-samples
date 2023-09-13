@@ -6,7 +6,7 @@
 
 #include "FakeIOPipes.hpp"
 
-// If the 'USE_REAL_IO_PIPE' macro is defined, this test will use real IO pipes.
+// If the 'USE_REAL_IO_PIPES' macro is defined, this test will use real IO pipes.
 // To use this, ensure you have a BSP that supports IO pipes.
 // NOTE: define this BEFORE including the LoopbackTest.hpp and
 // SideChannelTest.hpp which will check for the presence of this macro.

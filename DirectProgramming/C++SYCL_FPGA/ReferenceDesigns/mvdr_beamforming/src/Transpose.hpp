@@ -44,14 +44,7 @@ event SubmitTransposeKernel(queue& q) {
   static_assert(k_num_cols_in % k_pipe_width == 0,
                 "k_num_cols_in must be evenly divisible by k_pipe_width");
 
-  return q.submit([&](handler& h) {
-    h.single_task<TransposeKernelName>([=]() {
-      // start the transposer
-      Transposer<T, k_num_cols_in, k_pipe_width, MatrixInPipe, MatrixOutPipe>
-          TheTransposer;
-      TheTransposer();
-    });
-  });
+  return q.single_task<TransposeKernelName>(Transposer<T, k_num_cols_in, k_pipe_width, MatrixInPipe, MatrixOutPipe>{});
 }
 
 // The generic transpose. We use classes here because we want to do partial

@@ -1,0 +1,26 @@
+{
+    "guid": "91B5893E-028B-47BC-9D84-395A60CC1B33",
+    "name": "Intel PyTorch GPU Inference Optimization with AMP",
+    "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
+    "description": "This sample illustrates how to use AMP BFLOAT16 in PyTorch on Intel dGPU",
+    "builder": ["cli"],
+    "languages": [{"python":{}}],
+    "os":["linux"],
+    "targetDevice": ["GPU"],
+    "ciTests": {
+      "linux": [
+      {
+          "id": "intel pytorch gpu inference optimization with amp",
+          "steps": [
+              "source activate pytorch-gpu",
+	      "pip install -r requirements.txt",  
+              "python IntelPyTorch_GPU_InferenceOptimization_with_AMP.py",
+              "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch-gpu",
+			  "python ci_test.py"
+           ]
+      }
+       ]
+    },
+    "expertise": "Code Optimization"
+  }
+  

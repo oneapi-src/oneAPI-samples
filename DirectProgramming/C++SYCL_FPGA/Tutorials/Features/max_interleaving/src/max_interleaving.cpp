@@ -13,9 +13,16 @@
 
 using namespace sycl;
 
-constexpr size_t kSize = 8;
-constexpr float kErrorThreshold = 0.001;
-constexpr int kTotalOps = kSize * (2 * kSize + 1);
+#if defined(FPGA_SIMULATOR) || defined(FPGA_EMULATOR)
+// Simulator runs too slowly for large array sizes
+// Emulator has stack issues for large array sizes -
+// (malloc can be used but is out of scope of this tutorial)
+constexpr size_t kSize = 32;
+#else
+constexpr size_t kSize = 512;
+#endif
+constexpr float kErrorThreshold = 0.5;
+constexpr int kTotalOps = 4 * kSize * kSize;
 
 using FloatArray = std::array<float, kSize>;
 using TwoDimFloatArray = std::array<float, kSize*kSize>;
@@ -34,8 +41,7 @@ class KernelCompute;
 // The kernel's functionality is designed to show the
 // performance impact of the max_interleaving attribute.
 template <int interleaving>
-void Transform(const TwoDimFloatArray &array_a, const FloatArray &array_b, 
-               FloatArray &array_r) {
+void Transform(const TwoDimFloatArray &array_a, FloatArray &array_r) {
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -57,38 +63,53 @@ void Transform(const TwoDimFloatArray &array_a, const FloatArray &array_b,
               << std::endl;
 
     buffer array_a_buffer(array_a);
-    buffer array_b_buffer(array_b);
     buffer array_r_buffer(array_r);
 
     event e = q.submit([&](handler &h) {
       accessor array_a_accessor(array_a_buffer, h, read_only);
-      accessor array_b_accessor(array_b_buffer, h, read_only);
       accessor accessor_array_r(array_r_buffer, h, write_only, no_init);
 
       h.single_task<KernelCompute<interleaving>>([=]() 
                                                  [[intel::kernel_args_restrict]] {
         float temp_a[kSize*kSize];
-        float temp_b[kSize];
         float temp_r[kSize];
 
         for (size_t i = 0; i < kSize; i++) {
           for (size_t j = 0; j < kSize; j++) {
             temp_a[i*kSize+j] = array_a_accessor[i*kSize+j];
           }
-          temp_b[i] = array_b_accessor[i];
           temp_r[i] = 1.0;
         }
 
-        for (size_t i = 0; i < kSize; i++) {
-          // only one iteration of the outer loop can be executing the
-          // inner loop at a time so that accesses to temp_r occur
-          // in the correct order -- use max_interleaving to simplify
-          // the datapath and reduce hardware resource usage
-          [[intel::max_interleaving(interleaving)]] 
-          for (size_t j = 0; j < kSize; j++) {
-            temp_r[j] = SomethingComplicated(temp_a[i*kSize+j], temp_r[j]);
+        // A simple row reduction where row i of temp_a is summed and 
+        // stored in temp_r[i].
+        // Notice how temp_r[i] is a loop carried dependency in the inner loop as it is updated 
+        // every iteration. As a result, the *inner loop II is very high* as a new iteration from 
+        // the *same* outer loop invocation must wait for the previous iteration to finish updating
+        // temp_r[i].
+        // However, notice how *no* loop carried memory dependency exists with respect to 
+        // the outer loop - for different i-iterations, the temp_r array is read and written to
+        // in different locations. 
+        // The lack of outer loop carried memory dependencies and a high inner loop II is what 
+        // allows interleaving to happen - where multiple invocations of the inner loop
+        // concurrently execute on the same inner loop hardware. This is like pipelining, 
+        // but each iteration executing in the inner loop is from *different* invocations.
+        outer: 
+        for (int i = kSize - 1; i >= 0; i--) {
+          // You can explicitly disable interleaving with this attribute by providing `1` as 
+          // a parameter. `0` keeps it enabled, so long as interleaving is possible.
+          // This may result in area savings at the cost of throughput, which could 
+          // be useful for non-critical data paths in low-area settings. 
+          inner: 
+          [[intel::max_interleaving(interleaving)]]
+          for (int j = kSize - 1; j >= 0; j--) {
+            temp_r[i] +=
+                SomethingComplicated(temp_a[i * kSize + j], temp_r[i]);
           }
-          temp_r[i] += temp_b[i];
+          // One final note - the loop induction variables decrease (i--) instead of increase (i++)
+          // in these two loops to prevent loop fusion optimizations, which makes it harder to 
+          // keep track of loops in the optimization reports. Interleaving will still occur if  
+          // `i` and `j` were instead incremented.
         }
 
         for (size_t i = 0; i < kSize; i++) {
@@ -135,20 +156,18 @@ void Transform(const TwoDimFloatArray &array_a, const FloatArray &array_b,
 
 // Calculates the expected results. Used to verify that the kernel
 // is functionally correct.
-void GoldenResult(const TwoDimFloatArray &A, const FloatArray &B,
-                  FloatArray &R) {
-  for (size_t i = 0; i < kSize; i++) {
-    for (size_t j = 0; j < kSize; j++) {
-      R[j] = SomethingComplicated(A[i*kSize+j], R[j]);
+void GoldenResult(const TwoDimFloatArray &A, FloatArray &R) {
+  outer: for (int i = kSize - 1; i >= 0; i--) {
+    inner: for (int j = kSize - 1; j >= 0; j--) {
+      R[i] +=
+          SomethingComplicated(A[i * kSize + j], R[i]);
     }
-    R[i] += B[i];
   }
 }
 
 int main() {
 
   TwoDimFloatArray indata_A;
-  FloatArray indata_B;
   FloatArray outdata_R_compute_0;
   FloatArray outdata_R_compute_1;
   FloatArray outdata_R_golden;
@@ -156,25 +175,25 @@ int main() {
   // initialize the input data
   srand(7);
   for (size_t i = 0; i < kSize; i++) {
-    indata_B[i] = (float)(rand() % 256);
     for (size_t j = 0; j < kSize; j++) {
-      indata_A[i*kSize+j] = (float)(rand() % 256);
+      indata_A[i*kSize+j] = (float)(rand() % 32);
     }
     outdata_R_golden[i] = 1.0;
   }
 
   // Run the kernel with two different values of the max_interleaving
-  // attribute. In this case, unlimited interleaving (max_interleaving
-  // set to 0) gives no improvement in runtime performance over
-  // restricted interleaving (max_interleaving set to 1), despite
-  // requiring more hardware resources (see README.md for details
+  // attribute: 
+  //   Enabled - max_interleaving = 0
+  //   Disabled - max_interleaving = 1
+  // When interleaving is disabled, runtime performance may decrease while
+  // hardware resources may increase (see README.md for details
   // on confirming this difference in hardware resource usage in
   // the reports).
-  Transform<0>(indata_A, indata_B, outdata_R_compute_0);
-  Transform<1>(indata_A, indata_B, outdata_R_compute_1);
+  Transform<0>(indata_A, outdata_R_compute_0);
+  Transform<1>(indata_A, outdata_R_compute_1);
 
   // compute the actual result here
-  GoldenResult(indata_A, indata_B, outdata_R_golden);
+  GoldenResult(indata_A, outdata_R_golden);
 
   // error check for Transform<0>
   bool failed = false;

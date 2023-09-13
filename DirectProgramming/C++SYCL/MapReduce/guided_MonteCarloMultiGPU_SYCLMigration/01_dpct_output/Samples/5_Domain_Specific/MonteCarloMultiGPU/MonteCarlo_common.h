@@ -37,7 +37,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Global types
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct dpct_type_623103 {
+typedef struct dpct_type_136915 {
   float S;
   float X;
   float T;
@@ -48,19 +48,19 @@ typedef struct dpct_type_623103 {
 typedef struct
     // #ifdef __CUDACC__
     //__align__(8)
-    // #endif dpct_type_143893
+    // #endif dpct_type_392709
     {
   float Expected;
   float Confidence;
 } TOptionValue;
 
 // GPU outputs before CPU postprocessing
-typedef struct dpct_type_790570 {
+typedef struct dpct_type_108828 {
   real Expected;
   real Confidence;
 } __TOptionValue;
 
-typedef struct dpct_type_137502 {
+typedef struct dpct_type_723642 {
   // Device ID for multi-GPU version
   int device;
   // Option count for this plan
@@ -85,10 +85,10 @@ typedef struct dpct_type_137502 {
 
   // random number generator states
   /*
-  DPCT1032:25: A different random number generator is used. You may need to
+  DPCT1032:24: A different random number generator is used. You may need to
   adjust the code.
   */
-  dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
+  dpct::rng::device::rng_generator<oneapi::mkl::rng::device::philox4x32x10<1>>
       *rngStates;
 
   // Pseudorandom samples count

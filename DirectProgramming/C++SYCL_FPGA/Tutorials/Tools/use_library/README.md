@@ -2,13 +2,21 @@
 
 This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design.
 
+| Area                  | Description
+|:---                   |:---
+| What you will learn   | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
+| Time to complete      | 30 minutes
+| Category              | Concepts and Functionality
+## Purpose
+
+This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design. An RTL library is useful for embedding high performance FPGA code, handwritten in Verilog into your oneAPI program.
+
+## Prerequisites
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
 | Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
-| What you will learn               | How to integrate Verilog directly into your oneAPI program and emulate it using a C model, as well as pulling the RTL directly into your full system design.
-| Time to complete                  | 30 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -21,10 +29,6 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-
-> :warning: When targeting an IP-only flow, the RTL library feature will not work when compiling to Quartus and will error out in the late-stage compile. RTL libraries will work in the simulation flow. This will be fixed in a future release. This is documented in the [compiler release notes](https://www.intel.com/content/www/us/en/developer/articles/release-notes/intel-oneapi-dpc-c-compiler-release-notes.html).
-
-## Prerequisites
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
@@ -47,9 +51,39 @@ flowchart LR
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
 You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
-## Purpose
 
-This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sources and use them in your SYCL design. An RTL library is useful for embedding high performance FPGA code, handwritten in Verilog into your oneAPI program.
+### Source Code Description
+
+This tutorial includes two designs, each in separate kernel. Both designs multiply two 27-bit inputs together to produce a 54-bit output. In `NativeMult27x27` functor, a 27x27 multiplication is described with native C++ code. 
+In `RtlMult27x27` functor, RTL code is used to customize a DSP block to perform the multiplication more optimally. You can observe the impact on area utilization and performance by comparing the two designs.
+This code sample demonstrates how to use a simple RTL library in a simple FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, since the area changes in this sample are quite small. You can use the `fpga_crossgen` and `fpga_libtool` commands to generate RTL libraries for multiarchitecture binary kernel (full system) designs as well.
+This graphic illustrates the Library Toolchain Creation Process:
+![](assets/lib_toolchain.svg)
+
+### Use of RTL libraries in SYCL
+
+Files needed to create a SYCL target library from RTL source include:
+- Verilog, System Verilog, or VHDL files that define the RTL component
+- An Object Manifest File (.xml) which contains properties needed to integrate RTL component into SYCL pipeline
+- A header file containing valid SYCL kernel language and declares the signatures of functions implemented by the RTL component.
+- A SYCL based emulation model file for RTL component
+
+The RTL is used when compiling for hardware and simulation, and the emulation model is used when compiling for the FPGA emulator.
+After having created the library file, the function in the library can be called from the SYCL kernel, without the need to know the hardware design or implementation details on underlying functions in the library.
+
+Given a workable RTL module, one may need to apply some modifications in order to integrate it into oneAPI program.
+1. An RTL module must use a single Avalon® streaming input interface. Multiple input signals are allowed, but they must synchronize with a single ready/valid handshake.
+Your RTL library's interface must include a `clock` port, a `resetn` port, and a single Avalon® streaming interface input and single output port (that is: `ivalid`, `ovalid`, `iready`, `oready`). Your RTL module may have multiple input data signals, but only a single output.
+
+    ![](assets/rtl_library.svg)
+
+    > **Note**: The signal names must match the ones specified in the .xml file. An error occurs during library creation if a signal name is inconsistent.
+    > You may find full list of RTL support constraints in [Restrictions and Limitations in RTL Support](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/restrictions-and-limitations-in-rtl-support.html).
+
+2. The RTL library’s characteristics need to be specified. For example, this tutorial RTL library has specified the latency of the RTL component, that needs to be specified in object manifest file (.xml) under ATTRIBUTES. For other ATTRIBUTES-specific elements, refer to [Object Manifest File Syntax of an RTL Module](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/object-manifest-file-syntax-of-an-rtl-library.html) for additional information.
+
+    > **Note**: It is challenging to debug an RTL module that works correctly on its own but works incorrectly as part of a SYCL kernel. Double-check all parameters under the ATTRIBUTES element in the object manifest file (.xml).
+
 
 ### Generating a library
 
@@ -67,14 +101,20 @@ To create a library from  source code, use the following steps:
 
    Note that generating an RTL library requires that an `xml` file and a C++ emulation model be provided in addition to the Verilog source code. The RTL is used when compiling for the hardware whereas the emulation model is used when the oneAPI program is run on the FPGA emulator. Examine the tutorial source code and the comments in `use_library.cpp` for more details.
 
+   **Note**: When you use special datatypes (such as ac_int in this sample) in the emulation model, the compiler may warn about "incomplete type which could be incompatible with C". This warning can be disabled with the -Wno-return-type-c-linkage flag.
+
+   ```bash
+   warning: 'RtlDSPm27x27u' has C-linkage specified, but returns incomplete type 'MyInt54' (aka 'ac_int<54, false>') which could be incompatible with C [-Wreturn-type-c-linkage]
+
+
 2. `fpga_libtool` collects one or more objects into a SYCL library archive file. This command creates a single library archive file from one or more object files generated by `fpga_crossgen` in the previous step:
 
    ```bash
    # Linux
-   fpga_libtool lib_rtl.o --target sycl --create lib.a
+   fpga_libtool lib_rtl.o --target sycl --create lib_rtl.a
 
    # Windows
-   fpga_libtool lib_rtl.obj --target sycl --create lib.lib
+   fpga_libtool lib_rtl.obj --target sycl --create lib_rtl.lib
 
    ```
 
@@ -84,22 +124,21 @@ To use the generated library in your project, simply add the generated library a
 
 ```bash
 # Compile for FPGA emulator
-icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR
+icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library_emu.fpga -DFPGA_EMULATOR
 
 # Compile for FPGA Simulator
-icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
+icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
 
 # Compile for FPGA hardware
-icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
+icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
 ```
 
 Note that the library files (\*.a) must be included after all of the cpp files in the `icpx` command.
 
-## Building the `use_library` Tutorial
 
-> **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
-> Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
-> This practice ensures that your compiler, libraries, and tools are ready for development.
+## Build the `use_library` Sample
+
+>**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -114,141 +153,126 @@ Note that the library files (\*.a) must be included after all of the cpp files i
 
 ### On a Linux* System
 
-1. Generate the `Makefile` by running `cmake`.
+1. Change to the sample directory.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
-    ```bash
-    mkdir build
-    cd build
-    ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-    To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
-    ```
-    cmake ..
-    ```
-
-    > **Note**: You can change the default target by using the command:
-    >  ```
-    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-    >  ```
-    >
-    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-    >  ```
-    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-    >  ```
-    >
-    > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-
-      ```bash
+   1. Compile and run for emulation (fast compile time, targets emulates an FPGA device).
+      ```
       make fpga_emu
       ```
-
-   * Generate the optimization report:
-
-     ```bash
-     make report
-     ```
-
-   * Compile for FPGA Simulator
-
-     ```bash
-     make fpga_sim
-     ```
-
-   * Compile for FPGA hardware (longer compile time, targets FPGA device):
-
-     ```bash
-     make fpga
-     ```
+   2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      make report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+      ```
+      make fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, runs Intel® Quartus® Prime to get accurate area estimates).
+      ```
+      make fpga
+      ```
 
 ### On a Windows* System
 
-1. Generate the `Makefile` by running `cmake`.
+1. Change to the sample directory.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
+   ```
+   mkdir build
+   cd build
+   cmake -G "NMake Makefiles" ..
+   ```
+   > **Note**: You can change the default target by using the command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
-    ```
-    mkdir build
-    cd build
-    ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-    To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-    ```
-    > **Note**: You can change the default target by using the command:
-    >  ```
-    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-    >  ```
-    >
-    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-    >  ```
-    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-    >  ```
-    >
-    > You will only be able to run an executable on the FPGA if you specified a BSP.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
+      ```
+      nmake report
+      ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size).
+      ```
+      nmake fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, runs Intel® Quartus® Prime to get accurate area estimates).
+      ```
+      nmake fpga
+      ```
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+## Run the `use_library` Sample
 
-   - Compile for emulation (fast compile time, targets emulated FPGA device):
+### On Linux
 
-     ```
-     nmake fpga_emu
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   ./use_library.fpga_emu
+   ```
+2. Run the sample of the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
+   ```
 
-   - Generate the optimization report:
+### On Windows
 
-     ```
-     nmake report
-     ```
-
-   - Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
-
-     ```
-     nmake fpga_sim
-     ```
-
-   - Compile for FPGA hardware (longer compile time, targets FPGA device):
-
-     ```
-     nmake fpga
-     ```
-
-## Running the Sample
-
-1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-
-     ```bash
-     ./use_library.fpga_emu     (Linux)
-     use_library.fpga_emu.exe   (Windows)
-     ```
-
-2. Run the sample on the FPGA simulator device
-
-    * On Linux
-        ```bash
-        CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
-        ```
-    * On Windows
-        ```bash
-        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-        use_library.fpga_sim.exe
-        set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-        ```
-
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-
-     ```bash
-     ./use_library.fpga         (Linux)
-     use_library.fpga.exe       (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+   ```
+   use_library.fpga_emu.exe
+   ```
+2. Run the sample of the FPGA simulator device (the kernel executes on the CPU).
+   ```
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
+   use_library.fpga_sim.exe
+   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
+   ```
 
 ### Example of Output
 
 ```bash
 PASSED: result is correct!
 ```
+
+## Read the Reports
+
+Locate the `report.html` file in `use_library_report.prj` or `use_library.fpga_sim.prj`.
+
+Navigate to **Loop Analysis** (**Throughput Analysis > Loop Analysis**). In this viewer, you can find the latency of loops in the kernel. The latency of `KernelComputeRTL` with customised DSP should be lower than `KernelCompute` design.
+
+![](assets/loop_analysis_comparison.svg)
+
+Locate the `report.html` file in `use_library.fpga.prj` and `use_library.fpga.prj_1`.
+
+Navigate to **System Resource Utilization Summary** (**Summary > System Resource Utilization Summary**) and compare both reports.
+
+By default, compiler area estimation tools assume that the RTL module area is 0.
+Optionally, you may specifiy the FPGA resources that the RTL library use (for example, DSPS value="1") in object manifest file under RESOURCES attribute.
+Then, you may find the Compile Estimated: Kernel System used 1 DSP in this table.
+
+The following table shows comparison of the estimated and generated area usage for each design separately.
+
+![](assets/resource_comparison.svg)
 
 ## License
 

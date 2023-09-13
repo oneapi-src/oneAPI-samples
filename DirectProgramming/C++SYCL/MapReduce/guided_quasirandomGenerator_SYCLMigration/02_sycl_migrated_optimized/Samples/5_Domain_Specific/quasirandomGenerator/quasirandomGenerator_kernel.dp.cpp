@@ -33,11 +33,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <helper_cuda.h>
-using namespace sycl;
 #include "quasirandomGenerator_common.h"
-
+using namespace sycl;
 // Fast integer multiplication
-
 #define MUL(a, b) sycl::mul24((unsigned int)a, (unsigned int)b)
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +47,7 @@ static dpct::constant_memory<unsigned int, 2> c_Table(QRNG_DIMENSIONS,
 static void quasirandomGeneratorKernel(float *d_Output,
                                                   unsigned int seed,
                                                   unsigned int N,
-                                                  sycl::nd_item<3> item_ct1,
+                                                  const sycl::nd_item<3> &item_ct1,
                                                   dpct::accessor<unsigned int, dpct::constant, 2> c_Table) {
   unsigned int *dimBase = &c_Table[item_ct1.get_local_id(1)][0];
   unsigned int tid = MUL(item_ct1.get_local_range(2), item_ct1.get_group(2)) +
@@ -74,16 +72,16 @@ static void quasirandomGeneratorKernel(float *d_Output,
 // Table initialization routine
 extern "C" void initTableGPU(
     unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION],sycl::queue q_ct1) {
-  
-   q_ct1.memcpy(c_Table.get_ptr(), tableCPU,
-                   QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int)).wait();
+  checkCudaErrors(DPCT_CHECK_ERROR(
+          q_ct1.memcpy(c_Table.get_ptr(), tableCPU,
+                  QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int))
+          .wait()));
 }
 
 // Host-side interface
 extern "C" void quasirandomGeneratorGPU(float *d_Output, unsigned int seed,
-                                        unsigned int N,sycl::queue q_ct1) {
+                                        unsigned int N, sycl::queue q_ct1) {
   sycl::range<3> threads(1, QRNG_DIMENSIONS, 128);
- 
   q_ct1.submit([&](sycl::handler &cgh) {
     c_Table.init();
 
@@ -170,7 +168,7 @@ inline float MoroInvCNDgpu(unsigned int x) {
 ////////////////////////////////////////////////////////////////////////////////
 static void inverseCNDKernel(float *d_Output, unsigned int *d_Input,
                                         unsigned int pathN,
-                                        sycl::nd_item<3> item_ct1) {
+                                        const sycl::nd_item<3> &item_ct1) {
   unsigned int distance = ((unsigned int)-1) / (pathN + 1);
   unsigned int tid = MUL(item_ct1.get_local_range(2), item_ct1.get_group(2)) +
                      item_ct1.get_local_id(2);
@@ -195,7 +193,7 @@ static void inverseCNDKernel(float *d_Output, unsigned int *d_Input,
 }
 
 extern "C" void inverseCNDgpu(float *d_Output, unsigned int *d_Input,
-                              unsigned int N,sycl::queue q_ct1) {
+                              unsigned int N, sycl::queue q_ct1) {
   q_ct1.parallel_for(
       sycl::nd_range<3>(sycl::range<3>(1, 1, 128) * sycl::range<3>(1, 1, 128),
                         sycl::range<3>(1, 1, 128)),

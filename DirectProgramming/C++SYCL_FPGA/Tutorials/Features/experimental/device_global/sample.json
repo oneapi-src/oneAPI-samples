@@ -1,6 +1,6 @@
 {
   "guid": "92110788-F876-4009-89A5-D1589B588D20",
-  "name": "device_global",
+  "name": "Device Global",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the device_global feature",
   "toolchain": ["icpx"],

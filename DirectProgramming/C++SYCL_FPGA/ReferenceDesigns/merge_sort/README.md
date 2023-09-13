@@ -181,13 +181,14 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
 >**Note**: When running on the FPGA emulator, the *Execution time* and *Throughput* values do not reflect the design's actual hardware performance.
 
 ```
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Running sort 17 times for an input size of 16777216 using 8 4-way merge units
 Streaming data from device memory
-Execution time: 24.7522 ms
-Throughput: 646.408 Melements/s
+Execution time: 21.3643 ms
+Throughput: 748.914 Melements/s
 PASSED
 ```
->**Note**: The performance numbers above were achieved using the Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX); your results may vary.
+>**Note**: The performance numbers above were achieved using Terasic’s DE10-Agilex Development Board; your results may vary.
 
 ## License
 

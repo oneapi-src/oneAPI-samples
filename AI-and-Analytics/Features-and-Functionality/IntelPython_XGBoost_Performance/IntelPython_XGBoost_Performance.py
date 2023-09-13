@@ -169,7 +169,7 @@ else:
     df = pd.read_csv(filename)
     if not df.shape[0]==2:
         df2 = pd.DataFrame([[xgb_ver,xgb_total]], columns = ["XGBoost Version",  "Time in Sec"])
-        df = df.append(df2, ignore_index=True)
+        df = pd.concat([df, df2], ignore_index=True)
 
 
 # **Only run the following cells after running the demo in both environments.** This will generate the performance visualization.

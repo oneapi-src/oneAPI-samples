@@ -1,5 +1,5 @@
 {
-  "guid": "842EBEB9-B902-4706-8C08-02E4EB550FC1",
+  "guid": "009305E2-4EA9-4D30-B09F-4B578CE6DD54",
   "name": "convolutionSeparable",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
   "description": "This sample implements a separable convolution filter of a 2D signal with a gaussian kernel.",
@@ -14,6 +14,8 @@
                         "mkdir build",
                         "cd build",
                         "cmake ..",
+			"cmake -D INTEL_MAX_GPU=1 ..",
+			"cmake -D NVIDIA_GPU=1 ..",
                         "make",
                         "make run",
                         "make run_smo"

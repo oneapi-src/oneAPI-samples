@@ -6,6 +6,7 @@
   "toolchain": [ "ifort", "ifx" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
   "os": [ "linux", "windows" ],
   "builder": [ "make" ],
   "ciTests": {

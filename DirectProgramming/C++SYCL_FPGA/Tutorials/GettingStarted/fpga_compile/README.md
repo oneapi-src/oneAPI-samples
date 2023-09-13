@@ -66,9 +66,9 @@ Long compile times are detrimental to developer productivity. The Intel® oneAPI
 
 ### Multiarchitecture Binary versus IP Component
 
-In the FPGA multiarchitecture binary generation flow, you can generate an executable host application and accelerator for a PCIe FPGA board if you have a compatible board support package (BSP). Intel provides BSPs for the Intel® PAC with Intel Arria® 10 GX FPGA, and the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX). If you have a different board, check with your vendor to see if they supply a BSP.
+In the FPGA multiarchitecture binary generation flow, you can generate an executable host application and accelerator for a PCIe FPGA board if you have a compatible board support package (BSP).
 
-In the FPGA IP component generation flow, you can generate an IP component that you can import into an Intel® Quartus® Prime project. You can generate an IP by targeting your compilation to a supported Intel® FPGA device family or part number (for example, `Agilex 7` or `AGFA014R24B1E1V`) instead of a named board (for example, `intel_a10gx_pac:pac_a10`).
+In the FPGA IP component generation flow, you can generate an IP component that you can import into an Intel® Quartus® Prime project. You can generate an IP by targeting your compilation to a supported Intel® FPGA device family or part number (for example, `Agilex 7` or `AGFA014R24B1E1V`) instead of a named board.
 
 The FPGA IP component generation flow does not generate any FPGA accelerated executable, only RTL (Register Transfer Level) IP component files. The host application is treated only as a test bench that exercises and validates your IP component in emulation and simulation.
 
@@ -189,7 +189,7 @@ Through `-Xstarget`, you can target an explicit board, a device family, or an FP
 
 There are 4 parts to this tutorial located in the 3 sub-folders. Together, they demonstrate how you can migrate an algorithm from vanilla C++ code to SYCL for FPGA. Note that you may also choose to use a functor with buffers, or a function with USM.
 
-> **Note**: SYCL USM allocations, used in `part2` and `part3` of this tutorial, are only supported on FPGA boards that have a USM capable BSP (for example, the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
+> **Note**: SYCL USM allocations, used in `part2` and `part3` of this tutorial, are only supported on FPGA boards that have a USM capable BSP or when targeting an FPGA family/part number.
 
 #### Part 1: C++
 

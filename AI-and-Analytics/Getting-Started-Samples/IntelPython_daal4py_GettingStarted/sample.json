@@ -9,15 +9,17 @@
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
+    "linux": [
     {
-  		"env": ["source activate base"],
-  		"id": "idp_d4p_GS_py",
-  		"steps": [
-         "python IntelPython_daal4py_GettingStarted.py" 
-  		 ]
-  	}
-    ]
-},
-"expertise": "Getting Started"
+      "env": [
+        "source activate base",
+        "pip install -r requirements.txt"
+      ],
+      "id": "idp_d4p_GS_py",
+      "steps": [
+        "python IntelPython_daal4py_GettingStarted.py"
+      ]
+    }]
+  },
+  "expertise": "Getting Started"
 }

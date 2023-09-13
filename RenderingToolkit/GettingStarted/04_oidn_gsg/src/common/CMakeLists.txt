@@ -12,6 +12,15 @@ set(OIDN_ROOT ${ONEAPI_ROOT}/oidn/latest)
 set(OIDN_INCLUDE_DIR ${OIDN_ROOT}/include)
 
 add_library(common STATIC
+  ${OIDN_INCLUDE_DIR}/OpenImageDenoise/config.h
+  ${OIDN_INCLUDE_DIR}/OpenImageDenoise/oidn.h
+  ${OIDN_INCLUDE_DIR}/OpenImageDenoise/oidn.hpp
+  common.h
+  common.cpp
+  half.h
+  half.cpp
+  oidn_utils.h
+  oidn_utils.cpp
   platform.h
   platform.cpp
   timer.h
@@ -20,10 +29,5 @@ add_library(common STATIC
 target_include_directories(common
   PUBLIC
   ${OIDN_ROOT}
+  ${OIDN_GSG_SOURCE_DIR}/src
 )
-
-#target_link_libraries(common
-#  PUBLIC
-#    ${CMAKE_THREAD_LIBS_INIT}
-#    TBB
-#)
