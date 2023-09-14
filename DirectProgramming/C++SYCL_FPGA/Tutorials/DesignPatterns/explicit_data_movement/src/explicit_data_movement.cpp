@@ -82,10 +82,10 @@ double SubmitExplicitKernel(sycl::queue &q, std::vector<T> &in,
   // Allocate the device memory
   T *in_ptr = sycl::malloc_device<T>(
       size, q,
-      sycl::ext::intel::experimental::property::usm::buffer_location(1));
+      sycl::ext::intel::experimental::property::usm::buffer_location(0));
   T *out_ptr = sycl::malloc_device<T>(
       size, q,
-      sycl::ext::intel::experimental::property::usm::buffer_location(1));
+      sycl::ext::intel::experimental::property::usm::buffer_location(0));
 #else
   // When targeting an FPGA family/part, use USM host or shared allocations
   // since USM device allocations are not supported. Here we use USM shared
