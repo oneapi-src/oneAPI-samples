@@ -29,23 +29,21 @@
 // Global types
 ////////////////////////////////////////////////////////////////////////////////
 #include <sycl/sycl.hpp>
-//#include <dpct/dpct.hpp>
-#include <helper_cuda.h>
-#include <stdio.h>
+#include <dpct/dpct.hpp>
 #include <stdlib.h>
+#include <stdio.h>
 
-#include <oneapi/mkl.hpp>
-#include <oneapi/mkl/rng/device.hpp>
-using namespace sycl;
+#include <helper_cuda.h>
+#include <dpct/rng_utils.hpp>
+
 #include "MonteCarlo_common.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helper reduction template
 // Please see the "reduction" CUDA Sample for more information
 ////////////////////////////////////////////////////////////////////////////////
-#include <cmath>
-
 #include "MonteCarlo_reduction.dp.hpp"
+#include <cmath>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Internal GPU-side data structures
@@ -53,7 +51,7 @@ using namespace sycl;
 #define MAX_OPTIONS (1024 * 1024)
 
 // Preprocessed input option data
-typedef struct dpct_type_127056 {
+typedef struct dpct_type_164939 {
   real S;
   real X;
   real MuByT;
@@ -64,13 +62,13 @@ typedef struct dpct_type_127056 {
 // Overloaded shortcut payoff functions for different precision modes
 ////////////////////////////////////////////////////////////////////////////////
 inline float endCallValue(float S, float X, float r, float MuByT,
-                          float VBySqrtT) {
-  float callValue = S * sycl::exp(MuByT + VBySqrtT * r) - X;
+                                     float VBySqrtT) {
+  float callValue = S * sycl::native::exp(MuByT + VBySqrtT * r) - X;
   return (callValue > 0.0F) ? callValue : 0.0F;
 }
 
-inline double endCallValue(double S, double X, double r, double MuByT,
-                           double VBySqrtT) {
+inline double endCallValue(double S, double X, double r,
+                                      double MuByT, double VBySqrtT) {
   double callValue = S * sycl::exp(MuByT + VBySqrtT * r) - X;
   return (callValue > 0.0) ? callValue : 0.0;
 }
@@ -82,6 +80,7 @@ inline double endCallValue(double S, double X, double r, double MuByT,
 // per option. It is fastest when the number of thread blocks times the work per
 // block is high enough to keep the GPU busy.
 ////////////////////////////////////////////////////////////////////////////////
+
 static void MonteCarloOneBlockPerOption(
 
     oneapi::mkl::rng::device::philox4x32x10<1> *__restrict rngStates,
@@ -153,35 +152,42 @@ static void rngSetupStates(oneapi::mkl::rng::device::philox4x32x10<1> *rngState,
 // Host-side interface to GPU Monte Carlo
 ////////////////////////////////////////////////////////////////////////////////
 
-extern "C" void initMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
-  plan->d_OptionData = (void *)sycl::malloc_device(
-      sizeof(__TOptionData) * (plan->optionCount), *stream);
-
-  plan->d_CallValue = (void *)sycl::malloc_device(
-      sizeof(__TOptionValue) * (plan->optionCount), *stream);
-
-  plan->h_OptionData = (void *)sycl::malloc_host(
-      sizeof(__TOptionData) * (plan->optionCount), *stream);
+extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(
+                           sizeof(__TOptionData) * (plan->optionCount),
+                           dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(
+                           sizeof(__TOptionValue) * (plan->optionCount),
+                           dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      plan->h_OptionData =
+          (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount),
+                                    dpct::get_default_queue())));
   // Allocate internal device memory
-
-  plan->h_CallValue =
-      sycl::malloc_host<__TOptionValue>((plan->optionCount), *stream);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
+                           (plan->optionCount), dpct::get_default_queue())));
   // Allocate states for pseudo random number generators
-
-  plan->rngStates =
-      sycl::malloc_device<oneapi::mkl::rng::device::philox4x32x10<1>>(
-          plan->gridSize * THREAD_N, *stream);
-
-  stream
-      ->memset(plan->rngStates, 0,
-               plan->gridSize * THREAD_N *
-                   sizeof(oneapi::mkl::rng::device::philox4x32x10<1>))
-      .wait();
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      plan->rngStates = sycl::malloc_device<oneapi::mkl::rng::device::philox4x32x10<1>>(
+          plan->gridSize * THREAD_N, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memset(plan->rngStates, 0,
+                  /*
+                  DPCT1032:36: A different random number generator is used. You
+                  may need to adjust the code.
+                  */
+                  plan->gridSize * THREAD_N *
+                      sizeof(oneapi::mkl::rng::device::philox4x32x10<1>))
+          .wait()));
 
   // place each device pathN random numbers apart on the random number sequence
-  stream->submit([&](sycl::handler &cgh) {
+  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
     auto plan_rngStates_ct0 = plan->rngStates;
-    auto plan_device_ct1 = plan->device;
+    int plan_device_ct1 = plan->device;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
                                            sycl::range<3>(1, 1, THREAD_N),
@@ -195,7 +201,7 @@ extern "C" void initMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
 }
 
 // Compute statistics and deallocate internal device memory
-extern "C" void closeMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
+extern "C" void closeMonteCarloGPU(TOptionPlan *plan) {
   for (int i = 0; i < plan->optionCount; i++) {
     const double RT = plan->optionData[i].R * plan->optionData[i].T;
     const double sum = plan->h_CallValue[i].Expected;
@@ -211,19 +217,20 @@ extern "C" void closeMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
         (float)(exp(-RT) * 1.96 * stdDev / sqrt(pathN));
   }
 
-  sycl::free(plan->rngStates, *stream);
-
-  sycl::free(plan->h_CallValue, *stream);
-
-  sycl::free(plan->h_OptionData, *stream);
-
-  sycl::free(plan->d_CallValue, *stream);
-
-  sycl::free(plan->d_OptionData, *stream);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(plan->rngStates, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_CallValue, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_OptionData, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->d_CallValue, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->d_OptionData, dpct::get_default_queue())));
 }
 
 // Main computations
-extern "C" void MonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
+extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
   __TOptionValue *h_CallValue = plan->h_CallValue;
 
   if (plan->optionCount <= 0 || plan->optionCount > MAX_OPTIONS) {
@@ -245,21 +252,27 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
     h_OptionData[i].VBySqrtT = (real)VBySqrtT;
   }
 
-  stream->memcpy(plan->d_OptionData, h_OptionData,
-                 plan->optionCount * sizeof(__TOptionData));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream->memcpy(plan->d_OptionData, h_OptionData,
+                     plan->optionCount * sizeof(__TOptionData))));
 
   stream->submit([&](sycl::handler &cgh) {
+
     sycl::local_accessor<real, 1> s_SumCall_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
     sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
+    //dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
+    //    *plan_rngStates_ct0 = plan->rngStates;
     auto plan_rngStates_ct0 = plan->rngStates;
-    auto plan_d_OptionData_ct1 = (__TOptionData *)(plan->d_OptionData);
-    auto plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);
-    auto plan_pathN_ct3 = plan->pathN;
-    auto plan_optionCount_ct4 = plan->optionCount;
+    const __TOptionData *plan_d_OptionData_ct1 =
+        (__TOptionData *)(plan->d_OptionData);
+    __TOptionValue *plan_d_CallValue_ct2 =
+        (__TOptionValue *)(plan->d_CallValue);
+    int plan_pathN_ct3 = plan->pathN;
+    int plan_optionCount_ct4 = plan->optionCount;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
@@ -275,8 +288,9 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, sycl::queue *stream) {
   });
   getLastCudaError("MonteCarloOneBlockPerOption() execution failed\n");
 
-  stream->memcpy(h_CallValue, plan->d_CallValue,
-                 plan->optionCount * sizeof(__TOptionValue));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream->memcpy(h_CallValue, plan->d_CallValue,
+                     plan->optionCount * sizeof(__TOptionValue))));
 
   // cudaDeviceSynchronize();
 }

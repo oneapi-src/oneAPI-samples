@@ -1,5 +1,5 @@
 {
-  "guid": "86E424B8-11CA-4B44-B553-33C2C445306F",
+  "guid": "81E7955F-AD50-4223-9219-BB9DF13CE161",
   "name": "MontecarloMultiGPU",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/MapReduce"],
   "description": "Evaluates fair call price for a given set of European Options using the MonteCarlo approach",
@@ -14,9 +14,13 @@
 			"mkdir build",
       		        "cd build",
            		"cmake ..",
+			"cmake -D INTEL_MAX_GPU=1 ..",
+			"cmake -D NVIDIA_GPU=1 ..",
            		"make",
 			"make run_sm_cpu",
-			"make run_sm_gpu"
+			"make run_sm_gpu",
+			"make run_sm_gpu_opencl"
+			"make run_sm_gpu_cuda"
 		 ]
 	}]
 
