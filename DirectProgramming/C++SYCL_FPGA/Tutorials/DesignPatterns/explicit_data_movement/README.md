@@ -82,7 +82,7 @@ There are three types of such allocations:
 - shared allocations (through the use of `malloc_shared`). The memory can live on the host or on the FPGA and may be moved at runtime between the host and device depending on the memory access pattern.
 
 SYCL USM allocations enable the use of raw *C-style* pointers in SYCL. 
-Copying data to or from a USM pointer must be done explicitly by the programmer, typically using the SYCL `memcpy` function. 
+When copying data to or from the FPGA DDR, the data transfer must be done explicitly by the programmer, typically using the SYCL `memcpy` function. 
 Additionally, synchronization between kernels accessing the same device pointers must be expressed explicitly by the programmer using either the `wait` function of a SYCL `event` or the `depends_on` signal between events.
 
 In this tutorial, the `SubmitImplicitKernel` function demonstrates the basic SYCL buffer model, while the `SubmitExplicitKernel` function demonstrates how you may use these USM device allocations (in full stack flow) or USM host allocations (in IP Authoring flow) to perform the same task and manually manage the movement of data.
