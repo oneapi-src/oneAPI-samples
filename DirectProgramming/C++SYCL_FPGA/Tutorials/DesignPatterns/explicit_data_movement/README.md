@@ -71,7 +71,7 @@ SYCL provides two methods for managing the movement of data between host and dev
 - **Implicit data movement**: Copying data to and from the FPGA Device Memory is not controlled by the code author but rather by a parallel runtime. The parallel runtime is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
 - **Explicit data movement**: Copying data to and from the FPGA Device Memory is explicitly handled by the code author in the source code. The code author is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
 
-Most of the other code sample tutorials in the [FPGA Tutorials](/DirectProgramming/C++SYCL_FPGA/Tutorials) in the one-API-samples GitHub repository use implicit data movement, which is achieved through the `buffer` and `accessor` SYCL constructs. This tutorial demonstrates an alternative coding style using explicit data movement, which is achieved through USM device allocations.
+Most of the other code sample tutorials in the [FPGA Tutorials](/DirectProgramming/C++SYCL_FPGA/Tutorials) in the oneAPI-samples GitHub repository use implicit data movement, which is achieved through the `buffer` and `accessor` SYCL constructs. This tutorial demonstrates an alternative coding style using explicit data movement, which is achieved through USM device allocations.
 
 ### SYCL USM Device Allocations
 
