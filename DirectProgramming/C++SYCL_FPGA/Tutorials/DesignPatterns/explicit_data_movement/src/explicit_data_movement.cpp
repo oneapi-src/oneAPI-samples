@@ -9,11 +9,6 @@
 #include <sycl/sycl.hpp>
 #include <type_traits>
 
-using namespace sycl;
-using namespace std::chrono;
-
-using malloc_bl = ext::intel::experimental::property::usm::buffer_location;
-
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class ImplicitKernel;
@@ -24,18 +19,18 @@ class ExplicitKernel;
 // through SYCL buffers and accessors.
 //
 template <typename T>
-double SubmitImplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
-                            size_t size) {
+double SubmitImplicitKernel(sycl::queue &q, std::vector<T> &in,
+                            std::vector<T> &out, size_t size) {
   // start the timer
-  auto start = high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now();
 
   {
     // set up the input and output buffers
-    buffer in_buf(in);
-    buffer out_buf(out);
+    sycl::buffer in_buf(in);
+    sycl::buffer out_buf(out);
 
     // launch the computation kernel
-    auto kernel_event = q.submit([&](handler &h) {
+    auto kernel_event = q.submit([&](sycl::handler &h) {
       // When targeting an FPGA family/part, the compiler infers memory
       // interfaces based on the unique buffer_locations specified on kernel
       // arguments whereas when a BSP is specified to the compiler, the
@@ -44,12 +39,13 @@ double SubmitImplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
       // whereas the pointers from ExplicitKernel specified to be in
       // buffer_location 1.
       sycl::ext::oneapi::accessor_property_list location_of_buffer{
-          ext::intel::buffer_location<0>};
-      accessor in_a(in_buf, h, read_only, location_of_buffer);
+          sycl::ext::intel::buffer_location<0>};
+      sycl::accessor in_a(in_buf, h, sycl::read_only, location_of_buffer);
 
       sycl::ext::oneapi::accessor_property_list location_of_buffer_no_init{
-          no_init, ext::intel::buffer_location<0>};
-      accessor out_a(out_buf, h, write_only, location_of_buffer_no_init);
+          sycl::no_init, sycl::ext::intel::buffer_location<0>};
+      sycl::accessor out_a(out_buf, h, sycl::write_only,
+                           location_of_buffer_no_init);
 
       h.single_task<ImplicitKernel>([=]() [[intel::kernel_args_restrict]] {
         for (size_t i = 0; i < size; i++) {
@@ -67,8 +63,8 @@ double SubmitImplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
   // and the data has been transferred back to the host.
 
   // stop the timer
-  auto end = high_resolution_clock::now();
-  duration<double, std::milli> diff = end - start;
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> diff = end - start;
 
   return diff.count();
 }
@@ -78,20 +74,28 @@ double SubmitImplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
 // through explicit USM.
 //
 template <typename T>
-double SubmitExplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
-                            size_t size) {
+double SubmitExplicitKernel(sycl::queue &q, std::vector<T> &in,
+                            std::vector<T> &out, size_t size) {
 #if defined(IS_BSP)
   // USM device allocations are more commonly supported by FPGA boards than
   // other types of USM allocations like host and shared allocations.
   // Allocate the device memory
-  T *in_ptr = malloc_device<T>(size, q, malloc_bl(1));
-  T *out_ptr = malloc_device<T>(size, q, malloc_bl(1));
+  T *in_ptr = sycl::malloc_device<T>(
+      size, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(1));
+  T *out_ptr = sycl::malloc_device<T>(
+      size, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(1));
 #else
   // When targeting an FPGA family/part, use USM host or shared allocations
   // since USM device allocations are not supported. Here we use USM shared
   // allocation.
-  T *in_ptr = malloc_shared<T>(size, q, malloc_bl(1));
-  T *out_ptr = malloc_shared<T>(size, q, malloc_bl(1));
+  T *in_ptr = sycl::malloc_host<T>(
+      size, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(1));
+  T *out_ptr = sycl::malloc_host<T>(
+      size, q,
+      sycl::ext::intel::experimental::property::usm::buffer_location(1));
 #endif
 
   // ensure we successfully allocated the device memory
@@ -105,7 +109,7 @@ double SubmitExplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
   }
 
   // start the timer
-  auto start = high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now();
 
   // copy host input data to the device's memory
   auto copy_host_to_device_event =
@@ -119,16 +123,16 @@ double SubmitExplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
   // Here, we use annotated_arg to specify buffer_location on the USM pointer
   // kernel argument to allow the compiler to infer an interface for
   // buffer_location 1
-  ext::oneapi::experimental::annotated_arg in_ptr_d(
-      in_ptr, ext::oneapi::experimental::properties{
-                  ext::intel::experimental::buffer_location<1>});
-  ext::oneapi::experimental::annotated_arg out_ptr_d(
-      out_ptr, ext::oneapi::experimental::properties{
-                   ext::intel::experimental::buffer_location<1>});
+  sycl::ext::oneapi::experimental::annotated_arg in_ptr_d(
+      in_ptr, sycl::ext::oneapi::experimental::properties{
+                  sycl::ext::intel::experimental::buffer_location<1>});
+  sycl::ext::oneapi::experimental::annotated_arg out_ptr_d(
+      out_ptr, sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::buffer_location<1>});
 #endif
 
   // launch the computation kernel
-  auto kernel_event = q.submit([&](handler &h) {
+  auto kernel_event = q.submit([&](sycl::handler &h) {
     // this kernel must wait until the data is copied from the host's to
     // the device's memory
     h.depends_on(copy_host_to_device_event);
@@ -148,7 +152,7 @@ double SubmitExplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
   });
 
   // copy output data back from device to host
-  auto copy_device_to_host_event = q.submit([&](handler &h) {
+  auto copy_device_to_host_event = q.submit([&](sycl::handler &h) {
     // we cannot copy the output data from the device's to the host's memory
     // until the computation kernel has finished
     h.depends_on(kernel_event);
@@ -159,8 +163,8 @@ double SubmitExplicitKernel(queue &q, std::vector<T> &in, std::vector<T> &out,
   copy_device_to_host_event.wait();
 
   // stop the timer
-  auto end = high_resolution_clock::now();
-  duration<double, std::milli> diff = end - start;
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> diff = end - start;
 
   // free the device memory
   // note that these are calls to sycl::free()
@@ -207,19 +211,20 @@ int main(int argc, char *argv[]) {
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else // #if FPGA_EMULATOR
+#else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
     // queue properties to enable profiling
-    auto prop_list = property_list{property::queue::enable_profiling()};
+    auto prop_list =
+        sycl::property_list{sycl::property::queue::enable_profiling()};
 
     // create the device queue
-    queue q(selector, prop_list);
+    sycl::queue q(selector, prop_list);
 
     // make sure the device supports USM device allocations
     auto device = q.get_device();
-    if (!device.get_info<info::device::usm_device_allocations>()) {
+    if (!device.get_info<sycl::info::device::usm_device_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM device"
                 << " allocations\n";
       return 1;
@@ -307,7 +312,7 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-  } catch (exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
@@ -323,4 +328,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-

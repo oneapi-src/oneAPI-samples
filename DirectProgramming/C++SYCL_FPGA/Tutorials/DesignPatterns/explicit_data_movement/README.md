@@ -56,36 +56,46 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Implicit and Explicit Data Movement
 
-A typical SYCL design copies input data from the Host Memory to the FPGA device memory. To do this, the data is sent to the FPGA board over PCIe. Once all the data is copied to the FPGA Device Memory, the FPGA kernel is run and produces output that is also stored in Device Memory. Finally, the output data is transferred from the FPGA Device Memory back to the CPU Host Memory over PCIe. This model is shown in the figure below.
+A typical SYCL design copies input data from the Host DDR to the FPGA DDR. To do this, the data is sent to the FPGA board over PCIe. Once all the data is copied to the FPGA DDR, the FPGA kernel is run and produces output that is also stored in the FPGA DDR. Finally, the output data is transferred from the FPGA DDR back to the host DDR over PCIe. This model is shown in the figure below.
 
 ```
-|-------------|                               |---------------|
-|             |   |-------| PCIe |--------|   |               |
-| Host Memory |<=>|  CPU  |<====>|  FPGA  |<=>| Device Memory |
-|             |   |-------|      |--------|   |               |
-|-------------|                               |---------------|
+|------------|                               |----------|
+|            |   |-------| PCIe |--------|   |          |
+|  Host DDR  |<=>|  CPU  |<====>|  FPGA  |<=>| FPGA DDR |
+|            |   |-------|      |--------|   |          |
+|------------|                               |----------|
 ```
 
 SYCL provides two methods for managing the movement of data between host and device:
 
-- **Implicit data movement**: Copying data to and from the FPGA Device Memory is not controlled by the code author but rather by a parallel runtime. The parallel runtime is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
-- **Explicit data movement**: Copying data to and from the FPGA Device Memory is explicitly handled by the code author in the source code. The code author is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
+- **Implicit data movement**: Copying data to and from the FPGA DDR is not controlled by the code author but rather by a parallel runtime. The parallel runtime is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
+- **Explicit data movement**: Copying data to and from the FPGA DDR is explicitly handled by the code author in the source code. The code author is responsible to ensure data is correctly transferred before being used and that kernels accessing the same data are synchronized appropriately.
 
-Most of the other code sample tutorials in the [FPGA Tutorials](/DirectProgramming/C++SYCL_FPGA/Tutorials) in the oneAPI-samples GitHub repository use implicit data movement, which is achieved through the `buffer` and `accessor` SYCL constructs. This tutorial demonstrates an alternative coding style using explicit data movement, which is achieved through USM device allocations.
+Most of the other code sample tutorials in the [FPGA Tutorials](/DirectProgramming/C++SYCL_FPGA/Tutorials) in the oneAPI-samples GitHub repository use implicit data movement, which is achieved through the `buffer` and `accessor` SYCL constructs. This tutorial demonstrates an alternative coding style using explicit data movement, which is achieved through USM allocations.
 
-### SYCL USM Device Allocations
+### SYCL USM Allocations
 
-SYCL USM device allocations enable the use of raw *C-style* pointers in SYCL, called *device pointers*. Allocating space in the FPGA Device Memory for device pointers is done explicitly using the `malloc_device` function. Copying data to or from a device pointer must be done explicitly by the programmer, typically using the SYCL `memcpy` function. Additionally, synchronization between kernels accessing the same device pointers must be expressed explicitly by the programmer using either the `wait` function of a SYCL `event` or the `depends_on` signal between events.
+SYCL USM allocations allows users to allocate memory directly accessible by the FPGA.
+There are three types of such allocations:
+- device allocations (through the use of `malloc_device`). This type of allocation matches the example given above
+- host allocations (through the use of `malloc_host`). The pointer given to the FPGA actually lives in the host DDR, but the BSP implements the necessary functionalities to be able to read directly in this memory.
+- shared allocations (through the use of `malloc_shared`). The memory can live on the host or on the FPGA and may be moved at runtime between the host and device depending on the memory access pattern.
 
-In this tutorial, the `SubmitImplicitKernel` function demonstrates the basic SYCL buffer model, while the `SubmitExplicitKernel` function demonstrates how you may use these USM device allocations to perform the same task and manually manage the movement of data.
+SYCL USM allocations enable the use of raw *C-style* pointers in SYCL. 
+Copying data to or from a USM pointer must be done explicitly by the programmer, typically using the SYCL `memcpy` function. 
+Additionally, synchronization between kernels accessing the same device pointers must be expressed explicitly by the programmer using either the `wait` function of a SYCL `event` or the `depends_on` signal between events.
+
+In this tutorial, the `SubmitImplicitKernel` function demonstrates the basic SYCL buffer model, while the `SubmitExplicitKernel` function demonstrates how you may use these USM device allocations (in full stack flow) or USM host allocations (in IP Authoring flow) to perform the same task and manually manage the movement of data.
 
 ### Deciding Which Style to Use
 
-The main advantage of explicit data movement is that it gives you full control over when data is transferred between different memories. In some cases, we can improve our design's overall performance by overlapping data movement and computation, which can be done with more fine-grained control using USM device allocations. The main disadvantage of explicit data movement is that specifying all data movements can be tedious and error prone.
+The main advantage of explicit data movement is that it gives you full control over when data is transferred between different memories. In some cases, one can improve a design's overall performance by overlapping data movement and computation, which can be done with more fine-grained control using USM allocations. The main disadvantage of explicit data movement is that specifying all data movements can be tedious and error prone.
 
-Choosing a data movement strategy largely depends on the specific application and personal preference. However, when starting a new design, it is typically easier to begin by using implicit data movement since all of the data movement is handled for you, allowing you to focus on expressing and validating the computation. Once the design is validated, you can profile your application. If you determine that there is still performance on the table, it may be worthwhile switching to explicit data movement.
+Choosing a data movement strategy largely depends on the specific application and personal preference. However, when starting a new design, it is typically easier to begin by using implicit data movement since all of the data movement is handled automatically, allowing the user to focus on expressing and validating the computation. Once the design is validated, one can:
+- profile the application in the full stack flow. If there is still performance on the table, it may be worthwhile switching to explicit data movement.
+- customize the IP interface in the IP authoring flow. One can annotate these raw pointers to direct the compiler into implementing different protocols. An overview of the different interfaces can be found in the [component_interfaces_comparison](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) sample.
 
-Alternatively, there is a hybrid approach that uses some implicit data movement and some explicit data movement. This technique, demonstrated in the **Double Buffering** (double_buffering) and  **N-Way Buffering** (n_way_buffering) tutorials, uses implicit data movement for some buffers where the control does not affect performance, and explicit data movement for buffers whose movement has a substantial effect on performance. In this hybrid approach, we do **not** use device allocations but rather specific `buffer` API calls (e.g., `update_host`) to trigger the movement of data.
+Alternatively, in the full stack flow, there is a hybrid approach that uses some implicit data movement and some explicit data movement. This technique, demonstrated in the **Double Buffering** (double_buffering) and  **N-Way Buffering** (n_way_buffering) tutorials, uses implicit data movement for some buffers where the control does not affect performance, and explicit data movement for buffers whose movement has a substantial effect on performance. In this hybrid approach, we do **not** use device allocations but rather specific `buffer` API calls (e.g., `update_host`) to trigger the movement of data.
 
 ## Build the `Explicit Data Movement` Sample
 
