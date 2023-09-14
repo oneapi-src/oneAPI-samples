@@ -9,6 +9,8 @@
 #include <sycl/sycl.hpp>
 #include <type_traits>
 
+#include "exception_handler.hpp"
+
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class ImplicitKernel;
@@ -220,7 +222,7 @@ int main(int argc, char *argv[]) {
         sycl::property_list{sycl::property::queue::enable_profiling()};
 
     // create the device queue
-    sycl::queue q(selector, prop_list);
+    sycl::queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // make sure the device supports USM device allocations
     auto device = q.get_device();
