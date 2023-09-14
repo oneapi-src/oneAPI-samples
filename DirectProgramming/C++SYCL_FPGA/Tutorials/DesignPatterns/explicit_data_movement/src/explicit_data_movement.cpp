@@ -36,8 +36,8 @@ double SubmitImplicitKernel(sycl::queue &q, std::vector<T> &in,
       // arguments whereas when a BSP is specified to the compiler, the
       // buffer_location is used to select from the available memory interfaces
       // supported by the BSP. Here, we specify 0 on the accessor arguments
-      // whereas the pointers from ExplicitKernel specified to be in
-      // buffer_location 1.
+      // whereas the pointer arguments in ExplicitKernel are specified to be in
+      // buffer_location 1, when targeting an FPGA family/part.
       sycl::ext::oneapi::accessor_property_list location_of_buffer{
           sycl::ext::intel::buffer_location<0>};
       sycl::accessor in_a(in_buf, h, sycl::read_only, location_of_buffer);
