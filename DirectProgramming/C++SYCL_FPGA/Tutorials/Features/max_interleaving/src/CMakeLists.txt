@@ -19,6 +19,21 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+# Choose the random seed for the hardware compile
+# e.g. cmake .. -DSEED=7
+if(NOT DEFINED SEED)
+    # Seed 1 fails for A10 on Windows
+    set(SEED 2) 
+else()
+    message(STATUS "Seed explicitly set to ${SEED}")
+endif()
+
+if(IGNORE_DEFAULT_SEED)
+    set(SEED_FLAG "")
+else()
+    set(SEED_FLAG "-Xsseed=${SEED}")
+endif()
+
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
@@ -28,7 +43,7 @@ set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR -Wno-unused-label")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE -Wno-unused-label")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA simulator compilation and backend compilation
 
 
