@@ -456,7 +456,7 @@ Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStream
 
 In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **FunctorStreamingPipelinedIP** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **FunctorStreamingPipelinedIP** and **LambdaStreamingIP**.
 
-> **Note**: Kernel invocation interfaces `ready_in` and `ready_out` are show as `stall_in` and `stall_out` respectively in 2024.0.
+> **Note**: Kernel invocation interfaces `ready_in` and `ready_out` are show as `stall_in` and `stall_out` respectively.
 > **Note**: The report of **FunctorStreamingRmDownstreamStallIP** shows the internals of the kernel. Thus, there is a `stall_in`, but tied to ground and not sees at the device image boundary.
 
 ## Run the `Invocation Interfaces` Sample
