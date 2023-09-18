@@ -27,11 +27,6 @@ edge detection loops, regardless of whether they are run on the CPU or offloaded
 ## Key Implementation Details
 [Using Fortran DO CONCURRENT for Accelerator Offload](https://www.intel.com/content/www/us/en/developer/articles/technical/using-fortran-do-current-for-accelerator-offload.html) provides more detailed descriptions of each example code, and discusses the relative merits of each approach.
 
-## License
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
@@ -60,9 +55,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > Linux User: . ~/intel/oneapi/setvars.sh
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
-
-### Running Samples on the DevCloud
-When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### On a Linux System
 Run `make` to build and run the sample. Six programs are generated:
@@ -119,3 +111,8 @@ OMP_TARGET_OFFLOAD=MANDATORY ./img_seg_omp_gpu -n 12 -o 2 -i 1 -d
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+## License
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
