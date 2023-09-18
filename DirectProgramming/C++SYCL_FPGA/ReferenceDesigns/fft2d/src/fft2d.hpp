@@ -512,10 +512,10 @@ struct Transpose {
   // The data width is equal to width of the DDR burst performed by the function
   sycl::ext::oneapi::experimental::annotated_arg<
       ac_complex<T> *, decltype(sycl::ext::oneapi::experimental::properties{
-                           sycl::ext::oneapi::experimental::buffer_location<1>,
-                           sycl::ext::oneapi::experimental::dwidth<
+                           sycl::ext::intel::experimental::buffer_location<1>,
+                           sycl::ext::intel::experimental::dwidth<
                                sizeof(ac_complex<T>) * (1 << log_points)>,
-                           sycl::ext::oneapi::experimental::latency<0>})>
+                           sycl::ext::intel::experimental::latency<0>})>
       dest;
 #endif
 
