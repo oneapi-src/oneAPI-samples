@@ -19,7 +19,7 @@
            		"make",
 			"make run_sm_cpu",
 			"make run_sm_gpu",
-			"make run_sm_gpu_opencl"
+			"make run_sm_gpu_opencl",`
 			"make run_sm_gpu_cuda"
 		 ]
 	}]
