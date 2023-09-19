@@ -302,21 +302,21 @@ struct FunctorStreamingPipelinedIP {
 These four functor kernels are invoked in the same way in the host code, by constructing the struct and submitting `single_task` into the SYCL `queue`.
 
 ```c++
-q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count}).wait();
+q.single_task<FunctorRegisterMap>(FunctorRegisterMapIP{input, functor_register_map_out, count}).wait();
 ```
 
 ```c++
-q.single_task(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
+q.single_task<FunctorStream>(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
 ```
 
 ```c++
-q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out,
+q.single_task<StreamRmStall>(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out,
 	count}).wait();
 ```
 
 ```c++
 for (int i = 0; i < count; i++) {
-	q.single_task(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
+	q.single_task<StreamPipelined>(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
 }
 q.wait();
 ```
@@ -325,7 +325,7 @@ Kernel properties argument can be passed into the SYCL `queue` `single_task` to 
 
 ```c++
 void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output, MyUInt5 n) {
-  q.single_task<LambdaRegisterMapIP>([=] {
+  q.single_task<LambdaRegisterMap>([=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }
@@ -338,7 +338,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output, My
   sycl::ext::oneapi::experimental::properties kernel_properties {
     sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
   };
-  q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
+  q.single_task<LambdaStream>(kernel_properties, [=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }
@@ -448,16 +448,17 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output, My
 
 2. Open the **Views** menu and select **System Viewer**.
 
-In the left-hand pane, select **FunctorRegisterMapIP** or **LambdaRegisterMapIP** under the System hierarchy for the kernels with a register-mapped invocation interface.
+In the left-hand pane, select **FunctorRegisterMap** or **LambdaRegisterMap** under the System hierarchy for the kernels with a register-mapped invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMapIP**, and in a register map interface in the **LambdaRegisterMapIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMap**, and in a register map interface in the **LambdaRegisterMap**.
 
-Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStreamingRmDownstreamStallIP**, **FunctorStreamingPipelinedIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
+Similarly, in the left-hand pane, select **FunctorStream**, **StreamRmStall**, **StreamPipelined** or **LambdaStream** under the System hierarchy for the kernels with a streaming invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **FunctorStreamingPipelinedIP** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **FunctorStreamingPipelinedIP** and **LambdaStreamingIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **StreamPipelined** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStream** and **StreamRmStall**, and in a streaming interface in the **StreamPipelined** and **LambdaStream**.
 
 > **Note**: Kernel invocation interfaces `ready_in` and `ready_out` are show as `stall_in` and `stall_out` respectively.
-> **Note**: The report of **FunctorStreamingRmDownstreamStallIP** shows the internals of the kernel. Thus, there is a `stall_in`, but tied to ground and not sees at the device image boundary.
+> 
+> **Note**: The report of **StreamRmStall** shows the internals of the kernel. Thus, there is a `stall_in`, but tied to ground and not sees at the device image boundary.
 
 ## Run the `Invocation Interfaces` Sample
 
