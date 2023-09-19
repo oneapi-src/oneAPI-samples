@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-
+// This comment's purpose is only to highlight the change in file in GitHub
 #ifndef __BLACK_SCHOLES_HPP__
 #define __BLACK_SCHOLES_HPP__
 

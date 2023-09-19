@@ -13,7 +13,7 @@
     "ciTests": {
        "linux": [
          {
-           "id": "openmp_reduction",
+           "id": "openmp_reduction_test",
            "steps": [
  			   "mkdir build",
  			   "cd build",

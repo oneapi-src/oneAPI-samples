@@ -11,7 +11,7 @@
 *       for DPC++ USM-based interface of random number generators
 *
 *******************************************************************************/
-
+// This comment's purpose is only to highlight the change in file in GitHub
 #include <iostream>
 
 #include <sycl/sycl.hpp>
