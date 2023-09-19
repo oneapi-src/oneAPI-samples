@@ -14,13 +14,10 @@
 			"mkdir build",
       		        "cd build",
            		"cmake ..",
-			"cmake -D INTEL_MAX_GPU=1 ..",
-			"cmake -D NVIDIA_GPU=1 ..",
            		"make",
 			"make run_sm_cpu",
 			"make run_sm_gpu",
-			"make run_sm_gpu_opencl",`
-			"make run_sm_gpu_cuda"
+			"make run_sm_gpu_opencl"
 		 ]
 	}]
 
