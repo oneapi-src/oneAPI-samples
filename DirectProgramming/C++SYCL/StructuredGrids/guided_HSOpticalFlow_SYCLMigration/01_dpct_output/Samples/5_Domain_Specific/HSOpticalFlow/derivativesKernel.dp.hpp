@@ -119,7 +119,7 @@ static void ComputeDerivatives(const float *I0, const float *I1, int w, int h,
   texRes.set_data_type(dpct::image_data_type::pitch);
   texRes.set_data_ptr((void *)I0);
   /*
-  DPCT1059:13: SYCL only supports 4-channel image format. Adjust the code.
+  DPCT1059:10: SYCL only supports 4-channel image format. Adjust the code.
   */
   texRes.set_channel(dpct::image_channel::create<float>());
   texRes.set_x(w);
@@ -133,35 +133,27 @@ static void ComputeDerivatives(const float *I0, const float *I1, int w, int h,
                sycl::filtering_mode::linear,
                sycl::coordinate_normalization_mode::normalized);
   /*
-  DPCT1007:14: Migration of cudaTextureDesc::readMode is not supported.
+  DPCT1007:11: Migration of cudaTextureDesc::readMode is not supported.
   */
   texDescr.readMode = cudaReadModeElementType;
 
-  /*
-  DPCT1003:15: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (texSource = dpct::create_image_wrapper(texRes, texDescr), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      texSource = dpct::create_image_wrapper(texRes, texDescr)));
   memset(&texRes, 0, sizeof(dpct::image_data));
   texRes.set_data_type(dpct::image_data_type::pitch);
   texRes.set_data_ptr((void *)I1);
   /*
-  DPCT1059:16: SYCL only supports 4-channel image format. Adjust the code.
+  DPCT1059:12: SYCL only supports 4-channel image format. Adjust the code.
   */
   texRes.set_channel(dpct::image_channel::create<float>());
   texRes.set_x(w);
   texRes.set_y(h);
   texRes.set_pitch(s * sizeof(float));
-  /*
-  DPCT1003:17: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (texTarget = dpct::create_image_wrapper(texRes, texDescr), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      texTarget = dpct::create_image_wrapper(texRes, texDescr)));
 
   /*
-  DPCT1049:12: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */

@@ -60,7 +60,7 @@ static void Add(const float *op1, const float *op2, int count, float *sum) {
   sycl::range<3> blocks(1, 1, iDivUp(count, threads[2]));
 
   /*
-  DPCT1049:20: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */

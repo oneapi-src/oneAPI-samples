@@ -61,7 +61,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-*Notice: SYCL USM host allocations, used in this tutorial, are only supported on FPGA boards that have a USM capable BSP (e.g. the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: intel_s10sx_pac:pac_s10_usm) or when targeting an FPGA family/part number.
+*Notice: SYCL USM host allocations, used in this tutorial, are only supported on FPGA boards that have a USM capable BSP or when targeting an FPGA family/part number.
 
 
 ## Key Implementation Details
@@ -253,48 +253,6 @@ This sample demonstrates the following concepts:
     Average latency with API: 5.0432 ms
     Average processing time with API: 76.0256 ms
     Average throughput with API: 68.9620 MB/s
-
-    PASSED
-```
-
-### Example Output on an Intel® PAC D5005 (with Intel Stratix® 10 SX)
-
->**Note**: In the performance results shown below the FPGA kernel is **not** the bottleneck of the full system. Instead, the **Producer**/**Consumer** running in parallel are the bottlenecks. (See the [Roofline Analysis](#roofline-analysis) section below for more information.) The full design achieves ~87% of the maximum throughput, as measured by the roofline analysis.
-
-```
-    Repetitions:      200
-    Buffers:          2
-    Buffer Count:     524288
-    Iterations:       4
-    Total Threads:    12
-
-    Running the roofline analysis
-    Producer (6 threads)
-            Time:       2.1712 ms
-            Throughput: 15453.9737 MB/s
-    Consumer (6 threads)
-            Time:       2.1064 ms
-            Throughput: 15929.9736 MB/s
-    Producer & Consumer (6 threads, each)
-            Time:       4.2813 ms
-            Throughput: 7802.4714 MB/s
-    Kernel
-            Time:       3.2528 ms
-            Throughput: 10315.6158 MB/s
-
-    Maximum Design Throughput: 7802.4714 MB/s
-    The FPGA kernel does not limit the performance of the design
-    Done the roofline analysis
-
-    Running the full design without API
-    Average latency without API: 4.8865 ms
-    Average processing time without API: 979.9290 ms
-    Average throughput without API: 6829.5611 MB/s
-
-    Running the full design with API
-    Average latency with API: 3.3371 ms
-    Average processing time with API: 1053.3818 ms
-    Average throughput with API: 6370.8013 MB/s
 
     PASSED
 ```

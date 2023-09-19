@@ -28,6 +28,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+set(SEED "-Xsseed=2")
+
+if (IGNORE_DEFAULT_SEED)
+  set(SEED "")
+endif()
+
+message(STATUS "SEED=${SEED}")
+
 if ((IS_BSP STREQUAL "1"))
     set(CLOCK_FLAG "")
 else()
@@ -42,8 +50,8 @@ set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR ${CLOCK_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${CLOCK_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${CLOCK_FLAG} ${SEED} -fsycl-device-code-split=per_kernel")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG} -fsycl-device-code-split=per_kernel")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

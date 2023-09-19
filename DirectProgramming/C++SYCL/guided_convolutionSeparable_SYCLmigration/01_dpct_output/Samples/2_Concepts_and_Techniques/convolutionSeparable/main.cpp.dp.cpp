@@ -95,38 +95,21 @@ int main(int argc, char **argv) {
   }
 
   printf("Allocating and initializing CUDA arrays...\n");
-  /*
-  DPCT1003:24: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((d_Input = sycl::malloc_device<float>(
-                       imageW * imageH, dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((d_Output = sycl::malloc_device<float>(
-                       imageW * imageH, dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((d_Buffer = sycl::malloc_device<float>(
-                       imageW * imageH, dpct::get_default_queue()),
-                   0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_Input = sycl::malloc_device<float>(
+                           imageW * imageH, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
+                           imageW * imageH, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_Buffer = sycl::malloc_device<float>(
+                           imageW * imageH, dpct::get_default_queue())));
 
   setConvolutionKernel(h_Kernel);
-  /*
-  DPCT1003:27: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memcpy(d_Input, h_Input, imageW * imageH * sizeof(float))
-           .wait(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memcpy(d_Input, h_Input, imageW * imageH * sizeof(float))
+          .wait()));
 
   printf("Running GPU convolution (%u identical iterations)...\n\n",
          iterations);
@@ -134,11 +117,8 @@ int main(int argc, char **argv) {
   for (int i = -1; i < iterations; i++) {
     // i == -1 -- warmup iteration
     if (i == 0) {
-      /*
-      DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
@@ -148,11 +128,8 @@ int main(int argc, char **argv) {
     convolutionColumnsGPU(d_Output, d_Buffer, imageW, imageH);
   }
 
-  /*
-  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
   sdkStopTimer(&hTimer);
   double gpuTime = 0.001 * sdkGetTimerValue(&hTimer) / (double)iterations;
   printf(
@@ -162,15 +139,10 @@ int main(int argc, char **argv) {
       (imageW * imageH), 1, 0);
 
   printf("\nReading back GPU results...\n\n");
-  /*
-  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memcpy(h_OutputGPU, d_Output, imageW * imageH * sizeof(float))
-           .wait(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memcpy(h_OutputGPU, d_Output, imageW * imageH * sizeof(float))
+          .wait()));
 
   printf("Checking the results...\n");
   printf(" ...running convolutionRowCPU()\n");
@@ -193,21 +165,12 @@ int main(int argc, char **argv) {
   printf(" ...Relative L2 norm: %E\n\n", L2norm);
   printf("Shutting down...\n");
 
-  /*
-  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Buffer, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Output, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_Input, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Buffer, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Output, dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(sycl::free(d_Input, dpct::get_default_queue())));
   free(h_OutputGPU);
   free(h_OutputCPU);
   free(h_Buffer);

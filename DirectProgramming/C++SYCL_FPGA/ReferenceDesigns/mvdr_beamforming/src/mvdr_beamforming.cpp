@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <thread>
 #include <vector>
+#include <fstream>
 
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -271,7 +272,7 @@ int main(int argc, char *argv[]) {
     constexpr float degree_unit = 120.0f / (kNumSteer - 1);
     for (int i = 0; i < kNumSteer; i++) {
       float degree = -60.0f + i * degree_unit;
-      SinThetaProducer::Data()[i] = sin(degree / 180.0f * M_PI);
+      SinThetaProducer::Data()[i] = sycl::sin(degree / 180.0f * M_PI);
     }
 
     // launch the mvdr kernels
@@ -286,7 +287,7 @@ int main(int argc, char *argv[]) {
         kSubstitutionUnrollFactor,  // unroll factor used by the forward and
                                     // backward substitution kernels
         kBeamformingUnrollFactor,   // unroll factor used by beamformer
-        kQRDMinIterations,          // minumum 'inner loop' iterations for QRD
+        kQRDMinIterations,          // minimum 'inner loop' iterations for QRD
         kNumComplexPerXrxPipe,      // Number of complex numbers (contained
                                     // in NTuple) per read from the
                                     // Xrx input pipes
@@ -317,7 +318,7 @@ int main(int argc, char *argv[]) {
     // Start the host producer for the sin theta data
     // By waiting on this kernel to finish, we are assuring that the runtime
     // has already programmed the FPGA with the image for this kernel. This
-    // makes calling SetupPAC below safe (for the real IO pipes).
+    // makes calling SetupFPGA below safe (for the real IO pipes).
     event steer_dma_event, steer_kernel_event;
     std::tie(steer_dma_event, steer_kernel_event) =
       SinThetaProducer::Start(q, kNumSteer);
@@ -328,7 +329,7 @@ int main(int argc, char *argv[]) {
     // NOTE: this must be done AFTER programming the FPGA, which happens
     // when the kernel is launched (if it is not already programmed)
 #if defined(REAL_IO_PIPES)
-    SetupPAC(udp_args.fpga_mac_addr, udp_args.fpga_ip_addr,
+    SetupFPGA(udp_args.fpga_mac_addr, udp_args.fpga_ip_addr,
              udp_args.fpga_udp_port, udp_args.fpga_netmask,
              udp_args.host_mac_addr, udp_args.host_ip_addr,
              udp_args.host_udp_port);
@@ -476,7 +477,7 @@ int main(int argc, char *argv[]) {
 
 bool ReadInputData(std::string in_dir, ComplexType *data_in,
                    int num_matrix_copies) {
-  // file paths relative the the base directory
+  // file paths relative the base directory
   std::string training_real_path = in_dir + "/" + "A_real.txt";
   std::string training_imag_path = in_dir + "/" + "A_imag.txt";
   std::string x_real_path = in_dir + "/" + "X_real.txt";
@@ -562,7 +563,7 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
                      int num_matrix_copies, bool print_diffs) {
   bool match = true;
 
-  // file paths relative the the base directory
+  // file paths relative the base directory
   std::string expected_out_real_path =
       in_dir + "/" + "small_expected_out_real.txt";
   std::string expected_out_imag_path =
@@ -625,7 +626,7 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
 }
 
 bool WriteOutputData(std::string out_dir, ComplexType *data_out) {
-  // file paths relative the the base directory
+  // file paths relative the base directory
   std::string out_real_path = out_dir + "/" + "out_real.txt";
   std::string out_imag_path = out_dir + "/" + "out_imag.txt";
 

@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FLOW_SYCL_H
-#define FLOW_SYCL_H
+#ifndef FLOW_CUDA_H
+#define FLOW_CUDA_H
 
-void ComputeFlowSYCL(
+void ComputeFlowCUDA(
     const float *I0,   // source frame
     const float *I1,   // tracked frame
     int width,         // frame width

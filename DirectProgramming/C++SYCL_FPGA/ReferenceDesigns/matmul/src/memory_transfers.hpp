@@ -31,21 +31,24 @@ template <typename TT,              // Datatype of the elements of the matrix
           typename PipeA,           // Input pipe for matrix
           typename PipeDone, // Pipe to notify compute kernel when to stop
                              // reading inputs
-          int dwidth = elems_per_ddr_access * sizeof(TT) * 8>
+          int datawidth = elems_per_ddr_access * sizeof(TT) * 8>
 class MatrixReadFromDDRToPipeA {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  mmhost(aspace, // buffer_location or aspace
-         28,     // address width
-         dwidth, // data width
-         0,      // latency
-         1,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,      // maxburst
-         0,      // align, 0 defaults to alignment of the type
-         1)      // waitrequest, 0: false, 1: true
+  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+      decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
+#else
+  TT *
 #endif
-      TT *a_ptr;   // Input matrix pointer
+      a_ptr;       // Input matrix pointer
   int repetitions; // Number of times to write the same matrix to the pipe
 
   void operator()() const {
@@ -184,21 +187,24 @@ template <typename TT,              // Datatype of the elements of the matrix
           int elems_per_ddr_access, // Number of elements per DDR access
           int num_matrices,         // Number of pairs of matrices to multiply
           typename PipeB,           // Input pipe for matrix
-          int dwidth = elems_per_ddr_access * sizeof(TT) * 8>
+          int datawidth = elems_per_ddr_access * sizeof(TT) * 8>
 class MatrixReadFromDDRToPipeB {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  mmhost(aspace, // buffer_location or aspace
-         28,     // address width
-         dwidth, // data width
-         0,      // latency
-         1,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,      // maxburst
-         0,      // align, 0 defaults to alignment of the type
-         1)      // waitrequest, 0: false, 1: true
+  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+      decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_read,
+          sycl::ext::intel::experimental::wait_request_requested})>
+#else
+  TT *
 #endif
-      TT *b_ptr;   // Input matrix pointer
+      b_ptr;       // Input matrix pointer
   int repetitions; // Number of times to write the same matrix to the pipe
 
   void operator()() const {
@@ -329,21 +335,24 @@ template <typename TT,              // Datatype of the elements of the matrix
           int elems_per_ddr_access, // Number of elements per DDR access
           int num_matrices,         // Number of pairs of matrices to multiply
           typename PipeC,           // Output pipe for matrix
-          int dwidth = elems_per_ddr_access * sizeof(TT) * 8>
+          int datawidth = elems_per_ddr_access * sizeof(TT) * 8>
 class MatrixReadPipeToDDR {
 public:
 #if !defined(IS_BSP)
   // Customizing mmhost only supported when targetting an FPGA part/family
-  mmhost(aspace, // buffer_location or aspace
-         28,     // address width
-         dwidth, // data width
-         0,      // latency
-         2,      // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-         1,      // maxburst
-         0,      // align, 0 defaults to alignment of the type
-         1)      // waitrequest, 0: false, 1: true
+  sycl::ext::oneapi::experimental::annotated_arg<TT *, 
+      decltype(sycl::ext::oneapi::experimental::properties{
+          sycl::ext::intel::experimental::awidth<28>,
+          sycl::ext::intel::experimental::buffer_location<aspace>,
+          sycl::ext::intel::experimental::dwidth<datawidth>,
+          sycl::ext::intel::experimental::latency<0>,
+          sycl::ext::intel::experimental::maxburst<1>,
+          sycl::ext::intel::experimental::read_write_mode_write,
+          sycl::ext::intel::experimental::wait_request_requested})>
+#else
+  TT *
 #endif
-      TT *c_ptr;   // Output matrix pointer
+      c_ptr;       // Input matrix pointer
   int repetitions; // Number of time to read the same matrix to the pipe
 
   void operator()() const {

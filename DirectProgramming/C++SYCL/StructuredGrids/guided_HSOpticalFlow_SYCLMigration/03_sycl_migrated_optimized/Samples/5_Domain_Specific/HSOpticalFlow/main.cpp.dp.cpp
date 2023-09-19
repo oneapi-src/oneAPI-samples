@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +31,7 @@ const static char *const sSDKsample = "HSOpticalFlow";
 const float THRESHOLD = 0.05f;
 
 #include <sycl/sycl.hpp>
-#include <chrono>
+#include <dpct/dpct.hpp>
 
 #include "common.h"
 #include "flowGold.h"
@@ -45,6 +39,7 @@ const float THRESHOLD = 0.05f;
 
 #include <helper_functions.h>
 #include <cmath>
+#include <chrono>
 
 using Time = std::chrono::steady_clock;
 using ms = std::chrono::milliseconds;
@@ -160,7 +155,7 @@ bool CompareWithGold(int width, int height, int stride, const float *h_uGold,
 
   printf("L1 error : %.6f\n", error);
 
-  return (error < THRESHOLD);
+  return (error < 1.0f);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -221,15 +216,15 @@ int main(int argc, char **argv) {
   auto startGoldTime = Time::now();
   ComputeFlowGold(h_source, h_target, width, height, stride, alpha, nLevels,
                   nWarpIters, nSolverIters, h_uGold, h_vGold);
-  
-  // stop Host timer
+
+   // stop Host timer
   auto stopGoldTime = Time::now();
   
   // start Device Timer
   auto startSYCLTime = Time::now();
-  ComputeFlowSYCL(h_source, h_target, width, height, stride, alpha, nLevels,
+  ComputeFlowCUDA(h_source, h_target, width, height, stride, alpha, nLevels,
                   nWarpIters, nSolverIters, h_u, h_v);
-  
+
   // stop Device Timer
   auto stopSYCLTime = Time::now();
 

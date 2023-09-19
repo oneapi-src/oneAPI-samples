@@ -1,10 +1,10 @@
 ﻿# `HSOpticalFlow` Sample
 
-The `HSOpticalFlow` sample is a computation of per-pixel motion estimation between two consecutive image frames caused by movement of object or camera. This sample is implemented using SYCL* by migrating code from original CUDA source code and offloading computations to a CPU, GPU, or another accelerator.
+The `HSOpticalFlow` sample is a computation of per-pixel motion estimation between two consecutive image frames caused by the movement of an object or camera. This sample is implemented using SYCL* by migrating code from the original CUDA source code and offloading computations to a CPU, GPU, or another accelerator.
 
 | Area                      | Description
 |:---                       |:---
-| What you will learn       | Migrate and optimize HSOptical sample from CUDA to SYCL.
+| What you will learn       | Migrate and optimize the HSOptical sample from CUDA to SYCL.
 | Time to complete          | 15 minutes
 | Category                  | Concepts and Functionality
 
@@ -14,22 +14,22 @@ The `HSOpticalFlow` sample is a computation of per-pixel motion estimation betwe
 
 ## Purpose
 
-Optical flow method is based on two assumptions: brightness constancy and spatial flow smoothness. These assumptions are combined in a single energy functional and solution is found as its minimum point. The sample includes both parallel and serial computation, which allows for direct results comparison between CPU and Device. Input images of the sample are computed to get the absolute difference value output(L1 error) between serial and parallel computation. The parallel implementation demonstrates the use of key SYCL concepts, such as
+The optical flow method is based on two assumptions: brightness constancy and spatial flow smoothness. These assumptions are combined in a single energy functional and a solution is found as its minimum point. The sample includes both parallel and serial computation, which allows for direct results comparison between CPU and Device. Input images of the sample are computed to get the absolute difference value output(L1 error) between serial and parallel computation. The parallel implementation demonstrates the use of key SYCL concepts, such as
 
 - Image Processing
 - SYCL Image memory
 - Sub-group primitives
 - Shared Memory
 
-This sample illustrates the steps needed for manual migration of CUDA Texture memory object and APIs such as  `cudaResourceDesc`, `cudaTextureDesc`, and `cudaCreateTextureObject` to SYCL equivalent. These CUDA Texture memory APIs are manually migrated to SYCL Image memory APIs.
+This sample illustrates the steps needed for manual migration of CUDA Texture memory objects and APIs such as  `cudaResourceDesc`, `cudaTextureDesc`, and `cudaCreateTextureObject` to SYCL equivalent. These CUDA Texture memory APIs are manually migrated to SYCL Image memory APIs.
 
-> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment Base Toolkit.
+> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment the Base Toolkit.
 
 This sample contains three versions in the following folders:
 
 | Folder Name                  | Description
 |:---                          |:---
-| `01_dpct_output`             | Contains output of SYCLomatic tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
+| `01_dpct_output`             | Contains the output of the SYCLomatic tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some code that is not migrated and has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
 | `02_sycl_migrated`           | Contains manually migrated SYCL code from CUDA code.
 | `03_sycl_migrated_optimized` | Contains manually migrated SYCL code from CUDA code with performance optimizations applied.
 
@@ -37,9 +37,12 @@ This sample contains three versions in the following folders:
 
 | Optimized for              | Description
 |:---                        |:---
-| OS                         | Ubuntu* 20.04
-| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU
-| Software                   | SYCLomatic <br> Intel® oneAPI Base Toolkit (Base Kit)
+| OS                         | Ubuntu* 22.04
+| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100
+| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPUs plugin (version 2023.2.0) from Codeplay
+
+For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
+Refer [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute sample on NVIDIA GPU.
 
 ## Key Implementation Details
 
@@ -49,25 +52,25 @@ This sample demonstrates the migration of the following prominent CUDA features:
 - Shared memory
 - Cooperative groups
 
-HSOptical flow mainly involves following stages image downscaling and upscaling, image warping, computing derivatives, and computation of Jacobi iteration.
+HSOptical flow mainly involves the following stages image downscaling and upscaling, image warping, computing derivatives, and computation of Jacobi iteration.
 
 Image scaling downscaling or upscaling aims to preserve the visual appearance of the original image when it is resized, without changing the amount of data in that image. An image with a resolution of width × height will be resized to new_width × new_height with a scale factor. A scale factor less than 1 indicates shrinking while a scale factor greater than 1 indicates stretching.
 
-Image warping is a transformation that maps all positions in source image plane to positions in a destination plane. Texture addressing mode is set to Clamp, texture coordinates are unnormalized. Clamp addressing mode to handle the out-of-range coordinates. It eases computing derivatives and warping whenever we need to reflect out-of-range coordinates across borders.
+Image warping is a transformation that maps all positions in the source image plane to positions in a destination plane. Texture addressing mode is set to Clamp, and texture coordinates are unnormalized. Clamp addressing mode to handle the out-of-range coordinates. It eases computing derivatives and warping whenever we need to reflect out-of-range coordinates across borders.
 
-Once the warped image is created, derivatives are computed. For each pixel, the required stencil points from texture are fetched and convolved them with filter kernel. In terms of CUDA, we can create a thread for each pixel. This thread fetches required data and computes derivative.
+Once the warped image is created, derivatives are computed. For each pixel, the required stencil points from the texture are fetched and convolved them with the filter kernel. In terms of CUDA, we can create a thread for each pixel. This thread fetches required data and computes the derivative.
 
-The next step involves solving for Jacobi iterations. Border conditions are explicitly handled within the kernel. The number of iterations is fixed during computations. This eliminates the need for checking error on every iteration. The required number of iterations can be determined experimentally. To perform one iteration of Jacobi method in a particular point, we need to know results of previous iteration for its four neighbors. If we simply load these values from global memory each value will be loaded four times. We store these values in shared memory. This approach reduces number of global memory accesses, provides better coalescing, and improves overall performance.
+The next step involves solving for Jacobi iterations. Border conditions are explicitly handled within the kernel. The number of iterations is fixed during computations. This eliminates the need for checking errors on every iteration. The required number of iterations can be determined experimentally. To perform one iteration of the Jacobi method at a particular point, we need to know the results of the previous iteration for its four neighbors. If we simply load these values from global memory each value will be loaded four times. We store these values in shared memory. This approach reduces the number of global memory accesses, provides better coalescing, and improves overall performance.
 
 Prolongation is performed with bilinear interpolation followed by scaling. and are handled independently. For each output pixel, there is a thread that fetches the output value from the texture and scales it.
 
-In CUDA texture memory is used to read and update image data and the equivalent in SYCL is image memory where image objects represent a region of memory managed by the SYCL runtime. The data layout of the image memory is deliberately unspecified to allow implementations to provide a layout optimal to a given device. When accessed on host, image memory may be stored on temporary host memory. When accessed on device, image data is stored in device image memory, which can often be texture memory if the device supports it. In case of Intel integrated graphics there is no dedicated texture memory, so L3 cache is utilized.
+In CUDA texture memory is used to read and update image data and the equivalent in SYCL is image memory where image objects represent a region of memory managed by the SYCL runtime. The data layout of the image memory is deliberately unspecified to allow implementations to provide a layout optimal to a given device. When accessed on the host, image memory may be stored on temporary host memory. When accessed on a device, image data is stored in the device image memory, which can often be texture memory if the device supports it. In the case of Intel integrated graphics, there is no dedicated texture memory, so the L3 cache is utilized.
 
 >**Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html#gs.s2njvh) for general information about the migration workflow.
 
 ### CUDA Source Code Evaluation
 
-The HSOptical Flow sample includes both serial and parallel implementation of the algorithm in flowGold.cpp and flowCUDA.cu files respectively. In the parallel implementation, the computation is distributed among following six kernels:
+The HSOptical Flow sample includes both serial and parallel implementation of the algorithm in flowGold.cpp and flowCUDA.cu files respectively. In the parallel implementation, the computation is distributed among the following six kernels:
 
 - `AddKernel()` - Performs vector addition
 - `ComputeDerivativesKernel()` - Computes temporal and spatial derivatives of images
@@ -76,9 +79,9 @@ The HSOptical Flow sample includes both serial and parallel implementation of th
 - `UpscaleKernel()` - Upscales one component of an image displacement field
 - `WarpingKernel()` - Warps image with given displacement field
 
-The host code of downscale, Compute derivatives, Upscale and Warping uses texture memory for image data computation. The final computed result of serial and parallel implementation are then compared based on the threshold value.
+The host code of downscale, Compute derivatives, Upscale, and Warping uses texture memory for image data computation. The final computed result of serial and parallel implementation is then compared based on the threshold value.
 
-For information on how to use SYCLomatic, refer to the materials at *[Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html)*.
+>**Note**: For information on how to use SYCLomatic, refer to the materials at *[Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html)*.
 
 
 ## Set Environment Variables
@@ -105,24 +108,24 @@ For this sample, the SYCLomatic Tool automatically migrates ~80% of the CUDA run
    ```
    The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated. The `--use-custom-helper` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as `include` folder. The `--use-experimental-features` option specifies experimental helper function used to logically group work-items.
+4. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The `--in-root` specifies the path to the root of the source tree to be migrated. The `--gen-helper-function` option will make a copy of dpct header files/functions used in the migrated code into the dpct_output folder as `include` folder.
    ```
-   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api --use-experimental-features=logical-group
+   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
    
 ### Manual Workarounds
 
-The following warnings in the "DPCT1XXX" format are generated by the tool to indicate the code not migrated by the tool and need to be manually modified in order to complete the migration.
+The following warnings in the "DPCT1XXX" format are generated by the tool to indicate the code has not migrated by the tool and needs to be manually modified in order to complete the migration.
 
 1. DPCT1059: SYCL only supports 4-channel image format. Adjust the code.
     ```
     texRes.res.pitch2D.desc = cudaCreateChannelDesc<float>();
     ```
     CUDA HSOptical Flow sample uses single channel image format and SYCL supports only 4 channel image formats. We must adjust two properties of image data manually.
-    1. Image data type format - Data type of image accessor should be `sycl::float4`.
+    1. Image data type format - The data type of the image accessor should be `sycl::float4`.
     2. Image input layout - Image data should be padded for additional image channels.
 
-    Following code block illustrates the image data type format and padding of image data for additional image channels.
+    The following code block illustrates the image data type format and padding of image data for additional image channels.
     ```
     float *src_p = (float *)sycl::malloc_shared(height * stride * sizeof(sycl::float4), q);
     for (int i = 0; i < 4 * height * stride; i++) src_p[i] = 0.f;
@@ -145,7 +148,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
 
 
 3. Along with these changes, we have also converted the Image memory APIs from dpct namespace to sycl namespace and manually mapped the SYCL APIs.
-    Following code block is the CUDA Texture memory object creation and object API, the `texRes` object sets the CUDA resource descriptor variables and `texDescr` object sets the CUDA texture descriptor variables.
+    The following code block is the CUDA Texture memory object creation and object API, the `texRes` object sets the CUDA resource descriptor variables, and `texDescr` object sets the CUDA texture descriptor variables.
     ```
      cudaTextureObject_t texFine;
      cudaResourceDesc texRes;
@@ -170,7 +173,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     
     The following SYCL code is the equivalent SYCL image APIs.
     
-    In SYCL implementation, `sycl::image` defines a shared image data. Images can be 1-, 2-, and 3-dimensional, which are accessed using the accessor class. SYCL images are created from a host pointer, like buffers, and constructs an image with the specified image channel_order and channel_type, range and pitch, with a raw host pointer to the image data. On object destruction, the data will be copied to the specified host pointer unless a final pointer is specified using `set_final_data()` in which case that specified pointer will be used.
+    In SYCL implementation, `sycl::image` defines a shared image data. Images can be 1-, 2-, and 3-dimensional, which are accessed using the accessor class. SYCL images are created from a host pointer, like buffers, and construct an image with the specified image channel_order and channel_type, range, and pitch, with a raw host pointer to the image data. On object destruction, the data will be copied to the specified host pointer unless a final pointer is specified using `set_final_data()` in which case that specified pointer will be used.
 
     ```
     auto texFine = sycl::image<2>(src_p, sycl::image_channel_order::rgba,
@@ -192,16 +195,16 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
         );
     });
     ```
-    The texture descriptor in SYCL is created using image_sampler struct, which supports a slightly different configuration for sampling an image. SYCL images do not support normalized readMode. By default, Sampler API supports read mode as element by element, which is guided by the buffer. Consequently, we change the image coordinates to “unnormalized”. The members of this struct, addressing mode is set as clamp to edge, whereas the addressing mode in CUDA is set to Mirror. Since mirrored address mode is only supported by normalized coordinates and SYCL uses unnormalized coordinated the address mode set is clamp to edge. Mirror address mode mirrors the out of range texture coordinates at every integer boundary, and clamp to edge addressing mode clamps out of range image coordinates to the extent.
+    The texture descriptor in SYCL is created using the image_sampler struct, which supports a slightly different configuration for sampling an image. SYCL images do not support normalized readMode. By default, Sampler API supports read mode as element by element, which is guided by the buffer. Consequently, we change the image coordinates to “unnormalized”. For the members of this struct, the addressing mode is set as clamp to edge, whereas the addressing mode in CUDA is set to Mirror. Since mirrored address mode is only supported by normalized coordinates and SYCL uses unnormalized coordinated the address mode set is clamp to edge. Mirror address mode mirrors the out-of-range texture coordinates at every integer boundary, and clamp to edge addressing mode clamps out-of-range image coordinates to the extent.
 
-    In CUDA, texture coordinates are normalized. This behavior causes the coordinates to be specified in the floating point range [0.0, 1.0-1/N], and the filtering mode is set to linear filtering to support the textures that are configured to return floating-point data. But in SYCL the coordinates are unnormalized and filtering mode is set to linear or nearest based on the type of the image data. The downscaleKernel and derivativeKernel use integer coordinates and hence filtering mode is set to nearest. The upscaleKernel and warpingKernel use floating-point coordinates and hence filtering mode is set to linear. Nearest filtering mode chooses a color of nearest pixel. Linear filtering mode performs a linear sampling of adjacent pixels.
+    In CUDA, texture coordinates are normalized. This behavior causes the coordinates to be specified in the floating point range [0.0, 1.0-1/N], and the filtering mode is set to linear filtering to support the textures that are configured to return floating-point data. But in SYCL the coordinates are unnormalized and the filtering mode is set to linear or nearest based on the type of the image data. The downscaleKernel and derivativeKernel use integer coordinates and hence filtering mode is set to nearest. The upscaleKernel and warpingKernel use floating-point coordinates and hence filtering mode is set to linear. The nearest filtering mode chooses the color of the nearest pixel. Linear filtering mode performs a linear sampling of adjacent pixels.
 
-    To access an image `get_access()` accessor member function is used. The accessor element type specifies how the image should be read from or written to. It can be either int4, uint4 or float4.
+    To access an image `get_access()` accessor member function is used. The accessor element type specifies how the image should be read from or written to. It can be either int4, uint4, or float4.
 
 
-4. As the image coordinates in SYCL image_sampler is set to unnormalized, we need to modify the texture fetch in the gold  implementation, i.e., Tex2D and Tex2Di functions in order to account for the unnormalized texture coordinates in SYCL.
+4. As the image coordinates in SYCL image_sampler are set to unnormalized, we need to modify the texture fetch in the gold  implementation, i.e., Tex2D and Tex2Di functions in order to account for the unnormalized texture coordinates in SYCL.
 
-    In the original code, the out-of-range texture coordinates are mirrored as shown below. These host texture fetch functions read from arbitrary position within image using bilinear interpolation. Note that, mirrored addressing mode for texture are supported only for normalized texture coordinates.
+    In the original code, the out-of-range texture coordinates are mirrored as shown below. These host texture fetch functions read from arbitrary positions within an image using bilinear interpolation. Note that, mirrored addressing modes for texture are supported only for normalized texture coordinates.
     ```
     if (ix0 < 0) ix0 = abs(ix0 + 1);
     if (iy0 < 0) iy0 = abs(iy0 + 1);
@@ -210,7 +213,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     if (iy0 >= h) iy0 = h * 2 - iy0 - 1;
     ```
 
-    In the modified gold implementation, the out of range coordinates are changed to be clamped to edge as shown below to account for unnormalized coordinates in SYCL.
+    In the modified gold implementation, the out-of-range coordinates are changed to be clamped to edge as shown below to account for unnormalized coordinates in SYCL.
     ```
     if (ix0 < 0) ix0 = 0;
     if (iy0 < 0) iy0 = 0;
@@ -221,13 +224,21 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
 
 > **Note**: You can find more information about image samplers and options for struct members in section *4.7.8. Image samplers* of the [SYCL™ 2020 Specification](https://registry.khronos.org/SYCL/specs/sycl-2020/html/sycl-2020.html#subsec:samplers).
 
+5. CUDA code includes a custom API `findCUDADevice` in helper_cuda file to find the best CUDA Device available.
+
+```
+    findCudaDevice (argc, (const char **) argv);
+```
+Since its a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the `sycl get_device()` API
+
+
 ### Optimizations
 
 Once you migrate the CUDA code to SYCL successfully and you have functional code, you can optimize the code by using profiling tools, which can help in identifying the hotspots such as operations/instructions taking longer time to execute, memory utilization, and the like.
 
 #### Memory Operation Optimization
 
-Since CUDA HSOptical Flow sample uses single channel image and SYCL supports only 4 channel image format we have manually adjusted two properties of image data. Image data type format and Image input layout where Image data are padded for additional image channels. For this purpose, create additional host and USM memory using `malloc_shared` that is padded.
+Since the CUDA HSOptical Flow sample uses single channel image and SYCL supports only 4 channel image format we have manually adjusted two properties of image data. Image data type format and Image input layout where Image data are padded for additional image channels. For this purpose, create additional host and USM memory using `malloc_shared` that is padded.
 
 ```
 int dataSize = height * stride * sizeof(float);
@@ -246,7 +257,7 @@ for (int i = 0; i < height; i++) {
 }
 ```
 
-Even though malloc_shared gives us shared memory allocation that is accessible on the host and on sycl Device it increases execution time as it creates lot of unnecessary memory movement in code. To avoid the unnecessary memory copies, we can replace the `malloc_shared` with `malloc_device`.
+Even though malloc_shared gives us shared memory allocation that is accessible on the host and on sycl Device it increases execution time as it creates a lot of unnecessary memory movement in code. To avoid unnecessary memory copies, we can replace the `malloc_shared` with `malloc_device`.
 
 ```
 int dataSize = height * stride * sizeof(float);
@@ -265,9 +276,9 @@ for (int i = 0; i < height; i++) {
 q.memcpy(src_p, pI0_h, height * width * sizeof(sycl::float4)).wait();
 ```
 
-malloc_device returns a pointer to the newly allocated memory on the specified device on success. This memory is not accessible on the host. Hence, we need to copy memory to host when required. Also copying from malloc_host to malloc_device is faster than compared to C malloc to malloc_device.
+malloc_device returns a pointer to the newly allocated memory on the specified device on success. This memory is not accessible on the host. Hence, we need to copy memory to the host when required. Also copying from malloc_host to malloc_device is faster than compared to C malloc to malloc_device.
 
-This optimization changes are performed in Downscale, Warping, Upscale and ComputeDerivative methods can be found in  `03_sycl_migrated_optimized` folder.
+These optimization changes are performed in Downscale, Warping, Upscale, and ComputeDerivative methods can be found in  `03_sycl_migrated_optimized` folder.
 
 
 ## Build and Run the `HSOpticalFlow` Sample
@@ -294,9 +305,12 @@ This optimization changes are performed in Downscale, Warping, Upscale and Compu
    ```
    $ mkdir build
    $ cd build
-   $ cmake ..
+   $ cmake .. or ( cmake -D NVIDIA_GPU=1 .. )
    $ make
    ```
+    **Note**: By default, no flag are enabled during build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU. <br>
+    Enable `NVIDIA_GPU` flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs ) <br>
+
    By default, this command sequence will build the `02_sycl_migrated` and `03_sycl_migrated_optimized` versions of the program.
 
 3. Run the program.
@@ -343,10 +357,9 @@ Loading "frame11.ppm" ...
 Computing optical flow on CPU...
 Computing optical flow on Device...
 
-Processing time on CPU: 1818.056152 (ms)
-Processing time on Device: 482.154114 (ms)
+Processing time on CPU: 2638.262451 (ms)
+Processing time on Device: 686.988098 (ms)
 L1 error : 0.018193
-Built target run_smo
 ```
 
 ## License

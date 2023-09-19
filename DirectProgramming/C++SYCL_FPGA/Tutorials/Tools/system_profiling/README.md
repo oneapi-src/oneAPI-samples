@@ -49,7 +49,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL™ Applications, an open-source tool, to perform system-level profiling on a design and reveal areas for improvement.
-When targeting an FPGA family/part, no FPGA executable is generated. So this sample is really meant to be used when targeting a device with a BSP (e.g. the Intel® PAC with Intel Arria® 10 GX FPGA) where an FPGA executable would be produced.
+When targeting an FPGA family/part, no FPGA executable is generated. So this sample is really meant to be used when targeting a device with a BSP where an FPGA executable would be produced.
 
 ### Profiling Techniques
 The following code snippet uses standard SYCL* and C++ language features to extract profiling information from code.
@@ -206,7 +206,7 @@ The double-buffering optimization can help minimize or remove gaps between conse
 
 For a more detailed explanation of the optimization, refer to the FPGA tutorial "Double Buffering to Overlap Kernel Execution with Buffer Transfers and Host Processing".
 
-In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
+In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Arria® 10 FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
 
 ![](with_and_without_double_buffering.PNG)
 
@@ -307,25 +307,27 @@ __Command line `stdout`:__
 When run without `cliloader`, the tutorial output should resemble the result below.
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_ee00000)
-
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Executing kernel 3 times in each round.
 
 *** Beginning execution, without double buffering
 Launching kernel #0
 
-Overall execution time without double buffering = 3597 ms
-Total kernel-only execution time without double buffering = 534 ms
-Throughput = 8.7433481 MB/s
+Overall execution time without double buffering = 4085 ms
+Total kernel-only execution time without double buffering = 25 ms
+Throughput = 0.7699827 MB/s
+
 
 *** Beginning execution, with double buffering.
 Launching kernel #0
 
-Overall execution time with double buffering = 620 ms
-Total kernel-only execution time with double buffering = 534 ms
-Throughput = 50.684795 MB/s
+Overall execution time with double buffering = 25 ms
+Total kernel-only execution time with double buffering = 25 ms
+Throughput = 121.66745 MB/s
+
 
 Verification PASSED
+```
 
 ## License
 

@@ -60,14 +60,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of February 25, 2022.
+Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA           | 221k matrices/s for real matrices of size 32x32
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 214k matrices/s for real matrices of size 32x32
+| Terasic’s DE10-Agilex Development Board           | 378k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
@@ -273,29 +272,12 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
 
 ## Example Output
 
-These examples show output when running decomposition of 8 matrices 819,200 times with each matrix consisting of 32x32 real numbers.
-
-### Example Output for Intel® PAC with Intel Arria® 10 GX FPGA
-
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Generating 8 random real matrices of size 32x32 
 Computing the Cholesky decomposition of 8 matrices 819200 times
-   Total duration:   29.6193 s
-Throughput: 221.261k matrices/s
-Verifying results...
-
-PASSED
-```
-
-### Example Output for Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)
-
-```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32
-Computing the Cholesky decomposition of 8 matrices 819200 times
-   Total duration:   30.58 s
-Throughput: 214.31k matrices/s
+   Total duration:   17.3307 s
+Throughput: 378.15k matrices/s
 Verifying results...
 
 PASSED

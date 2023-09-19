@@ -13,12 +13,8 @@ endif ()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option (BUILD_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject 01_dpct_output" ON)
 option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject 02_sycl_migrated" ON)
 
-if (BUILD_DPCT_MIGRATED_SUBPROJECT)
-	add_subdirectory (01_dpct_output)
-endif ()
 if (BUILD_SYCL_MIGRATED_SUBPROJECT)
     add_subdirectory (02_sycl_migrated)
 endif ()

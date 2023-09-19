@@ -40,7 +40,7 @@ This tutorial includes three designs:
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
->**Notice**: SYCL USM host allocations, which are used in this sample, are only supported on FPGA boards that have a USM capable BSP (For example, the Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM support: **intel_s10sx_pac:pac_s10_usm**) or when targeting an FPGA family/part number.
+>**Notice**: SYCL USM host allocations, which are used in this sample, are only supported on FPGA boards that have a USM capable BSP or when targeting an FPGA family/part number.
 
 This sample is part of the FPGA code samples. It is categorized as a Tier 3 sample that demonstrates a design pattern.
 
@@ -288,30 +288,8 @@ PASSED
 
 >**Note**: The FPGA emulator does not accurately represent the performance (throughput or latency) of the kernels.
 
-### Example Output for Intel® FPGA PAC D5005 with Intel Stratix® 10 SX with USM Support
 
-```
-# Chunks:             512
-Chunk count:          32768
-Total count:          16777216
-Iterations:           4
-
-Running the basic offload kernel
-Offload average latency:          99.6709 ms
-Offload average throughput:       107772.8673 MB/s
-
-Running the latency optimized single-kernel design
-Single-kernel average latency:          0.2109 ms
-Single-kernel average throughput:       10689.9578 MB/s
-
-Running the latency optimized multi-kernel design
-Multi-kernel average latency:          0.2431 ms
-Multi-kernel average throughput:       10674.7123 MB/s
-
-PASSED
-```
-
->**Note**: The experimentally measured bandwidth of the PCIe is ~11 GB/s (bidirectional, ~22 MB/s total). The FPGA device performance numbers above show that the offload, single-kernel, and multi-kernel designs are all able to saturate the PCIe bandwidth (since this design reads and writes over PCIe, a design throughput of 10.7 GB/s uses 10.7 x 2 = 21.4 GB/s of total PCIe bandwidth). However, the single-kernel and multi-kernel designs saturate the PCIe bandwidth with a latency that is ~473x lower than the offload kernel.
+>**Note**: The experimentally measured bandwidth of the PCIe is ~11 GB/s (bidirectional, ~22 MB/s total). The offload, single-kernel, and multi-kernel designs are all able to saturate the PCIe bandwidth. However, the single-kernel and multi-kernel designs saturate the PCIe bandwidth with a latency that is orders of magnitude lower than the offload kernel.
 
 ## License
 

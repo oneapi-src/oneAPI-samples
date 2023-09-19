@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +26,7 @@
  */
 
 #include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include "common.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,10 +40,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 void WarpingKernel(int width, int height, int stride, const float *u,
                    const float *v, float *out,
-                    sycl::accessor<sycl::float4, 2, sycl::access::mode::read,
+                   sycl::accessor<sycl::float4, 2, sycl::access::mode::read,
                             sycl::access::target::image>
                        texToWarp,
-                   sycl::sampler texDesc, sycl::nd_item<3> item_ct1) {
+                   sycl::sampler texDesc,
+                   const sycl::nd_item<3> &item_ct1) {
   const int ix = item_ct1.get_local_id(2) +
                  item_ct1.get_group(2) * item_ct1.get_local_range(2);
   const int iy = item_ct1.get_local_id(1) +

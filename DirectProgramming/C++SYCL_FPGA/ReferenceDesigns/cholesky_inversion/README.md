@@ -79,8 +79,7 @@ Performance results are based on testing as of April 26, 2022.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA           | 215k matrices/s for real matrices of size 32x32
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 255k matrices/s for real matrices of size 32x32
+| Terasic’s DE10-Agilex Development Board           | 415k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
@@ -299,26 +298,12 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
 
 ## Example Output
 
-This example output shows typical results for 8 matrices inverted 819,200 times with each matrix consisting of **32x32** real numbers.
-
-### Intel® PAC with Intel Arria® 10 GX FPGA
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Generating 8 random real matrices of size 32x32 
 Computing the Cholesky-based inversion of 8 matrices 819200 times
-   Total duration:   30.442 s
-Throughput: 215.281k matrices/s
-Verifying results...
-
-PASSED
-```
-### Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)
-```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random real matrices of size 32x32
-Computing the Cholesky-based inversion of 8 matrices 819200 times
- Total duration:   25.694 s
-Throughput: 255.063k matrices/s
+   Total duration:   15.7619 s
+Throughput: 415.789k matrices/s
 Verifying results...
 
 PASSED

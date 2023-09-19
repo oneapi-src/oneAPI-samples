@@ -1,0 +1,24 @@
+{
+    "guid": "17DC2EC8-9139-4BED-ABC2-6ECFB3A9ACB0",
+    "name": "Odd Even Merge Sort",
+    "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL/Dense Linear Algebra"],
+    "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }]
+  
+    },
+    "expertise": "Concepts and Functionality"
+  }

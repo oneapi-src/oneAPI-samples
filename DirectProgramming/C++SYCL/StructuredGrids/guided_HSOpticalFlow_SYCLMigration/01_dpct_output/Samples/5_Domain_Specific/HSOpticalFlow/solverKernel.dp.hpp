@@ -88,6 +88,10 @@ void JacobiIteration(const float *du0, const float *dv0,
     // sm - shared memory
     int gmPos, smPos;
 
+    /*
+    DPCT1064:30: Migrated min call is used in a macro/template definition and
+    may not be valid for all macro/template uses. Adjust the code.
+    */
     x = dpct::min((unsigned int)(bsx + item_ct1.get_local_id(2)), w - 1);
     // row just below the tile
     y = sycl::max(bsy - 1, 0);
@@ -113,6 +117,10 @@ void JacobiIteration(const float *du0, const float *dv0,
     // sm - shared memory
     int gmPos, smPos;
 
+    /*
+    DPCT1064:31: Migrated min call is used in a macro/template definition and
+    may not be valid for all macro/template uses. Adjust the code.
+    */
     y = dpct::min((unsigned int)(bsy + item_ct1.get_local_id(2)), h - 1);
     // column to the left
     x = sycl::max(bsx - 1, 0);
@@ -133,7 +141,7 @@ void JacobiIteration(const float *du0, const float *dv0,
   }
 
   /*
-  DPCT1065:18: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:13: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -183,7 +191,7 @@ static void SolveForUpdate(const float *du0, const float *dv0, const float *Ix,
   sycl::range<3> blocks(1, iDivUp(h, threads[1]), iDivUp(w, threads[2]));
 
   /*
-  DPCT1049:19: The work-group size passed to the SYCL kernel may exceed the
+  DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */

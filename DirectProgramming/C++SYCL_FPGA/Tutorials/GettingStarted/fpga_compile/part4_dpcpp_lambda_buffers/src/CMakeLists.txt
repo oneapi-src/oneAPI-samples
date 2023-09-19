@@ -35,7 +35,7 @@ set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsg
 set(REPORT_COMPILE_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Wall ${WIN_FLAG} -DFPGA_REPORT")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Wall ${WIN_FLAG} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsparallel=2 -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
