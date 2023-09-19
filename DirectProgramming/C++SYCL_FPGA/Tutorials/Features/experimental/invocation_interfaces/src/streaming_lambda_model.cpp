@@ -9,7 +9,7 @@ using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaStreamingIP;
+class LambdaStream;
 
 /////////////////////////////////////////
 
@@ -23,7 +23,7 @@ void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output,
 
   // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
   // interface. All kernel arguments will have the same interface as the kernel invocation interface.
-  q.single_task<LambdaStreamingIP>(kernel_properties, [=] {
+  q.single_task<LambdaStream>(kernel_properties, [=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }

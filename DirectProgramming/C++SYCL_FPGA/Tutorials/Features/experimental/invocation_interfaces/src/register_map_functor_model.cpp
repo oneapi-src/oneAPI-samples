@@ -7,6 +7,10 @@
 using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class FunctorRegisterMap;
+
 /////////////////////////////////////////
 
 struct FunctorRegisterMapIP {
@@ -105,7 +109,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Running the kernel with register map invocation interface "
                  "implemented in the functor programming model"
               << std::endl;
-    q.single_task(FunctorRegisterMapIP{input, functor_register_map_out, count})
+    q.single_task<FunctorRegisterMap>(FunctorRegisterMapIP{input, functor_register_map_out, count})
         .wait();
     std::cout << "\t Done" << std::endl;
 

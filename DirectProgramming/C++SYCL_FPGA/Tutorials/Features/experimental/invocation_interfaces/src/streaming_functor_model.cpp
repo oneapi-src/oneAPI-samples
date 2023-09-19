@@ -6,6 +6,10 @@
 
 using MyUInt5 = ac_int<5, false>;
 
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class FunctorStream;
+
 struct a_s {
   int x;
   char y;
@@ -134,7 +138,7 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
+    q.single_task<FunctorStream>(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden_out, functor_streaming_out);

@@ -7,6 +7,10 @@
 using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class StreamRmStall;
+
 /////////////////////////////////////////
 
 struct FunctorStreamingRmDownstreamStallIP {
@@ -110,7 +114,7 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out, count})
+    q.single_task<StreamRmStall>(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out, count})
         .wait();
     std::cout << "\t Done" << std::endl;
 

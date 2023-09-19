@@ -9,7 +9,7 @@ using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaRegisterMapIP;
+class LambdaRegisterMap;
 
 /////////////////////////////////////////
 
@@ -17,7 +17,7 @@ void TestLambdaRegisterMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
                                  MyUInt5 n) {
   // Without passing a properties object argument, register-mapped 
   // invocation interface will be inferred by the compiler.
-  q.single_task<LambdaRegisterMapIP>([=] {
+  q.single_task<LambdaRegisterMap>([=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }

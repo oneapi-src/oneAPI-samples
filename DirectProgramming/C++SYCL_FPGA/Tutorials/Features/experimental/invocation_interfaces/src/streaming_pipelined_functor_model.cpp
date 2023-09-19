@@ -7,6 +7,10 @@
 using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class StreamPipelined;
+
 struct FunctorStreamingPipelinedIP {
   // Without the annotation, kernel argument will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
@@ -96,7 +100,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Launching streaming pipelined kernels consecutively" << std::endl;
     for (int i = 0; i < count; i++) {
-      q.single_task(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
+      q.single_task<StreamPipelined>(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
     }
     q.wait();
     std::cout << "\t Done" << std::endl;
