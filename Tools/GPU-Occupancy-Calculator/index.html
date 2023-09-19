@@ -110,7 +110,7 @@
 		<div class="section" id="output_opt_config">
 			<div class="title"><select id="occupancy_threshold" onchange="update_occupancy()"><option value="100">100%</option><option value="90">&gt; 90%</option><option value="80">&gt; 80%</option></select> Occupancy Configuration</div>
 			<div class="box">
-				<div class="info">This table shows ideal combination of Work-Group(WG) size, Sub-Group size and Shared Local Memory(SLM) usage limit that will get you <span id="occupancy_threshold_value">100</span>% occupancy in the selected hardware Sub-Slice(SS).</div><br>
+				<div class="info">This table shows ideal combination of Work-Group(WG) size, Sub-Group size and Shared Local Memory(SLM) usage limit that will get you <span id="occupancy_threshold_value">100</span>% occupancy in the selected GPU Xe-Core/Sub-Slice(SS).</div><br>
 				<div class="output">
 					<div id="table"></div>
 				</div>
@@ -233,7 +233,7 @@ var targets = [
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
 		"Threads_Per_EU": 8,
-		"EU_Count": [448, 896, 1024],
+		"EU_Count": [448, 1024],
 		"Max_Threads_Per_Sub_Slice": 64,
 		"Large_GRF_Mode": true,
 		"Subgroup_Sizes": [32, 16],
@@ -958,7 +958,7 @@ function print_gpu_info(){
 		grf_mode = '<input type="hidden" id="large_grf" value="0" />';
 	}
 
-	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>+ EU Count: ' + eu_count + grf_mode;
+	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per Xe-Core/SS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>+ EU Count: ' + eu_count + grf_mode;
 }
 
 // If url param exists load gpu info
@@ -1214,7 +1214,7 @@ function cal_occupancy(){
 
 		let gpu_output = compute_gpu_occupancy(input_wg, ss_output.num_wg, ss_output.occupancy, num_ss, global_size);
 
-		document.querySelector('#occ_cal .output').innerHTML = '<div class="result"><table><tr><td>SS/DSS Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr><tr><td>GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td><tr><tr><td>Number of Work-Groups per SS/DSS </td><td>' + ss_output.num_wg + '</td></tr><tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr></table></div><div class="notes">The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be different. Note that higher occupancy does not always translate to higher performance.</div>';
+		document.querySelector('#occ_cal .output').innerHTML = '<div class="result"><table><tr><td>Xe-Core/SS Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr><tr><td>GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td><tr><tr><td>Number of Work-Groups per Xe-Core/SS </td><td>' + ss_output.num_wg + '</td></tr><tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr></table></div><div class="notes">The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be different. Note that higher occupancy does not always translate to higher performance.</div>';
 
 		opt_occupancy(target_value, input_wg, input_sg, input_slm, large_grf, ss_output.occupancy, wg_count);
 		update_valid_wg_sizes();
@@ -1399,7 +1399,7 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 				y: {
 					title: {
 						display: true,
-						text: "Occupancy (%)"
+						text: "XeCore/SS Occupancy (%)"
 					},
 					min: 0,
 					max: 100,
@@ -1474,7 +1474,7 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 				y: {
 					title: {
 						display: true,
-						text: "Occupancy (%)"
+						text: "Xe-Core/SS Occupancy (%)"
 					},
 					min: 0,
 					max: 100,
@@ -1529,7 +1529,7 @@ function valid_wg_sizes(){
 
 	document.getElementById("global_size").style.backgroundColor = "";
 	var input_global_range = document.getElementById("global_size").value.split(",");
-	var result = '<table id="wg_occ_table" width="100%"><thead><tr><td>Valid WG Sizes</td><td>SS Occupancy</td><td>WG per SS</td><td>GPU Occupancy</td></tr></thead>';
+	var result = '<table id="wg_occ_table" width="100%"><thead><tr><td>Valid WG Sizes</td><td>Xe-Core/SS Occupancy</td><td>WG per Xe-Core/SS</td><td>GPU Occupancy</td></tr></thead>';
 	var error = 0;
 	if (input_global_range.length === 1){
 		var x = parseInt(input_global_range[0]);
@@ -1623,7 +1623,7 @@ function valid_wg_sizes(){
 		alert("Please enter a valid value for global size");
 	} else {
 		result += '</table>';
-		document.querySelector('#output_wg .info').innerHTML = 'The list below show all the valid Work-Group(WG) sizes and GPU Sub-Slice(SS) Occupancy for Global Size of (' + document.getElementById("global_size").value + ') on ' + gpu.name;
+		document.querySelector('#output_wg .info').innerHTML = 'The list below show all the valid Work-Group(WG) sizes and GPU Xe-Core/Sub-Slice(SS) Occupancy for Global Size of (' + document.getElementById("global_size").value + ') on ' + gpu.name;
 		document.querySelector('#output_wg .output').innerHTML = result;
 		document.getElementById("output_wg").style.display = "block";
 	}
