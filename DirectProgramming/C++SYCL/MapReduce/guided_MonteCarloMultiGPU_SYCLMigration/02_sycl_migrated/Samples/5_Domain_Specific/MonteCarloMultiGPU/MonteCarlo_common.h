@@ -28,16 +28,14 @@
 #ifndef MONTECARLO_COMMON_H
 #define MONTECARLO_COMMON_H
 #include <sycl/sycl.hpp>
-//#include <dpct/dpct.hpp>
-#include <oneapi/mkl.hpp>
-#include <oneapi/mkl/rng/device.hpp>
-
+#include <dpct/dpct.hpp>
 #include "realtype.h"
+#include <dpct/rng_utils.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global types
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct dpct_type_136915 {
+typedef struct dpct_type_495057 {
   float S;
   float X;
   float T;
@@ -46,21 +44,21 @@ typedef struct dpct_type_136915 {
 } TOptionData;
 
 typedef struct
-// #ifdef __CUDACC__
-//__align__(8)
-// #endif dpct_type_392709
-{
+    // #ifdef __CUDACC__
+    //__align__(8)
+    // #endif dpct_type_363787
+    {
   float Expected;
   float Confidence;
 } TOptionValue;
 
 // GPU outputs before CPU postprocessing
-typedef struct dpct_type_108828 {
+typedef struct dpct_type_118506 {
   real Expected;
   real Confidence;
 } __TOptionValue;
 
-typedef struct dpct_type_723642 {
+typedef struct dpct_type_258576 {
   // Device ID for multi-GPU version
   int device;
   // Option count for this plan
@@ -84,10 +82,6 @@ typedef struct dpct_type_723642 {
   void *d_Buffer;
 
   // random number generator states
-  /*
-  DPCT1032:24: A different random number generator is used. You may need to
-  adjust the code.
-  */
   oneapi::mkl::rng::device::philox4x32x10<1> *rngStates;
 
   // Pseudorandom samples count
@@ -99,8 +93,10 @@ typedef struct dpct_type_723642 {
   int gridSize;
 } TOptionPlan;
 
-extern "C" void initMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream = 0);
-extern "C" void MonteCarloGPU(TOptionPlan *plan, sycl::queue *stream = 0);
-extern "C" void closeMonteCarloGPU(TOptionPlan *plan, sycl::queue *stream = 0);
+extern "C" void initMonteCarloGPU(TOptionPlan *plan);
+extern "C" void
+MonteCarloGPU(TOptionPlan *plan,
+              dpct::queue_ptr stream = &dpct::get_default_queue());
+extern "C" void closeMonteCarloGPU(TOptionPlan *plan);
 
 #endif

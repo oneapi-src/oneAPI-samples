@@ -68,19 +68,14 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
   // select problem size
   for (int i = 0; i < GPU_N; i++) {
     dpct::device_info deviceProp;
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        dpct::dev_mgr::instance().get_device(i).get_device_info(deviceProp)));
     /*
-    DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors(
-        (dpct::dev_mgr::instance().get_device(i).get_device_info(deviceProp),
-         0));
-    /*
-    DPCT1005:48: The SYCL device version is different from CUDA Compute
+    DPCT1005:20: The SYCL device version is different from CUDA Compute
     Compatibility. You may need to rewrite this code.
     */
     int cudaCores = _ConvertSMVer2Cores(deviceProp.get_major_version(),
-                                        deviceProp.get_minor_version()) *
+                                       deviceProp.get_minor_version()) *
                     deviceProp.get_max_compute_units();
 
     if (cudaCores <= 32) {
@@ -93,14 +88,9 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 
 int adjustGridSize(int GPUIndex, int defaultGridSize) {
   dpct::device_info deviceProp;
-  /*
-  DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::dev_mgr::instance().get_device(GPUIndex).get_device_info(
-           deviceProp),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::dev_mgr::instance().get_device(GPUIndex).get_device_info(
+          deviceProp)));
   int maxGridSize = deviceProp.get_max_compute_units() * 40;
   return ((defaultGridSize > maxGridSize) ? maxGridSize : defaultGridSize);
 }
@@ -123,24 +113,15 @@ StopWatchInterface **hTimer = NULL;
 static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Init GPU
   /*
-  DPCT1093:50: The "plan->device" device may be not the one intended for use.
+  DPCT1093:21: The "plan->device" device may be not the one intended for use.
   Adjust the selected device if needed.
   */
-  /*
-  DPCT1003:51: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::select_device(plan->device), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan->device)));
 
   dpct::device_info deviceProp;
-  /*
-  DPCT1003:52: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::dev_mgr::instance()
-                       .get_device(plan->device)
-                       .get_device_info(deviceProp),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                       .get_device(plan->device)
+                                       .get_device_info(deviceProp)));
 
   // Start the timer
   sdkStartTimer(&hTimer[plan->device]);
@@ -152,11 +133,8 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Main computation
   MonteCarloGPU(plan);
 
-  /*
-  DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
 
   // Stop the timer
   sdkStopTimer(&hTimer[plan->device]);
@@ -182,25 +160,13 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
 
   for (int i = 0; i < nPlans; i++) {
     /*
-    DPCT1093:54: The "plan[i].device" device may be not the one intended for
+    DPCT1093:22: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:55: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
-    /*
-    DPCT1003:56: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors(
-        ((streams[i]) = dpct::get_current_device().create_queue(), 0));
-    /*
-    DPCT1003:57: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((events[i] = new sycl::event(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        (streams[i]) = dpct::get_current_device().create_queue()));
+    checkCudaErrors(DPCT_CHECK_ERROR(events[i] = new sycl::event()));
   }
 
   // Init Each GPU
@@ -210,24 +176,15 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   for (int i = 0; i < nPlans; i++) {
     // set the target device to perform initialization on
     /*
-    DPCT1093:58: The "plan[i].device" device may be not the one intended for
+    DPCT1093:23: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:59: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
 
     dpct::device_info deviceProp;
-    /*
-    DPCT1003:60: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::dev_mgr::instance()
-                         .get_device(plan[i].device)
-                         .get_device_info(deviceProp),
-                     0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                         .get_device(plan[i].device)
+                                         .get_device_info(deviceProp)));
 
     // Allocate intermediate memory for MC integrator
     // and initialize RNG state
@@ -236,19 +193,12 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
 
   for (int i = 0; i < nPlans; i++) {
     /*
-    DPCT1093:61: The "plan[i].device" device may be not the one intended for
+    DPCT1093:24: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:62: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
-    /*
-    DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::get_current_device().queues_wait_and_throw(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
   }
 
   // Start the timer
@@ -257,42 +207,35 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
 
   for (int i = 0; i < nPlans; i++) {
     /*
-    DPCT1093:64: The "plan[i].device" device may be not the one intended for
+    DPCT1093:25: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
 
     // Main computations
     MonteCarloGPU(&plan[i], streams[i]);
 
     /*
-    DPCT1012:66: Detected kernel execution time measurement pattern and
+    DPCT1012:26: Detected kernel execution time measurement pattern and
     generated an initial code for time measurements in SYCL. You can change the
     way time is measured depending on your goals.
     */
     /*
-    DPCT1024:67: The original code returned the error code that was further
+    DPCT1024:27: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
     events_ct1_i = std::chrono::steady_clock::now();
-    checkCudaErrors((*events[i] = streams[i]->ext_oneapi_submit_barrier(), 0));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(*events[i] = streams[i]->ext_oneapi_submit_barrier()));
   }
 
   for (int i = 0; i < nPlans; i++) {
     /*
-    DPCT1093:68: The "plan[i].device" device may be not the one intended for
+    DPCT1093:28: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     events[i]->wait_and_throw();
   }
 
@@ -301,25 +244,14 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
 
   for (int i = 0; i < nPlans; i++) {
     /*
-    DPCT1093:70: The "plan[i].device" device may be not the one intended for
+    DPCT1093:29: The "plan[i].device" device may be not the one intended for
     use. Adjust the selected device if needed.
     */
-    /*
-    DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(plan[i].device), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     closeMonteCarloGPU(&plan[i]);
-    /*
-    DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::get_current_device().destroy_queue(streams[i]), 0));
-    /*
-    DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::destroy_event(events[i]), 0));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(dpct::get_current_device().destroy_queue(streams[i])));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::destroy_event(events[i])));
   }
 }
 
@@ -397,11 +329,8 @@ int main(int argc, char **argv) {
 
   // GPU number present in the system
   int GPU_N;
-  /*
-  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((GPU_N = dpct::dev_mgr::instance().device_count(), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(GPU_N = dpct::dev_mgr::instance().device_count()));
   int nOptions = 8 * 1024;
 
   nOptions = adjustProblemSize(GPU_N, nOptions);
@@ -498,14 +427,9 @@ int main(int argc, char **argv) {
 
     for (i = 0; i < GPU_N; i++) {
       dpct::device_info deviceProp;
-      /*
-      DPCT1003:75: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::dev_mgr::instance()
-                           .get_device(optionSolver[i].device)
-                           .get_device_info(deviceProp),
-                       0));
+      checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                           .get_device(optionSolver[i].device)
+                                           .get_device_info(deviceProp)));
       printf("GPU Device #%i: %s\n", optionSolver[i].device,
              deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
@@ -546,14 +470,9 @@ int main(int argc, char **argv) {
 
     for (i = 0; i < GPU_N; i++) {
       dpct::device_info deviceProp;
-      /*
-      DPCT1003:76: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((dpct::dev_mgr::instance()
-                           .get_device(optionSolver[i].device)
-                           .get_device_info(deviceProp),
-                       0));
+      checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                           .get_device(optionSolver[i].device)
+                                           .get_device_info(deviceProp)));
       printf("GPU Device #%i: %s\n", optionSolver[i].device,
              deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
@@ -614,14 +533,10 @@ int main(int argc, char **argv) {
   for (int i = 0; i < GPU_N; i++) {
     sdkStartTimer(&hTimer[i]);
     /*
-    DPCT1093:77: The "i" device may be not the one intended for use. Adjust the
+    DPCT1093:30: The "i" device may be not the one intended for use. Adjust the
     selected device if needed.
     */
-    /*
-    DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((dpct::select_device(i), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(i)));
   }
 
   delete[] optionSolver;

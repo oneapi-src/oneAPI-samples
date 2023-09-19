@@ -29,11 +29,7 @@
 #define MONTECARLO_REDUCTION_CUH
 
 #include <sycl/sycl.hpp>
-
-using namespace sycl;
-#include "MonteCarlo_common.h"
-//#include <dpct/dpct.hpp>
-//#include <cooperative_groups.h>
+#include <dpct/dpct.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // This function calculates total sum for each of the two input arrays.
@@ -61,18 +57,8 @@ void sumReduce(T *sum, T *sum2, sycl::group<3> &cta, sycl::sub_group &tile32,
       sum[tid] = beta;
       sum2[tid] = beta2;
     }
-    /*
-    DPCT1065:2: Consider replacing sycl::sub_group::barrier() with
-    sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
     item_ct1.get_sub_group().barrier();
   }
-  /*
-  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 
   if (tid == 0) {
@@ -85,11 +71,6 @@ void sumReduce(T *sum, T *sum2, sycl::group<3> &cta, sycl::sub_group &tile32,
     __TOptionValue t = {beta, beta2};
     *d_CallValue = t;
   }
-  /*
-  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 }
 

@@ -32,12 +32,9 @@
 #include <dpct/dpct.hpp>
 #include <stdlib.h>
 #include <stdio.h>
-//#include <cooperative_groups.h>
 
 #include <helper_cuda.h>
-#include <oneapi/mkl.hpp>
-
-#include <oneapi/mkl/rng/device.hpp>
+#include <dpct/rng_utils.hpp>
 
 #include "MonteCarlo_common.h"
 
@@ -54,7 +51,7 @@
 #define MAX_OPTIONS (1024 * 1024)
 
 // Preprocessed input option data
-typedef struct dpct_type_127056 {
+typedef struct dpct_type_164939 {
   real S;
   real X;
   real MuByT;
@@ -66,7 +63,7 @@ typedef struct dpct_type_127056 {
 ////////////////////////////////////////////////////////////////////////////////
 inline float endCallValue(float S, float X, float r, float MuByT,
                                      float VBySqrtT) {
-  float callValue = S * sycl::exp(MuByT + VBySqrtT * r) - X;
+  float callValue = S * sycl::native::exp(MuByT + VBySqrtT * r) - X;
   return (callValue > 0.0F) ? callValue : 0.0F;
 }
 
@@ -83,12 +80,19 @@ inline double endCallValue(double S, double X, double r,
 // per option. It is fastest when the number of thread blocks times the work per
 // block is high enough to keep the GPU busy.
 ////////////////////////////////////////////////////////////////////////////////
+/*
+DPCT1110:3: The total declared local variable size in device function
+MonteCarloOneBlockPerOption exceeds 128 bytes and may cause high register
+pressure. Consult with your hardware vendor to find the total register size
+available and adjust the code, or use smaller sub-group size to avoid high
+register pressure.
+*/
 static void MonteCarloOneBlockPerOption(
     /*
-    DPCT1032:29: A different random number generator is used. You may need to
+    DPCT1032:31: A different random number generator is used. You may need to
     adjust the code.
     */
-    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::philox4x32x10<1>>
+    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
         *__restrict rngStates,
     const __TOptionData *__restrict d_OptionData,
     __TOptionValue *__restrict d_CallValue, int pathN, int optionN,
@@ -105,10 +109,10 @@ static void MonteCarloOneBlockPerOption(
 
   // Copy random number state to local memory for efficiency
   /*
-  DPCT1032:30: A different random number generator is used. You may need to
+  DPCT1032:32: A different random number generator is used. You may need to
   adjust the code.
   */
-  dpct::rng::device::rng_generator<oneapi::mkl::rng::device::philox4x32x10<1>>
+  dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
       localState = rngStates[tid];
   for (int optionIndex = item_ct1.get_group(2); optionIndex < optionN;
        optionIndex += item_ct1.get_group_range(2)) {
@@ -140,7 +144,7 @@ static void MonteCarloOneBlockPerOption(
     // Reduce shared memory accumulators
     // and write final result to global memory
     /*
-    DPCT1065:3: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -151,11 +155,11 @@ static void MonteCarloOneBlockPerOption(
 }
 
 /*
-DPCT1032:31: A different random number generator is used. You may need to adjust
+DPCT1032:33: A different random number generator is used. You may need to adjust
 the code.
 */
 static void rngSetupStates(
-    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::philox4x32x10<1>>
+    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
         *rngState,
     int device_id, const sycl::nd_item<3> &item_ct1) {
   // determine global thread id
@@ -163,10 +167,14 @@ static void rngSetupStates(
             item_ct1.get_group(2) * item_ct1.get_local_range(2);
   // Each threadblock gets different seed,
   // Threads within a threadblock get different sequence numbers
-  rngState[tid] = dpct::rng::device::rng_generator<
-      oneapi::mkl::rng::device::philox4x32x10<1>>(
-      item_ct1.get_group(2) + item_ct1.get_group_range(2) * device_id,
-      {0, static_cast<std::uint64_t>((item_ct1.get_local_id(2)) * 8)});
+  /*
+  DPCT1105:34: The mcg59 random number generator is used. The subsequence
+  argument "item_ct1.get_local_id(2)" is ignored. You need to verify the
+  migration.
+  */
+  rngState[tid] =
+      dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>(
+          item_ct1.get_group(2) + item_ct1.get_group_range(2) * device_id, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,69 +182,44 @@ static void rngSetupStates(
 ////////////////////////////////////////////////////////////////////////////////
 
 extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
-  /*
-  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((plan->d_OptionData = (void *)sycl::malloc_device(
-                       sizeof(__TOptionData) * (plan->optionCount),
-                       dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((plan->d_CallValue = (void *)sycl::malloc_device(
-                       sizeof(__TOptionValue) * (plan->optionCount),
-                       dpct::get_default_queue()),
-                   0));
-  /*
-  DPCT1003:34: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((plan->h_OptionData = (void *)sycl::malloc_host(
-                       sizeof(__TOptionData) * (plan->optionCount),
-                       dpct::get_default_queue()),
-                   0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(
+                           sizeof(__TOptionData) * (plan->optionCount),
+                           dpct::get_default_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(
+                           sizeof(__TOptionValue) * (plan->optionCount),
+                           dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      plan->h_OptionData =
+          (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount),
+                                    dpct::get_default_queue())));
   // Allocate internal device memory
-  /*
-  DPCT1003:35: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
-                       (plan->optionCount), dpct::get_default_queue()),
-                   0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
+                           (plan->optionCount), dpct::get_default_queue())));
   // Allocate states for pseudo random number generators
-  /*
-  DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (plan->rngStates = sycl::malloc_device<dpct::rng::device::rng_generator<
-           oneapi::mkl::rng::device::philox4x32x10<1>>>(
-           plan->gridSize * THREAD_N, dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:38: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::get_default_queue()
-           .memset(plan->rngStates, 0,
-                   /*
-                   DPCT1032:39: A different random number generator is used. You
-                   may need to adjust the code.
-                   */
-                   plan->gridSize * THREAD_N *
-                       sizeof(dpct::rng::device::rng_generator<
-                              oneapi::mkl::rng::device::philox4x32x10<1>>))
-           .wait(),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      plan->rngStates = sycl::malloc_device<
+          dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>>(
+          plan->gridSize * THREAD_N, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_default_queue()
+          .memset(plan->rngStates, 0,
+                  /*
+                  DPCT1032:36: A different random number generator is used. You
+                  may need to adjust the code.
+                  */
+                  plan->gridSize * THREAD_N *
+                      sizeof(dpct::rng::device::rng_generator<
+                             oneapi::mkl::rng::device::mcg59<1>>))
+          .wait()));
 
   // place each device pathN random numbers apart on the random number sequence
   dpct::get_default_queue().submit([&](sycl::handler &cgh) {
-    auto plan_rngStates_ct0 = plan->rngStates;
-    auto plan_device_ct1 = plan->device;
+    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
+        *plan_rngStates_ct0 = plan->rngStates;
+    int plan_device_ct1 = plan->device;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
                                            sycl::range<3>(1, 1, THREAD_N),
@@ -266,35 +249,16 @@ extern "C" void closeMonteCarloGPU(TOptionPlan *plan) {
         (float)(exp(-RT) * 1.96 * stdDev / sqrt(pathN));
   }
 
-  /*
-  DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(plan->rngStates, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:41: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   checkCudaErrors(
-      (sycl::free(plan->h_CallValue, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:42: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (sycl::free(plan->h_OptionData, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (sycl::free(plan->d_CallValue, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (sycl::free(plan->d_OptionData, dpct::get_default_queue()), 0));
+      DPCT_CHECK_ERROR(sycl::free(plan->rngStates, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_CallValue, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_OptionData, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->d_CallValue, dpct::get_default_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->d_OptionData, dpct::get_default_queue())));
 }
 
 // Main computations
@@ -320,33 +284,32 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
     h_OptionData[i].VBySqrtT = (real)VBySqrtT;
   }
 
-  /*
-  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream->memcpy(plan->d_OptionData, h_OptionData,
-                                  plan->optionCount * sizeof(__TOptionData)),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream->memcpy(plan->d_OptionData, h_OptionData,
+                     plan->optionCount * sizeof(__TOptionData))));
 
   stream->submit([&](sycl::handler &cgh) {
     /*
-    DPCT1101:79: 'SUM_N' expression was replaced with a value. Modify the code
+    DPCT1101:37: 'SUM_N' expression was replaced with a value. Modify the code
     to use the original expression, provided in comments, if it is correct.
     */
     sycl::local_accessor<real, 1> s_SumCall_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
     /*
-    DPCT1101:80: 'SUM_N' expression was replaced with a value. Modify the code
+    DPCT1101:38: 'SUM_N' expression was replaced with a value. Modify the code
     to use the original expression, provided in comments, if it is correct.
     */
     sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
-    auto plan_rngStates_ct0 = plan->rngStates;
-    auto plan_d_OptionData_ct1 = (__TOptionData *)(plan->d_OptionData);
-    auto plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);
-    auto plan_pathN_ct3 = plan->pathN;
-    auto plan_optionCount_ct4 = plan->optionCount;
+    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
+        *plan_rngStates_ct0 = plan->rngStates;
+    const __TOptionData *plan_d_OptionData_ct1 =
+        (__TOptionData *)(plan->d_OptionData);
+    __TOptionValue *plan_d_CallValue_ct2 =
+        (__TOptionValue *)(plan->d_CallValue);
+    int plan_pathN_ct3 = plan->pathN;
+    int plan_optionCount_ct4 = plan->optionCount;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
@@ -362,13 +325,9 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
   });
   getLastCudaError("MonteCarloOneBlockPerOption() execution failed\n");
 
-  /*
-  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream->memcpy(h_CallValue, plan->d_CallValue,
-                                  plan->optionCount * sizeof(__TOptionValue)),
-                   0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream->memcpy(h_CallValue, plan->d_CallValue,
+                     plan->optionCount * sizeof(__TOptionValue))));
 
   // cudaDeviceSynchronize();
 }
