@@ -12,8 +12,8 @@ This sample introduces different invocation/data interfaces that can be used whe
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 18.04/20.04/22.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Cyclone® V, Cyclone® 10 GX, Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
-| Software             | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition versions 20.2 to 23.1 <br> (Intel® Quartus® Prime Standard Edition version 22.1 for Cyclone® V FPGA)
+| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >

@@ -4,7 +4,7 @@ This tutorial demonstrates how to configure Avalon memory-mapped host data inter
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® FPGAs
+| Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to customize Avalon memory-mapped host interfaces in your FPGA IP components
 | Time to complete                  | 45 minutes
