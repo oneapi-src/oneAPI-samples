@@ -1,10 +1,10 @@
 // oneAPI headers
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
+
 #include "exception_handler.hpp"
 
-using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
@@ -14,32 +14,32 @@ class FunctorRegisterMap;
 /////////////////////////////////////////
 
 struct FunctorRegisterMapIP {
-  // Annotate kernel argument with 'register_map' property 
-  // to explicitly specify it to be a register-mapped kernel argument.
+  // Use an annotated_arg with the 'register_map' property to explicitly specify
+  // it to be a register-mapped kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::register_map})>                    
+      int *, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::register_map})>
       input;
-      
-  // Without the annotation, kernel argument will be inferred to be register-mapped
-  // kernel arguments if the kernel invocation interface is register-mapped,
-  // and vice-versa.
-  ValueT *output;
+
+  // Without the annotation, kernel argument will be inferred to be
+  // register-mapped kernel arguments if the kernel invocation interface is
+  // register-mapped, and vice-versa.
+  int *output;
 
   // A kernel with a register map invocation interface can also independently
   // have streaming kernel arguments, when annotated by 'conduit' property.
   sycl::ext::oneapi::experimental::annotated_arg<
-    MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
-                  sycl::ext::intel::experimental::conduit})>
-    n;
+      MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::conduit})>
+      n;
 
-  // Without kernel invocation interface annotation, register-mapped invocation
-  // interface will be inferred by the compiler.
+  // Without a kernel argument definition, the compiler will infer a
+  // register-mapped invocation interface.
   void operator()() const {
     // For annotated_arg of ac_int type, explicitly cast away the annotated_arg
-    // to prevent compiler error.
-    for (MyUInt5 i = 0; i < ((MyUInt5)n); i++) { 
-      output[i] = (ValueT)(input[i] * (input[i] + 1));
+    // to prevent compiler error when using methods or accessing members.
+    for (MyUInt5 i = 0; i < ((MyUInt5)n).slc<5>(0); i++) {
+      output[i] = input[i] * (input[i] + 1);
     }
   }
 };
@@ -81,23 +81,26 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *input = sycl::malloc_host<ValueT>(count, q);
-    ValueT *functor_register_map_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
+    int *input = sycl::malloc_host<int>(count, q);
+    int *functor_register_map_out = sycl::malloc_host<int>(count, q);
+    int *golden_out = sycl::malloc_host<int>(count, q);
 
     // create input and golden output data
     for (MyUInt5 i = 0; i < count; i++) {
       input[i] = rand() % 77;
-      golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
+      golden_out[i] = (int)(input[i] * (input[i] + 1));
       functor_register_map_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](ValueT *golden_out, ValueT *functor_register_map_out, MyUInt5 count) {
+    auto validate = [](int *golden_out, int *functor_register_map_out,
+                       MyUInt5 count) {
       for (MyUInt5 i = 0; i < count; i++) {
         if (functor_register_map_out[i] != golden_out[i]) {
-          std::cout << "functor_register_map_out[" << i << "] != golden_out[" << i << "]"
-                    << " (" << functor_register_map_out[i] << " != " << golden_out[i] << ")" << std::endl;
+          std::cout << "functor_register_map_out[" << i << "] != golden_out["
+                    << i << "]"
+                    << " (" << functor_register_map_out[i]
+                    << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
@@ -109,7 +112,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Running the kernel with register map invocation interface "
                  "implemented in the functor programming model"
               << std::endl;
-    q.single_task<FunctorRegisterMap>(FunctorRegisterMapIP{input, functor_register_map_out, count})
+    q.single_task<FunctorRegisterMap>(
+         FunctorRegisterMapIP{input, functor_register_map_out, count})
         .wait();
     std::cout << "\t Done" << std::endl;
 

@@ -1,11 +1,8 @@
 // oneAPI headers
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include "exception_handler.hpp"
+#include <sycl/sycl.hpp>
 
-using ValueT = int;
-using MyUInt5 = ac_int<5, false>;
+#include "exception_handler.hpp"
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -13,19 +10,20 @@ class LambdaStream;
 
 /////////////////////////////////////////
 
-void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output,
-                               MyUInt5 n) {
+void TestLambdaStreamingKernel(sycl::queue &q, int *input, int *output,
+                               int n) {
   // Create a properties object containing the kernel invocation interface
   // property 'streaming_interface_remove_downstream_stall'.
-  sycl::ext::oneapi::experimental::properties kernel_properties {
-    sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
-  };
+  sycl::ext::oneapi::experimental::properties kernel_properties{
+      sycl::ext::intel::experimental::
+          streaming_interface_remove_downstream_stall};
 
-  // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
-  // interface. All kernel arguments will have the same interface as the kernel invocation interface.
+  // In the Lambda programming model, pass a properties object argument to
+  // configure the kernel invocation interface. All kernel arguments will have
+  // the same interface as the kernel invocation interface.
   q.single_task<LambdaStream>(kernel_properties, [=] {
-     for (MyUInt5 i = 0; i < n; i++) {
-       output[i] = (ValueT)(input[i] * (input[i] + 1));
+     for (int i = 0; i < n; i++) {
+       output[i] = input[i] * (input[i] + 1);
      }
    }).wait();
 
@@ -43,7 +41,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  MyUInt5 count = 16;
+  int count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
@@ -69,23 +67,26 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *input = sycl::malloc_host<ValueT>(count, q);
-    ValueT *lambda_streaming_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
+    int *input = sycl::malloc_host<int>(count, q);
+    int *lambda_streaming_out = sycl::malloc_host<int>(count, q);
+    int *golden_out = sycl::malloc_host<int>(count, q);
 
     // create input and golden output data
-    for (MyUInt5 i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
       input[i] = rand() % 77;
-      golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
+      golden_out[i] = (int)(input[i] * (input[i] + 1));
       lambda_streaming_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](ValueT *golden_out, ValueT *lambda_streaming_out, MyUInt5 count) {
-      for (MyUInt5 i = 0; i < count; i++) {
+    auto validate = [](int *golden_out, int *lambda_streaming_out,
+                       int count) {
+      for (int i = 0; i < count; i++) {
         if (lambda_streaming_out[i] != golden_out[i]) {
-          std::cout << "lambda_streaming_out[" << i << "] != golden_out[" << i << "]"
-                    << " (" << lambda_streaming_out[i] << " != " << golden_out[i] << ")" << std::endl;
+          std::cout << "lambda_streaming_out[" << i << "] != golden_out[" << i
+                    << "]"
+                    << " (" << lambda_streaming_out[i]
+                    << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
