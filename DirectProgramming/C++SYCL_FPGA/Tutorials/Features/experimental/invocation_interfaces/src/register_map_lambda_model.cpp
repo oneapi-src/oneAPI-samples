@@ -20,14 +20,14 @@ void TestLambdaRegisterMapKernel(sycl::queue &q, int *input, int *output,
   sycl::ext::oneapi::experimental::annotated_arg<
       MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
                    sycl::ext::intel::experimental::conduit})>
-      n;
+      n_annotated = n;
 
   // Without passing a properties object argument, the compiler will infer a
   // register-mapped invocation interface.
   q.single_task<LambdaRegisterMap>([=] {
      // For annotated_arg of ac_int type, explicitly cast away the annotated_arg
      // to prevent compiler error when using methods or accessing members.
-     for (MyUInt5 i = 0; i < ((MyUInt5)n).slc<5>(0); i++) {
+     for (MyUInt5 i = 0; i < ((MyUInt5)n_annotated).slc<5>(0); i++) {
        output[i] = input[i] * (input[i] + 1);
      }
    }).wait();
