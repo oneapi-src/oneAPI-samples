@@ -1,10 +1,10 @@
 // oneAPI headers
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
+
 #include "exception_handler.hpp"
 
-using ValueT = int;
 using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
@@ -13,13 +13,22 @@ class LambdaRegMap;
 
 /////////////////////////////////////////
 
-void LambdaRegMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
+void LambdaRegMapKernel(sycl::queue &q, int *input, int *output,
                                  MyUInt5 n) {
-  // Without passing a properties object argument, register-mapped 
-  // invocation interface will be inferred by the compiler.
+  // A kernel with a register map invocation interface can also independently
+  // have streaming kernel arguments, when annotated by 'conduit' property.
+  sycl::ext::oneapi::experimental::annotated_arg<
+      MyUInt5, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::conduit})>
+      n_annotated = n;
+
+  // Without passing a properties object argument, the compiler will infer a
+  // register-mapped invocation interface.
   q.single_task<LambdaRegMap>([=] {
-     for (MyUInt5 i = 0; i < n; i++) {
-       output[i] = (ValueT)(input[i] * (input[i] + 1));
+     // For annotated_arg of ac_int type, explicitly cast away the annotated_arg
+     // to prevent compiler error when using methods or accessing members.
+     for (MyUInt5 i = 0; i < ((MyUInt5)n_annotated).slc<5>(0); i++) {
+       output[i] = input[i] * (input[i] + 1);
      }
    }).wait();
 
@@ -63,23 +72,26 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *input = sycl::malloc_host<ValueT>(count, q);
-    ValueT *lambda_register_map_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
+    int *input = sycl::malloc_host<int>(count, q);
+    int *lambda_register_map_out = sycl::malloc_host<int>(count, q);
+    int *golden_out = sycl::malloc_host<int>(count, q);
 
     // create input and golden output data
     for (MyUInt5 i = 0; i < count; i++) {
       input[i] = rand() % 77;
-      golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
+      golden_out[i] = (int)(input[i] * (input[i] + 1));
       lambda_register_map_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](ValueT *golden_out, ValueT *lambda_register_map_out, MyUInt5 count) {
+    auto validate = [](int *golden_out, int *lambda_register_map_out,
+                       MyUInt5 count) {
       for (MyUInt5 i = 0; i < count; i++) {
         if (lambda_register_map_out[i] != golden_out[i]) {
-          std::cout << "lambda_register_map_out[" << i << "] != golden_out[" << i << "]"
-                    << " (" << lambda_register_map_out[i] << " != " << golden_out[i] << ")" << std::endl;
+          std::cout << "lambda_register_map_out[" << i << "] != golden_out["
+                    << i << "]"
+                    << " (" << lambda_register_map_out[i]
+                    << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
@@ -89,8 +101,7 @@ int main(int argc, char *argv[]) {
     // Launch the kernel with a register map invocation interface implemented in
     // the lambda programming model
     std::cout << "Running the kernel with register map invocation interface "
-                 "implemented in the "
-                 "lambda programming model"
+                 "implemented in the lambda programming model"
               << std::endl;
     LambdaRegMapKernel(q, input, lambda_register_map_out, count);
     passed &= validate(golden_out, lambda_register_map_out, count);

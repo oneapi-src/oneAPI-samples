@@ -1,16 +1,14 @@
 // oneAPI headers
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include "exception_handler.hpp"
+#include <sycl/sycl.hpp>
 
-using MyUInt5 = ac_int<5, false>;
+#include "exception_handler.hpp"
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class FunctorStream;
 
-struct a_s {
+struct Point {
   int x;
   char y;
 };
@@ -18,46 +16,46 @@ struct a_s {
 /////////////////////////////////////////
 
 struct FunctorStreamIP {
-  // Annotate kernel argument with 'conduit' property 
+  // Annotate kernel argument with 'conduit' property
   // to specify it to be a streaming kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
-      a_s, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::conduit})>                    
+      Point, decltype(sycl::ext::oneapi::experimental::properties{
+                 sycl::ext::intel::experimental::conduit})>
       input;
 
   // A kernel with a streaming invocation interface can also independently
-  // have register-mapped kernel arguments, when annotated by 'register_map' property.
+  // have register-mapped kernel arguments, when annotated by 'register_map'
+  // property.
   sycl::ext::oneapi::experimental::annotated_arg<
-      a_s *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::register_map})>                    
+      Point *, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::register_map})>
       output;
 
   // Without the annotation, kernel argument will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
   // vice-versa.
-  MyUInt5 n;
+  int n;
 
-  // Kernel properties method to configure the kernel to be a kernel with 
+  // Kernel properties method to configure the kernel to be a kernel with
   // streaming invocation interface.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
-    return sycl::ext::oneapi::experimental::properties {
-        sycl::ext::intel::experimental::streaming_interface_accept_downstream_stall
-    };
+    return sycl::ext::oneapi::experimental::properties{
+        sycl::ext::intel::experimental::
+            streaming_interface_accept_downstream_stall};
   }
 
   void operator()() const {
-      // For annotated_arg of struct type, explicitly cast away the annotated_arg
-      // to prevent compiler error.
-      struct a_s ret;
-      ret.x = 0;
-      ret.y = ((a_s)input).y;
+    // For annotated_arg of struct type, explicitly cast away the annotated_arg
+    // to prevent compiler error.
+    struct Point ret;
+    ret.x = 0;
+    ret.y = ((Point)input).y;
 
-      for(MyUInt5 i = 0; i < n; i++)
-      {
-        ret.x += ((a_s)input).x;
-        ret.y += 1;
-      }
-      *output = ret;
+    for (int i = 0; i < n; i++) {
+      ret.x += ((Point)input).x;
+      ret.y += 1;
+    }
+    *output = ret;
   }
 };
 
@@ -72,7 +70,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  MyUInt5 count = 16;
+  int count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
@@ -98,20 +96,19 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    struct a_s input;
+    Point input;
     input.x = 1;
     input.y = 'a';
 
-    a_s *functor_streaming_out = sycl::malloc_host<a_s>(count, q);
-    a_s *golden_out = sycl::malloc_host<a_s>(count, q);
+    Point *functor_streaming_out = sycl::malloc_host<Point>(count, q);
+    Point *golden_out = sycl::malloc_host<Point>(count, q);
 
     // Compute golden output data
-    struct a_s ret;
+    Point ret;
     ret.x = 0;
     ret.y = input.y;
 
-    for(MyUInt5 i = 0; i < (count); i++)
-    {
+    for (int i = 0; i < (count); i++) {
       ret.x += input.x;
       ret.y += 1;
     }
@@ -119,15 +116,18 @@ int main(int argc, char *argv[]) {
 
     // validation lambda
     auto validate = [](auto *golden_out, auto *functor_streaming_out) {
-      if (functor_streaming_out->x != golden_out->x || functor_streaming_out->y != golden_out->y) {
-          std::cout << "Expected: \n";
-          std::cout << "functor_streaming_out->x = " << golden_out->x << "\n";
-          std::cout << "functor_streaming_out->y = " << golden_out->y << "\n";
-          std::cout << "Got: \n";
-          std::cout << "functor_streaming_out->x = " << functor_streaming_out->x << "\n";
-          std::cout << "functor_streaming_out->y = " << functor_streaming_out->y << "\n";
-          std::cout << "FAILED\n";
-          return false;
+      if (functor_streaming_out->x != golden_out->x ||
+          functor_streaming_out->y != golden_out->y) {
+        std::cout << "Expected: \n";
+        std::cout << "functor_streaming_out->x = " << golden_out->x << "\n";
+        std::cout << "functor_streaming_out->y = " << golden_out->y << "\n";
+        std::cout << "Got: \n";
+        std::cout << "functor_streaming_out->x = " << functor_streaming_out->x
+                  << "\n";
+        std::cout << "functor_streaming_out->y = " << functor_streaming_out->y
+                  << "\n";
+        std::cout << "FAILED\n";
+        return false;
       }
       return true;
     };
@@ -138,7 +138,9 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task<FunctorStream>(FunctorStreamIP{input, functor_streaming_out, count}).wait();
+    q.single_task<FunctorStream>(
+         FunctorStreamIP{input, functor_streaming_out, count})
+        .wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden_out, functor_streaming_out);
