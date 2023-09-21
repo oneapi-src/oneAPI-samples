@@ -138,7 +138,7 @@ q.single_task([=] {
 </tr>
 </table>
 
-You can see concrete examples of kernels that use register-mapped invocation interfaces in `src/register_map_functor_model.cpp` and `src/register_map_lambda_model.cpp` 
+You can see concrete examples of kernels that use register-mapped invocation interfaces in `src/reg_map_functor.cpp` and `src/reg_map_lambda.cpp` 
 
 
 ### Declaring a Streaming Invocation Interface
@@ -170,9 +170,9 @@ struct MyIP {
 q.single_task(MyIP{});
 ```
 
-`src/streaming_functor_model.cpp` and `src/streaming_lambda_model.cpp`
+`src/stream_functor.cpp` and `src/stream_lambda.cpp`
 demonstrate two different kernels that use a streaming invocation interface.
-`src/streaming_remove_downstream_stall_functor_model.cpp` demonstrates a kernel
+`src/stream_rm_stall.cpp` demonstrates a kernel
 that has a streaming invocation interface with the `ready_in` signal disabled.
 
 #### Lambda Syntax
@@ -223,12 +223,12 @@ When you invoke a kernel with a pipelined streaming interface, you should only c
 
 ```c++
 for (int i = 0; i < count; i++) {
-	q.single_task(FunctorStreamingPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
+	q.single_task<StreamPipelined>(StreamPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
 }
 q.wait();
 ```
 
-For an example of a pipelined streaming kernel, see `src/streaming_pipelined_functor_model.cpp`.
+For an example of a pipelined streaming kernel, see `src/stream_pipelined.cpp`.
 
 ### Customizing the Kernel Argument Interface
 
@@ -260,7 +260,7 @@ struct MyIP {
 > ```c++
 > using MyUInt5 = ac_int<5, false>;
 > 
-> struct FunctorRegisterMapIP {
+> struct FunctorRegMapIP {
 > 
 >   int *input;
 >   int *output;
@@ -283,42 +283,42 @@ struct MyIP {
 >   }
 > };
 > ```
-> This is demonstrated in `src/register_map_functor_model.cpp`, `src/register_map_lambda_model.cpp` and `src/streaming_functor_model.cpp`.
+> This is demonstrated in `src/reg_map_functor.cpp`, `src/reg_map_lambda.cpp` and `src/stream_functor.cpp`.
 
 ### Source File Summary
 
 This code sample contains 6 source files that together demonstrate a full spectrum of configuration options for IP component invocation interfaces.
 
-1. `src/register_map_functor_model.cpp`
+1. `src/reg_map_functor.cpp`
    * Register-mapped invocation interface
    * Functor coding style
    * Register-mapped argument (explicitly specified with `annotated_arg`)
    * Proper casting away of `annotated_arg` to access an `ac_int` method
 
-2. `src/register_map_lambda_model.cpp`
+2. `src/reg_map_lambda.cpp`
    * Register-mapped invocation interface
    * Lambda coding style
    * Register-mapped argument (explicitly specified with `annotated_arg`)
    * Proper casting away of `annotated_arg` to access an `ac_int` method
 
-3. `src/streaming_functor_model.cpp`
+3. `src/stream_functor.cpp`
    * Streaming invocation interface (non-pipelined)
    * Functor coding style
    * Conduit argument (explicitly specified with `annotated_arg`)
    * Register-mapped argument (explicitly specified with `annotated_arg`)
    * Proper casting away of `annotated_arg` to access an `struct` member
 
-4. `src/streaming_lambda_model.cpp`
+4. `src/stream_lambda.cpp`
    * Streaming invocation interface (non-pipelined)
    * Lambda coding style
    * Conduit argument (implied)
 
-5. `src/streaming_pipelined_functor_model.cpp`
+5. `src/stream_pipelined.cpp`
    * Streaming invocation interface (pipelined)
    * Functor coding style
    * Conduit argument (implied)
 
-6. `src/streaming_remove_downstream_stall_functor_model.cpp`
+6. `src/stream_rm_stall.cpp`
    * Streaming invocation interface (non-pipelined, stall-free)
    * Functor coding style
    * Register-mapped argument (explicitly specified with `annotated_arg`)
@@ -426,17 +426,17 @@ This code sample contains 6 source files that together demonstrate a full spectr
 
 2. Open the **Views** menu and select **System Viewer**.
 
-In the left-hand pane, select **FunctorRegisterMapIP** or **LambdaRegisterMapIP** under the System hierarchy for the kernels with a register-mapped invocation interface.
+In the left-hand pane, select **FunctorRegMap** or **LambdaRegMap** under the System hierarchy for the kernels with a register-mapped invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in the **FunctorRegisterMapIP**, and in a register map interface in the **LambdaRegisterMapIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `busy`, and `done` kernel invocation interfaces are implemented in register map interfaces, and the `arg_input` and `arg_output` kernel arguments are implemented in register map interfaces. The `arg_n` kernel argument is implemented in a streaming interface in both the **FunctorRegMap**, and **LambdaRegMap**.
 
-Similarly, in the left-hand pane, select **FunctorStreamingIP**, **FunctorStreamingRmDownstreamStallIP**, **FunctorStreamingPipelinedIP** or **LambdaStreamingIP** under the System hierarchy for the kernels with a streaming invocation interface.
+Similarly, in the left-hand pane, select **FunctorStream**, **StreamRmStall**, **StreamPipelined** or **LambdaStream** under the System hierarchy for the kernels with a streaming invocation interface.
 
-In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **FunctorStreamingPipelinedIP** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStreamingIP** and **FunctorStreamingRmDownstreamStallIP**, and in a streaming interface in the **FunctorStreamingPipelinedIP** and **LambdaStreamingIP**.
+In the main **System Viewer** pane, the kernel invocation interfaces and kernel arguments interfaces are shown. They show that the `start`, `done`, `ready_in`, and `ready_out` kernel invocation interfaces are implemented in streaming interfaces. The `arg_input` kernel argument are implemented in streaming interfaces, `arg_n` kernel argument are implemented in streaming interfaces except for **StreamPipelined** which does not have this argument input and `arg_output` kernel argument are implemented in a register map interface in the **FunctorStream** and **StreamRmStall**, and in a streaming interface in the **StreamPipelined** and **LambdaStream**.
 
 > **Note**: Kernel invocation interfaces `ready_in` and `ready_out` are shown as `stall_in` and `stall_out` respectively.
 
-> **Note**: The report of **FunctorStreamingRmDownstreamStallIP** shows the internals of the kernel. Thus, there is a `stall_in`, but tied to ground and not seen at the device image boundary.
+> **Note**: The report of **StreamRmStall** shows the internals of the kernel. Thus, there is a `stall_in`, but tied to ground and not seen at the device image boundary.
 
 ## Run the `Invocation Interfaces` Sample
 
@@ -444,43 +444,43 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./register_map_functor.fpga_emu
-   ./streaming_functor.fpga_emu
-   ./streaming_rm_stall_in_functor.fpga_emu
-   ./streaming_pipelined_functor.fpga_emu
-   ./register_map_lambda.fpga_emu
-   ./streaming_lambda.fpga_emu
+   ./reg_map_functor.fpga_emu
+   ./stream_functor.fpga_emu
+   ./stream_rm_stall.fpga_emu
+   ./stream_pipelined.fpga_emu
+   ./reg_map_lambda.fpga_emu
+   ./stream_lambda.fpga_emu
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_rm_stall_in_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_pipelined_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./register_map_lambda.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./streaming_lambda.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./reg_map_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_functor.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_rm_stall.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_pipelined.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./reg_map_lambda.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_lambda.fpga_sim
    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   register_map_functor.fpga_emu.exe
-   streaming_functor.fpga_emu.exe
-   streaming_rm_stall_in_functor.fpga_emu.exe
-   streaming_pipelined_functor.fpga_emu.exe
-   register_map_lambda.fpga_emu.exe
-   streaming_lambda.fpga_emu.exe
+   reg_map_functor.fpga_emu.exe
+   stream_functor.fpga_emu.exe
+   stream_rm_stall.fpga_emu.exe
+   stream_pipelined.fpga_emu.exe
+   reg_map_lambda.fpga_emu.exe
+   stream_lambda.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   register_map_functor.fpga_sim.exe
-   streaming_functor.fpga_sim.exe
-   streaming_rm_stall_in_functor.fpga_sim.exe
-   streaming_pipelined_functor.fpga_sim
-   register_map_lambda.fpga_sim.exe
-   streaming_lambda.fpga_sim.exe
+   reg_map_functor.fpga_sim.exe
+   stream_functor.fpga_sim.exe
+   stream_rm_stall.fpga_sim.exe
+   stream_pipelined.fpga_sim
+   reg_map_lambda.fpga_sim.exe
+   stream_lambda.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
