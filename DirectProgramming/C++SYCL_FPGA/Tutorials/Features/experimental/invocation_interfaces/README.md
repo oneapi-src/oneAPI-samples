@@ -321,7 +321,8 @@ This code sample contains 6 source files that together demonstrate a full spectr
 6. `src/streaming_remove_downstream_stall_functor_model.cpp`
    * Streaming invocation interface (non-pipelined, stall-free)
    * Functor coding style
-   * Register-mapped argument
+   * Register-mapped argument (explicitly specified with `annotated_arg`)
+   * Conduit argument (explicitly specified with `annotated_arg`)
 
 ## Build the `Invocation Interfaces` Tutorial
 
