@@ -60,10 +60,18 @@ using ConsumePipe = pipe<class ConsumePipeClass, T>;
 //
 template <typename T>
 event SubmitProducer(queue& q, T* in_data, size_t size) {
+#if !defined(IS_BSP)
+  sycl::ext::oneapi::experimental::annotated_arg h_in_data(
+      in_data, sycl::ext::oneapi::experimental::properties{
+              sycl::ext::intel::experimental::buffer_location<0>});
+#endif
+
   return q.single_task<Producer>([=]() [[intel::kernel_args_restrict]] {
+#if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
     host_ptr<T> h_in_data(in_data);
+#endif
 
     for (size_t i = 0; i < size; i++) {
       T data_from_host_memory = *(h_in_data + i);
@@ -95,10 +103,18 @@ event SubmitWorker(queue& q, size_t size) {
 //
 template <typename T>
 event SubmitConsumer(queue& q, T* out_data, size_t size) {
+#if !defined(IS_BSP)
+  sycl::ext::oneapi::experimental::annotated_arg h_out_data(
+      out_data, sycl::ext::oneapi::experimental::properties{
+              sycl::ext::intel::experimental::buffer_location<0>});
+#endif
+
   return q.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
+#if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
     host_ptr<T> h_out_data(out_data);
+#endif
 
     for (size_t i = 0; i < size; i++) {
       T data_to_host_memory = ConsumePipe<T>::read();

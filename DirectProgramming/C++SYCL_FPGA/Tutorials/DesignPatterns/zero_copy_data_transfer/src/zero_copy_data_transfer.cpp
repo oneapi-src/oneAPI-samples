@@ -79,8 +79,17 @@ int main(int argc, char* argv[]) {
 
     // input and output data for the zero-copy version
     // malloc_host allocates memory specifically in the host's address space
+#if defined(IS_BSP)
     Type* in_zero_copy = malloc_host<Type>(size, q.get_context());
     Type* out_zero_copy = malloc_host<Type>(size, q.get_context());
+#else
+    Type *in_zero_copy = sycl::malloc_host<Type>(
+        size, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(0));
+    Type *out_zero_copy = sycl::malloc_host<Type>(
+        size, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(0));
+#endif
     
     // ensure that we could allocate space for both the input and output
     if (in_zero_copy == NULL) {
