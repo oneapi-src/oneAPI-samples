@@ -9,21 +9,15 @@ using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaStream;
+class LambdaRegMap;
 
 /////////////////////////////////////////
 
-void TestLambdaStreamingKernel(sycl::queue &q, ValueT *input, ValueT *output,
-                               MyUInt5 n) {
-  // Create a properties object containing the kernel invocation interface
-  // property 'streaming_interface_remove_downstream_stall'.
-  sycl::ext::oneapi::experimental::properties kernel_properties {
-    sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
-  };
-
-  // In the Lambda programming model, pass a properties object argument to configure the kernel invocation
-  // interface. All kernel arguments will have the same interface as the kernel invocation interface.
-  q.single_task<LambdaStream>(kernel_properties, [=] {
+void LambdaRegMapKernel(sycl::queue &q, ValueT *input, ValueT *output,
+                                 MyUInt5 n) {
+  // Without passing a properties object argument, register-mapped 
+  // invocation interface will be inferred by the compiler.
+  q.single_task<LambdaRegMap>([=] {
      for (MyUInt5 i = 0; i < n; i++) {
        output[i] = (ValueT)(input[i] * (input[i] + 1));
      }
@@ -70,40 +64,40 @@ int main(int argc, char *argv[]) {
     }
 
     ValueT *input = sycl::malloc_host<ValueT>(count, q);
-    ValueT *lambda_streaming_out = sycl::malloc_host<ValueT>(count, q);
+    ValueT *lambda_register_map_out = sycl::malloc_host<ValueT>(count, q);
     ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
     for (MyUInt5 i = 0; i < count; i++) {
       input[i] = rand() % 77;
       golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
-      lambda_streaming_out[i] = 0;
+      lambda_register_map_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](ValueT *golden_out, ValueT *lambda_streaming_out, MyUInt5 count) {
+    auto validate = [](ValueT *golden_out, ValueT *lambda_register_map_out, MyUInt5 count) {
       for (MyUInt5 i = 0; i < count; i++) {
-        if (lambda_streaming_out[i] != golden_out[i]) {
-          std::cout << "lambda_streaming_out[" << i << "] != golden_out[" << i << "]"
-                    << " (" << lambda_streaming_out[i] << " != " << golden_out[i] << ")" << std::endl;
+        if (lambda_register_map_out[i] != golden_out[i]) {
+          std::cout << "lambda_register_map_out[" << i << "] != golden_out[" << i << "]"
+                    << " (" << lambda_register_map_out[i] << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
       return true;
     };
 
-    // Launch the kernel with a streaming invocation interface implemented in
+    // Launch the kernel with a register map invocation interface implemented in
     // the lambda programming model
-    std::cout << "Running the kernel with streaming invocation interface "
+    std::cout << "Running the kernel with register map invocation interface "
                  "implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaStreamingKernel(q, input, lambda_streaming_out, count);
-    passed &= validate(golden_out, lambda_streaming_out, count);
+    LambdaRegMapKernel(q, input, lambda_register_map_out, count);
+    passed &= validate(golden_out, lambda_register_map_out, count);
     std::cout << std::endl;
 
     sycl::free(input, q);
-    sycl::free(lambda_streaming_out, q);
+    sycl::free(lambda_register_map_out, q);
     sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code

@@ -9,42 +9,33 @@ using MyUInt5 = ac_int<5, false>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class StreamRmStall;
+class StreamPipelined;
 
-/////////////////////////////////////////
-
-struct FunctorStreamingRmDownstreamStallIP {
-  // Annotate kernel argument with 'conduit' property 
-  // to specify it to be a streaming kernel argument.
-  sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::conduit})>                    
-      input;
-
-  // A kernel with a streaming invocation interface can also independently
-  // have register map kernel arguments, when annotated by 'register_map' property.
-  sycl::ext::oneapi::experimental::annotated_arg<
-      ValueT *, decltype(sycl::ext::oneapi::experimental::properties{
-                    sycl::ext::intel::experimental::register_map})>                    
-      output;
-
+struct StreamPipelinedIP {
   // Without the annotation, kernel argument will be inferred to be streaming
   // kernel arguments if the kernel invocation interface is streaming, and
-  // vice-versa.
-  MyUInt5 n;
+  // vice-versa.             
+  ValueT* input;
+                 
+  ValueT* output;
 
   // Kernel properties method to configure the kernel to be a kernel with 
-  // streaming invocation interface without downstream 'ready_in' interface.
+  // streaming pipelined invocation interface.
+  // The property `sycl::ext::intel::experimental::pipelined` takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
+  // -1: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
+  // 0: Do not pipeline the kernel.
+  // N (N> 0): Pipeline the kernel, and force the II of the kernel to be N.
+  // If a parameter is not specified, the default behaviour of -1 will be inferred.
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties {
-        sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall
+        sycl::ext::intel::experimental::streaming_interface<>,
+        sycl::ext::intel::experimental::pipelined<>
     };
   }
 
   void operator()() const {
-    for (MyUInt5 i = 0; i < n; i++) {
-      output[i] = (ValueT)(input[i] * (input[i] + 1));
-    }
+    ValueT val = *input;
+    *output = (ValueT)(val * (val + 1));
   }
 };
 
@@ -58,8 +49,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   bool passed = true;
-
-  MyUInt5 count = 16;
+  int count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
@@ -86,43 +76,40 @@ int main(int argc, char *argv[]) {
     }
 
     ValueT *input = sycl::malloc_host<ValueT>(count, q);
-    ValueT *functor_streaming_rm_downstream_stall_out = sycl::malloc_host<ValueT>(count, q);
+    ValueT *functor_streaming_pipelined_out = sycl::malloc_host<ValueT>(count, q);
     ValueT *golden_out = sycl::malloc_host<ValueT>(count, q);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       input[i] = rand() % 77;
       golden_out[i] = (ValueT)(input[i] * (input[i] + 1));
-      functor_streaming_rm_downstream_stall_out[i] = 0;
+      functor_streaming_pipelined_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](auto *golden_out, auto *functor_streaming_rm_downstream_stall_out, MyUInt5 count) {
+    auto validate = [](auto *golden_out, auto *functor_streaming_pipelined_out, MyUInt5 count) {
       for (int i = 0; i < count; i++) {
-        if (functor_streaming_rm_downstream_stall_out[i] != golden_out[i]) {
-          std::cout << "functor_streaming_rm_downstream_stall_out[" << i << "] != golden_out[" << i << "]"
-                    << " (" << functor_streaming_rm_downstream_stall_out[i] << " != " << golden_out[i] << ")" << std::endl;
+        if (functor_streaming_pipelined_out[i] != golden_out[i]) {
+          std::cout << "functor_streaming_pipelined_out[" << i << "] != golden_out[" << i << "]"
+                    << " (" << functor_streaming_pipelined_out[i] << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
       return true;
     };
 
-    // Launch the kernel with a streaming invocation interface implemented in
-    // the functor programming model
-    std::cout << "Running the kernel with streaming invocation interface "
-                 "implemented in the "
-                 "functor programming model"
-              << std::endl;
-    q.single_task<StreamRmStall>(FunctorStreamingRmDownstreamStallIP{input, functor_streaming_rm_downstream_stall_out, count})
-        .wait();
+    std::cout << "Launching streaming pipelined kernels consecutively" << std::endl;
+    for (int i = 0; i < count; i++) {
+      q.single_task<StreamPipelined>(StreamPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
+    }
+    q.wait();
     std::cout << "\t Done" << std::endl;
 
-    passed &= validate(golden_out, functor_streaming_rm_downstream_stall_out, count);
+    passed &= validate(golden_out, functor_streaming_pipelined_out, count);
     std::cout << std::endl;
 
     sycl::free(input, q);
-    sycl::free(functor_streaming_rm_downstream_stall_out, q);
+    sycl::free(functor_streaming_pipelined_out, q);
     sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code

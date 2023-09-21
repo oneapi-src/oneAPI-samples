@@ -17,7 +17,7 @@ struct a_s {
 
 /////////////////////////////////////////
 
-struct FunctorStreamingIP {
+struct FunctorStreamIP {
   // Annotate kernel argument with 'conduit' property 
   // to specify it to be a streaming kernel argument.
   sycl::ext::oneapi::experimental::annotated_arg<
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q.single_task<FunctorStream>(FunctorStreamingIP{input, functor_streaming_out, count}).wait();
+    q.single_task<FunctorStream>(FunctorStreamIP{input, functor_streaming_out, count}).wait();
     std::cout << "\t Done" << std::endl;
 
     passed &= validate(golden_out, functor_streaming_out);
