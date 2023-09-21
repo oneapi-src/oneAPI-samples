@@ -255,7 +255,7 @@ struct MyIP {
 };
 ```
 
-> **Note**: If you use a `struct` type as the payload of an `annotated_arg`, you must cast away the `annotated_arg` wrapper to access the members of your struct. If you forget to cast away the `annotated_arg` wrapper and try to access struct members anyway, you will see a compiler error.
+> **Note**: If you use a `struct` or `class` type as the payload of an `annotated_arg`, you must cast away the `annotated_arg` wrapper to access the members and methods of your `struct` or `class`. In particular, this applies to `ac_int` types. If you forget to cast away the `annotated_arg` wrapper and try to access members or methods anyway, you will see a compiler error.
 > 
 > ```c++
 > using MyUInt5 = ac_int<5, false>;
