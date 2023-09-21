@@ -83,6 +83,12 @@ int main(int argc, char* argv[]) {
     Type* in_zero_copy = malloc_host<Type>(size, q.get_context());
     Type* out_zero_copy = malloc_host<Type>(size, q.get_context());
 #else
+    // When targeting an FPGA family/part, the compiler infers memory
+    // interfaces based on the unique buffer_location property specified
+    // on kernel arguments
+    // The USM pointers passed into the kernel must match with the buffer location
+    // of each kernel argument, i.e. the allocated host memory should be in
+    // the location "0", as requested in ZeroCopyKernel
     Type *in_zero_copy = sycl::malloc_host<Type>(
         size, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(0));

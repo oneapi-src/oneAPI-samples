@@ -61,6 +61,12 @@ using ConsumePipe = pipe<class ConsumePipeClass, T>;
 template <typename T>
 event SubmitProducer(queue& q, T* in_data, size_t size) {
 #if !defined(IS_BSP)
+  // When targeting an FPGA family/part, the compiler infers memory
+  // interfaces based on the unique buffer_location property specified
+  // on kernel arguments
+  // With this property, we tell the compiler that these buffers
+  // are in a location "0" whereas the pointers from BufferKernel
+  // are in the location "1"
   sycl::ext::oneapi::experimental::annotated_arg h_in_data(
       in_data, sycl::ext::oneapi::experimental::properties{
               sycl::ext::intel::experimental::buffer_location<0>});
