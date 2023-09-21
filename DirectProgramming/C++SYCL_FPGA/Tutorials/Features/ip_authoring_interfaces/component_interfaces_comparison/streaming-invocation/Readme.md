@@ -4,25 +4,18 @@ This design also shows how to specify conduit interfaces using `annotated_arg`.
 
 ![](../assets/stream_kernel.svg)
 
-## Invocation Interface - Streaming pipelined interface
-In this design, the `SimpleVAdd` kernel uses a streaming pipelined invocation interface. This is explicitly specified using kernel properties. The following member function is added to the kernel functor to specify kernel properties:
+## Invocation Interface - Streaming interface
+In this design, the `SimpleVAdd` kernel uses a streaming invocation interface. This is explicitly specified using kernel properties. The following member function is added to the kernel functor to specify kernel properties:
 ```cpp
 auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface<>,
-        sycl::ext::intel::experimental::pipelined<1>
+        sycl::ext::intel::experimental::streaming_interface<>
     };
 }
 ```
-The property `sycl::ext::intel::experimental::streaming_interface<>` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit this property, the compiler will configure your kernel with a register-mapped invocation interface.
+The property `sycl::ext::intel::experimental::streaming_interface<>` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit the `streaming_interface` property, the compiler will configure your kernel with a register-mapped invocation interface.
 
-The property `sycl::ext::intel::experimental::pipelined<1>` specifies that this streaming interface is pipelined with an II of 1. Other valid parameterization are:
-- **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
-- **0**: Do not pipeline the kernel.
-- **N (N> 0)**: Pipeline the kernel, and force the II of the kernel to be N.
-> **Note**: `sycl::ext::intel::experimental::pipelined<>` property only supports kernels with a streaming invocation interface.
-
-Detailed explanation of invocation interfaces can be found in this dedicated [Invocation Interfaces](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/invocation_interfaces) code sample.
+Detailed explanation of invocation interfaces can be found in this dedicated [Invocation Interfaces](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/invocation_interfaces) code sample.
 
 ## Data Interface
 In this design, all kernel arguments (`A_in`, `B_in`, `C_out`, `len`) are implemented as conduits. In kernels with a streaming invocation interface, all unannotated arguments will be implemented as conduits by default. In kernels with a register-mapped invocation interface, all unannotated arguments will be implemented in the control/status register by default. In this design, they are explicitly specified as conduits to demonstrate the `annotated_arg` wrapper with property `sycl::ext::intel::experimental::conduit`.
