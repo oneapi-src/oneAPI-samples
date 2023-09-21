@@ -311,7 +311,7 @@ This code sample contains 6 source files that together demonstrate a full spectr
 4. `src/streaming_lambda_model.cpp`
    * Streaming invocation interface (non-pipelined)
    * Lambda coding style
-   * Register-mapped argument (implied)
+   * Conduit argument (implied)
 
 5. `src/streaming_pipelined_functor_model.cpp`
    * Streaming invocation interface (pipelined)
