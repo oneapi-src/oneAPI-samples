@@ -5,6 +5,7 @@
 
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include "exception_handler.hpp"
 
 // define buffer locations so the IP can have two unique Avalon memory-mapped
 // host interfaces
@@ -79,7 +80,7 @@ int main() {
 #endif
 
   // create the device queue
-  sycl::queue q(selector);
+  sycl::queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM host allocations
   auto device = q.get_device();
