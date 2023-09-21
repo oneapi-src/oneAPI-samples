@@ -123,9 +123,13 @@ The Nios V CPU uses memory caching, so it is important to flush the cache after 
 
 See the comments in the [source code](software/simple_dma_test/src/simple_dma_test.c) for further hints and notes.
 
-### Synthesis Notes
+### :warning: Synthesis Notes
 
-This design does not have any timing constraints or pin assignments, so do not synthesize the design without including those first. This design contains a JTAG UART, so if it is ported to a board ensure the JTAG I/O are constrained properly. The input reset path can be safely cut since the reset block inside the Platform Designer system will synchronize the reset for you.
+The focus of this design is on the interaction between the FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, and a Nios® V softcore processor. In order to demonstrate this interaction as simply as possible, some design choices were made that would make this design impractical in a real system as it is written.
+
+1. This design does not have any timing constraints or pin assignments, so do not synthesize the design without including those first. This design contains a JTAG UART, so if it is ported to a board, ensure the JTAG I/O are constrained properly. The input reset path can be safely cut since the reset block inside the Platform Designer system will synchronize the reset for you.
+
+2. For simplicity, a single memory holds the Nios® V softcore processor instructions and also the data that will be processed. In a more realistic system, this memory would likely be off-chip and split into multiple banks to allow the DMA kernel to move data concurrently. Since the DMA source and destination interfaces share, this forms a bottleneck.
 
 ## Build the `Nios V` Reference Design
 
