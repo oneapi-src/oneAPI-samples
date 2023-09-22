@@ -895,13 +895,16 @@ int ComputeParallel9(sycl::queue &q, std::vector<int> &data,
             size_t loc_id = item.get_local_id(0);
             sycl::sub_group sg = item.get_sub_group();
             sycl::vec<int, 8> sum{0, 0, 0, 0, 0, 0, 0, 0};
-            using global_ptr =
-                sycl::multi_ptr<int, sycl::access::address_space::global_space>;
             int base = (group_id * work_group_size +
                         sg.get_group_id()[0] * sg.get_local_range()[0]) *
                        elements_per_work_item;
-            for (int i = 0; i < elements_per_work_item / 8; ++i)
-              sum += sg.load<8>(global_ptr(&buf_acc[base + i * 128]));
+            for (int i = 0; i < elements_per_work_item / 8; ++i) {
+	       auto buf_ptr = sycl::address_space_cast<
+		 sycl::access::address_space::global_space,
+		 sycl::access::decorated::yes>(&buf_acc[base + i * 128]);
+
+               sum += sg.load<8>(buf_ptr);
+	    }
             scratch[loc_id] = sum;
             for (int i = work_group_size / 2; i > 0; i >>= 1) {
               item.barrier(sycl::access::fence_space::local_space);

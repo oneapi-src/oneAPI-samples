@@ -6,6 +6,17 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
+template <typename T>
+auto get_multi_ptr(T *raw_ptr) {
+  auto multi_ptr =
+    sycl::address_space_cast<
+      sycl::access::address_space::global_space,
+      sycl::access::decorated::yes>(raw_ptr);
+
+  return multi_ptr;
+}
+
+
 int main() {
   sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
@@ -25,15 +36,14 @@ int main() {
           auto sg = it.get_sub_group();
           sycl::vec<int, 8> x;
 
-          using global_ptr =
-              sycl::multi_ptr<int, sycl::access::address_space::global_space>;
           int base = (it.get_group(0) * 32 +
                       sg.get_group_id()[0] * sg.get_local_range()[0]) *
                      16;
-          x = sg.load<8>(global_ptr(&(data2[base + 0])));
-          sg.store<8>(global_ptr(&(data[base + 0])), x);
-          x = sg.load<8>(global_ptr(&(data2[base + 128])));
-          sg.store<8>(global_ptr(&(data[base + 128])), x);
+
+          x = sg.load<8>(get_multi_ptr(&(data2[base + 0])));
+          sg.store<8>(get_multi_ptr(&(data[base + 0])), x);
+          x = sg.load<8>(get_multi_ptr(&(data2[base + 128])));
+          sg.store<8>(get_multi_ptr(&(data[base + 128])), x);
         });
   });
   // Snippet end

@@ -4,7 +4,7 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 
 | Area                   | Description
 |:---                    |:---
-| What you will learn    | How to begin migrating CUDA to SYCL
+| What you will learn    | How to migrate and map SYCL RNG philox4x32x10<1> equivalent of cuRAND API's
 | Time to complete       | 15 minutes
 | Category               | Code Optimization
 
@@ -14,15 +14,15 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 ## Purpose
 The MonteCarlo Method provides a way to compute expected values by generating random scenarios and then averaging them. The execution of these random scenarios can be parallelized very efficiently. 
 
-With the help of a GPU, we reduce and speed up the problem by parallelizing each path. That is, we can assign each path to a single thread, simulating thousands of them in parallel, with massive savings in computational power and time.
+With the help of a GPU, we reduce and speed up the problem by parallelizing each path. That we can assign each path to a single thread, simulating thousands of them in parallel, with massive savings in computational power and time.
 
-> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment Base Toolkit.
+> **Note**: The sample used the open-source [SYCLomatic tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html) that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the [Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html#gs.5g2aqn) available to augment Base Toolkit.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                          | Description
 |:---                                  |:---
-| 01_dpct_output                       | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality.
+| 01_dpct_output                       | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that must be manually fixed to get full functionality. (The code does not functionally work as generated.)
 | 02_sycl_migrated                     | Contains manually migrated SYCL code from CUDA code.
 
 ## Prerequisites
@@ -30,8 +30,11 @@ This sample contains two versions in the following folders:
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Ubuntu* 20.04
-| Hardware              | Intel® Gen9 <br> Gen11 <br> Xeon CPU
-| Software              | SYCLomatic <br> Intel® oneAPI Base Toolkit (Base Kit)
+| Hardware              | Intel® Gen9 <br>Intel® Gen11 <br>Intel® Xeon CPU <br>Intel® Data Center GPU Max <br> Nvidia Testa P100 <br> Nvidia A100 <br> Nvidia H100 
+| Software              | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPU plugin from Codeplay (to run SYCL™ applications on NVIDIA® GPUs)
+
+For information on how to use SYCLomatic, refer to the materials at *[Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html)*.<br> How to run SYCL™ applications on NVIDIA® GPUs, refer to 
+[oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin from Codeplay.
 
 ## Key Implementation Details
 
@@ -52,7 +55,7 @@ Finally, the `MonteCarloGPU()` function performs the main computations by copyin
 
 >**Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html) for general information about the migration workflow.
 
-### CUDA source code evaluation
+## CUDA source code evaluation
 
 Pricing of European Options can be done by applying the Black-Scholes formula and with MonteCarlo approach.
 
@@ -100,10 +103,10 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
    ```
    This step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated. The `--use-custom-helper` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as include folder.
+4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated.
 
    ```
-   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api
+   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
 
 ## Build and Run the `MonteCarloMultiGPU` Sample
@@ -129,17 +132,22 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
    ```
    $ mkdir build
    $ cd build
-   $ cmake ..
+   $ cmake .. or ( cmake -D INTEL_MAX_GPU=1 .. ) or ( cmake -D NVIDIA_GPU=1 .. )
    $ make
    ```
+   > **Note**:
+   > - By default, no flag are enabled during build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU.
+   > - Enable **INTEL_MAX_GPU** flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
+   > - Enable **NVIDIA_GPU** flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs )
+    
+   By default, this command sequence will build the `02_sycl_migrated` version of the program.
 
-   By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated` version of the program.
-
-3. Run `02_sycl_migrated` for CPU and GPU.
+4. Run `02_sycl_migrated` for CPU and GPU.
      ```
-    make run_sm_cpu
+    make run_sm_cpu (runs on cpu)
     make run_sm_gpu (runs on Level-Zero Backend)
     make run_sm_gpu_opencl (runs on OpenCL Backend)
+    make run_sm_gpu_cuda (runs on cuda Backend)
     ```
 
 #### Troubleshooting
@@ -156,28 +164,33 @@ The following example is for `02_sycl_migrated` for GPU on Intel(R) UHD Graphics
 ```
 ./a.out Starting...
 
+Using single CPU thread for multiple GPUs
 MonteCarloMultiGPU
 ==================
 Parallelization method  = streamed
 Problem scaling         = weak
 Number of GPUs          = 1
-Total number of options = 12
+Total number of options = 8192
 Number of paths         = 262144
 main(): generating input data...
 main(): starting 1 host threads...
 main(): GPU statistics, streamed
-GPU Device #0: Intel(R) UHD Graphics P630 [0x3e96]
-Options         : 12
+GPU Device #0: Intel(R) UHD Graphics [0x9a60]
+Options         : 8192
 Simulation paths: 262144
 
-Total time (ms.): 3.139000
+Total time (ms.): 5408.881836
         Note: This is elapsed time for all to compute.
-Options per sec.: 3822.873601
+Options per sec.: 1514.545935
 main(): comparing Monte Carlo and Black-Scholes results...
 Shutting down...
 Test Summary...
-L1 norm        : 6.504269E-04
-Average reserve: 2.790815
+L1 norm        : 4.811539E-04
+Average reserve: 11.875348
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+
+Test passed
 
 ```
 ## License

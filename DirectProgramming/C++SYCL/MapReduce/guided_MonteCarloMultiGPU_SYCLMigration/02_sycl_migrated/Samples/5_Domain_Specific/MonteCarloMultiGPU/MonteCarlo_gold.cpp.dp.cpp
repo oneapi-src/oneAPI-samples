@@ -25,17 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <math.h>
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <dpct/rng_utils.hpp>
 
-#include <dpct/dpct.hpp>
-#include <oneapi/mkl.hpp>
-#include <oneapi/mkl/rng/device.hpp>
-#include <sycl/sycl.hpp>
-using namespace sycl;
 //#include "curand_kernel.h"
-//#include "helper_cuda.h"
+#include "helper_cuda.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Common types
@@ -108,15 +106,14 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
   gen =
       dpct::rng::create_host_rng(dpct::rng::random_engine_type::philox4x32x10);
   unsigned long long seed = 1234ULL;
-
-  gen->set_seed(seed);
+  checkCudaErrors(DPCT_CHECK_ERROR(gen->set_seed(seed)));
 
   if (h_Samples != NULL) {
     samples = h_Samples;
   } else {
     samples = (float *)malloc(pathN * sizeof(float));
-
-    gen->generate_gaussian(samples, pathN, 0.0, 1.0);
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(gen->generate_gaussian(samples, pathN, 0.0, 1.0)));
   }
 
   // for(int i=0; i<10; i++) printf("CPU sample = %f\n", samples[i]);
@@ -132,7 +129,7 @@ extern "C" void MonteCarloCPU(TOptionValue &callValue, TOptionData optionData,
 
   if (h_Samples == NULL) free(samples);
 
-  gen.reset();
+  checkCudaErrors(DPCT_CHECK_ERROR(gen.reset()));
 
   // Derive average from the total sum and discount by riskfree rate
   callValue.Expected = (float)(exp(-R * T) * sum / (double)pathN);

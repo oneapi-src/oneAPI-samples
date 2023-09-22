@@ -33,8 +33,7 @@ struct SimpleVAddKernel {
   // kernel property method to config invocation interface
   auto get(sycl::ext::oneapi::experimental::properties_tag) {
     return sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::streaming_interface<>,
-        sycl::ext::intel::experimental::pipelined<1>};
+        sycl::ext::intel::experimental::streaming_interface<>};
   }
 
   void operator()() const {

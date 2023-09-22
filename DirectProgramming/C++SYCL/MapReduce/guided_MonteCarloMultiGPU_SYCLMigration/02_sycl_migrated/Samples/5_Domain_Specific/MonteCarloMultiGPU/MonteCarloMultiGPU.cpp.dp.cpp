@@ -31,22 +31,20 @@
  * See supplied whitepaper for more explanations.
  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 // includes, project
-#include <helper_cuda.h>  // helper functions (cuda error checking and initialization)
 #include <helper_functions.h>  // Helper functions (utilities, parsing, timing)
+#include <helper_cuda.h>  // helper functions (cuda error checking and initialization)
 #include <multithreading.h>
-using namespace sycl;
-
-#include <chrono>
 
 #include "MonteCarlo_common.h"
+#include <chrono>
 
 int *pArgc = NULL;
 char **pArgv = NULL;
@@ -69,11 +67,13 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 
   // select problem size
   for (int i = 0; i < GPU_N; i++) {
-    sycl::queue q_ct1 = sycl::queue(default_selector_v);
-    auto device = q_ct1.get_device();
+    dpct::device_info deviceProp;
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        dpct::dev_mgr::instance().get_device(i).get_device_info(deviceProp)));
 
-    int cudaCores =
-        device.get_info<cl::sycl::info::device::max_compute_units>();
+    int cudaCores = _ConvertSMVer2Cores(deviceProp.get_major_version(),
+                                        deviceProp.get_minor_version()) *
+                    deviceProp.get_max_compute_units();
 
     if (cudaCores <= 32) {
       nOptions = (nOptions < cudaCores / 2 ? nOptions : cudaCores / 2);
@@ -84,11 +84,11 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 }
 
 int adjustGridSize(int GPUIndex, int defaultGridSize) {
-  sycl::queue q_ct1 = sycl::queue(default_selector_v);
-  auto device = q_ct1.get_device();
-
-  int maxGridSize =
-      device.get_info<cl::sycl::info::device::max_compute_units>() * 40;
+  dpct::device_info deviceProp;
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::dev_mgr::instance().get_device(GPUIndex).get_device_info(
+          deviceProp)));
+  int maxGridSize = deviceProp.get_max_compute_units() * 40;
   return ((defaultGridSize > maxGridSize) ? maxGridSize : defaultGridSize);
 }
 
@@ -108,21 +108,27 @@ extern "C" void BlackScholesCall(float &CallResult, TOptionData optionData);
 StopWatchInterface **hTimer = NULL;
 
 static CUT_THREADPROC solverThread(TOptionPlan *plan) {
-  sycl::queue stream = sycl::queue(
-      (sycl::platform(sycl::default_selector_v)
-           .get_devices(sycl::info::device_type::all)[plan->device]));
+  // Init GPU
+
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan->device)));
+
+  dpct::device_info deviceProp;
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                       .get_device(plan->device)
+                                       .get_device_info(deviceProp)));
 
   // Start the timer
   sdkStartTimer(&hTimer[plan->device]);
 
   // Allocate intermediate memory for MC integrator and initialize
   // RNG states
-  initMonteCarloGPU(plan, &stream);
+  initMonteCarloGPU(plan);
 
   // Main computation
-  MonteCarloGPU(plan, &stream);
+  MonteCarloGPU(plan);
 
-  stream.wait_and_throw();
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
 
   // Stop the timer
   sdkStopTimer(&hTimer[plan->device]);
@@ -130,34 +136,54 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Shut down this GPU
   closeMonteCarloGPU(plan);
 
-  stream.wait();
+  dpct::get_default_queue().wait();
+
+  printf("solverThread() finished - GPU Device %d: %s\n", plan->device,
+         deviceProp.get_name());
 
   CUT_THREADEND;
 }
 
 static void multiSolver(TOptionPlan *plan, int nPlans) {
   // allocate and initialize an array of stream handles
-  sycl::queue *streams = (sycl::queue *)malloc(nPlans * sizeof(sycl::queue));
-  sycl::event *events = new sycl::event[nPlans];
+  dpct::queue_ptr *streams =
+      (dpct::queue_ptr *)malloc(nPlans * sizeof(dpct::queue_ptr));
+  dpct::event_ptr *events =
+      (dpct::event_ptr *)malloc(nPlans * sizeof(dpct::event_ptr));
   std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;
 
-  auto gpu_devices =
-      cl::sycl::device::get_devices(cl::sycl::info::device_type::all);
-
   for (int i = 0; i < nPlans; i++) {
-    streams[i] =
-        sycl::queue(gpu_devices[plan[i].device], dpct::exception_handler,
-                    property::queue::in_order());
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        (streams[i]) = dpct::get_current_device().create_queue()));
+    checkCudaErrors(DPCT_CHECK_ERROR(events[i] = new sycl::event()));
   }
 
+  // Init Each GPU
+  // In CUDA 4.0 we can call cudaSetDevice multiple times to target each device
+  // Set the device desired, then perform initializations on that device
+
   for (int i = 0; i < nPlans; i++) {
+    // set the target device to perform initialization on
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+
+    dpct::device_info deviceProp;
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                         .get_device(plan[i].device)
+                                         .get_device_info(deviceProp)));
+
     // Allocate intermediate memory for MC integrator
     // and initialize RNG state
-    initMonteCarloGPU(&plan[i], &streams[i]);
+    initMonteCarloGPU(&plan[i]);
   }
 
   for (int i = 0; i < nPlans; i++) {
-    streams[i].wait_and_throw();
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
   }
 
   // Start the timer
@@ -165,22 +191,33 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   sdkStartTimer(&hTimer[0]);
 
   for (int i = 0; i < nPlans; i++) {
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+
     // Main computations
-    MonteCarloGPU(&plan[i], &streams[i]);
+    MonteCarloGPU(&plan[i], streams[i]);
 
     events_ct1_i = std::chrono::steady_clock::now();
-    events[i] = streams[i].ext_oneapi_submit_barrier();
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(*events[i] = streams[i]->ext_oneapi_submit_barrier()));
   }
 
   for (int i = 0; i < nPlans; i++) {
-    events[i].wait_and_throw();
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    events[i]->wait_and_throw();
   }
 
   // Stop the timer
   sdkStopTimer(&hTimer[0]);
 
   for (int i = 0; i < nPlans; i++) {
-    closeMonteCarloGPU(&plan[i], &streams[i]);
+
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
+    closeMonteCarloGPU(&plan[i]);
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(dpct::get_current_device().destroy_queue(streams[i])));
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::destroy_event(events[i])));
   }
 }
 
@@ -258,9 +295,8 @@ int main(int argc, char **argv) {
 
   // GPU number present in the system
   int GPU_N;
-
-  GPU_N =
-      (cl::sycl::device::get_devices(cl::sycl::info::device_type::all)).size();
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(GPU_N = dpct::dev_mgr::instance().device_count()));
   int nOptions = 8 * 1024;
 
   nOptions = adjustProblemSize(GPU_N, nOptions);
@@ -356,11 +392,12 @@ int main(int argc, char **argv) {
     printf("main(): GPU statistics, threaded\n");
 
     for (i = 0; i < GPU_N; i++) {
-      sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
-      std::cout << "\nRunning on "
-                << q_ct1.get_device().get_info<sycl::info::device::name>()
-                << "\n";
+      dpct::device_info deviceProp;
+      checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                           .get_device(optionSolver[i].device)
+                                           .get_device_info(deviceProp)));
+      printf("GPU Device #%i: %s\n", optionSolver[i].device,
+             deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
       printf("Simulation paths: %i\n", optionSolver[i].pathN);
       time = sdkGetTimerValue(&hTimer[i]);
@@ -398,10 +435,12 @@ int main(int argc, char **argv) {
     printf("main(): GPU statistics, streamed\n");
 
     for (i = 0; i < GPU_N; i++) {
-      sycl::queue q_ct1 = sycl::queue();
-      printf("GPU Device #%i: ", optionSolver[i].device);
-      std::cout << q_ct1.get_device().get_info<sycl::info::device::name>()
-                << "\n";
+      dpct::device_info deviceProp;
+      checkCudaErrors(DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
+                                           .get_device(optionSolver[i].device)
+                                           .get_device_info(deviceProp)));
+      printf("GPU Device #%i: %s\n", optionSolver[i].device,
+             deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);
       printf("Simulation paths: %i\n", optionSolver[i].pathN);
     }
@@ -459,6 +498,7 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < GPU_N; i++) {
     sdkStartTimer(&hTimer[i]);
+    checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(i)));
   }
 
   delete[] optionSolver;
