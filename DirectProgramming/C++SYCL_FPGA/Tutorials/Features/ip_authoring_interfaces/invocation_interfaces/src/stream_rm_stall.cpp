@@ -85,27 +85,29 @@ int main(int argc, char *argv[]) {
     }
 
     int *input = sycl::malloc_host<int>(count, q);
-    int *functor_streaming_rm_downstream_stall_out =
-        sycl::malloc_host<int>(count, q);
+    int *stream_rm_stall_out = sycl::malloc_host<int>(count, q);
     int *golden_out = sycl::malloc_host<int>(count, q);
+
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(stream_rm_stall_out);
+    assert(golden_out);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       input[i] = rand() % 77;
       golden_out[i] = (int)(input[i] * (input[i] + 1));
-      functor_streaming_rm_downstream_stall_out[i] = 0;
+      stream_rm_stall_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](auto *golden_out,
-                       auto *functor_streaming_rm_downstream_stall_out,
-                       int count) {
+    auto validate = [](auto *golden_out, auto *stream_rm_stall_out, int count) {
       for (int i = 0; i < count; i++) {
-        if (functor_streaming_rm_downstream_stall_out[i] != golden_out[i]) {
-          std::cout << "functor_streaming_rm_downstream_stall_out[" << i
-                    << "] != golden_out[" << i << "]"
-                    << " (" << functor_streaming_rm_downstream_stall_out[i]
-                    << " != " << golden_out[i] << ")" << std::endl;
+        if (stream_rm_stall_out[i] != golden_out[i]) {
+          std::cout << "stream_rm_stall_out[" << i << "] != golden_out[" << i
+                    << "]"
+                    << " (" << stream_rm_stall_out[i] << " != " << golden_out[i]
+                    << ")" << std::endl;
           return false;
         }
       }
@@ -118,18 +120,16 @@ int main(int argc, char *argv[]) {
                  "implemented in the "
                  "functor programming model"
               << std::endl;
-    q
-        .single_task<StreamRmStall>(StreamRmStallIP{
-            input, functor_streaming_rm_downstream_stall_out, count})
+    q.single_task<StreamRmStall>(
+         StreamRmStallIP{input, stream_rm_stall_out, count})
         .wait();
     std::cout << "\t Done" << std::endl;
 
-    passed &=
-        validate(golden_out, functor_streaming_rm_downstream_stall_out, count);
+    passed &= validate(golden_out, stream_rm_stall_out, count);
     std::cout << std::endl;
 
     sycl::free(input, q);
-    sycl::free(functor_streaming_rm_downstream_stall_out, q);
+    sycl::free(stream_rm_stall_out, q);
     sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code

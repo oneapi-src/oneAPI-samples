@@ -10,8 +10,7 @@ class LambdaStream;
 
 /////////////////////////////////////////
 
-void LambdaStreamKernel(sycl::queue &q, int *input, int *output,
-                               int n) {
+void LambdaStreamKernel(sycl::queue &q, int *input, int *output, int n) {
   // Create a properties object containing the kernel invocation interface
   // property 'streaming_interface_remove_downstream_stall'.
   sycl::ext::oneapi::experimental::properties kernel_properties{
@@ -71,6 +70,11 @@ int main(int argc, char *argv[]) {
     int *lambda_streaming_out = sycl::malloc_host<int>(count, q);
     int *golden_out = sycl::malloc_host<int>(count, q);
 
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(lambda_streaming_out);
+    assert(golden_out);
+
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       input[i] = rand() % 77;
@@ -79,8 +83,7 @@ int main(int argc, char *argv[]) {
     }
 
     // validation lambda
-    auto validate = [](int *golden_out, int *lambda_streaming_out,
-                       int count) {
+    auto validate = [](int *golden_out, int *lambda_streaming_out, int count) {
       for (int i = 0; i < count; i++) {
         if (lambda_streaming_out[i] != golden_out[i]) {
           std::cout << "lambda_streaming_out[" << i << "] != golden_out[" << i

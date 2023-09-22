@@ -103,6 +103,10 @@ int main(int argc, char *argv[]) {
     Point *functor_streaming_out = sycl::malloc_host<Point>(count, q);
     Point *golden_out = sycl::malloc_host<Point>(count, q);
 
+    // test that mallocs did not return nullptr
+    assert(functor_streaming_out);
+    assert(golden_out);
+
     // Compute golden output data
     Point ret;
     ret.x = 0;

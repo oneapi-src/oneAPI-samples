@@ -75,6 +75,11 @@ int main(int argc, char *argv[]) {
     int *functor_streaming_pipelined_out = sycl::malloc_host<int>(count, q);
     int *golden_out = sycl::malloc_host<int>(count, q);
 
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(functor_streaming_pipelined_out);
+    assert(golden_out);
+
     // create input and golden output data
     for (int i = 0; i < count; i++) {
       input[i] = rand() % 77;
@@ -100,8 +105,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Launching streaming pipelined kernels consecutively"
               << std::endl;
     for (int i = 0; i < count; i++) {
-      q.single_task<StreamPipelined>(StreamPipelinedIP{
-          &input[i], &functor_streaming_pipelined_out[i]});
+      q.single_task<StreamPipelined>(
+          StreamPipelinedIP{&input[i], &functor_streaming_pipelined_out[i]});
     }
     q.wait();
     std::cout << "\t Done" << std::endl;

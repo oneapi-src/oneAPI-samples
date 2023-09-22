@@ -85,6 +85,11 @@ int main(int argc, char *argv[]) {
     int *functor_register_map_out = sycl::malloc_host<int>(count, q);
     int *golden_out = sycl::malloc_host<int>(count, q);
 
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(functor_register_map_out);
+    assert(golden_out);
+
     // create input and golden output data
     for (MyUInt5 i = 0; i < count; i++) {
       input[i] = rand() % 77;

@@ -13,8 +13,7 @@ class LambdaRegMap;
 
 /////////////////////////////////////////
 
-void LambdaRegMapKernel(sycl::queue &q, int *input, int *output,
-                                 MyUInt5 n) {
+void LambdaRegMapKernel(sycl::queue &q, int *input, int *output, MyUInt5 n) {
   // A kernel with a register map invocation interface can also independently
   // have streaming kernel arguments, when annotated by 'conduit' property.
   sycl::ext::oneapi::experimental::annotated_arg<
@@ -75,6 +74,11 @@ int main(int argc, char *argv[]) {
     int *input = sycl::malloc_host<int>(count, q);
     int *lambda_register_map_out = sycl::malloc_host<int>(count, q);
     int *golden_out = sycl::malloc_host<int>(count, q);
+
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(lambda_register_map_out);
+    assert(golden_out);
 
     // create input and golden output data
     for (MyUInt5 i = 0; i < count; i++) {
