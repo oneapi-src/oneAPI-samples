@@ -370,7 +370,7 @@ This code sample contains 6 source files that together demonstrate a full spectr
       ```
       make report
       ```
-   3. Compile for simulation (fast compile time, targets simulated FPGA device).
+   3. Compile for simulation (:warning: This design compiles many source files, so the simulation compilation may take up to 3 hours depending on your computer).
       ```
       make fpga_sim
       ```
