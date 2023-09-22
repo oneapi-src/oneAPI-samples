@@ -60,7 +60,13 @@ The sample demonstrates in detail how to declare kernel invocation interfaces an
 
 ### Understanding Register-Mapped and Streaming Interfaces
 
-The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. The following table lists valid kernel argument interface synchronizations.
+The kernel invocation interface (namely, the `start` and `done` signals) can be implemented in the kernel's CSR, or using a ready/valid handshake. Similarly, the kernel arguments can be passed through the CSR, or through dedicated conduits. 
+
+| Register-mapped Invocation with Register-mapped Arguments | Streaming Invocation with Conduit Arguments
+|:--:                                                       |:--:
+| ![](assets/invocation_mm_agent_args.svg)                  | ![](assets/invocation_streaming_args.svg)
+
+The invocation interface and any argument interfaces are specified independently, so you may choose to implement the invocation interface with a ready/valid handshake, and implement the kernel arguments in the CSR. The following table lists valid kernel argument interface synchronizations.
 
 | Invocation Interface    | Argument Interface    | Argument Interface Synchronization
 |:---                     |:---                   |:---
@@ -68,24 +74,6 @@ The kernel invocation interface (namely, the `start` and `done` signals) can be 
 | Streaming               | Register-mapped       | Consumed if written one clock cycle before `<kernel_name>_streaming_start`=1 and `<kernel_name>_streaming_ready_out`=0 
 | Register-mapped         | Conduit               | Consumed one clock cycle after writing to the `start` register 
 | Register-mapped         | Register-mapped       | Consumed if written any time before writing to the `start` register 
-
-[//]: # "Comment: Use an HTML Table to render figures side-by-side" 
-
-<table>
-<tr> <th>Register-mapped Invocation with Register-mapped Arguments</th> <th>Streaming Invocation with Conduit Arguments</th>
-<tr>
-<td>
-
-![](assets/invocation_mm_agent_args.svg)
-
-</td>
-<td>
-
-![](assets/invocation_streaming_args.svg)
-
-</td>
-</tr>
-</table>
 
 If you would like an argument to have its own **dedicated** ready/valid handshake, implement that argument using a [streaming interface](../streaming_data_interfaces/).
 
@@ -95,14 +83,7 @@ If you would like an argument to have its own **dedicated** ready/valid handshak
 
 By default, your IP's `start` and `done` signals will appear in the IP's CSR. This is true whether you declare your kernel using the 'functor' or 'lambda' syntax.
 
-[//]: # "Comment: Use an HTML Table to render code snippets side-by-side" 
-
-<table> 
-<tr>
-<th>Functor Syntax</th> <th>Lambda Syntax</th>
-</tr>
-<tr>
-<td>
+#### Functor Syntax
 
 ```c++
 struct MyIP {
@@ -117,9 +98,7 @@ struct MyIP {
 q.single_task(MyIP{});
 ```
 
-</td>
-
-<td>
+#### Lambda Syntax
 
 ```c++
 void myIPFunction() {
@@ -133,10 +112,6 @@ q.single_task([=] {
   ...
 });
 ```
-
-</td>
-</tr>
-</table>
 
 You can see concrete examples of kernels that use register-mapped invocation interfaces in `src/reg_map_functor.cpp` and `src/reg_map_lambda.cpp` 
 
@@ -193,22 +168,9 @@ q.single_task(kernel_properties, [=] {
 
 SYCL* task kernels are non-pipelined by default, meaning the next kernel invocation can only be started after the previous one has completed its execution. Kernels with a streaming kernel invocation interface can optionally be pipelined to increase the throughput of the kernel. A pipelined kernel is one that can be invoked while the previous kernel invocation is still executing, making full use of the entire hardware pipeline. The delay between successive invocations is called the initiation interval (II).
 
-[//]: # "Comment: Use an HTML Table to render images side-by-side" 
-
-<table>
-<tr> <th>Non-pipelined Invocation</th> <th>Pipelined Invocation with II=1</th> </tr>
-<tr>
-<td>
-
-![](assets/non-pipelined.png)</td>
-
-<td>
-
-![](assets/pipelined.png)
-
-</td>
-</tr>
-</table>
+| Non-pipelined Invocation | Pipelined Invocation with II=1
+|:--:                      |:--:
+| ![](assets/non-pipelined.png) | ![](assets/pipelined.png)
 
 The kernel property `sycl::ext::intel::experimental::pipelined` takes an optional template parameter that controls whether to pipeline the kernel. Valid parameters are:
 - **-1**: Pipeline the kernel, and automatically infer lowest possible II at target fMAX.
