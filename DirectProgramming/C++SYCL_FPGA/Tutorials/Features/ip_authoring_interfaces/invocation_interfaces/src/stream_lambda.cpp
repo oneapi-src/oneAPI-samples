@@ -1,29 +1,30 @@
+// oneAPI headers
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/prototype/interfaces.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
-using ValueT = int;
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class LambdaStreamingIP;
-
-// offloaded computation
-ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * (val + 1)); }
+class LambdaStream;
 
 /////////////////////////////////////////
 
-void TestLambdaStreamingKernel(sycl::queue &q, ValueT *in, ValueT *out,
-                               size_t count) {
-  // In the Lambda programming model, all kernel arguments will have the same
-  // interface as the kernel invocation interface.
-  q.single_task<LambdaStreamingIP>([=] streaming_interface {
-     for (int i = 0; i < count; i++) {
-       out[i] = SomethingComplicated(in[i]);
+void LambdaStreamKernel(sycl::queue &q, int *input, int *output, int n) {
+  // Create a properties object containing the kernel invocation interface
+  // property 'streaming_interface_remove_downstream_stall'.
+  sycl::ext::oneapi::experimental::properties kernel_properties{
+      sycl::ext::intel::experimental::
+          streaming_interface_remove_downstream_stall};
+
+  // In the Lambda programming model, pass a properties object argument to
+  // configure the kernel invocation interface. All kernel arguments will have
+  // the same interface as the kernel invocation interface.
+  q.single_task<LambdaStream>(kernel_properties, [=] {
+     for (int i = 0; i < n; i++) {
+       output[i] = input[i] * (input[i] + 1);
      }
-   })
-      .wait();
+   }).wait();
 
   std::cout << "\t Done" << std::endl;
 }
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 
-  size_t count = 16;
+  int count = 16;
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
@@ -65,23 +66,30 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    ValueT *in = sycl::malloc_host<ValueT>(count, q);
-    ValueT *lambda_streaming_out = sycl::malloc_host<ValueT>(count, q);
-    ValueT *golden = sycl::malloc_host<ValueT>(count, q);
+    int *input = sycl::malloc_host<int>(count, q);
+    int *lambda_streaming_out = sycl::malloc_host<int>(count, q);
+    int *golden_out = sycl::malloc_host<int>(count, q);
+
+    // test that mallocs did not return nullptr
+    assert(input);
+    assert(lambda_streaming_out);
+    assert(golden_out);
 
     // create input and golden output data
     for (int i = 0; i < count; i++) {
-      in[i] = rand() % 77;
-      golden[i] = SomethingComplicated(in[i]);
+      input[i] = rand() % 77;
+      golden_out[i] = (int)(input[i] * (input[i] + 1));
       lambda_streaming_out[i] = 0;
     }
 
     // validation lambda
-    auto validate = [](auto &in, auto &out, size_t size) {
-      for (int i = 0; i < size; i++) {
-        if (out[i] != in[i]) {
-          std::cout << "out[" << i << "] != in[" << i << "]"
-                    << " (" << out[i] << " != " << in[i] << ")" << std::endl;
+    auto validate = [](int *golden_out, int *lambda_streaming_out, int count) {
+      for (int i = 0; i < count; i++) {
+        if (lambda_streaming_out[i] != golden_out[i]) {
+          std::cout << "lambda_streaming_out[" << i << "] != golden_out[" << i
+                    << "]"
+                    << " (" << lambda_streaming_out[i]
+                    << " != " << golden_out[i] << ")" << std::endl;
           return false;
         }
       }
@@ -90,17 +98,17 @@ int main(int argc, char *argv[]) {
 
     // Launch the kernel with a streaming invocation interface implemented in
     // the lambda programming model
-    std::cout << "Running kernel with a streaming invocation interface "
+    std::cout << "Running the kernel with streaming invocation interface "
                  "implemented in the "
                  "lambda programming model"
               << std::endl;
-    TestLambdaStreamingKernel(q, in, lambda_streaming_out, count);
-    passed &= validate(golden, lambda_streaming_out, count);
+    LambdaStreamKernel(q, input, lambda_streaming_out, count);
+    passed &= validate(golden_out, lambda_streaming_out, count);
     std::cout << std::endl;
 
-    sycl::free(in, q);
+    sycl::free(input, q);
     sycl::free(lambda_streaming_out, q);
-    sycl::free(golden, q);
+    sycl::free(golden_out, q);
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";

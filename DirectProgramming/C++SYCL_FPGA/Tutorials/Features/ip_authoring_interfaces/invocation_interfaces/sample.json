@@ -27,10 +27,12 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./register_map_functor_model.fpga_emu",
-          "./streaming_functor_model.fpga_emu",
-          "./register_map_lambda_model.fpga_emu",
-          "./streaming_lambda_model.fpga_emu"
+          "./reg_map_functor.fpga_emu",
+          "./stream_functor.fpga_emu",
+          "./reg_map_lambda.fpga_emu",
+          "./stream_lambda.fpga_emu",
+          "./stream_pipelined.fpga_emu",
+          "./stream_rm_stall.fpga_emu"
         ]
       },
       {
@@ -54,10 +56,12 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/invocation_interfaces",
           "nmake fpga_emu",
-          "register_map_functor_model.fpga_emu.exe",
-          "streaming_functor_model.fpga_emu.exe",
-          "register_map_lambda_model.fpga_emu.exe",
-          "streaming_lambda_model.fpga_emu.exe"
+          "reg_map_functor.fpga_emu.exe",
+          "stream_functor.fpga_emu.exe",
+          "reg_map_lambda.fpga_emu.exe",
+          "stream_lambda.fpga_emu.exe",
+          "stream_pipelined.fpga_emu.exe",
+          "stream_rm_stall.fpga_emu.exe"
         ]
       },
       {
