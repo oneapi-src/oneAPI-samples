@@ -33,11 +33,12 @@ double SubmitBufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
       accessor in_a(in_buf, h, read_only);
       accessor out_a(out_buf, h, write_only, no_init);
 #else
-      // When targeting an FPGA family/part, the compiler does not know
-      // if the two kernels accesses the same memory location
+      // When targeting an FPGA family/part, the compiler infers memory
+      // interfaces based on the unique buffer_location property specified
+      // on kernel arguments
       // With this property, we tell the compiler that these buffers
-      // are in a location "1" whereas the pointers from ExplicitKernel
-      // are in the default location "0"
+      // are in a location "1" whereas the pointers from ZeroCopyKernel
+      // are in the location "0"
       sycl::ext::oneapi::accessor_property_list location_of_buffer{
           ext::intel::buffer_location<1>};
       accessor in_a(in_buf, h, read_only, location_of_buffer);

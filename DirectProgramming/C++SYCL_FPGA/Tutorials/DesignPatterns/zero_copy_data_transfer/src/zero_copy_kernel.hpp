@@ -60,10 +60,24 @@ using ConsumePipe = pipe<class ConsumePipeClass, T>;
 //
 template <typename T>
 event SubmitProducer(queue& q, T* in_data, size_t size) {
+#if !defined(IS_BSP)
+  // When targeting an FPGA family/part, the compiler infers memory
+  // interfaces based on the unique buffer_location property specified
+  // on kernel arguments
+  // With this property, we tell the compiler that these buffers
+  // are in a location "0" whereas the pointers from BufferKernel
+  // are in the location "1"
+  sycl::ext::oneapi::experimental::annotated_arg h_in_data(
+      in_data, sycl::ext::oneapi::experimental::properties{
+              sycl::ext::intel::experimental::buffer_location<0>});
+#endif
+
   return q.single_task<Producer>([=]() [[intel::kernel_args_restrict]] {
+#if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
     host_ptr<T> h_in_data(in_data);
+#endif
 
     for (size_t i = 0; i < size; i++) {
       T data_from_host_memory = *(h_in_data + i);
@@ -95,10 +109,24 @@ event SubmitWorker(queue& q, size_t size) {
 //
 template <typename T>
 event SubmitConsumer(queue& q, T* out_data, size_t size) {
+#if !defined(IS_BSP)
+  // When targeting an FPGA family/part, the compiler infers memory
+  // interfaces based on the unique buffer_location property specified
+  // on kernel arguments
+  // With this property, we tell the compiler that these buffers
+  // are in a location "0" whereas the pointers from BufferKernel
+  // are in the location "1"
+  sycl::ext::oneapi::experimental::annotated_arg h_out_data(
+      out_data, sycl::ext::oneapi::experimental::properties{
+              sycl::ext::intel::experimental::buffer_location<0>});
+#endif
+
   return q.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
+#if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
     host_ptr<T> h_out_data(out_data);
+#endif
 
     for (size_t i = 0; i < size; i++) {
       T data_to_host_memory = ConsumePipe<T>::read();

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--- 
+      This file will automatically be found by platform designer when you open the system.  If you need to have other locations searched just add more search locations below.
+      IP search files are looking for other .ip, .tcl, and .ipx files so make sure you set the path to match where those files reside.
+      Since this file is searching for RTL and kernel components recursively all you have to do is ensure those items are located in the following directories:
+      
+         1)  /custom_ip - Ensure that your RTL components are added to this directory.  This file will search up to 2 subdirectories deep looking for the build kernel.
+         2)  /kernels - Ensure that your oneAPI kernels are located here.  This file will search up to 3 subdirectories deep looking for the built kernel.
+-->
+
+<library>
+
+  <!--- Search for custom IP in the custom_ip directory (and up to two subdirectory deeper) -->
+  <path path="./custom_ip/*" />
+  <path path="./custom_ip/*/*" />
+  <path path="./custom_ip/*/*/*" />
+  
+  <!--- Search for kernels in the kernels directory (and up to three subdirectory levels deep since kernels tend to have more directory heirarchy than RTL) -->
+  <path path="./kernels/*" />
+  <path path="./kernels/*/*" />
+  <path path="./kernels/*/*/*" />
+  <path path="./kernels/*/*/*/*" />
+  
+</library>
+
