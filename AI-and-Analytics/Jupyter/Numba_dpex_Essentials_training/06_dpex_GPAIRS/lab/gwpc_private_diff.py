@@ -1,6 +1,8 @@
-import numpy as np
-import numba_dpex
 import math
+
+import numba_dpex
+import numpy as np
+
 from numba import cuda
 
 
@@ -62,7 +64,9 @@ def count_weighted_pairs_3d_cuda_mesh(
                 for icell2_iy in range(leftmost_iy2, rightmost_iy2):
                     for icell2_iz in range(leftmost_iz2, rightmost_iz2):
 
-                        icell2 = icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        icell2 = (
+                            icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        )
                         ifirst2 = cell_id2_indices[icell2]
                         ilast2 = cell_id2_indices[icell2 + 1]
 
@@ -152,7 +156,9 @@ def count_weighted_pairs_3d_cuda_mesh_old(
                 for icell2_iy in range(leftmost_iy2, rightmost_iy2):
                     for icell2_iz in range(leftmost_iz2, rightmost_iz2):
 
-                        icell2 = icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        icell2 = (
+                            icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        )
                         ifirst2 = cell_id2_indices[icell2]
                         ilast2 = cell_id2_indices[icell2 + 1]
 
@@ -185,7 +191,9 @@ def count_weighted_pairs_3d_cuda_mesh_old(
 
 
 @cuda.jit
-def count_weighted_pairs_3d_cuda(x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
+def count_weighted_pairs_3d_cuda(
+    x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
+):
     """Naively count Npairs(<r), the total number of pairs that are separated
     by a distance less than r, for each r**2 in the input rbins_squared.
     """

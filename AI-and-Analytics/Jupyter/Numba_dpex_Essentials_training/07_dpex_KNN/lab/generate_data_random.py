@@ -1,7 +1,7 @@
-import numpy as np
+import dpnp as np
 
 try:
-    import numpy.random_intel as rnd
+    import dpnp.random_intel as rnd
 
     numpy_ver = "Intel"
 except:

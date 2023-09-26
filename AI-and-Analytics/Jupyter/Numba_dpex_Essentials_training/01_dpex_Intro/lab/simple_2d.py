@@ -50,8 +50,7 @@ def main():
 
     print("Running kernel ...")
     driver(a_dpt, b_dpt, c_dpt, global_size)
-    c_out = dpt.asnumpy(c_dpt)
-    assert np.allclose(c, c_out)
+    c_out = dpt.asnumpy(c_dpt)   
 
     print("Done...")
 

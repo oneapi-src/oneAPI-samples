@@ -5,7 +5,7 @@
 ## =============================================================
 
 import dpctl
-import numpy as np
+import dpnp as np
 from numba import float32
 
 import numba_dpex as dpex

@@ -24,7 +24,7 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *****************************************************************************
 
-import numpy as np
+import dpnp as np
 
 # @numba.jit(nopython=True)
 # def euclidean_dist(x1, x2):

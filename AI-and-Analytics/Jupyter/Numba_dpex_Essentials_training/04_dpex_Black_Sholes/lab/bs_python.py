@@ -1,4 +1,5 @@
-from math import log, sqrt, exp, erf
+from math import erf, exp, log, sqrt
+
 import numpy as np
 
 invsqrt = lambda x: 1.0 / sqrt(x)

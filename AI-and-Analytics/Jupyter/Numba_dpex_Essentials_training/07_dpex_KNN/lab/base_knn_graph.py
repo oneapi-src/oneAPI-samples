@@ -31,8 +31,8 @@ import sys
 
 import dpctl
 import dpctl.tensor as dpt
-import numpy as np
-import numpy.random as rnd
+import dpnp as np
+import dpnp.random as rnd
 from generate_data_random import (
     CLASSES_NUM,
     DATA_DIM,

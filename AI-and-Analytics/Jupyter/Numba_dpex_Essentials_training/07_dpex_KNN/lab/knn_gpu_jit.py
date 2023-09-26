@@ -1,5 +1,5 @@
 import base_knn_jit
-import numpy as np
+import dpnp as np
 
 import numba
 from numba import jit, njit, vectorize

@@ -25,7 +25,7 @@
 # *****************************************************************************
 
 import base_knn
-import numpy as np
+import dpnp as np
 
 import numba
 

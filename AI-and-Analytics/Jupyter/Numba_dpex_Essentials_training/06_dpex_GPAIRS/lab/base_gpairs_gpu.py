@@ -1,14 +1,17 @@
 # Copyright (C) 2017-2018 Intel Corporation
 #
 # SPDX-License-Identifier: MIT
+import datetime
+import json
+import os
 
+import dpctl
+import dpctl.tensor as dpt
 import numpy as np
-import sys, json, os, datetime
-import dpctl, dpctl.memory as dpmem, dpctl.tensor as dpt
-
-from gpairs_python import gpairs_python
-from generate_data_random import gen_rand_data, DEFAULT_NBINS
+import numpy.random as rnd
 from device_selector import get_device_selector
+from dpbench_datagen.gpairs import DEFAULT_NBINS, gen_rand_data
+from dpbench_python.gpairs.gpairs_python import gpairs_python
 
 try:
     import itimer as it
@@ -45,7 +48,9 @@ def gen_data_np(npoints, dtype=np.float32):
 
 def gen_data_usm(npoints):
     # init numpy obj
-    x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result = gen_data_np(npoints)
+    x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result = gen_data_np(
+        npoints
+    )
 
     with dpctl.device_context(get_device_selector(is_gpu=True)) as gpu_queue:
         # init usmdevice memory
@@ -118,7 +123,9 @@ def gen_data_usm(npoints):
     y2_usm.usm_data.copy_from_host(y2.view("u1"))
     z2_usm.usm_data.copy_from_host(z2.view("u1"))
     w2_usm.usm_data.copy_from_host(w2.view("u1"))
-    DEFAULT_RBINS_SQUARED_usm.usm_data.copy_from_host(DEFAULT_RBINS_SQUARED.view("u1"))
+    DEFAULT_RBINS_SQUARED_usm.usm_data.copy_from_host(
+        DEFAULT_RBINS_SQUARED.view("u1")
+    )
     result_usm.usm_data.copy_from_host(result.view("u1"))
 
     return (
@@ -138,7 +145,7 @@ def gen_data_usm(npoints):
 ##############################################
 
 
-def run(name, alg, sizes=2, step=2, nopt=2 ** 15):
+def run(name, alg, sizes=4, step=2, nopt=2**16):
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -152,7 +159,10 @@ def run(name, alg, sizes=2, step=2, nopt=2 ** 15):
         "--size", required=False, default=nopt, help="Initial data size"
     )
     parser.add_argument(
-        "--repeat", required=False, default=1, help="Iterations inside measured region"
+        "--repeat",
+        required=False,
+        default=1,
+        help="Iterations inside measured region",
     )
     parser.add_argument(
         "--text", required=False, default="", help="Print with each result"
@@ -194,10 +204,21 @@ def run(name, alg, sizes=2, step=2, nopt=2 ** 15):
     output["metrics"] = []
 
     if args.test:
-        x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result_p = gen_data_np(
-            nopt
+        (
+            x1,
+            y1,
+            z1,
+            w1,
+            x2,
+            y2,
+            z2,
+            w2,
+            DEFAULT_RBINS_SQUARED,
+            result_p,
+        ) = gen_data_np(nopt)
+        gpairs_python(
+            x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result_p
         )
-        gpairs_python(x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result_p)
 
         if args.usm is True:  # test usm feature
             (
@@ -288,9 +309,18 @@ def run(name, alg, sizes=2, step=2, nopt=2 ** 15):
                 result,
             ) = gen_data_usm(nopt)
         else:
-            x1, y1, z1, w1, x2, y2, z2, w2, DEFAULT_RBINS_SQUARED, result = gen_data_np(
-                nopt
-            )
+            (
+                x1,
+                y1,
+                z1,
+                w1,
+                x2,
+                y2,
+                z2,
+                w2,
+                DEFAULT_RBINS_SQUARED,
+                result,
+            ) = gen_data_np(nopt)
         iterations = xrange(repeat)
 
         alg(
