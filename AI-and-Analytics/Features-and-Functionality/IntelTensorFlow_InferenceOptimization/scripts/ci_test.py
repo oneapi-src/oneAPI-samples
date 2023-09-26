@@ -3,7 +3,6 @@ import os
 
 def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_env, fdpath='./'):
     import nbformat
-    import os
     from nbconvert.preprocessors import ExecutePreprocessor
     from nbconvert.preprocessors import CellExecutionError
     if os.path.isfile(input_notebook_filename) is False:
@@ -21,6 +20,6 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         return -1
 
 
-runJupyterNotebook(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+runJupyterNotebook(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
                                 'tutorial_optimize_TensorFlow_pretrained_model.ipynb'),
                    'tutorial_optimize_TensorFlow_pretrained_model_result.ipynb', 'tensorflow')
