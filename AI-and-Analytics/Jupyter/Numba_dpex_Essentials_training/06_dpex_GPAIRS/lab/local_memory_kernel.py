@@ -13,8 +13,9 @@
 # limitations under the License.
 
 import dpctl
-import numpy as np
+import dpnp as np
 from numba import float32
+import dpctl.tensor as dpt
 
 import numba_dpex as dpex
 
@@ -35,17 +36,17 @@ def no_arg_barrier_support():
         A[i] = d * 2
 
     N = 10
-    arr = np.arange(N).astype(np.float32)
-    print(arr)
 
     # Use the environment variable SYCL_DEVICE_FILTER to change the default device.
     # See https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#sycl_device_filter.
     device = dpctl.select_default_device()
     print("Using device ...")
     device.print_device_info()
-
-    with dpctl.device_context(device):
-        twice[N, dpex.DEFAULT_LOCAL_SIZE](arr)
+    
+    arr = dpt.ones(N, dtype=dpt.float32, device=device)
+    #arr = np.arange(blocksize).astype(np.float32)
+    print(arr)     
+    twice[N, dpex.DEFAULT_LOCAL_SIZE](arr)
 
     # the output should be `arr * 2, i.e. [0, 2, 4, 6, ...]`
     print(arr)
@@ -71,17 +72,16 @@ def local_memory():
         # write
         A[i] += lm[blocksize - 1 - i]
 
-    arr = np.arange(blocksize).astype(np.float32)
-    print(arr)
-
-    # Use the environment variable SYCL_DEVICE_FILTER to change the default device.
-    # See https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#sycl_device_filter.
+    
     device = dpctl.select_default_device()
     print("Using device ...")
     device.print_device_info()
+    
+    arr = np.arange(blocksize).astype(np.float32)
+    print(arr)   
 
-    with dpctl.device_context(device):
-        reverse_array[blocksize, dpex.DEFAULT_LOCAL_SIZE](arr)
+    
+    reverse_array[blocksize, dpex.DEFAULT_LOCAL_SIZE](arr)
 
     # the output should be `orig[::-1] + orig, i.e. [9, 9, 9, ...]``
     print(arr)

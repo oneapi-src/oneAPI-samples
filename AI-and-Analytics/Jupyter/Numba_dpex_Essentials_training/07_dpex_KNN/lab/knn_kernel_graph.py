@@ -1,6 +1,6 @@
 import dpctl
 import math
-import numpy as np
+import dpnp as np
 
 import base_knn_graph
 from device_selector import get_device_selector

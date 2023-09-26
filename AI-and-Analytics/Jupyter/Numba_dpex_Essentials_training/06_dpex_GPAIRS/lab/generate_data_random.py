@@ -80,7 +80,7 @@ def __generate_rbins__(dtype):
     DEFAULT_RBINS = np.logspace(
         np.log10(DEFAULT_RMIN), np.log10(DEFAULT_RMAX), DEFAULT_NBINS
     ).astype(dtype)
-    DEFAULT_RBINS_SQUARED = (DEFAULT_RBINS ** 2).astype(dtype)
+    DEFAULT_RBINS_SQUARED = (DEFAULT_RBINS**2).astype(dtype)
 
     return DEFAULT_RBINS_SQUARED
 
