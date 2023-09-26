@@ -1,33 +1,41 @@
 
-import dpctl
-import numpy as np
-import numba
-from numba import njit, prange
+# Copyright 2020 - 2023 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
 
-@numba.njit(parallel=True)
-def l2_distance_kernel(a, b):
-    sub = a - b
-    sq = np.square(sub)
-    sum = np.sum(sq)
-    d = np.sqrt(sum)
-    return d
+import dpnp as np
+
+from numba_dpex import dpjit
+
+
+@dpjit
+def f1(a, b):
+    c = a + b
+    return c
+
 
 def main():
-    R = 64
-    C = 1
-    
-    X = np.random.random((R,C))
-    Y = np.random.random((R,C))
-    
-    device = dpctl.select_default_device()
-    print("Using device ...")
-    device.print_device_info()
+    global_size = 64
+    local_size = 32
+    N = global_size * local_size
+    print("N", N)
 
-    with dpctl.device_context(device):
-        result = l2_distance_kernel(X, Y)
+    a = np.ones(N, dtype=np.float32)
+    b = np.ones(N, dtype=np.float32)
 
-    print("Result :", result)
+    print(a)
+    print(b)
+
+    c = f1(a, b)
+
+    print("RESULT c:", c)
+    for i in range(N):
+        if c[i] != 2.0:
+            print("First index not equal to 2.0 was", i)
+            break
+
     print("Done...")
+
 
 if __name__ == "__main__":
     main()

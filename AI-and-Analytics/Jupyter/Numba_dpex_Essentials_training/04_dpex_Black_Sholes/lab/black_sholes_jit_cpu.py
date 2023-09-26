@@ -2,18 +2,18 @@
 #
 # SPDX-License-Identifier: MIT
 
-import dpctl
+from math import erf, exp, log, sqrt
 import base_bs_erf
-import numba as nb
-from math import log, sqrt, exp, erf
+from numba import prange
+from numba_dpex import dpjit
 
-# blackscholes implemented as a parallel loop using numba.prange
-@nb.njit(parallel=True, fastmath=True)
-def black_scholes_kernel(nopt, price, strike, t, rate, vol, call, put):
+
+@dpjit
+def black_scholes(nopt, price, strike, t, rate, volatility, call, put):
     mr = -rate
-    sig_sig_two = vol * vol * 2
+    sig_sig_two = volatility * volatility * 2
 
-    for i in nb.prange(nopt):
+    for i in prange(nopt):
         P = price[i]
         S = strike[i]
         T = t[i]
@@ -36,13 +36,6 @@ def black_scholes_kernel(nopt, price, strike, t, rate, vol, call, put):
         r = P * d1 - Se * d2
         call[i] = r
         put[i] = r - P + Se
-
-
-def black_scholes(nopt, price, strike, t, rate, vol, call, put):
-    # offload blackscholes computation to CPU (toggle level0 or opencl driver).
-    
-    black_scholes_kernel(nopt, price, strike, t, rate, vol, call, put)
-
 
 # call the run function to setup input data and performance data infrastructure
 base_bs_erf.run("Numba@jit-loop-par", black_scholes)

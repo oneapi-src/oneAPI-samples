@@ -1,25 +1,25 @@
 
-import dpctl
-import numpy
+# SPDX-FileCopyrightText: 2023 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import base_kmeans_gpu
-import numba
+import dpnp as np
+import numba as nb
+import numba_dpex as nbdx
+from numba_dpex import dpjit, kernel
 
-REPEAT = 1
-# defines total number of iterations for kmeans accuracy
-ITERATIONS = 30
-
-__njit = numba.jit(nopython=True, parallel=True, fastmath=True)
 
 # determine the euclidean distance from the cluster center to each point
-@__njit
+@dpjit
 def groupByCluster(arrayP, arrayPcluster, arrayC, num_points, num_centroids):
     # parallel for loop
-    for i0 in numba.prange(num_points):
+    for i0 in nb.prange(num_points):
         minor_distance = -1
         for i1 in range(num_centroids):
             dx = arrayP[i0, 0] - arrayC[i1, 0]
             dy = arrayP[i0, 1] - arrayC[i1, 1]
-            my_distance = numpy.sqrt(dx * dx + dy * dy)
+            my_distance = np.sqrt(dx * dx + dy * dy)
             if minor_distance > my_distance or minor_distance == -1:
                 minor_distance = my_distance
                 arrayPcluster[i0] = i1
@@ -27,42 +27,65 @@ def groupByCluster(arrayP, arrayPcluster, arrayC, num_points, num_centroids):
 
 
 # assign points to cluster
-@__njit
+@dpjit
 def calCentroidsSum(
     arrayP, arrayPcluster, arrayCsum, arrayCnumpoint, num_points, num_centroids
 ):
     # parallel for loop
-    for i in numba.prange(num_centroids):
+    for i in nb.prange(num_centroids):
         arrayCsum[i, 0] = 0
         arrayCsum[i, 1] = 0
         arrayCnumpoint[i] = 0
 
-    for i in range(num_points):
-        ci = arrayPcluster[i]
-        arrayCsum[ci, 0] += arrayP[i, 0]
-        arrayCsum[ci, 1] += arrayP[i, 1]
-        arrayCnumpoint[ci] += 1
 
-    return arrayCsum, arrayCnumpoint
+@kernel
+def calCentroidsSum2(arrayP, arrayPcluster, arrayCsum, arrayCnumpoint):
+    i = nbdx.get_global_id(0)
+    ci = arrayPcluster[i]
+    nbdx.atomic.add(arrayCsum, (ci, 0), arrayP[i, 0])
+    nbdx.atomic.add(arrayCsum, (ci, 1), arrayP[i, 1])
+    nbdx.atomic.add(arrayCnumpoint, ci, 1)
 
 
 # update the centriods array after computation
-@__njit
+@dpjit
 def updateCentroids(arrayC, arrayCsum, arrayCnumpoint, num_centroids):
-    for i in numba.prange(num_centroids):
+    for i in nb.prange(num_centroids):
         arrayC[i, 0] = arrayCsum[i, 0] / arrayCnumpoint[i]
         arrayC[i, 1] = arrayCsum[i, 1] / arrayCnumpoint[i]
 
 
-def kmeans(
-    arrayP, arrayPcluster, arrayC, arrayCsum, arrayCnumpoint, num_points, num_centroids
-):
+@dpjit
+def copy_arrayC(arrayC, arrayP, num_centroids):
+    for i in nb.prange(num_centroids):
+        arrayC[i, 0] = arrayP[i, 0]
+        arrayC[i, 1] = arrayP[i, 1]
 
-    for i in range(ITERATIONS):
+
+def kmeans_numba(
+    arrayP,
+    arrayPcluster,
+    arrayC,
+    arrayCsum,
+    arrayCnumpoint,
+    niters,
+    num_points,
+    num_centroids,
+):
+    for i in range(niters):
         groupByCluster(arrayP, arrayPcluster, arrayC, num_points, num_centroids)
 
         calCentroidsSum(
-            arrayP, arrayPcluster, arrayCsum, arrayCnumpoint, num_points, num_centroids
+            arrayP,
+            arrayPcluster,
+            arrayCsum,
+            arrayCnumpoint,
+            num_points,
+            num_centroids,
+        )
+
+        calCentroidsSum2[num_points,](
+            arrayP, arrayPcluster, arrayCsum, arrayCnumpoint
         )
 
         updateCentroids(arrayC, arrayCsum, arrayCnumpoint, num_centroids)
@@ -70,31 +93,29 @@ def kmeans(
     return arrayC, arrayCsum, arrayCnumpoint
 
 
-def run_kmeans(
+def kmeans(
     arrayP,
     arrayPclusters,
     arrayC,
     arrayCsum,
     arrayCnumpoint,
-    NUMBER_OF_POINTS,
-    NUMBER_OF_CENTROIDS,
+    niters,
+    npoints,
+    ndims,
+    ncentroids,
 ):
+    copy_arrayC(arrayC, arrayP, ncentroids)
 
-    with dpctl.device_context(base_kmeans_gpu.get_device_selector(is_gpu=True)):
-        for i in range(REPEAT):
-            for i1 in range(NUMBER_OF_CENTROIDS):
-                arrayC[i1, 0] = arrayP[i1, 0]
-                arrayC[i1, 1] = arrayP[i1, 1]
-
-            arrayC, arrayCsum, arrayCnumpoint = kmeans(
-                arrayP,
-                arrayPclusters,
-                arrayC,
-                arrayCsum,
-                arrayCnumpoint,
-                NUMBER_OF_POINTS,
-                NUMBER_OF_CENTROIDS,
-            )
+    arrayC, arrayCsum, arrayCnumpoint = kmeans_numba(
+        arrayP,
+        arrayPclusters,
+        arrayC,
+        arrayCsum,
+        arrayCnumpoint,
+        niters,
+        npoints,
+        ncentroids,
+    )
 
 
-base_kmeans_gpu.run("Kmeans Numba", run_kmeans)
+base_kmeans_gpu.run("Kmeans Numba", kmeans)

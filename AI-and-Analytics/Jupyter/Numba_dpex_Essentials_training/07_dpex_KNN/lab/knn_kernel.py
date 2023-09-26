@@ -1,20 +1,16 @@
-import dpctl
-import math
+# SPDX-FileCopyrightText: 2022 - 2023 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+from math import sqrt
+import base_knn
+
+import numba_dpex as dpex
 import numpy as np
 
-import base_knn
-from device_selector import get_device_selector
 
-from numba_dpex import kernel, DEFAULT_LOCAL_SIZE
-import numba_dpex
-
-@kernel(
-    access_types={
-        "read_only": ["train", "train_labels", "test", "votes_to_classes_lst"],
-        "write_only": ["predictions"],
-    }
-)
-def run_knn_kernel(
+@dpex.kernel
+def _knn_kernel(  # noqa: C901: TODO: can we simplify logic?
     train,
     train_labels,
     test,
@@ -25,18 +21,20 @@ def run_knn_kernel(
     votes_to_classes_lst,
     data_dim,
 ):
-    i = numba_dpex.get_global_id(0)
-    queue_neighbors = numba_dpex.private.array(shape=(5, 2), dtype=np.float64)
+    dtype = train.dtype
+    i = dpex.get_global_id(0)
+    # here k has to be 5 in order to match with numpy
+    queue_neighbors = dpex.private.array(shape=(5, 2), dtype=dtype)
 
     for j in range(k):
         x1 = train[j]
         x2 = test[i]
 
-        distance = 0.0
+        distance = dtype.type(0.0)
         for jj in range(data_dim):
             diff = x1[jj] - x2[jj]
             distance += diff * diff
-        dist = math.sqrt(distance)
+        dist = sqrt(distance)
 
         queue_neighbors[j, 0] = dist
         queue_neighbors[j, 1] = train_labels[j]
@@ -59,11 +57,11 @@ def run_knn_kernel(
         x1 = train[j]
         x2 = test[i]
 
-        distance = 0.0
+        distance = dtype.type(0.0)
         for jj in range(data_dim):
             diff = x1[jj] - x2[jj]
             distance += diff * diff
-        dist = math.sqrt(distance)
+        dist = sqrt(distance)
 
         if dist < queue_neighbors[k - 1][0]:
             queue_neighbors[k - 1][0] = dist
@@ -83,11 +81,11 @@ def run_knn_kernel(
 
     votes_to_classes = votes_to_classes_lst[i]
 
-    for j in range(k):
+    for j in range(len(queue_neighbors)):
         votes_to_classes[int(queue_neighbors[j, 1])] += 1
 
     max_ind = 0
-    max_value = 0
+    max_value = dtype.type(0)
 
     for j in range(classes_num):
         if votes_to_classes[j] > max_value:
@@ -97,30 +95,26 @@ def run_knn_kernel(
     predictions[i] = max_ind
 
 
-def run_knn(
-    train,
-    train_labels,
-    test,
+def knn(
+    x_train,
+    y_train,
+    x_test,
     k,
     classes_num,
     test_size,
     train_size,
     predictions,
-    votes_to_classes_lst,
+    votes_to_classes,
     data_dim,
 ):
-    with dpctl.device_context(get_device_selector(is_gpu=True)) as gpu_queue:
-        run_knn_kernel[test_size, numba_dpex.DEFAULT_LOCAL_SIZE](
-            train,
-            train_labels,
-            test,
-            k,
-            classes_num,
-            train_size,
-            predictions,
-            votes_to_classes_lst,
-            data_dim,
-        )
-
-
-base_knn.run("K-Nearest-Neighbors Numba", run_knn)
+    _knn_kernel[test_size,](
+        x_train,
+        y_train,
+        x_test,
+        k,
+        classes_num,
+        train_size,
+        predictions,
+        votes_to_classes,
+        data_dim,
+    )

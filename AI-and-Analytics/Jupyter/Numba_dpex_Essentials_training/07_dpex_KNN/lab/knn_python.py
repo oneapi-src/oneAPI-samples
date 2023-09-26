@@ -24,7 +24,7 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *****************************************************************************
 
-import numpy as np
+import dpnp as np
 
 
 def knn_python(
