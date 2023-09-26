@@ -72,11 +72,11 @@ template <typename AccRandom, typename AccGrid, bool HasFp64> class ParticleMoti
       int iX;
       int iY;
       if constexpr (HasFp64) {
-        // Algorithm using sycl::half type
+        // Algorithm using double precision
         iX = sycl::floor(particle_X_a[p] + 0.5);
         iY = sycl::floor(particle_Y_a[p] + 0.5);
       } else {
-        // Fall back code for devices that don't support sycl::half
+        // Fall back code for single precision
         iX = sycl::floor(particle_X_a[p] + 0.5f);
         iY = sycl::floor(particle_Y_a[p] + 0.5f);
       }
