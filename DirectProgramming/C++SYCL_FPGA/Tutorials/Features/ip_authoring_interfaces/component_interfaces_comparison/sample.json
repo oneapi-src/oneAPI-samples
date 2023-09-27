@@ -9,7 +9,7 @@
     "builder": ["ide", "cmake"],
     "languages": [{"cpp":{}}],
     "commonFolder": {
-      "base": "../../..",
+      "base": "../../../..",
       "include": [
         "README.md",
         "Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison",
@@ -130,7 +130,7 @@
           "id": "fpga_emu_1",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/csr-pipes",
@@ -142,7 +142,7 @@
           "id": "fpga_emu_2",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/streaming-invocation",
@@ -154,7 +154,7 @@
           "id": "report_1",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/csr-pipes",
@@ -165,7 +165,7 @@
           "id": "report_2",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/streaming-invocation",
@@ -176,7 +176,7 @@
           "id": "fpga_emu_3",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/pipes",
@@ -188,7 +188,7 @@
           "id": "report_3",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/pipes",
@@ -199,7 +199,7 @@
           "id": "fpga_emu_4",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/mm-host",
@@ -211,7 +211,7 @@
           "id": "report_4",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/mm-host",
@@ -222,7 +222,7 @@
           "id": "fpga_emu_5",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/naive",
@@ -234,7 +234,7 @@
           "id": "report_5",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
             "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/naive",
