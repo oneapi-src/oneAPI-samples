@@ -13,8 +13,8 @@
 #include <vector>
 #include <sycl/sycl.hpp>
 
-#ifndef DataType
-#define DataType double
+#ifndef DATA_TYPE
+#define DATA_TYPE double
 #endif
 
 #ifndef ITEMS_PER_WORK_ITEM
@@ -24,6 +24,8 @@
 #ifndef VEC_SIZE
 #define VEC_SIZE 8
 #endif
+
+using DataType = DATA_TYPE;
 
 //Should be > 1
 constexpr int num_options = 384000;
