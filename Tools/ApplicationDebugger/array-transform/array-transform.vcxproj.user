@@ -3,6 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerEnvironment>ONEAPI_DEVICE_SELECTOR=*:cpu</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <RemoteDebuggerEnvironment>ZET_ENABLE_PROGRAM_DEBUGGING=1</RemoteDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerEnvironment>ONEAPI_DEVICE_SELECTOR=*:cpu</LocalDebuggerEnvironment>
