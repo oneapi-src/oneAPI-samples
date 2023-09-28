@@ -25,7 +25,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake .. -DFPGA_DEVICE=Agilex7",
           "make fpga_emu",
           "./board_test.fpga_emu"
         ]
@@ -35,7 +35,7 @@
         "steps": [
           "icpx --version",
           "mkdir build",
-          "cd build",
+          "cd build -DFPGA_DEVICE=Agilex7",
           "cmake ..",
           "make report"
         ]
@@ -49,7 +49,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test -DFPGA_DEVICE=Agilex7",
           "nmake fpga_emu",
           "board_test.fpga_emu.exe"
         ]
@@ -61,7 +61,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test -DFPGA_DEVICE=Agilex7",
           "nmake report"
         ]
       }
