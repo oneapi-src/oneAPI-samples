@@ -14,7 +14,7 @@
             "env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate pytorch"],
             "id": "ipex_chat_quantization_py",
             "steps": [
-              "python IntelPytorch_Interactive_Chat_Quantization.py < input.txt" 
+              "python IntelPytorch_Interactive_Chat_Quantization.py < insert.txt" 
              ]
         }
       ]
