@@ -167,3 +167,9 @@ int wmain()
 
 	return 0;
 }
+
+#ifdef UNIX
+int main() {
+	return wmain();
+}
+#endif
