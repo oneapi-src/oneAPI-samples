@@ -8,6 +8,7 @@
   "os": [ "linux" ],
   "builder": [ "ide", "make" ],
   "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
   "ciTests": {
     "linux": [
       {
