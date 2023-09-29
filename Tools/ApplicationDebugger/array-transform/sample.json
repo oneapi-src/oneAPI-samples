@@ -16,7 +16,7 @@
         "steps": [
           "mkdir -p build_cpu; cd build_cpu; cmake ..",
           "make",
-	  "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
+          "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
           "make clean"
         ]
       },
@@ -25,7 +25,7 @@
         "steps": [
           "mkdir -p build_cpu_aot; cd build_cpu_aot; cmake .. -DSYCL_COMPILE_TARGET=cpu",
           "make",
-	  "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
+          "ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform",
           "make clean"
         ]
       },
@@ -34,7 +34,7 @@
         "steps": [
           "mkdir -p build_gpu; cd build_gpu; cmake ..",
           "make",
-	  "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
+          "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
           "make clean"
         ]
       },
@@ -43,7 +43,7 @@
         "steps": [
           "mkdir -p build_gpu_aot; cd build_gpu_aot; cmake .. -DSYCL_COMPILE_TARGET=gen9,gen12LP",
           "make",
-	  "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
+          "ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./array-transform",
           "make clean"
         ]
       },
@@ -69,22 +69,22 @@
     "windows": [
       {
         "id": "cpu",
-	"env": [
+        "env": [
           "set ONEAPI_DEVICE_SELECTOR=*:cpu"
         ],
         "steps": [
-          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=Debug",
           "cd x64\\Debug",
           "array-transform.exe"
         ]
       },
       {
         "id": "gpu",
-	"env": [
+        "env": [
           "set ONEAPI_DEVICE_SELECTOR=level_zero:gpu"
         ],
         "steps": [
-          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=Debug",
           "cd x64\\Debug",
           "array-transform.exe"
         ]
@@ -95,7 +95,7 @@
           "set ONEAPI_DEVICE_SELECTOR=*:fpga"
         ],
         "steps": [
-          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=Debug",
           "cd x64\\Debug",
           "array-transform.exe"
         ]
