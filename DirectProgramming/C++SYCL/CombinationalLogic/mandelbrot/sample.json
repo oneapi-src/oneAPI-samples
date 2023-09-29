@@ -20,8 +20,8 @@
 	}],
 	"windows": [{
 		"steps": [
-			"MSBuild mandelbrot.sln /t:Rebuild /p:Configuration=\"Release\"",
-			"cd x64/Release",
+			"MSBuild mandelbrot.sln /t:Rebuild /p:Configuration=Release",
+			"cd x64\\Release",
             		"mandelbrot.exe"
 		]
 	}]

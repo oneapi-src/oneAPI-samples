@@ -20,8 +20,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild PrefixSum.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
+                        "MSBuild PrefixSum.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "PrefixSum.exe 21 47"
                 ]
         }]

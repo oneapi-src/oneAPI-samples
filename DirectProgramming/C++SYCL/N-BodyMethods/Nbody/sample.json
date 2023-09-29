@@ -20,7 +20,7 @@
 	}],
 	"windows": [{
 		"steps": [
-			"MSBuild Nbody.sln /t:Rebuild /p:Configuration=\"Release\"",
+			"MSBuild Nbody.sln /t:Rebuild /p:Configuration=Release",
 			"cd x64\\Release",
 			"Nbody.exe"
 		]

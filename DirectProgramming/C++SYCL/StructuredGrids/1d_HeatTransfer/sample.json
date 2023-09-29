@@ -20,8 +20,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
+                        "MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "1d_HeatTransfer.exe 100 1000"
                 ]
         }]
