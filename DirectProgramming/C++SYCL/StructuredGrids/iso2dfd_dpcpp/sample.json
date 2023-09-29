@@ -21,8 +21,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild iso2dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
+                        "MSBuild iso2dfd.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "iso2dfd.exe 1000 1000 2000"
                 ]
         }]

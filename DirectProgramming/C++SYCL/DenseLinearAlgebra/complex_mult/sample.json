@@ -21,8 +21,8 @@
     "windows": [
       {
         "steps": [
-          "MSBuild complex_mult.sln /t:Rebuild /p:Configuration=\"debug\"",
-          "cd x64\\Debug",
+          "MSBuild complex_mult.sln /t:Rebuild /p:Configuration=Release",
+          "cd x64\\Release",
           "complex_mult.exe"
         ]
       }

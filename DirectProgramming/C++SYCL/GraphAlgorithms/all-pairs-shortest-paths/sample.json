@@ -20,8 +20,8 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild all-pairs-shortest-paths.sln /t:Rebuild /p:Configuration=\"Release\"",
-                          "cd x64/Release",
+                          "MSBuild all-pairs-shortest-paths.sln /t:Rebuild /p:Configuration=Release",
+                          "cd x64\\Release",
                           "all-pairs-shortest-paths.exe"
                   ]
           }]

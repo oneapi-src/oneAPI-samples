@@ -20,8 +20,8 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild guided_iso3dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
-                          "cd x64/Release",
+                          "MSBuild guided_iso3dfd.sln /t:Rebuild /p:Configuration=Release",
+                          "cd x64\\Release",
                           "1_CPU_only.exe 256 256 256 10",
                           "2_GPU_basic.exe 256 256 256 10",
                           "3_GPU_linear.exe 256 256 256 10",
