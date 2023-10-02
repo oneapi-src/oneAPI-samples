@@ -514,7 +514,7 @@ struct Transpose {
       ac_complex<T> *, decltype(sycl::ext::oneapi::experimental::properties{
                            sycl::ext::intel::experimental::buffer_location<1>,
                            sycl::ext::intel::experimental::dwidth<
-                               sizeof(ac_complex<T>) * (1 << log_points)>,
+                               sizeof(ac_complex<T>) * 8 * (1 << log_points)>,
                            sycl::ext::intel::experimental::latency<0>})>
       dest;
 #endif
