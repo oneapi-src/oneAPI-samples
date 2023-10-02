@@ -5,8 +5,8 @@
 
 template <typename T, typename I>
 struct pair {
-    bool operator > (const pair& o) const {
-        return val >= o.val || (val == o.val && idx >= o.idx);
+    bool operator < (const pair& o) const {
+        return val <= o.val || (val == o.val && idx <= o.idx);
     }
     T val;
     I idx;
