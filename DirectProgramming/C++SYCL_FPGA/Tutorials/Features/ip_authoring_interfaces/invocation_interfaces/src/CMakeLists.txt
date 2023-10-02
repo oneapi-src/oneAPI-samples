@@ -63,13 +63,6 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# This is for finding the install path to the necessary include files
-if(DEFINED ENV{INTELFPGAOCLSDKROOT})
-   set(SDK_ROOT_PATH $ENV{INTELFPGAOCLSDKROOT})
-else()
-   message(FATAL_ERROR "The INTELFPGAOCLSDKROOT environment variable must be defined for this tutorial to compile.")
-endif()
-
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
