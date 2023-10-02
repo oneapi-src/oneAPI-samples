@@ -16,6 +16,6 @@ sparse_cg: sparse_cg.cpp
 	icpx $< -fsycl -o $@ $(DPCPP_OPTS)
 
 clean:
-	-rm -f sparse_cg
+	-rm -f sparse_cg genxir
 
 .PHONY: clean run all

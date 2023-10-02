@@ -14,6 +14,6 @@ solve: solve.cpp dgeblttrf.cpp dgeblttrs.cpp auxi.cpp
 	icpx $^ -o $@ -fsycl -fsycl-device-code-split=per_kernel $(MKL_COPTS) $(MKL_LIBS)
 
 clean:
-	-rm -f factor solve
+	-rm -f factor solve genxir
 
 .PHONY: clean all
