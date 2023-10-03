@@ -24,9 +24,9 @@ int main() {
 
     q.submit([&](auto &h) {
       // Create device accessors.
-      sycl::accessor a_acc(a_buf, h);
-      sycl::accessor b_acc(b_buf, h);
-      sycl::accessor c_acc(c_buf, h);
+      sycl::accessor a_acc(a_buf, h, sycl::read_only);
+      sycl::accessor b_acc(b_buf, h, sycl::read_only);
+      sycl::accessor c_acc(c_buf, h, sycl::write_only, sycl::no_init);
 
       h.parallel_for(N, [=](auto i) {
         c_acc[i] = a_acc[i] + b_acc[i];
