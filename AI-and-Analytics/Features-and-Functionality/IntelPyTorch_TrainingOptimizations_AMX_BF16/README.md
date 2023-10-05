@@ -28,19 +28,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 - **Intel® AI Analytics Toolkit (AI Kit)**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
-
-- **Jupyter Notebook**
-
-  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
-- **Additional Packages**
-
-  You will need to install these additional packages: **Matplotlib** and **Py-cpuinfo**.
-  ```
-  python -m pip install matplotlib
-  python -m pip install py-cpuinfo
-  ```
+  You can get the AI Kit from [Intel® AI Analytics Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit-download.html).
 
 ### For Intel® DevCloud
 
@@ -64,7 +52,8 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                             | Description
 |:---                                |:---
-|`IntelPyTorch_TrainingOptimizations_AMX_BF16.py` | The script performs training with AMX BF16 and compares the performance against the baseline
+|`pytorch_training_amx_bf16.py`      | The script performs training with AMX BF16 and compares the performance against the baseline
+|`pytorch_training_avx512_bf16.py`   | The script performs training with AVX512 in BF16
 
 ## Set Environment Variables
 

@@ -134,26 +134,9 @@ When working with the command-line interface (CLI), you should configure the one
 1. Change to the sample directory.
 2. Run the script.
    ```
-   python IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.py
+   python pytorch_inference_amx.py
+   python pytorch_inference_vnni.py
    ```
-
-### Run the `PyTorch* Inference Optimizations with Advanced Matrix Extensions Bfloat16 Integer8` Sample on Intel® DevCloud
-
-1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-2. On a Linux* system, open a terminal.
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://DevCloud.intel.com/oneapi/get_started).
-
-4. Follow the instructions to open the URL with the token in your browser.
-5. Locate and select the Notebook.
-   ```
-   IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb
-   ````
-6. Change the kernel to **user_pytorch**.
-7. Run every cell in the Notebook in sequence.
 
 ### Troubleshooting
 
