@@ -145,31 +145,13 @@ def summarizeResults(modelName="", results=None):
     for key in results.keys():
         print("%s inference time: %.3f seconds" %(key, results[key]))
 
-    # Create bar chart with inference time results
-    plt.figure()
-    plt.title("%s Inference Time (%d samples)" %(modelName, NUM_SAMPLES))
-    plt.xlabel("Run Case")
-    plt.ylabel("Inference Time (seconds)")
-    plt.bar(results.keys(), results.values())
-
     # Calculate speedup when using AMX
     print("\n")
     bf16_with_amx_speedup = results["FP32"] / results["BF16_with_AMX"]
     print("BF16 with AMX is %.2fX faster than FP32" %bf16_with_amx_speedup)
-    int8_with_vnni_speedup = results["FP32"] / results["INT8_with_VNNI"]
-    print("INT8 with VNNI is %.2fX faster than FP32" %int8_with_vnni_speedup)
     int8_with_amx_speedup = results["FP32"] / results["INT8_with_AMX"]
     print("INT8 with AMX is %.2fX faster than FP32" %int8_with_amx_speedup)
     print("\n\n")
-
-    # Create bar chart with speedup results
-    plt.figure()
-    plt.title("%s AMX BF16/INT8 Speedup over FP32" %modelName)
-    plt.xlabel("Run Case")
-    plt.ylabel("Speedup")
-    plt.bar(results.keys(), 
-        [1, bf16_with_amx_speedup, int8_with_vnni_speedup, int8_with_amx_speedup]
-    )
 
 """
 Perform all types of inference in main function
@@ -203,12 +185,10 @@ def main():
     resnet_model.eval()
     fp32_resnet_inference_time = runInference(resnet_model, resnet_data, modelName="resnet50", dataType="FP32", amx=True)
     bf16_amx_resnet_inference_time = runInference(resnet_model, resnet_data, modelName="resnet50", dataType="BF16", amx=True)
-    int8_with_vnni_resnet_inference_time = runInference(resnet_model, resnet_data, modelName="resnet50", dataType="INT8", amx=False)
     int8_amx_resnet_inference_time = runInference(resnet_model, resnet_data, modelName="resnet50", dataType="INT8", amx=True)
     results_resnet = {
         "FP32": fp32_resnet_inference_time,
         "BF16_with_AMX": bf16_amx_resnet_inference_time,
-        "INT8_with_VNNI": int8_with_vnni_resnet_inference_time,
         "INT8_with_AMX": int8_amx_resnet_inference_time
     }
     summarizeResults("ResNet50", results_resnet)
@@ -219,19 +199,14 @@ def main():
     bert_model.eval()
     fp32_bert_inference_time = runInference(bert_model, bert_data, modelName="bert", dataType="FP32", amx=True)
     bf16_amx_bert_inference_time = runInference(bert_model, bert_data, modelName="bert", dataType="BF16", amx=True)
-    int8_with_vnni_bert_inference_time = runInference(bert_model, bert_data, modelName="bert", dataType="INT8", amx=False)
     int8_amx_bert_inference_time = runInference(bert_model, bert_data, modelName="bert", dataType="INT8", amx=True)
     results_bert = {
         "FP32": fp32_bert_inference_time,
         "BF16_with_AMX": bf16_amx_bert_inference_time,
-        "INT8_with_VNNI": int8_with_vnni_bert_inference_time,
         "INT8_with_AMX": int8_amx_bert_inference_time
     }
     summarizeResults("BERT", results_bert)
 
-    # Display graphs
-    plt.show()
-
 if __name__ == '__main__':
     main()
-    print('[CODE_SAMPLE_COMPLETED_SUCCESFULLY]')
+    print('[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]')

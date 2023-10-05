@@ -28,18 +28,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 - **Intel® AI Analytics Toolkit (AI Kit)**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
-
-- **Jupyter Notebook**
-
-  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
-- **Additional Packages**
-
-  You will need to install these additional packages in *requirements.txt*.
-  ```
-  python -m pip install -r requirements.txt
-  ```
+  You can get the AI Kit from [Intel® AI Analytics Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit-download.html).
 
 ### For Intel® DevCloud
 
@@ -70,7 +59,8 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                                                | Description
 |:---                                                   |:---
-|`IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.py` | The script performs inference with AMX BF16/INT8 and compares the performance against the baseline
+|`pytorch_inference_amx.py`                             | The script performs inference with AMX BF16/INT8 and compares the performance against the baseline of FP32
+|`pytorch_inference_vnni.py`                            | The script performs inference with VNNI INT8 and compares the performance against the baseline of FP32
 
 ## Set Environment Variables
 
@@ -107,6 +97,23 @@ When working with the command-line interface (CLI), you should configure the one
    conda activate user_pytorch
    ```
 
+#### Additional Environment Setup
+
+**Additional Packages**
+
+You will need to install these additional packages in *requirements.txt*.
+```
+python -m pip install -r requirements.txt
+```
+
+**Jupyter Kernelspec**
+
+Add the jupyter kernelspec. This step is essential to ensure the notebook uses the environment you set up.
+```
+python -m ipykernel install --user --name=user_pytorch
+```
+
+
 #### Running the Jupyter Notebook
 
 1. Change to the sample directory.
@@ -119,7 +126,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb
    ```
-5. Change your Jupyter Notebook kernel to **PyTorch (AI kit)**.
+5. Change your Jupyter Notebook kernel to **user_pytorch**.
 6. Run every cell in the Notebook in sequence.
 
 #### Running on the Command Line (Optional)
@@ -145,7 +152,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb
    ````
-6. Change the kernel to **PyTorch (AI kit)**.
+6. Change the kernel to **user_pytorch**.
 7. Run every cell in the Notebook in sequence.
 
 ### Troubleshooting
