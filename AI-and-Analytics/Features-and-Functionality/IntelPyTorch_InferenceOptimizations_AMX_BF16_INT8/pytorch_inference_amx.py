@@ -28,6 +28,8 @@ RESNET_BATCH_SIZE = 64
 BERT_BATCH_SIZE = 64
 BERT_SEQ_LENGTH = 512
 
+os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_AMX"
+
 """
 Function to perform inference on Resnet50 and BERT
 """
@@ -49,12 +51,6 @@ def runInference(model, data, modelName="resnet50", dataType="FP32", amx=True):
     else:
         isa_text = "AVX512_CORE_VNNI"
     print("%s %s inference with %s" %(modelName, dataType, isa_text))
-
-    # Configure environment variable
-    if not amx:
-        os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_VNNI"
-    else:
-        os.environ["ONEDNN_MAX_CPU_ISA"] = "DEFAULT"
 
     # Special variables for specific models
     batch_size = None
