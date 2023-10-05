@@ -157,13 +157,15 @@ python -m ipykernel install --user --name=user_pytorch
 
 ### Troubleshooting
 
+If you encounter environment issues, you can create a new conda environment with the desired Python version, then install Intel® Extension for PyTorch* for CPU by following these [instructions](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/installation.html). Finally, install all packages in *requirements.txt*.
+
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
 ## Example Output
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample will print out the runtimes and charts of relative performance with the FP32 model without any optimizations as the baseline.  
 
-The performance speedups using AMX BF16 and INT8 are approximate on ResNet50 and BERT. Performance will vary based on your hardware and software versions. Larger batch sizes should increase the gap between VNNI and AMX. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html).  
+The performance speedups using AMX BF16 and INT8 are approximate on ResNet50 and BERT. Performance will vary based on your hardware and software versions. To see a larger performance gap between VNNI and AMX, increase the batch size. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html).  
 
 ## License
 
