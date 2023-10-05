@@ -99,19 +99,19 @@ When working with the command-line interface (CLI), you should configure the one
 
 #### Additional Environment Setup
 
-**Additional Packages**
+- **Additional Packages**
 
-You will need to install these additional packages in *requirements.txt*.
-```
-python -m pip install -r requirements.txt
-```
+  You will need to install these additional packages in *requirements.txt*.
+  ```
+  python -m pip install -r requirements.txt
+  ```
 
-**Jupyter Kernelspec**
+- **Jupyter Kernelspec**
 
-Add the jupyter kernelspec. This step is essential to ensure the notebook uses the environment you set up.
-```
-python -m ipykernel install --user --name=user_pytorch
-```
+  Add the jupyter kernelspec. This step is essential to ensure the notebook uses the environment you set up.
+  ```
+  python -m ipykernel install --user --name=user_pytorch
+  ```
 
 
 #### Running the Jupyter Notebook
