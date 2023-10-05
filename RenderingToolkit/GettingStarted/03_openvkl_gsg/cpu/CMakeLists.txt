@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 3.16)
+project(OPENVKL_CPU_GSG LANGUAGES C CXX)
+
+set(ONEAPI_ROOT "")
+if(DEFINED ENV{ONEAPI_ROOT})
+  set(ONEAPI_ROOT "$ENV{ONEAPI_ROOT}")
+  message(STATUS "ONEAPI_ROOT FROM ENVIRONMENT: ${ONEAPI_ROOT}")
+else()
+  message(FATAL_ERROR "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
+endif(DEFINED ENV{ONEAPI_ROOT})
+
+set(OPENVKL_BASE_DIR "")
+if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh)
+  set(OPENVKL_BASE_DIR ${ONEAPI_ROOT})
+else()
+  set(OPENVKL_BASE_DIR ${ONEAPI_ROOT}/openvkl/latest)
+endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh)
+
+set(OPENVKL_INCLUDE_DIR ${OPENVKL_BASE_DIR}/include)
+set(OPENVKL_CPU_INCLUDE_DIR ${OPENVKL_BASE_DIR}/include/openvkl/devices/cpu)
+message(STATUS "OPENVKL_INCLUDE_DIR: ${OPENVKL_INCLUDE_DIR}")
+find_package(openvkl REQUIRED PATHS ${ONEAPI_ROOT})
+
+if(MSVC)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif(MSVC)
+
+include_directories(${OPENVKL_INCLUDE_DIR} ${OPENVKL_CPU_INCLUDE_DIR})
+link_directories(${OPENVKL_BASE_DIR}/lib)
+
+add_executable(vklTutorialCPU src/vklTutorialCPU.c)
+target_link_libraries(vklTutorialCPU PRIVATE openvkl openvkl_module_cpu_device)
+install(TARGETS vklTutorialCPU RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
