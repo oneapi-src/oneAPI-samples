@@ -13,7 +13,8 @@
 		"steps": [
 			"mkdir build",
 			"cd build",
-			"cmake ..",
+			"../get_sdl2.sh",
+			"SDL2_DIR=SDL/install/ cmake ..",
 			"make"
 		 ]
 	}],
