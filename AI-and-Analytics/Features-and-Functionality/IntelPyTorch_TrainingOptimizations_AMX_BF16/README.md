@@ -90,6 +90,22 @@ When working with the command-line interface (CLI), you should configure the one
    conda activate user_pytorch
    ```
 
+#### Additional Environment Setup
+
+- **Additional Packages**
+
+  You will need to install these additional packages in *requirements.txt*.
+  ```
+  python -m pip install -r requirements.txt
+  ```
+
+- **Jupyter Kernelspec**
+
+  Add the jupyter kernelspec. This step is essential to ensure the notebook uses the environment you set up.
+  ```
+  python -m ipykernel install --user --name=user_pytorch
+  ```
+
 #### Running the Jupyter Notebook
 
 1. Change to the sample directory.
@@ -102,7 +118,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb
    ```
-5. Change your Jupyter Notebook kernel to **PyTorch (AI kit)**.
+5. Change your Jupyter Notebook kernel to **user_pytorch**.
 6. Run every cell in the Notebook in sequence.
 
 #### Running on the Command Line (Optional)
@@ -110,26 +126,9 @@ When working with the command-line interface (CLI), you should configure the one
 1. Change to the sample directory.
 2. Run the script.
    ```
-   python IntelPyTorch_TrainingOptimizations_AMX_BF16.py
+   python pytorch_training_amx_bf16.py
+   python pytorch_training_avx512_bf16.py
    ```
-
-### Run the `PyTorch Training Optimizations with Advanced Matrix Extensions Bfloat16` Sample on Intel® DevCloud
-
-1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-2. On a Linux* system, open a terminal.
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://DevCloud.intel.com/oneapi/get_started).
-
-4. Follow the instructions to open the URL with the token in your browser.
-5. Locate and select the Notebook.
-   ```
-   IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb
-   ````
-6. Change the kernel to **PyTorch (AI kit)**.
-7. Run every cell in the Notebook in sequence.
 
 ### Troubleshooting
 
@@ -139,7 +138,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample will print out the runtimes and charts of relative performance with the FP32 model without any optimizations as the baseline. 
 
-The performance speedups using AMX BF16 are approximate on ResNet50. Performance will vary based on your hardware and software versions. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the amount of required computations in one batch. This can be done by increasing the batch size with CIFAR10 or using another dataset. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html). 
+The performance speedups using AMX BF16 are approximate on ResNet50. Performance will vary based on your hardware and software versions. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the batch size with CIFAR10 or use another dataset. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html). 
 
 ## License
 
