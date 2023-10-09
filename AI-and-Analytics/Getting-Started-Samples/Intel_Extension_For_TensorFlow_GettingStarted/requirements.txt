@@ -1,0 +1,2 @@
+tensorflow_hub
+ipykernel
