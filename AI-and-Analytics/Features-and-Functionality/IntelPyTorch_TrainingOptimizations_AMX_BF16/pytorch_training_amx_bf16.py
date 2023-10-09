@@ -22,25 +22,20 @@ MOMENTUM = 0.9
 DOWNLOAD = True
 DATA = 'datasets/cifar10/'
 
+os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_AMX"
+
 """
 Function to run a test case
 """
-def trainModel(train_loader, modelName="myModel", amx=True, dataType="fp32"):
+def trainModel(train_loader, modelName="myModel", dataType="fp32"):
     """
     Input parameters
         train_loader: a torch DataLoader object containing the training data
         modelName: a string representing the name of the model
-        amx: set to False to disable AMX on BF16, default True otherwise
         dataType: the data type for model parameters, supported values - fp32, bf16
     Return value
         training_time: the time in seconds it takes to train the model
     """
-    
-    # Configure environment variable
-    if not amx and "bf16" == dataType:
-        os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_BF16"
-    else:
-        os.environ["ONEDNN_MAX_CPU_ISA"] = "DEFAULT"
 
     # Initialize the model 
     model = torchvision.models.resnet50()
@@ -128,15 +123,12 @@ def main():
     # Train models and acquire training times
     print("Training model with FP32")
     fp32_training_time = trainModel(train_loader, modelName="fp32", dataType="fp32")
-    print("Training model with BF16 without AMX")
-    bf16_noAmx_training_time = trainModel(train_loader, modelName="bf16_noAmx", amx=False, dataType="bf16")
     print("Training model with BF16 with AMX")
     bf16_withAmx_training_time = trainModel(train_loader, modelName="bf16_withAmx", dataType="bf16")
 
     # Training time results
     print("Summary")
     print("FP32 training time: %.3f" %fp32_training_time)
-    print("BF16 without AMX training time: %.3f" %bf16_noAmx_training_time)
     print("BF16 with AMX training time: %.3f" %bf16_withAmx_training_time)
 
     # Create bar chart with training time results
@@ -144,20 +136,18 @@ def main():
     plt.title("ResNet Training Time")
     plt.xlabel("Test Case")
     plt.ylabel("Training Time (seconds)")
-    plt.bar(["FP32", "BF16 no AMX", "BF16 with AMX"], [fp32_training_time, bf16_noAmx_training_time, bf16_withAmx_training_time])
+    plt.bar(["FP32", "BF16 w/AMX"], [fp32_training_time, bf16_withAmx_training_time])
 
     # Calculate speedup when using AMX
     speedup_from_fp32 = fp32_training_time / bf16_withAmx_training_time
     print("BF16 with AMX is %.2fX faster than FP32" %speedup_from_fp32)
-    speedup_from_bf16 = bf16_noAmx_training_time / bf16_withAmx_training_time
-    print("BF16 with AMX is %.2fX faster than BF16 without AMX" %speedup_from_bf16)
 
     # Create bar chart with speedup results
     plt.figure()
     plt.title("AMX Speedup")
     plt.xlabel("Test Case")
     plt.ylabel("Speedup")
-    plt.bar(["FP32", "BF16 no AMX"], [speedup_from_fp32, speedup_from_bf16])
+    plt.bar(["FP32", "BF16 w/AMX"], [1, speedup_from_fp32])
     
     plt.show()
 
