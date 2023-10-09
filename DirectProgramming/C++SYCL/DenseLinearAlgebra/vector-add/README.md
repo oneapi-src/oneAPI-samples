@@ -364,7 +364,6 @@ Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of
 
 Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
 
-
 ## Example Output
 ```
 Running on device:        Intel(R) Gen(R) HD Graphics NEO
@@ -376,6 +375,33 @@ Vector size: 10000
 [9999]: 9999 + 9999 = 19998
 Vector add successfully completed on device.
 ```
+
+### Running on FPGA Interactively (Intel Devcloud)
+1. Connect to FPGA Node. 
+```
+qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
+```
+2. Activate oneAPI Environment.
+```
+source /opt/intel/oneapi/setvars.sh
+```
+3. Compile and Run.
+```
+icpx -fsycl -fintelfpga -DFPGA_EMULATOR vector-add-buffers.cpp
+./a.out
+```
+4. Example Output
+```
+Running on device: Intel(R) FPGA Emulation Device
+Vector size: 10000
+[0]: 0 + 0 = 0
+[1]: 1 + 1 = 2
+[2]: 2 + 2 = 4
+...
+[9999]: 9999 + 9999 = 19998
+Vector add successfully completed on device.
+```
+
 
 ## License
 
