@@ -23,8 +23,8 @@ void memcpy_threaded(T* dst, const T* src, size_t count, int num_threads) {
     // multi-threaded memcpy()
     std::vector<std::thread> threads;
 
-    // number of elements per thread = ceil(count/num_threads)
-    size_t count_per_thread = (count + num_threads - 1) / num_threads;
+    // number of elements per thread = count num_threads
+    size_t count_per_thread = count / num_threads;
 
     // the last thread may have a different count if 'num_threads' is not 
     // a multiple of 'count'.
