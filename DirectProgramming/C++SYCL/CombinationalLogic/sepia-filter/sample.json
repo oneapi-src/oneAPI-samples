@@ -25,7 +25,7 @@
 				"MSBuild sepia-filter.sln /t:Rebuild /p:Configuration=Release",
 				"cd x64\\Release",
 				"sepia-filter.exe ..\\..\\input\\silver512.png"
-
+      ]
 		}]
 	},
     "expertise": "Concepts and Functionality"
