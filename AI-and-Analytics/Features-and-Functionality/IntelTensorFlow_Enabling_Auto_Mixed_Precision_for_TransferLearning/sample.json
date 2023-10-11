@@ -11,16 +11,16 @@
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
-			"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
+			"env": ["source /opt/intel/oneapi/setvars.sh --force",
 			"conda env remove -n user_tensorflow",
 			"conda create --name user_tensorflow --clone tensorflow",
 			"conda activate user_tensorflow",
 			"pip install -r requirements.txt",
-			"~/.conda/envs/user_tensorflow/bin/python -m ipykernel install --user --name=user_tensorflow"	
+			"python -m ipykernel install --user --name=user_tensorflow"	
                         ],
 			"id": "tensorflow_AMP_transfer_learning",
 			"steps": [
-				"source activate user_tensorflow",
+				"conda activate user_tensorflow",
 				"python scripts/ci_test.py"
 			]
 		}]
