@@ -13,9 +13,10 @@
 		"linux": [{
 			"id": "tensorflow_inference_optimization",
 			"steps": [
+				"source /opt/intel/oneapi/setvars.sh --force",
 				"conda activate tensorflow",
 				"pip install ipykernel nbconvert nbformat",
-				"/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+				"python -m ipykernel install --user --name=tensorflow",
 				"python scripts/ci_test.py"
 			]
 		}]
