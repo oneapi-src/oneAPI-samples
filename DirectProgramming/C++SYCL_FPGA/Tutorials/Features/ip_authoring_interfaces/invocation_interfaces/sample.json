@@ -71,7 +71,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/invocatoin_interfaces",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/invocation_interfaces",
           "nmake report"
         ]
       }

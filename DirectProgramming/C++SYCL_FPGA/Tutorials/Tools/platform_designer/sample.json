@@ -9,10 +9,10 @@
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
   "commonFolder": {
-    "base": "../../../../",
+    "base": "../../../",
     "include": [
       "README.md",
-      "Tutorials/Tools/experimental/platform_designer",
+      "Tutorials/Tools/platform_designer",
       "include"
     ],
     "exclude": []
@@ -46,10 +46,10 @@
         "id": "fpga_emu",
         "steps": [
           "icx-cl --version",
-          "cd ../../../..",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/platform_designer/add-oneapi",
           "nmake fpga_emu",
           "add.fpga_emu.exe"
         ]
@@ -58,10 +58,10 @@
         "id": "report",
         "steps": [
           "icx-cl --version",
-          "cd ../../../..",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/experimental/platform_designer/add-oneapi",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Tools/platform_designer/add-oneapi",
           "nmake report"
         ]
       }
