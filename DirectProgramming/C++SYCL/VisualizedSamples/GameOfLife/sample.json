@@ -12,9 +12,10 @@
 	"linux": [{
 		"steps": [
 			"mkdir build",
-      		        "cd build",
-           		"cmake ..",
-           		"make",
+      		"cd build",
+			"../get_sdl2.sh",
+           	"SDL2_DIR=SDL/install/ cmake ..",
+           	"make",
 			"make run"
 		 ]
 	}],
