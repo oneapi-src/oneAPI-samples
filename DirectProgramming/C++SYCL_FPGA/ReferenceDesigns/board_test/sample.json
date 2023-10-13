@@ -35,8 +35,8 @@
         "steps": [
           "icpx --version",
           "mkdir build",
-          "cd build -DFPGA_DEVICE=Agilex7",
-          "cmake ..",
+          "cd build",
+          "cmake .. -DFPGA_DEVICE=Agilex7",
           "make report"
         ]
       }
