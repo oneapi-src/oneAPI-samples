@@ -50,6 +50,23 @@ endif()
 # specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
+    set(DEVICE_FLAG "Agilex7")
+else()
+    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
+    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
+      set(DEVICE_FLAG "A10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
+      set(DEVICE_FLAG "S10")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "Agilex7")
+    endif()
+    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
+endif()
+
+if(NOT DEFINED DEVICE_FLAG)
+    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
@@ -128,8 +145,17 @@ set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reu
 ### Generate Library
 ###############################################################################
 
+# The FPGA family in lib_rtl.v must be set according to the target family
+if(DEVICE_FLAG MATCHES A10)
+    set(FAMILY "Arria10")
+elseif(DEVICE_FLAG MATCHES S10)
+    set(FAMILY "Stratix10")
+else()
+    set(FAMILY "Agilex")
+endif()
+
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} @ONLY)
 
 set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --emulation_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT} ${USER_FLAGS})
 

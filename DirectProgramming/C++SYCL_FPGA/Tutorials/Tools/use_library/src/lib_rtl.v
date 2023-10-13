@@ -1,5 +1,7 @@
 module dsp_27x27u #(
-    parameter FAMILY = "Agilex",
+    // To be replaced with the appropriate family
+    // In this build system, cmake replaces the family automatically
+    parameter FAMILY = "@FAMILY@",
     parameter LATENCY = 2,
     parameter AX_WIDTH = 27,
     parameter AY_WIDTH = 27,
