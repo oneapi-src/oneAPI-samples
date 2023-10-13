@@ -22,4 +22,4 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
 
 runJupyterNotebook(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
                                 'ResNet50_Inference.ipynb'),
-                   'ResNet50_Inference_result.ipynb', 'user-tensorflow-gpu')
+                   'ResNet50_Inference_result.ipynb', 'user-tensorflow')
