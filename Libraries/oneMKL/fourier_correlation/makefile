@@ -4,7 +4,7 @@ default: run_all
 
 all: run_all
 
-run_all: fcorr_1d_buff.exe fcorr_1d_usm.exe fcorr_2d_usm
+run_all: fcorr_1d_buff.exe fcorr_1d_usm.exe fcorr_2d_usm.exe
 	.\fcorr_1d_buff 1024
 	.\fcorr_1d_usm 1024
 	.\fcorr_2d_usm
