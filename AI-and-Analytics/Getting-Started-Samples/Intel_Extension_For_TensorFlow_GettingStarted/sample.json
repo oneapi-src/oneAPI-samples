@@ -13,20 +13,23 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-                           "source /opt/intel/oneapi/setvars.sh --force", 
-                           "conda create --name user-tensorflow-gpu --clone tensorflow-gpu",
-                           "conda activate user-tensorflow-gpu",
-                           "pip install -r requirements.txt",
-                           "~/.conda/envs/user-tensorflow-gpu/bin/python  -m ipykernel install --user --name=user-tensorflow-gpu",
-			   "conda deactivate",
-			   "conda create --name user-tensorflow --clone tensorflow",
-                           "conda activate user-tensorflow",
-                           "pip install -r requirements.txt",
-                           "~/.conda/envs/user-tensorflow/bin/python  -m ipykernel install --user --name=user-tensorflow ",
-			   "conda deactivate"
-                        ],
+                "source /opt/intel/oneapi/setvars.sh --force", 
+			    "conda create --name user-tensorflow --clone tensorflow",
+				"conda activate user-tensorflow",
+				"pip install -r requirements.txt",
+				"pip install nbformat nbconvert",
+				"python  -m ipykernel install --user --name=user-tensorflow",
+				"conda deactivate",
+				"conda create --name user-tensorflow-gpu --clone tensorflow-gpu",
+				"conda activate user-tensorflow-gpu",
+				"pip install -r requirements.txt",
+				"pip install nbformat nbconvert",
+				"python  -m ipykernel install --user --name=user-tensorflow-gpu",
+				"conda deactivate"
+            ],
 			"id": "itex_sample_test",
 			"steps": [
+				"conda activate user-tensorflow",
 				"python scripts/ci_test.py"
 			]
 		}]
