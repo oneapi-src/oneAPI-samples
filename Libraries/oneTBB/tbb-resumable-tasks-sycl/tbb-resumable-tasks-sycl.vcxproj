@@ -65,11 +65,11 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/lib/vc_mt" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib" %(AdditionalOptions)</AdditionalOptions>
       <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\bin\vc_mt\tbb12_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\bin\tbb12_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -92,10 +92,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/lib/vc_mt" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\bin\vc_mt\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\bin\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
