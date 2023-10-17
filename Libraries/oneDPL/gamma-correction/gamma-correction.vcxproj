@@ -80,11 +80,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/lib/vc_mt" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib" %(AdditionalOptions)</AdditionalOptions>
       <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\bin\vc_mt\tbb12_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\bin\tbb12_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy tbb12_debug.dll to binary folder </Message>
@@ -108,10 +108,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/lib/vc_mt" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\bin\vc_mt\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\bin\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy tbb12.dll to binary folder </Message>
