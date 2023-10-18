@@ -1281,9 +1281,6 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
     return 1;
   }
 
-  std::cout << "Artem: total_bytes_used: " << total_bytes_used << std::endl;
-  std::cout << "Artem: vector_size" << vector_size << std::endl;
-
   // Initialize host memory
   InitializeVector(host_data_in, vector_size);
   InitializeVector(host_data_out, vector_size);
