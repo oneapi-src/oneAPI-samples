@@ -77,6 +77,13 @@ function(add_example name)
   add_test(NAME ${name} COMMAND ${name} ${ARGN})
 endfunction(add_example)
 
+function(add_openmp_example name)
+  set(_sources ${name}.cpp)
+  add_executable(${name} ${_sources})
+  target_compile_options(${name} PRIVATE ${COMMON_CXX_FLAGS})
+  add_test(NAME ${name} COMMAND ${name} ${ARGN})
+endfunction(add_openmp_example)
+
 function(add_fortran_example name)
   if(CMAKE_Fortran_COMPILER)
     set(_sources ${name}.f90)
