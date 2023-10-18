@@ -79,10 +79,10 @@ int run_test(sycl::queue &q, USMTest test) {
   size_t iterations = 1;
   size_t num_bytes = 1024 * 1024 * 1024;
   size_t num_items = num_bytes / sizeof(sycl::ulong8);
-  size_t num_bytes_GB = num_bytes / kGB;
+  size_t num_bytes_GB = num_bytes / kGiB;
 
   std::cout << "Iterations: " << iterations << std::endl;
-  std::cout << "Data size: " << num_bytes / kMB << " MB" << std::endl;
+  std::cout << "Data size: " << num_bytes / kMiB << " MB" << std::endl;
   std::cout << "Data type size: " << sizeof(sycl::ulong8) << " bytes"
             << std::endl;
 
