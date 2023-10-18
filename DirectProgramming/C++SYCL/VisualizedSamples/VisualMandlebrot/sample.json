@@ -21,8 +21,7 @@
 	"windows": [{
 		"steps": [
 			"MSBuild MandelbrotSDL.sln /t:Rebuild /p:Configuration=\"Release\"",
-			"cd x64/Release",
-			"MandelbrotSDL.exe"
+			"cd x64/Release"
 		]
 	}]
 
