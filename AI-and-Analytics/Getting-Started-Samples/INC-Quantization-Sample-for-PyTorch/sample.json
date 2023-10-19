@@ -12,11 +12,8 @@
       {
           "env": [
             "source /opt/intel/oneapi/setvars.sh --force",
-            "conda env remove -n user_pytorch",
-            "conda create -n user_pytorch --clone pytorch -y",
-            "conda activate user_pytorch",
-            "conda install -n user_pytorch jinja2=3.0.3 nbconvert=6.4.4 -y",
-            "pip install ipykernel",
+            "conda activate pytorch",
+            "pip install ipykernel jupyter",
             "python -m ipykernel install --user --name=user_pytorch"
           ],
           "id": "quantize with inc",
