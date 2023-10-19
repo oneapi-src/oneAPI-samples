@@ -1365,6 +1365,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
       // ****  Submit kernel tasks **** //
 
       auto e = q.submit([&](sycl::handler &h) {
+        // sycl::ext::oneapi::no_offset - tells the compiler that no offset has 
+        // been applied to the base pointer, and aligned accesses can be used 
         sycl::accessor mem(dev_buf, h, sycl::ext::oneapi::accessor_property_list{sycl::ext::oneapi::no_offset});
         // Work group Size (1 dimension)
         constexpr size_t kWGSize = 1024 * 32;
