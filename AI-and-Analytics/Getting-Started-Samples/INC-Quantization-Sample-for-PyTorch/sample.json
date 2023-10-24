@@ -14,11 +14,11 @@
             "source /opt/intel/oneapi/setvars.sh --force",
             "conda activate pytorch",
             "pip install ipykernel jupyter",
-            "python -m ipykernel install --user --name=user_pytorch"
+            "python -m ipykernel install --user --name=pytorch"
           ],
           "id": "quantize with inc",
           "steps": [
-              "jupyter nbconvert --ExecutePreprocessor.kernel_name=user_pytorch --to notebook quantize_with_inc.ipynb"
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb"
            ]
       }
        ]
