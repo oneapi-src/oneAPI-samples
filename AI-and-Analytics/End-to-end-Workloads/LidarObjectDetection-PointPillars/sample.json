@@ -11,14 +11,15 @@
     "ciTests": {
           "linux": [{
                   "steps": [
-			  "./get_dependencies.sh",
-			  "mkdir build",
+                          "source ./get_dependencies.sh",
+                          "mkdir build",
                           "cd build",
                           "cmake ..",
                           "make",
-			  "./example.exe"
+                          "./example.exe"
                    ]
           }]
     },
     "expertise": "Reference Designs and End to End"
 }
+

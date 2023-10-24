@@ -1,18 +1,22 @@
 #! /bin/bash
-# Build and install OpenCL ICD Loader
+# Build and install OpenCL Headers and OpenCL-ICD-Loader
 apt -y install ruby-full
 
 git clone --recursive https://github.com/KhronosGroup/OpenCL-CLHPP
 git clone https://github.com/KhronosGroup/OpenCL-ICD-Loader
 git clone https://github.com/KhronosGroup/OpenCL-Headers
 
-cmake -D CMAKE_INSTALL_PREFIX=./OpenCL-Headers/install -S ./OpenCL-Headers -B ./OpenCL-Headers/build 
+cmake -D CMAKE_INSTALL_PREFIX=./OpenCL-Headers/install -S ./OpenCL-Headers -B ./OpenCL-Headers/build
 cmake --build ./OpenCL-Headers/build --target install
 
-cmake -D CMAKE_PREFIX_PATH=`$PWD`/OpenCL-Headers/install -D CMAKE_INSTALL_PREFIX=./OpenCL-ICD-Loader/install -S ./OpenCL-ICD-Loader -B ./OpenCL-ICD-Loader/build 
+export OpenCLHeaders_DIR=$PWD/OpenCL-Headers/build/OpenCLHeaders
+
+cmake -D CMAKE_PREFIX_PATH=`$PWD`/OpenCL-Headers/install -D CMAKE_INSTALL_PREFIX=./OpenCL-ICD-Loader/install -S ./OpenCL-ICD-Loader -B ./OpenCL-ICD-Loader/build
 cmake --build ./OpenCL-ICD-Loader/build --target install
 
-cmake -D CMAKE_PREFIX_PATH="`$PWD`/OpenCL-Headers/install;`$PWD`/OpenCL-ICD-Loader/install" -D CMAKE_INSTALL_PREFIX=./OpenCL-CLHPP/install -S ./OpenCL-CLHPP -B ./OpenCL-CLHPP/build 
+export OpenCLICDLoader_DIR=$PWD/OpenCL-ICD-Loader/build/OpenCLICDLoader
+
+cmake -D CMAKE_PREFIX_PATH="`$PWD`/OpenCL-Headers/install;`$PWD`/OpenCL-ICD-Loader/install" -D CMAKE_INSTALL_PREFIX=./OpenCL-CLHPP/install -S ./OpenCL-CLHPP -B ./OpenCL-CLHPP/build
 cmake --build ./OpenCL-CLHPP/build --target install
 
 export OpenCLHeadersCpp_DIR=$PWD/OpenCL-CLHPP/build/OpenCLHeadersCpp
