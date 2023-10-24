@@ -1,6 +1,6 @@
-# `cuRAND Migration` Sample
+# `Radix Sort Thrust Migrated` Sample
 
-The `cuRAND Migration` sample is a collection of code samples that demonstrate the cuBLAS equivalent in Intel® oneAPI Math Kernel Library (oneMKL). 
+The `Radix Sort Thrust Migrated` sample is a CUDA to SYCL migrated sample that shows the THRUST equivalent in Intel® oneAPI. 
 
 | Area                   | Description
 |:---                    |:---
@@ -14,9 +14,7 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 The samples source code using SYCL were migrated from CUDA source code for offloading computations to a GPU/CPU. The sample demonstrates how to migrate code to SYCL, optimize the migration steps, and improve processing time.
 
-Each of the cuRAND samples source files shows the usage of different oneMKL cuRAND routines. All are basic programs containing the usage of a single method of generating pseudorandom numbers.
-
->**Note**: This sample is based on the [*cuRAND Library - APIs Examples*](https://github.com/NVIDIA/CUDALibrarySamples/tree/master/cuRAND) samples in the NVIDIA/CUDALibrary GitHub repository.
+>**Note**: This sample is based on the [*radixSortThrust*](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/radixSortThrust) sample in the NVIDIA/cuda-samples GitHub repository.
 
 ## Prerequisites
 
@@ -76,7 +74,7 @@ make VERBOSE=1
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 
-## Run the `cuRAND Migration` Sample
+## Run the `Radix Sort Thrust Migrated` Sample
 
 ### On Linux
 
@@ -84,10 +82,10 @@ Run the programs on a CPU or GPU. Each sample uses a default device, which in mo
 
 1. Run the samples in the `02_sycl_dpct_migrated` folder.
    ```
-   make run_mt19937_uniform
+   make run_radixSortMigrated
    ```
 
-### Build and Run the `cuRAND Migration` Sample in Intel® DevCloud (Optional)
+### Build and Run the `Radix Sort Thrust Migrated` Sample in Intel® DevCloud (Optional)
 
 When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
@@ -132,42 +130,24 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 
 ## Example Output
 
-This is example output if you built the default and ran `run_mt19937_uniform`.
+This is example output if you built the default and ran `run_radixSortMigrated`.
 
 ```
 Scanning dependencies of target mt19937_uniform
-[ 50%] Building CXX object 02_sycl_dpct_migrated/mt19937/CMakeFiles/mt19937_uniform.dir/mt19937_uniform.cpp.o
-[100%] Linking CXX executable ../../bin/mt19937_uniform
-[100%] Built target mt19937_uniform
-Host
-0.966454
-0.778166
-0.440733
-0.116851
-0.007491
-0.090644
-0.910976
-0.942535
-0.939269
-0.807002
-0.582228
-0.034926
-=====
-Device
-0.966454
-0.778166
-0.440733
-0.116851
-0.007491
-0.090644
-0.910976
-0.942535
-0.939269
-0.807002
-0.582228
-0.034926
-=====
-[100%] Built target run_mt19937_uniform
+[ 50%] Building CXX object 02_sycl_dpct_migrated/src/CMakeFiles/radixSortMigrated.dir/radixSortMigrated.cpp.o
+[100%] Linking CXX executable ../../bin/radixSortMigrated
+[100%] Built target radixSortMigrated
+Scanning dependencies of target run_radixSortMigrated
+../../bin/radixSortMigrated Starting...
+
+
+Sorting 1048576 32-bit unsigned int keys and values
+
+radixSortThrust, Throughput = 5.5147 MElements/s, Time = 0.19014 s, Size = 1048576 elements
+Test passed
+Time taken by program is : 292.000000 sec 
+[100%] Built target run_radixSortMigrated
+
 ```
 
 ## License
