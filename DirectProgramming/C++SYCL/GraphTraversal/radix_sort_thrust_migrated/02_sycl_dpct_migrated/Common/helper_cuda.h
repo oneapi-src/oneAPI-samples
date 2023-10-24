@@ -666,10 +666,6 @@ inline int _ConvertSMVer2Cores(int major, int minor) {
 
   // If we don't find the values, we default use the previous one
   // to run properly
-  printf(
-      "MapSMtoCores for SM %d.%d is undefined."
-      "  Default to use %d Cores/SM\n",
-      major, minor, nGpuArchCoresPerSM[index - 1].Cores);
   return nGpuArchCoresPerSM[index - 1].Cores;
 }
 
@@ -714,10 +710,6 @@ inline const char* _ConvertSMVer2ArchName(int major, int minor) {
 
   // If we don't find the values, we default use the previous one
   // to run properly
-  printf(
-      "MapSMtoArchName for SM %d.%d is undefined."
-      "  Default to use %s\n",
-      major, minor, nGpuArchNameSM[index - 1].name);
   return nGpuArchNameSM[index - 1].name;
 }
   // end of GPU Architecture definitions
@@ -884,8 +876,6 @@ inline int findCudaDevice(int argc, const char **argv) {
     checkCudaErrors(DPCT_CHECK_ERROR(
         minor =
             dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
-    printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
-           devID, _ConvertSMVer2ArchName(major, minor), major, minor);
 
   }
 
@@ -925,9 +915,6 @@ inline int findIntegratedGPU() {
       checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
                                                    .get_device(current_device)
                                                    .get_minor_version()));
-      printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
-             current_device, _ConvertSMVer2ArchName(major, minor), major, minor);
-
       return current_device;
     } else {
       devices_prohibited++;
