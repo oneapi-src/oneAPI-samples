@@ -1,1 +1,1 @@
-add_example(nbody_c)
+add_openmp_example(nbody_c)

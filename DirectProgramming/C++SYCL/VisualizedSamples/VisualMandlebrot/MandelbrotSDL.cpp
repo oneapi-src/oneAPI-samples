@@ -83,9 +83,18 @@ int main()
 	queue q(default_selector_v);
 	ShowDevice(q);
 
-
 	// Create mandelbrot class with width x height texture size, maxIterations, and rendered range from -2 to 2 in X and Y direction
-	Mandelbrot mandelbrot(width, height, maxIterations, -2, 2, -2, 2, q);
+	Mandelbrot *mandelbrot;
+	auto device = q.get_device();
+	// If the device does not support fp64, we fallback to single precision (float)
+	if (!device.has(aspect::fp64)) {
+		std::cout << "Device " << device.get_info<info::device::name>() << " does not support double precision!"
+		<< " Single precision will be used instead." << std::endl;
+		// Create mandelbrot class with width x height texture size, maxIterations, and rendered range from -2 to 2 in X and Y direction
+		mandelbrot = new Mandelbrot(width, height, maxIterations, -2.0f, 2.0f, -2.0f, 2.0f, q);
+	} else
+		mandelbrot = new Mandelbrot(width, height, maxIterations, -2.0, 2.0, -2.0, 2.0, q);
+
 	uint32_t* pixels;
 	bool quit = false;
 	SDL_Event event;
@@ -94,12 +103,12 @@ int main()
 	{
 		// Wait for SDL event.
 		SDL_WaitEvent(&event);
-		quit = handleEvents(event, mandelbrot);
+		quit = handleEvents(event, *mandelbrot);
 
 		// Lock texture and update the pixels pointer from where SDL will read data.
 		SDL_LockTexture(texture, NULL, (void**)&pixels, &pitch);
 		// Calculate mandelbrot and write pixels to pixel pointer
-		mandelbrot.Calculate(pixels);
+		mandelbrot->Calculate(pixels);
 		// Unlock the texture.
 		SDL_UnlockTexture(texture);
 		// Copy texture to renderer.
@@ -111,6 +120,6 @@ int main()
 	// Destroy window and clean the SDL.
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-
+	delete mandelbrot;
 	return 0;
 }
