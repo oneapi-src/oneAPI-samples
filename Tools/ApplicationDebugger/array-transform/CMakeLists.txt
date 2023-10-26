@@ -14,7 +14,7 @@ endif ()
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl")
 
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g")
 message (STATUS "Optimization level is set to -O0.")
 
 # Check that debugger executables exist in PATH
@@ -37,7 +37,7 @@ elseif (SYCL_COMPILE_TARGET MATCHES fpga-emu)
   set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_fpga")
 else ()
   set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_gen")
-  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xs \"-device ${SYCL_COMPILE_TARGET} -internal_options -cl-kernel-debug-enable -options -cl-opt-disable\"")
+  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xs \"-device ${SYCL_COMPILE_TARGET}\"")
 endif ()
 message (STATUS "SYCL_COMPILE_TARGET is '${SYCL_COMPILE_TARGET}'")
 
