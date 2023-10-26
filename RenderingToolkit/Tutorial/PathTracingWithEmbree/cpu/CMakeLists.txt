@@ -6,21 +6,37 @@ if(DEFINED ENV{ONEAPI_ROOT})
   set(ONEAPI_ROOT "$ENV{ONEAPI_ROOT}")
   message(STATUS "ONEAPI_ROOT FROM ENVIRONMENT: ${ONEAPI_ROOT}")
 else()
-  if(WIN32)
-    set(ONEAPI_ROOT "C:/Program Files (x86)/Intel/oneAPI")
-  else()
-    set(ONEAPI_ROOT /opt/intel/oneapi)
-  endif()
-  message(STATUS "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
+  message(FATAL_ERROR "ONEAPI_ROOT not set. Please use a vars script (.bat/.sh) from the oneAPI deployment directory")
 endif(DEFINED ENV{ONEAPI_ROOT})
 
-#tbb is used for tasking in this example
-find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
+set(EMBREE_BASE_DIR "")
+set(RKCOMMON_BASE_DIR "")
+set(TBB_BASE_DIR "")
+set(DEVUTILITIES_BASE_DIR "")
+set(COMPILERRUNTIMES_BASE_DIR "")
+if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
+  set(EMBREE_BASE_DIR ${ONEAPI_ROOT})
+  set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT})
+  set(TBB_BASE_DIR ${ONEAPI_ROOT})
+  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT})
+  #Compiler runtimes help for windows MSVS debugger DLL help only
+  set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT})
+else()
+  set(EMBREE_BASE_DIR ${ONEAPI_ROOT}/embree/latest)
+  set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT}/rkcommon/latest)
+  set(TBB_BASE_DIR ${ONEAPI_ROOT}/tbb/latest)
+  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT}/dev-utilities/latest)
+  #Compiler runtimes help for windows MSVS debugger DLL help only
+  set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT}/compiler/latest)
+endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
 
-find_package(embree 4.0 REQUIRED PATHS ${ONEAPI_ROOT}/embree/latest/lib/cmake NO_DEFAULT_PATH)
+#tbb is used for tasking in this example
+find_package(TBB REQUIRED PATHS ${TBB_BASE_DIR}/lib/cmake NO_DEFAULT_PATH)
+
+find_package(embree 4.0 REQUIRED PATHS ${EMBREE_BASE_DIR}/lib/cmake NO_DEFAULT_PATH)
 
 #rkcommon objects for rendering are used in this example
-find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT}/rkcommon/latest/lib/cmake NO_DEFAULT_PATH)
+find_package(rkcommon REQUIRED CONFIG PATHS ${RKCOMMON_BASE_DIR}/lib/cmake NO_DEFAULT_PATH)
 
 if(MSVC)
   set(CMAKE_CXX_STANDARD 11)
@@ -40,8 +56,8 @@ if (NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 endif(NOT MSVC)
 
-#stb headers are located in dev-utilities. oneAPI 2022.2 release and earlier: these header only libraries are distributed with the oneAPI Base Toolkit.
-include_directories(${ONEAPI_ROOT}/dev-utilities/latest/include)
+#stb headers are located in dev-utilities with the old oneAPI dires layout
+include_directories(${DEVUTILITIES_BASE_DIR}/include)
 
 set(HEADERS src/CornellBox.h  src/DefaultCubeAndPlane.h  src/Geometry.h  src/Lights.h src/Materials.h src/PathTracer.h src/Pool.h src/Renderer.h src/SceneGraph.h src/Sphere.h src/definitions.h src/RandomSampler.h)
 add_executable(rkPathTracer src/rkPathTracer.cpp ${HEADERS})
@@ -49,7 +65,7 @@ add_executable(rkPathTracer src/rkPathTracer.cpp ${HEADERS})
 if(MSVC)
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
     set_target_properties(rkPathTracer
-	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;"
+	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${COMPILERRUNTIMES_BASE_DIR}/bin;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;"
     )
 endif(MSVC)
 target_link_libraries(rkPathTracer PRIVATE embree TBB::tbb rkcommon::rkcommon)
