@@ -26,17 +26,17 @@ output](example_images/rkRayTracer.png)
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 <br>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions <br>(Optimization requirement: Intel&reg; Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions)
-| Compiler Toolchain                | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake* <br>Other platforms: C++11 compiler and CMake*
-| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component
+| Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++11 compiler and CMake*
+| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler runtimes
 | Tools                             | .png capable image viewer
 
 ## Build and Run
 
 ### Windows*
 
-Open a new x64 Native Command Prompt for VS 2019. Navigate to the source folder:
+Open a new x64 Native Command Prompt for VS 2022 (or 2019). Navigate to the source folder:
 
 ```
 cd <path-to-oneAPI-Samples>\RenderingToolkit\Tutorial\IntroToRayTracingWithEmbree\cpu
@@ -47,12 +47,12 @@ Build and Run the Application:
 call <path-to-oneAPI>\setvars.bat
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -A x64 ..
+cmake -G"Visual Studio 17 2022" -A x64 ..
 cmake --build . --config Release
 cd Release
 .\rkRayTracer.exe
 ```
-**Note**: Visual Studio 2022 users should use the x64 NAtive Command Prompt for VS 2022 and `-G"Visual Studio 17 2022"`
+**Note**: Visual Studio 2019 users should use the x64 Native Command Prompt for VS 2019 and `-G"Visual Studio 16 2019"`
 generator flag.
 
 Open the resulting image file: `rkRayTracer.png` with an image viewer.
@@ -643,7 +643,7 @@ features available with Intel&reg; Embree are best observed in the Intel&reg;
 Embree tutorial codes. These codes reside within the [Embree
 repository](https://github.com/embree/embree).
 
-The Intel&reg; oneAPI Rendering Toolkit `rkRayTracer` sample
+The Intel&reg; Rendering Toolkit `rkRayTracer` sample
 forgoes use of the Embree common library found in the full codes. The Embree
 common library implements math, tasking, and system access routines that are
 common to rendering applications. The Intel&reg; Embree common library lives in
