@@ -14,6 +14,7 @@ set(RKCOMMON_BASE_DIR "")
 set(TBB_BASE_DIR "")
 set(DEVUTILITIES_BASE_DIR "")
 set(COMPILERRUNTIMES_BASE_DIR "")
+set(PATHADDITIONS_DIRS "")
 if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
   set(EMBREE_BASE_DIR ${ONEAPI_ROOT})
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT})
@@ -21,6 +22,7 @@ if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat
   set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT})
   #Compiler runtimes help for windows MSVS debugger DLL help only
   set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT})
+  set(PATHADDITIONS_DIRS "PATH=%PATH%;${ONEAPI_ROOT}/bin")
 else()
   set(EMBREE_BASE_DIR ${ONEAPI_ROOT}/embree/latest)
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT}/rkcommon/latest)
@@ -37,6 +39,11 @@ find_package(embree 4.0 REQUIRED PATHS ${EMBREE_BASE_DIR}/lib/cmake NO_DEFAULT_P
 
 #rkcommon objects for rendering are used in this example
 find_package(rkcommon REQUIRED CONFIG PATHS ${RKCOMMON_BASE_DIR}/lib/cmake NO_DEFAULT_PATH)
+
+if(PATHADDITIONS_DIRS STREQUAL "")
+  set(PATHADDITIONS_DIRS "PATH=%PATH%;${COMPILERRUNTIMES_BASE_DIR}/bin;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;")
+endif(PATHADDITIONS_DIRS STREQUAL "")
+
 
 if(MSVC)
   set(CMAKE_CXX_STANDARD 11)
@@ -63,10 +70,11 @@ set(HEADERS src/CornellBox.h  src/DefaultCubeAndPlane.h  src/Geometry.h  src/Lig
 add_executable(rkPathTracer src/rkPathTracer.cpp ${HEADERS})
 
 if(MSVC)
+  message(STATUS "Using ${PATHADDITIONS_DIRS} for the MSVS Debugger env")
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
-    set_target_properties(rkPathTracer
-	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${COMPILERRUNTIMES_BASE_DIR}/bin;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;"
-    )
+  set_target_properties(rkPathTracer
+    PROPERTIES VS_DEBUGGER_ENVIRONMENT ${PATHADDITIONS_DIRS}
+  )
 endif(MSVC)
 target_link_libraries(rkPathTracer PRIVATE embree TBB::tbb rkcommon::rkcommon)
 
