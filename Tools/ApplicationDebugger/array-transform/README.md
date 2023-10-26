@@ -184,18 +184,7 @@ For example, to do AoT compilation for a specific GPU device ID:
 ```
 $ cmake .. -DSYCL_COMPILE_TARGET=<device id>
 ```
-where the `<device id>` must be replaced with the actual device ID in the hex format.
-Use `sycl-ls` command to list available devices on your target machine:
-
-```
-$ sycl-ls
-[ext_oneapi_level_zero:gpu:0] Intel(R) Level-Zero, Intel(R) Graphics [0x56c1] 1.3 [1.3.0]
-[ext_oneapi_level_zero:gpu:1] Intel(R) Level-Zero, Intel(R) Graphics [0x56c1] 1.3 [1.3.0]
-[ext_oneapi_level_zero:gpu:2] Intel(R) Level-Zero, Intel(R) Graphics [0x56c1] 1.3 [1.3.0]
-[ext_oneapi_level_zero:gpu:3] Intel(R) Level-Zero, Intel(R) Graphics [0x56c1] 1.3 [1.3.0]
-```
-
-In the above example, the device ID is `0x56c1`.
+where the `<device id>` specifies the target device, e.g., "xe".
 
 > *Hint:* Run `ocloc compile --help` to see all available GPU device options.
 
