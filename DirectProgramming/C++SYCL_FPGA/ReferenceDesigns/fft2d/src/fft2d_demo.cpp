@@ -239,7 +239,7 @@ void TestFFT(bool mangle, bool inverse) {
       auto fetch_event = q.single_task<class FetchKernel>(
           Fetch<kLogN, kLogParallelism, FetchToFFT, float>{to_read, mangle});
 
-      auto fft_event = q.single_task<class FFTKernel>(
+      q.single_task<class FFTKernel>(
           FFT<kLogN, kLogParallelism, FetchToFFT, FFTToTranspose, float>{
               inverse});
 
@@ -247,7 +247,6 @@ void TestFFT(bool mangle, bool inverse) {
           Transpose<kLogN, kLogParallelism, FFTToTranspose, float>{to_write,
                                                                    mangle});
 
-      fft_event.wait();
       transpose_event.wait();
 
       if (i == 0) {
