@@ -9,6 +9,7 @@ else()
   message(FATAL_ERROR "ONEAPI_ROOT NOT set. Please source environment variables.")
 endif(DEFINED ENV{ONEAPI_ROOT})
 
+#lots of helper variables to get access to other components
 set(OPENVKL_BASE_DIR "")
 set(COMPILER_SYCL_INCLUDE "")
 set(COMPILER_CL_INCLUDE "")
@@ -69,20 +70,6 @@ find_package(TBB REQUIRED PATHS ${TBB_BASE_DIR}/lib/cmake/tbb)
 
 find_package(embree 4.0 REQUIRED PATHS ${EMBREE_BASE_DIR})
 
-if(MSVC)
-	#  set(CMAKE_CXX_STANDARD 11)
-	#  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-	#  set(CMAKE_CXX_EXTENSIONS OFF)
-	#  set(CMAKE_CXX_FLAGS "-opaque-pointers")
-	#  set (CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld-link")
-
-else()
-	#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-endif(MSVC)
-
-#include_directories(${OPENVKL_INCLUDE_DIR} ${OPENVKL_GPU_INCLUDE_DIR} ${COMPILER_SYCL_INCLUDE} ${COMPILER_CL_INCLUDE})
-#include_directories(${OPENVKL_INCLUDE_DIR} ${OPENVKL_GPU_INCLUDE_DIR} /home/mcarroll/sycl-nightly-20230922/include/sycl /home/mcarroll/sycl-nightly-20230922/include/sycl/sycl)
-#include_directories(${OPENVKL_INCLUDE_DIR} ${OPENVKL_GPU_INCLUDE_DIR})
 link_directories(${OPENVKL_BASE_DIR}/lib ${RKCOMMON_BASE_DIR}/lib ${ISPCRT_BASE_DIR}/lib)
 
 add_executable(vklTutorialGPU src/vklTutorialGPU.cpp)

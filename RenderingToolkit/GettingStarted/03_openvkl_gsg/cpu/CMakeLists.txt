@@ -16,10 +16,6 @@ else()
   set(OPENVKL_BASE_DIR ${ONEAPI_ROOT}/openvkl/latest)
 endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
 
-set(OPENVKL_INCLUDE_DIR ${OPENVKL_BASE_DIR}/include)
-set(OPENVKL_CPU_INCLUDE_DIR ${OPENVKL_BASE_DIR}/include/openvkl/devices/cpu)
-message(STATUS "OPENVKL_INCLUDE_DIR: ${OPENVKL_INCLUDE_DIR}")
-message(STATUS "OPENVKL_CPU_INCLUDE_DIR: ${OPENVKL_CPU_INCLUDE_DIR}")
 find_package(openvkl REQUIRED PATHS ${ONEAPI_ROOT})
 
 if(MSVC)
@@ -29,9 +25,6 @@ if(MSVC)
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(MSVC)
-
-include_directories(${OPENVKL_INCLUDE_DIR} ${OPENVKL_CPU_INCLUDE_DIR})
-link_directories(${OPENVKL_BASE_DIR}/lib)
 
 add_executable(vklTutorialCPU src/vklTutorialCPU.c)
 target_link_libraries(vklTutorialCPU PRIVATE openvkl::openvkl openvkl::openvkl_module_cpu_device)

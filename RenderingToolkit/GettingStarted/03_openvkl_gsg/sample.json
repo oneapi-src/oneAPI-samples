@@ -22,7 +22,7 @@
 		    "cd ../gpu",
 		    "mkdir build",
 		    "cd build",
-		    "cmake -DCMAKE_CXX_COMPILER=clang++ ..",
+		    "cmake -DCMAKE_CXX_COMPILER=icpx ..",
 		    "cmake --build .",
 		    "./vklTutorialGPU"
                  ]
@@ -43,7 +43,7 @@
 		    "cd gpu",
 		    "mkdir build",
 		    "cd build",
-		    "cmake -DCMAKE_CXX_COMPILER=clang-cl ..",
+		    "cmake -G\"NMake Makefiles\" -DCMAKE_CXX_COMPILER=icx-cl ..",
 		    "cmake --build . --config Release",
 		    ".\\vklTutorialGPU.exe"
                 ]
