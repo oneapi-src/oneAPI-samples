@@ -16,6 +16,63 @@ inline size_t GetMin(size_t first, size_t second) {
 }
 #pragma omp end declare target
 
+#ifdef NO_OFFLOAD
+/*
+ * Host-Code
+ * CPU implementation used to test Advisor offload modeling 
+ * and compare OpenMP performance on CPU with the OpenMP Offload version
+ */
+void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
+                             float *ptr_vel_base, float *coeff,
+                             const size_t n1, const size_t n2,
+                             const size_t n3, const size_t n1_block,
+                             const size_t n2_block,
+                             const size_t n3_block) {
+  auto dimn1n2 = n1 * n2;
+
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
+
+  // Outer 3 loops just execute once if block sizes are same as the grid sizes,
+  // which is enforced here to demonstrate the baseline version.
+#pragma omp parallel default(shared)
+#pragma omp for schedule(static) collapse(3)
+  for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
+    for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+      for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+        auto iz_end = GetMin(bz + n3_block, n3_end);
+        auto iy_end = GetMin(by + n2_block, n2_end);
+        auto ix_end = GetMin(bx + n1_block, n1_end);
+
+        for (auto iz = bz; iz < iz_end; iz++) {
+          for (auto iy = by; iy < iy_end; iy++) {
+              float *ptr_next = ptr_next_base + iz * dimn1n2 + iy * n1;
+              float *ptr_prev = ptr_prev_base + iz * dimn1n2 + iy * n1;
+              float *ptr_vel = ptr_vel_base + iz * dimn1n2 + iy * n1;
+#pragma omp simd
+	      for (auto ix = bx; ix < ix_end; ix++) {
+              float value = ptr_prev[ix] * coeff[0];
+              value += STENCIL_LOOKUP(1);
+              value += STENCIL_LOOKUP(2);
+              value += STENCIL_LOOKUP(3);
+              value += STENCIL_LOOKUP(4);
+              value += STENCIL_LOOKUP(5);
+              value += STENCIL_LOOKUP(6);
+              value += STENCIL_LOOKUP(7);
+              value += STENCIL_LOOKUP(8);
+
+              ptr_next[ix] =
+                  2.0f * ptr_prev[ix] - ptr_next[ix] + value * ptr_vel[ix];
+            }
+          }
+        }
+      }
+    }
+  }
+}
+#endif
+
 #ifdef USE_BASELINE
 /*
  * Device-Code
