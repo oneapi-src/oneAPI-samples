@@ -6,17 +6,39 @@ if(DEFINED ENV{ONEAPI_ROOT})
   set(ONEAPI_ROOT "$ENV{ONEAPI_ROOT}")
   message(STATUS "ONEAPI_ROOT FROM ENVIRONMENT: ${ONEAPI_ROOT}")
 else()
-  if(WIN32)
-    set(ONEAPI_ROOT "C:/Program Files (x86)/Intel/oneAPI")
-  else()
-    set(ONEAPI_ROOT /opt/intel/oneapi)
-  endif()
-  message(STATUS "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
+  message(FATAL_ERROR "ONEAPI_ROOT not set. Please use a vars script (.bat/.sh) from the oneAPI deployment directory")
 endif(DEFINED ENV{ONEAPI_ROOT})
+
+set(EMBREE_BASE_DIR "")
+set(RKCOMMON_BASE_DIR "")
+set(TBB_BASE_DIR "")
+set(DEVUTILITIES_BASE_DIR "")
+set(COMPILERRUNTIMES_BASE_DIR "")
+set(PATHADDITIONS_DIRS "")
+if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
+  set(EMBREE_BASE_DIR ${ONEAPI_ROOT})
+  set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT})
+  set(TBB_BASE_DIR ${ONEAPI_ROOT})
+  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT})
+  #Compiler runtimes help for windows MSVS debugger DLL help only
+  set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT})
+  set(PATHADDITIONS_DIRS "PATH=%PATH%;${ONEAPI_ROOT}/bin")
+else()
+  set(EMBREE_BASE_DIR ${ONEAPI_ROOT}/embree/latest)
+  set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT}/rkcommon/latest)
+  set(TBB_BASE_DIR ${ONEAPI_ROOT}/tbb/latest)
+  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT}/dev-utilities/latest)
+  #Compiler runtimes help for windows MSVS debugger DLL help only
+  set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT}/compiler/latest)
+endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
 
 find_package(embree 4.0 REQUIRED PATHS ${ONEAPI_ROOT})
 
-find_package(IntelDPCPP REQUIRED)
+find_package(IntelSYCL REQUIRED)
+
+if(PATHADDITIONS_DIRS STREQUAL "")
+  set(PATHADDITIONS_DIRS "PATH=%PATH%;${COMPILERRUNTIMES_BASE_DIR}/bin;${embree_DIR}/../../../bin;")
+endif(PATHADDITIONS_DIRS STREQUAL "")
 
 #Required for SYCL implementation support
 set(CMAKE_CXX_STANDARD 17)
@@ -54,15 +76,15 @@ endif(NOT MSVC)
     endif(NOT MSVC)
 
 
-#stb headers are located in dev-utilities. oneAPI 2022.2 release and earlier: these header only libraries are distributed with the oneAPI Base Toolkit.
-include_directories(${ONEAPI_ROOT}/dev-utilities/latest/include)
+#stb headers are located in dev-utilities with the old oneAPI dirs layout
+include_directories(${DEVUTILITIES_BASE_DIR}/include)
 include_directories(SYSTEM "${SYCL_COMPILER_DIR}/../include/sycl" "${SYCL_COMPILER_DIR}/../include")
 
 add_executable(rkRayTracerGPU src/rkRayTracerGPU.cpp)
 if(MSVC)
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
     set_target_properties(rkRayTracerGPU
-	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${embree_DIR}/../../../bin"
+	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "${PATHADDITIONS_DIRS}"
     )
 endif(MSVC)
 target_link_libraries(rkRayTracerGPU PRIVATE embree)
