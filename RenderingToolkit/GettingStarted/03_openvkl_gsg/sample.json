@@ -4,7 +4,7 @@
   "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
   "description": "This introductory hello rendering toolkit sample program demonstrates how to sample into volumes with Intel Open VKL",
   "builder": ["cli"],
-  "languages": [{"c":{}}],
+  "languages": [{"cpp":{}}],
   "dependencies": ["tbb","openvkl","embree","rkcommon"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU","GPU"],
