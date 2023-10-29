@@ -51,7 +51,7 @@ Note: MSVS 2019 users should use a **x64 Native Tools Command Prompt for MSVS 20
 2. Review the terminal output (stdout).
 
 
-### Linux and macOS
+### Linux
 
 1. Start a new Terminal session.
 ```
