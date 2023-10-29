@@ -1,9 +1,10 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
-#include <openvkl/openvkl.h>
 
+#include <openvkl/openvkl.h>
 #include <openvkl/device/openvkl.h>
+
 #include <iomanip>
 #include <iostream>
 
@@ -13,8 +14,7 @@ static_assert(std::is_trivially_copyable<VKLFeatureFlags>::value);
 constexpr static sycl::specialization_id<VKLFeatureFlags> samplerSpecId{
     VKL_FEATURE_FLAGS_DEFAULT};
 
-void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
-{
+void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume) {
   std::cout << "demo of GPU API" << std::endl;
 
   std::cout << std::fixed << std::setprecision(6);
@@ -55,10 +55,10 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
 
   // sample, gradient (first attribute)
   const unsigned int attributeIndex = 0;
-  const float time                  = 0.f;
+  const float time = 0.f;
 
   // USM shared allocations, required when we want to pass results back from GPU
-  float *sample   = sycl::malloc_shared<float>(1, syclQueue);
+  float *sample = sycl::malloc_shared<float>(1, syclQueue);
   vkl_vec3f *grad = sycl::malloc_shared<vkl_vec3f>(1, syclQueue);
 
   syclQueue
@@ -69,10 +69,10 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
           const VKLFeatureFlags featureFlags =
               kh.get_specialization_constant<samplerSpecId>();
 
-          *sample = vklComputeSample(
-              &sampler, &coord, attributeIndex, time, featureFlags);
-          *grad = vklComputeGradient(
-              &sampler, &coord, attributeIndex, time, featureFlags);
+          *sample = vklComputeSample(&sampler, &coord, attributeIndex, time,
+                                     featureFlags);
+          *grad = vklComputeGradient(&sampler, &coord, attributeIndex, time,
+                                     featureFlags);
         });
       })
       .wait();
@@ -88,7 +88,7 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
   sycl::free(grad, syclQueue);
 
   // sample (multiple attributes)
-  const unsigned int M                  = 3;
+  const unsigned int M = 3;
   const unsigned int attributeIndices[] = {0, 1, 2};
 
   float *samples = sycl::malloc_shared<float>(M, syclQueue);
@@ -101,13 +101,8 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
           const VKLFeatureFlags featureFlags =
               kh.get_specialization_constant<samplerSpecId>();
 
-          vklComputeSampleM(&sampler,
-                            &coord,
-                            samples,
-                            M,
-                            attributeIndices,
-                            time,
-                            featureFlags);
+          vklComputeSampleM(&sampler, &coord, samples, M, attributeIndices,
+                            time, featureFlags);
         });
       })
       .wait();
@@ -152,7 +147,7 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
       vklGetIntervalIteratorSize(&intervalContext), syclQueue);
 
   int *numIntervals = sycl::malloc_shared<int>(1, syclQueue);
-  *numIntervals     = 0;
+  *numIntervals = 0;
 
   const size_t maxNumIntervals = 999;
 
@@ -175,14 +170,9 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
           const VKLFeatureFlags featureFlags =
               kh.get_specialization_constant<samplerSpecId>();
 
-          VKLIntervalIterator intervalIterator =
-              vklInitIntervalIterator(&intervalContext,
-                                      &rayOrigin,
-                                      &rayDirection,
-                                      &rayTRange,
-                                      time,
-                                      (void *)iteratorBuffer,
-                                      featureFlags);
+          VKLIntervalIterator intervalIterator = vklInitIntervalIterator(
+              &intervalContext, &rayOrigin, &rayDirection, &rayTRange, time,
+              (void *)iteratorBuffer, featureFlags);
 
           for (;;) {
             VKLInterval interval;
@@ -194,8 +184,7 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
             intervalsBuffer[*numIntervals] = interval;
 
             *numIntervals = *numIntervals + 1;
-            if (*numIntervals >= maxNumIntervals)
-              break;
+            if (*numIntervals >= maxNumIntervals) break;
           }
         });
       })
@@ -221,8 +210,8 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
   std::cout << std::endl << "\thit iteration" << std::endl << std::endl;
 
   // hit iterator context setup
-  float values[2]    = {32.f, 96.f};
-  int num_values     = 2;
+  float values[2] = {32.f, 96.f};
+  int num_values = 2;
   VKLData valuesData = vklNewData(device, num_values, VKL_FLOAT, values);
 
   VKLHitIteratorContext hitContext = vklNewHitIteratorContext(sampler);
@@ -241,7 +230,7 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
       sycl::malloc_device<char>(vklGetHitIteratorSize(&hitContext), syclQueue);
 
   int *numHits = sycl::malloc_shared<int>(1, syclQueue);
-  *numHits     = 0;
+  *numHits = 0;
 
   const size_t maxNumHits = 999;
 
@@ -263,14 +252,9 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
           const VKLFeatureFlags featureFlags =
               kh.get_specialization_constant<samplerSpecId>();
 
-          VKLHitIterator hitIterator =
-              vklInitHitIterator(&hitContext,
-                                 &rayOrigin,
-                                 &rayDirection,
-                                 &rayTRange,
-                                 time,
-                                 (void *)hitIteratorBuffer,
-                                 featureFlags);
+          VKLHitIterator hitIterator = vklInitHitIterator(
+              &hitContext, &rayOrigin, &rayDirection, &rayTRange, time,
+              (void *)hitIteratorBuffer, featureFlags);
 
           for (;;) {
             VKLHit hit;
@@ -281,8 +265,7 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
             hitBuffer[*numHits] = hit;
 
             *numHits = *numHits + 1;
-            if (*numHits >= maxNumHits)
-              break;
+            if (*numHits >= maxNumHits) break;
           }
         });
       })
@@ -304,12 +287,11 @@ void demoGpuAPI(sycl::queue &syclQueue, VKLDevice device, VKLVolume volume)
   vklRelease(sampler);
 }
 
-int main()
-{
+int main() {
   auto IntelGPUDeviceSelector = [](const sycl::device &device) {
     using namespace sycl::info;
     const std::string deviceName = device.get_info<device::name>();
-    bool match                   = device.is_gpu() &&
+    bool match = device.is_gpu() &&
                  device.get_info<sycl::info::device::vendor_id>() == 0x8086 &&
                  device.get_backend() == sycl::backend::ext_oneapi_level_zero;
     return match ? 1 : -1;
@@ -337,8 +319,8 @@ int main()
   const int numAttributes = 3;
 
   VKLVolume volume = vklNewVolume(device, "structuredRegular");
-  vklSetVec3i(
-      volume, "dimensions", dimensions[0], dimensions[1], dimensions[2]);
+  vklSetVec3i(volume, "dimensions", dimensions[0], dimensions[1],
+              dimensions[2]);
   vklSetVec3f(volume, "gridOrigin", 0, 0, 0);
   vklSetVec3f(volume, "gridSpacing", 1, 1, 1);
 
