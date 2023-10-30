@@ -1,17 +1,17 @@
-# End-to-End Samples for the AI Tools
+# End-to-End Samples for the Intel AI Tools
 
-The AI Tools allows data scientists, AI
+The Intel AI Tools allow data scientists, AI
 developers, and researchers familiar Python* tools and frameworks to
 accelerate end-to-end data science and analytics pipelines on Intel®
 architectures. The components are built using oneAPI libraries for low-level
 compute optimizations.
 
-The AI Tools maximizes performance from preprocessing
+The Intel AI Tools maximize performance from preprocessing
 through machine learning, and provides interoperability for efficient model
 development.
 
 You can find more information at
-[AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+[Intel AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 
 # End-to-end Samples
