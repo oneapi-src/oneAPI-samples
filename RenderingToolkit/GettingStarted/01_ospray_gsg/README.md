@@ -1,17 +1,17 @@
-# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; OSPRay
+# Getting Started Sample for Intel&reg; Rendering Toolkit (Render Kit): Intel&reg; OSPRay
 
 Intel&reg; OSPRay is an open source, scalable, and portable ray tracing engine
 for high-performance, high-fidelity visualization. Easily build applications
 that use ray tracing based rendering for both surface and volume-based
-visualizations. OSPRay builds on top of Intel&reg; Embree, Intel&reg; Open
+visualizations. OSPRay uses abstracted functionality from Intel&reg; Embree, Intel&reg; Open
 Volume Kernel Library (Intel&reg; Open VKL), and Intel&reg; Open Image Denoise.
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>CentOS 8 (or compatible) <br>Windows* 10 <br>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions, ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extentions, ARM64 with NEON extensions)
-| Compiler Toolchain                | Windows OS: MSVS 2019 installed with Windows SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example, gcc/c++/clang), and CMake*
-| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise
+| Compiler Toolchain                | Windows OS: MSVS 2022 (or 2019) installed with Windows SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example, gcc/c++/clang), and CMake*
+| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise; Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtimes
 | Image Display Tool                | A .ppm filetype viewer (for example, [ImageMagick](https://www.imagemagick.org)).
 
 
@@ -52,14 +52,9 @@ Volume Kernel Library (Intel&reg; Open VKL), and Intel&reg; Open Image Denoise.
 
 ## Build and Run
 
-### Additional Notes
-
-oneAPI Rendering Toolkit 2023.1 version's cmake file contains an errata. The errata will produce an error while building the example. Please apply the following workaround described in the following page. 2023.1.1 version will address the issue.
-
-https://community.intel.com/t5/Intel-oneAPI-Rendering-Toolkit/2023-1-troubleshoot-errata-CMake-Error/m-p/1476040#M98
 ### Windows
 
-1. Run a new **x64 Native Tools Command Prompt for MSVS 2019**.
+1. Run a new **x64 Native Tools Command Prompt for MSVS 2022**.
 
 ```
 call <path-to-oneapi-folder>\setvars.bat
@@ -69,21 +64,45 @@ cd build
 cmake ..
 cmake --build . --config Release
 cd Release
-ospTutorialCpp.exe
+.\ospTutorialCpp.exe
+```
+2. Example stdout output:
+```
+rendering initial frame to firstFrameCpp.ppm
+rendering 10 accumulated frames to accumulatedFrameCpp.ppm
+picked geometry [instance: 0000028FEA8F9860, model: 0000028FEA8CAE50, primitive: 1]
 ```
 
-2. Review the first output image with a .ppm image viewer. Example using
+3. Review the first output image with a .ppm image viewer. Example using
    ImageMagick display:
 ```
 <path-to-ImageMagick>\imdisplay.exe firstFrameCpp.ppm
 ```
 
-3. Review the accumulated output image with a .ppm image viewer. Example using
+4. Review the accumulated output image with a .ppm image viewer. Example using
    ImageMagick display:
 ```
 <path-to-ImageMagick>\imdisplay.exe accumulatedFrameCpp.ppm
 ```
 
+5. GPU (Beta in 2024.0) users try running the application in GPU mode:
+```
+REM close imdisplay and delete get started images
+del firstFrameCpp.ppm
+del AccumulatedFrameCpp.ppm
+REM run program
+.\ospTutorialCpp.exe
+
+```
+
+6. Review stdout output. Notice, picking `ospPick(..)` functionality is not available on GPU in the initial Intel&reg; OSPray 3.0 release:
+```
+rendering initial frame to firstFrameCpp.ppm
+rendering 10 accumulated frames to accumulatedFrameCpp.ppm
+picked geometry [instance: 0000000000000000, model: 0000000000000000, primitive: 4294967295]
+```
+
+7. Review GPU generated output images like steps 4. and 5. above.
 
 ### Linux
 
@@ -98,17 +117,44 @@ cmake --build .
 ./ospTutorialCpp
 ```
 
-2. Review the first output image with a .ppm image viewer. Example using
+2. Example stdout output:
+```
+rendering initial frame to firstFrameCpp.ppm
+rendering 10 accumulated frames to accumulatedFrameCpp.ppm
+picked geometry [instance: 0000028FEA8F9860, model: 0000028FEA8CAE50, primitive: 1]
+```
+
+3. Review the first output image with a .ppm image viewer. Example using
    ImageMagick display:
 ```
 <path-to-ImageMagick>/display-im6 firstFrameCpp.ppm
 ```
 
-3. Review the accumulated output image with a .ppm image viewer. Example using
+4. Review the accumulated output image with a .ppm image viewer. Example using
    ImageMagick display:
 ```
 <path-to-ImageMagick>/display-im6 accumulatedFrameCpp.ppm
 ```
+
+5. GPU (Beta in 2024.0) users try running the application in GPU mode:
+```
+# close display-im6 and delete get started images
+rm firstFrameCpp.ppm
+rm AccumulatedFrameCpp.ppm
+# run program
+./ospTutorialCpp
+
+```
+
+6. Review stdout output. Notice, picking `ospPick(..)` functionality is not available on GPU in the initial Intel&reg; OSPray 3.0 release:
+```
+rendering initial frame to firstFrameCpp.ppm
+rendering 10 accumulated frames to accumulatedFrameCpp.ppm
+picked geometry [instance: 0000000000000000, model: 0000000000000000, primitive: 4294967295]
+```
+
+7. Review GPU generated output images like steps 4. and 5. above.
+
 ### macOS
 
 1. Start a new Terminal session.
