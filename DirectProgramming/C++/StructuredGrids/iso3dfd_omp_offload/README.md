@@ -298,7 +298,7 @@ The **Top Non-Offloaded** region typically shows loops that could be offloaded b
 
 The Offload Modeling Perspective also provides a technical breakdown of the loops recommended for offloading, as well as recommendations to get started with the offload to the GPU. Notice that **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** is the top candidate for offload. use the [OpenMP* Offload Programming Model](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/c-c-or-fortran-with-openmp-offload-programming.html) to get started with this offload. 
 
-### How the Inital Offload was Done
+### How the Initial Offload was Done
 For the initial offload, the original pragma was changed to do an OpenMP offload to a target device specified in the compiler option. The modified pragma instructs the application to run the loop on the GPU instead of the CPU. For more information on OpenMP Targets see the [Intel® oneAPI DPC++/C++ Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/2023-0/fopenmp-targets-qopenmp-targets.html)
 
  **Pragma before Offload:**
