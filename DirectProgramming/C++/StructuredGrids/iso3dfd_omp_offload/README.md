@@ -50,7 +50,6 @@ This table describes the steps in the iso3dfd workflow. You can also see the one
  |**Step 6:** [Determine if the Application is CPU/GPU Bound](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-6-determine-if-the-application-is-cpugpu-bound)| `GPU Offload Unoptimized`| GPU Offload analysis| Intel VTune™ Profiler|  
  |**Step 7:** [Examine offload for GPU Kernel Optimization](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-7-examine-offload-for-gpu-kernel-optimization)| `GPU Offload Unoptimized` | GPU Compute/Media Hotspots Analysis | Intel VTune™ Profiler|
  |**Step 8:** [Maximize Application Performance](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-8-maximize-application-performance) | `GPU Offload Optimized 2`            | GPU Roofline Analysis               | Intel® Advisor                  |
-![image](https://github.com/clevels/oneAPI-samples/assets/59889830/6e123df3-08ec-4b7f-bb48-fdd6c04d110c)
 
 
 <br>\
