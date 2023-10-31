@@ -1,12 +1,12 @@
-# `Guided iso3dfd OpenMP Offload` Sample 
- 
+# `Guided iso3dfd OpenMP Offload` Sample
+
 The `Guided iso3dfd OpenMP Offload ` Sample demonstrates how you can:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Analyze the performance of an application when running on CPU<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Add OpenMP* directives to increase parallelism<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.Offload the optimized code onto Intel GPUs<br>
 
-This workflow makes use of oneAPI components available in the Intel® oneAPI Base Toolkit and Intel® HPC Toolkit. 
+This workflow makes use of oneAPI components available in the Intel® oneAPI Base Toolkit and Intel® HPC Toolkit.
 
 `iso3dfd` is a three-dimensional stencil designed to simulate a wave which propagates in a 3D isotropic medium.  This sample exposes some typical challenges you face when offloading applications onto OpenMP* (OMP) Offload devices. The sample also introduces techniques to resolve these challenges in order to achieve good performance.  
 
@@ -22,7 +22,7 @@ To learn more about optimizing OpenMP Offload applications for Intel® GPUs, see
 
 ## `iso3dfd Sample Structure`
 
-There are five versions of the iso3dfd project. 
+There are five versions of the iso3dfd project.
 
 - `CPU Only Implementation`: This is the basic serial CPU implementation.
 - `GPU Offload Unoptimized`: This version demonstrates the use of the OpenMP offload target parallel for construct with the collapse.
@@ -38,11 +38,11 @@ The iso3dfd sample has a single executable. To run each implementation, use appr
 ## `iso3dfd OpenMP Offload Workflow`
 You start the workflow with the basic version of the sample, called `CPU Only Implementation`. This version has serial CPU implementation. As you proceed through the workflow, the sample goes through modifications which are captured in different versions.  
 
-This table describes the steps in the iso3dfd workflow. You can also see the oneAPI tools used at each step and the relevant implementation of the iso3dfd sample. 
+This table describes the steps in the iso3dfd workflow. You can also see the oneAPI tools used at each step and the relevant implementation of the iso3dfd sample.
 
  |Steps| Sample Version Used &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |Analysis Type|Intel Analysis Tool &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;|
   |:------|:------:|:------:|:------:|
- |**Step 1:** [Set Environment Variables](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-1-set-environment-variables)| --- | --- | ---| 
+ |**Step 1:** [Set Environment Variables](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-1-set-environment-variables)| --- | --- | ---|
  |**Step 2:** [Build the iso3dfd Sample](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-2-build-the-iso3dfd-sample)| --- | --- | --- |  
  |**Step 3:** [Identify the Most Time-Consuming Loops](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-3-identify-the-most-time-consuming-loops)| `CPU Only Implementation`| Hotspots Analysis | Intel VTune™ Profiler|  
  |**Step 4:** [Analyze Vectorization](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-4-analyze-vectorization)| `CPU Only Implementation`| Vectorization Analysis|Intel® Advisor|
@@ -56,9 +56,9 @@ This table describes the steps in the iso3dfd workflow. You can also see the one
 <br>
 ## `Approach`
 The `iso3dfd` guided sample workflow makes extensive use of Intel® VTune™ Profiler and Intel® Advisor to profile software performance. The workflow uses these tools to:
-     1. Identify the most time-consuming loops and functions in the sample 
-     2. Conduct offload modeling  to identify profitable code regions to offload onto a Gen11 device. 
-     3. Analyze the OpenMP* code portions that were offloaded 
+     1. Identify the most time-consuming loops and functions in the sample
+     2. Conduct offload modeling  to identify profitable code regions to offload onto a Gen11 device.
+     3. Analyze the OpenMP* code portions that were offloaded
 
 `iso3dfd` is a finite difference stencil kernel that you can use to solve the 3D acoustic isotropic wave equation. You can use this equation as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave, which is a compute-intensive task.
 
@@ -66,7 +66,7 @@ The code searches for an available GPU or an alternate device that is suitable f
 
 The code also demonstrates some of the common optimization techniques that you can use to improve 3D-stencil code running on a GPU device.
 
- **Example Output:** 
+ **Example Output:**
 ```
 Grid Sizes: 256 256 256
 Tile sizes: 16 8 64
@@ -91,7 +91,7 @@ bytes        : 5.14244 GBytes/s
 | Operating System        | Hardware                   | Software
 |:---                     |:---                        |:---
 |Ubuntu* 18.04            |Skylake with GEN9 or newer  |Intel® oneAPI DPC++/C++ Compiler
-|--                       |--                          |Intel VTune™ Profiler 
+|--                       |--                          |Intel VTune™ Profiler
 |--                       |--                          |Intel® Advisor
 
 <br>\
@@ -116,7 +116,7 @@ When working with the command-line interface (CLI), configure the software tools
 >
 > `sudo sysctl -w dev.i915.perf_stream_paranoid=0`
 >
->The above command makes a temporary change that is lost after reboot. To make a permanent change,run: 
+>The above command makes a temporary change that is lost after reboot. To make a permanent change,run:
 >
 > `sudo echo dev.i915.perf_stream_paranoid=0 > /etc/sysctl.d/60-mdapi.conf`
 
@@ -135,7 +135,7 @@ Follow these steps to build and run a sample using VS Code:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 <br>
 <br>
@@ -189,7 +189,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    make clean
    ```
-   
+
 4. Change the optimized version (if necessary)
 
    If you already compiled with the optimization path, for example "*cmake -DUSE_OPT1=1 ..*", use "*cmake -DUSE_OPT1=0 ..*" can go back to the baseline version.
@@ -215,7 +215,7 @@ src/iso3dfd n1 n2 n3 n1_block n2_block n3_block Iterations
 The default syntax is `src/iso3dfd 256 256 256 16 8 64 100`.
 
 # `Step 3: Identify the Most Time-Consuming Loops`
-To find the most time consuming functions in the `CPU Only Implementation` version, use the VTune™ Profiler to run a Hotspots Analysis. 
+To find the most time consuming functions in the `CPU Only Implementation` version, use the VTune™ Profiler to run a Hotspots Analysis.
 
 **Build Command:**\
 `cmake -DNO_OFFLOAD=1 -DVERIFY_RESULTS=0 ..`\
@@ -233,27 +233,27 @@ Once the data collection completes, review the **Summary** page to see such perf
 
 In the **Top Hotspot** section the most time consuming function is **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`**.  This function occupies 94.2% of the total CPU time. The **Effective CPU Utilization Histogram** shows the ideal usage of all the CPUs.
 
-![Hotspots-Summary](https://github.com/intel-sandbox/clevels/assets/59889830/1709f642-f0ac-4e8e-bb00-675ec28a112b)
+![Hotspots-Summary](img/261384680-1709f642-f0ac-4e8e-bb00-675ec28a112b.png)
 
 Look at the **Hotspots Insights** section in the top right corner of the Summary window. Both the **Microarchitecture Usage** and **Vectorization** have been flagged as poor performing metrics. For each flagged metric, there is a recommendation to run another analysis type and further examine the issue.
 
-The Microarchitecture Usage metric is flagged at 29.9%. This is an estimation of how effectively the code utilizes the current microarchitecture. 
+The Microarchitecture Usage metric is flagged at 29.9%. This is an estimation of how effectively the code utilizes the current microarchitecture.
 
-The Vectorization metric is flagged at 100%- All of the floating point operations are vectorized, but this value does not neccisarily imply that they operations are 100% efficient. 
+The Vectorization metric is flagged at 100%- All of the floating point operations are vectorized, but this value does not neccisarily imply that they operations are 100% efficient.
 
-![Hotspots-bottom up](https://github.com/intel-sandbox/clevels/assets/59889830/a8688154-d7cc-4057-b112-7d5038126b0a)
+![Hotspots-bottom up](img/261385154-a8688154-d7cc-4057-b112-7d5038126b0a.png)
 
 Next, switch to the **Bottom-Up** window. The table shows a breakdown of metrics reported for all of the identified hotspots. The timeline below the table shows a visualization of the thread activity throughout the execution time of the application.
 
-Based on these results, the biggest performance problems point to the inefficient use of the platform and possible inefficiencies in the vectorization. Microarchitecture usage is low, and there is no use of a GPU. 
+Based on these results, the biggest performance problems point to the inefficient use of the platform and possible inefficiencies in the vectorization. Microarchitecture usage is low, and there is no use of a GPU.
 
 Before you evaluate potential performance on the GPU, examine the vectorization in this code. Use Intel Advisor to complete a high-level CPU analysis.
 
 
-# `Step 4: Analyze Vectorization` 
+# `Step 4: Analyze Vectorization`
 When you run a vectorization analysis with Intel Advisor, yopu can investigate potential CPU performance improvements before you evaluate potential performance on the GPU.
 
-At the command prompt, run these commands: 
+At the command prompt, run these commands:
 **Build Command:**\
 `cmake -DNO_OFFLOAD=1 -DVERIFY_RESULTS=0 ..`\
 `make -j`
@@ -262,16 +262,16 @@ At the command prompt, run these commands:
 `advisor --collect=survey --project-dir=./adv_vectorization -- ./src/iso3dfd 256 256 256 16 8 64 100`\
 `advisor --collect=tripcounts --flop --stacks --project-dir=./adv_vectorization -- ./src/iso3dfd 256 256 256 16 8 64 100`
 
-In the result, you can see a technical breakdown of the overall vectorization of the application. There is more information about the **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** function identified in the Hotspots Analysis. 
+In the result, you can see a technical breakdown of the overall vectorization of the application. There is more information about the **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** function identified in the Hotspots Analysis.
 
 The **Recommendations** tab provides guidance for potential optimizations.
 
-![Vectorization-summary-new](https://github.com/intel-sandbox/clevels/assets/59889830/bd33b40d-6ca3-491a-8d6b-23b3596ef915)
+![Vectorization-summary-new](img/275656782-bd33b40d-6ca3-491a-8d6b-23b3596ef915.png)
 
-Now that your high-level scan of CPU performance is complete, investigate the potential performance when you offload the iso3dfd application onto a GPU. 
+Now that your high-level scan of CPU performance is complete, investigate the potential performance when you offload the iso3dfd application onto a GPU.
 
-# `Step 5: Identify Profitable Code to Offload` 
-Use Intel Advisor to run the Offload Modeling Perspective. You can see the **projected** performance of the offload on the GPU, without needing access to the hardware. This perspective also shows the exact code that would be most profitable to offload. 
+# `Step 5: Identify Profitable Code to Offload`
+Use Intel Advisor to run the Offload Modeling Perspective. You can see the **projected** performance of the offload on the GPU, without needing access to the hardware. This perspective also shows the exact code that would be most profitable to offload.
 
  This exercise looks for projected performance on the 12th Generation Intel® Iris® Xe graphics. Note that you do **not** need to access the hardware to run the Offload Modeling Perspective.
 
@@ -288,15 +288,15 @@ In the **Program Metrics** section, see a visual comparison of the original exec
 
 In the **Offload Bounded By** section, see the potential limiting factors of the offloaded code. Use this to form your offload strategy.
 
-![Offload-adv-gen12](https://github.com/intel-sandbox/clevels/assets/59889830/97ff1f48-f5e6-4883-aa46-ea70f025e6c5)
+![Offload-adv-gen12](img/264219171-97ff1f48-f5e6-4883-aa46-ea70f025e6c5.png)
 
 At the bottom of the result in the **Top Offloaded** section, see the loops that are recommended for offload. You can also  see specific metrics for each loop.
 
 The **Top Non-Offloaded** region typically shows loops that could be offloaded but would not be profitable. In this example, there are no such loops.
 
-![Offload-adv-gen12-2](https://github.com/intel-sandbox/clevels/assets/59889830/7826f4c4-7b61-4e45-8eb0-340135ecc1bc)
+![Offload-adv-gen12-2](img/275947439-7826f4c4-7b61-4e45-8eb0-340135ecc1bc.png)
 
-The Offload Modeling Perspective also provides a technical breakdown of the loops recommended for offloading, as well as recommendations to get started with the offload to the GPU. Notice that **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** is the top candidate for offload. use the [OpenMP* Offload Programming Model](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/c-c-or-fortran-with-openmp-offload-programming.html) to get started with this offload. 
+The Offload Modeling Perspective also provides a technical breakdown of the loops recommended for offloading, as well as recommendations to get started with the offload to the GPU. Notice that **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** is the top candidate for offload. use the [OpenMP* Offload Programming Model](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/c-c-or-fortran-with-openmp-offload-programming.html) to get started with this offload.
 
 ### How the Initial Offload was Done
 For the initial offload, the original pragma was changed to do an OpenMP offload to a target device specified in the compiler option. The modified pragma instructs the application to run the loop on the GPU instead of the CPU. For more information on OpenMP Targets see the [Intel® oneAPI DPC++/C++ Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/2023-0/fopenmp-targets-qopenmp-targets.html)
@@ -330,16 +330,16 @@ In the **Recommendations** section you see that:
 <br>
 This confirms that the application is GPU-bound. To further examine these metrics, switch to the **Graphics** window.
 
-![BASELINE-GPU-OFFLOAD-SUMMARY](https://github.com/intel-sandbox/clevels/assets/59889830/d8f26d73-b2bb-4a9a-a106-38525b547577)
+![BASELINE-GPU-OFFLOAD-SUMMARY](img/275984951-d8f26d73-b2bb-4a9a-a106-38525b547577.png)
 
 The table in the Graphics window shows detailed metrics about each GPU computing task. The percentage of stalls in the EU array have been flagged as a performance issue. To get more details about this performance issue, you can run the GPU Compute/Media Hotspots Analysis.
 
-The timeline below the table shows how the metrics change through the runtime of the application. At the top of the timeline, the `OpenMP Primary Thread` starts by executing on the CPU. Around the 2 second mark, this thread begins prepare the offload process. The lower portion of the timeline shows when execution starts on the GPU. 
+The timeline below the table shows how the metrics change through the runtime of the application. At the top of the timeline, the `OpenMP Primary Thread` starts by executing on the CPU. Around the 2 second mark, this thread begins prepare the offload process. The lower portion of the timeline shows when execution starts on the GPU.
 
-![BASELINE-GPU-OFFLOAD-GRAPHICS2](https://github.com/intel-sandbox/clevels/assets/59889830/ee89da63-43d9-4737-b5c5-04cd565fb1e7)
+![BASELINE-GPU-OFFLOAD-GRAPHICS2](img/276409585-ee89da63-43d9-4737-b5c5-04cd565fb1e7.png)
 
 # `Step 7: Examine offload for GPU Kernel Optimization`    
- Now that the application is GPU-bound, run the GPU Compute/Media Hotspots Analysis in VTune Profiler to do a deeper dive focused on the kernels running on the GPU. Run these commands: 
+ Now that the application is GPU-bound, run the GPU Compute/Media Hotspots Analysis in VTune Profiler to do a deeper dive focused on the kernels running on the GPU. Run these commands:
 
 **Build Command:**\
 `cmake -DVERIFY_RESULTS=0 ..`\
@@ -351,21 +351,21 @@ The timeline below the table shows how the metrics change through the runtime of
 When the analysis finishes, the Summary window displays a comprehensive view of GPU performance.  
 
 -The percentage of EU Array stalls has been flagged as a top performance issue.
--Additionally, the offload is L3 Bandwidth Bound. 
+-Additionally, the offload is L3 Bandwidth Bound.
 
-![GPU-HOTSPots-Baseline-SUMMARY](https://github.com/intel-sandbox/clevels/assets/59889830/e9f03b26-ab38-48f3-9f1f-e91e433675f6)
+![GPU-HOTSPots-Baseline-SUMMARY](img/276416174-e9f03b26-ab38-48f3-9f1f-e91e433675f6.png)
 
-In the Graphics window, the Memory Hierarchy Diagram illustrates the flow of data from the CPU to the GPU. Use this diagram to identify potential bottlenecks. Notice that when the EU was stalled, the L3 Bandwidth was high. 
+In the Graphics window, the Memory Hierarchy Diagram illustrates the flow of data from the CPU to the GPU. Use this diagram to identify potential bottlenecks. Notice that when the EU was stalled, the L3 Bandwidth was high.
 
-The metrics and diagram inform that any time an instruction needs data, the instruction has to go to L3 cache. Using data reuse could possibly decrease the number of stalls on the EU and thereby increase GPU performance. 
+The metrics and diagram inform that any time an instruction needs data, the instruction has to go to L3 cache. Using data reuse could possibly decrease the number of stalls on the EU and thereby increase GPU performance.
 
-![NEW Graphics Baseline](https://github.com/intel-sandbox/clevels/assets/59889830/b2cbadf5-0f77-4466-954a-6a28950f03ef)
+![NEW Graphics Baseline](img/276416139-b2cbadf5-0f77-4466-954a-6a28950f03ef.png)
 
 
 # `Step 8: Maximize Application Performance`    
-Build the sample to analyze GPU Optimized 2. Then use Intel Advisor to run a GPU Roofline Analysis. Use this analysis to visualize the performance of the kernels against the maximum achievable performance of the system. 
+Build the sample to analyze GPU Optimized 2. Then use Intel Advisor to run a GPU Roofline Analysis. Use this analysis to visualize the performance of the kernels against the maximum achievable performance of the system.
 
-In this optimized version we can see that the offload is L3 Bandwidth Bound. Intel Advisor recommends that you optimize the memory access patterns. 
+In this optimized version we can see that the offload is L3 Bandwidth Bound. Intel Advisor recommends that you optimize the memory access patterns.
 
 **Build Command:**\
 `cmake -DUSE_OPT2=1 -DVERIFY_RESULTS=0 ..`\
@@ -374,7 +374,7 @@ In this optimized version we can see that the offload is L3 Bandwidth Bound. Int
 **Command:**\
 `advisor --collect=roofline --profile-gpu --search-dir src:r=src --project-dir=./adv_gpu_roofline_opt2 -- ./src/iso3dfd 256 256 256 16 8 64 100`
 
-![opt2-roofline](https://github.com/intel-sandbox/clevels/assets/59889830/0f02f76f-16d4-4ced-aa4d-2b74669d817b)
+![opt2-roofline](img/274476155-0f02f76f-16d4-4ced-aa4d-2b74669d817b.png)
 
 ## Output
 ```
