@@ -241,7 +241,7 @@ The Microarchitecture Usage metric is flagged at 29.9%. This is an estimation of
 
 The Vectorization metric is flagged at 100%- All of the floating point operations are vectorized, but this value does not neccisarily imply that they operations are 100% efficient.
 
-![Hotspots-bottom up](https://github.com/intel-sandbox/clevels/assets/59889830/a8688154-d7cc-4057-b112-7d5038126b0a)
+![Hotspots-bottom up](img/261385154-a8688154-d7cc-4057-b112-7d5038126b0a.png)
 
 Next, switch to the **Bottom-Up** window. The table shows a breakdown of metrics reported for all of the identified hotspots. The timeline below the table shows a visualization of the thread activity throughout the execution time of the application.
 
@@ -266,7 +266,7 @@ In the result, you can see a technical breakdown of the overall vectorization of
 
 The **Recommendations** tab provides guidance for potential optimizations.
 
-![Vectorization-summary-new](https://github.com/intel-sandbox/clevels/assets/59889830/bd33b40d-6ca3-491a-8d6b-23b3596ef915)
+![Vectorization-summary-new](img/275656782-bd33b40d-6ca3-491a-8d6b-23b3596ef915.png)
 
 Now that your high-level scan of CPU performance is complete, investigate the potential performance when you offload the iso3dfd application onto a GPU.
 
@@ -288,13 +288,13 @@ In the **Program Metrics** section, see a visual comparison of the original exec
 
 In the **Offload Bounded By** section, see the potential limiting factors of the offloaded code. Use this to form your offload strategy.
 
-![Offload-adv-gen12](https://github.com/intel-sandbox/clevels/assets/59889830/97ff1f48-f5e6-4883-aa46-ea70f025e6c5)
+![Offload-adv-gen12](img/264219171-97ff1f48-f5e6-4883-aa46-ea70f025e6c5.png)
 
 At the bottom of the result in the **Top Offloaded** section, see the loops that are recommended for offload. You can also  see specific metrics for each loop.
 
 The **Top Non-Offloaded** region typically shows loops that could be offloaded but would not be profitable. In this example, there are no such loops.
 
-![Offload-adv-gen12-2](https://github.com/intel-sandbox/clevels/assets/59889830/7826f4c4-7b61-4e45-8eb0-340135ecc1bc)
+![Offload-adv-gen12-2](img/275947439-7826f4c4-7b61-4e45-8eb0-340135ecc1bc.png)
 
 The Offload Modeling Perspective also provides a technical breakdown of the loops recommended for offloading, as well as recommendations to get started with the offload to the GPU. Notice that **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`** is the top candidate for offload. use the [OpenMP* Offload Programming Model](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/c-c-or-fortran-with-openmp-offload-programming.html) to get started with this offload.
 
@@ -330,13 +330,13 @@ In the **Recommendations** section you see that:
 <br>
 This confirms that the application is GPU-bound. To further examine these metrics, switch to the **Graphics** window.
 
-![BASELINE-GPU-OFFLOAD-SUMMARY](https://github.com/intel-sandbox/clevels/assets/59889830/d8f26d73-b2bb-4a9a-a106-38525b547577)
+![BASELINE-GPU-OFFLOAD-SUMMARY](img/275984951-d8f26d73-b2bb-4a9a-a106-38525b547577.png)
 
 The table in the Graphics window shows detailed metrics about each GPU computing task. The percentage of stalls in the EU array have been flagged as a performance issue. To get more details about this performance issue, you can run the GPU Compute/Media Hotspots Analysis.
 
 The timeline below the table shows how the metrics change through the runtime of the application. At the top of the timeline, the `OpenMP Primary Thread` starts by executing on the CPU. Around the 2 second mark, this thread begins prepare the offload process. The lower portion of the timeline shows when execution starts on the GPU.
 
-![BASELINE-GPU-OFFLOAD-GRAPHICS2](https://github.com/intel-sandbox/clevels/assets/59889830/ee89da63-43d9-4737-b5c5-04cd565fb1e7)
+![BASELINE-GPU-OFFLOAD-GRAPHICS2](img/276409585-ee89da63-43d9-4737-b5c5-04cd565fb1e7.png)
 
 # `Step 7: Examine offload for GPU Kernel Optimization`    
  Now that the application is GPU-bound, run the GPU Compute/Media Hotspots Analysis in VTune Profiler to do a deeper dive focused on the kernels running on the GPU. Run these commands:
@@ -353,13 +353,13 @@ When the analysis finishes, the Summary window displays a comprehensive view
 -The percentage of EU Array stalls has been flagged as a top performance issue.
 -Additionally, the offload is L3 Bandwidth Bound.
 
-![GPU-HOTSPots-Baseline-SUMMARY](https://github.com/intel-sandbox/clevels/assets/59889830/e9f03b26-ab38-48f3-9f1f-e91e433675f6)
+![GPU-HOTSPots-Baseline-SUMMARY](img/276416174-e9f03b26-ab38-48f3-9f1f-e91e433675f6.png)
 
 In the Graphics window, the Memory Hierarchy Diagram illustrates the flow of data from the CPU to the GPU. Use this diagram to identify potential bottlenecks. Notice that when the EU was stalled, the L3 Bandwidth was high.
 
 The metrics and diagram inform that any time an instruction needs data, the instruction has to go to L3 cache. Using data reuse could possibly decrease the number of stalls on the EU and thereby increase GPU performance.
 
-![NEW Graphics Baseline](https://github.com/intel-sandbox/clevels/assets/59889830/b2cbadf5-0f77-4466-954a-6a28950f03ef)
+![NEW Graphics Baseline](img/276416139-b2cbadf5-0f77-4466-954a-6a28950f03ef.png)
 
 
 # `Step 8: Maximize Application Performance`    
@@ -374,7 +374,7 @@ In this optimized version we can see that the offload is L3 Bandwidth Bound. Int
 **Command:**\
 `advisor --collect=roofline --profile-gpu --search-dir src:r=src --project-dir=./adv_gpu_roofline_opt2 -- ./src/iso3dfd 256 256 256 16 8 64 100`
 
-![opt2-roofline](https://github.com/intel-sandbox/clevels/assets/59889830/0f02f76f-16d4-4ced-aa4d-2b74669d817b)
+![opt2-roofline](img/274476155-0f02f76f-16d4-4ced-aa4d-2b74669d817b.png)
 
 ## Output
 ```
