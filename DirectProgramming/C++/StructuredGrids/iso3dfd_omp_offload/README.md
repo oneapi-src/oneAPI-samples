@@ -233,7 +233,7 @@ Once the data collection completes, review the **Summary** page to see such perf
 
 In the **Top Hotspot** section the most time consuming function is **`_Z16Iso3dfdIterarionPfS_S_S_mmmmmm.DIR.OMP.PARALLEL2`**.  This function occupies 94.2% of the total CPU time. The **Effective CPU Utilization Histogram** shows the ideal usage of all the CPUs.
 
-![Hotspots-Summary](imgs/261384680-1709f642-f0ac-4e8e-bb00-675ec28a112b.png)
+![Hotspots-Summary](img/261384680-1709f642-f0ac-4e8e-bb00-675ec28a112b.png)
 
 Look at the **Hotspots Insights** section in the top right corner of the Summary window. Both the **Microarchitecture Usage** and **Vectorization** have been flagged as poor performing metrics. For each flagged metric, there is a recommendation to run another analysis type and further examine the issue.
 
