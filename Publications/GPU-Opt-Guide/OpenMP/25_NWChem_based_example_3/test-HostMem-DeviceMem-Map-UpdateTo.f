@@ -171,37 +171,37 @@
         lnov = nocc * nvir
         kchunk = (nocc - 1)/nkpass + 1
 
-        !$omp allocate allocator(omp_target_device_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_device_mem_alloc): f1n)
         allocate( f1n(1:nvir,1:nvir) )
 
-        !$omp allocate allocator(omp_target_device_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_device_mem_alloc): f2n)
         allocate( f2n(1:nvir,1:nvir) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): eorb)
         allocate( eorb(1:nbf) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Jia)
         allocate( Jia(1:lnvv) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Kia)
         allocate( Kia(1:lnvv) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Tia)
         allocate( Tia(1:lnov*nocc) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Xia)
         allocate( Xia(1:lnov*nocc))
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Tkj)
         allocate( Tkj(1:kchunk*lnvv) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): Kkj)
         allocate( Kkj(1:kchunk*lnvv) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): t1v1)
         allocate( t1v1(1:lnvv) )
 
-        !$omp allocate allocator(omp_target_host_mem_alloc)
+        !$omp allocators allocate(allocator(omp_target_host_mem_alloc): t1v2)
         allocate( t1v2(1:lnvv) )
 !
         call init_array_1(eorb, nbf)
