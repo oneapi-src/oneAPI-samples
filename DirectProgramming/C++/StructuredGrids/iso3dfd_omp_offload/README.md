@@ -41,15 +41,16 @@ You start the workflow with the basic version of the sample, called `CPU Only Im
 This table describes the steps in the iso3dfd workflow. You can also see the oneAPI tools used at each step and the relevant implementation of the iso3dfd sample. 
 
  |Steps| Sample Version Used &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |Analysis Type|Intel Analysis Tool &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;|
- |:------|:------:|:------:|:------:|
- |**Step 1:** [Set Environment Variables](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-1-set-environment-variables)| --- | --- | ---| 
- |**Step 2:** [Build the iso3dfd Sample](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-2-build-the-iso3dfd-sample)| --- | --- | --- |  
- |**Step 3:** [Identify the Most Time-Consuming Loops](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-3-identify-the-most-time-consuming-loops)| `CPU Only Implementation`| Hotspots Analysis | Intel VTune™ Profiler|  
- |**Step 4:** [Analyze Vectorization](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-4-analyze-vectorization)| `CPU Only Implementation`| Vectorization Analysis|Intel® Advisor|
- |**Step 5:** [Identify Profitable Code to Offload](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-5-identify-profitable-code-to-offload) | `CPU Only Implementation` | Offload Advisor |Intel® Advisor |
- |**Step 6:** [Determine if the Application is CPU/GPU Bound](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-6-determine-if-the-application-is-cpugpu-bound)| `GPU Offload Unoptimized`| GPU Offload analysis| Intel VTune™ Profiler|  
- |**Step 7:** [Examine offload for GPU Kernel Optimization](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-7-examine-offload-for-gpu-kernel-optimization)| `GPU Offload Unoptimized` | GPU Compute/Media Hotspots Analysis | Intel VTune™ Profiler|
- |**Step 8:** [Maximize Application Performance](https://github.com/intel-sandbox/clevels/blob/main/iso3dfd_omp_offload_new/README.md#step-9-maximize-application-performance) | `GPU Offload Optimized 2`            | GPU Roofline Analysis               | Intel® Advisor                  |
+  |:------|:------:|:------:|:------:|
+ |**Step 1:** [Set Environment Variables](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-1-set-environment-variables)| --- | --- | ---| 
+ |**Step 2:** [Build the iso3dfd Sample](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-2-build-the-iso3dfd-sample)| --- | --- | --- |  
+ |**Step 3:** [Identify the Most Time-Consuming Loops](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-3-identify-the-most-time-consuming-loops)| `CPU Only Implementation`| Hotspots Analysis | Intel VTune™ Profiler|  
+ |**Step 4:** [Analyze Vectorization](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-4-analyze-vectorization)| `CPU Only Implementation`| Vectorization Analysis|Intel® Advisor|
+ |**Step 5:** [Identify Profitable Code to Offload](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-5-identify-profitable-code-to-offload) | `CPU Only Implementation` | Offload Advisor |Intel® Advisor |
+ |**Step 6:** [Determine if the Application is CPU/GPU Bound](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-6-determine-if-the-application-is-cpugpu-bound)| `GPU Offload Unoptimized`| GPU Offload analysis| Intel VTune™ Profiler|  
+ |**Step 7:** [Examine offload for GPU Kernel Optimization](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-7-examine-offload-for-gpu-kernel-optimization)| `GPU Offload Unoptimized` | GPU Compute/Media Hotspots Analysis | Intel VTune™ Profiler|
+ |**Step 8:** [Maximize Application Performance](https://github.com/clevels/oneAPI-samples/blob/development/DirectProgramming/C%2B%2B/StructuredGrids/iso3dfd_omp_offload/README.md#step-8-maximize-application-performance) | `GPU Offload Optimized 2`            | GPU Roofline Analysis               | Intel® Advisor                  |
+
 
 <br>\
 <br>
