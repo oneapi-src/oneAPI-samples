@@ -1,13 +1,23 @@
 # Intel Extension for TensorFlow Getting Started Sample
-This code sample will guide users how to run a tensorflow inference workload on both GPU and CPU by using oneAPI AI Analytics Toolkit and also analyze the GPU and CPU usage via oneDNN verbose logs
+This code sample will guide users how to run a tensorflow inference workload on both GPU and CPU by using Intel AI Tools and also analyze the GPU and CPU usage via oneDNN verbose logs
 
 ## Purpose
-  - Guide users how to use different conda environments in oneAPI AI Analytics Toolkit to run TensorFlow workloads on both CPU and GPU
+  - Guide users how to use different conda environments in Intel AI Tools to run TensorFlow workloads on both CPU and GPU
   - Guide users how to validate the GPU or CPU usages for TensorFlow workloads on Intel CPU or GPU
- 
+
+## Prerequisites
+
+| Optimized for          | Description
+|:---                    |:---
+| OS                     | Ubuntu* 22.04  
+| Hardware               | Intel® Data Center GPU
+| Software               | Intel Extension for TensorFlow
+
+Intel Extension for TensorFlow* is ready for use once you finish the Intel AI Tools installation through AI Tools Selector or Offline Installer. 
+You can refer to the oneAPI AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 ## Key implementation details
-1. leverage the [resnet50 inference sample] (https://github.com/intel/intel-extension-for-tensorflow/tree/main/examples/infer_resnet50) from intel-extension-for-tensorflow
+1. leverage the [resnet50 inference sample](https://github.com/intel/intel-extension-for-tensorflow/tree/main/examples/infer_resnet50) from intel-extension-for-tensorflow
 2. use the resnet50v1.5 pretrained model from TensorFlow Hub
 3. infernece with images in intel caffe github
 4. guide users how to use different conda environment to run on Intel CPU and GPU
@@ -24,9 +34,9 @@ If you are running this sample on the DevCloud, skip the Pre-requirements and go
 
 ## Pre-requirements (Local or Remote Host Installation)
 
-TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit (AI Kit) installation and have run the post installation script.
+TensorFlow* is ready for use once you finish the Intel AI Tools installation and have run the post installation script.
 
-You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; AI Analytics Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
+You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; Intel AI Tools Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 ## Environment Setup
 This sample requires two additional pip packages: tensorflow_hub and ipykerenl.  
