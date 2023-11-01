@@ -38,7 +38,7 @@ TensorFlow* is ready for use once you finish the Intel AI Tools installation and
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; Intel AI Tools Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
-## Environment Setup
+## Environment Setup (Only applicable to AI Tools Offline Installer)
 This sample requires two additional pip packages: tensorflow_hub and ipykerenl.  
 Therefore users need to clone the tensorflow conda environment into users' home folder and install those additional packages accordingly.   
 Please follow bellow steps to setup GPU environment.  
@@ -56,9 +56,9 @@ In the end, you will have two new conda environments which are user-tensorflow-g
 ## How to Build and Run
 
 You can run the Jupyter notebook with the sample code on your local
-server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud.
+server.
 
-**Note:** You can run this sample on the Intel DevCloud using the Dask and OmniSci engine backends for Modin. To learn how to set the engine backend for Intel Distribution of Modin, visit the [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html). The Ray backend cannot be used on Intel DevCloud at this time. Thank you for your patience.
+
 
 ### Run the Sample in Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
