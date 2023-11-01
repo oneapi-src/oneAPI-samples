@@ -29,9 +29,6 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Running Samples on the Intel&reg; DevCloud
-If you are running this sample on the DevCloud, skip the Pre-requirements and go to the [Activate Conda Environment](#activate-conda) section.
-
 ## Pre-requirements (Local or Remote Host Installation)
 
 TensorFlow* is ready for use once you finish the Intel AI Tools installation and have run the post installation script.
