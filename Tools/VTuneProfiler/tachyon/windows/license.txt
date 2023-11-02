@@ -1,0 +1,18 @@
+Tachyon Sample
+
+License Information Follows
+---------------------------
+* src\*.cpp, src\*.h
+* src\common\gui\*.cpp, src\common\gui\*.h, src\common\utility\*.h, src\common\index.html
+* src\tachyon.openmp\*.cpp, src\tachyon.serial\*.cpp, src\tachyon.tbb\*.cpp
+* scripts\*.bat
+* datx\*.dat, dat\*.dat
+* build.bat, readme.html
+
+Copyright Intel Corporation
+
+* license: http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/  
+
+The original source is
+    Copyright (c) 1994-2008 John E. Stone
+    All rights reserved.
