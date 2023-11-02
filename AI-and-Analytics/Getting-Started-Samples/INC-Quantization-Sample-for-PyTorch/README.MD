@@ -20,7 +20,7 @@ The sample starts by loading a BERT model from Hugging Face. After loading the m
 |:---                     |:---
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel® Xeon® Scalable processor family
-| Software                | Intel® Neural Compressor, Intel Extension for PyTorch
+| Software                | Intel® Neural Compressor, Intel Optimization for PyTorch
 
 ### For Local Development Environments
 
