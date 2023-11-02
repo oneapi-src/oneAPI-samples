@@ -54,6 +54,7 @@ The sample contains one Jupyter Notebook and one Python script.
 
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample
 
+### On Linux* (Only applicable to AI Tools Offline Installer)
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
@@ -63,8 +64,6 @@ The sample contains one Jupyter Notebook and one Python script.
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
-
-### On Linux*
 
 #### Activate Conda
 
