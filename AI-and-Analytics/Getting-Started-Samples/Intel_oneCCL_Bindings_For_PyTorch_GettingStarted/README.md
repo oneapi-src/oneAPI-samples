@@ -13,29 +13,26 @@ The oneAPI Collective Communications Library Bindings for PyTorch* (oneCCL Bindi
 |:---                               |:---
 | OS                                | Ubuntu* 22.04
 | Hardware                          | Intel® Xeon® scalable processor family <br> Intel® Data Center GPU
-| Software                          | Intel® AI Analytics Toolkit (AI Kit)
+| Software                          | Intel® Extension for PyTorch
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **Intel® AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Tools installation information and post-installation steps and scripts.
 
-  oneCCL Bindings for PyTorch* is ready for use once you finish the Intel® AI Analytics Toolkit (AI Kit) installation and have run the post installation script.
+  oneCCL Bindings for PyTorch* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
-  You can refer to the *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
+  You can refer to the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See *[Intel® DevCloud for oneAPI](https://DevCloud.intel.com/oneapi/get_started/)* for information.
 
 ## Key Implementation Details
 
 The sample code demonstrates distributed training using oneCCL in PyTorch*. oneCCL is a library for efficient distributed deep learning training that implements such collectives like `allreduce`, `allgather`, and `alltoall`. For more information on oneCCL, refer to the [*oneCCL documentation*](https://oneapi-src.github.io/oneCCL/).
 
-This sample contains a Jupyter Notebook that guides you through the process of running a simple PyTorch* distributed workload on both GPU and CPU by using oneAPI AI Analytics Toolkit.
+This sample contains a Jupyter Notebook that guides you through the process of running a simple PyTorch* distributed workload on both GPU and CPU by using Intel® AI Tools.
 
 The Jupyter Notebook also demonstrates how to change PyTorch* distributed workloads from CPU to the Intel® Data Center GPU family.
 
@@ -48,13 +45,11 @@ The Jupyter Notebook also demonstrates how to change PyTorch* distributed worklo
 
 From this sample code, you will learn how to perform distributed training with oneCCL in PyTorch*. The `oneCCL_Bindings_GettingStarted.ipynb` Jupyter Notebook targets both CPUs and GPUs using oneCCL Bindings for PyTorch*.
 
-## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 ## Run the `oneCCL Bindings for PyTorch* Getting Started` Sample
 
-### On Linux*
+### On Linux* (Only applicable to AI Tools Offline Installer)
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
