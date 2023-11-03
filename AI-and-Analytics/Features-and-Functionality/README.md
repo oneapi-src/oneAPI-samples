@@ -4,7 +4,7 @@ The Intel AI Tools give data scientists, AI developers, and researchers familiar
 
 You can find more information at [ AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
-Users could learn more details of features in AI Tools with those features and functionality samples.
+Users can explore the extensive features of Intel AI Tools through provided feature and functionality samples, offering a deeper understanding of their capabilities.
 
 ## License
 Code samples are licensed under the MIT license. See
