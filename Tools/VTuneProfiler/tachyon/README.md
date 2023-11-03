@@ -1,10 +1,10 @@
 # `Tachyon` Sample
 
-The `Tachyon` sample shows how to improve the performance of serial programs by using parallel processing with OpenMP* or Intel® Threading Building Blocks (Intel® TBB). The `Tachyon` sample is an implementation of the tachyon program; it is a 2-D raytracer program that renders objects described in data files. 
+The `Tachyon` sample shows how to improve the performance of serial programs by using parallel processing with OpenMP* or Intel® oneAPI Threading Building Blocks (Intel® oneTBB). The `Tachyon` sample is an implementation of the tachyon program; it is a 2-D raytracer program that renders objects described in data files. 
 
 | Area                              | Description
 |:---                               |:---
-| What you will learn               | How to implement parallelization using OpenMP or Intel® Threading Building Blocks (Intel® TBB)  
+| What you will learn               | How to implement parallelization using OpenMP or Intel® oneAPI Threading Building Blocks (Intel® oneTBB)  
 | Time to complete                  | 15 minutes
 
 ## Purpose
@@ -27,15 +27,13 @@ Five versions of the tachyon program are included in the sample.
 
 The time to generate the image varies according to the parallel scheduling method used in each version of the program.
 
-<span style="color:red">**K+J TODO: --> Finalize the wording around rendering in Lin/Win**</span>
-
 ## Prerequisites
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 20.04 <br>Windows* 11
 | Hardware                          | Intel&reg; CPU
-| Software                          | Intel® oneAPI DPC++/C++ Compiler<br>Intel oneAPI Threading Building Blocks (oneTBB) <br><br>For Linux the `libXext.so` and `libX11.so` libraries must be installed to display the rendered graphic.
+| Software                          | Intel® oneAPI DPC++/C++ Compiler<br>Intel oneAPI Threading Building Blocks (oneTBB) <br>Intel VTune&trade; Profiler<br><br>For Linux the `libXext.so` and `libX11.so` libraries must be installed to display the rendered graphic.
 
 
 
@@ -45,11 +43,11 @@ The sample implements the following OpenMP and oneTBB features.
 
 OpenMP:
 
-<span style="color:red">**TODO --> add key features of implementation**</span>
+Uses the **omp parallel for** pragma to thread the horizontal rendering of pixels. 
 
-TBB: 
+oneTBB: 
 
-<span style="color:red">**TODO --> add key features of implementation**</span>
+Uses the **tbb::parallel_for** function to thread the horizontal rendering of pixels.
 
 >**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -67,7 +65,6 @@ When working with the command-line interface (CLI), you should configure the one
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
@@ -89,8 +86,6 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
 
 ### On Linux*
-
-<span style="color:red">**CHECK --> this still valid/tested?**</span>
 
 1. Change to the sample directory.
 2. Build the program.
@@ -116,7 +111,7 @@ make tachyon.tbb_optimized
 
 **Using Visual Studio***
 
-Build the program using Visual Studio 2019 or newer.
+Build the program using Visual Studio 2017 or newer.
 
 1. Change to the sample directory.
 2. Right-click on the solution file and open the solution in the IDE.
@@ -127,7 +122,7 @@ Build the program using Visual Studio 2019 or newer.
 
 1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019" or whatever is appropriate for your Visual Studio* version.
 2. Change to the sample directory.
-3. Run the following command: `MSBuild "tachyon_samples_2022.sln" /t:Rebuild /p:Configuration="Release"`
+3. Run the following command: `MSBuild "tachyon_sample.sln" /t:Rebuild /p:Configuration="Release"`
 
   > **Note**: Remember to use Release mode for better performance.
 
@@ -145,7 +140,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Guided Walkthrough
 
 
-This guided walkthrough starts with the serial implementation to establish a performance baseline and then compares the baseline to the OpenMP and TBB versions of the program with optimizations to the code.
+This guided walkthrough starts with the serial implementation to establish a performance baseline and then compares the baseline to the OpenMP and oneTBB versions of the program with optimizations to the code.
 
 ### Run the Serial Version
 
@@ -153,7 +148,7 @@ Run the serial version of the program to establish a baseline execution time.
 
 #### On Linux
 
-Run the serial version of the program to establish a baseline execution time.  
+Run the serial version of the program to establish a baseline execution time. 
 
 1. Change to the build directory in your sample directory.
 2. Run the executable, providing the balls.dat data file. 
@@ -166,12 +161,18 @@ Run the serial version of the program to establish a baseline execution time.
 
    ```
    Scene contains 7386 bounded objects. 
-   tachyon.serial ../dat/balls.dat: 26.128 seconds 
+   tachyon.serial ../dat/balls.dat: 3.706 seconds 
    ```
 
 #### On Windows
 
-<span style="color:red">**TODO -->**</span>
+Run the build_serial project in VS, or run build_serial.exe ..\dat\balls.dat directly. The Windows version may not show the elapsed execution time, but you can get a high-level look at this implementation's performance by running a hotspots analysis with Intel VTune&trade; Profiler. For more information on Intel VTune Profiler: https://www.intel.com/content/www/us/en/docs/vtune-profiler/get-started-guide/2023/windows-os.html
+
+The Summary view of a hotspots collection with user-mode sampling shows an elapsed time of 3.937s:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/2394ec2f-c189-4323-b1f0-a77642ec8112)
+
+The CPU Utilization histogram shows that a maximum of one CPU was used throughout the duration of the collection, which is expected in the serial implementation.
 
 ### Run the OpenMP Versions
 
@@ -190,7 +191,7 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
  
    ```
    Scene contains 7386 bounded objects. 
-   tachyon.openmp ../dat/balls.dat: 19.647 seconds 
+   tachyon.openmp ../dat/balls.dat: 0.283 seconds 
    ```
 3. Run optimized OpenMP version. 
 
@@ -202,19 +203,37 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
 
    ```
    Scene contains 7386 bounded objects. 
-   tachyon.openmp_solution ../dat/balls.dat: 2.992 seconds    ```
+   tachyon.openmp_solution ../dat/balls.dat: 0.153 seconds    ```
 
 4. Compare the render time between the basic OpenMP and optimized OpenMP versions. The optimized version shows an improvement in render time. 
 
 <span style="color:red">
 
-*The `build_with_openmp_optimized` project adds dynamic scheduling to the omp pragma, which allows early-finishing threads to take on additional work from slower threads.*
+*The `build_with_openmp_optimized` project adds dynamic scheduling to the omp pragma, which allows early-finishing threads to take on additional work.*
 
 </span>
 
 #### On Windows
 
-<span style="color:red">**TODO -->**</span>
+1. First run the basic OpenMP implementation. Run the build_with_openmp project in VS, or run build_with_openmp.exe ..\dat\balls.dat directly. There should be a noticeable improvement in the rendering time. To see how threads performed with the omp parallel for pragma, run a hotspots analysis with Intel VTune Profiler:
+   
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/1e3e15b1-045e-4714-b8c2-a716454066b2)
+
+The elapsed time is almost half of the serial implementation at 2.021s. The CPU histogram still shows a large amount of time where only one CPU was utilized, but the application does make simultaneous use of up to 14 CPUs. The Bottom-up tab has a timeline view which shows thread behavior over time:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/204b7558-6a3c-4628-bcd5-213f41fd9007)
+
+The first 1.3 seconds are spent reading the data and preparing for rendering. The primary OpenMP thread begins spawning workers near the 1.5 mark, and the timeline shows that some theads finish early and wait for slower threads to finish. Allowing the faster threads to take on more work instead of waiting should result in better performance.
+
+2. Test the optimized OpenMP implementation, which adds dynamic scheduling to the **omp parallel for** pragma. Run the build_with_openmp_optimized project in VS, or run build_with_openmp_optimized.exe ..\dat\balls.dat directly. The difference in elapsed time may not be noticeable for this quick application, but running a hotspots analysis with Intel VTune Profiler will show if performance improved and by how much.
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/5fc11663-8f7e-4138-8a4e-79260f462b90)
+
+The elapsed time for the optimized version is 1.875s, which is a small improvement. Parallelism has improved marginally, with the application spending a small amount of time utilizing all 16 available CPUs. The timeline view in the Bottom-up tab will show how adding dynamic scheduling changed the behavior of the OpenMP threads:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/1e63669c-74e4-4466-bce0-5095d9d9fbd1)
+
+The threads now complete at the same time, although there is some spinning as one thread completes its work. 
 
 ### Run the Intel® oneAPI Threading Building Blocks Versions
 
