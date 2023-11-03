@@ -2,7 +2,7 @@
 
 Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel hardware. Most of the optimizations will be included in stock PyTorch* releases eventually, and the intention of the extension is to deliver up-to-date features and optimizations for PyTorch* on Intel hardware, examples include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
-This sample contains a Jupyter* NoteBook that guides you through the process of running a PyTorch* inference workload on both GPU and CPU by using Intel® AI Analytics Toolkit (AI Kit) and also analyze the GPU and CPU usage via Intel® oneAPI Deep Neural Network Library (oneDNN) verbose logs.
+This sample contains a Jupyter* NoteBook that guides you through the process of running a PyTorch* inference workload on both GPU and CPU by using Intel® AI Tools and also analyze the GPU and CPU usage via Intel® oneAPI Deep Neural Network Library (oneDNN) verbose logs.
 
 | Area                 | Description
 |:---                  |:---
@@ -15,7 +15,7 @@ This sample contains a Jupyter* NoteBook that guides you through the process of 
 |:---                  |:---
 | OS                   | Ubuntu* 22.04
 | Hardware             | Intel® Xeon® scalable processor family <br> Intel® Data Center GPUs
-| Software             | Intel® AI Analytics Toolkit (AI Kit)
+| Software             | Intel® Extension for PyTorch
 
 
 ## Hardware requirement
@@ -38,14 +38,14 @@ You can quickly build and train a PyTorch* neural network using the simple Pytho
 
 The Jupyter notebook in this sample also guides users how to change PyTorch* codes to run on Intel® Data Center GPU family and how to validate the GPU or CPU usages for PyTorch* workloads on Intel CPU or GPU.
 
->**Note**: Intel® Extension for PyTorch* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+>**Note**: Intel® Extension for PyTorch* is available as part of Intel® AI Tools. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
 >
 >Find more examples in the [*Examples*](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html) topic of the [*Intel® Extension for PyTorch* Documentation*](https://intel.github.io/intel-extension-for-pytorch).
 
 
 ## Key Implementation Details
 
-The sample uses pretrained model provided by Intel and published as part of [Intel Model Zoo](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
+The sample uses pretrained model provided by Intel and published as part of [Intel Reference Models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
 
 - The Jupyter Notebook, `ResNet50_Inference.ipynb`, is implemented for both CPU and GPU using Intel® Extension for PyTorch*.
 - The `Intel_Extension_For_PyTorch_Hello_World.py` script is implemented for CPU using the Python language.
@@ -55,7 +55,7 @@ The sample uses pretrained model provided by Intel and published as part of [Int
 
 ## Run the `Intel® Extension for PyTorch* Getting Started` Sample
 
-### On Linux*
+### On Linux* (Only applicable to AI Tools Offline Installer)
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -76,7 +76,7 @@ The sample uses pretrained model provided by Intel and published as part of [Int
 
 2. Activate conda environment without Root access (Optional).
 
-   By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+   By default, the AI Tools are installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
    ```
@@ -121,26 +121,6 @@ The sample uses pretrained model provided by Intel and published as part of [Int
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-### Run the `Intel® Extension for PyTorch* Getting Started` Sample on Intel® DevCloud (Optional)
-
-1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-2. On a Linux* system, open a terminal.
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://DevCloud.intel.com/oneapi/get_started).
-
-  
-4. Navigate to the directory with the sample.
-   ```
-   cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
-   ```
-5. Submit this `Intel_Extension_For_PyTorch_GettingStarted` workload on the selected node with  the run script.
-   ```
-   ./q ./run.sh
-   ```
-   The `run.sh` script contains all the instructions needed to run this `Intel_Extension_For_PyTorch_Hello_World.py` workload.
 
 ### Example Output
 
