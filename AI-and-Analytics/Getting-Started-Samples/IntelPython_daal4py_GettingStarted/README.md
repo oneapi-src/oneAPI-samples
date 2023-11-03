@@ -8,7 +8,7 @@ The `Intel® Python Daal4py Getting Started` sample code shows how to do batch l
 | Time to complete       | 5 minutes
 | Category               | Getting Started
 
-The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Purpose
 
@@ -22,19 +22,16 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | :---                    | :---
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software                | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® oneAPI Data Analytics Library (oneDAL)
+| Software                | Intel® oneAPI Data Analytics Library (oneDAL)
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **Intel® AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
 
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
 
 ## Key Implementation Details
 
@@ -42,11 +39,7 @@ This get started sample code is implemented for CPUs using the Python language. 
 
 The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
-## Configure Environment
+## Configure Environment (Only applicable to AI Tools Offline Installer)
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -71,7 +64,7 @@ When working with the command-line interface (CLI), you should configure the one
 	 
    2. If you do not have the root access to your oneAPI installation path, choose this option.
 
-      By default, the Intel® AI Analytics Toolkit is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
+      By default, the Intel® AI Tools is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
       ```
       conda create --name usr_intelpython --clone base
       source activate usr_intelpython
