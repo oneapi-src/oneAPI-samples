@@ -1,6 +1,6 @@
 # `Intel® Modin* Get Started` Sample
 
-The `Intel® Modin Getting Started` sample demonstrates how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The `Intel® Modin Getting Started` sample demonstrates how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Area                  | Description
 | :---                  | :---
@@ -20,7 +20,7 @@ In this sample, you will run Intel® Distribution of Modin*-accelerated Pandas f
 | :---                              | :---
 | OS                                | Ubuntu* 18.04 (or newer)
 | Hardware                          | Intel® Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable Performance processor family
-| Software                          | Intel® Distribution of Modin* <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software                          | Intel® Distribution of Modin* 
 
 ## Key Implementation Details
 
@@ -54,7 +54,7 @@ This get started sample code is implemented for CPU using the Python language. T
    ```
 ## Run the `Intel® Modin* Get Started` Sample
 
-You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
+You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
 
 ### Run the Sample in Visual Studio Code* (Optional)
 
