@@ -7,7 +7,7 @@ architectures. The components are built using oneAPI libraries for low-level
 compute optimizations.
 
 The Intel AI Tools maximize performance from preprocessing
-through machine learning, and provides interoperability for efficient model
+through machine learning, and provide interoperability for efficient model
 development.
 
 You can find more information at
