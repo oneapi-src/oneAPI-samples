@@ -17,7 +17,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Component      | Folder                                             | Description
 | --------- | ------------------------------------------------ | -
 | Intel® Neural Compressor | [INC Quantization Aware Training](INC_QuantizationAwareTraining_TextClassification)                     | Fine-tune a BERT tiny model for emotion classification task using Quantization Aware Training (QAT) from Intel® Neural Compressor.
-| PyTorch | [IntelPyTorch Extensions Inference Optimization](IntelPyTorch_Extensions_Inference_Optimization)   | Applying IPEX Optimizations to a PyTorch workload to gain performance boost.
+| Intel® Extension for PyTorch* | [IntelPyTorch Extensions Inference Optimization](IntelPyTorch_Extensions_Inference_Optimization)   | Apply Intel Extension for PyTorch* to a PyTorch workload to gain performance boost.
 | PyTorch | [IntelPyTorch Extensions GPU Inference Optimization with AMP](IntelPyTorch_GPU_InferenceOptimization_with_AMP)   | use PyTorch ResNet50 model transfer learning and inference using the CIFAR10 dataset on Intel discrete GPU with Intel® Extension for PyTorch*
 | PyTorch | [IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8](IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8)   | Analyze inference performance improvements using Intel® Extension for PyTorch with Advanced Matrix Extensions Bfloat16 and Integer8
 | PyTorch | [IntelPyTorch TrainingOptimizations AMX BF16](IntelPyTorch_TrainingOptimizations_AMX_BF16)   | Analyze training performance improvements using Intel® Extension for PyTorch with Advanced Matrix Extensions Bfloat16.
