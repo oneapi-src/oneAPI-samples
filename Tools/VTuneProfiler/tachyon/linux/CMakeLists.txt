@@ -109,9 +109,11 @@ COMMAND echo "== Serial"
 COMMAND tachyon.serial ${DATA_FILE}
 COMMAND echo "== OpenMP"
 COMMAND tachyon.openmp ${DATA_FILE} 
+COMMAND tachyon.openmp_optimized ${DATA_FILE}
 COMMAND echo "== TBB"
 COMMAND tachyon.tbb ${DATA_FILE}
-DEPENDS tachyon.serial tachyon.openmp tachyon.tbb
+COMMAND tachyon.tbb_optimized ${DATA_FILE}
+DEPENDS tachyon.serial tachyon.openmp tachyon.openmp_optimized tachyon.tbb tachyon.tbb_optimized
 WORKING_DIRECTORY ${CMAKE_PROJECT_DIR})
 
 foreach(VERSION IN ITEMS serial openmp tbb openmp_optimized tbb_optimized)
