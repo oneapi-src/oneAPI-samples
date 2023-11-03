@@ -14,7 +14,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 # Features and Functionalities Samples
 
-| Compoment      | Folder                                             | Description
+| Component      | Folder                                             | Description
 | --------- | ------------------------------------------------ | -
 | Intel® Neural Compressor | [INC Quantization Aware Training](INC_QuantizationAwareTraining_TextClassification)                     | fine-tune BERT tiny model for emotion classification task using Quantization Aware Training (QAT) from Intel® Neural Compressor.
 | PyTorch | [IntelPyTorch Extensions Inference Optimization](IntelPyTorch_Extensions_Inference_Optimization)   | Applying IPEX Optimizations to a PyTorch workload to gain performance boost.
