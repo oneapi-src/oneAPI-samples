@@ -9,7 +9,7 @@
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "altindex": true,
-  "guid": "8C866569-DCEC-43D1-85EB-E725FBF18591"
+  "guid": "8C866569-DCEC-43D1-85EB-E725FBF18591",
   "ciTests": {
          "linux": [{
                 "steps": [
