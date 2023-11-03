@@ -215,7 +215,7 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
 
 #### On Windows
 
-1. First run the basic OpenMP implementation. Run the build_with_openmp project in VS, or run build_with_openmp.exe ..\dat\balls.dat directly. There should be a noticeable improvement in the rendering time. To see how threads performed with the omp parallel for pragma, run a hotspots analysis with Intel VTune Profiler:
+1. First run the basic OpenMP implementation. Run the build_with_openmp project in VS, or run **build_with_openmp.exe ..\..\dat\balls.dat** directly. There should be a noticeable improvement in the rendering time. To see how threads performed with the omp parallel for pragma, run a hotspots analysis with Intel VTune Profiler:
    
 ![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/1e3e15b1-045e-4714-b8c2-a716454066b2)
 
@@ -225,7 +225,7 @@ The elapsed time is almost half of the serial implementation at 2.021s. The CPU 
 
 The first 1.3 seconds are spent reading the data and preparing for rendering. The primary OpenMP thread begins spawning workers near the 1.5 mark, and the timeline shows that some theads finish early and wait for slower threads to finish. Allowing the faster threads to take on more work instead of waiting should result in better performance.
 
-2. Test the optimized OpenMP implementation, which adds dynamic scheduling to the **omp parallel for** pragma. Run the build_with_openmp_optimized project in VS, or run build_with_openmp_optimized.exe ..\dat\balls.dat directly. The difference in elapsed time may not be noticeable for this quick application, but running a hotspots analysis with Intel VTune Profiler will show if performance improved and by how much.
+2. Test the optimized OpenMP implementation, which adds dynamic scheduling to the **omp parallel for** pragma. Run the build_with_openmp_optimized project in VS, or run **build_with_openmp_optimized.exe ..\..\dat\balls.dat** directly. The difference in elapsed time may not be noticeable for this quick application, but running a hotspots analysis with Intel VTune Profiler will show if performance improved and by how much.
 
 ![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/5fc11663-8f7e-4138-8a4e-79260f462b90)
 
@@ -252,29 +252,44 @@ Run the Intel® oneAPI Threading Building Blocks (Intel® oneTBB) versions of th
  
    ``` 
    Scene contains 7386 bounded objects. 
-   tachyon.tbb ../dat/balls.dat: 29.682 seconds 
+   tachyon.tbb ../dat/balls.dat: 6.504 seconds 
    ```
  
-3. Run the optimized Intel® TBB version. 
+3. Run the optimized Intel® oneTBB version. 
 
    ```
-   ./tachyon.tbb_solution ../dat/balls.dat 
+   ./tachyon.tbb_optimized ../dat/balls.dat 
    ```
    
    You will see the following output: 
  
    ``` 
    Scene contains 7386 bounded objects. 
-   tachyon.tbb_solution ../dat/balls.dat: 2.953 seconds 
+   tachyon.tbb_optimized ../dat/balls.dat: 0.158 seconds 
    ```
 
-4. Compare the render time between the basic Intel TBB and optimized Intel TBB versions. The optimized version shows an improvement in render time. 
+4. Compare the render time between the basic Intel oneTBB and optimized Intel oneTBB versions. The optimized version shows an improvement in render time. 
 
-The basic version of the Intel TBB program uses the TBB version of a mutex lock, which prevents multiple threads from working on the code at the same time. In comparison, the optimized version of the TBB program removes mutex lock to allow all threads to work concurrently. 
+The basic version of the Intel oneTBB program uses the oneTBB version of a mutex lock, which prevents multiple threads from working on the code at the same time. In comparison, the optimized version of the oneTBB program removes mutex lock to allow all threads to work concurrently. 
 
 #### On Windows
+1. Run the build_with_tbb project in VS or run **build_with_tbb.exe ..\..\dat\balls.dat** directly. Running a hotspots analysis with the Intel VTune Profiler shows worse performance than the serial implementation, with an elapsed time of 5.290s:
 
-<span style="color:red">**TODO: -->**</span>
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/b2029a5b-5862-4045-93f8-ac5bde4c10a6)
+
+The summary view shows a large amount of spin time, with the most active function being a oneTBB lock. The bottom-up view shows several worker threads, but they spend the majority of time spinning:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/7ad8c037-8999-4e78-96f4-c67f86a4091e)
+
+Taking a closer look at the mutex lock reveals that it is not necessary, as the data is not shared between threads. The optimized implementation removes this mutex.
+
+2. Run the build_with_tbb_optimized project in VS or run **build_with_tbb_optimized.exe ..\..\dat\balls.dat** directly. A hotspots analysis of this implementation shows much better performance:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/23611d00-3c9a-4915-8d42-925b631d8a7a)
+
+The bottom-up view shows a thread timeline similar to the dynamic openmp implementation, as oneTBB uses work-stealing to balance thread loads:
+
+![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/c1b2eb3d-923b-4a45-9872-f2fed890634a)
 
 
 ## License
