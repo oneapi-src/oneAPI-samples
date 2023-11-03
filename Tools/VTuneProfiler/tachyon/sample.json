@@ -1,15 +1,16 @@
 {
-"guid":"8C866569-DCEC-43D1-85EB-E725FBF18591",
- "name": "Tachyon",
- "categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
- "description": "Simple ray tracer demonstrating the use of Intel&reg; oneTBB and OpenMP along with optimizations based on Intel VTune&trade; Profiler results.",
- "toolchain": ["dpcpp"],
- "dependencies": ["vtune"],
- "languages": [{"cpp": {}}],
- "os": ["linux", "windows"],
- "targetDevice": ["CPU"],
- "builder": ["ide", "cmake"],
- "ciTests": {
+  "name": "tachyon",
+  "description": "Simple ray tracer demonstrating the use of Intel&reg; oneTBB and OpenMP along with optimizations based on Intel VTune&trade; Profiler results.",
+  "categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb", "vtune"],
+  "targetDevice": ["CPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "altindex": true,
+  "guid": "8C866569-DCEC-43D1-85EB-E725FBF18591"
+  "ciTests": {
          "linux": [{
                 "steps": [
                         "mkdir build",
@@ -29,6 +30,6 @@
                         "msvs\build_with_tbb_optimized_x64_Release\build_with_tbb_optimized.exe dat\balls.dat"
                 ]
         }]
-},
-"expertise": "Getting Started"
+	},
+	"expertise": "Getting Started"
 }
