@@ -1,11 +1,11 @@
 {
-"guid":"D5D48B97-C29C-4386-A6D2-DB84D006D6A9",
- "name": "Matrix Multiply VTune™ Profiler",
+"guid":"8C866569-DCEC-43D1-85EB-E725FBF18591",
+ "name": "Tachyon",
  "categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
- "description": "Simple program that shows how to improve the C (CPU only) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
- "toolchain": ["cpp"],
+ "description": "Simple ray tracer demonstrating the use of Intel&reg; oneTBB and OpenMP along with optimizations based on Intel VTune&trade; Profiler results.",
+ "toolchain": ["dpcpp"],
  "dependencies": ["vtune"],
- "languages": [{"c": { }}],
+ "languages": [{"cpp": {}}],
  "os": ["linux", "windows"],
  "targetDevice": ["CPU"],
  "builder": ["ide", "cmake"],
@@ -21,9 +21,12 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=\"Release\"",
-                       "cd x64/Release",
-                        "matrix_multiply.exe"
+                        "MSBuild tachyon_sample.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "msvs\build_serial_x64_Release\build_serial.exe dat\balls.dat",
+                        "msvs\build_with_openmp_x64_Release\build_with_openmp.exe dat\balls.dat",
+                        "msvs\build_with_openmp_optimized_x64_Release\build_with_openmp_optimized.exe dat\balls.dat",
+                        "msvs\build_with_tbb_x64_Release\build_with_tbb.exe dat\balls.dat",
+                        "msvs\build_with_tbb_optimized_x64_Release\build_with_tbb_optimized.exe dat\balls.dat"
                 ]
         }]
 },
