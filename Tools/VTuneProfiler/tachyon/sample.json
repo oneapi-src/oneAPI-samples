@@ -22,6 +22,7 @@
         }],
         "windows": [{
                 "steps": [
+                        "cd windows",
                         "MSBuild tachyon_sample.sln /t:Rebuild /p:Configuration=Release"
                 ]
         }]
