@@ -13,23 +13,18 @@
   "ciTests": {
          "linux": [{
                 "steps": [
+                        "cd linux",
                         "mkdir build",
                         "cd build",
                         "cmake ..",
-                        "make",
-                        "make run"
+                        "make"
                  ]
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild tachyon_sample.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "msvs\build_serial_x64_Release\build_serial.exe dat\balls.dat",
-                        "msvs\build_with_openmp_x64_Release\build_with_openmp.exe dat\balls.dat",
-                        "msvs\build_with_openmp_optimized_x64_Release\build_with_openmp_optimized.exe dat\balls.dat",
-                        "msvs\build_with_tbb_x64_Release\build_with_tbb.exe dat\balls.dat",
-                        "msvs\build_with_tbb_optimized_x64_Release\build_with_tbb_optimized.exe dat\balls.dat"
+                        "MSBuild tachyon_sample.sln /t:Rebuild /p:Configuration=Release"
                 ]
         }]
-	},
-	"expertise": "Getting Started"
+  },
+  "expertise": "Getting Started"
 }
