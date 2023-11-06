@@ -57,8 +57,8 @@ void verify(float nstream_time, size_t length, int iterations, float scalar, std
   } else {
     float avgtime = nstream_time/(iterations-2);
     float nbytes = 4.0 * length * sizeof(float);
-    std::cout << "\n Rate: larger better     (MB/s): " << (1.e-6*nbytes)/(1.e-9*avgtime) 
-              << "\n Avg time: lower better  (ns):   " << avgtime  << std::endl; 
+    std::cout << "\n Rate: larger better     (MB/s): " << (1.e-6*nbytes)/(1.e-9*avgtime)
+              << "\n Avg time: lower better  (ns):   " << avgtime  << std::endl;
   }
 }
 
@@ -85,7 +85,7 @@ void invokeDS(int length, std::vector<sycl::queue> &universe){
     ds::submit_and_wait(policy, [&](sycl::queue e)
     {
       if (i < num_warmup_iterations) {
-        std::cout << e.get_device().get_info<sycl::info::device::name>() <<std::endl; 
+        std::cout << e.get_device().get_info<sycl::info::device::name>() <<std::endl;
       }
       float *d_A = sycl::malloc_device<float>(length, e);
       float *d_B = sycl::malloc_device<float>(length, e);
@@ -109,7 +109,7 @@ void invokeDS(int length, std::vector<sycl::queue> &universe){
       sycl::free(d_A, e);
 
       //
-      // Note: Dynamic Device Select requires a return event such as the following.  
+      // Note: Dynamic Device Select requires a return event such as the following.
       //
       return x;
     });
@@ -204,19 +204,19 @@ int main(int argc, char * argv[])
   auto prop_list = sycl::property_list{sycl::property::queue::enable_profiling()};
   switch (policy) {
     case 1:
-      std::cout << "Using Static Policy (CPU) to interate on CPU device with vector length: " << length << std::endl;
+      std::cout << "Using Static Policy (CPU) to iterate on CPU device with vector length: " << length << std::endl;
       // Add CPUs to the universe of devices.
       universe.push_back(sycl::queue{sycl::cpu_selector_v});
       invokeDS<ds::fixed_resource_policy<ds::sycl_backend>>(length, universe);
       break;
     case 2:
-      std::cout << "Using Static Policy (GPU) to interate on GPU device with vector length: " << length << std::endl;
+      std::cout << "Using Static Policy (GPU) to iterate on GPU device with vector length: " << length << std::endl;
       // Add GPUs to the universe of devices.
       universe.push_back(sycl::queue{sycl::gpu_selector_v});
       invokeDS<ds::fixed_resource_policy<ds::sycl_backend>>(length, universe);
       break;
     case 3:
-      std::cout << "Using Round Robin Policy to interate across available devices with vector length: " << length << std::endl;
+      std::cout << "Using Round Robin Policy to iterate across available devices with vector length: " << length << std::endl;
       // Add CPUs and GPUs to the universe of devices.
       universe.push_back(sycl::queue{sycl::cpu_selector_v});
       universe.push_back(sycl::queue{sycl::gpu_selector_v});

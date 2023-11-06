@@ -1,6 +1,6 @@
 # `nstreams_device_selection` Sample
 
-The `nstreams_device_selection` sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and Intel® oneAPI DPC++ Library (oneDPL) found in the Base Kit to apply device selection pollicies using a simple application based on nstreams.
+The `nstreams_device_selection` sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and Intel® oneAPI DPC++ Library (oneDPL) found in the Base Kit to apply device selection policies using a simple application based on nstreams.
 
 For comprehensive instructions, see the [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html) and search based on relevant terms noted in the comments.
 
@@ -11,40 +11,36 @@ For comprehensive instructions, see the [Intel® oneAPI Programming Guide](https
 
 ## Purpose
 
-This sample starts with a simple implementation of device offload using SYCL*. The second version of the code shows how to introduce Dynamic Device Selection and uses device specific policies that can be selected by supplying different arguments when invoking the application.
-
-Complete documentation can found in the [oneAPI DPC++ Library Developer Guide](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/2022-2/overview.html).  **NOTE: url not final**
-
-This sample performs a simple element-wise parallel computation on three vectors: `A`, `B` and `C`.  For each element `i`, it computes `A[i] += B[i] + scalar * C[i]`. Additional information can be found on the [Optimizing Memory Bandwidth on Stream Triad](https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-memory-bandwidth-on-stream-triad.html) page.
+This sample performs a simple element-wise parallel computation on three vectors: `A`, `B` and `C`.  For each element `i`, it computes `A[i] += B[i] + scalar * C[i]`. Additional information can be found on the [Optimizing Memory Bandwidth on Stream Triad](https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-memory-bandwidth-on-stream-triad.html) page. This sample starts with a simple implementation of device offload using SYCL*. The second version of the code shows how to introduce Dynamic Device Selection and uses device specific policies that can be selected by supplying different arguments when invoking the application.
 
 The sample includes two different versions of the nstreams project:
 1. `1_nstreams_sycl.cpp`: basic SYCL implementation; creates a kernel that targets the system's CPU.
-2. `2_nstreams_policies.cpp`: version of the sample that includes five policies: 
+2. `2_nstreams_policies.cpp`: version of the sample that includes five policies:
     1. Static CPU
     2. Static GPU
     3. Round Robin policy CPU/GPU
     4. Dynamic Load policy CPU/GPU
-    5. Auto Tune poliy CPU/GPU
+    5. Auto Tune policy CPU/GPU
 
 The varying policies are helpful as follows:
 1. **Fixed CPU:** This is the simplest implementation. It can be helpful to start implementations using fixed CPU since any debug or troubleshooting will be considerably easier.
-2. **Fixed GPU:** This an incremental step that simply designates the offload kernel to run on the GPU, isolating functionality to help triage any problems that may arise when targetng the GPU. 
-3. **Round Robin:** Assigns the function to the next available device as specified in the "universe". The capability is particularly beneficial in *multi-GPU systems*. Note that performance benefits may not be realized on single GPU platforms but will scale accordingly on multi-GPU systems. 
-4. **Dynamice Load** selects the device that has the most available capacity at that moment based on the number of unfinished submissions. This can be useful for offloading kernels of varying cost to devices of varying performance. 
-5. **Auto-tune** performs run-time profile sampling of the performance of the kernel on the available devices before selecting a final device to use. The choice is made based on runtime performance history, so this policy is only useful for kernels that have stable performance. 
+2. **Fixed GPU:** This an incremental step that simply designates the offload kernel to run on the GPU, isolating functionality to help triage any problems that may arise when targeting the GPU.
+3. **Round Robin:** Assigns the function to the next available device as specified in the "universe". The capability is particularly beneficial in *multi-GPU systems*. Note that performance benefits may not be realized on single GPU platforms but will scale accordingly on multi-GPU systems.
+4. **Dynamic Load** selects the device that has the most available capacity at that moment based on the number of unfinished submissions. This can be useful for offloading kernels of varying cost to devices of varying performance.
+5. **Auto-tune** performs run-time profile sampling of the performance of the kernel on the available devices before selecting a final device to use. The choice is made based on runtime performance history, so this policy is only useful for kernels that have stable performance.
 
-[Detailed Descriptions of the Policies](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/current/policies.html) are available in the Intel® oneAPI DPC++ Library Developer Guide and Reference. 
+[Detailed Descriptions of the Policies](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/current/policies.html) are available in the Intel® oneAPI DPC++ Library Developer Guide and Reference.
 
->NOTE: Given the simplicity of this example, performance benefits may not be gained depending on the available devices. 
-> 
+>NOTE: Given the simplicity of this example, performance benefits may not be gained depending on the available devices.
+>
 
-Dynamic Device Selection support customization to allow frameworks or application developers to define custom logic for making device selections. Complete reference documentation is available in the [oneAPI DPC++ Library Developer Guide](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/2022-2/overview.html). 
+Dynamic Device Selection support customization to allow frameworks or application developers to define custom logic for making device selections. Complete reference documentation is available in the [oneAPI DPC++ Library Developer Guide](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/2022-2/overview.html).
 
 ## Key Implementation Details
 
 The basic SYCL standards implemented in the code include the use of the following:
 - Fixed (CPU and GPU) policies.
-- Dynamic policies Round Robin, Load, and Auto-tune. 
+- Dynamic policies Round Robin, Load, and Auto-tune.
 - Basic structure: header, namespace, define universe, setup policies, wrap kernel, and return event. **Note: a return event is required for all Dynamic Device Selection usage.**
 
 ## Building the `nstreams_device_selection` Program for CPU and GPU
@@ -63,10 +59,6 @@ The basic SYCL standards implemented in the code include the use of the followin
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-linux-or-macos.html#GUID-D01C791A-E72A-4EA5-A45A-AEF22F1E8506), or [Windows](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-windows.html#GUID-A76C1E1B-5235-4A16-9AA3-F5BD35F8C7F1).
 
 
-### Running Samples in Intel® DevCloud
-
-If running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 ### Using Visual Studio Code*  (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
@@ -77,7 +69,7 @@ The basic steps to build and run a sample using VS Code include:
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see 
+To learn more about the extensions and how to configure the oneAPI environment, see
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-vs-code/current/overview.html).
 
 ### On Linux*
@@ -95,19 +87,19 @@ Perform the following steps:
    $ make run_all
    ```
    > **Note**: by default, only CPU devices are run.  Use ``sycl-ls`` to see available devices on your target system.
-   
-   Manually envoking the application requires supplying a vector length. 1000 is used in the examples below. 
 
-   For the basic SYCL implementation: 
+   Manually envoking the application requires supplying a vector length. 1000 is used in the examples below.
+
+   For the basic SYCL implementation:
    ```
    $  ./1_nstreams_sycl 1000
    ```
-             
-    For Dynamic Device Selection, usage:  ./2_nstreams_policies 1000 <policy>. For example, Fixed Resource Policy (CPU): 
+
+    For Dynamic Device Selection, usage:  ./2_nstreams_policies 1000 <policy>. For example, Fixed Resource Policy (CPU):
     ```
    $  ./2_nstreams_policies 1000 1
     ```   
-    
+
     | Arg | Dynamic Device Selection Policy
     |:--- |:---
     | 1   | Fixed Resource Policy (CPU)
@@ -163,7 +155,7 @@ Where:
 ## Example Output
 
 ```
-Using Static Policy (CPU) to interate on CPU device with vector length: 10000
+Using Static Policy (CPU) to iterate on CPU device with vector length: 10000
 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
 ...

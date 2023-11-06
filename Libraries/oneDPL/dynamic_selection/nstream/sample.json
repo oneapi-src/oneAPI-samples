@@ -1,8 +1,8 @@
 {
-  "guid": "C4BF34CF-9B45-434F-B295-11AE9123D448",
-  "name": "Sepia Filter Dynamic Device Selection",
+  "guid": "0E721DAE-C292-4F69-A567-F853A954D9D8",
+  "name": "Nstreams Device Selection",
   "categories": ["Toolkit/oneAPI Libraries/oneDPL"],
-  "description": "The sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and Intel® oneAPI DPC++ Library (oneDPL) found in the Base Kit to easily apply Dynamic Device Selection policies that can help determine which device to run the application.",
+  "description": "The Nstreams Device Selection sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and Intel® oneAPI DPC++ Library (oneDPL) found in the Base Kit to apply device selection policies using a simple application based on nstreams.",
   "toolchain": ["dpcpp"],
   "languages": [{
     "cpp": {}
@@ -17,8 +17,7 @@
         "cd build",
         "cmake ..",
         "make",
-        "./1_sepia_sycl 1000 2",
-        "/2_sepia_policies 1000 2 4"
+        "make run_all"
       ]
     }],
     "windows": [{
