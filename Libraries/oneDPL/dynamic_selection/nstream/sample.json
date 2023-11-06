@@ -22,7 +22,7 @@
     }],
     "windows": [{
       "steps": [
-        "MSBuild "nstreams_device_selection.sln" /t:Rebuild /p:Configuration=Release",
+        "MSBuild nstreams_device_selection.sln /t:Rebuild /p:Configuration=Release",
         "cd x64\\Release",
         "1_nstreams_sycl.exe 1000",
         "2_nstreams_sycl.exe 1000 1"
