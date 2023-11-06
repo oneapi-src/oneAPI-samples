@@ -6,7 +6,7 @@
 #include <chrono>
 #include <cmath>
 #include <iostream>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
@@ -28,7 +28,11 @@ constexpr auto sycl_write = access::mode::write;
 constexpr auto sycl_device = access::target::device;
 
 int g_num_images = 4;
-const char *g_fnames[3] = { "../input/silver512.png", "../input/nahelam512.bmp", "../input/silverfalls1.png" };
+#if !WINDOWS
+const char* g_fnames[3] = { "../input/silver512.png", "../input/nahelam512.bmp", "../input/silverfalls1.png" };
+#else
+const char* g_fnames[3] = { "../../input/silver512.png", "../../input/nahelam512.bmp", "../../input/silverfalls1.png" };
+#endif
 int g_width[4] = {0, 0, 0, 0};
 int g_height[4] = {0, 0, 0, 0};
 int g_channels[4] = {0, 0, 0, 0};
