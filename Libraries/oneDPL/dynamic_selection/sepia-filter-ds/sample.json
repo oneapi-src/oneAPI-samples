@@ -1,0 +1,34 @@
+{
+  "guid": "C4BF34CF-9B45-434F-B295-11AE9123D448",
+  "name": "Sepia Filter Dynamic Device Selection",
+  "categories": ["Toolkit/oneAPI Libraries/oneDPL"],
+  "description": "The sample demonstrates how to use the Intel® oneAPI Base Toolkit (Base Kit) and Intel® oneAPI DPC++ Library (oneDPL) found in the Base Kit to easily apply Dynamic Device Selection policies that can help determine which device to run the application.",
+  "toolchain": ["dpcpp"],
+  "languages": [{
+    "cpp": {}
+  }],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "ciTests": {
+    "linux": [{
+      "steps": [
+        "mkdir build",
+        "cd build",
+        "cmake ..",
+        "make",
+        "./1_sepia_sycl 1000 2",
+        "./2_sepia_policies 1000 2 4"
+      ]
+    }],
+    "windows": [{
+      "steps": [
+        "MSBuild sepia-filter.sln /t:Rebuild /p:Configuration=Release",
+        "cd x64\\Release",
+        "1_sepia_sycl.exe 1000 2",
+        "2_sepia_policies.exe 1000 2 4"
+      ]
+    }]
+  },
+  "expertise": "Concepts and Functionality"
+}
