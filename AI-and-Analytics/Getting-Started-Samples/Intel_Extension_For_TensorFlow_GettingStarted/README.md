@@ -13,7 +13,7 @@ This code sample demonstrates how to run a TensorFlow inference workload on both
 | Hardware               | Intel® Data Center GPU
 | Software               | Intel Extension for TensorFlow
 
-Intel Extension for TensorFlow* is ready for use once you finish the Intel AI Tools installation through AI Tools Selector or Offline Installer.   
+Before running the sample, install the Intel Extension for TensorFlow* via the Intel AI Tools Selector or Offline Installer.   
 You can refer to the Intel AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 ## Key implementation details
