@@ -2,7 +2,7 @@
 This code sample demonstrates how to run a TensorFlow inference workload on both GPU and CPU by using Intel AI Tools and analyze the GPU and CPU usage via oneDNN verbose logs
 
 ## Purpose
-  - Guide users how to use different conda environments in Intel AI Tools to run TensorFlow workloads on both CPU and GPU
+  - Guide on how to use different conda environments in Intel AI Tools to run TensorFlow workloads on both CPU and GPU
   - Guide users how to validate the GPU or CPU usage for TensorFlow workloads on Intel CPU or GPU
 
 ## Prerequisites
