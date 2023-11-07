@@ -14,20 +14,19 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 # Getting Started Samples
 
-| Compoment      | Folder                                             | Description
-| --------- | ------------------------------------------------ | -
-| Intel® Neural Compressor | [INC-Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     |perform INT8 quantization on a Hugging Face BERT model .
-| Intel® Neural Compressor | [INC-Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     |Quantize a fp32 model into int8 by Intel® Neural Compressor, and compare the performance between fp32 and int8 .
-| oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | configuration script to automatically configure the environment |
-| Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain .
-| Modin |[IntelModin_Vs_Pandas](IntelModin_Vs_Pandas)| compares the performance of Intel® Distribution of Modin* and the performance of Pandas
-| Intel® Optimization for XGBoost* | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
-| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL) .
-| Intel® Optimization for TensorFlow* | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
-|Intel® Extension of PyTorch | [IntelPyTorch_GettingStarted](Intel_Extension_For_PyTorch_GettingStarted) | A simple training example for Intel® Extension of PyTorch. |
-| Scikit-learn (OneDAL) | [Intel_Extension_For_SKLearn_GettingStarted](Intel_Extension_For_SKLearn_GettingStarted) | Speed up a scikit-learn application using Intel oneDAL.
-|oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | configuration script to automatically configure the environment |
-|Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | guide users how to run a tensorflow inference workload on both GPU and CPU |
-|oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU |
+|AI Tools preset bundle    | Compoment      | Folder                                             | Description
+|--------------------------| --------- | ------------------------------------------------ | -
+|Deep Learning| Intel® Neural Compressor | [INC-Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     |perform INT8 quantization on a Hugging Face BERT model .
+|Deep Learning| Intel® Neural Compressor | [INC-Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     |Quantize a fp32 model into int8 by Intel® Neural Compressor, and compare the performance between fp32 and int8 .
+|Deep Learning | oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | configuration script to automatically configure the environment |
+|Data Analytics  | Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain .
+|Data Analytics | Modin |[IntelModin_Vs_Pandas](IntelModin_Vs_Pandas)| compares the performance of Intel® Distribution of Modin* and the performance of Pandas
+|Classical Machine Learning| Intel® Optimization for XGBoost* | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
+|Classical Machine Learning| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL) .
+|Deep Learning| Intel® Optimization for TensorFlow* | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
+|Deep Learning|Intel® Extension of PyTorch | [IntelPyTorch_GettingStarted](Intel_Extension_For_PyTorch_GettingStarted) | A simple training example for Intel® Extension of PyTorch. |
+|Classical Machine Learning| Scikit-learn (OneDAL) | [Intel_Extension_For_SKLearn_GettingStarted](Intel_Extension_For_SKLearn_GettingStarted) | Speed up a scikit-learn application using Intel oneDAL.
+|Deep Learning|Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | guide users how to run a tensorflow inference workload on both GPU and CPU |
+|Deep Learning|oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU |
 
 *Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
