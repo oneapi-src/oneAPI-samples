@@ -29,7 +29,7 @@ The sample intends to help you understand some key concepts:
 ### For Local Development Environments
 
 Intel Extension for TensorFlow* is ready for use once you finish the Intel AI Tools installation through AI Tools Selector or Offline Installer.   
-You can refer to the oneAPI AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
+You can refer to the Intel AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 
 
