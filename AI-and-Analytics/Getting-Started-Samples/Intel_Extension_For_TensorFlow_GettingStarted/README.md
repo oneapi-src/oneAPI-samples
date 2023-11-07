@@ -3,7 +3,7 @@ This code sample demonstrates how to run a TensorFlow inference workload on both
 
 ## Purpose
   - Guide users how to use different conda environments in Intel AI Tools to run TensorFlow workloads on both CPU and GPU
-  - Guide users how to validate the GPU or CPU usages for TensorFlow workloads on Intel CPU or GPU
+  - Guide users how to validate the GPU or CPU usage for TensorFlow workloads on Intel CPU or GPU
 
 ## Prerequisites
 
