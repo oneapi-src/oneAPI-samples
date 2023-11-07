@@ -1,6 +1,6 @@
-# `Intel® Reference models TensorFlow* Inference With FP32 Int8` Sample
+# `Intel® AI Reference models for TensorFlow* Inference With FP32 Int8` Sample
 
-The `Intel® Reference models TensorFlow* Inference With FP32 Int8` sample demonstrates how to run ResNet50 inference on pretrained FP32 and Int8 models included in the Reference models for Intel® Architecture.
+The `Intel® AI Reference models for TensorFlow* Inference` sample demonstrates how to run ResNet50 inference on pretrained FP32 and Int8 models included in the Reference models for Intel® Architecture.
 
 | Area                  | Description
 |:---                   |:---
@@ -24,7 +24,7 @@ The sample intends to help you understand some key concepts:
 |:---             |:---
 | OS              | Ubuntu* 20.04 or higher
 | Hardware        | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
-| Software        | Intel® Reference models, Intel Extension for TensorFlow
+| Software        | Intel® AI Reference models, Intel Extension for TensorFlow
 
 ### For Local Development Environments
 
@@ -35,7 +35,7 @@ You can refer to the Intel AI Tools [product page](https://www.intel.com/content
 
 ## Key Implementation Details
 
-The example uses some pretrained models published as part of the [Reference models for Intel® Architecture](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* runtime settings to maximize CPU performance on ResNet50 workload.
+The example uses some pretrained models published as part of the [Intel® AI Reference models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* runtime settings to maximize CPU performance on ResNet50 workload.
 
 ## Set Environment Variables (Only applicable to AI Tools Offline Installer)
 
@@ -73,14 +73,14 @@ conda activate user_tensorflow
 
 #### Navigate to Model Zoo
 
-Navigate to the Model Zoo for Intel® Architecture source directory. By default, it is in your installation path, like `/opt/intel/oneapi/modelzoo`. 
+Navigate to the Intel® AI Reference models source directory. By default, it is in your installation path, like `/opt/intel/oneapi/modelzoo`. 
 
-1. View the available Intel® Reference models release versions for the AI Tools:
+1. View the available Intel® AI Reference models release versions for the AI Tools:
    ```
    ls /opt/intel/oneapi/modelzoo
    2.13.0  latest
    ```
-2. Navigate to the [Intel® Reference models Scripts](https://github.com/IntelAI/models/tree/v2.11.0/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
+2. Navigate to the [Intel® AI Reference models Scripts](https://github.com/IntelAI/models/tree/v2.11.0/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
    ```
    cd /opt/intel/oneapi/modelzoo/latest
    ```
