@@ -24,7 +24,8 @@ You will need to download and install the following toolkits, tools, and compone
 
   You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Tools installation information and post-installation steps and scripts.
 
-  oneCCL Bindings for PyTorch* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
+  oneCCL Bindings for PyTorch* is ready for use once you finish the Intel® AI Tools installation via Offline Installer and have run the post-installation script.
+
 
   You can refer to the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
