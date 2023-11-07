@@ -29,7 +29,7 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Pre-requirements (Local or Remote Host Installation)
+## Pre-requisites (Local or Remote Host Installation)
 
 TensorFlow* is ready for use once you finish the installation and have run the post-installation script.
 
