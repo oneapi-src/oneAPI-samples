@@ -57,7 +57,7 @@ When working with the command-line interface (CLI), you should configure the one
 
 #### Activate Conda with Root Access
 
-By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
+By default, the Intel AI Tools are installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
 ```
 conda activate tensorflow
 ```
