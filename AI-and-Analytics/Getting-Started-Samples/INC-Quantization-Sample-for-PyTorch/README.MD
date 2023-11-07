@@ -95,6 +95,8 @@ The sample contains one Jupyter Notebook and one Python script.
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.   
 
+## Example Output
+You should see an image showing the performance comparison and analysis between FP32 and INT8.
 
 ## License
 
