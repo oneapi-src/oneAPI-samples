@@ -31,7 +31,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Pre-requirements (Local or Remote Host Installation)
 
-TensorFlow* is ready for use once you finish the Intel AI Tools installation and have run the post installation script.
+TensorFlow* is ready for use once you finish the installation and have run the post-installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; Intel AI Tools Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
