@@ -37,9 +37,6 @@ You can refer to the Intel AI Tools [product page](https://www.intel.com/content
 
 The example uses some pretrained models published as part of the [Intel® AI Reference models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* runtime settings to maximize CPU performance on ResNet50 workload.
 
-## Set Environment Variables (Only applicable to AI Tools Offline Installer)
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 ## Run the `Intel® TensorFlow* Model Zoo Inference With FP32 Int8` Sample
 
