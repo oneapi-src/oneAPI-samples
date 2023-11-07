@@ -21,7 +21,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | configuration script to automatically configure the environment |
 | Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain .
 | Modin |[IntelModin_Vs_Pandas](IntelModin_Vs_Pandas)| compares the performance of Intel® Distribution of Modin* and the performance of Pandas
-| XGBoost | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
+| Intel® Optimization for XGBoost* | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
 | daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL) .
 | Intel® Optimization for TensorFlow* | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
 |Intel® Extension of PyTorch | [IntelPyTorch_GettingStarted](Intel_Extension_For_PyTorch_GettingStarted) | A simple training example for Intel® Extension of PyTorch. |
