@@ -34,10 +34,12 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | TensorFlow | [IntelTensorFlow Enabling Auto Mixed Precision for TransferLearning](IntelTensorFlow_Enabling_Auto_Mixed_Precision_for_TransferLearning) | Enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow*.
 | Horovod | [IntelTensorFlow Horovod Distributed Deep Learning](IntelTensorFlow_Horovod_Distributed_Deep_Learning) | run inference & training workloads across multi-cards using Intel Optimization for Horovod and TensorFlow* on Intel® dGPU's.
 | TensorFlow | [IntelTensorFlow InferenceOptimization](IntelTensorFlow_InferenceOptimization) |  Optimize a pre-trained model for a better inference performance.
-| TensorFlow & Reference Models | [IntelTensorFlow Reference Models Inference with FP32 Int8](IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8)               | Run ResNet50 inference on Intel's pretrained FP32 and Int8 model.
+| TensorFlow & Intel® AI Reference Models | [IntelTensorFlow Reference Models Inference with FP32 Int8](IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8)               | Run ResNet50 inference on Intel's pretrained FP32 and Int8 model.
 | TensorFlow | [IntelTensorFlow PerformanceAnalysis](IntelTensorFlow_PerformanceAnalysis) | Analyze the performance difference between Stock Tensorflow and Intel Tensorflow.
 | TensorFlow | [IntelTensorFlow Transformer AMX bfloat16 MixedPrecisiong](IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision) | Run a transformer classification model with bfloat16 mixed precision.
 | TensorFlow | [IntelTensorFlow for LLMs](IntelTensorFlow_for_LLMs) | Finetune a GPT-J (LLM) model using the GLUE cola dataset with the Intel® Optimization for TensorFlow*.
-| Scikit-learn | [IntelScikitLearn Extensions SVC Adult](IntelScikitLearn_Extensions_SVC_Adult)   | Use Intel® Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel® Extension for Scikit-learn against original Scikit-learn..
+| Scikit-learn | [IntelScikitLearn Extensions SVC Adult](IntelScikitLearn_Extensions_SVC_Adult)   | Use Intel® Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel® Extension for Scikit-learn against original Scikit-learn.
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
 
 
