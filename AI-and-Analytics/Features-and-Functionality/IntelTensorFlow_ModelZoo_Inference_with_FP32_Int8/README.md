@@ -77,12 +77,12 @@ Navigate to the Intel® AI Reference models source directory. By default, it is 
 
 1. View the available Intel® AI Reference models release versions for the AI Tools:
    ```
-   ls /opt/intel/oneapi/modelzoo
+   ls /opt/intel/oneapi/reference_models
    2.13.0  latest
    ```
 2. Navigate to the [Intel® AI Reference models Scripts](https://github.com/IntelAI/models/tree/v2.11.0/benchmarks) GitHub repo to determine the preferred released version to run inference for ResNet50 or another supported topology.
    ```
-   cd /opt/intel/oneapi/modelzoo/latest
+   cd /opt/intel/oneapi/reference_models/latest
    ```
 
 #### Install Jupyter Notebook
