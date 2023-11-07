@@ -5,7 +5,7 @@ if [ -z "$1" ] ; then
 fi
 
 image_id="$1"
-name="aikit_container"
+name="aitools_container"
 gpu_arg=""
 GPU_DEV=/dev/dri
 if [ -d "$GPU_DEV" ]; then
@@ -22,10 +22,10 @@ mydir=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
 
 export DOCKER_RUN_ENVS="-e ftp_proxy=${ftp_proxy} -e FTP_PROXY=${FTP_PROXY} -e http_proxy=${http_proxy} -e HTTP_PROXY=${HTTP_PROXY} -e https_proxy=${https_proxy} -e HTTPS_PROXY=${HTTPS_PROXY} -e no_proxy=${no_proxy} -e NO_PROXY=${NO_PROXY} -e socks_proxy=${socks_proxy} -e SOCKS_PROXY=${SOCKS_PROXY}"
 
-docker run --privileged $DOCKER_RUN_ENVS -dit  --name "$name" $gpu_arg \
+docker run --privileged $DOCKER_RUN_ENVS --rm --pid=host --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE  -dit  --name "$name" $gpu_arg \
     -p 8888:8888 \
     -p 6006:6006 \
-    -v"/home:/home" \
+    -v"${PWD}:/home/dev/jupyter" \
     -v"/tmp:/tmp" \
     --net host \
     -p 6543:6543 \
