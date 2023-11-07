@@ -89,3 +89,5 @@ If an error occurs, troubleshoot the problem using the Diagnostics Utility for I
 
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
