@@ -18,3 +18,4 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Component & Segment | [Features-and-Functionality](Features-and-Functionality) | Demonstrate features from components like Int8 inference in Intel® Reference Models.
 | Reference | [End-to-end-Workloads](End-to-end-Workloads)                     | AI End-to-end reference workloads with real world data.
 
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
