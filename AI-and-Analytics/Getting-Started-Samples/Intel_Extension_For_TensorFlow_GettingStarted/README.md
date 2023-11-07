@@ -14,7 +14,7 @@ This code sample demonstrates how to run a TensorFlow inference workload on both
 | Software               | Intel Extension for TensorFlow
 
 Intel Extension for TensorFlow* is ready for use once you finish the Intel AI Tools installation through AI Tools Selector or Offline Installer.   
-You can refer to the oneAPI AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
+You can refer to the Intel AI Tools [product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html) for software installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 ## Key implementation details
 1. leverage the [resnet50 inference sample](https://github.com/intel/intel-extension-for-tensorflow/tree/main/examples/infer_resnet50) from intel-extension-for-tensorflow
