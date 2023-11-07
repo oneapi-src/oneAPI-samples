@@ -97,6 +97,10 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
+>**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
+
+![Performance Numbers](images/inc_speedup.png)
+
 
 ## License
 
