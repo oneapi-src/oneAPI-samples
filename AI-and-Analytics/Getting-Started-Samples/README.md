@@ -30,4 +30,4 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | guide users how to run a tensorflow inference workload on both GPU and CPU |
 |oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU |
 
-
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
