@@ -42,7 +42,7 @@ This sample is updated regularly to match the Intel® Neural Compressor version 
    git checkout 2022.3.0
    ```
 
-### For Local Development Environments (Only applicable to AI Tools Offline Installer)
+### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
@@ -71,6 +71,7 @@ The sample demonstrates how to:
 - Test the performance of the FP32 model and INT8 (quantization) model.
 
 ## Prepare the Environment
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
 ### On Linux* (Only applicable to AI Tools Offline Installer)
 
@@ -159,7 +160,7 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
 
-### On Linux (Only applicable to AI Tools Offline Installer)
+### Steps for Intel AI Tools Offline Installer
 
 1. Ensure you activate the conda environment.
    ```
@@ -170,12 +171,14 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
    ```
    conda activate usr_tensorflow
    ```
-2. Change to the sample directory. 
-3. Launch Jupyter Notebook.
+2. Change to the sample directory.
+
+### Run the Notebook
+1. Launch Jupyter Notebook.
    ```
    jupyter notebook --ip=0.0.0.0
    ```
-4. Alternatively, you can launch Jupyter Notebook by running the script located in the sample code directory.
+2. Alternatively, you can launch Jupyter Notebook by running the script located in the sample code directory.
 	```
 	./run_jupyter.sh
 	```
@@ -202,12 +205,12 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
    In a web browser, open the link that the Jupyter server displayed when you started it. For example:
    **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca**.
 
-5. Locate and select the Notebook.
+3. Locate and select the Notebook.
    ```
    inc_sample_tensorflow.ipynb
    ```
-6. Change the kernel to **user_tensorflow**.
-7. Run every cell in the Notebook in sequence.
+4. Change the kernel to **user_tensorflow**.
+5. Run every cell in the Notebook in sequence.
 
 
 #### Troubleshooting
