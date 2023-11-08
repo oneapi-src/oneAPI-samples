@@ -106,7 +106,7 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
    ```
    >**Note**: Read more information about the mkldnn log at [https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
-#### Run the Jupyter Notebook
+### Run the Jupyter Notebook
 
 1. Change to the sample directory.
 2. Launch Jupyter Notebook.
