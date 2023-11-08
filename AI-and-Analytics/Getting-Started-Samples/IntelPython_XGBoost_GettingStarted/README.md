@@ -29,7 +29,7 @@ This Getting Started sample code is implemented for CPU using the Python languag
 XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
 ## Configure Environment (Only applicable to Intel AI Tools Offline Installer)
-
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
@@ -64,7 +64,7 @@ source activate user_base
    ```
    conda install jupyter nb_conda_kernels
    ```
-### Open Jupyter Notebook
+### Run Jupyter Notebook
 
 >**Note**: You cannot execute the sample in Jupyter Notebook, but you can still view inside the notebook to follow the included write-up and description.
 
