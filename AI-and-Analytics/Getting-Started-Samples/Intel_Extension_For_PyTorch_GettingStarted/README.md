@@ -78,7 +78,8 @@ The sample uses pretrained model provided by Intel and published as part of [Int
 
 2. Activate conda environment without Root access (Optional).
 
-   By default, the AI Tools are installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+   By default, the Intel AI Tools are installed in the `/opt/intel/oneapi` folder and require root privileges to manage them.
+
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
    ```
