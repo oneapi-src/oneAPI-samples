@@ -77,7 +77,7 @@ The invocation interface and any argument interfaces are specified independently
 
 If you would like an argument to have its own **dedicated** ready/valid handshake, implement that argument using a [streaming interface](../streaming_data_interfaces/).
 
-> **Note**: The register-mapped and streaming interface features are **only** supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can compile the generated RTL with Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the six `.fpga` executables generated in this tutorial are **not** designed to run on FPGA devices directly.
+> **Note**: The register-mapped and streaming interface features are **only** supported in the SYCL HLS flow. The SYCL HLS flow compiles SYCL* source code to IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can compile the generated RTL with Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the six `.fpga` executables generated in this tutorial are **not** designed to run on FPGA devices directly.
 
 ### Declaring a Register-Mapped Invocation Interface
 

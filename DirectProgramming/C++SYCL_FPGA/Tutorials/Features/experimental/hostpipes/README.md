@@ -284,7 +284,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -319,7 +319,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -380,7 +380,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 	
 ### On Windows
 
@@ -394,7 +394,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    hostpipes.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 ## Example Output
 

@@ -180,7 +180,7 @@ See the [Host Pipes](https://github.com/oneapi-src/oneAPI-samples/tree/master/Di
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial is only intended for use in the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial is only intended for use in the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -215,7 +215,7 @@ See the [Host Pipes](https://github.com/oneapi-src/oneAPI-samples/tree/master/Di
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial is only intended for use in the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial is only intended for use in the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 

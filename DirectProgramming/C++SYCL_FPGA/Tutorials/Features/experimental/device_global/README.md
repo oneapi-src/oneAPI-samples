@@ -93,7 +93,7 @@ int main () {
   q.copy(val, &x).wait(); // Read from device_global into x
 }
 ```
->**Note**: `sycl::queue::copy()` currently only works in the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
+>**Note**: `sycl::queue::copy()` currently only works in the SYCL HLS flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 ## Build the `device_global` Tutorial
 
@@ -123,7 +123,7 @@ int main () {
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
+   > This tutorial only uses the SYCL HLS flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -157,7 +157,7 @@ int main () {
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > This tutorial only uses the IP Authoring flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
+   > This tutorial only uses the SYCL HLS flow since Intel does not ship a BSP that supports a dedicated interface for accessing a `device global`.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -191,7 +191,7 @@ int main () {
    ```bash
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./device_global.fpga_sim
    ```
-   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 ### On Windows
 
@@ -205,7 +205,7 @@ int main () {
    device_global.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+   > **Note**: Running this sample on an actual FPGA device requires a BSP that supports device_globals with host access from a dedicated interface. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 
 ## Example Output

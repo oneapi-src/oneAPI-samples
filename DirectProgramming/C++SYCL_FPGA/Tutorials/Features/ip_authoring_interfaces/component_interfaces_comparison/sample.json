@@ -1,8 +1,8 @@
 {
     "guid": "7d8482f5-39f1-4cf1-aa2e-a1f72cfc47cb",
-    "name": "IP Authoring Interfaces Overview",
+    "name": "SYCL HLS Flow Interfaces Overview",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
-    "description": "Intel® FPGA example designs oversewing different interfaces for IP Authoring",
+    "description": "Intel® FPGA example designs oversewing different interfaces for the SYCL HLS flow",
     "toolchain": ["icpx"],
     "os": ["linux", "windows"],
     "targetDevice": ["FPGA"],
