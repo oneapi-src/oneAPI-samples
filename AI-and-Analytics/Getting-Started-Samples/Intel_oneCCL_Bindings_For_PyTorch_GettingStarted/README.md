@@ -48,7 +48,6 @@ The Jupyter Notebook also demonstrates how to change PyTorch* distributed worklo
 From this sample code, you will learn how to perform distributed training with oneCCL in PyTorch*. The `oneCCL_Bindings_GettingStarted.ipynb` Jupyter Notebook targets both CPUs and GPUs using oneCCL Bindings for PyTorch*.
 
 
-
 ## Run the `oneCCL Bindings for PyTorch* Getting Started` Sample
 
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
@@ -81,9 +80,6 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
    ```
 5. Change your Jupyter Notebook kernel to **PyTorch** or **PyTorch-GPU**.
 6. Run every cell in the Notebook in sequence.
-
-
-## Example Output
 
 
 ## License
