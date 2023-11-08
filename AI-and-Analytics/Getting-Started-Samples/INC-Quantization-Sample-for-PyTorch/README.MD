@@ -103,8 +103,6 @@ You should see an image showing the performance comparison and analysis between 
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
-
-
 ## License
 
 Code samples are licensed under the MIT license. See
