@@ -49,7 +49,7 @@ source activate base
 ```
 ### Activate Conda without Root Access (Optional)
 
-By default, the Intel® AI Tools is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone and active your desired conda environment using the following commands:
+By default, the Intel® AI Tools are installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone and active your desired conda environment using the following commands:
 ```
 conda create --name user_base --clone base
 source activate user_base
