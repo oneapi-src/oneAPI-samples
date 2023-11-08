@@ -57,7 +57,8 @@ The sample uses pretrained model provided by Intel and published as part of [Int
 
 ## Run the `Intel® Extension for PyTorch* Getting Started` Sample
 
-### On Linux* (Only applicable to AI Tools Offline Installer)
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+### Steps for Intel AI Tools Offline Installer   
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
