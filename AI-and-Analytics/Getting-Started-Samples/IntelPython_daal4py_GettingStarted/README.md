@@ -40,6 +40,7 @@ This get started sample code is implemented for CPUs using the Python language. 
 The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
 ## Configure Environment (Only applicable to AI Tools Offline Installer)
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -51,7 +52,9 @@ The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you fin
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-### On Linux*
+
+
+### Steps for Intel AI Tools Offline Installer
 
 1. Activate the conda environment.
 
@@ -78,9 +81,9 @@ The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you fin
 
 ## Run the `Intel® Python Daal4py Getting Started` Sample
 
-You can run the sample code in a Jupyter Notebook or as a Python script locally or in Intel® DevCloud.
+You can run the sample code in a Jupyter Notebook or as a Python script locally.
 
-### In Jupyter Notebook
+### Run the Jupyter Notebook
 
 1. Activate the conda environment.
    ```
@@ -115,48 +118,6 @@ You can run the sample code in a Jupyter Notebook or as a Python script locally 
    ```
 
    The script saves the output files in the included ``models`` and ``results`` directories.
-
-### On Intel® DevCloud
-
-#### Using oneAPI JupyterLab
-
-1. Navigate to the JupyterHub for Intel® DevCloud: [jupyter.oneapi.devcloud.intel.com](https://jupyter.oneapi.devcloud.intel.com/).
-
-2. In the Dashboard, locate and navigate to the `IntelPython_daal4py_GettingStarted.ipynb`.
-
-3. Open the Jupyter Notebook.
-
-4. Click the **Run** button to execute all cells in the Notebook in sequence. (Read the explanations of the code in the cells.)
-
-#### In Batch Mode
-
-This sample includes the ``run.sh`` script for batch processing.
-
-Submit a job that requests a compute node to run the sample code:
-
-```
-qsub -l nodes=1:xeon:ppn=2 -d . run.sh
-```
-
-<details>
-<summary>You can specify nodes using a single line script.</summary>
-
-```
-qsub  -I  -l nodes=1:xeon:ppn=2 -d . run.sh
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:xeon:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-  >**Note**: For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in  the Intel® DevCloud Documentation.
-</details>
-
-The script saves the output files in the included `models` and `results` directories.
 
 ## Example Output
 
