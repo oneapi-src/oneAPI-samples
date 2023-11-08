@@ -52,7 +52,7 @@ For details, refer to the *[Quick Example on Intel CPU and GPU](https://intel.gi
 
 ### Steps for Intel AI Tools Offline Installer  
 
-These instructions demonstrate how to build and run a sample on a machine where you have installed the Intel® AI Tools. 
+These instructions demonstrate how to build and run a sample on a machine where you have installed the Intel® AI Tools. If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Script.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
