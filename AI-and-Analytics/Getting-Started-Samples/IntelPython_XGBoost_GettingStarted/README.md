@@ -28,7 +28,7 @@ This Getting Started sample code is implemented for CPU using the Python languag
 
 XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
-## Configure Environment (Only applicable to AI Tools Offline Installer)
+## Configure Environment (Only applicable to Intel AI Tools Offline Installer)
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
