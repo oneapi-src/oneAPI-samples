@@ -46,7 +46,8 @@ The Jupyter notebook in this sample also guides users how to change PyTorch* cod
 
 ## Key Implementation Details
 
-The sample uses pretrained model provided by Intel and published as part of [Intel Reference Models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
+The sample uses pretrained model provided by Intel and published as part of [Intel AI Reference Models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
+
 
 - The Jupyter Notebook, `ResNet50_Inference.ipynb`, is implemented for both CPU and GPU using Intel® Extension for PyTorch*.
 - The `Intel_Extension_For_PyTorch_Hello_World.py` script is implemented for CPU using the Python language.
