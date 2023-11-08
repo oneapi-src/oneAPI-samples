@@ -50,7 +50,7 @@ You will need to download and install the following toolkits, tools, and compone
 
   You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Tools installation information and post-installation steps and scripts.
 
-  Intel® Optimizations for TensorFlow* is included in AI Tools.
+  Intel® Extension for TensorFlow* is included in the Intel AI Tools Offline Installer package.
 
 - **Jupyter Notebook**
 
