@@ -1,7 +1,6 @@
 # `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
 
-The  `Intel® Neural Compressor TensorFlow* Getting Started*` Sample demonstrates using the Intel® Neural Compressor, which is part of the Intel® AI Analytics
-Kit (AI Kit) with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
+The  `Intel® Neural Compressor TensorFlow* Getting Started*` Sample demonstrates using the Intel® Neural Compressor, which is part of the Intel® AI Tools with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
 
 | Area                     | Description
 |:---                      |:---
@@ -23,13 +22,13 @@ You will learn how to train a CNN model with Keras and TensorFlow*, use Intel® 
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 (or newer) <br> Windows 11, 10*
 | Hardware                          | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
-| Software                          | Intel® AI Analytics Toolkit (AI Kit)
+| Software                          | Intel® Neural Compressor, Intel Optimization for TensorFlow
 
 ### Intel® Neural Compressor and Sample Code Versions
 
 >**Note**: See the [Intel® Neural Compressor](https://github.com/intel/neural-compressor) GitHub repository for more information and recent changes. 
 
-This sample is updated regularly to match the Intel® Neural Compressor version in the latest Intel® AI Analytics Toolkit release. If you want to get the sample code for an earlier toolkit release, check out the corresponding git tag.
+This sample is updated regularly to match the Intel® Neural Compressor version in the latest Intel® AI Tools release. If you want to get the sample code for an earlier toolkit release, check out the corresponding git tag.
 
 1. List the available git tags.
    ```
@@ -43,26 +42,21 @@ This sample is updated regularly to match the Intel® Neural Compressor version 
    git checkout 2022.3.0
    ```
 
-### For Local Development Environments
+### For Local Development Environments (Only applicable to AI Tools Offline Installer)
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **Intel® AI Tools **
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Tools installation information and post-installation steps and scripts.
 
-  Intel® Optimizations for TensorFlow* is included in AI Kit.
+  Intel® Extension for TensorFlow* is included in the Intel AI Tools Offline Installer package.
 
 - **Jupyter Notebook**
 
   Install using PIP: `$pip -m install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
 
 - **TensorFlow\* 2.2** (or newer)
-
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
-
 
 ## Key Implementation Details
 
@@ -76,13 +70,13 @@ The sample demonstrates how to:
   - Specifically, the latest Intel® Xeon® Scalable  processors and  Xeon® processors provide hardware acceleration for such tasks.
 - Test the performance of the FP32 model and INT8 (quantization) model.
 
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
 ## Prepare the Environment
 
-### On Linux*
+### On Linux* (Only applicable to AI Tools Offline Installer)
+
+#### Set Environment Variables
+
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 #### Activate Conda
 
@@ -165,7 +159,7 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
 
-### On Linux
+### On Linux (Only applicable to AI Tools Offline Installer)
 
 1. Ensure you activate the conda environment.
    ```
@@ -219,16 +213,6 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
 #### Troubleshooting
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
-### On Intel® DevCloud
-
-1. Open Jupyter Hub in a browser: [oneAPI JupyterHub](https://jupyter.oneapi.devcloud.intel.com/).
-
-2. Navigate to the `inc_sample_tensorflow.ipynb` file and open it.
-
-3. Change the Kernel to **user_tensorflow**.
-
-4. Run every cell in the Notebook in sequence.
 
 
 ## License

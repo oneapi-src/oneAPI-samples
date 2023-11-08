@@ -20,7 +20,7 @@ You can run the sample locally or in Google Colaboratory (Colab).
 |:---                       |:---
 | OS                        | Ubuntu* 20.04 (or newer)
 | Hardware                  | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
-| Software                  | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® Distribution of Modin*
+| Software                  | Intel® Distribution of Modin*
 
 ## Key Implementation Details
 
