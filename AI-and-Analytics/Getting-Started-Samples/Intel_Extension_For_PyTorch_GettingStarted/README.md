@@ -38,7 +38,8 @@ You can quickly build and train a PyTorch* neural network using the simple Pytho
 
 The Jupyter notebook in this sample also guides users how to change PyTorch* codes to run on Intel® Data Center GPU family and how to validate the GPU or CPU usages for PyTorch* workloads on Intel CPU or GPU.
 
->**Note**: Intel® Extension for PyTorch* is available as part of Intel® AI Tools. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+>**Note**: Intel® Extension for PyTorch* can be installed via the Intel® AI Tools Offline Installer or via the Intel AI Tools Selector. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+
 >
 >Find more examples in the [*Examples*](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html) topic of the [*Intel® Extension for PyTorch* Documentation*](https://intel.github.io/intel-extension-for-pytorch).
 
