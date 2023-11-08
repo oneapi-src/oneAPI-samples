@@ -50,7 +50,7 @@ The sample code is CPU based, but you can run it using Intel® Extension for Ten
 
 For details, refer to the *[Quick Example on Intel CPU and GPU](https://intel.github.io/intel-extension-for-tensorflow/latest/examples/quick_example.html)* topic of the *Intel® Extension for TensorFlow** documentation. 
 
-## Run the Sample Locally (Only applicable to Intel AI Tools Offline Installer)
+### Steps for Intel AI Tools Offline Installer  
 
 These instructions demonstrate how to build and run a sample on a machine where you have installed the Intel® AI Tools. 
 
