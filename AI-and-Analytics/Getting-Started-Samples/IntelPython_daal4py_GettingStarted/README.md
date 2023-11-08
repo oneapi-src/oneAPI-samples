@@ -64,7 +64,8 @@ The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you fin
 	 
    2. If you do not have the root access to your oneAPI installation path, choose this option.
 
-      By default, the Intel® AI Tools is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
+      By default, the Intel® AI Tools are installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
+
       ```
       conda create --name usr_intelpython --clone base
       source activate usr_intelpython
