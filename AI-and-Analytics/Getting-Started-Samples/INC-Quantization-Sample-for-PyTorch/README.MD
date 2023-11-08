@@ -78,7 +78,7 @@ The sample contains one Jupyter Notebook and one Python script.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
 
-#### Run the NoteBook
+### Run the Notebook
 
 1. Launch Jupyter Notebook.
    ```
