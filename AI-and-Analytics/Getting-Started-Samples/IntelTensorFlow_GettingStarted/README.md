@@ -1,18 +1,18 @@
-# `Intel® TensorFlow* Getting Started` Sample
+# ` TensorFlow* Getting Started` Sample
 
-The `Intel® TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow* model and run inference using Intel® oneAPI Math Kernel Library (oneMKL) and Intel® oneAPI Deep Neural Networks (Intel® oneDNN).
+The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow* model and run inference using Intel® oneAPI Deep Neural Networks (Intel® oneDNN).
 
 | Area                       | Description
 |:---                        |:---
-| What you will learn        | The basics of using Intel® Optimization for TensorFlow* and the Intel® Extension for TensorFlow*
+| What you will learn        | The basics of using TensorFlow* with oneDNN optimizations
 | Time to complete           | 10 minutes
 | Category                   | Getting Started
 
 ## Purpose
 
-TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow* framework has been optimized using Intel® oneDNN primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow* enables Intel® oneDNN calls by default. Intel-optimized TensorFlow* is available as part of the Intel® AI Analytics Toolkit (AI Kit).
+TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow* framework has been optimized using Intel® oneDNN primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow* enables Intel® oneDNN calls by default. Intel-optimized TensorFlow* is available as part of the Intel® AI Tools.
 
-This sample code shows how to get started with Intel® Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. You can build and train a TensorFlow* neural network using a simple Python code. Also, by controlling the build-in environment variable, this sample attempts to demonstrate explicitly how Intel® oneDNN Primitives are called and shows their performance during the neural network training.
+This sample code shows how to get started with TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. You can build and train a TensorFlow* neural network using a simple Python code. Also, by controlling the build-in environment variable, this sample attempts to demonstrate explicitly how Intel® oneDNN Primitives are called and shows their performance during the neural network training.
 
 ## Prerequisites
 
@@ -20,9 +20,9 @@ This sample code shows how to get started with Intel® Optimization for TensorFl
 |:---                    |:---
 | OS                     | Ubuntu* 18.0.x (and newer) <br> Windows* 10 
 | Hardware               | Intel® Xeon® Scalable processor family
-| Software               | Intel® AI Analytics Toolkit (AI Kit)
+| Software               | TensorFlow
 
-TensorFlow* is ready for use once you finish the Intel AI Analytics Toolkit installation. You can refer to the oneAPI [product page](https://software.intel.com/en-us/oneapi) for toolkit installation and the *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
+TensorFlow* is ready for use once you finish the Intel AI Tools installation. You can refer to the oneAPI [product page](https://software.intel.com/en-us/oneapi) for tools installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 ## Key Implementation Details
 
@@ -50,9 +50,9 @@ The sample code is CPU based, but you can run it using Intel® Extension for Ten
 
 For details, refer to the *[Quick Example on Intel CPU and GPU](https://intel.github.io/intel-extension-for-tensorflow/latest/examples/quick_example.html)* topic of the *Intel® Extension for TensorFlow** documentation. 
 
-## Run the Sample Locally
+### Steps for Intel AI Tools Offline Installer  
 
-These instructions demonstrate how to build and run a sample on a machine where you have installed the AI Kit. 
+These instructions demonstrate how to build and run a sample on a machine where you have installed the Intel® AI Tools. If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Script.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -99,46 +99,6 @@ If you would like to bypass using root access to manage your conda environment, 
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-### Run the Sample on Intel® DevCloud (Optional)
-
->**Note**: For more information on using Intel® DevCloud, see the Intel® oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started/) page.
-
-1. Open a terminal on a Linux* system.
-2. Log in to the Intel® DevCloud.
-   ```
-   ssh devcloud
-   ```
-3. Change to the sample directory.
-4. Configure the sample for the appropriate node. 
-
-   <details>
-   <summary>You can specify nodes using a single line script.</summary>
-
-   ```
-   qsub  -I  -l nodes=1:xeon:ppn=2 -d .
-   ```
-
-   - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:xeon:ppn=2` (lower case L) assigns one full GPU node.
-   - `-d .` makes the current folder as the working directory for the task.
-
-     |Available Nodes    |Command Options
-     |:---               |:---
-     |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-     |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-    >**Note**: For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in  the Intel® DevCloud Documentation.
-   </details>
-
-5. Run the supplied script, which contains all the instructions needed to run this workload.
-   ```
-   ./q ./run.sh
-   ```
-6. Review the output.
-7. Disconnect from Intel® DevCloud.
-	```
-	exit
-	```
 
 ## Example Output
 

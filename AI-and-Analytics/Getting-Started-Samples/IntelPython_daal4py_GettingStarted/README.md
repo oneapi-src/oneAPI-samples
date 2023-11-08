@@ -8,7 +8,7 @@ The `Intel® Python Daal4py Getting Started` sample code shows how to do batch l
 | Time to complete       | 5 minutes
 | Category               | Getting Started
 
-The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Purpose
 
@@ -22,19 +22,16 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | :---                    | :---
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software                | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® oneAPI Data Analytics Library (oneDAL)
+| Software                | Intel® oneAPI Data Analytics Library (oneDAL)
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **Intel® AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
 
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
 
 ## Key Implementation Details
 
@@ -42,11 +39,8 @@ This get started sample code is implemented for CPUs using the Python language. 
 
 The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
-## Configure Environment
+## Configure Environment (Only applicable to AI Tools Offline Installer)
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -58,7 +52,9 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-### On Linux*
+
+
+### Steps for Intel AI Tools Offline Installer
 
 1. Activate the conda environment.
 
@@ -71,7 +67,8 @@ When working with the command-line interface (CLI), you should configure the one
 	 
    2. If you do not have the root access to your oneAPI installation path, choose this option.
 
-      By default, the Intel® AI Analytics Toolkit is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
+      By default, the Intel® AI Tools are installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
+
       ```
       conda create --name usr_intelpython --clone base
       source activate usr_intelpython
@@ -84,9 +81,9 @@ When working with the command-line interface (CLI), you should configure the one
 
 ## Run the `Intel® Python Daal4py Getting Started` Sample
 
-You can run the sample code in a Jupyter Notebook or as a Python script locally or in Intel® DevCloud.
+You can run the sample code in a Jupyter Notebook or as a Python script locally.
 
-### In Jupyter Notebook
+### Run the Jupyter Notebook
 
 1. Activate the conda environment.
    ```
@@ -121,48 +118,6 @@ You can run the sample code in a Jupyter Notebook or as a Python script locally 
    ```
 
    The script saves the output files in the included ``models`` and ``results`` directories.
-
-### On Intel® DevCloud
-
-#### Using oneAPI JupyterLab
-
-1. Navigate to the JupyterHub for Intel® DevCloud: [jupyter.oneapi.devcloud.intel.com](https://jupyter.oneapi.devcloud.intel.com/).
-
-2. In the Dashboard, locate and navigate to the `IntelPython_daal4py_GettingStarted.ipynb`.
-
-3. Open the Jupyter Notebook.
-
-4. Click the **Run** button to execute all cells in the Notebook in sequence. (Read the explanations of the code in the cells.)
-
-#### In Batch Mode
-
-This sample includes the ``run.sh`` script for batch processing.
-
-Submit a job that requests a compute node to run the sample code:
-
-```
-qsub -l nodes=1:xeon:ppn=2 -d . run.sh
-```
-
-<details>
-<summary>You can specify nodes using a single line script.</summary>
-
-```
-qsub  -I  -l nodes=1:xeon:ppn=2 -d . run.sh
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:xeon:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-  >**Note**: For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in  the Intel® DevCloud Documentation.
-</details>
-
-The script saves the output files in the included `models` and `results` directories.
 
 ## Example Output
 
