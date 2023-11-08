@@ -54,7 +54,7 @@ The sample contains one Jupyter Notebook and one Python script.
 
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample
 
-```If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+> **Note**: If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
 ### Steps for Intel AI Tools Offline Installer
 
