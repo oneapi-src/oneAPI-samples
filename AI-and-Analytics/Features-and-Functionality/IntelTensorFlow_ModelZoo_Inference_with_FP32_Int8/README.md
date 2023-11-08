@@ -40,7 +40,8 @@ The example uses some pretrained models published as part of the [Intel® AI Ref
 
 ## Run the `Intel® TensorFlow* Model Zoo Inference With FP32 Int8` Sample
 
-### On Linux* (Only applicable to AI Tools Offline Installer)
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+### Steps for Intel AI Tools Offline Installer   
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
