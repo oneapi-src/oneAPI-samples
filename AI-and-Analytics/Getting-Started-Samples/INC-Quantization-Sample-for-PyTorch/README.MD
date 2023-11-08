@@ -52,11 +52,11 @@ The sample contains one Jupyter Notebook and one Python script.
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
 
-## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample
+## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
 
-> **Note**: If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.  
 
-### Steps for Intel AI Tools Offline Installer
+### Steps for Intel AI Tools Offline Installer  
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -67,7 +67,7 @@ The sample contains one Jupyter Notebook and one Python script.
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
-
+ 
 #### Activate Conda
 
 1. Activate the Conda environment.
