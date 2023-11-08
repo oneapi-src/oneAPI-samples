@@ -1,6 +1,7 @@
 ﻿# `Intel® AI Tools Container Getting Started` Sample
+>**Note**: This sample is relevant only for AI Tools installed via Docker. If you have installed AI tools using PIP or Conda, this sample may not be relevant for you.
 
-The `Intel® AI Tools Container Getting Started` sample demonstrates how to use AI Tools containers. 
+The `Intel® AI Tools Container Getting Started` sample demonstrates how to use AI Tools containers.  
 
 | Area                  | Description
 |:---                   |:---
