@@ -43,8 +43,8 @@ HTMLElement.prototype.removeListeners = function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log('document is ready.');
-    fetchData().then((data) => { 
-        renderUi(data.paginatedData); 
+    fetchData().then((data) => {
+        renderUi(data.paginatedData);
         showTotalRecords();
         attachSearch();
         filterPaginatedData();
