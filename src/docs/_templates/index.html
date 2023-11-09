@@ -22,6 +22,10 @@
                 <div class="app-title">
                     Samples Catalog
                 </div>
+                <div>
+                    <a class="btn home-button" onclick="resetFiltersGoHome()" role="button">
+                        <i class="fa fa-home fa-lg"></i></a>
+                </div>
 
             </div>
 
@@ -44,7 +48,7 @@
                             onkeypress=onlyAlphaNumInput(event) 
                             data-search >
     
-                    <button type="reset" onclick="resetSearcher()" class="resetSearchButton">
+                    <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
                         <i class="fa fa-remove fa-xl"></i> <!--fa fa-refresh-->
                     </button>
                     
@@ -109,12 +113,12 @@
     </div>
 
     <div class="filter-input-wrapper">       
-        <div>
+        <!-- <div> -->
                 <input id="collapsible" class="toggle" type="checkbox">
                 <label for="collapsible" class="label-toggle">
                     <span class="filter-text">Filter</span>
-                        <span>
-                            <button type="reset" onclick="resetFilters()" class="filter-btn">
+                        <span title="Reset Filters">
+                            <button  onclick="resetFiltersGoHome()" class="filter-btn">
                                 <i class="fa-solid fa-filter-circle-xmark fa-2xl"></i>
                             </button>
                         </span>
@@ -124,49 +128,51 @@
 
                 <div class="filter-content"> 
 
-                    <div class="filter-children expertise-checkboxes"> 
+                <form id="filter-menu">
+                        <div class="filter-children expertise-checkboxes"> 
 
-                        <span class="badge-col-head">
-                            <div class="circle badge1-circle">
-                            </div> Expertise
-                        </span>
-
-                        <div > <!--onclick="checkBoxClick(event)"-->
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="getting\sstarted" name="data-filter"/> 
-                                <label class="container-filter">
-                                    Getting Started
-                                </label>
-                            </span>
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="tutorial" name="data-filter"/>
-                                <label class="container-filter">
-                                    Tutorial
-                                </label>
+                            <span class="badge-col-head">
+                                <div class="circle badge1-circle">
+                                </div> Expertise
                             </span>
 
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="concepts\sand\sfunctionality" name="data-filter"/>
-                                <label class="container-filter">
-                                    Concepts and Functionality
-                                </label>
-                            </span>
-                            
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="reference\sdesigns\sand\send\sto\send" name="data-filter"/>
-                                <label class="container-filter">
-                                    Reference Designs and End to End
-                                </label>
-                            </span>
+                            <div id="expertise-col"> <!--onclick="checkBoxClick(event)"-->
+                                <span class="checkmark"> 
+                                    <input type="checkbox" class="checkoption" value="getStart" name="data-filter"/> 
+                                    <label class="container-filter">
+                                        Getting Started
+                                    </label>
+                                </span>
+                                <span class="checkmark"> 
+                                    <input type="checkbox" class="checkoption" value="tutorial"  name="data-filter"/>
+                                    <label class="container-filter">
+                                        Tutorial
+                                    </label>
+                                </span>
 
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="code\soptimization" name="data-filter"/>
-                                <label class="container-filter">
-                                    Code Optimization
-                                </label>
-                            </span>
+                                <span class="checkmark"> 
+                                    <input type="checkbox" class="checkoption" value="conFunc"  name="data-filter"/>
+                                    <label class="container-filter">
+                                        Concepts and Functionality
+                                    </label>
+                                </span>
+                                
+                                <span class="checkmark"> 
+                                    <input type="checkbox" class="checkoption" value="refDesEnd2End"  name="data-filter"/>
+                                    <label class="container-filter">
+                                        Reference Designs and End to End
+                                    </label>
+                                </span>
+
+                                <span class="checkmark"> 
+                                    <input type="checkbox" class="checkoption" value="codeOpt"  name="data-filter"/>
+                                    <label class="container-filter">
+                                        Code Optimization
+                                    </label>
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                </form>
 
                     <div class="filter-children language-checkboxes">
 
@@ -225,9 +231,10 @@
                             </span>
                         </div>      
                     </div>
+                <!-- <  /form> -->
                 </div>
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 
     <div class="toolkit-cards" data-toolkit-cards-container> </div>
@@ -240,9 +247,12 @@
                             <p class="badges badge2" data-languages></p>
                             <p class="badges-devices" data-targetDevice></p>
                             <div url></div>
-                        </div> 
+                        </div>
+                    </div>
+                </div> 
             </li>
         </template>
+    </div>
 
     <div id="hide"> 
         <div class="no-results">  
@@ -253,7 +263,7 @@
 
                         <ul class="help">
                             <li> <span class="emph1">Search</span>:  Simplify search term.</span></li>
-                            <li> <span class="emph1">Filter</span>:  Select one filter. Add filter from another column. </li>
+                            <li> <span class="emph1">Filter</span>:  Select one filter per column. </li>
                             <li> <span class="emph1"> Search</span><span class="emph2"> and </span><span class="emph1">Filter</span>: Avoid combining.</li>
                         </ul>
                     </div>

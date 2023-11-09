@@ -171,6 +171,10 @@ body {
   justify-content: center;
 }
 
+/* Expandable Filter  */
+div.filter-input-wrapper div{
+  padding: -0.25em !important;
+}
 
 .filter-ctrls {
   display: inline-block;
@@ -183,6 +187,7 @@ body {
   vertical-align: middle;
   color:rgb(0,84,174);
   cursor: pointer;
+  padding-bottom: 1.5rem;
 } 
 
 .label-toggle::before {
@@ -202,6 +207,7 @@ body {
 }
 
 .collapsible-content {
+  margin-bottom: -35px;
   max-height: 0px;
   overflow: hidden;
   transition: max-height .25s ease-in-out;
@@ -210,11 +216,11 @@ body {
 .collapsible-content .filter-content {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* no spacing below filter menu */
   justify-content: center;
   border-bottom-left-radius: 7px;
   border-bottom-right-radius: 7px;
-  padding: .5rem 1rem;
+  padding: .5rem .25rem;
 }
 
 .toggle:checked + .label-toggle + .collapsible-content {
@@ -568,6 +574,21 @@ input[type=button] > #nobutton {
   padding-left: 0px;
 }
 
+.fa-home {
+  color: rgba(255,255,255,100);
+  background-color: transparent;
+  outline: none ;
+  border: none  !important;
+  padding:  18px 0px 15px 12px;
+  z-index: 50;
+  text-decoration: none !important;
+}
+
+.fa-home:hover, .fa-home:active, .fa-home:focus-visible {
+  color:rgb(160, 235, 255) !important;
+}
+
+
 input[type=text]{
   padding: 10px 20px;
   text-align: left;
@@ -636,6 +657,7 @@ input:hover {
   flex-direction: column;
   text-align: center; 
   justify-content: center;
+  margin-bottom: 2rem;
 }
    
 .toolkit-cards{
@@ -644,6 +666,7 @@ input:hover {
   grid-template-columns: minmax(360px, 480px) minmax(360px, 480px) minmax(360px, 480px);
   grid-gap: .50rem;
   margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .card {
@@ -856,7 +879,7 @@ figcaption:hover{
   position: relative;
   padding-left: 35px;
   margin-top: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
