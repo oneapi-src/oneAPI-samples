@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         showTotalRecords();
         attachSearch();
         filterPaginatedData();
+        externalLinksOpenNewTab();
         lastUpdated();
     })
 });
@@ -366,3 +367,18 @@ function renderCards(data) {
         }
     })
 }
+
+function externalLinksOpenNewTab() {
+
+    const hyperlinks = document.querySelectorAll("a[href^='https://'], a[href^='http://']");
+    const host = window.location.hostname;
+    const internalLink = link => new URL(link).hostname === host
+
+    hyperlinks.forEach(link => {
+        if (internalLink(link)) return        
+        link.setAttribute("target", "_blank")
+        link.setAttribute("rel", "noopener")
+    })
+
+};
+
