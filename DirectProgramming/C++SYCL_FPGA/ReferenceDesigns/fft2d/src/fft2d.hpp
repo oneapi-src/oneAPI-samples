@@ -506,7 +506,7 @@ struct Transpose {
 #if defined IS_BSP
   ac_complex<T> *dest;
 #else
-  // Specify the memory interface when in the IP Authoring flow
+  // Specify the memory interface when in the SYCL HLS flow
   // The buffer location is set to 1 (identical as the malloc performed in
   // fft2d_demo.cpp)
   // The data width is equal to width of the DDR burst performed by the function

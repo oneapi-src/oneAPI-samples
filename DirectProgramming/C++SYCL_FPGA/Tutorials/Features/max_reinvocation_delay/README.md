@@ -120,7 +120,7 @@ Now, the first iteration of the `i+1`th  invocation of the inner loop will launc
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > For simplicity, this tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > For simplicity, this tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -154,7 +154,7 @@ Now, the first iteration of the `i+1`th  invocation of the inner loop will launc
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   > For simplicity, this tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > For simplicity, this tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -189,7 +189,7 @@ Now, the first iteration of the `i+1`th  invocation of the inner loop will launc
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./max_reinvocation_delay.fpga_sim
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 ### On Windows
 
@@ -203,7 +203,7 @@ Now, the first iteration of the `i+1`th  invocation of the inner loop will launc
    max_reinvocation_delay.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 ## Example Output
 

@@ -20,7 +20,7 @@ This tutorial demonstrates how to configure Avalon memory-mapped host data inter
 
 > **Note**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: This tutorial will not work for a Full System compile as it demonstrates an IP Authoring specific feature.
+> **Note**: This tutorial will not work for a Full System compile as it demonstrates a SYCL HLS flow specific feature.
 
 ## Prerequisites
 

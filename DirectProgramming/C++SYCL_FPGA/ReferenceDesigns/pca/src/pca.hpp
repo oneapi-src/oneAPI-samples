@@ -99,7 +99,7 @@ void PCAKernel(
         sycl::malloc_device<ac_int<1, false>>(matrix_count, q);
   } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
     std::cout << "Using shared allocations" << std::endl;
-    // No device allocations means that we are probably in an IP authoring flow
+    // No device allocations means that we are probably in a SYCL HLS flow
     input_matrix_device =
         sycl::malloc_shared<T>(kInputMatrixSize * matrix_count, q);
     eigen_vectors_device =
