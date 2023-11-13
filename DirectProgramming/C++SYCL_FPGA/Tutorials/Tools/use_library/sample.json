@@ -4,7 +4,7 @@
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools"],
   "description": "An Intel® FPGA Tutorial demonstrating how to create Intel® FPGA libraries and to incorporate them in a Intel® oneAPI SYCL project",
   "toolchain": ["icpx"],
-  "os": ["linux", "windows"],
+  "os": [],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
