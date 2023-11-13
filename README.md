@@ -122,7 +122,6 @@ Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA E
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.27359]  
 oneAPI package version:  
 \- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
-\- Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182  
 \- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577    
 \- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649   
 
@@ -131,8 +130,7 @@ Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake)
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]  
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.27359]  
 oneAPI package version:  
-\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
-\- Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182  
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557   
 \- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577  
 \- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649  
 
