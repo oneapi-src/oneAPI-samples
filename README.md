@@ -90,30 +90,30 @@ Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 3.0, (pvc)
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]  
 Level Zero driver: Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.26918]  
 oneAPI package version:  
-    - Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
-    - Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582   
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646
-    - Intel AI Tools 2024.0.0.48873
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
+\- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582  
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646  
+\- Intel AI Tools 2024.0.0.48873  
 
 12th Gen Intel(R) Core(TM) i9-12900  
 Intel(R) UHD Graphics 770  3.0 ; (gen12, AlderLake-S GT1 [8086:4680])  
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]  
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.26918]  
 oneAPI package version:  
-    - Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
-    - Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582  
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646 
-    - Intel AI Tools 2024.0.0.48873
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
+\- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582  
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646  
+\- Intel AI Tools 2024.0.0.48873  
 
 11th Gen Intel(R) Core(TM) i7-11700  
 Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake)   
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]   
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.26918]   
 oneAPI package version:  
-    - Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
-    - Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582   
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646
-    - Intel AI Tools 2024.0.0.48873
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49556  
+\- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49582  
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49646  
+\- Intel AI Tools 2024.0.0.48873  
 
 ### Windows 11
 12th Gen Intel(R) Core(TM) i9-12900 	 
@@ -121,24 +121,24 @@ Intel(R) UHD Graphics 770  3.0 ; (gen12, AlderLake-S GT1 [8086:4680])
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]  
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.27359]  
 oneAPI package version:  
-    - Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
-    - Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182
-    - Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577   
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649 
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
+\- Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182  
+\- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577    
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649   
 
 11th Gen Intel(R) Core(TM) i7-11700  
 Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake)  
 Opencl driver:  Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000]  
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.27359]  
 oneAPI package version:  
-    - Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
-    - Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182  
-    - Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577   
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649 
+\- Intel oneAPI Base Toolkit Build Version: 2024.0.0.49557  
+\- Intel oneAPI Base Toolkit Build Version (32 Bit): 2024.0.0.49182  
+\- Intel oneAPI HPC Toolkit Build Version: 2024.0.0.49577  
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49649  
 
 ### macOS
 Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz  
-    - Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49648 
+\- Intel oneAPI Rendering Toolkit Build Version: 2024.0.0.49648  
 
 ## Known Issues and Limitations
 
