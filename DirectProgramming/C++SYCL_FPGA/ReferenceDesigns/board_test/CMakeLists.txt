@@ -49,7 +49,9 @@ endif()
 # By default the oneAPI compiler burst interleaves across same memory type,
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} -Xsno-interleaving=default)
+# -Xshyper-optimized-handshaking=off is used to get slightly better fmax on such small kernels
+# Refer to https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/hyper-opt-handshaking.html for more information
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} -Xsno-interleaving=default -Xshyper-optimized-handshaking=off)
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS ${USER_FLAGS} ${USM_FLAG})
