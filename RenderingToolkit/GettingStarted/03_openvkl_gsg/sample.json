@@ -43,8 +43,8 @@
 		    "cd gpu",
 		    "mkdir build",
 		    "cd build",
-		    "cmake -G\"NMake Makefiles\" -DCMAKE_CXX_COMPILER=icx-cl ..",
-		    "cmake --build . --config Release",
+		    "cmake -G\"NMake Makefiles\" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=icx-cl ..",
+		    "cmake --build .",
 		    ".\\vklTutorialGPU.exe"
                 ]
 
