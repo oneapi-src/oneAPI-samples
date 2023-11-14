@@ -14,11 +14,13 @@ This tutorial shows compiling with the minimum latency optimization target to ac
 
 This FPGA tutorial demonstrates how to set optimization targets for your compile to target different performance metrics.
 
-The `-Xsoptimize=<flag>` command-line option sets optimization targets, and it supports the following flag:
+The `-Xsoptimize=<flag>` command-line option sets optimization targets, and it supports the following flags:
 
-| Flag      | Explanation      | Documentation
-|:---       |:---              |:---
-|`latency`  | Minimum latency  | [*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/minimum-latency-flow.html) topic in the *FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide*.
+|Flag                      |Explanation                        |Documentation
+|:---                      |:---                               |:---
+|`latency`                 |Minimum latency                    |[*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/minimum-latency-flow.html)
+|`throughput-area-balanced`|Balanced throughput-area trade-offs|[*Balanced Throughput-Area Trade-Offs Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/???.html)
+|`area`                    |Minimum area                       |[*Minimum Area Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/???.html)
 
 To compile your design with the minimum latency optimization target, use the flag option `-Xsoptimize=latency`.
 
