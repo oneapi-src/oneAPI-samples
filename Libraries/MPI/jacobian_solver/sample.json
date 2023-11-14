@@ -7,6 +7,7 @@
   "dependencies": [ "compiler|icpx,icx","mpi" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "GPU" ],
+  "gpuRequired": ["gen9"],
   "os": [ "linux" ],
   "builder": [ "make" ],
   "ciTests": {
