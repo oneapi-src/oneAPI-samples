@@ -125,20 +125,24 @@ event SubmitBeamformerKernel(
           for (unsigned char vector_num = 0;
                vector_num < (unsigned char)k_num_weight_vectors; vector_num++) {
             // zero the accumulators
-            fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto i) { accum_vector[i] = 0; });
+#pragma unroll
+            for (size_t i = 0; i < k_unroll_factor; ++i) { accum_vector[i] = 0; }
 
             // calculate the sum of products of the weight and xrx vectors
             // unroll by a factor of k_unroll_factor (so perform k_unroll_factor
             // operations in parallel)
             for (short i = 0; i < (kNumCalcTypePerVector); i++) {
-              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
+#pragma unroll
+              for (size_t j = 0; j < k_unroll_factor; ++j) {
                 accum_vector[j] +=
                     xrx_vector[i][j] * weight_vectors[vector_num][i][j].conj();
-              });
+              }
             }
             ComplexType accum_vector_sum = 0;
-            fpga_tools::UnrolledLoop<k_unroll_factor>(
-                [&](auto i) { accum_vector_sum += accum_vector[i]; });
+#pragma unroll
+            for (size_t i = 0; i < k_unroll_factor; ++i) {
+              accum_vector_sum += accum_vector[i];
+            }
 
             result[vector_num] = accum_vector_sum;
 

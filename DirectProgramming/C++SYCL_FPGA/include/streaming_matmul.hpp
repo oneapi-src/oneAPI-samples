@@ -31,11 +31,13 @@ public:
     [[intel::fpga_register]] // NO-FORMAT: Attribute
     TT accum[tile_a][tile_b];
 
-    fpga_tools::UnrolledLoop<tile_a>([&](auto row) {
-      fpga_tools::UnrolledLoop<tile_b>([&](auto col) {
+#pragma unroll
+    for (size_t row = 0; row < tile_a; ++row) {
+#pragma unroll
+      for (size_t col = 0; col < tile_b; ++col) {
         accum[row][col] = 0;
-      });
-    });
+      }
+    }
 
     // Matrix is flushed out to a secondary register storage when it is fully
     // computed, from where it is streamed out to the pipe
@@ -52,11 +54,13 @@ public:
     while (1) {
       // Between matrices and/or matrix tiles, reset the accumulators to 0
       if (counter == 0) {
-        fpga_tools::UnrolledLoop<tile_a>([&](auto row) {
-          fpga_tools::UnrolledLoop<tile_b>([&](auto col) {
+#pragma unroll
+        for (size_t row = 0; row < tile_a; ++row) {
+#pragma unroll
+          for (size_t col = 0; col < tile_b; ++col) {
             accum[row][col] = 0;
-          });
-        });
+          }
+        }
       }
 
       // Read matrices A and B from the two input pipes; feeder A will send a
@@ -115,9 +119,10 @@ public:
         fpga_tools::NTuple<TT, tile_a> pipe_write;
         fpga_tools::UnrolledLoop<tile_a>([&](auto row) {
           pipe_write.template get<row>() = results[row][0];
-          fpga_tools::UnrolledLoop<tile_b - 1>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < tile_b - 1; ++k) {
             results[row][k] = results[row][k + 1];
-          });
+          }
         });
         PipeC::write(pipe_write);
       }

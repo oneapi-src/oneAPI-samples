@@ -172,7 +172,8 @@ struct StreamingCholeskyInversion {
           TT current_sum = (row == col) ? TT{1} : TT{0};
           TT div_val;
 
-          fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < kColumns; ++k) {
             auto li_loaded = l_matrix[col][k];
 
             TT lhs;
@@ -195,7 +196,7 @@ struct StreamingCholeskyInversion {
             }
 
             current_sum -= lhs * rhs;
-          });
+          }
 
           TT result = current_sum / div_val;
 
@@ -235,7 +236,8 @@ struct StreamingCholeskyInversion {
           
           TT elem{0};
 
-          fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < kColumns; ++k) {
             auto li_load = li_matrix[row_index][k];
 
             if (row_index == col) {
@@ -249,7 +251,7 @@ struct StreamingCholeskyInversion {
             } else {
               elem += lhs * rhs;
             }
-          });
+          }
           i_matrix[inverse_matrix_write_idx] = elem;
           inverse_matrix_write_idx++;
         }

@@ -17,12 +17,14 @@ struct ParallelCopyArray {
 
   // copy constructor - do a parallel copy
   ParallelCopyArray(const ParallelCopyArray& source) {
-    fpga_tools::UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
+#pragma unroll
+    for (size_t k = 0; k < k_size; ++k) { data[k] = source[k]; }
   }
 
   // assignment operator - do a parallel copy
   ParallelCopyArray& operator=(const ParallelCopyArray& source) {
-    fpga_tools::UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
+#pragma unroll
+    for (size_t k = 0; k < k_size; ++k) { data[k] = source[k]; }
     return *this;
   }
 

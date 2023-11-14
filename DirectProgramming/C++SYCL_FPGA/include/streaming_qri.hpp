@@ -184,7 +184,8 @@ struct StreamingQRI {
           TT current_sum = row == col ? TT{1} : TT{0};
           TT div_val;
 
-          fpga_tools::UnrolledLoop<columns>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < columns; ++k) {
             auto lhs = rt_matrix[col][k];
             auto rhs =
                 (k >= col) || (col < row) ? TT{0} : ri_matrix_compute[row][k];
@@ -193,7 +194,7 @@ struct StreamingQRI {
             }
 
             current_sum -= lhs * rhs;
-          });
+          }
 
           TT result = current_sum / div_val;
 
@@ -247,13 +248,14 @@ struct StreamingQRI {
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
           TT dot_product = {0.0};
-          fpga_tools::UnrolledLoop<rows>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < rows; ++k) {
             if constexpr (is_complex) {
               dot_product += ri_matrix[row][k] * qt_matrix[col][k].conj();
             } else {
               dot_product += ri_matrix[row][k] * qt_matrix[col][k];
             }
-          });
+          }
           i_matrix[row][col] = dot_product;
         }  // end of col
       }    // end of row
@@ -263,10 +265,11 @@ struct StreamingQRI {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+#pragma unroll
+        for (size_t k = 0; k < kLoopIterPerColumn; ++k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
+        }
 
         fpga_tools::NTuple<TT, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {

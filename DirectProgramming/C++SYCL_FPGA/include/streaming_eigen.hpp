@@ -323,7 +323,8 @@ struct StreamingEigen {
               i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
               i_lt_0[kBanksForFanout], j_ge_0[kBanksForFanout];
 
-          fpga_tools::UnrolledLoop<kBanksForFanout>([&](auto k) {
+#pragma unroll
+          for (size_t k = 0; k < kBanksForFanout; ++k) {
             i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
             i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
             j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
@@ -333,7 +334,7 @@ struct StreamingEigen {
             if (j >= 0) {
               s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
             }
-          });
+          }
 
           // Preload col and a_i with the correct data for the current iteration
           // These are going to be use to compute the dot product of two
@@ -413,8 +414,10 @@ struct StreamingEigen {
 
           // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
           T p_ij{0.0};
-          fpga_tools::UnrolledLoop<size>(
-              [&](auto k) { p_ij += col1[k] * a_ip1[k]; });
+#pragma unroll
+          for (size_t k = 0; k < size; ++k) {
+            p_ij += col1[k] * a_ip1[k];
+          }
 
           bool projection_is_zero_local = false;
 
@@ -472,13 +475,14 @@ struct StreamingEigen {
         T rq_matrix_copy[size][size];
         for (int row = size-1; row >= 0; row--) {
           T eigen_vectors_row[size];
-          fpga_tools::UnrolledLoop<size>([&](auto t) {
+#pragma unroll
+          for (size_t t = 0; t < size; ++t) {
             if (iteration_count == 0) {
               eigen_vectors_row[t] = t == row ? 1 : 0;
             } else {
               eigen_vectors_row[t] = eigen_vectors_matrix[row][t];
             }
-          });
+          }
 
           for (int column = 0; column < size; column++) {
             T dot_product_rq = 0;
@@ -623,10 +627,11 @@ struct StreamingEigen {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+#pragma unroll
+        for (size_t k = 0; k < kLoopIterPerColumn; ++k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
+        }
 
         fpga_tools::NTuple<T, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {

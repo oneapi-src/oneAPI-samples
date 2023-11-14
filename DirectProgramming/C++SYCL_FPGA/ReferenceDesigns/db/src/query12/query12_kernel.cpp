@@ -218,12 +218,13 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
           });
 
           // this creates an adder reduction tree from *_local_tmp to *_local
-          UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto i) {
+#pragma unroll
+          for (size_t i = 0; i < kLineItemJoinWindowSize; ++i) {
             high_line_count1_local += high_line_count1_local_tmp[i];
             low_line_count1_local += low_line_count1_local_tmp[i];
             high_line_count2_local += high_line_count2_local_tmp[i];
             low_line_count2_local += low_line_count2_local_tmp[i];
-          });
+          }
         }
       } while (!done);
 

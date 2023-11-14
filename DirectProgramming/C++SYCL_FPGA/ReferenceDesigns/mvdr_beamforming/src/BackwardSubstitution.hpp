@@ -135,7 +135,8 @@ event SubmitBackwardSubstitutionKernel(queue& q) {
               CalcType u_val, y_val, y_initial_val, y_current, y_new;
               short row[k_unroll_factor];
 
-              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
+#pragma unroll
+              for (size_t j = 0; j < k_unroll_factor; ++j) {
                 // calculate current location within the vector
                 row[j] = j + (i * (short)k_unroll_factor);
 
@@ -166,7 +167,7 @@ event SubmitBackwardSubstitutionKernel(queue& q) {
                 if (row[j] == col - 1) {
                   y_at_next_col_pos = y_new[j];
                 }
-              });  // end of unrolled loop
+              }  // end of unrolled loop
 
             }  // end of for( v... )
 
