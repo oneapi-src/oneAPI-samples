@@ -76,7 +76,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsoptimize=latency)
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-# use -Wno-return-type-c-linkage to disable warnings caused by using ac_int types in the emulation model
+# use -Wno-return-type-c-linkage to disable warnings caused by using ac_int types in the C++ model
 set(USER_FLAGS ${USER_FLAGS};-Wno-return-type-c-linkage)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
@@ -161,7 +161,7 @@ endif()
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} @ONLY)
 
-set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --emulation_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT} ${USER_FLAGS})
+set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --cpp_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT} ${USER_FLAGS})
 
 # Create RTL source object
 add_custom_target(
