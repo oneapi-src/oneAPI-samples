@@ -59,13 +59,15 @@ else()
       set(DEVICE_FLAG "S10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
       set(DEVICE_FLAG "Agilex7")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*cyclonev.*")
+      set(DEVICE_FLAG "CycloneV")
     endif()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10, -DDEVICE_FLAG=CycloneV or \
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
@@ -147,9 +149,11 @@ set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reu
 
 # The FPGA family in lib_rtl.v must be set according to the target family
 if(DEVICE_FLAG MATCHES A10)
-    set(FAMILY "Arria10")
+    set(FAMILY "Arria 10")
 elseif(DEVICE_FLAG MATCHES S10)
-    set(FAMILY "Stratix10")
+    set(FAMILY "Stratix 10")
+elseif(DEVICE_FLAG MATCHES CycloneV)
+    set(FAMILY "Cyclone V")
 else()
     set(FAMILY "Agilex")
 endif()
