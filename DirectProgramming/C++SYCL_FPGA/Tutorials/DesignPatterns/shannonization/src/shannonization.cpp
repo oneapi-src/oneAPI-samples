@@ -300,6 +300,11 @@ int main(int argc, char** argv) {
     success &= Intersection<1,1>(q, a, b, golden_n);
     success &= Intersection<2,1>(q, a, b, golden_n);
     success &= Intersection<3,1>(q, a, b, golden_n);
+#elif defined(CycloneV)
+    success &= Intersection<0,3>(q, a, b, golden_n);
+    success &= Intersection<1,2>(q, a, b, golden_n);
+    success &= Intersection<2,2>(q, a, b, golden_n);
+    success &= Intersection<3,3>(q, a, b, golden_n);
 #elif defined(S10)
     success &= Intersection<0,3>(q, a, b, golden_n);
     success &= Intersection<1,2>(q, a, b, golden_n);
