@@ -66,9 +66,9 @@ Files needed to create a SYCL target library from RTL source include:
 - Verilog, System Verilog, or VHDL files that define the RTL component
 - An Object Manifest File (.xml) which contains properties needed to integrate RTL component into SYCL pipeline
 - A header file containing valid SYCL kernel language and declares the signatures of functions implemented by the RTL component.
-- A SYCL based emulation model file for RTL component
+- A SYCL based C++ model file for RTL component
 
-The RTL is used when compiling for hardware and simulation, and the emulation model is used when compiling for the FPGA emulator.
+The RTL is used when compiling for hardware and simulation, and the C++ model is used when compiling for the FPGA emulator.
 After having created the library file, the function in the library can be called from the SYCL kernel, without the need to know the hardware design or implementation details on underlying functions in the library.
 
 Given a workable RTL module, one may need to apply some modifications in order to integrate it into oneAPI program.
@@ -93,15 +93,15 @@ To create a library from  source code, use the following steps:
 
    ```bash
    # Linux
-   fpga_crossgen lib_rtl_spec.xml --emulation_model lib_rtl_model.cpp --target sycl -o lib_rtl.o
+   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp --target sycl -o lib_rtl.o
 
    # Windows
-   fpga_crossgen lib_rtl_spec.xml --emulation_model lib_rtl_model.cpp --target sycl -o lib_rtl.obj
+   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp --target sycl -o lib_rtl.obj
    ```
 
-   Note that generating an RTL library requires that an `xml` file and a C++ emulation model be provided in addition to the Verilog source code. The RTL is used when compiling for the hardware whereas the emulation model is used when the oneAPI program is run on the FPGA emulator. Examine the tutorial source code and the comments in `use_library.cpp` for more details.
+   Note that generating an RTL library requires that an `xml` file and a C++ model be provided in addition to the Verilog source code. The RTL is used when compiling for the hardware whereas the C++ model is used when the oneAPI program is run on the FPGA emulator. Examine the tutorial source code and the comments in `use_library.cpp` for more details.
 
-   **Note**: When you use special datatypes (such as ac_int in this sample) in the emulation model, the compiler may warn about "incomplete type which could be incompatible with C". This warning can be disabled with the -Wno-return-type-c-linkage flag.
+   **Note**: When you use special datatypes (such as ac_int in this sample) in the C++ model, the compiler may warn about "incomplete type which could be incompatible with C". This warning can be disabled with the -Wno-return-type-c-linkage flag.
 
    ```bash
    warning: 'RtlDSPm27x27u' has C-linkage specified, but returns incomplete type 'MyInt54' (aka 'ac_int<54, false>') which could be incompatible with C [-Wreturn-type-c-linkage]
