@@ -18,9 +18,9 @@ The `-Xsoptimize=<flag>` command-line option sets optimization targets, and it s
 
 |Flag                      |Explanation                        |Documentation
 |:---                      |:---                               |:---
-|`latency`                 |Minimum latency                    |[*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/minimum-latency-flow.html)
-|`throughput-area-balanced`|Balanced throughput-area trade-offs|[*Balanced Throughput-Area Trade-Offs Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/???.html)
-|`area`                    |Minimum area                       |[*Minimum Area Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/optimization-guide/current/???.html)
+|`latency`                 |Minimum latency                    |[*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-latency-flow.html)
+|`throughput-area-balanced`|Balanced throughput-area trade-offs|[*Balanced Throughput-Area Trade-Offs Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/max-throughput.html)
+|`area`                    |Minimum area                       |[*Minimum Area Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-area.html)
 
 To compile your design with the minimum latency optimization target, use the flag option `-Xsoptimize=latency`.
 
