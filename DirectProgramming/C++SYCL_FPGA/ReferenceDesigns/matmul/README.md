@@ -141,7 +141,7 @@ This achieves the same objective of increasing throughput, though this design is
 | 256x256     | 256              | 256       | 341.08 MHz
 
 
-These results were gathered from targeting the Arria® 10 device family using the IP authoring flow, and the fMAX values were averaged across 6 seeds.
+These results were gathered from targeting the Arria® 10 device family using the SYCL HLS flow, and the fMAX values were averaged across 6 seeds.
 
 ### Compiler Flags Used
 

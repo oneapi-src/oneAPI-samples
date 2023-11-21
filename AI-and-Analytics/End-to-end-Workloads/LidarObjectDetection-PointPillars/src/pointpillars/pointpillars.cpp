@@ -24,7 +24,7 @@
 #include <thread>
 #include "devicemanager/devicemanager.hpp"
 
-#include <CL/sycl/backend/opencl.hpp>
+#include <sycl/backend/opencl.hpp>
 
 namespace pointpillars {
 PointPillars::PointPillars(const float score_threshold, const float nms_threshold, const PointPillarsConfig &config)

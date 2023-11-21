@@ -1,225 +1,155 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © 2023 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 //
-// Matrix Multiplication is a simple program that multiplies together two
-//     large matrices and verifies the results.
-// This samples uses the oneAPI Math Kernel Library (oneMKL) to accelerate
-//     the computation.
-
-// The test is updated based on oneAPI samples oneAPI-samples/Libraries/oneMKL/matrix_mul_mkl
-#include <iostream>
-#include <iomanip>
-#include <limits>
+// Contents:
+//     A simple matrix multiplication benchmark, using the oneAPI Math Kernel
+//     Library (oneMKL).
+//
 
 #include <sycl/sycl.hpp>
-#include "oneapi/mkl.hpp"
-#include "dpc_common.hpp"
+#include <oneapi/mkl.hpp>
+#include <chrono>
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+#include <string>
 
-#ifndef USE_DOUBLE
-#define FLOAT   float
-#else
-#define FLOAT   double
-#endif
+#include "utilities.hpp"
 
-FLOAT rand_uniform();
-bool verify_result(int m, int n, int k, int ldc, FLOAT *C, FLOAT *C_reference);
+using namespace sycl;
 
-#define WARMUP	 10
-#define LOOPS   100
-//default matrix size 8192x8192
-#define MSIZE   8192
-#define VERIFY_RESULT   False
-
-
-using namespace std ;
-
-int main(int argc, char* argv[])
+template <typename T>
+void test(queue &Q, int M, int N, int K)
 {
-    try {
+    std::cout << "\nBenchmarking (" << M << " x " << K << ") x (" << K << " x " << N << ") matrix multiplication, " << type_string<T>() << std::endl;;
 
-        int msize = MSIZE;
-        int loops = LOOPS;
-        int verify = 0;
+    std::cout << " -> Initializing data...\n";
 
-        // Initialize data for GEMM. The full GEMM operation is:
-        //
-        //      C = alpha * op(A) * op(B) + beta * C
-        //
-        // where alpha, beta are scalar values, and op(...) represents
-        // optional matrix transposition.
-        //
-        // For this simple matrix multiplication, no transposition is needed.
-        // 
-        // By choosing alpha = 1, beta = 0, GEMM will calculate C = A * B.
-        //
-        // In this example, matrices are stored in row-major layout.
+    /* Allocate A/B/C matrices */
+    int lda = nice_ld<T>(M);
+    int ldb = nice_ld<T>(K);
+    int ldc = nice_ld<T>(M);
 
-        auto transA = oneapi::mkl::transpose::nontrans;
-        auto transB = oneapi::mkl::transpose::nontrans;
+    auto A = malloc_device<T>(lda * K, Q);
+    auto B = malloc_device<T>(ldb * N, Q);
+    auto C = malloc_device<T>(ldc * N, Q);
 
-        // Matrix data sizes.
-        // 
-        // A is m x k
-        // B is k x n  --> product C is m x n
-        int m = msize;
-        int k = msize;
-        int n = msize;
+    /* Fill A/B with random data */
+    constexpr int rd_size = 1048576;
+    auto random_data = malloc_host<T>(rd_size, Q);
+    generate_random_data(rd_size, random_data);
 
-        cout << "Problem size: "
-                  << " A (" << m << 'x' << k << ") *"
-                  << " B (" << k << 'x' << n << ")  --> "
-                  << " C (" << m << 'x' << n << ")\n";
-        
-        cout << "Benchmark interations: " << loops << endl;
+    replicate_data(Q, A, lda * K, random_data, rd_size);
+    replicate_data(Q, B, ldb * N, random_data, rd_size);
 
-        // Leading dimensions of data. For row-major matrices, the leading
-        // dimension is the stride between adjacent rows.
-        int lda = k;
-        int ldb = n;
-        int ldc = n;
+    /* Measure time for a given number of GEMM calls */
+    auto time_gemms = [=, &Q](int runs) -> double {
+        using namespace oneapi::mkl;
+        using namespace std::chrono;
+        auto start = steady_clock::now();
+        for (int i = 0; i < runs; i++)
+            blas::gemm(Q, transpose::N, transpose::N, M, N, K, 1, A, lda, B, ldb, 0, C, ldc);
+        Q.wait_and_throw();
+        auto end = steady_clock::now();
+        return duration<double>(end - start).count();
+    };
 
-        // Scaling factors.
-        FLOAT alpha = 1.0f;
-        FLOAT beta = 0.0f;
+    /* Do a warmup call to initialize MKL and ensure kernels are JIT'ed if needed */
+    std::cout << " -> Warmup...\n";
+    (void) time_gemms(1);
 
-        // Create a queue on the default device.
-        sycl::queue device_queue{sycl::default_selector_v};
+    /* Time one GEMM call, and estimate how many calls will be required to keep the
+     * GPU busy for 1s. */
+    auto tare = time_gemms(1);
+    int ncalls = std::max(4, std::min(1000, int(1. / tare)));
 
-        std::cout << "Device: "
-                  << device_queue.get_device().get_info<sycl::info::device::name>()
-                  << std::endl;
+    /* Time that many GEMMs, subtracting the first call time to remove host overhead.
+     * This gives a better idea of device performance. */
+    std::cout << " -> Timing...\n";
+    auto time = time_gemms(ncalls + 1) - tare;
+    auto avg = time / ncalls;
 
-        // Allocate shared memory for matrices.
-        const size_t alignment = 4096;
-        auto a = sycl::aligned_alloc_host<FLOAT>(alignment, m * k, device_queue);
-        auto b = sycl::aligned_alloc_host<FLOAT>(alignment, k * n, device_queue);
-        auto c = sycl::aligned_alloc_host<FLOAT>(alignment, m * n, device_queue);
+    /* Calculate and display performance */
+    auto op_count = double(M) * double(N) * double(K) * 2;
+    auto flops = op_count / avg;
 
-        auto C_reference = (FLOAT *) calloc(m * n, sizeof(FLOAT));
-
-        if (!a || !b || !c || !C_reference) {
-            std::cerr << "Could not allocate memory for matrices." << std::endl;
-            exit(1);
-        }
-
-        // Initialize matrix data.
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < k; j++)
-                a[i * lda + j] = rand_uniform();
-
-        for (int i = 0; i < k; i++)
-            for (int j = 0; j < n; j++)
-                b[i * ldb + j] = rand_uniform();
-
-        auto A = sycl::aligned_alloc_device<FLOAT>(alignment, m * k, device_queue);
-        auto B = sycl::aligned_alloc_device<FLOAT>(alignment, m * n, device_queue);
-        auto C = sycl::aligned_alloc_device<FLOAT>(alignment, m * n, device_queue);
-        device_queue.wait();
-
-        device_queue.memcpy(A, &(a[0]), m * k * sizeof(FLOAT));
-        device_queue.memcpy(B, &(b[0]), k * n * sizeof(FLOAT));
-        device_queue.memcpy(C, &(c[0]), m * n * sizeof(FLOAT));
-        device_queue.wait();
-        
-
-        // Call GEMM to do matrix multiplication, asynchronously.
-        std::cerr << "Launching oneMKL GEMM calculation..." << std::endl;
-        dpc_common::TimeInterval timer;
-        double start_time = 0.0;
-
-        //warm up
-	for (int w=0; w < WARMUP; w++)
-	{
-            oneapi::mkl::blas::row_major::gemm(device_queue, transA, transB, m, n, k,
-                                            alpha, A, lda, B, ldb, beta, C, ldc);
-	}
-	device_queue.wait_and_throw();
-
-        start_time = timer.Elapsed();
-        for (int l=0; l < loops; l++)
-        {
-            oneapi::mkl::blas::row_major::gemm(device_queue, transA, transB, m, n, k,
-                                            alpha, A, lda, B, ldb, beta, C, ldc);
-        }
-        // Wait for oneMKL computation to complete.        
-        device_queue.wait_and_throw();
-
-        double stop_time = timer.Elapsed();
-        double avg_gemm_time = (stop_time - start_time)/loops;
-
-        double gflops = 2.0 * (double)m * (double)m * (double)m;
-        #ifdef USE_DOUBLE
-            cout << "DGEMM performance : " << gflops / avg_gemm_time * 1.e-9 << " GFLOPS" << endl;
-        #else
-            cout << "SGEMM performance : " << gflops / avg_gemm_time * 1.e-9 << " GFLOPS" << endl;
-        #endif
-
-        
-        if(verify)
-        {
-            // While calculation occurs, compute reference result to check accuracy.
-            std::cerr << "Performing reference calculation..." << std::endl;
-            for (int i = 0; i < m; i++)
-                for (int h = 0; h < k; h++)
-                    for (int j = 0; j < n; j++)
-                        C_reference[i * ldc + j] += a[i * lda + h] * b[h * ldb + j];        
-            // Check results for accuracy.
-           device_queue.memcpy(&(c[0]), C, m*n*sizeof(FLOAT)).wait();
-           verify_result(m, n, k, ldc, c, C_reference);
-        }
-        
-
-        // Free memory.
-        free(A, device_queue);
-        free(B, device_queue);
-        free(C, device_queue);
-        free(C_reference);        
-	free(a, device_queue);
-	free(b, device_queue);
-	free(c, device_queue);
-
-    } catch (const std::exception &e) {
-        std::cerr << "An exception occurred: "
-                  << e.what() << std::endl;
-        exit(1);
+    flops *= 1e-9;
+    char unit = 'G';
+    if (flops >= 1000.) {
+        flops *= 1e-3;
+        unit = 'T';
     }
-}
-
-FLOAT rand_uniform()
-{
-    return static_cast <FLOAT> (rand()) / static_cast <FLOAT> (RAND_MAX);
-}
-
-bool verify_result(int m, int n, int k, int ldc, FLOAT *C, FLOAT *C_reference)
-{
-    FLOAT tolerance = 1e-3;
-    bool ok = true;
-
-    // Compare host side results with the result buffer from device side: print
-    // fail data 5 times only.
-    int printf_count = 0;
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            auto idx = i * ldc + j;
-            auto abs_diff = std::abs(C[idx] - C_reference[idx]);
-
-            if (abs_diff > tolerance && printf_count++ < 5) {
-                std::cerr << "The result is incorrect for element "
-                          << '[' << i << ", " << j << ']'
-                          << ", expected: " << C_reference[idx]
-                          << ", but got: " << C[idx] << std::endl;
-                ok = false;
-            }
-        }
+    if (flops >= 1000.) {
+        flops *= 1e-3;
+        unit = 'P';
     }
 
-    if (ok)
-        std::cout << "Results are accurate with tolerance = " << tolerance << endl;
+    std::cout << "\nAverage performance: " << flops << unit << 'F' << std::endl;
+
+    /* Free data */
+    free(A, Q);
+    free(B, Q);
+    free(C, Q);
+    free(random_data, Q);
+}
+
+void usage(const char *pname)
+{
+    std::cerr << "Usage:\n"
+              << "  " << pname << " [type] N           benchmark (NxN) x (NxN) square matrix multiplication (default: N = 4096)\n"
+              << "  " << pname << " [type] M N K       benchmark (MxK) x (KxN) square matrix multiplication\n"
+              << "\n"
+              << "The optional [type] selects the data type:\n"
+              << "   double    [default]\n"
+              << "   single\n"
+              << "   half\n"
+              << "\n"
+              << "This benchmark uses the default DPC++ device, which can be controlled using\n"
+              << "  the ONEAPI_DEVICE_SELECTOR environment variable\n";
+    std::exit(1);
+}
+
+int main(int argc, char **argv)
+{
+    auto pname = argv[0];
+    int M = 4096, N = 4096, K = 4096;
+    std::string type = "double";
+
+    if (argc <= 1)
+        usage(pname);
+
+    if (argc > 1 && std::isalpha(argv[1][0])) {
+        type = argv[1];
+        argc--; argv++;
+    }
+
+    if (argc > 1) M = N = K = std::atoi(argv[1]);
+
+    if (argc > 3) {
+        N = std::atoi(argv[2]);
+        K = std::atoi(argv[3]);
+    }
+
+    if (M <= 0 || N <= 0 || K <= 0)
+        usage(pname);
+
+    queue Q;
+
+    std::cout << "oneMKL DPC++ GEMM benchmark\n"
+              << "---------------------------\n"
+              << "Device:                  " << Q.get_device().get_info<info::device::name>()                          << std::endl
+              << "Core/EU count:           " << Q.get_device().get_info<info::device::max_compute_units>()             << std::endl
+              << "Maximum clock frequency: " << Q.get_device().get_info<info::device::max_clock_frequency>() << " MHz" << std::endl;
+
+    if (type == "double")
+        test<double>(Q, M, N, K);
+    else if (type == "single" || type == "float")
+        test<float>(Q, M, N, K);
+    else if (type == "half")
+        test<half>(Q, M, N, K);
     else
-        std::cout << "Results may not be accurate with tolerance = " << tolerance << endl;
-
-    return ok;
+        usage(pname);
 }

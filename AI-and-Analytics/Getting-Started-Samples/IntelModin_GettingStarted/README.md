@@ -1,6 +1,6 @@
 # `Intel® Modin* Get Started` Sample
 
-The `Intel® Modin Getting Started` sample demonstrates how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The `Intel® Modin Getting Started` sample demonstrates how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Area                  | Description
 | :---                  | :---
@@ -20,7 +20,7 @@ In this sample, you will run Intel® Distribution of Modin*-accelerated Pandas f
 | :---                              | :---
 | OS                                | Ubuntu* 18.04 (or newer)
 | Hardware                          | Intel® Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable Performance processor family
-| Software                          | Intel® Distribution of Modin* <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software                          | Intel® Distribution of Modin* 
 
 ## Key Implementation Details
 
@@ -42,7 +42,7 @@ This get started sample code is implemented for CPU using the Python language. T
    conda install -c intel matplotlib -y
    ```
 
-3. Install Jupyter Notebook. (Skip this step if you are working on Intel® DevCloud.)
+3. Install Jupyter Notebook. 
    ```
    conda install jupyter nb_conda_kernels -y
    ```
@@ -54,7 +54,7 @@ This get started sample code is implemented for CPU using the Python language. T
    ```
 ## Run the `Intel® Modin* Get Started` Sample
 
-You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
+You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
 
 ### Run the Sample in Visual Studio Code* (Optional)
 
@@ -106,74 +106,6 @@ To learn more about the extensions, see
    ```
    ipython IntelModin_GettingStarted.py
    ```
-
-### Run in Intel® DevCloud (Optional)
-
-#### Using JupyterLab
-
-1. If you do not already have an account, request an Intel® DevCloud account at [Create an Intel® DevCloud Account](https://www.intel.com/content/www/us/en/forms/idz/devcloud-registration.html).
-
-2. Navigate to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
-
-3. Locate the **Connect with Jupyter Lab\*** section (near the bottom). 
-
-4. Click **Sign in to Connect** button. (If you are already signed in, the link should say **Launch JupyterLab\***.)
-  
-5. If the samples are not already present in your Intel® DevCloud account, download them.
-   - From JupyterLab, select **File > New > Terminal**.
-   - In the terminal, clone the samples from GitHub: 
-      ```
-      git clone https://github.com/oneapi-src/oneAPI-samples.git
-      ```
-6. Set up environment in the terminal.
-   1. source oneAPI conda environment.
-      ```
-      source /opt/intel/oneapi/setvars.sh --force
-      ```
-   2. See [Configure Environment](#configure-environment) to set up the environment properly.
- 
-1. In the JupyterLab, navigate to the ``IntelModin_GettingStarted.ipynb`` file and open it.
-
-2. Change the kernel. Click **Kernel** > **Change kernel** > **usr_modin**.
-
-3. Run the sample code and read the explanations in the notebook.
-
-
-#### Using Batch Mode (Optional)
-
-This sample runs in batch mode, so you must have a script for batch processing.
-
-1. Convert ``IntelModin_GettingStarted.ipynb`` to a python file.
-   ```
-   jupyter nbconvert --to python IntelModin_GettingStarted.ipynb
-   ```
-
-2. Create a shell script file ``run-modin-sample.sh`` to activate the conda environment and run the sample.
-   ```
-   source activate aikit-modin
-   ipython IntelModin_GettingStarted.py
-   ```
-
-3. Submit a job that requests a compute node to run the sample code.
-   ```
-   qsub -l nodes=1:xeon:ppn=2 -d . run-modin-sample.sh -o output.txt
-   ```
-   <details>
-   <summary>You can specify other nodes using a single line qsub script.</summary>
-
-   - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-   - `-d .` makes the current folder as the working directory for the task.
-
-     |Available Nodes    |Command Options
-     |:---               |:---
-     |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-     |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-     >**Note**: For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud Documentation.
-     </details>
-   
-   The ``-o output.txt`` option redirects the output of the script to the ``output.txt`` file.
 
 ### Expected Output
 

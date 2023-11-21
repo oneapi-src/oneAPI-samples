@@ -145,13 +145,13 @@ void TestFFT(bool mangle, bool inverse) {
       temp_data = sycl::malloc_device<ac_complex<float>>(kN * kN, q);
     } else if (q.get_device().has(sycl::aspect::usm_host_allocations)) {
       std::cout << "Using USM host allocations" << std::endl;
-      // No device allocations means that we are probably in an IP authoring
+      // No device allocations means that we are probably in a SYCL HLS
       // flow
 
 #if defined IS_BSP
       auto prop_list = sycl::property_list{};
 #else
-      // In the IP Authoring flow, we need to define the memory interface.
+      // In the SYCL HLS flow, we need to define the memory interface.
       // For, that we need to assign a location to the memory being accessed.
       auto prop_list = sycl::property_list{
           sycl::ext::intel::experimental::property::usm::buffer_location(1)};

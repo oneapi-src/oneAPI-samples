@@ -120,6 +120,8 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           [[intel::initiation_interval(3)]]
 #elif defined(S10)
           [[intel::initiation_interval(5)]]
+#elif defined(CycloneV)
+          [[intel::initiation_interval(5)]]
 #elif defined(Agilex7)
           [[intel::initiation_interval(5)]]
 #else

@@ -38,17 +38,17 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware           | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -85,7 +85,7 @@ SYCL USM allocations enable the use of raw *C-style* pointers in SYCL.
 When copying data to or from the FPGA DDR, the data transfer must be done explicitly by the programmer, typically using the SYCL `memcpy` function. 
 Additionally, synchronization between kernels accessing the same device pointers must be expressed explicitly by the programmer using either the `wait` function of a SYCL `event` or the `depends_on` signal between events.
 
-In this tutorial, the `SubmitImplicitKernel` function demonstrates the basic SYCL buffer model, while the `SubmitExplicitKernel` function demonstrates how you may use these USM device allocations (in full stack flow) or USM host allocations (in IP Authoring flow) to perform the same task and manually manage the movement of data.
+In this tutorial, the `SubmitImplicitKernel` function demonstrates the basic SYCL buffer model, while the `SubmitExplicitKernel` function demonstrates how you may use these USM device allocations (in full stack flow) or USM host allocations (in the SYCL HLS flow) to perform the same task and manually manage the movement of data.
 
 ### Deciding Which Style to Use
 
@@ -93,7 +93,7 @@ The main advantage of explicit data movement is that it gives you full control o
 
 Choosing a data movement strategy largely depends on the specific application and personal preference. However, when starting a new design, it is typically easier to begin by using implicit data movement since all of the data movement is handled automatically, allowing the user to focus on expressing and validating the computation. Once the design is validated, one can:
 - profile the application in the full stack flow. If there is still performance on the table, it may be worthwhile switching to explicit data movement.
-- customize the IP interface in the IP authoring flow. One can annotate these raw pointers to direct the compiler into implementing different protocols. An overview of the different interfaces can be found in the [component_interfaces_comparison](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) sample.
+- customize the IP interface in the SYCL HLS flow. One can annotate these raw pointers to direct the compiler into implementing different protocols. An overview of the different interfaces can be found in the [component_interfaces_comparison](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) sample.
 
 Alternatively, in the full stack flow, there is a hybrid approach that uses some implicit data movement and some explicit data movement. This technique, demonstrated in the **Double Buffering** (double_buffering) and  **N-Way Buffering** (n_way_buffering) tutorials, uses implicit data movement for some buffers where the control does not affect performance, and explicit data movement for buffers whose movement has a substantial effect on performance. In this hybrid approach, we do **not** use device allocations but rather specific `buffer` API calls (e.g., `update_host`) to trigger the movement of data.
 

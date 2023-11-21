@@ -1,6 +1,6 @@
 # `Matrix Multiplication with oneMKL` Sample
 
-Matrix Multiplication with Intel® oneAPI Math Kernel Library (oneMKL) shows how to use the oneMKL optimized matrix multiplication routines.
+Matrix Multiplication with Intel® oneAPI Math Kernel Library (oneMKL) shows how to use the oneMKL optimized matrix multiplication routines, and provides a simple benchmark.
 
 | Optimized for       | Description
 |:---                 |:---
@@ -14,14 +14,17 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 ## Purpose
 
-Matrix Multiplication uses oneMKL to multiply two large matrices.
+Matrix Multiplication uses oneMKL to multiply two large matrices and measure device performance.
 
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
-
+This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
 
 ## Key Implementation Details
 
-The oneMKL `blas::gemm` routine performs a generalized matrix multiplication operation. OneMKL BLAS routines support both row-major and column-major matrix layouts; this sample uses row-major layouts, the traditional choice for C++.
+The oneMKL `blas::gemm` routine performs a matrix multiplication operation with optional scaling and updating behavior. oneMKL BLAS routines support both row-major and column-major matrix layouts; this sample uses the default column-major layout, the traditional choice for BLAS.
+
+This sample provides a simple benchmark to test `gemm` performance on a SYCL device, and illustrates several best practices:
+ - Perform a warmup run before timing, to allow oneMKL to initialize and prepare GEMM kernels for execution.
+ - Pad matrix dimensions if needed to ensure data is well-aligned.
 
 ## Using Visual Studio Code* (Optional)
 
@@ -63,27 +66,39 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
-> **Warning**: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
-
 ## Running the Matrix Multiplication with oneMKL Sample
 
 ### Example of Output
-If everything is working correctly, the program will generate two input matrices and call oneMKL to multiply them. It will also compute the product matrix itself to verify the results from oneMKL.
+Example output from this sample:
 
 ```
-./sgemm.mkl
-Problem size:  A (8192x8192) * B (8192x8192)  -->  C (8192x8192)
-Benchmark interations: 100
-Device: Intel(R) Iris(R) Xe Graphics
-Launching oneMKL GEMM calculation...
-SGEMM performance : GFLOPS
+./matrix_mul_mkl single
+oneMKL DPC++ GEMM benchmark
+---------------------------
+Device:                  Intel(R) Iris(R) Pro Graphics 580
+Core/EU count:           72
+Maximum clock frequency: 950 MHz
 
-./dgemm.mkl
-Problem size:  A (8192x8192) * B (8192x8192)  -->  C (8192x8192)
-Benchmark interations: 100
-Device: Intel(R) Data Center GPU Max 1100
-Launching oneMKL GEMM calculation...
-DGEMM performance : GFLOPS
+Benchmarking (4096 x 4096) x (4096 x 4096) matrix multiplication, single precision
+ -> Initializing data...
+ -> Warmup...
+ -> Timing...
+
+Average performance: ...
+
+./matrix_mul_mkl double
+oneMKL DPC++ GEMM benchmark
+---------------------------
+Device:                  Intel(R) Iris(R) Pro Graphics 580
+Core/EU count:           72
+Maximum clock frequency: 950 MHz
+
+Benchmarking (4096 x 4096) x (4096 x 4096) matrix multiplication, double precision
+ -> Initializing data...
+ -> Warmup...
+ -> Timing...
+
+Average performance: ...
 ```
 
 ### Troubleshooting

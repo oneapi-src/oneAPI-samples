@@ -1,9 +1,16 @@
 // Header file to accompany board_test
 #include <sycl/sycl.hpp>
 
-constexpr size_t kKB = 1024;
-constexpr size_t kMB = 1024 * 1024;
-constexpr size_t kGB = 1024 * 1024 * 1024;
+// Use for even memory allocations, and reporting size
+constexpr size_t kKiB = 1024;
+constexpr size_t kMiB = 1024 * 1024;
+constexpr size_t kGiB = 1024 * 1024 * 1024;
+
+// Use for reporting speed/thoughput
+constexpr size_t kKB = 1000;
+constexpr size_t kMB = 1000 * 1000;
+constexpr size_t kGB = 1000 * 1000 * 1000;
+
 constexpr size_t kRandomSeed = 1009;
 
 #if defined(_WIN32) || defined(_WIN64)
