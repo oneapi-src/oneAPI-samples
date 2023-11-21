@@ -18,9 +18,9 @@ The `-Xsoptimize=<flag>` command-line option sets optimization targets, and it s
 
 |Flag                      |Explanation                        |Documentation
 |:---                      |:---                               |:---
-|`latency`                 |Minimum latency                    |[*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-latency-flow.html)
-|`throughput-area-balanced`|Balanced throughput-area trade-offs|[*Balanced Throughput-Area Trade-Offs Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/max-throughput.html)
-|`area`                    |Minimum area                       |[*Minimum Area Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-area.html)
+|`latency`                 |Minimum latency: minimize kernel latency at the cost of decreased f<sub>MAX</sub> |[*Minimum Latency Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-latency-flow.html)
+|`throughput-area-balanced`|Balanced throughput-area trade-offs: disable throughput-area trade-off heuristics that increase the throughput at the cost of area |[*Balanced Throughput-Area Trade-Offs Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/max-throughput.html)
+|`area`                    |Minimum area: minimize kernel area at the cost of decreased f<sub>MAX</sub> |[*Minimum Area Flow*](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/minimum-area.html)
 
 To compile your design with the minimum latency optimization target, use the flag option `-Xsoptimize=latency`.
 
