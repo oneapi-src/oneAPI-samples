@@ -13,7 +13,7 @@
 using namespace sycl;
 
 // Matrix dimensions
-constexpr size_t kNumRows = 1000;
+constexpr size_t kNumRows = 500;
 constexpr size_t kNumCols = 2;
 constexpr size_t kNumElements = kNumRows * kNumCols;
 
