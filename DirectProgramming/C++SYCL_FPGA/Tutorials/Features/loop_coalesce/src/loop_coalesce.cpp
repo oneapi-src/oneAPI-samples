@@ -13,8 +13,8 @@
 using namespace sycl;
 
 // Matrix dimensions
-constexpr size_t kNumRows = 100000;
-constexpr size_t kNumCols = 10;
+constexpr size_t kNumRows = 1000;
+constexpr size_t kNumCols = 2;
 constexpr size_t kNumElements = kNumRows * kNumCols;
 
 // Total floating point ops performed by the kernel
