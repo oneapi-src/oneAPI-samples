@@ -169,10 +169,9 @@ template <typename T, bool floatKeys> bool testSort(int argc, char **argv) try {
     stop_event_ct1 = std::chrono::steady_clock::now();
 
     float time = 0;
-    checkCudaErrors(
-        DPCT_CHECK_ERROR((time = std::chrono::duration<float, std::milli>(
+    DPCT_CHECK_ERROR((time = std::chrono::duration<float, std::milli>(
                                      stop_event_ct1 - start_event_ct1)
-                                     .count())));
+                                     .count()));
     totalTime += time;
   }
 
@@ -181,8 +180,6 @@ template <typename T, bool floatKeys> bool testSort(int argc, char **argv) try {
       "radixSortThrust, Throughput = %.4f MElements/s, Time = %.5f s, Size = "
       "%u elements\n",
       1.0e-6f * numElements / totalTime, totalTime, numElements);
-
-  getLastCudaError("after radixsort");
 
   // Get results back to host for correctness checking
   std::copy(
@@ -193,8 +190,6 @@ template <typename T, bool floatKeys> bool testSort(int argc, char **argv) try {
     std::copy(
         oneapi::dpl::execution::make_device_policy(dpct::get_default_queue()),
         d_values.begin(), d_values.end(), h_values.begin());
-
-  getLastCudaError("copying results to host memory");
 
   // Check results
   bool bTestResult = oneapi::dpl::is_sorted(
@@ -220,8 +215,6 @@ int main(int argc, char **argv) {
   time(&start);
   // Start logs
   printf("%s Starting...\n\n", argv[0]);
-
-  findCudaDevice(argc, (const char **)argv);
 
   bool bTestResult = false;
 
