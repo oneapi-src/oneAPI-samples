@@ -13,13 +13,9 @@
 using namespace sycl;
 
 // Matrix dimensions
-constexpr size_t kNumRows = 500;
-constexpr size_t kNumCols = 2;
+constexpr size_t kNumRows = 4;
+constexpr size_t kNumCols = 4;
 constexpr size_t kNumElements = kNumRows * kNumCols;
-
-// Total floating point ops performed by the kernel
-constexpr size_t kTotalOps = (4 + (3*kNumCols)) * kNumElements;
-
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -32,8 +28,6 @@ template <int coalesce_factor>
 void MatrixMultiply(const std::vector<float> &matrix_a,
                     const std::vector<float> &matrix_b,
                     std::vector<float> &res) {
-  double kernel_time = 0.0;
-
 #if FPGA_SIMULATOR
   auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
@@ -111,12 +105,6 @@ void MatrixMultiply(const std::vector<float> &matrix_a,
       });
     });
 
-    // Kernel profiling data
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-    // convert nanoseconds to microseconds
-    kernel_time = (double)(end - start) * 1e-3;
-
   } catch (exception const &exc) {
     std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
     if (exc.code().value() == CL_DEVICE_NOT_FOUND) {
@@ -128,14 +116,6 @@ void MatrixMultiply(const std::vector<float> &matrix_a,
     }
     std::terminate();
   }
-
-  std::cout << "Loop Coalesce: " << coalesce_factor
-            << " -- kernel time : " << kernel_time << " microseconds\n";
-  std::cout << "Throughput for kernel with coalesce_factor " << coalesce_factor
-            << ": ";
-  std::cout << std::fixed << std::setprecision(0)
-            << (((double)kTotalOps * sizeof(float) * 1e-3f) /
-                (kernel_time * 1e-6f)) << "KB/s\n";
 }
 
 int main() {
