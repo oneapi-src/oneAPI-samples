@@ -199,7 +199,7 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
 ## Read the Reports
 Locate `report.html` in the `loop_coalesce_report.prj/reports/` directory. 
 
-On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel, for example, KernelCompute<2> uses a `loop_coalesce` argument of 2. You can verify that the resource consumption for each kernel decreases after nested loops are coalesced.
+On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel; for example, KernelCompute<2> uses a `loop_coalesce` argument of 2. You can verify that the resource consumption for each kernel decreases after nested loops are coalesced due to the significant drop in MLAB utilization. 
 
 ## Run the `Loop Coalesce` Sample
 
