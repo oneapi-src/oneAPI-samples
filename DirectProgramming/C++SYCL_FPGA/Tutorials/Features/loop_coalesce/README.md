@@ -199,7 +199,7 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
 ## Read the Reports
 Locate `report.html` in the `loop_coalesce_report.prj/reports/` directory. 
 
-On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel, for example, KernelCompute<2> uses a `loop_coalesce` argument of 2. You can verify that the number of registers, MLABs, and DSPs used for each kernel decreases after nested loops are coalesced.
+On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel; for example, KernelCompute<2> uses a `loop_coalesce` argument of `2`. You can verify that the number of ALMs used decreases when the loops are coalesced. Since KernelCompute<2> has fewer loops than KernelCompute<1>, it requires less hardware for loop overhead. 
 
 ## Run the `Loop Coalesce` Sample
 
@@ -234,21 +234,6 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
    ```
    loop_coalesce.fpga.exe
    ```
-
-## Example Output
-
-The output displays the execution time and throughput for each kernel. The emulator will not reflect performance differences generally.
-
-```
-Loop Coalesce: 1 -- kernel time : 156 microseconds
-Throughput for kernel with coalesce_factor 1: 6550KB/S
-Loop Coalesce: 2 -- kernel time : 113 microseconds
-Throughput for kernel with coalesce_factor 2: 9064KB/S
-PASSED: The results are correct
-
-```
-
-Applying the `loop_coalesce` attribute in this example reduced the kernel execution time by a factor of ~1.5. **You will only see this result when executing on FPGA hardware.**
 
 ## License
 
