@@ -6,12 +6,12 @@
 #include <sycl/sycl.hpp>
 
 int main() {
-  sycl::queue q{sycl::property::queue::in_order()};
+  sycl::queue q;
   std::cout << "Device : " << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   //# initialize data on host
   constexpr int N = 16;
-  int *host_data = static_cast<int *>(malloc(N * sizeof(int)));
+  int host_data[N];
   for (int i = 0; i < N; i++) host_data[i] = 10;
 
   //# Explicit USM allocation using malloc_device
@@ -29,6 +29,5 @@ int main() {
   //# print output
   for (int i = 0; i < N; i++) std::cout << host_data[i] << " ";std::cout <<"\n";
   sycl::free(device_data, q);
-  free(host_data);
   return 0;
 }

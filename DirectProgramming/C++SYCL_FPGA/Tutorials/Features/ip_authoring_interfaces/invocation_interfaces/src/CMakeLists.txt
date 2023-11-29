@@ -54,20 +54,13 @@ else()
 endif()
 
 if((IS_BSP STREQUAL "1"))
-    message(FATAL_ERROR "ERROR: This tutorial is only supported in the IP Authoring flow and therefore does not support BSPs as a target.")
+    message(FATAL_ERROR "ERROR: This tutorial is only supported in the SYCL HLS flow and therefore does not support BSPs as a target.")
 endif()
 
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-endif()
-
-# This is for finding the install path to the necessary include files
-if(DEFINED ENV{INTELFPGAOCLSDKROOT})
-   set(SDK_ROOT_PATH $ENV{INTELFPGAOCLSDKROOT})
-else()
-   message(FATAL_ERROR "The INTELFPGAOCLSDKROOT environment variable must be defined for this tutorial to compile.")
 endif()
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.

@@ -1,0 +1,31 @@
+{
+  "guid": "6C6DF339-103B-4A7C-9A8D-72A48351431B",  
+  "name": "Distributed Jacobian Solver SYCL/MPI",
+  "categories": ["Toolkit/oneAPI Libraries/MPI"],
+  "description": "Distributed implementation of Jacobian solver with OpenMP/SYCL offload and MPI-3 one-sided.",
+  "toolchain": [ "icpx" ],
+  "dependencies": [ "compiler|icpx,icx","mpi" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "jacobian_omp",
+        "env": [
+            "export I_MPI_OFFLOAD=2"
+        ],
+        "steps": [
+          "make clean",
+          "make",
+          "mpirun -n 2 ./src/01_jacobian_host_mpi_one-sided/mpi3_onesided_jacobian",
+          "mpirun -n 2 ./src/02_jacobian_device_mpi_one-sided_gpu_aware/mpi3_onesided_jacobian_gpu_sycl",
+          "mpirun -n 2 -genv I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1 ./src/03_jacobian_device_mpi_one-sided_device_initiated/mpi3_onesided_jacobian_gpu_sycl_device_initiated"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

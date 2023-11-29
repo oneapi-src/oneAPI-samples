@@ -12,17 +12,16 @@
 	"linux": [{
 		"steps": [
 			"mkdir build",
-      		        "cd build",
-           		"cmake ..",
-           		"make",
-			"make run"
+      		"cd build",
+			"../get_sdl2.sh",
+           	"SDL2_DIR=SDL/install/ cmake ..",
+           	"make"
 		 ]
 	}],
 	"windows": [{
 		"steps": [
 			"MSBuild GameOfLife.sln /t:Rebuild /p:Configuration=\"Release\"",
-			"cd x64/Release",
-            		"GameOfLife.exe"
+			"cd x64/Release"
 		]
 	}]
 

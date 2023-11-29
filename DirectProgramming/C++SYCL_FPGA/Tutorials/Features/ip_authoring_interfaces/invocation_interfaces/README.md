@@ -18,18 +18,18 @@ Use the `get` kernel properties method to specify how the IP is started, and `an
 
 | Optimized for        | Description
 |:---                  |:---
-| OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -77,7 +77,7 @@ The invocation interface and any argument interfaces are specified independently
 
 If you would like an argument to have its own **dedicated** ready/valid handshake, implement that argument using a [streaming interface](../streaming_data_interfaces/).
 
-> **Note**: The register-mapped and streaming interface features are **only** supported in the IP Authoring flow. The IP Authoring flow compiles SYCL* source code to IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can compile the generated RTL with Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the six `.fpga` executables generated in this tutorial are **not** designed to run on FPGA devices directly.
+> **Note**: The register-mapped and streaming interface features are **only** supported in the SYCL HLS flow. The SYCL HLS flow compiles SYCL* source code to IPs that can be deployed into your Intel® Quartus® Prime projects. Emulator and simulator executables are still generated to allow you to validate your IP. You can compile the generated RTL with Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates. However, the six `.fpga` executables generated in this tutorial are **not** designed to run on FPGA devices directly.
 
 ### Declaring a Register-Mapped Invocation Interface
 

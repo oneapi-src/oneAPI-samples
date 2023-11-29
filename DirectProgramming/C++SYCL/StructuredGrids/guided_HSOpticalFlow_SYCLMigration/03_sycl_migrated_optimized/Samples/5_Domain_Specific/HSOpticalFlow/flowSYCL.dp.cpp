@@ -58,7 +58,7 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
                      int nSolverIters, float *u, float *v) {
   printf("Computing optical flow on Device...\n");
 
-  sycl::queue q{aspect_selector(sycl::aspect::image), sycl::property::queue::in_order()};
+  sycl::queue q{aspect_selector(sycl::aspect::ext_intel_legacy_image), sycl::property::queue::in_order()};
 
   std::cout << "\nRunning on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";

@@ -8,14 +8,29 @@
 		"python": {}
 	}],
 	"os": ["linux"],
-	"targetDevice": ["CPU"],
+	"targetDevice": ["CPU","GPU"],
+	"gpuRequired": ["ats-m","pvc"],
 	"ciTests": {
 		"linux": [{
-			"id": "model_zoo_sample_test",
+			"env": [
+                "source /opt/intel/oneapi/setvars.sh --force", 
+			    "conda create --name user-tensorflow --clone tensorflow",
+				"conda activate user-tensorflow",
+				"pip install -r requirements.txt",
+				"pip install nbformat nbconvert",
+				"python  -m ipykernel install --user --name=user-tensorflow",
+				"conda deactivate",
+				"conda create --name user-tensorflow-gpu --clone tensorflow-gpu",
+				"conda activate user-tensorflow-gpu",
+				"pip install -r requirements.txt",
+				"pip install nbformat nbconvert",
+				"python  -m ipykernel install --user --name=user-tensorflow-gpu",
+				"conda deactivate"
+            ],
+			"id": "itex_sample_test",
 			"steps": [
-				"source activate tensorflow",
-                                "pip install runipy",
-				"runipy ResNet50_Inference.ipynb"
+				"conda activate user-tensorflow",
+				"python scripts/ci_test.py"
 			]
 		}]
 	},

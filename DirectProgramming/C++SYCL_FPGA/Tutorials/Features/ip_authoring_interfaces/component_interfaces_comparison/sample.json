@@ -1,15 +1,15 @@
 {
     "guid": "7d8482f5-39f1-4cf1-aa2e-a1f72cfc47cb",
-    "name": "IP Authoring Interfaces Overview",
+    "name": "SYCL HLS Flow Interfaces Overview",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
-    "description": "Intel® FPGA example designs oversewing different interfaces for IP Authoring",
+    "description": "Intel® FPGA example designs oversewing different interfaces for the SYCL HLS flow",
     "toolchain": ["icpx"],
     "os": ["linux", "windows"],
     "targetDevice": ["FPGA"],
     "builder": ["ide", "cmake"],
     "languages": [{"cpp":{}}],
     "commonFolder": {
-      "base": "../../..",
+      "base": "../../../..",
       "include": [
         "README.md",
         "Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison",
@@ -25,7 +25,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../csr-pipes",
+            "cmake .. -DTYPE=CSR",
             "make fpga_emu",
             "./vector_add.fpga_emu"
           ]
@@ -36,7 +36,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../streaming-invocation",
+            "cmake .. -DTYPE=STREAMING",
             "make fpga_emu",
             "./vector_add.fpga_emu"
           ]
@@ -47,7 +47,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../csr-pipes",
+            "cmake .. -DTYPE=CSR",
             "make report"
           ]
         },
@@ -57,7 +57,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../streaming-invocation",
+            "cmake .. -DTYPE=STREAMING",
             "make report"
           ]
         },
@@ -67,7 +67,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../pipes",
+            "cmake .. -DTYPE=PIPES",
             "make fpga_emu",
             "./vector_add.fpga_emu"
           ]
@@ -78,7 +78,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../pipes",
+            "cmake .. -DTYPE=PIPES",
             "make report"
           ]
         },
@@ -88,7 +88,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../mm-host",
+            "cmake .. -DTYPE=MMHOST",
             "make fpga_emu",
             "./vector_add.fpga_emu"
           ]
@@ -99,7 +99,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../naive",
+            "cmake .. -DTYPE=NAIVE",
             "make fpga_emu",
             "./vector_add.fpga_emu"
           ]
@@ -110,7 +110,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../mm-host",
+            "cmake .. -DTYPE=MMHOST",
             "make report"
           ]
         },
@@ -120,7 +120,7 @@
             "icpx --version",
             "mkdir build",
             "cd build",
-            "cmake ../naive",
+            "cmake .. -DTYPE=NAIVE",
             "make report"
           ]
         }
@@ -130,10 +130,10 @@
           "id": "fpga_emu_1",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/csr-pipes",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=CSR",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -142,10 +142,10 @@
           "id": "fpga_emu_2",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/streaming-invocation",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -154,10 +154,10 @@
           "id": "report_1",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/csr-pipes",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=CSR",
             "nmake report"
           ]
         },
@@ -165,10 +165,10 @@
           "id": "report_2",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/streaming-invocation",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
             "nmake report"
           ]
         },
@@ -176,10 +176,10 @@
           "id": "fpga_emu_3",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/pipes",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=PIPES",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -188,10 +188,10 @@
           "id": "report_3",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/pipes",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=PIPES",
             "nmake report"
           ]
         },
@@ -199,10 +199,10 @@
           "id": "fpga_emu_4",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/mm-host",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -211,10 +211,10 @@
           "id": "report_4",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/mm-host",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
             "nmake report"
           ]
         },
@@ -222,10 +222,10 @@
           "id": "fpga_emu_5",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/naive",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -234,10 +234,10 @@
           "id": "report_5",
           "steps": [
             "icpx --version",
-            "cd ../../..",
+            "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces_overview/naive",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
             "nmake report"
           ]
         }
@@ -245,3 +245,4 @@
     },
     "expertise": "Concepts and Functionality"
   }
+

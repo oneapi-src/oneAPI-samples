@@ -20,8 +20,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
+                        "MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "bitonic-sort.exe 21 47"
                 ]
         }]

@@ -1,25 +1,23 @@
 # Makefile for GNU Make
 
-default: all
+default: run
 
-all: sgemm.mkl dgemm.mkl
+all: matrix_mul_mkl
 
-run: sgemm.mkl dgemm.mkl
-	./sgemm.mkl
-	./dgemm.mkl
+run: matrix_mul_mkl
+	./matrix_mul_mkl single
+	./matrix_mul_mkl double
 
-MKL_COPTS = 
-MKL_LIBS = -qmkl
+INCLUDE_COMMON=../../../common
+MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
+MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
 
-DPCPP_OPTS = -O3 $(MKL_COPTS) $(MKL_LIBS)
+DPCPP_OPTS = -O2 $(MKL_COPTS) $(MKL_LIBS)
 
-sgemm.mkl: matrix_mul_mkl.cpp
-	icpx -fsycl $< -o $@ $(DPCPP_OPTS)
-
-dgemm.mkl: matrix_mul_mkl.cpp
-	icpx -fsycl $< -o $@ $(DPCPP_OPTS) -DUSE_DOUBLE
+matrix_mul_mkl: matrix_mul_mkl.cpp
+	icpx -fsycl -I$(INCLUDE_COMMON) $< -o $@ $(DPCPP_OPTS)
 
 clean:
-	-rm -f sgemm.mkl dgemm.mkl
+	-rm -f matrix_mul_mkl
 
 .PHONY: clean run all

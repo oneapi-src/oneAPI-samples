@@ -30,8 +30,7 @@ Intel® Advisor can assist with vectorization and show optimization report messa
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* <br> Xcode*
-| Hardware							      | Mac* with an Intel® processor
+| OS                                | Linux*
 | Software                          | Intel® Fortran Compiler
 
 >**Note**: The Intel® Fortran Compiler is part of the Intel® oneAPI HPC Toolkit (HPC Kit).
@@ -57,9 +56,8 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -75,7 +73,7 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the 
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On macOS*
+### On Linux*
 
 #### Step 1. Establish a Performance Baseline
 

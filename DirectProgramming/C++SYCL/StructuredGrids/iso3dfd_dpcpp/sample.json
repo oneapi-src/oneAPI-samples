@@ -21,8 +21,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild iso3dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
+                        "MSBuild iso3dfd.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "iso3dfd.exe 256 256 256 32 8 64 10 gpu"
                 ]
         }]

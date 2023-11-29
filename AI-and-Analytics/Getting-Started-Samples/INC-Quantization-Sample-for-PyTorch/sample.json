@@ -10,10 +10,15 @@
     "ciTests": {
       "linux": [
       {
+          "env": [
+            "source /opt/intel/oneapi/setvars.sh --force",
+            "conda activate pytorch",
+            "pip install ipykernel jupyter",
+            "python -m ipykernel install --user --name=pytorch"
+          ],
           "id": "quantize with inc",
           "steps": [
-              "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
-              "python ci_test.py"
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb"
            ]
       }
        ]

@@ -14,8 +14,10 @@
           "id": "intel amx bf16 training",
           "steps": [
               "source activate pytorch",
-              "python IntelPyTorch_TrainingOptimizations_AMX_BF16.py",
-              "/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
+              "python -m pip install -r requirements.txt",
+              "python -m ipykernel install --user --name=user_pytorch",
+              "python pytorch_training_avx512_bf16.py",
+              "python pytorch_training_amx_bf16.py",
               "python ci_test.py"
            ]
       }

@@ -23,8 +23,8 @@
 		"windows": [{
 			"steps": [
 				"cd vc16",
-				"MSBuild matrix.sln /t:Rebuild /p:Configuration=\"Release\"",
-				"cd x64/Release",
+				"MSBuild matrix.sln /t:Rebuild /p:Configuration=Release",
+				"cd x64\\Release",
 				"matrix.exe"
 			]
 		}]

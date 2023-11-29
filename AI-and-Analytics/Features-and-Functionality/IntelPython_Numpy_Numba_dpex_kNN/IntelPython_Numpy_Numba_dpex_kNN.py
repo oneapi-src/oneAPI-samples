@@ -231,7 +231,7 @@ print('Numba accuracy:', accuracy)
 # In[ ]:
 
 
-import   numba_dpex
+import numba_dpex
 
 @numba_dpex.kernel
 def knn_numba_dpex(train, train_labels, test, k, predictions, votes_to_classes_lst):
@@ -307,20 +307,25 @@ def knn_numba_dpex(train, train_labels, test, k, predictions, votes_to_classes_l
 
 # Next, like before, let's test the prepared k-NN function.
 # 
-# In this case, we will need to provide the container for predictions: `pedictions_numba` and the container for votes per class: `votes_to_classes_lst` (the container size is 3, as we have 3 classes in our dataset).
+# In this case, we will need to provide the container for predictions: `predictions` and the container for votes per class: `votes_to_classes_lst` (the container size is 3, as we have 3 classes in our dataset).
 # 
-# We are running a prepared k-NN function using `dctl.device_context()`, which allows us to select a divice. For more information, go to: https://intelpython.github.io/dpctl/latest/docfiles/user_guides/manual/dpctl/device_selection.html.
+# We are running a prepared k-NN function using `dctl.device_context()`, which allows us to select a device. For more information, go to: https://intelpython.github.io/dpctl/latest/docfiles/user_guides/manual/dpctl/device_selection.html.
 
 # In[ ]:
 
 
 import dpctl
 
-predictions_numba = np.empty(len(X_test.values))
+predictions = dpctl.tensor.empty(len(X_test.values))
 # we have 3 classes
-votes_to_classes_lst = np.zeros((len(X_test.values), 3))
+votes_to_classes_lst = dpctl.tensor.zeros((len(X_test.values), 3))
+
+X_train_dpt = dpctl.tensor.asarray(X_train.values)
+y_train_dpt = dpctl.tensor.asarray(y_train.values)
+X_test_dpt = dpctl.tensor.asarray(X_test.values)
+
 with dpctl.device_context("opencl:cpu:0"):
-    knn_numba_dpex[len(X_test.values), numba_dpex.DEFAULT_LOCAL_SIZE](X_train.values, y_train.values, X_test.values, 3, predictions_numba, votes_to_classes_lst)
+    knn_numba_dpex[numba_dpex.Range(len(X_test.values))](X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst)
 
 
 # Like before, let's measure the accuracy of the prepared implementation. It is measured as the number of well-assigned classes for the test set. The final result is the same for all: NumPy, numba and numba-dpex implementations.
@@ -328,6 +333,7 @@ with dpctl.device_context("opencl:cpu:0"):
 # In[ ]:
 
 
+predictions_numba = dpctl.tensor.to_numpy(predictions)
 true_values = y_test.to_numpy()
 accuracy = np.mean(predictions_numba == true_values)
 print('Numba_dpex accuracy:', accuracy)

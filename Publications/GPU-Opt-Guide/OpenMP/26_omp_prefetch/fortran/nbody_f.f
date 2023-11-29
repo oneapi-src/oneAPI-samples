@@ -7,6 +7,8 @@ c snippet-begin
 #define PREFETCH_HINT 4     ! 4 = prefetch to L1 and L3;  2 = prefetch to L3
 #define TILE_SIZE 64
 
+      module gpu_kernels
+      contains
       subroutine nbody_1d_gpu(c, a, b, n1, n2)
       implicit none
       integer n1, n2
@@ -53,7 +55,7 @@ c snippet-end
       implicit none
       integer n1, n2
       real a(0:n1), b(0:n2), c(0:n1)
-      real dx, bb(0:TILE_SIZE), delta, r2, s0, s1, f
+      real dx, delta, r2, s0, s1, f
       integer i,j
       real ma0, ma1, ma2, ma3, ma4, ma5, eps
       parameter (ma0=0.269327, ma1=-0.0750978, ma2=0.0114808)
@@ -86,7 +88,10 @@ c snippet-end
 !$omp end target teams distribute parallel do
       end subroutine
 
+      end module gpu_kernels
+
       program nbody
+      use gpu_kernels
       implicit none
       include 'omp_lib.h'
 

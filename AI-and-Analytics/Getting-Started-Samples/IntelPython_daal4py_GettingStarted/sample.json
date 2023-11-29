@@ -12,7 +12,8 @@
     "linux": [
     {
       "env": [
-        "source activate base",
+        "source /opt/intel/oneapi/setvars.sh --force",
+        "conda activate base",
         "pip install -r requirements.txt"
       ],
       "id": "idp_d4p_GS_py",

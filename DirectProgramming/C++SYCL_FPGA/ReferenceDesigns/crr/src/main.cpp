@@ -264,7 +264,7 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               // L4:
               // Calculate all the elements in optval[] -- all the tree nodes
               // for one level of the tree
-              [[intel::ivdep]] // NO-FORMAT: Attribute
+              [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
               for (int n = 0; n <= steps - 1 - t; n += INNER_UNROLL) {
 
                 #pragma unroll

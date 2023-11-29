@@ -59,7 +59,7 @@ class ShimMetrics {
         q.get_device().get_info<sycl::info::device::global_mem_size>();
 #if defined(FPGA_EMULATOR)
     max_alloc_size_ =
-        512 * kMB;  // Limiting size of all buffers used in test for emulation
+        512 * kMiB;  // Limiting size of all buffers used in test for emulation
 #else
     max_alloc_size_ =
         q.get_device().get_info<sycl::info::device::max_mem_alloc_size>();
@@ -131,7 +131,7 @@ class ShimMetrics {
 size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   // Data is transferred from host to device in kMaxHostChunk size transfers
   // (size in bytes)
-  constexpr size_t kMaxHostChunk = 512 * kMB;
+  constexpr size_t kMaxHostChunk = 512 * kMiB;
 
   // Test fails if max alloc size is 0
   if (max_alloc_size_ == 0) {
@@ -155,7 +155,7 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   size_t host_size = kMaxHostChunk;
   unsigned long *hostbuf = new (std::nothrow) unsigned long[host_size];
 
-  while ((host_size >= (kKB / 2)) && hostbuf == NULL) {
+  while ((host_size >= (kKiB / 2)) && hostbuf == NULL) {
     host_size = host_size / 2;
     hostbuf = new (std::nothrow) unsigned long[host_size];
   }
@@ -175,8 +175,8 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   double sum_time_ns = 0.0;
 
   // Copying host memory to device buffer in chunks
-  std::cout << "Writing " << (max_alloc_size_ / kMB)
-            << " MB to device global memory ... ";
+  std::cout << "Writing " << (max_alloc_size_ / kMiB)
+            << " MiB to device global memory ... ";
 
   // Device global memory larger (i.e. max_alloc_size_) than host memory size
   // (i.e. host_size) Chunks of host memory size written to device memory in
@@ -222,8 +222,8 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   // **** Reading data from device global memory to host memory **** //
 
   // Read back all of memory and verify
-  std::cout << "Reading " << (max_alloc_size_ / kMB)
-            << " MB from device global memory ... ";
+  std::cout << "Reading " << (max_alloc_size_ / kMiB)
+            << " MiB from device global memory ... ";
 
   // Reset variables for read loop
   bytes_rem = max_alloc_size_;
@@ -317,10 +317,10 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   std::cout << "Verifying data ...\n";
 
   if (errors == 0) {
-    std::cout << "Successfully wrote and readback " << (max_alloc_size_ / kMB)
+    std::cout << "Successfully wrote and readback " << (max_alloc_size_ / kMiB)
               << " MB buffer\n\n";
   } else {
-    std::cout << "Wrote and readback " << (max_alloc_size_ / kMB)
+    std::cout << "Wrote and readback " << (max_alloc_size_ / kMiB)
               << " MB buffer\n";
     std::cerr
         << "Failed write/readback test with " << errors << " errors out of "
@@ -367,11 +367,11 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
 
 int ShimMetrics::HostSpeed(sycl::queue &q) {
   // Total bytes to transfer
-  constexpr size_t kMaxBytes = 8 * kMB;  // 8 MB;
+  constexpr size_t kMaxBytes = 8 * kMiB;  // 8 MB;
   constexpr size_t kMaxChars = kMaxBytes / sizeof(char);
 
   // Block size of each transfer in bytes
-  constexpr size_t kMinBytes = 32 * kKB;  // 32 KB
+  constexpr size_t kMinBytes = 32 * kKiB;  // 32 KB
   size_t block_bytes = kMinBytes;
 
   // Call function to verify write to and read from the entire device global
@@ -436,8 +436,8 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
   // Iterate till total bytes (i.e. kMaxBytes) have been transferred
   // and accumulate results in rd_bw and wr_bw structs
   for (size_t i = 0; i < iterations; i++, block_bytes *= 2) {
-    std::cout << "Transferring " << (kMaxBytes / kKB) << " KBs in "
-              << (kMaxBytes / block_bytes) << " " << (block_bytes / kKB)
+    std::cout << "Transferring " << (kMaxBytes / kKiB) << " KBs in "
+              << (kMaxBytes / block_bytes) << " " << (block_bytes / kKiB)
               << " KB blocks ...\n";
     wr_bw[i] = WriteSpeed(q, device_buffer, hostbuf_wr, block_bytes, kMaxBytes);
     rd_bw[i] = ReadSpeed(q, device_buffer, hostbuf_rd, block_bytes, kMaxBytes);
@@ -461,7 +461,7 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
   // Fastest transfer value used in read-write bandwidth calculation
   float write_topspeed = 0;
 
-  std::cout << "\nWriting " << (kMaxBytes / kKB)
+  std::cout << "\nWriting " << (kMaxBytes / kKiB)
             << " KBs with block size (in bytes) below:\n";
   std::cout << "\nBlock_Size Avg Max Min End-End (MB/s)\n";
 
@@ -484,7 +484,7 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
   // Fastest transfer value used in read-write bandwidth calculation
   float read_topspeed = 0;
 
-  std::cout << "\nReading " << (kMaxBytes / kKB)
+  std::cout << "\nReading " << (kMaxBytes / kKiB)
             << " KBs with block size (in bytes) below:\n";
   std::cout << "\nBlock_Size Avg Max Min End-End (MB/s)\n";
 
@@ -545,7 +545,7 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
 
 int ShimMetrics::HostRWTest(sycl::queue &q, size_t dev_offset) {
   // Bytes to transfer (1KB)
-  constexpr size_t kMaxBytes_rw = kKB;
+  constexpr size_t kMaxBytes_rw = kKiB;
 
   // **** Device and host memory offsets to make them unaligned **** //
 
@@ -718,7 +718,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
 
   // ND Range of kernel to launch
   constexpr size_t kTotalBytes =
-      128 * kMB;  // 128 MB - this is the min amount known to be available on
+      128 * kMiB;  // 128 MB - this is the min amount known to be available on
                   // device memory (minimum on device - e.g. Cyclone V)
   constexpr size_t kGlobalSize = kTotalBytes / (sizeof(unsigned));
 
@@ -726,7 +726,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
     // Global range (1 dimension)
     constexpr size_t kN = kGlobalSize;
     // Work group Size (1 dimension)
-    constexpr size_t kReqdWgSize = 32 * kKB;  // 32 KB
+    constexpr size_t kReqdWgSize = 32 * kKiB;  // 32 KB
     h.parallel_for<NopNDRange>(
         sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=
     ](auto id) [[sycl::reqd_work_group_size(1, 1, kReqdWgSize)]]{});
@@ -994,7 +994,7 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // ...SYCL ID queries are expected to fit within MAX_INT,...
   // ...limit the range to prevent truncating data and errors
   size_t num_host_vectors =
-      (max_dev_vectors > (std::numeric_limits<int>::max())) ? kGB
+      (max_dev_vectors > (std::numeric_limits<int>::max())) ? kGiB
                                                             : max_dev_vectors;
   size_t host_vector_size_bytes = num_host_vectors * sizeof(unsigned);
 
@@ -1006,7 +1006,7 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // The below while loop checks if host memory allocation failed and tries to
   // allocate a smaller chunk if above allocation fails, minimum size of 512
   // bytes
-  while ((host_vector_size_bytes >= (kKB / 2)) &&
+  while ((host_vector_size_bytes >= (kKiB / 2)) &&
          (host_data_in == NULL || host_data_out == NULL)) {
     num_host_vectors = num_host_vectors / 2;
     host_vector_size_bytes = num_host_vectors * sizeof(unsigned);
@@ -1036,18 +1036,18 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // ... multiple iterations/writes to device memory are needed to fill entire
   // global memory with preset data ...
   // ... To ensure full device global memory is written to (even if it is evenly
-  // distributable by kGB) - ...
-  // ... Pad with (kGB - 1) before dividing by kGB.
+  // distributable by kGiB) - ...
+  // ... Pad with (kGiB - 1) before dividing by kGiB.
   size_t num_dev_writes =
-      (max_dev_vectors + kGB - 1) /
-      kGB;  // Calculating number of writes needed (adding kGB - 1 to prevent
+      (max_dev_vectors + kGiB - 1) /
+      kGiB;  // Calculating number of writes needed (adding kGiB - 1 to prevent
             // missing out few bytes of global address space due to rounding
 
   // Access device memory in chunks and initialize it
   for (size_t vecID = 0; vecID < num_dev_writes; vecID++) {
-    // Each iteration writes kGB size chunks, so offset increments by lGB
-    size_t global_offset = vecID * kGB;
-    size_t current_write_size = kGB;
+    // Each iteration writes kGiB size chunks, so offset increments by lGB
+    size_t global_offset = vecID * kGiB;
+    size_t current_write_size = kGiB;
 
     // Remaining vectors for last set (calculated this way as the padding may
     // make the last write bigger than actual global memory size on buffer)
@@ -1096,12 +1096,12 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // Enqueue kernel to access all of global memory
   // Multiple enqueues are needed to access the whole ...
   // ... global memory address space from the kernel ...
-  // ... if max_dev_vectors > kGB
+  // ... if max_dev_vectors > kGiB
 
   for (size_t vecID = 0; vecID < num_dev_writes; vecID++) {
-    // Each iteration writes kGB size chunks, so offset increments by kGB
-    size_t global_offset = vecID * kGB;
-    size_t current_write_size = kGB;
+    // Each iteration writes kGiB size chunks, so offset increments by kGiB
+    size_t global_offset = vecID * kGiB;
+    size_t current_write_size = kGiB;
 
     // Remaining vectors for last set (calculated this way as the padding may
     // make the last read bigger than actual global memory size on buffer)
@@ -1137,9 +1137,9 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // **** Read back data from device global memory & verify **** //
 
   for (size_t vecID = 0; vecID < num_dev_writes; vecID++) {
-    // Each iteration writes kGB size chunks, so offset increments by kGB
-    size_t global_offset = vecID * kGB;
-    size_t current_read_size = kGB;
+    // Each iteration writes kGiB size chunks, so offset increments by kGiB
+    size_t global_offset = vecID * kGiB;
+    size_t current_read_size = kGiB;
 
     // Remaining vectors for last set (calculated this way as the padding may
     // make the last read bigger than actual global memory size on buffer)
@@ -1251,7 +1251,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
   // If device global memory > 4 GB , limit the transfer size to 4 GB for this
   // test
   size_t total_bytes_used =
-      (max_alloc_size_ > (4 * kGB)) ? (4 * kGB) : max_alloc_size_;
+      (max_alloc_size_ > (4 * kGiB)) ? (4 * kGiB) : max_alloc_size_;
 
   // Transfer size in number of unsigned elements
   size_t vector_size = total_bytes_used / sizeof(unsigned);
@@ -1259,14 +1259,14 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
   // **** Host memory allocation & initialization **** //
 
   // Host memory used to store input data to device buffer
-  unsigned *host_data_in = new (std::nothrow) unsigned[total_bytes_used];
+  unsigned *host_data_in = new (std::nothrow) unsigned[vector_size];
   // Host memory used to store data read back from device
-  unsigned *host_data_out = new (std::nothrow) unsigned[total_bytes_used];
+  unsigned *host_data_out = new (std::nothrow) unsigned[vector_size];
 
   // The below while loop checks if hostbuf allocation failed and tries to
   // allocate a smaller chunk if above allocation fails, minimum buffer size
   // of 512 bytes
-  while ((total_bytes_used > (kKB / 2)) &&
+  while ((total_bytes_used > (kKiB / 2)) &&
          (host_data_in == NULL || host_data_out == NULL)) {
     vector_size = vector_size / 2;
     total_bytes_used = vector_size * sizeof(unsigned);
@@ -1287,8 +1287,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
   // **** Write data to device & launch kernels **** //
 
-  std::cout << "\nPerforming kernel transfers of " << (total_bytes_used / kMB)
-            << " MBs on the default global memory (address starting at 0)\n";
+  std::cout << "\nPerforming kernel transfers of " << (total_bytes_used / kMiB)
+            << " MiBs on the default global memory (address starting at 0)\n";
 
   // The loop launches 3 different kernels to measure:
   // kernel to memory write bandwidth using "MemWriteStream" kernel
@@ -1365,7 +1365,9 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
       // ****  Submit kernel tasks **** //
 
       auto e = q.submit([&](sycl::handler &h) {
-        sycl::accessor mem(dev_buf, h);
+        // sycl::ext::oneapi::no_offset - tells the compiler that no offset has 
+        // been applied to the base pointer, and aligned accesses can be used 
+        sycl::accessor mem(dev_buf, h, sycl::ext::oneapi::accessor_property_list{sycl::ext::oneapi::no_offset});
         // Work group Size (1 dimension)
         constexpr size_t kWGSize = 1024 * 32;
         constexpr size_t kSimdItems = 16;
@@ -1387,9 +1389,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Write global ID to memory
                       auto gid = it.get_global_id(0);
-                      // As global range is larger than max_alloc_size_, limit
-                      // access from kernel to memory to size of global memory
-                      if (gid < vector_size) mem[gid] = gid;
+                      mem[gid] = gid;
                     });
             break;
           case 1:  // kernel MemReadStream
@@ -1399,16 +1399,12 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                     [[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read memory
-                      auto gid = it.get_global_id(0);
-                      // As global range is larger than max_alloc_size_, limit
-                      // access from kernel to memory to size of global memory
-                      if (gid < vector_size) {
-                        unsigned val = mem[gid];
-                        // Use val to prevent compiler from optimizing away this
-                        // variable & read from memory
-                        if (val && (dummy_var == 3))
-                          mem[gid] = 2;  // Randomly selected value
-                      }
+                      auto gid = it.get_global_id();
+                      unsigned val = mem[gid];
+                      // Use val to prevent compiler from optimizing away this
+                      // variable & read from memory
+                      if (!val && (dummy_var == 3))
+                        mem[gid] = 2;  // Randomly selected value
                     });
             break;
           case 2:  // MemReadWriteStream (also the default)
@@ -1420,7 +1416,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read, modify and write to memory
                       auto gid = it.get_global_id(0);
-                      if (gid < vector_size) mem[gid] = mem[gid] + 2;
+                      mem[gid] = mem[gid] + 2;
                     });
             break;
         }  // End of switch in q.submit
@@ -1433,10 +1429,10 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
       if (k == 0 ||
           k == 1) {  // Unidirectional (MemReadStream or MemWriteStream kernel)
-        bw_bank.push_back(((vector_size * sizeof(unsigned) / kMB) /
+        bw_bank.push_back(((total_bytes_used / kMB) /
                            (SyclGetQStExecTimeNs(e) * 1.0e-9f)));
       } else {  // bidirectional (MemReadWriteStream kernel)
-        bw_bank.push_back(((vector_size * sizeof(unsigned) * 2 / kMB) /
+        bw_bank.push_back(((total_bytes_used * 2 / kMB) /
                            (SyclGetQStExecTimeNs(e) * 1.0e-9f)));
       }
 

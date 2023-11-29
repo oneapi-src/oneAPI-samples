@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdint.h>
 
 // returns 0 on success, otherwise failure
 int WriteBlockGzip(

@@ -18,18 +18,18 @@ Pipes connecting a host and a device are called host pipes. Use host pipes to mo
 
 | Optimized for        | Description
 |:---                  |:---
-| OS                   | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -284,7 +284,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -319,7 +319,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > This tutorial only uses the IP Authoring flow and does not support targeting an explicit FPGA board variant and BSP.
+   > This tutorial only uses the SYCL HLS flow and does not support targeting an explicit FPGA board variant and BSP.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -380,7 +380,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hostpipes.fpga_sim
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 	
 ### On Windows
 
@@ -394,7 +394,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    hostpipes.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the IP Authoring flow is enabled for this code sample.
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
 
 ## Example Output
 

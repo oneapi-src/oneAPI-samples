@@ -19,9 +19,12 @@
                    ]
           }],
           "windows": [{
+		  "env": [
+                    "set ONEAPI_DEVICE_SELECTOR=*:cpu"
+                  ],
                   "steps": [
-                          "MSBuild loop-unroll.sln /t:Rebuild /p:Configuration=\"Release\"",
-                          "cd x64/Release",
+                          "MSBuild loop-unroll.sln /t:Rebuild /p:Configuration=Release",
+                          "cd x64\\Release",
                           "loop-unroll.exe"
                   ]
           }]
