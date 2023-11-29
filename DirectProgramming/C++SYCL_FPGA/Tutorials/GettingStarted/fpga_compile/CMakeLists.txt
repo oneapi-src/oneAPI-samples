@@ -34,11 +34,7 @@ endif()
 set(TARGET_NAME vector_add)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
-# different device. Here are a few device examples (this list is not
-# exhaustive):
-#   intel_s10sx_pac:pac_s10
-#   intel_s10sx_pac:pac_s10_usm
-#   intel_a10gx_pac:pac_a10
+# different device. 
 # Note that depending on your installation, you may need to specify the full 
 # path to the board support package (BSP), this usually is in your install 
 # folder.
