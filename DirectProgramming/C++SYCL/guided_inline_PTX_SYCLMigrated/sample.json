@@ -1,7 +1,7 @@
 {
     "guid": "9A9EF7D1-BAD6-4E9F-A7A5-49E0F18F8AE0",	
     "name": "guided_inlinePTX_SYCLMigration",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/"],
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
     "description": "This sample shows the demonstrates the use of SYCL queues for PTX assembly on GPU devices.",
     "toolchain": [ "dpcpp" ],
     "languages": [ { "cpp": {} } ],
