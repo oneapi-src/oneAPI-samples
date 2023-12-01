@@ -63,7 +63,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);WINDOWS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -83,7 +83,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);WINDOWS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
