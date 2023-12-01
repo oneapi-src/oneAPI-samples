@@ -1,6 +1,6 @@
 ﻿# `QuasirandomGenerator` Sample
  
-The `QuasirandomGenerator` sample implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions.
+The `QuasirandomGenerator` sample implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
 
 | Area                  | Description
 |:---                       |:---
@@ -12,16 +12,31 @@ The `QuasirandomGenerator` sample implements Niederreiter Quasirandom Sequence G
 
 The sample is based on the Niederreiter sequence, which is a type of low-discrepancy sequence that has better properties than pseudorandom sequences for certain applications, such as Monte Carlo integration.
 
+> **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
+
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
 |:---                           |:---
-| `01_dpct_output`              | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
-| `02_sycl_migrated_optimized`            | Contains the optimized sycl code.
+| `01_dpct_output`              | Contains the output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
+| `02_sycl_migrated_optimized`            | Contains the optimized the sycl code.
 
-### Workflow For CUDA to SYCL migration
+## Prerequisites
 
-Refer [Workflow](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html#gs.s2njvh) for details.
+| Optimized for              | Description
+|:---                        |:---
+| OS                         | Ubuntu* 22.04
+| Hardware                   | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon(R) Gold 6128 CPU <br> Intel® Data Center GPU Max <br> NVIDIA Tesla P100 <br> NVIDIA A100 <br> NVIDIA H100
+| Software                   | SYCLomatic (Tag - 20230720) <br> Intel oneAPI Base Toolkit version 2024.0.0 <br> oneAPI for NVIDIA GPUs" plugin from Codeplay (version 2024.0.0)
+
+For more information on how to install Syclomatic Tool & DPC++ CUDA® plugin, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br> How to run SYCL™ applications on NVIDIA® GPUs, refer to oneAPI for NVIDIA GPUs plugin from Codeplay [Install oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/)
+
+## Key Implementation Details
+
+This sample demonstrates the migration of the following prominent CUDA feature: 
+- Constant Memory
+
+>  **Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html#gs.s2njvh) for general information about the migration workflow.
 
 ### CUDA source code evaluation
 
@@ -30,21 +45,53 @@ The program uses the CUDA runtime and some helper functions from the CUDA sample
 
 This sample is migrated from NVIDIA CUDA sample. See the [quasirandomGenerator](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/5_Domain_Specific/quasirandomGenerator) sample in the NVIDIA/cuda-samples GitHub.
 
-## Prerequisites
+## Set Environment Variables
 
-| Optimized for              | Description
-|:---                        |:---
-| OS                         | Ubuntu* 20.04
-| Hardware                   | Intel® Gen9 <br> Gen11 <br> Intel® Xeon(R) Gold 6128 CPU <br> Intel® Data Center GPU Max <br> NVIDIA Tesla P100 <br> NVIDIA A100 <br> NVIDIA H100
-| Software                   | SYCLomatic (Tag - 20230720) <br> Intel oneAPI Base Toolkit version 2023.2.1 <br> oneAPI for NVIDIA GPUs" plugin from Codeplay
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that the compiler, libraries, and tools are ready for development.
 
-For more information on how to install SYCLomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v3584e). <br> 
-[Install oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/)
+## Migrate the `quasirandomGenerator` Sample
 
-## Key Implementation Details
+### Migrate the Code using SYCLomatic 
 
-This sample demonstrates the migration of the following prominent CUDA feature: 
-- Constant Memory
+For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
+
+  1. Clone the required GitHub repository to your local environment.
+     ```
+     git clone https://github.com/NVIDIA/cuda-samples.git
+     ```
+  2. Change to the convolutionSeparable sample directory.
+     ```
+     cd cuda-samples/Samples/5_Domain_Specific/quasirandomGenerator/
+     ```
+  3. Generate a compilation database with intercept-build
+     ```
+     intercept-build make
+     ```
+   The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
+   
+  4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated. The --gen-helper-function option will make a copy of dpct header files/functions used in the migrated code into the dpct_output folder as include folder.
+     ```
+     c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
+     ```
+### Optimizations
+
+SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution:
+
+  #### In-order queues: 
+  Where kernels are executed in the order they were submitted to the queue.
+   
+  #### Out-of-order queues: 
+  Where kernels can be executed in an arbitrary order (subject to the dependency constraints among them).
+
+The choice to create an in-order or out-of-order queue is made at the queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
+
+The optimized code creates the queue as follows:
+        
+        sycl::queue q_ct1 = sycl::queue(sycl::default_selector_v);
+
+Since we changed the queue from in-order to out-of-order execution, it resulted in better performance.
+
+To summarise, in-order queues guarantee the order of execution of commands, while out-of-order queues allow for greater flexibility and potential performance gains but require careful synchronization management. The choice of which queue to use depends on the requirements and constraints of the application being developed.
 
 ## Build the `QuasirandomGenerator` Sample for CPU and GPU
 
@@ -58,41 +105,6 @@ This sample demonstrates the migration of the following prominent CUDA feature:
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
-## Tool assisted migration – SYCLomatic 
-
-For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
-
-1. git clone https://github.com/NVIDIA/cuda-samples.git
-2. cd cuda-samples/Samples/5_Domain_Specific/quasirandomGenerator/
-3. Generate a compilation database with intercept-build
-   ```
-   intercept-build make
-   ```
-4. The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
-5. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated.
-   ```
-   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
-   ```
-## Optimizations
-
-SYCL has two kinds of queues that a programmer can create and use to submit kernels for execution:
-
-  #### In-order queues: 
-  Where kernels are executed in the order they were submitted to the queue.
-   
- #### Out-of-order queues: 
- Where kernels can be executed in an arbitrary order (subject to the dependency constraints among them).
-
-The choice to create an in-order or out-of-order queue is made at the queue construction time through the property sycl::property::queue::in_order(). By default, when no property is specified, the queue is out-of-order.
-
-The optimized code creates the queue as follows:
-        
-        sycl::queue q_ct1 = sycl::queue(sycl::default_selector_v);
-
-Since we changed the queue from in-order to out-of-order execution, it resulted in better performance.
-
-To summarise, in-order queues guarantee the order of execution of commands, while out-of-order queues allow for greater flexibility and potential performance gains but require careful synchronization management. The choice of which queue to use depends on the requirements and constraints of the application being developed.
-
 ### On Linux*
 
 1. Change to the sample directory.
@@ -104,34 +116,22 @@ To summarise, in-order queues guarantee the order of execution of commands, whil
    $ make
    ```
 >**Note:** 
-> - By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon(R) Gold 6128 CPU.
+> - By default, no flags are enabled during the build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU.
 > - Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
 > - Enable NVIDIA_GPU flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs plugin from Codeplay](https://developer.codeplay.com/products/oneapi/nvidia/)  is required to build for NVIDIA GPUs)
    
-By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated_optimized` version of the program.
+By default, this command sequence will build the `02_sycl_migrated_optimized` version of the program.
 
-4. Run the program.
-   
-   Run `01_dpct_output` on GPU.
-   ```
-   make run
-   ```  
-   Run `01_dpct_output` on CPU.
-   ```
-   export ONEAPI_DEVICE_SELECTOR=cpu
-   make run
-   unset ONEAPI_DEVICE_SELECTOR 
-   ```
- 5. Run the program.
+3. Run the program.
    
    Run `02_sycl_migrated_optimized` on GPU.
    ```
-   make run_smo
+   make run
    ```  
    Run `02_sycl_migrated_optimized` on CPU.
    ```
-   export ONEAPI_DEVICE_SELECTOR=cpu
-   make run_smo
+   export ONEAPI_DEVICE_SELECTOR=opencl:cpu
+   make run
    unset ONEAPI_DEVICE_SELECTOR 
    ```
    
@@ -142,36 +142,8 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-0/overview.html) for more information on using the utility.
 
-
-### Example Output
-
-The following example is for `02_sycl_migrated_optimized` for GPU on **Intel(R) UHD Graphics [0x9a60]**.
-```
-Allocating GPU memory...
-Allocating CPU memory...
-Initializing QRNG tables...
-
-Testing QRNG...
-
-quasirandomGenerator, Throughput = 0.8495 GNumbers/s, Time = 0.00370 s, Size = 3145728 Numbers, NumDevsUsed = 1, Workgroup = 384
-
-Reading GPU results...
-Comparing to the CPU results...
-
-L1 norm: 7.275964E-12
-
-Testing inverseCNDgpu()...
-
-quasirandomGenerator-inverse, Throughput = 11.0902 GNumbers/s, Time = 0.00028 s, Size = 3145728 Numbers, NumDevsUsed = 1, Workgroup = 128
-Reading GPU results...
-
-Comparing to the CPU results...
-L1 norm: 8.461076E-08
-
-Shutting down...
-```
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.

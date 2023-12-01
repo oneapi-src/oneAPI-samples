@@ -12,5 +12,5 @@ include_directories(${CMAKE_SOURCE_DIR}/02_sycl_migrated_optimized/include/)
 add_executable(02_sycl_migrated_optimized Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator.cpp.dp.cpp Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator_gold.cpp Samples/5_Domain_Specific/quasirandomGenerator/quasirandomGenerator_kernel.dp.cpp)
 target_link_libraries(02_sycl_migrated_optimized sycl)
 
-add_custom_target (run_smo cd ${CMAKE_SOURCE_DIR}/02_sycl_migrated_optimized/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/02_sycl_migrated_optimized)
+add_custom_target (run cd ${CMAKE_SOURCE_DIR}/02_sycl_migrated_optimized/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/02_sycl_migrated_optimized)
 
