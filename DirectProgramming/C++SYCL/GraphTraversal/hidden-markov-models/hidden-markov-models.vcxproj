@@ -96,7 +96,7 @@
       </PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>%ONEAPI_ROOT%\dev-utilities\latest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
       <SYCLOptimization>Disabled</SYCLOptimization>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
     </ClCompile>
@@ -126,7 +126,7 @@
       </PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>%ONEAPI_ROOT%\dev-utilities\latest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
       <SYCLOptimization>Disabled</SYCLOptimization>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
     </ClCompile>
