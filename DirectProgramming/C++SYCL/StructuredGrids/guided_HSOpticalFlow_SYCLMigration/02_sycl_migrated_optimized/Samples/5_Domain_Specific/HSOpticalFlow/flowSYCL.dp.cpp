@@ -88,43 +88,43 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
 
   const int dataSize = stride * height * sizeof(float);
 
-  checkCudaErrors(DPCT_CHECK_ERROR(d_tmp = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_du0 = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_dv0 = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_du1 = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_dv1 = (float *)sycl::malloc_device(
-                                       dataSize, q)));
+  DPCT_CHECK_ERROR(d_tmp = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_du0 = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_dv0 = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_du1 = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_dv1 = (float *)sycl::malloc_device(
+                                       dataSize, q));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(d_Ix = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_Iy = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_Iz = (float *)sycl::malloc_device(
-                                       dataSize, q)));
+  DPCT_CHECK_ERROR(d_Ix = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_Iy = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_Iz = (float *)sycl::malloc_device(
+                                       dataSize, q));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_u = (float *)sycl::malloc_device(dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_v = (float *)sycl::malloc_device(dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_nu = (float *)sycl::malloc_device(
-                                       dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_nv = (float *)sycl::malloc_device(
-                                       dataSize, q)));
+  DPCT_CHECK_ERROR(
+      d_u = (float *)sycl::malloc_device(dataSize, q));
+  DPCT_CHECK_ERROR(
+      d_v = (float *)sycl::malloc_device(dataSize, q));
+  DPCT_CHECK_ERROR(d_nu = (float *)sycl::malloc_device(
+                                       dataSize, q));
+  DPCT_CHECK_ERROR(d_nv = (float *)sycl::malloc_device(
+                                       dataSize, q));
 
   // prepare pyramid
 
   int currentLevel = nLevels - 1;
   // allocate GPU memory for input images
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       *(pI0 + currentLevel) = (const float *)sycl::malloc_device(
-          dataSize, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
+          dataSize, q));
+  DPCT_CHECK_ERROR(
       *(pI1 + currentLevel) = (const float *)sycl::malloc_device(
-          dataSize, q)));
+          dataSize, q));
 
   float *pI0_h =
       (float *)sycl::malloc_host(stride * height * sizeof(sycl::float4), q);
@@ -156,12 +156,12 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     int nh = pH[currentLevel] / 2;
     int ns = iAlignUp(nw);
 
-    checkCudaErrors(DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(
         *(pI0 + currentLevel - 1) = (const float *)sycl::malloc_device(
-            ns * nh * sizeof(float), q)));
-    checkCudaErrors(DPCT_CHECK_ERROR(
+            ns * nh * sizeof(float), q));
+    DPCT_CHECK_ERROR(
         *(pI1 + currentLevel - 1) = (const float *)sycl::malloc_device(
-            ns * nh * sizeof(float), q)));
+            ns * nh * sizeof(float), q));
 
     Downscale(pI0[currentLevel], pI0_h, I0_h, src_d0, pW[currentLevel],
               pH[currentLevel], pS[currentLevel], nw, nh, ns,
@@ -176,25 +176,22 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     pS[currentLevel - 1] = ns;
   }
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q.memset(d_u, 0, stride * height * sizeof(float))));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q.memset(d_v, 0, stride * height * sizeof(float))));
-  checkCudaErrors(
-    DPCT_CHECK_ERROR(q.wait()));
+  DPCT_CHECK_ERROR(q.memset(d_u, 0, stride * height * sizeof(float)));
+  DPCT_CHECK_ERROR(q.memset(d_v, 0, stride * height * sizeof(float)));
+  DPCT_CHECK_ERROR(q.wait());
 
   // compute flow
   for (; currentLevel < nLevels; ++currentLevel) {
     for (int warpIter = 0; warpIter < nWarpIters; ++warpIter) {
-      checkCudaErrors(DPCT_CHECK_ERROR(
-          q.memset(d_du0, 0, dataSize)));
-      checkCudaErrors(DPCT_CHECK_ERROR(
-          q.memset(d_dv0, 0, dataSize)));
+      DPCT_CHECK_ERROR(
+          q.memset(d_du0, 0, dataSize));
+      DPCT_CHECK_ERROR(
+          q.memset(d_dv0, 0, dataSize));
 
-      checkCudaErrors(DPCT_CHECK_ERROR(
-          q.memset(d_du1, 0, dataSize)));
-      checkCudaErrors(DPCT_CHECK_ERROR(
-          q.memset(d_dv1, 0, dataSize)));
+      DPCT_CHECK_ERROR(
+          q.memset(d_du1, 0, dataSize));
+      DPCT_CHECK_ERROR(
+          q.memset(d_dv1, 0, dataSize));
 
       // on current level we compute optical flow
       // between frame 0 and warped frame 1
@@ -237,19 +234,18 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
     }
   }
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      q.memcpy(u, d_u, dataSize)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      q.memcpy(v, d_v, dataSize)));
-  checkCudaErrors(
-    DPCT_CHECK_ERROR(q.wait()));
+  DPCT_CHECK_ERROR(
+      q.memcpy(u, d_u, dataSize));
+  DPCT_CHECK_ERROR(
+      q.memcpy(v, d_v, dataSize));
+  DPCT_CHECK_ERROR(q.wait());
 
   // cleanup
   for (int i = 0; i < nLevels; ++i) {
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        sycl::free((void *)pI0[i], q)));
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        sycl::free((void *)pI1[i], q)));
+    DPCT_CHECK_ERROR(
+        sycl::free((void *)pI0[i], q));
+    DPCT_CHECK_ERROR(
+        sycl::free((void *)pI1[i], q));
   }
 
   delete[] pI0;
@@ -258,26 +254,16 @@ void ComputeFlowCUDA(const float *I0, const float *I1, int width, int height,
   delete[] pH;
   delete[] pS;
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_tmp, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_du0, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_dv0, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_du1, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_dv1, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Ix, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Iy, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Iz, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_nu, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_nv, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_u, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_v, q)));
+  DPCT_CHECK_ERROR(sycl::free(d_tmp, q));
+  DPCT_CHECK_ERROR(sycl::free(d_du0, q));
+  DPCT_CHECK_ERROR(sycl::free(d_dv0, q));
+  DPCT_CHECK_ERROR(sycl::free(d_du1, q));
+  DPCT_CHECK_ERROR(sycl::free(d_dv1, q));
+  DPCT_CHECK_ERROR(sycl::free(d_Ix, q));
+  DPCT_CHECK_ERROR(sycl::free(d_Iy, q));
+  DPCT_CHECK_ERROR(sycl::free(d_Iz, q));
+  DPCT_CHECK_ERROR(sycl::free(d_nu, q));
+  DPCT_CHECK_ERROR(sycl::free(d_nv, q));
+  DPCT_CHECK_ERROR(sycl::free(d_u, q));
+  DPCT_CHECK_ERROR(sycl::free(d_v, q));
 }

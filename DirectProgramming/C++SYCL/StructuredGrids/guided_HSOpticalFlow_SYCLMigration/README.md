@@ -1,6 +1,6 @@
 ﻿# `HSOpticalFlow` Sample
 
-The `HSOpticalFlow` sample is a computation of per-pixel motion estimation between two consecutive image frames caused by the movement of an object or camera. This sample is implemented using SYCL* by migrating code from the original CUDA source code and offloading computations to a CPU, GPU, or another accelerator.
+The `HSOpticalFlow` sample is a computation of per-pixel motion estimation between two consecutive image frames caused by the movement of an object or camera. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
 
 | Area                      | Description
 |:---                       |:---
@@ -14,7 +14,7 @@ The `HSOpticalFlow` sample is a computation of per-pixel motion estimation betwe
 
 ## Purpose
 
-The optical flow method is based on two assumptions: brightness constancy and spatial flow smoothness. These assumptions are combined in a single energy functional and a solution is found as its minimum point. The sample includes both parallel and serial computation, which allows for direct results comparison between CPU and Device. Input images of the sample are computed to get the absolute difference value output(L1 error) between serial and parallel computation. The parallel implementation demonstrates the use of key SYCL concepts, such as
+The optical flow method is based on two assumptions: brightness constancy and spatial flow smoothness. These assumptions are combined in a single energy functional and a solution is found as its minimum point. The sample includes both parallel and serial computation, which allows direct results comparison between CPU and Device. Input images of the sample are computed to get the absolute difference value output(L1 error) between serial and parallel computation. The parallel implementation demonstrates the use of key SYCL concepts, such as
 
 - Image Processing
 - SYCL Image memory
@@ -30,19 +30,18 @@ This sample contains three versions in the following folders:
 | Folder Name                  | Description
 |:---                          |:---
 | `01_dpct_output`             | Contains the output of the SYCLomatic tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some code that is not migrated and has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
-| `02_sycl_migrated`           | Contains manually migrated SYCL code from CUDA code.
-| `03_sycl_migrated_optimized` | Contains manually migrated SYCL code from CUDA code with performance optimizations applied.
+| `02_sycl_migrated_optimized` | Contains manually migrated SYCL code from CUDA code with performance optimizations applied.
 
 ## Prerequisites
 
 | Optimized for              | Description
 |:---                        |:---
 | OS                         | Ubuntu* 22.04
-| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100
-| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPUs plugin (version 2023.2.0) from Codeplay
+| Hardware                   | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon CPU <br> Nvidia Tesla P100 <br> Nvidia A100 <br> Nvidia H100
+| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2024.0 <br> oneAPI for NVIDIA GPUs plugin (version 2024.0) from Codeplay
 
 For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
-Refer [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute sample on NVIDIA GPU.
+Refer [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute the sample on NVIDIA GPU.
 
 ## Key Implementation Details
 
@@ -86,7 +85,7 @@ The host code of downscale, Compute derivatives, Upscale, and Warping uses textu
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script each time you open a new terminal window. This practice ensures that compilers, libraries, and tools are ready for development.
 
 ## Migrate the `HSOpticalFlow` Code
 
@@ -108,7 +107,7 @@ For this sample, the SYCLomatic Tool automatically migrates ~80% of the CUDA run
    ```
    The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The `--in-root` specifies the path to the root of the source tree to be migrated. The `--gen-helper-function` option will make a copy of dpct header files/functions used in the migrated code into the dpct_output folder as `include` folder.
+4. Pass the JSON file as input to the SYCLomatic Tool. The result is written to a folder named dpct_output. The `--in-root` specifies the path to the root of the source tree to be migrated. The `--gen-helper-function` option will make a copy of the dpct header files/functions used in the migrated code into the dpct_output folder as `include` folder.
    ```
    c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
@@ -238,7 +237,7 @@ Once you migrate the CUDA code to SYCL successfully and you have functional code
 
 #### Memory Operation Optimization
 
-Since the CUDA HSOptical Flow sample uses single channel image and SYCL supports only 4 channel image format we have manually adjusted two properties of image data. Image data type format and Image input layout where Image data are padded for additional image channels. For this purpose, create additional host and USM memory using `malloc_shared` that is padded.
+Since the CUDA HSOptical Flow sample uses single channel image and SYCL supports only 4 channel image format we have manually adjusted two properties of image data. Image data type format and Image input layout where Image data are padded for additional image channels. For this purpose, we can create additional host and USM memory using `malloc_shared` that is padded as shown below.
 
 ```
 int dataSize = height * stride * sizeof(float);
@@ -278,8 +277,6 @@ q.memcpy(src_p, pI0_h, height * width * sizeof(sycl::float4)).wait();
 
 malloc_device returns a pointer to the newly allocated memory on the specified device on success. This memory is not accessible on the host. Hence, we need to copy memory to the host when required. Also copying from malloc_host to malloc_device is faster than compared to C malloc to malloc_device.
 
-These optimization changes are performed in Downscale, Warping, Upscale, and ComputeDerivative methods can be found in  `03_sycl_migrated_optimized` folder.
-
 
 ## Build and Run the `HSOpticalFlow` Sample
 
@@ -311,29 +308,18 @@ These optimization changes are performed in Downscale, Warping, Upscale, and Com
     **Note**: By default, no flag are enabled during build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU. <br>
     Enable `NVIDIA_GPU` flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs ) <br>
 
-   By default, this command sequence will build the `02_sycl_migrated` and `03_sycl_migrated_optimized` versions of the program.
+   By default, this command sequence will build the `02_sycl_migrated_optimized` version of the program.
 
 3. Run the program.
 
-   Run `02_sycl_migrated` on GPU.
+   Run `02_sycl_migrated_optimized` on GPU.
    ```
    $ make run
    ```
-   Run `02_sycl_migrated` for CPU.
+   Run `02_sycl_migrated_optimized` for CPU.
     ```
     $ export ONEAPI_DEVICE_SELECTOR=opencl:cpu
     $ make run
-    $ unset ONEAPI_DEVICE_SELECTOR
-    ```
-
-   Run `03_sycl_migrated_optimized` on GPU.
-   ```
-   $ make run_smo
-   ```
-   Run `03_sycl_migrated_optimized` for CPU.
-    ```
-    $ export ONEAPI_DEVICE_SELECTOR=opencl:cpu
-    $ make run_smo
     $ unset ONEAPI_DEVICE_SELECTOR
     ```
 
@@ -346,24 +332,8 @@ $ make VERBOSE=1
 ```
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
   
-## Example Output
-
-The following example is for `03_sycl_migrated_optimized` for GPU on **Intel(R) UHD Graphics [0x9a60]**.
-```
-HSOpticalFlow Starting...
-
-Loading "frame10.ppm" ...
-Loading "frame11.ppm" ...
-Computing optical flow on CPU...
-Computing optical flow on Device...
-
-Processing time on CPU: 2638.262451 (ms)
-Processing time on Device: 686.988098 (ms)
-L1 error : 0.018193
-```
-
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-0/overview.html) for details.
 
 Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
