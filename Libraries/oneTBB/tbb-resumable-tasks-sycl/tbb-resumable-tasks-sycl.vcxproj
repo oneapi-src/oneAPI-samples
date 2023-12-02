@@ -60,7 +60,6 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
     </ClCompile>
     <Link>
@@ -81,7 +80,6 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
     </ClCompile>
     <Link>

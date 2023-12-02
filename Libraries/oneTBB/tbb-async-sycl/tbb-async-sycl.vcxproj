@@ -60,7 +60,6 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -82,7 +81,6 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
-      <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\include\;$(ONEAPI_ROOT)\dev-utilities\latest\include\</AdditionalIncludeDirectories>
     </ClCompile>
