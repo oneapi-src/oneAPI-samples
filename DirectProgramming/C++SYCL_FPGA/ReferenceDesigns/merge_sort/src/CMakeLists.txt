@@ -28,6 +28,21 @@ else()
     endif()
 endif()
 
+# Older quartus versions do not support as many kernels in SYCL HLS when compiling for hardware
+if (IS_BSP MATCHES "0")
+    execute_process(COMMAND quartus_sh --version
+        OUTPUT_VARIABLE QUARTUS_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REGEX MATCH "[0-9][0-9]\.[0-9]\.[0-9]"
+        QUARTUS_VERSION
+        "${QUARTUS_VERSION}")
+    message(STATUS "Detected Quartus Prime Shell version ${QUARTUS_VERSION}")
+    if (QUARTUS_VERSION VERSION_LESS 22.2.0)
+        message(STATUS "Limiting hardware performance due to Quartus Prime version")
+        set(LIMIT_HW_MERGE_UNITS_FLAG "-DLIMIT_HW_MERGE_UNITS=1")
+    endif()
+endif()
+
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
@@ -84,7 +99,7 @@ set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${ENABLE_USM} $
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${ENABLE_USM} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} ${BSP_FLAG}")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR ${ENABLE_USM} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} ${BSP_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${ENABLE_USM} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${ENABLE_USM} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} -DFPGA_HARDWARE ${BSP_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${ENABLE_USM} ${LIMIT_HW_MERGE_UNITS_FLAG} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} -DFPGA_HARDWARE ${BSP_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PROFILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${ENABLE_USM} ${MERGE_UNITS_FLAG} ${SORT_WIDTH_FLAG} ${USER_HARDWARE_FLAGS} ${BSP_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
