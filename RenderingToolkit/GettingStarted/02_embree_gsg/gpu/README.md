@@ -1,4 +1,4 @@
-# `Getting Started` GPU Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Embree
+# `Getting Started` GPU Sample for Intel&reg; Rendering Toolkit (Render Kit): Intel&reg; Embree
 
 This sample program, `minimal_sycl`, performs two ray-to-triangle-intersect tests with the Intel&reg; Embree API. One test is a successful intersection, and the second test misses. The program performs intersection tests on the GPU device. The program writes output results to the console (stdout).
 
@@ -13,8 +13,8 @@ This sample program, `minimal_sycl`, performs two ray-to-triangle-intersect test
 |:---                               |:---
 | OS                                | Ubuntu* 22.04 <br> RHEL 8.5, 8.6 (or compatible) <br>Windows* 10 64-bit 20H2 or higher<br>Windows 11* 64-bit
 | Hardware                          | Intel&reg; Arc&trade; GPU or higher, compatible with Intel Xe-HPG architecture
-| Compiler Toolchain                | **Windows\***: Intel&reg; oneAPI DPC++ Compiler 2023.0 or higher, MSVS 2019 or higher with Windows* SDK and CMake*<br>**Linux\***: Intel&reg; oneAPI DPC++ Compiler 2023.0 or higher, C++17 system compiler (for example g++), and CMake*
-| Libraries                         | Intel&reg; oneAPI DPC++ Compiler and Runtime Library (Base Toolkit)<br>Intel&reg; oneAPI Rendering Toolkit (Render Kit), includes Embree
+| Compiler Toolchain                | **Windows\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, MSVS 2019 or higher with Windows* SDK and CMake*<br>**Linux\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, C++17 system compiler (for example g++), and CMake*
+| Libraries                         | Intel&reg; oneAPI DPC++ Compiler and Runtime Library (Base Toolkit)<br>Intel&reg; Rendering Toolkit (Render Kit), includes Embree
 | GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#) 
 ## Key Implementation Details
 
@@ -56,7 +56,7 @@ cd gpu
 ```
 mkdir build
 cd build
-cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2023" ..
+cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2024" ..
 cmake --build . --config Release
 cmake --install . --config Release
 cd ..\bin
@@ -69,7 +69,7 @@ cd ..\bin
 
 ### On Linux*
 
-1. Start a new Terminal session. Ensure environment variables are set.https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html
+1. Start a new Terminal session. Ensure environment variables are set.
 2. Change to the GPU sample program directory.
 ```
 cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/02_embree_gsg

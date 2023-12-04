@@ -12,16 +12,13 @@
       {
           "env": [
             "source /opt/intel/oneapi/setvars.sh --force",
-            "conda env remove -n user_pytorch",
-            "conda create -n user_pytorch --clone pytorch -y",
-            "conda activate user_pytorch",
-            "conda install -n user_pytorch jinja2=3.0.3 nbconvert=6.4.4 -y",
-            "pip install ipykernel",
-            "python -m ipykernel install --user --name=user_pytorch"
+            "conda activate pytorch",
+            "pip install ipykernel jupyter",
+            "python -m ipykernel install --user --name=pytorch"
           ],
           "id": "quantize with inc",
           "steps": [
-              "jupyter nbconvert --ExecutePreprocessor.kernel_name=user_pytorch --to notebook quantize_with_inc.ipynb"
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb"
            ]
       }
        ]

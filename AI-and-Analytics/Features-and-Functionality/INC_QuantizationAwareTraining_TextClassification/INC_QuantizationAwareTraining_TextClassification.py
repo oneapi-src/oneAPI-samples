@@ -104,7 +104,7 @@ plt.show()
 
 
 def tokenize_data(example):
-    return tokenizer(example['text'], padding=True, max_length=128)
+    return tokenizer(example['text'], padding='max_length', max_length=128)
 
 dataset = dataset.map(tokenize_data, batched=True)
 dataset

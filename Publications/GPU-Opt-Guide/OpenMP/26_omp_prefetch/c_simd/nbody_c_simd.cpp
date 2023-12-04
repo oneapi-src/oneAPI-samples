@@ -90,7 +90,7 @@ void nbody_1d_cpu(float *c, float *a, float *b, int n1, int n2) {
 void clean_cache_gpu(double *d, int n) {
 
 #pragma omp target teams distribute parallel for thread_limit(1024)
-  for (unsigned i = 0; i < n; ++i)
+  for (int i = 0; i < n; ++i)
     d[i] = i;
 
   return;

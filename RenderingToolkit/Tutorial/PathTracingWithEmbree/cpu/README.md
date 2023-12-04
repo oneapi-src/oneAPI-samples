@@ -1,6 +1,6 @@
 # Path Tracing with Intel&reg; Embree Sample Program
 
-This sample program illustrates path tracing using Intel Embree from the Intel&reg; oneAPI Rendering Toolkit (Render Kit).
+This sample program illustrates path tracing using Intel Embree from the Intel&reg; Rendering Toolkit (Render Kit).
 
 [![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
 
@@ -33,17 +33,17 @@ Make sure to try the [rkRayTracer](../IntroToRayTracingWithEmbree) sample progra
 
 | Minimum Requirements | Description                                                                                                                                                                                                                     |
 |:-------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OS                   | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 <br>macOS* 10.15+                                                                                                                                            |
+| OS                   | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+                                                                                                                                            |
 | Hardware             | <ul><li>Intel&reg; 64 (Intel 64 Penryn or higher with SSE4.1 extensions compatible) <ul><li>Intel Atom&reg; processors</li><li>Intel&reg; Core&trade; processor family</li><li>Intel&reg; Xeon&reg; processor family</li><li>Intel&reg; Xeon&reg; Scalable processor family</li></ul></li><li>ARM</li><ul><li>ARM64 with NEON extensions (ex: Apple* M1)</li></ul></li><li>Intel Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions</li></ul>  |
 | Compiler Toolchain   | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake* <br>Other platforms: C++14 compiler and CMake*                                                                                                                 |
-| Libraries            | Install Intel oneAPI Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component |
+| Libraries            | Install Intel Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler Runtimes |
 | Tools                | .png capable image viewer                                                                                                                                                                                                       |
 
 ## Build and Run
 
 ### Windows*
 
-1. Open an x64 Native Tools Command Prompt for VS 2019 (or 2022).
+1. Open an x64 Native Tools Command Prompt for VS 2022 (or 2019).
 
 2. Set toolkit environment variables.
 
@@ -51,8 +51,8 @@ Make sure to try the [rkRayTracer](../IntroToRayTracingWithEmbree) sample progra
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - `C:\Program Files(x86)\Intel\oneAPI\<version>\oneapi-vars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\<version>\oneapi-vars.bat" && powershell'`
 > For more information on configuring environment variables, see [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 3. Build and run the application:
@@ -60,13 +60,13 @@ Make sure to try the [rkRayTracer](../IntroToRayTracingWithEmbree) sample progra
 ```
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -A x64 ..
+cmake -G"Visual Studio 17 2022" -A x64 ..
 cmake --build . --config Release
 cd Release
 .\rkPathTracer.exe
 ```
 
-**Note**: Visual Studio 2022 users should use the `-G"Visual Studio 17 2022"`
+**Note**: Visual Studio 2019 users should use the `-G"Visual Studio 16 2019"`
 generator flag.
 
 4. Open the resulting .png image files with an image viewer. The .png files will be in the working directory for the executing program.
@@ -87,9 +87,9 @@ devenv rkPathTracer.sln
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
 > Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For system wide installations: `. /opt/intel/oneapi/<version>/oneapi-vars.sh`
+> - For private installations: ` . ~/intel/oneapi/<version>/oneapi-vars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/<version>/oneapi-vars.sh ; exec csh'`
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 3. Build and run the application:
@@ -106,7 +106,7 @@ cmake --build .
 
 ### Build Troubleshoot
 
-Imaging headers are used from `%ONEAPI_ROOT%\dev-utilities\latest\include`. If needed, these headers are also available common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
+Imaging headers are used from `%ONEAPI_ROOT%\dev-utilities\latest\include` in the `stb` folder. If needed, these headers are also available common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
 
 ## Path Tracing Concepts
 

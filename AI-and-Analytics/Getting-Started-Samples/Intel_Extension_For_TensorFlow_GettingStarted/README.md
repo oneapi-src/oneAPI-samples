@@ -13,12 +13,6 @@ This code sample will guide users how to run a tensorflow inference workload on 
 4. guide users how to use different conda environment to run on Intel CPU and GPU
 5. analyze oneDNN verbose logs to validate GPU or CPU usage  
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Running Samples on the Intel&reg; DevCloud
 If you are running this sample on the DevCloud, skip the Pre-requirements and go to the [Activate Conda Environment](#activate-conda) section.
 
@@ -64,7 +58,6 @@ To open the Jupyter notebook on your local server:
 
 6. select user-tensorflow jupyter kernel and run again from beginning for CPU run.  
 
-
 ---
 **NOTE**
 
@@ -72,13 +65,14 @@ In the jupyter page, be sure to select the correct kernel. In this example, sele
 
 ---
 
-
-
-
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
 
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.

@@ -55,7 +55,7 @@ else()
 endif()
 
 if((IS_BSP STREQUAL "1"))
-    message(FATAL_ERROR "ERROR: This tutorial is only supported in the IP Authoring flow and therefore does not support BSPs as a target.")
+    message(FATAL_ERROR "ERROR: This tutorial is only supported in the SYCL HLS flow and therefore does not support BSPs as a target.")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend

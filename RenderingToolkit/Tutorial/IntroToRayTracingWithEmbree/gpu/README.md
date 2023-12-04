@@ -19,11 +19,11 @@ output](example_images/rkRayTracerGPU.png)
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 <br>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | Intel&reg; Arc Graphics (Xe-HPG architecture, DG2-128, DG2-512) or higher
-| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit) including Intel&reg; oneAPI DPC++ Compiler, Intel&reg; Embree, and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component
-| SYCL Compiler                     | oneAPI DPC++ 2023.0.0 compiler or higher
-| Compiler Toolchain                | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake* <br>Other platforms: C++17 compiler and CMake*
+| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit) including Intel&reg; Embree, and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler
+| SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher
+| Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++17 compiler and CMake*
 | Tools                             | .png capable image viewer
 | Knowledge                         | First, build and run the IntroToRayTracingWithEmbree `rkRayTracer` [CPU](../cpu) sample program
 
@@ -41,19 +41,22 @@ Open a new x64 Native Tools Command Prompt for VS 2022. Navigate to the source f
 cd <path-to-oneAPI-Samples>\RenderingToolkit\Tutorial\IntroToRayTracingWithEmbree\cpu
 ```
 
-Run the MSVS build script to generate the sample program and MSVS .sln files for source code review:
-```
-build-win-vs-dpcpp-toolchain.bat
-```
-
 If you prefer command line builds only, use an nmake script:
 ```
 build-win-nmake-icx-cl.bat
 ```
 
+Run the MSVS build script to generate the sample program and MSVS .sln files for source code review. Note this method is deprecated but some may prefer it:
+```
+build-win-vs-dpcpp-toolchain.bat
+```
+
+Set environment variables:
 ```
 call <path-to-oneAPI>\setvars.bat
 ```
+
+Run the program
 ```
 cd bin
 .\rkRayTracerGPU.exe
@@ -76,12 +79,23 @@ Run oneAPI setvars.bat:
 call <path-to-oneAPI>\setvars.bat
 
 ```
-Build and run the application:
 
+Configure the build (Option 1):
 ```
 mkdir build
 cd build
-cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2023" ..
+cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=icx-cl -DCMAKE_INSTALL_PREFIX=.. ..
+```
+
+Configure the build (Option 2 Deprecated but generates .sln files for code review):
+```
+mkdir build
+cd build
+cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2024" ..
+```
+
+Build and run the application:
+```
 cmake --build . --config Release
 cmake --install . --config Release
 cd ..\bin
@@ -174,7 +188,7 @@ rendering API at a higher layer, perhaps at an _engine_ layer. Such developers
 should consider examining the Intel&reg; OSPRay API and library, which implements
 rendering facilities on top of Embree.
 
-You can find more information by visiting [Intel&reg; oneAPI Rendering
+You can find more information by visiting [Intel&reg; Rendering
 Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
 
 ## License

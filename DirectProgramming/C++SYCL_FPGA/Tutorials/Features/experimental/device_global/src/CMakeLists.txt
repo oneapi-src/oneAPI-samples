@@ -17,11 +17,11 @@ else()
     # Check if the target is a BSP
     if(IS_BSP MATCHES "1")
         set(IS_BSP "1")
-        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as uses IPA flow only.")
+        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as it uses the SYCL HLS flow only.")
     else()
         set(IS_BSP "0")
         message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
-        message(STATUS "This tutorial does not support a BSP target as it uses IPA flow only.")
+        message(STATUS "This tutorial does not support a BSP target as it uses the SYCL HLS flow only.")
     endif()
 endif()
 

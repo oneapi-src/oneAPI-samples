@@ -17,11 +17,11 @@ else()
     # Check if the target is a BSP
     if(IS_BSP MATCHES "1")
         set(IS_BSP "1")
-        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as uses IPA flow only.")
+        message(FATAL_ERROR "ERROR: This tutorial does not support a BSP target as it uses the SYCL HLS flow only.")
     else()
         set(IS_BSP "0")
         message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number.")
-        message(STATUS "This tutorial does not support a BSP target as it uses IPA flow only.")
+        message(STATUS "This tutorial does not support a BSP target as it uses the SYCL HLS flow only.")
     endif()
 endif()
 
@@ -37,7 +37,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -Xsdsp-mode=prefer-softlogic ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype -DFPGA_HARDWARE")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -60,10 +60,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -Xsdsp-mode=prefer-softlogic dsp_control.cpp -o dsp_control.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> hostpipes.cpp -o hostpipes.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o dsp_control.cpp.o -c dsp_control.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -Xsdsp-mode=prefer-softlogic dsp_control.cpp.o -o dsp_control.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o hostpipes.cpp.o -c hostpipes.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> hostpipes.cpp.o -o hostpipes.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})

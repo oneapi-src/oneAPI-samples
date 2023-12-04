@@ -304,10 +304,7 @@ struct StreamingQRD {
           if (i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
             col[k] = a_compute[j].template get<k>();
           }
-          // Using an else statement makes the compiler throw an
-          // inexplicable warning when using non complex types:
-          // "Compiler Warning: Memory instruction with unresolved
-          // pointer may lead to bad QoR."
+
           if (!i_gt_0[fanout_bank_idx] && j_ge_0[fanout_bank_idx]) {
             col[k] = a_load[j].template get<k>();
           }

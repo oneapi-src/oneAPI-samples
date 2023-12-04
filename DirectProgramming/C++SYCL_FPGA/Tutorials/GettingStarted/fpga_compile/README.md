@@ -19,17 +19,17 @@ While SYCL* code can be compiled for CPU, GPU, or FPGA, compiling to FPGA is som
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 > **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -232,30 +232,26 @@ Part 4 shows the vector addition in SYCL* C++ with a 'function' coding style and
 #### On Linux*
 
 1. Change to the sample directory.
-2. For different parts of this tutorial, navigate to the appropriate sub-folder.
-   ```
-   cd <partX_XXX>
-   ```
-   where `<partX_XXX>` is:
-   - `part1_cpp`
-   - `part2_dpcpp_functor_usm`
-   - `part3_dpcpp_lambda_usm`
-   - `part4_dpcpp_lambda_buffers`
 
-3. Build the program for Intel® Agilex® 7 device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DPART=<X>
    ```
+   where `-DPART=<X>` is:
+   - `-DPART=1`: Compile `part1_cpp`
+   - `-DPART=2`: Compile `part2_dpcpp_functor_usm`
+   - `-DPART=3`: Compile `part3_dpcpp_lambda_usm`
+   - `-DPART=4`: Compile `part4_dpcpp_lambda_buffers`
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DPART=<X>
    >  ```
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DPART=<X>
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
@@ -263,30 +259,26 @@ Part 4 shows the vector addition in SYCL* C++ with a 'function' coding style and
 #### On Windows*
 
 1. Change to the sample directory.
-2. For different parts of this tutorial, navigate to the appropriate sub-folder.
-   ```
-   cd <partX_XXX>
-   ```
-   where `<partX_XXX>` is:
-   - `part1_cpp`
-   - `part2_dpcpp_functor_usm`
-   - `part3_dpcpp_lambda_usm`
-   - `part4_dpcpp_lambda_buffers`
 
-3. Build the program for the Intel® Agilex® 7 device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
+   where `-DPART=<X>` is:
+   - `-DPART=1`: Compile `part1_cpp`
+   - `-DPART=2`: Compile `part2_dpcpp_functor_usm`
+   - `-DPART=3`: Compile `part3_dpcpp_lambda_usm`
+   - `-DPART=4`: Compile `part4_dpcpp_lambda_buffers`
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DPART=<X>
    >  ```
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DPART=<X>
    >  ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
