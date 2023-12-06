@@ -16,7 +16,7 @@
 		"id": "dnn gsg",
 		"steps": [
 			"pip install jupyter ipykernel",
-			"python -m ipykernel install --user --name=base",
+			"python3 -m ipykernel install --user --name=base",
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_getting_started.ipynb"
 		 ]
 	},
@@ -25,7 +25,7 @@
 		"id": "verbose_jit",
 		"steps": [
 			"pip install jupyter ipykernel",
-			"python -m ipykernel install --user --name=base",
+			"python3 -m ipykernel install --user --name=base",
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_verbose_jitdump.ipynb"
 		 ]
 	},
@@ -34,7 +34,7 @@
 		"id": "isa",
 		"steps": [
 			"pip install jupyter ipykernel",
-			"python -m ipykernel install --user --name=base",
+			"python3 -m ipykernel install --user --name=base",
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_analyze_isa_with_dispatcher_control.ipynb"
 		 ]
 	},
@@ -43,10 +43,9 @@
 		"id": "vtune_itt",
 		"steps": [
 			"pip install jupyter ipykernel",
-			"python -m ipykernel install --user --name=base",
+			"python3 -m ipykernel install --user --name=base",
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_vtune_profiling.ipynb"
 		 ]
 	}
-     ]
- }
 }
+   
