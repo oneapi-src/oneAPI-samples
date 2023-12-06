@@ -28,7 +28,8 @@ else()
     endif()
 endif()
 
-# Older quartus versions do not support as many kernels in SYCL HLS when compiling for hardware
+# Older Quartus versions do not support as many kernels in the SYCL HLS flow
+# when compiling for hardware
 if (IS_BSP MATCHES "0")
     execute_process(COMMAND quartus_sh --version
         OUTPUT_VARIABLE QUARTUS_VERSION
@@ -36,10 +37,14 @@ if (IS_BSP MATCHES "0")
     string(REGEX MATCH "[0-9][0-9]\.[0-9]\.[0-9]"
         QUARTUS_VERSION
         "${QUARTUS_VERSION}")
-    message(STATUS "Detected Quartus Prime Shell version ${QUARTUS_VERSION}")
-    if (QUARTUS_VERSION VERSION_LESS 22.2.0)
-        message(STATUS "Limiting hardware performance due to Quartus Prime version")
-        set(LIMIT_HW_MERGE_UNITS_FLAG "-DLIMIT_HW_MERGE_UNITS=1")
+    if ("${QUARTUS_VERSION}" STREQUAL "")
+        message(WARNING "Could not determine Quartus Prime Shell version.")
+    else()
+        message(STATUS "Detected Quartus Prime Shell version ${QUARTUS_VERSION}")
+        if (QUARTUS_VERSION VERSION_LESS 22.2.0)
+            message(STATUS "Limiting hardware performance due to Quartus Prime version.")
+            set(LIMIT_HW_MERGE_UNITS_FLAG "-DLIMIT_HW_MERGE_UNITS=1")
+        endif()
     endif()
 endif()
 
