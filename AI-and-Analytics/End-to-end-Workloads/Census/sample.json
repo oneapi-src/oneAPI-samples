@@ -15,7 +15,7 @@
         "id": "Intel_Modin_E2E_py",
         "steps": [
           "set -e # Terminate the script on first error",
-          "source ~/intel/oneapi/intelpython/bin/activate",
+          "source /root/intel/oneapi/intelpython/bin/activate",
           "conda create -n modin-hdk python=3.9 -y",
           "conda activate modin-hdk",
           "conda install modin-hdk -c conda-forge -y",
