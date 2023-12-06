@@ -13,24 +13,22 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-                "source /opt/intel/oneapi/setvars.sh --force", 
-			    "conda create --name user-tensorflow --clone tensorflow",
-				"conda activate user-tensorflow",
+                "source /root/intel/oneapi/intelpython/bin/activate", 
+			    "conda activate tensorflow",
 				"pip install -r requirements.txt",
-				"pip install nbformat nbconvert",
-				"python  -m ipykernel install --user --name=user-tensorflow",
+				"pip install jupyter ipykernel",
+				"python  -m ipykernel install --user --name=tensorflow",
 				"conda deactivate",
-				"conda create --name user-tensorflow-gpu --clone tensorflow-gpu",
-				"conda activate user-tensorflow-gpu",
+				"conda activate tensorflow-gpu",
 				"pip install -r requirements.txt",
-				"pip install nbformat nbconvert",
-				"python  -m ipykernel install --user --name=user-tensorflow-gpu",
+				"pip install jupyter ipykernel",
+				"python  -m ipykernel install --user --name=tensorflow-gpu",
 				"conda deactivate"
             ],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate user-tensorflow",
-				"python scripts/ci_test.py"
+				"conda activate tensorflow",
+				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
 			]
 		}]
 	},
