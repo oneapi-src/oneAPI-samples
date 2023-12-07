@@ -72,10 +72,10 @@ static void quasirandomGeneratorKernel(float *d_Output,
 // Table initialization routine
 extern "C" void initTableGPU(
     unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION],sycl::queue q_ct1) {
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
           q_ct1.memcpy(c_Table.get_ptr(), tableCPU,
                   QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int))
-          .wait()));
+          .wait());
 }
 
 // Host-side interface
@@ -94,7 +94,6 @@ extern "C" void quasirandomGeneratorGPU(float *d_Output, unsigned int seed,
                                      c_Table_acc_ct1);
         });
   });
-  getLastCudaError("quasirandomGeneratorKernel() execution failed.\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +199,6 @@ extern "C" void inverseCNDgpu(float *d_Output, unsigned int *d_Input,
       [=](sycl::nd_item<3> item_ct1) {
         inverseCNDKernel(d_Output, d_Input, N, item_ct1);
       });
-  getLastCudaError("inverseCNDKernel() execution failed.\n");
 }
 
 #endif
