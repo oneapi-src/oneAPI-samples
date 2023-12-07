@@ -99,11 +99,6 @@ void convolutionRowsKernel(float *d_Dst, float *d_Src, int imageW,
   }
 
   // Compute and store results
-  /*
-  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 
   float a[2*KERNEL_RADIUS + 1];
@@ -144,17 +139,6 @@ extern "C" void convolutionRowsGPU(float *d_Dst, float *d_Src, int imageW,
 
     auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
 
-    /*
-    DPCT1101:16: 'ROWS_BLOCKDIM_Y' expression was replaced with a value.
-    Modify the code to use the original expression, provided in comments, if
-    it is correct.
-    */
-    /*
-    DPCT1101:17: '(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
-                            ROWS_BLOCKDIM_X' expression was replaced with a
-    value. Modify the code to use the original expression, provided in
-    comments, if it is correct.
-    */
     sycl::local_accessor<float, 2> s_Data_acc_ct1(
         sycl::range<2>(4 /*ROWS_BLOCKDIM_Y*/,
                        160 /*(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
@@ -168,7 +152,6 @@ ROWS_BLOCKDIM_X*/),
                                              s_Data_acc_ct1);
                      });
   });
-  getLastCudaError("convolutionRowsKernel() execution failed\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -232,11 +215,6 @@ void convolutionColumnsKernel(float *d_Dst, float *d_Src, int imageW,
   }
 
   // Compute and store results
-  /*
-  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
   
   float a[2*KERNEL_RADIUS + 1];
@@ -278,19 +256,6 @@ extern "C" void convolutionColumnsGPU(float *d_Dst, float *d_Src, int imageW,
 
     auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
 
-    /*
-    DPCT1101:18: 'COLUMNS_BLOCKDIM_X' expression was replaced with a value.
-    Modify the code to use the original expression, provided in comments, if
-    it is correct.
-    */
-    /*
-    DPCT1101:19: '(COLUMNS_RESULT_STEPS +
-                                             2 * COLUMNS_HALO_STEPS) *
-                                                COLUMNS_BLOCKDIM_Y +
-                                            1' expression was replaced with a
-    value. Modify the code to use the original expression, provided in
-    comments, if it is correct.
-    */
     sycl::local_accessor<float, 2> s_Data_acc_ct1(
         sycl::range<2>(16 /*COLUMNS_BLOCKDIM_X*/, 81 /*(COLUMNS_RESULT_STEPS
     + 2 * COLUMNS_HALO_STEPS) * COLUMNS_BLOCKDIM_Y +
@@ -303,5 +268,4 @@ extern "C" void convolutionColumnsGPU(float *d_Dst, float *d_Src, int imageW,
                            c_Kernel_ptr_ct1, s_Data_acc_ct1);
                      });
   });
-  getLastCudaError("convolutionColumnsKernel() execution failed\n");
 }
