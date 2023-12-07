@@ -40,12 +40,9 @@ buffer, accessor, kernel, and command groups.
 ## Build the `Mandelbrot` Sample
 
 ### Setting Environment Variables
-For working with the Command-Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by
-sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -57,6 +54,10 @@ sourcing the `setvars` script every time you open a new terminal window. This pr
 > - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>
+> Microsoft Visual Studio:
+> The SETVARS_CONFIG environment variable is not automatically defined during installation. You must add it to your environment before starting Visual Studio using the following command. This only needs to be set once.
+> -	Open a command prompt window and execute `setx SETVARS_CONFIG " "`.
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
@@ -170,7 +171,7 @@ If running a sample in the Intel&reg; DevCloud, you must specify the compute nod
    ```
 
 ### Build and Run the Sample in Batch Mode (optional)
-The following instruction describe the optional process of submitting build and run jobs 
+The following instruction describe the optional process of submitting build and run jobs
 in a Portable Bash Script (PBS). A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the `-d \<dir\>` option to qsub to set the working directory.
 
 ### Create the Job Scripts
