@@ -104,12 +104,11 @@ int main(int argc, char **argv) {
 
   double *b = NULL;
   float *A = NULL;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      b = sycl::malloc_host<double>(N_ROWS, q)));
+  DPCT_CHECK_ERROR(
+      b = sycl::malloc_host<double>(N_ROWS, q));
   memset(b, 0, N_ROWS * sizeof(double));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(A = sycl::malloc_host<float>(
-                           N_ROWS * N_ROWS, q)));
+  DPCT_CHECK_ERROR(A = sycl::malloc_host<float>(
+                           N_ROWS * N_ROWS, q));
   memset(A, 0, N_ROWS * N_ROWS * sizeof(float));
 
   createLinearSystem(A, b);
@@ -142,24 +141,21 @@ int main(int argc, char **argv) {
   float *d_A;
   double *d_b, *d_x, *d_x_new;
   
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_b = sycl::malloc_device<double>(N_ROWS, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
+      d_b = sycl::malloc_device<double>(N_ROWS, q));
+  DPCT_CHECK_ERROR(
       d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS,
-                                         q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_x = sycl::malloc_device<double>(N_ROWS, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_x_new = sycl::malloc_device<double>(
-                                       N_ROWS, q)));
+                                         q));
+  DPCT_CHECK_ERROR(
+      d_x = sycl::malloc_device<double>(N_ROWS, q));
+  DPCT_CHECK_ERROR(d_x_new = sycl::malloc_device<double>(
+                                       N_ROWS, q));
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q.memset(d_x, 0, sizeof(double) * N_ROWS)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q.memset(d_x_new, 0, sizeof(double) * N_ROWS)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      q.memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q.memcpy(d_b, b, sizeof(double) * N_ROWS)));
+  DPCT_CHECK_ERROR(q.memset(d_x, 0, sizeof(double) * N_ROWS));
+  DPCT_CHECK_ERROR(q.memset(d_x_new, 0, sizeof(double) * N_ROWS));
+  DPCT_CHECK_ERROR(
+      q.memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS));
+  DPCT_CHECK_ERROR(q.memcpy(d_b, b, sizeof(double) * N_ROWS));
 
   q.wait();
 
@@ -178,14 +174,12 @@ int main(int argc, char **argv) {
   sdkStopTimer(&timerGpu);
   printf("Device Processing time: %f (ms)\n", sdkGetTimerValue(&timerGpu));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_b, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_A, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(d_x, q)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_x_new, q)));
-
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(A, q)));
-  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(b, q)));
+  DPCT_CHECK_ERROR(sycl::free(d_b, q));
+  DPCT_CHECK_ERROR(sycl::free(d_A, q));
+  DPCT_CHECK_ERROR(sycl::free(d_x, q));
+  DPCT_CHECK_ERROR(sycl::free(d_x_new, q));
+  DPCT_CHECK_ERROR(sycl::free(A, q));
+  DPCT_CHECK_ERROR(sycl::free(b, q));
 
   printf("&&&& jacobiCudaGraphs %s\n",
          (fabs(sum - sumGPU) < conv_threshold) ? "PASSED" : "FAILED");
