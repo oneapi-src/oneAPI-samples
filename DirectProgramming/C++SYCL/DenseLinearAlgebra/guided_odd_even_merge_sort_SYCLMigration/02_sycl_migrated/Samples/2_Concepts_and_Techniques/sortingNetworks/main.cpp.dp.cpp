@@ -81,26 +81,20 @@ int main(int argc, char **argv) try {
     h_InputVal[i] = i;
   }
 
-  printf("Allocating and initializing CUDA arrays...\n\n");
-  error = DPCT_CHECK_ERROR(
+  printf("Allocating and initializing arrays...\n\n");
+  DPCT_CHECK_ERROR(
       d_InputKey = sycl::malloc_device<uint>(N, q));
-  checkCudaErrors(error);
-  error = DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       d_InputVal = sycl::malloc_device<uint>(N, q));
-  checkCudaErrors(error);
-  error = DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       d_OutputKey = sycl::malloc_device<uint>(N, q));
-  checkCudaErrors(error);
-  error = DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       d_OutputVal = sycl::malloc_device<uint>(N, q));
-  checkCudaErrors(error);
-  error = DPCT_CHECK_ERROR(q.memcpy(d_InputKey, h_InputKey, N * sizeof(uint))
+  DPCT_CHECK_ERROR(q.memcpy(d_InputKey, h_InputKey, N * sizeof(uint))
                                .wait());
-  checkCudaErrors(error);
-  error = DPCT_CHECK_ERROR(q.memcpy(d_InputVal, h_InputVal, N * sizeof(uint))
+  DPCT_CHECK_ERROR(q.memcpy(d_InputVal, h_InputVal, N * sizeof(uint))
                                .wait());
-  checkCudaErrors(error);
-
+ 
   int flag = 1;
   printf("Running GPU OddEven Merge sort (%u identical iterations)...\n\n",
          numIterations);
@@ -109,10 +103,8 @@ int main(int argc, char **argv) try {
     printf("Testing array length %u (%u arrays per batch)...\n", arrayLength,
            N / arrayLength);
   
-    error =
-        DPCT_CHECK_ERROR(q.wait_and_throw());
-    checkCudaErrors(error);
-  
+    DPCT_CHECK_ERROR(q.wait_and_throw());
+    
     sdkResetTimer(&hTimer);
     sdkStartTimer(&hTimer);
     uint threadCount = 0;
@@ -121,9 +113,7 @@ int main(int argc, char **argv) try {
       threadCount = oddEvenMergeSort(d_OutputKey, d_OutputVal, d_InputKey,
                                 d_InputVal, N / arrayLength, arrayLength, DIR, q);
 
-    error =
-        DPCT_CHECK_ERROR(q.wait_and_throw());
-    checkCudaErrors(error);
+    DPCT_CHECK_ERROR(q.wait_and_throw());
 
     sdkStopTimer(&hTimer);
     printf("Average time: %f ms\n\n",
@@ -140,14 +130,12 @@ int main(int argc, char **argv) try {
 
     printf("\nValidating the results...\n");
     printf("...reading back GPU results\n");
-    error = DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(
         q.memcpy(h_OutputKeyGPU, d_OutputKey, N * sizeof(uint))
             .wait());
-    checkCudaErrors(error);
-    error = DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(
         q.memcpy(h_OutputValGPU, d_OutputVal, N * sizeof(uint))
             .wait());
-    checkCudaErrors(error);
 
     int keysFlag =
         validateSortedKeys(h_OutputKeyGPU, h_InputKey, N / arrayLength,
