@@ -10,7 +10,7 @@ The `Matrix Multiply` is a simple program that multiplies together two large mat
 
 ### Purpose
 
-The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample. 
+The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample.
 
 The code will attempt to execute on an available GPU first and fallback to the
 system CPU if a compatible GPU is not detected. The device used for the
@@ -35,19 +35,30 @@ The code attempts to run the calculation on both the GPU and CPU and verify the 
 
 ## Build the `Matrix Multiply` Samples
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+### Setting Environment Variables
+For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
-> - For PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>
+
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Include Files
 The include folder is located at `"%ONEAPI_ROOT%\dev-utilities\latest\include"` on your development system. You will need to use some of the resources from this location to build the sample.
