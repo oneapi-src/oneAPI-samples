@@ -41,6 +41,7 @@
 #include <helper_functions.h>
 #include <time.h>
 #include <chrono>
+#include <fstream>
 
 // This is a kernel that does no real work but runs at least for a specified
 // number of count
