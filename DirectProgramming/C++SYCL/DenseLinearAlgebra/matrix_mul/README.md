@@ -134,69 +134,6 @@ P = m_size / 2;
 ```
 > **Note**: The size value must be in multiples of **8**.
 
-### Run the `Matrix Multiply` Sample in Intel&reg; DevCloud
-When running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see Intel&reg; oneAPI Base Toolkit [Get Started](https://devcloud.intel.com/oneapi/get_started/).
-
-## Example Output
-
-### SYCL*
-```
-Running on device: Intel(R) Gen9 HD Graphics NEO
-Problem size: c(150,600) = a(150,300) * b(300,600)
-Result of matrix multiplication using SYCL: Success - The results are correct!
-```
-
-### OpenMP
-```
-Problem size: c(150,600) = a(150,300) * b(300,600)
-Running on 1 device(s)
-The default device id: 0
-Result of matrix multiplication using OpenMP: Success - The results are correct!
-Result of matrix multiplication using GPU offloading: Success - The results are correct!
-```
-
-### Running the sample in the DevCloud<a name="run-on-devcloud"></a>
-
-#### Build and run
-
-To launch build and run jobs on DevCloud submit scripts to PBS through the qsub utility.
-> Note that all parameters are already specified in the build and run scripts.
-1. Build the sample on a gpu node.
-
-    ```bash
-    qsub build.sh
-    ```
-
-2. When the build job completes, there will be a `build.sh.oXXXXXX` file in the directory. After the build job completes, run the sample on a gpu node:
-
-    ```bash
-    qsub run.sh
-    ```
-
-3. To build and run for OpenMP use the `build_omp.sh` and `run_omp.sh` scripts accordingly.
-
-#### Additional information
-
-1. In order to inspect the job progress, use the qstat utility.
-
-    ```bash
-    watch -n 1 qstat -n -1
-    ```
-
-    > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second.
-2. When a job terminates, a couple of files are written to the disk:
-
-    <script_name>.sh.eXXXX, which is the job stderr
-
-    <script_name>.sh.oXXXX, which is the job stdout
-
-    > Here XXXX is the job ID, which gets printed to the screen after each qsub command.
-3. To inspect the output of the sample use cat command.
-
-    ```bash
-    cat run.sh.oXXXX
-    ```
-
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
