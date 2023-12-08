@@ -12,6 +12,7 @@
 	{
 		"id": "verion check",
 		"steps": [
+      "source /root/intel/oneapi/intelpython/bin/activate",
 			"source activate tensorflow",
 			"python version_check.py"
 		 ]
