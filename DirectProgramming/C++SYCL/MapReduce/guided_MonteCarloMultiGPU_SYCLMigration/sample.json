@@ -1,7 +1,7 @@
 {
   "guid": "81E7955F-AD50-4223-9219-BB9DF13CE161",
   "name": "MontecarloMultiGPU",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/MapReduce"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Map Reduce"],
   "description": "Evaluates fair call price for a given set of European Options using the MonteCarlo approach",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

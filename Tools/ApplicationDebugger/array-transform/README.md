@@ -1,8 +1,6 @@
 # `array-transform` Sample
 
-This is a small SYCL*-compliant code sample for exercising application debugging using
-Intel&reg; Distribution for GDB*.  It is highly recommended that you go
-through this sample *after* you familiarize yourself with the basics of
+This is a small SYCL*-compliant code sample for exercising application debugging using Intel&reg; Distribution for GDB*.  It is highly recommended that you go through this sample *after* you familiarize yourself with the basics of
 SYCL programming, and *before* you start using the debugger.
 
 
@@ -11,26 +9,16 @@ SYCL programming, and *before* you start using the debugger.
 | What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator
 | Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
 
-This sample accompanies 
+This sample accompanies
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
 ## Purpose
 
-The `array-transform` sample is a SYCL-conforming application with a small
-computation kernel that is designed to illustrate key debugger
-features such as breakpoint definition, thread switching,
-scheduler-locking and SIMD lane views.  The sample is intended
-for exercising the debugger, not for performance benchmarking.
+The `array-transform` sample is a SYCL-conforming application with a small computation kernel that is designed to illustrate key debugger features such as breakpoint definition, thread switching, scheduler-locking and SIMD lane views.  The sample is intended for exercising the debugger, not for performance benchmarking.
 
-The debugger supports debugging kernels that run on the CPU, GPU, or
-accelerator devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
-to select device.  The default device is Level Zero GPU device, if available.
-For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
-The selected device is displayed in the output.  Concrete instructions
-about how to run the program and example outputs are given further
-below.  For complete setup and usage instructions, see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
-of the application debugger.
+The debugger supports debugging kernels that run on the CPU, GPU, or accelerator devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable to select device.  The default device is Level Zero GPU device, if available.  For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
+The selected device is displayed in the output.  Concrete instructions about how to run the program and example outputs are given further below.  For complete setup and usage instructions, see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp) of the application debugger.
 
 ## Prerequisites
 
@@ -53,31 +41,14 @@ correctly on CPU and only after that switch the offload to GPU.
 
 ## Key Implementation Details
 
-The basic SYCL implementation explained in the code includes device
-selection, buffer, accessor, and command groups.  The kernel contains
-data access via read/write accessors and a conditional statement to
-illustrate (in) active SIMD lanes on a GPU.
-
-## Using Visual Studio Code* (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
-
-To learn more about the extensions, see the 
-[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
+The basic SYCL implementation explained in the code includes device selection, buffer, accessor, and command groups.  The kernel contains data access via read/write accessors and a conditional statement to illustrate (in) active SIMD lanes on a GPU.
 
 ## Building and Running the `array-transform` Program
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+
+### Setting Environment Variables
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -88,36 +59,37 @@ To learn more about the extensions, see the
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
+
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see the
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide based on
-your OS: 
+your OS:
 - [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 - [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
-
-### Include Files
-
-The include folder is located at
-`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development
-system.
-
-### Running Samples In DevCloud
-
-If running a sample in the Intel DevCloud, remember that you must
-specify the compute node (CPU, GPU, FPGA) and whether to run in
-batch or interactive mode.  For the array transform sample, a node
-with GPU and an interactive shell is recommended.
-
-```
-$ qsub -I -l nodes=1:gpu:ppn=2
-```
-
-For more information, see the Intel® oneAPI
-Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### Auto-Attach
 
@@ -380,11 +352,8 @@ Thread 2.153 hit Breakpoint 1, with SIMD lanes [0-7], main::{lambda(auto:1&)#1}:
 
 ---
 
-\* Intel is a trademark of Intel Corporation or its subsidiaries.  Other
-names and brands may be claimed as the property of others.
-
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

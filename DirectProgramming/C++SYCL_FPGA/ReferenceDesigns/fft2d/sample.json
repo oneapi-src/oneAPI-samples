@@ -1,7 +1,7 @@
 {
   "guid": "1739EEF9-BCEF-413E-9F24-DE1656DDD3AA",
   "name": "FFT2D",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
   "description": "Reference design implementing a 2D FFT on Intel® FPGAs",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
