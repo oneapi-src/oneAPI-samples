@@ -11,7 +11,7 @@ SYCL programming, and *before* you start using the debugger.
 | What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator
 | Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
 
-This sample accompanies 
+This sample accompanies
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
@@ -58,6 +58,33 @@ selection, buffer, accessor, and command groups.  The kernel contains
 data access via read/write accessors and a conditional statement to
 illustrate (in) active SIMD lanes on a GPU.
 
+## Building and Running the `array-transform` Program
+
+### Setting Environment Variables
+For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>
+
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
+
 ## Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment,
@@ -70,31 +97,14 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see the 
+To learn more about the extensions, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-
-## Building and Running the `array-transform` Program
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
->
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide based on
-your OS: 
+your OS:
 - [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 - [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
 

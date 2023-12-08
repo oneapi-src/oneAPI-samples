@@ -62,44 +62,27 @@ information sources and HMM.
 The basic SYCL* implementation explained in the code includes device selector,
 buffer, accessor, kernel, and command groups.
 
-## Setting Environment Variables
-When working with the command-line interface (CLI), you should configure the
-oneAPI toolkits using environment variables. Set up your CLI environment by
-sourcing the `setvars` script every time you open a new terminal window. This
-practice ensures that your compiler, libraries, and tools are ready for
-development.
-
 ## Build the `Hidden Markov Models` Program for CPU and GPU
-> **Note**: If you have not already done so, set up your CLI environment by
-> sourcing  the `setvars` script in the root of your oneAPI installation.
+
+### Setting Environment Variables
+For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source
->   <install-dir>/setvars.sh ; exec csh'`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program
->   Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the
-> setvars Script with Linux* or
-> macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)
-> or [Use the setvars Script with
-> Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-> **Note**: You can use [Modulefiles
-> scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
-> to set up your development environment. The modulefiles scripts work with all
-> Linux shells.
-
-> **Note**: If you want to fine tune the list of components and the version of
-> those components, use a [setvars config
-> file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
-> to set up your development environment.
-
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>
 
 ### Include Files
 The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your
@@ -138,7 +121,7 @@ If an error occurs, you can get more details by running `make` with the
 make VERBOSE=1
 ```
 
-### On Windows* 
+### On Windows*
 **Using Visual Studio***
 
 Build the program using **Visual Studio 2017** or newer.
@@ -206,12 +189,12 @@ either absolute paths or pass the `-d \<dir\>` option to `qsub`.
    ```
 4. Change to the sample directory.
 
-5. Configure the sample for a GPU node. (This is a single line script.) 
-``` 
-qsub	-I  -l nodes=1:gpu:ppn=2 -d . 
+5. Configure the sample for a GPU node. (This is a single line script.)
+```
+qsub	-I  -l nodes=1:gpu:ppn=2 -d .
 ```
    - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
+   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
    - `-d .` makes the current folder as the working directory for the task.
 
   > **Note**: To inspect job progress, use the qstat utility.
@@ -223,10 +206,10 @@ qsub	-I  -l nodes=1:gpu:ppn=2 -d .
 
 6. Perform build steps you would on Linux. (Including optionally cleaning the
    project.)
-7. Run the sample. 
-8. Disconnect from the Intel® DevCloud. 
-``` 
-exit 
+7. Run the sample.
+8. Disconnect from the Intel® DevCloud.
+```
+exit
 ```
 
 ## Example Output
@@ -298,7 +281,7 @@ make VERBOSE=1
   ```bash
   watch -n 1 qstat -n -1
   ```
-  
+
   > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second. If no results are displayed, the job has completed.
 
 2. When a job terminates, a couple of files are written to the disk:
