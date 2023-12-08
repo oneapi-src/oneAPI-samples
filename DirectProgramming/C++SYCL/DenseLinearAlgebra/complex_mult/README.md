@@ -114,57 +114,6 @@ There are no editable parameters for this sample.
 	Complex multiplication successfully run on the device
 
 ```
-## Build the `Complex Multiplication` Sample in Intel&reg; DevCloud
-
-When running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
-To launch build and run jobs on Intel&reg; DevCloud submit scripts to Portable Bash Script (PBS) through the qsub utility.
-
-> **Note**: All parameters are already specified in the build and run scripts.
-
-1. Open a terminal on a Linux system.
-
-2. Log in to the Intel&reg; DevCloud.
-   ```
-   ssh devcloud
-   ```
-
-3. Download the samples from GitHub.
-   ```
-   git clone https://github.com/oneapi-src/oneAPI-samples.git
-   ```
-4. Change directories to the sample directory.
-
-5. Build the sample on a gpu node.
-
-    ```
-    qsub build.sh
-    ```
-6. Use the qstat utility to inspect the job progress.
-   ```
-   watch -n 1 qstat -n -1
-   ```
-   - The watch `-n 1` command is used to run `qstat -n -1` and display its results every second.
-
-When the build job completes, there will be a **build.sh.oXXXXXX** file in the directory.
-
-> **Note**: Some files are written to the disk when each job terminates.
-> - **<script_name>.sh.eXXXX** = the job stderr
-> - **<script_name>.sh.oXXXX** = the job stdout
-> - where **XXXX** is the job ID printed to the screen after each qsub command.
-
-
-7. After the build job completes, run the sample on a gpu node:
-
-    ```
-    qsub run.sh
-    ```
-
-3. Inspect the output of the sample using the `cat` command.
-
-    ```
-    cat run.sh.oXXXX
-    ```
 
 ## License
 Code samples are licensed under the MIT license. See
