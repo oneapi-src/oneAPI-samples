@@ -1,6 +1,5 @@
 # `Matrix Multiply` Sample
-A sample containing multiple implementations of matrix multiplication code
-sample and is implemented using SYCL* for CPU and GPU.
+A sample containing multiple implementations of matrix multiplication code sample and is implemented using SYCL* for CPU and GPU.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -12,18 +11,16 @@ sample and is implemented using SYCL* for CPU and GPU.
 
 ## Purpose
 
-The Matrix Multiplication sample performs basic matrix multiplication. Three
-versions are provided that use different SYCL features.
+The Matrix Multiplication sample performs basic matrix multiplication. Three versions are provided that use different SYCL features.
 
 ## Key Implementation details
 
-The basic SYCL implementation explained in the code includes device selector,
-buffer, accessor, kernel, and command groups.
+The basic SYCL implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
 ## How to Build
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -40,20 +37,11 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
 If you wish to fine tune the list of components and the version of those components, use
 a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
-
-## Include Files
-The include folder is located at
-`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-### Running Samples In Intel&reg; DevCloud
-Running samples in the Intel&reg; DevCloud requires you to specify a compute node.
-For specific instructions, jump to [Run the Matrix Multiply Advisor sample on the DevCloud](#run-matmul-advisor-on-devcloud).
 
 ## Using Visual Studio Code* (Optional)
 
@@ -79,7 +67,6 @@ This sample contains three versions of matrix multiplication:
 Edit the line in `src/multiply.hpp` to select the version of the multiply function:
 `#define MULTIPLY multiply1`.
 
-
 ### On a Linux* System
 	To build the SYCL version:
 	cd <sample dir>
@@ -103,7 +90,7 @@ dependencies and permissions errors.
    * Select Menu "Project > Build" to build the selected configuration
    * Select Menu "Debug > Start Without Debugging" to run the program
 
-### on Windows - command line - Build the program using MSBuild
+### On Windows - command line - Build the program using MSBuild
     DPCPP Configurations:
     Release - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
     Debug - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
@@ -121,125 +108,6 @@ Running on Intel(R) Gen9
 Elapsed Time: 0.539631s
 ```
 
-## Running an Intel® Advisor analysis
-See the [Intel® Advisor Cookbook](https://software.intel.com/en-us/advisor-cookbook).
-
-### Running the Matrix Multiply Advisor sample in the DevCloud<a name="run-matmul-advisor-on-devcloud"></a>
-This sample contains 3 version of matrix multiplication:
-
-- `multiply1` – basic implementation of matrix multiply using SYCL
-- `multiply1_1` – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
-- `multiply1_2` – the basic implementation, plus adding the local accessor and matrix tiling
-
-Edit the line in `src/multiply.hpp` to select the version of the multiply function:
-`#define MULTIPLY multiply1`.
-
-1.  Open a terminal on your Linux system.
-2.	Log in to DevCloud.
-```
-ssh devcloud
-```
-3.	Download the samples.
-```
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-```
-
-4. Change directories to the Matrix Multiply Advisor sample directory.
-```
-cd ~/oneAPI-samples/Tools/Advisor/matrix_multiply_advisor
-```
-#### Build and run the sample in batch mode
-The following describes the process of submitting build and run jobs to PBS.
-A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
-
-#### Create the Job Scripts
-1.	Create a build.sh script with your preferred text editor:
-```
-nano build.sh
-```
-2.	 Add this text into the build.sh file:
-```
-source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
-mkdir build
-cd build
-cmake ..
-make
-```
-
-3.	Save and close the build.sh file.
-
-4.	Create a run.sh script with your preferred text editor:
-```
-nano run.sh
-```
-
-5.	 Add this text into the run.sh file:
-```
-source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
-cd build
-make run
-```
-6.	Save and close the run.sh file.
-
-#### Build and run
-Jobs submitted in batch mode are placed in a queue waiting for the necessary resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.
-1.	Build the sample on a gpu node.
-
-```
-qsub -l nodes=1:gpu:ppn=2 -d . build.sh
-```
-
-Note: -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job.
-Note: The -d . is used to configure the current folder as the working directory for the task.
-
-2.	In order to inspect the job progress, use the qstat utility.
-```
-watch -n 1 qstat -n -1
-```
-Note: The watch -n 1 command is used to run qstat -n -1 and display its results every second. If no results are displayed, the job has completed.
-
-3.	After the build job completes successfully, run the sample on a gpu node:
-```
-qsub -l nodes=1:gpu:ppn=2 -d . run.sh
-```
-4.	When a job terminates, a couple of files are written to the disk:
-
-    <script_name>.sh.eXXXX, which is the job stderr
-
-    <script_name>.sh.oXXXX, which is the job stdout
-
-    Here XXXX is the job ID, which gets printed to the screen after each qsub command.
-
-5.	Inspect the output of the sample.
-```
-cat run.sh.oXXXX
-```
-You should see output similar to this:
-
-```
-Scanning dependencies of target run
-Address of buf1 = 0x7f570456f010
-Offset of buf1 = 0x7f570456f180
-Address of buf2 = 0x7f5703d6e010
-Offset of buf2 = 0x7f5703d6e1c0
-Address of buf3 = 0x7f570356d010
-Offset of buf3 = 0x7f570356d100
-Address of buf4 = 0x7f5702d6c010
-Offset of buf4 = 0x7f5702d6c140
-Using multiply kernel: multiply1
-Running on Intel(R) UHD Graphics P630 [0x3e96]
-Elapsed Time: 1.79388s
-Built target run
-```
-
-6.	Remove the stdout and stderr files and clean up the project files.
-```
-rm build.sh.*; rm run.sh.*; make clean
-```
-7.	Disconnect from the Intel DevCloud.
-```
-exit
-```
 ## Running an Intel&reg; Advisor analysis
 See the [Intel® Advisor Cookbook](https://software.intel.com/en-us/advisor-cookbook).
 
