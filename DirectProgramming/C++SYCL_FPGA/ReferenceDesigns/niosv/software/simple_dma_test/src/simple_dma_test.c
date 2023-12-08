@@ -64,44 +64,34 @@
 /// @brief configure and start the Simple DMA Accelerator IP
 ///
 /// @details `configure_and_start_dma` will accept the source, destination, and
-/// transfer length and write them into the kernel CSRs using the old Nios
-/// IORW/IORD_32DIRECT macros, since those also work for Nios II.
+/// transfer length and write them into the kernel CSRs.
 ///
-/// @note Since the kernel is located in the I/O space of the Nios V processor,
-/// you may choose to simply dereference a pointer to bypass the data cache but
-/// that doesn't port to Nios II directly so that has been avoided here.
+/// @note Since the kernel is located in the peripheral space of the Nios V
+/// processor, we simply dereference a pointer to bypass the data
+/// cache.
 ///
 /// @param[in] source Pointer to source memory to copy from
 ///
 /// @param[in] destination Pointer to which to copy data
 ///
 /// @param[in] length_bytes Number of bytes of data to copy
-void configure_and_start_dma(unsigned int* source, unsigned int* destination,
+void configure_and_start_dma(unsigned int *source, unsigned int *destination,
                              unsigned int length_bytes) {
-  // Nios V/g is 32-bit, but FPGA IP produced with the Intel® oneAPI DPC++/C++
-  // Compiler uses 64-bit pointers, so we have to write the source pointer 32
-  // bits at a time. The source pointer needs to be cast to unsigned int since
-  // the Nios macros do not expect a pointer.
-
-  // According to io.h there is an upper limitation of 12-bits of the offset
-  // field, so this code instead adds the offset to the base (first argument of
-  // macro) and hardcodes the offset field to 0 (second argument of macro).
-
   // DMA source
-  IOWR_32DIRECT(REG_ARG_SOURCE_BASE, 0, (unsigned int)source);
-  // padding upper 32 bits to all zeros
-  IOWR_32DIRECT(REG_ARG_SOURCE_BASE + 4, 0, 0);
+  unsigned int **reg_arg_source_ptr = (unsigned int **)REG_ARG_SOURCE_BASE;
+  *reg_arg_source_ptr = source;
 
   // DMA destination
-  IOWR_32DIRECT(REG_ARG_DEST_BASE, 0, (unsigned int)destination);
-  // padding upper 32 bits to all zeros
-  IOWR_32DIRECT(REG_ARG_DEST_BASE + 4, 0, 0);
+  unsigned int **reg_arg_destination_ptr = (unsigned int **)REG_ARG_DEST_BASE;
+  *reg_arg_destination_ptr = destination;
 
   // DMA length
-  IOWR_32DIRECT(REG_ARG_LENGTH_BASE, 0, BUFFER_LENGTH);
+  unsigned int *reg_arg_length_ptr = (unsigned int *)REG_ARG_LENGTH_BASE;
+  *reg_arg_length_ptr = length_bytes;
 
   // DMA start
-  IOWR_32DIRECT(REG_START_BASE, 0, 1);
+  unsigned int *reg_start_ptr = (unsigned int *)REG_START_BASE;
+  *reg_start_ptr = 1;
 
   // The DMA kernel should immediately start at this point
 }
@@ -150,9 +140,11 @@ int test_simple_dma() {
   //  Configure and start the DMA kernel
   configure_and_start_dma(source, destination, BUFFER_LENGTH);
 
+  volatile unsigned int *status_reg_ptr = (unsigned int *)REG_STATUS;
+
   // Busy-waiting for the accelerator to complete (kernel will fire off
   // interrupt as well but there is no register as of 2024.0 to clear it)
-  while ((IORD_32DIRECT(REG_STATUS, 0) & KERNEL_REGISTER_MAP_DONE_MASK) !=
+  while ((*status_reg_ptr & KERNEL_REGISTER_MAP_DONE_MASK) !=
          KERNEL_REGISTER_MAP_DONE_MASK) {
   }
 
