@@ -9,7 +9,6 @@ For comprehensive information about oneAPI programming, see the [Intel&reg; oneA
 | What you will learn  | How to offload the computation to specific devices and use policies to different dynamic offload strategies.
 | Time to complete     | 30 minutes
 
-
 ## Purpose
 
 The `Sepia Filter` sample is a SYCL-compliant application that accepts a color image as an input and converts it to a sepia tone image by applying the sepia filter coefficients to every pixel of the image. The sample offloads the compute intensive part of the application, the processing of individual pixels, to an accelerator with the help of lambda and functor kernels.
@@ -47,17 +46,14 @@ The sample distribution includes some sample images in the **/input** folder. An
 
 By default, three output images are written to the same folder as the application.
 
-
 #### Troubleshooting
 If you receive an error message, troubleshoot the problem using the Diagnostics Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors. See the [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
-
-
 ## Build the `Sepia Filter` Sample
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -74,10 +70,11 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
-### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Use Visual Studio Code* (Optional)
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
@@ -106,7 +103,6 @@ If an error occurs, you can get more details by running `make` with the `VERBOSE
 ```
 make VERBOSE=1
 ```
-
 
 ## Run the Sample
 1. Run the program.
