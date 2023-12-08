@@ -1,7 +1,6 @@
 ﻿# `Mandelbrot` Sample
 
-Mandelbrot is an infinitely complex fractal pattern that is derived from a
-simple formula. This `Mandelbrot` sample demonstrates how to use SYCL*-compliant code for offloading computations to a GPU (or other devices) and further demonstrates how to optimize and improve processing time using parallelism.
+Mandelbrot is an infinitely complex fractal pattern that is derived from a simple formula. This `Mandelbrot` sample demonstrates how to use SYCL*-compliant code for offloading computations to a GPU (or other devices) and further demonstrates how to optimize and improve processing time using parallelism.
 
 | Property                       | Description
 |:---                               |:---
@@ -12,21 +11,15 @@ For comprehensive information in oneAPI programming, see the [Intel&reg; oneAPI 
 
 ## Purpose
 
-This `Mandelbrot` sample is a SYCL-compliant application that generates a fractal image by
-initializing a matrix of 512 x 512, where the computation at each point (pixel)
-is entirely independent of the computation at other points. The sample includes
-both parallel and serial calculations of the set, which allows for direct results comparison. The parallel implementation demonstrates the use of
-Unified Shared Memory (USM) or buffers. You can modify parameters such as the
-number of rows, columns, and iterations to evaluate the difference in
-performance and load between USM and buffers.
-
+This `Mandelbrot` sample is a SYCL-compliant application that generates a fractal image by initializing a matrix of 512 x 512, where the computation at each point (pixel) is entirely independent of the computation at other points. The sample includes
+both parallel and serial calculations of the set, which allows for direct results comparison. The parallel implementation demonstrates the use of Unified Shared Memory (USM) or buffers. You can modify parameters such as the number of rows, columns, and iterations to evaluate the difference in performance and load between USM and buffers.
 
 ## Prerequisites
 | Property                       | Description
-|:---                               |:---
-| OS                                | Ubuntu* 18.04 <br>Windows* 10
-| Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+|:---                            |:---
+| OS                             | Ubuntu* 18.04 <br>Windows* 10
+| Hardware                       | Skylake with GEN9 or newer
+| Software                       | Intel&reg; oneAPI DPC++/C++ Compiler
 
 ## Key Implementation Details
 
@@ -34,13 +27,12 @@ The program attempts first to run on an available GPU, and it will fall back to 
 
 The program output displays the compilation device and elapsed render time for the Mandelbrot image, which helps compare different offload implementations based on the complexity of the computation.
 
-The basic SYCL implementation explained in the code includes device selector,
-buffer, accessor, kernel, and command groups.
+The basic SYCL implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
 ## Build the `Mandelbrot` Sample
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -57,19 +49,14 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 > 
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
 If you wish to fine tune the list of components and the version of those components, use
 a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
-### Include Files
-The include folder is located on your development system at `%ONEAPI_ROOT%\dev-utilities\latest\include`.
-
 ### Using Visual Studio Code*  (Optional)
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
