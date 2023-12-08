@@ -352,11 +352,8 @@ Thread 2.153 hit Breakpoint 1, with SIMD lanes [0-7], main::{lambda(auto:1&)#1}:
 
 ---
 
-\* Intel is a trademark of Intel Corporation or its subsidiaries.  Other
-names and brands may be claimed as the property of others.
-
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
