@@ -35,8 +35,6 @@ The time to generate the image varies according to the parallel scheduling metho
 | Hardware                          | Intel&reg; CPU
 | Software                          | Intel® oneAPI DPC++/C++ Compiler<br>Intel oneAPI Threading Building Blocks (oneTBB) <br>Intel VTune&trade; Profiler<br><br>For Linux the `libXext.so` and `libX11.so` libraries must be installed to display the rendered graphic.
 
-
-
 ## Key Implementation Details
 
 The sample implements the following OpenMP and oneTBB features.
@@ -54,7 +52,7 @@ Uses the **tbb::parallel_for** function to thread the horizontal rendering of pi
 ## Build the Tachyon Sample
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -71,7 +69,6 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
@@ -80,8 +77,7 @@ a [setvars config file](https://www.intel.com/content/www/us/en/develop/document
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
