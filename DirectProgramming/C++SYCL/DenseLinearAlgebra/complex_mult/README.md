@@ -1,32 +1,20 @@
 ﻿# `Complex Multiplication` Sample
 
-The `Complex Multiplication` sample demonstrates how to multiply two large vectors of complex numbers in parallel and verifies the results. The program also implements
-a custom device selector to target a specific vendor device. This program is
+The `Complex Multiplication` sample demonstrates how to multiply two large vectors of complex numbers in parallel and verifies the results. The program also implements a custom device selector to target a specific vendor device. This program is
 implemented using SYCL* and C++ for Intel CPU and accelerators.
 
-
-
 | Property                     | Description
-|:---                               |:---
-| What you will learn               | Using custom type classes and offloads complex number computations to GPU using SYCL*
-| Time to complete                  | 15 minutes
-
+|:---                          |:---
+| What you will learn          | Using custom type classes and offloads complex number computations to GPU using SYCL*
+| Time to complete             | 15 minutes
 
 ## Purpose
 
-This sample program shows how to create a custom device selector, how to target GPU or CPU of a specific vendor, and how to pass in a
-vector of custom Complex class objects to do the parallel
-executions on the device. The device used for the compilation is displayed in
-the output.
+This sample program shows how to create a custom device selector, how to target GPU or CPU of a specific vendor, and how to pass in a vector of custom Complex class objects to do the parallel executions on the device. The device used for the compilation is displayed in the output.
 
-Complex multiplication multiplies two vectors with complex numbers. The
-code will attempt to run the calculation on both the GPU and CPU and then
-verifies the results. The size of the computation can be adjusted for
-heavier workloads. If successful, the program displays the name of the offload device and along with a success message. (This sample uses buffers to manage memory. (For more information regarding different memory management options, refer to the [`Vector Add`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/vector-add) sample.)
+Complex multiplication multiplies two vectors with complex numbers. The code will attempt to run the calculation on both the GPU and CPU and then verifies the results. The size of the computation can be adjusted for heavier workloads. If successful, the program displays the name of the offload device and along with a success message. (This sample uses buffers to manage memory. (For more information regarding different memory management options, refer to the [`Vector Add`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B/DenseLinearAlgebra/vector-add) sample.)
 
 This `Complex Multiplication` sample includes both C++ and SYCL* implementations.
-
-
 
 ## Prerequisites
 
@@ -41,7 +29,6 @@ This `Complex Multiplication` sample includes both C++ and SYCL* implementations
 This program shows how we can use custom types of classes in a SYCL*-compliant program and explains basic implementation, including device selector, buffer, accessor, kernel and command group.
 
 The `Complex` class, described in `Complex.hpp` is a custom class, and this program shows how we can use custom types of classes in a SYCL*-compliant program.
-
 
 ## Build the `Complex Multiplication` Sample for CPU and GPU
 
@@ -63,19 +50,14 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
 If you wish to fine tune the list of components and the version of those components, use
 a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
-### Include Files
-The include folder is located on your development system at `%ONEAPI_ROOT%\dev-utilities\latest\include`.
-
 ### Using Visual Studio Code*  (Optional)
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
