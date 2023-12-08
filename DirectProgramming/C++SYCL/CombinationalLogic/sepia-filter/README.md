@@ -1,28 +1,23 @@
 # `Sepia Filter` Sample
 
-The `Sepia Filter` sample is a program demonstrating how to convert a color image to a Sepia tone
-image, which is a monochromatic image with a distinctive Brown Gray color. The
-sample program works by offloading the compute intensive conversion of each pixel to
+The `Sepia Filter` sample is a program demonstrating how to convert a color image to a Sepia tone image, which is a monochromatic image with a distinctive Brown Gray color. The sample program works by offloading the compute intensive conversion of each pixel to
 Sepia tone using SYCL*-compliant code for CPU and GPU.
 
 For comprehensive information about oneAPI programming, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
 
-| Property  | Description
-|:---       |:---
+| Property             | Description
+|:---                  |:---
 | What you will learn  | How to write a custom device selector class, offload compute intensive parts of an application, and measure kernel execution time
 | Time to complete     | 20 minutes
 
 ## Purpose
 
-The `Sepia Filter` sample is a SYCL-compliant application that accepts a color image as an input
-and converts it to a sepia tone image by applying the sepia filter coefficients
-to every pixel of the image. The sample offloads the compute intensive part of the application, the processing of individual pixels, to an accelerator with the help of lambda and functor kernels. The sample also demonstrates how to use a custom device selector, which sets precedence for a GPU device over other available devices on the system. The device selected for offloading the kernel is displayed in the output and the time taken to execute each of the kernels. The application outputs a sepia tone image of the input image.
+The `Sepia Filter` sample is a SYCL-compliant application that accepts a color image as an input and converts it to a sepia tone image by applying the sepia filter coefficients to every pixel of the image. The sample offloads the compute intensive part of the application, the processing of individual pixels, to an accelerator with the help of lambda and functor kernels. The sample also demonstrates how to use a custom device selector, which sets precedence for a GPU device over other available devices on the system. The device selected for offloading the kernel is displayed in the output and the time taken to execute each of the kernels. The application outputs a sepia tone image of the input image.
 
 The sample demonstrates:
 - Writing a custom device selector class.
 - Offloading compute intensive parts of the application using both lamba and functor kernels.
 - Measuring kernel execution time by enabling profiling.
-
 
 ## Prerequisites
 
@@ -34,13 +29,12 @@ The sample demonstrates:
 
 ## Key Implementation Details
 
-The basic SYCL implementation explained in the code includes device selector,
-buffer, accessor, kernel, and command groups. This sample demonstrates a custom device selector implementation by overwriting the SYCL device selector class, offloading computation using both lambda and functor kernels, and using event objects to time command group execution, enabling profiling.
+The basic SYCL implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups. This sample demonstrates a custom device selector implementation by overwriting the SYCL device selector class, offloading computation using both lambda and functor kernels, and using event objects to time command group execution, enabling profiling.
 
 ## Build the `Sepia Filter` Sample
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -57,15 +51,11 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
 You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
 If you wish to fine tune the list of components and the version of those components, use
 a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
-
-### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Use Visual Studio Code* (Optional)
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
