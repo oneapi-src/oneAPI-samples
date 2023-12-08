@@ -19,9 +19,9 @@ The concepts demonstrated by the sample are:
 
 | Optimized for       | Description
 |:---                 |:---
-| OS	                | Ubuntu* 18.04 <br> Windows* 10
-| Hardware	          | Skylake with GEN9 or newer
-| Software	          | Intel® oneAPI DPC++/C++ Compiler
+| OS	                 | Ubuntu* 18.04 <br> Windows* 10
+| Hardware	           | Skylake with GEN9 or newer
+| Software	           | Intel® oneAPI DPC++/C++ Compiler
 
 ## Key Implementation Details
 
@@ -32,7 +32,7 @@ The code in this sample will attempt to run on a compatible GPU. If the program 
 ## Build the `Loop Unroll` Sample
 
 ### Setting Environment Variables
-For working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
 
 > **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
@@ -49,11 +49,11 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
 
-### Include Files
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
-The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample.
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -131,32 +131,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    loop-unroll.exe
    ```
 
-
-### Build and Run the `Loop Unroll` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you should specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-|Available Nodes	 |Command Options
-|:---              |:---
-|GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-|CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
 #### Build and Run the Sample
 
 Follow the Linux instructions to build and run the program.
-
-For more information on using Intel® DevCloud, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 
 ## Example Output
 
