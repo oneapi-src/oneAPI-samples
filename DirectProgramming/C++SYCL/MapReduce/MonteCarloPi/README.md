@@ -48,14 +48,9 @@ For working with the Command Line Interface (CLI), you should configure the oneA
 > - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
 >
 >For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
->
-
-### Include Files
-The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample.
 
 ### Using Visual Studio Code* (VS Code) (Optional)
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment,create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
@@ -121,8 +116,6 @@ The sample has several configurable parameters in the `monte_carlo_pi.cpp` sourc
    ```
    MonteCarloPi.exe
    ```
-### Run the `Monte Carlo Pi` Sample in Intel® DevCloud
-If running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ## Example Output
 In addition to displaying output similar to the following, the program creates a rendered image plot of the computation to a file: `MonteCarloPi.bmp`.
