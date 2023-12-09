@@ -1,7 +1,7 @@
 {
   "guid": "C4E5E5BE-4A2D-4362-97B2-52289E113B94",
   "name": "quasirandomGenerator",
-  "categories": ["Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/MapReduce"],
+  "categories": ["Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/Map Reduce"],
   "description": "Implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
