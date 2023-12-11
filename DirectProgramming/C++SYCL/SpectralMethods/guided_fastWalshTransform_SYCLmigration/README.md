@@ -133,7 +133,7 @@ By default, this command sequence will build the `sycl_migrated` versions of the
       ```
       Run `sycl_migrated` on CPU.
       ```
-      export ONEAPI_DEVICE_SELECTOR=cpu
+      export ONEAPI_DEVICE_SELECTOR=opencl:cpu
       make run
       unset ONEAPI_DEVICE_SELECTOR
       ```
