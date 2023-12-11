@@ -276,8 +276,7 @@ struct StreamingQRD {
             i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
             i_lt_0[kBanksForFanout], j_ge_0[kBanksForFanout];
 
-#pragma unroll
-        for (size_t k = 0; k < kBanksForFanout; ++k) {
+        fpga_tools::UnrolledLoop<kBanksForFanout>([&](auto k) {
           i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
           i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
           j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
@@ -287,7 +286,7 @@ struct StreamingQRD {
           if (j >= 0) {
             s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
           }
-        }
+        });
 
         // Preload col and a_i with the correct data for the current iteration
         // These are going to be use to compute the dot product of two
@@ -363,14 +362,13 @@ struct StreamingQRD {
 
         // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
         TT p_ij{0.0};
-#pragma unroll
-        for (size_t k = 0; k < rows; ++k) {
+        fpga_tools::UnrolledLoop<rows>([&](auto k) {
           if constexpr (is_complex) {
             p_ij = p_ij + col1[k] * a_ip1[k].conj();
           } else {
             p_ij = p_ij + col1[k] * a_ip1[k];
           }
-        }
+        });
 
         // Compute pip1 and ir based on the results of the dot product
         if (j == i + 1) {
@@ -462,11 +460,10 @@ struct StreamingQRD {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
-#pragma unroll
-        for (size_t k = 0; k < kLoopIterPerColumn; ++k) {
+        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        }
+        });
 
         fpga_tools::NTuple<TT, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {

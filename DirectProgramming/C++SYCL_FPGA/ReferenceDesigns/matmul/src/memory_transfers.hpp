@@ -105,15 +105,14 @@ public:
         // Perform the read of "elems_per_ddr_access" elements into register
         // Only perform the reads that are relevant (and don't access a memory
         // address that may be beyond last matrix address)
-#pragma unroll
-        for (size_t k = 0; k < elems_per_ddr_access; ++k) {
+        fpga_tools::UnrolledLoop<elems_per_ddr_access>([&](auto k) {
           if ((write_idx * elems_per_ddr_access + k) < rows_a) {
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * rows_a) +
                           (write_idx * elems_per_ddr_access) + k;
             load_reg[k] = a_ptr_located[ptr_idx];
           }
-        }
+        });
         // Store the "elems_per_ddr_access" elements into on-chip memory
         fpga_tools::UnrolledLoop<kItersPerRowCol>([&](auto k) {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
@@ -139,22 +138,20 @@ public:
         for (ac_int<kItersToPipeBitSize, false> i = 0; i < kItersToPipe; i++) {
           int block = i / (kBlocksB * common);
           bool get[kBlocksA];
-#pragma unroll
-          for (size_t k = 0; k < kBlocksA; ++k) {
+          fpga_tools::UnrolledLoop<kBlocksA>([&](auto k) {
             block = sycl::ext::intel::fpga_reg(block);
             get[k] = block == k;
-          }
+          });
           // Write one column of a matrix tile to the pipe
           fpga_tools::NTuple<TT, tile_a> pipe_write;
-#pragma unroll
-          for (size_t k = 0; k < kBlocksA; ++k) {
+          fpga_tools::UnrolledLoop<kBlocksA>([&](auto k) {
             fpga_tools::UnrolledLoop<tile_a>([&](auto t) {
               pipe_write.template get<t>() =
                   get[k] ? mem[mat][i % common][k * tile_a + t]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<t>());
             });
-          }
+          });
           bool last_pipe_write = (rep == repetitions - 1) &
                                  (mat == num_matrices - 1) &
                                  (i == kItersToPipe - 1);
@@ -264,15 +261,14 @@ public:
         // Perform the read of "elems_per_ddr_access" elements into register
         // Only perform the reads that are relevant (and don't access a memory
         // address that may be beyond last matrix address)
-#pragma unroll
-        for (size_t k = 0; k < elems_per_ddr_access; ++k) {
+        fpga_tools::UnrolledLoop<elems_per_ddr_access>([&](auto k) {
           if ((write_idx * elems_per_ddr_access + k) < cols_b) {
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * cols_b) +
                           (write_idx * elems_per_ddr_access) + k;
             load_reg[k] = b_ptr_located[ptr_idx];
           }
-        }
+        });
         // Store the "elems_per_ddr_access" elements into on-chip memory
         fpga_tools::UnrolledLoop<kItersPerRowCol>([&](auto k) {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
@@ -298,22 +294,20 @@ public:
         for (ac_int<kItersToPipeBitSize, false> i = 0; i < kItersToPipe; i++) {
           int block = (i % (kBlocksB * common)) / common;
           bool get[kBlocksB];
-#pragma unroll
-          for (size_t k = 0; k < kBlocksB; ++k) {
+          fpga_tools::UnrolledLoop<kBlocksB>([&](auto k) {
             block = sycl::ext::intel::fpga_reg(block);
             get[k] = block == k;
-          }
+          });
           // Write one row of a matrix tile to the pipe
           fpga_tools::NTuple<TT, tile_b> pipe_write;
-#pragma unroll
-          for (size_t k = 0; k < kBlocksB; ++k) {
+          fpga_tools::UnrolledLoop<kBlocksB>([&](auto k) {
             fpga_tools::UnrolledLoop<tile_b>([&](auto t) {
               pipe_write.template get<t>() =
                   get[k] ? mem[mat][i % common][k * tile_b + t]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<t>());
             });
-          }
+          });
           PipeB::write(pipe_write);
         } // end of i
       }   // end of mat
@@ -417,8 +411,7 @@ public:
           // Read one column of a tile of the matrix from the pipe and store to
           // on-chip memory "mem"
           fpga_tools::NTuple<TT, tile_a> pipe_read = PipeC::read();
-#pragma unroll
-          for (size_t k = 0; k < kBlocksA; ++k) {
+          fpga_tools::UnrolledLoop<kBlocksA>([&](auto k) {
             block_a = sycl::ext::intel::fpga_reg(block_a);
             fpga_tools::UnrolledLoop<tile_a>([&](auto t) {
               pipe_read.template get<t>() =
@@ -428,7 +421,7 @@ public:
                     pipe_read.template get<t>();
               }
             });
-          }
+          });
         } // end of i
       }   // end of mat
     }     // end of rep
@@ -439,11 +432,10 @@ public:
       for (ac_int<kItersFromMemBitSize, false> i = 0; i < kItersFromMem; i++) {
         int write_idx = i % kItersPerRowCol;
         bool get[kItersPerRowCol];
-#pragma unroll
-        for (size_t k = 0; k < kItersPerRowCol; ++k) {
+        fpga_tools::UnrolledLoop<kItersPerRowCol>([&](auto k) {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
           get[k] = write_idx == k;
-        }
+        });
 
         [[intel::fpga_register]] // NO-FORMAT: Attribute
         TT load_reg[elems_per_ddr_access];
@@ -461,15 +453,14 @@ public:
         // Perform the write of "elems_per_ddr_access" elements to DDR
         // Only perform the writes that are relevant (and don't access a memory
         // address that may be beyond last matrix address)
-#pragma unroll
-        for (size_t k = 0; k < elems_per_ddr_access; ++k) {
+        fpga_tools::UnrolledLoop<elems_per_ddr_access>([&](auto k) {
           if ((write_idx * elems_per_ddr_access + k) < rows_a) {
             int ptr_idx = (mat * kMatsize) +
                           (((int)(i) / kItersPerRowCol) * rows_a) +
                           (write_idx * elems_per_ddr_access) + k;
             c_ptr_located[ptr_idx] = load_reg[k];
           }
-        }
+        });
       } // end of i
     }   // end of mat
   }     // end of operator

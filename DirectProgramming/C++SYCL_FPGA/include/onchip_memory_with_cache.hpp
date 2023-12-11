@@ -18,10 +18,9 @@ class OnchipMemoryWithCache {
   using addr_t = ac_int<kNumAddrBits, false>;
 
   OnchipMemoryWithCache() {
-#pragma unroll
-    for (size_t i = 0; i < k_cache_depth; ++i) {
+    UnrolledLoop<k_cache_depth>([&](auto i) {
       cache_valid_[i] = false;
-    }
+    });
   }
   OnchipMemoryWithCache(T init_val) { init(init_val); }
 
@@ -29,10 +28,9 @@ class OnchipMemoryWithCache {
     for (int i = 0; i < k_mem_depth; i++) {
       data_[i] = init_val;
     }
-#pragma unroll
-    for (size_t i = 0; i < k_cache_depth; ++i) {
+    UnrolledLoop<k_cache_depth>([&](auto i) {
       cache_valid_[i] = false;
-    }
+    });
   }
 
   OnchipMemoryWithCache(const OnchipMemoryWithCache&) = delete;
@@ -54,8 +52,7 @@ class OnchipMemoryWithCache {
     }
 
     // Shift the values in the cache
-#pragma unroll
-    for (size_t i = 0; i < k_cache_depth - 1; ++i) {
+    UnrolledLoop<k_cache_depth - 1>([&](auto i) {
       if (cache_addr_[i + 1] == addr) {
         cache_valid_[i] = false;  // invalidate old cache entry at same addr
       } else {
@@ -63,7 +60,7 @@ class OnchipMemoryWithCache {
       }
       cache_val_[i] = cache_val_[i + 1];
       cache_addr_[i] = cache_addr_[i + 1];
-    }
+    });
 
     // write the new value into the cache
     cache_val_[k_cache_depth - 1] = val;
@@ -76,13 +73,12 @@ class OnchipMemoryWithCache {
     bool in_cache = false;
 
     // check the cache, newest value will take precedence
-#pragma unroll
-    for (size_t i = 0; i < k_cache_depth; ++i) {
+    UnrolledLoop<k_cache_depth>([&](auto i) {
       if ((cache_addr_[i] == addr) && (cache_valid_[i])) {
         return_val = cache_val_[i];
         in_cache = true;
       }
-    }
+    });
 
     // if not in the cache, fetch from memory
     if (!in_cache) {
