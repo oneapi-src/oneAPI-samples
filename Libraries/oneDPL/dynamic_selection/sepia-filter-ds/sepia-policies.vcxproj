@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\sepia-filter-ds\src\2_sepia_policies.cpp" />
+    <ClCompile Include="src\2_sepia_policies.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{320f8748-f9fd-4f0a-85bc-0167e0d1c539}</ProjectGuid>
