@@ -12,13 +12,9 @@
   	"linux": [
     {
   		"env": [
-        "source /opt/intel/oneapi/setvars.sh --force", 
-        "conda env remove -n user_base",
-        "conda create --name user_base --clone base",
-        "conda activate user_base",
-        "pip install pandas",
-        "pip install ipykernel",
-        "~/.conda/envs/user_base/bin/python -m ipykernel install --user --name=user_base"
+        "source /root/intel/oneapi/intelpython/bin/activate",
+        "conda activate base", 
+        "pip install pandas"
       ],
   		"id": "idp_numpy_numba_dpex_gs_py",
   		"steps": [

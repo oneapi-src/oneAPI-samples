@@ -11,7 +11,7 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", 
+  		"env": ["source /root/intel/oneapi/intelpython/bin/activate", 
               "source activate base",
               "pip install -r requirements.txt"],
   		"id": "idp_sklex_gs_py",

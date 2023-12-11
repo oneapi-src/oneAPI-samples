@@ -83,9 +83,8 @@ int main(int argc, char **argv) {
   sdkCreateTimer(&hTimer);
 
   printf("Allocating GPU memory...\n");
-  checkCudaErrors(
       DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
-                           QRNG_DIMENSIONS * N, q_ct1)));
+                           QRNG_DIMENSIONS * N, q_ct1));
 
   printf("Allocating CPU memory...\n");
   h_OutputGPU = (float *)malloc(QRNG_DIMENSIONS * N * sizeof(float));
@@ -96,24 +95,21 @@ int main(int argc, char **argv) {
   initTableGPU(tableCPU, q_ct1);
 
   printf("Testing QRNG...\n\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
           q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-          .wait()));
+          .wait());
   int numIterations = 20;
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
+          DPCT_CHECK_ERROR(q_ct1.wait_and_throw());
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
 
     quasirandomGeneratorGPU(d_Output, 0, N, q_ct1);
   }
-
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
+  DPCT_CHECK_ERROR(q_ct1.wait_and_throw());
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -123,9 +119,9 @@ int main(int argc, char **argv) {
       QRNG_DIMENSIONS * N, 1, 128 * QRNG_DIMENSIONS);
 
   printf("\nReading GPU results...\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
           q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-          .wait()));
+          .wait());
 
   printf("Comparing to the CPU results...\n\n");
   sumDelta = 0;
@@ -142,23 +138,20 @@ int main(int argc, char **argv) {
   printf("L1 norm: %E\n", sumDelta / sumRef);
 
   printf("\nTesting inverseCNDgpu()...\n\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
           q_ct1.memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
-          .wait()));
+          .wait());
 
   for (int i = -1; i < numIterations; i++) {
     if (i == 0) {
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
+          DPCT_CHECK_ERROR(q_ct1.wait_and_throw());
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
 
     inverseCNDgpu(d_Output, NULL, QRNG_DIMENSIONS * N,q_ct1);
   }
-
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(q_ct1.wait_and_throw()));
+      DPCT_CHECK_ERROR(q_ct1.wait_and_throw());
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer) / (double)numIterations * 1e-3;
   printf(
@@ -168,9 +161,9 @@ int main(int argc, char **argv) {
       QRNG_DIMENSIONS * N, 1, 128);
 
   printf("Reading GPU results...\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
           q_ct1.memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
-          .wait()));
+          .wait());
   printf("\nComparing to the CPU results...\n");
   sumDelta = 0;
   sumRef = 0;
@@ -189,8 +182,7 @@ int main(int argc, char **argv) {
   printf("Shutting down...\n");
   sdkDeleteTimer(&hTimer);
   free(h_OutputGPU);
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Output, q_ct1)));
+      DPCT_CHECK_ERROR(sycl::free(d_Output, q_ct1));
 
   exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

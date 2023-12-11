@@ -46,7 +46,7 @@ def load_tokenizer_and_model(model="microsoft/DialoGPT-large"):
     """
     # Initialize tokenizer and model
     print("Loading model...")
-    tokenizer = AutoTokenizer.from_pretrained(model)
+    tokenizer = AutoTokenizer.from_pretrained(model, padding_side='left')
     model = AutoModelForCausalLM.from_pretrained(model)
     
     # Return tokenizer and model

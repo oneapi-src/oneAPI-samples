@@ -79,15 +79,16 @@ It is recommended that you use `[[intel::initiation_interval(N)]]` attribute on 
 
 ### Understanding the Tutorial Design
 
-In the tutorial, all four kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied. All specific numbers mentioned below are expected observations on Intel Arria® 10 GX FPGA. Even so, the tradeoff between fMAX and II is also expected on other devices.
+In the tutorial, all four kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied.
 
-In kernel `Default`, no fMAX or II constraints are provided. By default, the compiler tries to optimize throughput using heuristics to balance high fMAX and small II. The block `B1` is scheduled at less than 240 MHz, so this block is limiting this kernel's fMAX but is able to achieve II=1.
+In kernel `Default`, no fMAX or II constraints are provided. By default, the compiler tries to optimize throughput using heuristics to balance high fMAX and small II. The block `B1` is scheduled at less than the default fMAX target, so this block is limiting this kernel's fMAX but is able to achieve II=1.
+The default fMAX varies depending on the FPGA family (Arria10: 240MHz, Stratix10: 480MHz, Agilex7: 480Mhz, CycloneV: 200MHz).
 
-In kernel `Fmax480Attr`, the `[[intel::scheduler_target_fmax_mhz(480)]]` attribute tells the compiler to target 480 MHz. Since the II is unconstrained, the compiler inserts extra pipelining to schedule the kernel at 480 MHz instead of trying to balance fMAX and II. Now, all blocks are scheduled at the target fMAX, but block `B1` has a higher II than kernel `Default`.
+In kernel `ForcedHighFmax`, the `scheduler_target_fmax_mhz` attribute tells the compiler to target an fMAX that is above the default target. Since the II is unconstrained, the compiler inserts extra pipelining to schedule the kernel at the specified fMAX instead of trying to balance fMAX and II. Now, all blocks are scheduled at the target fMAX, but block `B1` has a higher II than kernel `Default`.
 
-In kernel `Fmax240Attr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attribute tells the compiler to target 240 MHz. Once again, all blocks are scheduled at the target fMAX, but block `B1` has a lower II than kernel `Fmax480Attr`. Since we reduce the fMAX target, the compiler inserts fewer pipeline registers in `B1` of this kernel.
+In kernel `ForcedDefaultFmax`, the `scheduler_target_fmax_mhz` attribute tells the compiler to target the provided fMAX, which matches the default fMAX of the device the sample is being compiled for. Once again, all blocks are scheduled at the target fMAX, but block `B1` has a lower II than kernel `ForcedHighFmax`. Since we reduced the fMAX target, the compiler inserts fewer pipeline registers in `B1` of this kernel.
 
-In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attribute tells the compiler to target 240 MHz, and the `[[intel::initiation_interval(1)]]` attribute forces block `B1` to be scheduled with II=1. Since the `[[intel::initiation_interval(1)]]` attribute takes priority over the `[[intel::scheduler_target_fmax_mhz(240)]]` attribute, the compiler is not able to schedule block `B1` at the requested target fMAX but is able to achieve II=1. This achieves a similar latency as kernel `Default` but provides you the control over how much pipelining the compiler generates while still achieving the desired II on critical loops.
+In kernel `ForcedDefaultFmaxII`, the `scheduler_target_fmax_mhz` attribute tells the compiler to target the default fMAX, and the `initiation_interval(1)` attribute forces block `B1` to be scheduled with II=1. Since the `initiation_interval(1)` attribute takes priority over the `scheduler_target_fmax_mhz` attribute, the compiler is not able to schedule block `B1` at the requested target fMAX but is able to achieve II=1. This achieves a similar latency as kernel `Default` but provides you the control over how much pipelining the compiler generates while still achieving the desired II on critical loops.
 
 ## Build the `scheduler_target_fmax_mhz` Tutorial
 
@@ -189,7 +190,7 @@ In kernel `Fmax240IIAttr`, the `[[intel::scheduler_target_fmax_mhz(240)]]` attri
 
 Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` directory.
 
-Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1. In kernel `Fmax240Attr` and `Fmax480Attr`, all blocks are scheduled at the target fMAX, but they have II>1. In kernel `Fmax240IIAttr`, similar to kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1.
+Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `Default`, block `B1` is scheduled at less than the default fMAX but has II=1. In kernel `ForcedDefaultFmax` and `ForcedHighFmax`, all blocks are scheduled at the target fMAX, but they have II>1. In kernel `ForcedDefaultFmaxII`, similar to kernel `Default`, block `B1` is scheduled at less than the default fMAX but has II=1.
 
 Navigate to the Area Analysis of System (Area Analysis > Area Analysis of System). By comparing the results in resource usage for different fMAX and II targets, you can see that the compiler inserts more pipeline stages and therefore increases area usage if the component is scheduled for a higher fMAX.
 

@@ -13,6 +13,7 @@
 		"linux": [{
 			"id": "tensorflow hello world",
 			"steps": [
+				"source /root/intel/oneapi/intelpython/bin/activate",
 				"source activate tensorflow",
 				"python TensorFlow_HelloWorld.py"
 			]

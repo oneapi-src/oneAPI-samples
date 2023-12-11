@@ -30,6 +30,16 @@ constexpr bool kUseUSMHostAllocation = true;
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
+// Limits the number of merge units used in hardware to support older
+// versions of quartus.
+#if defined(LIMIT_HW_MERGE_UNITS)
+#if FPGA_HARDWARE
+#ifndef MERGE_UNITS
+#define MERGE_UNITS 4
+#endif
+#endif
+#endif
+
 // The number of merge units, which must be a power of 2.
 // This can be set by defining the preprocessor macro 'MERGE_UNITS'
 // otherwise the default value below is used.
