@@ -204,8 +204,8 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   double sum = 0.0;
   double *d_sum = NULL;
   double *params[] = {x, x_new};
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_sum = sycl::malloc_device<double>(1, q)));
+  DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, q));
   int k = 0;
 
   tf::Task syclDeviceTasks =
@@ -296,12 +296,12 @@ double JacobiMethodGpu(const float *A, const double *b,
 
   double sum = 0.0;
   double *d_sum;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      d_sum = sycl::malloc_device<double>(1, q)));
+  DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, q));
   int k = 0;
 
   for (k = 0; k < max_iter; k++) {
-    checkCudaErrors(DPCT_CHECK_ERROR(q.memset(d_sum, 0, sizeof(double))));
+    DPCT_CHECK_ERROR(q.memset(d_sum, 0, sizeof(double)));
     if ((k & 1) == 0) {
       q.submit([&](sycl::handler &cgh) {
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
@@ -335,13 +335,11 @@ double JacobiMethodGpu(const float *A, const double *b,
             });
       });
     }
-    checkCudaErrors(
-        DPCT_CHECK_ERROR(q.memcpy(&sum, d_sum, sizeof(double))));
-    checkCudaErrors(DPCT_CHECK_ERROR(q.wait()));
+    DPCT_CHECK_ERROR(q.memcpy(&sum, d_sum, sizeof(double)));
+    DPCT_CHECK_ERROR(q.wait());
 
     if (sum <= conv_threshold) {
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(q.memset(d_sum, 0, sizeof(double))));
+      DPCT_CHECK_ERROR(q.memset(d_sum, 0, sizeof(double)));
       nblocks[2] = (N_ROWS / nthreads[2]) + 1;
       
       size_t sharedMemSize = ((nthreads[2] / 32) + 1) * sizeof(double);
@@ -371,16 +369,14 @@ double JacobiMethodGpu(const float *A, const double *b,
         });
       }
 
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(q.memcpy(&sum, d_sum, sizeof(double))));
-      checkCudaErrors(DPCT_CHECK_ERROR(q.wait()));
+      DPCT_CHECK_ERROR(q.memcpy(&sum, d_sum, sizeof(double)));
+      DPCT_CHECK_ERROR(q.wait());
       printf("Device iterations : %d\n", k + 1);
       printf("Device error : %.3e\n", sum);
       break;
     }
   }
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_sum, q)));
+  DPCT_CHECK_ERROR(sycl::free(d_sum, q));
   return sum;
 }

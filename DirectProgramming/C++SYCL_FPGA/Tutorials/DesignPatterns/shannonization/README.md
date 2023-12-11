@@ -17,17 +17,17 @@ Demonstrate a loop optimization to improve the f<sub>MAX</sub>/II of an FPGA des
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, you must have Intel® Quartus® Prime Pro Edition and one of the following simulators installed and accessible through your PATH:
+> For using the simulator flow, you must have Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -339,10 +339,6 @@ However, this places a 32-bit Integer Add Operation back into the critical path 
 ```
 In general, these shannonization optimizations create a shift-register that precomputes and *passes* values (additions and comparisons) to the loop's later iterations. The size of the shift-register determines how many *future* iterations we precompute for. In version 1, we precompute for one iteration; in this version, we precompute for 2 iterations. The reports for the `Intersection<2>` should show a critical path with: a single 32-bit Integer Compare Operation (`a < b`), a 32-bit Select Operation (`::read`), and a 1-bit And Operation (`a < b && A_count_inrange`). Note the removal of two 32-bit Compare Operations and one 32-bit Add Operation from the critical path. Looking at the *Loop Analysis* pane, you will see that the *Block Scheduled f<sub>MAX</sub>* is highest for `Intersection<2>` (e.g., 240 MHz).
 
-#### Version 3
-
-As a consequence of the fabric architecture of the Intel® Stratix® 10 SX FPGA, the hardware implementation of pipes for the Intel® Stratix® 10 SX FPGA has a longer latency for blocking pipe reads and writes. In version 3 of the kernel, `Intersection<3>`, we transform the code to use non-blocking pipe reads. For the Intel® Arria® 10 FPGA, this does not have a noticeable difference. However, this transformation allows the design to reach an II of 1 for the Intel® Stratix® 10 and Intel Agilex® 7 FPGAs.
-
 ## Run the `Shannonization` Sample
 
 ### Configurable Parameters
@@ -397,7 +393,6 @@ Computing golden result
 Running 1 iteration of kernel 0 with |A|=128 and |B|=256
 Running 1 iteration of kernel 1 with |A|=128 and |B|=256
 Running 1 iteration of kernel 2 with |A|=128 and |B|=256
-Running 1 iteration of kernel 3 with |A|=128 and |B|=256
 PASSED
 ```
 
@@ -413,8 +408,6 @@ Running 5 iterations of kernel 1 with |A|=16384 and |B|=32768
 Kernel 1 average throughput: 445.205 MB/s
 Running 5 iterations of kernel 2 with |A|=16384 and |B|=32768
 Kernel 2 average throughput: 388.668 MB/s
-Running 5 iterations of kernel 3 with |A|=16384 and |B|=32768
-Kernel 3 average throughput: 731.052 MB/s
 PASSED
 ```
 

@@ -1,7 +1,7 @@
 {
   "guid": "6ebfe36c-85f8-46cf-90c6-67ed4840487c",
   "name": "GPU Optimization using SYCL",
-  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
+  "categories": [ "Toolkit/oneAPI Direct Programming/C++SYCL/Tutorials Jupyter Notebooks" ],
   "description": "GPU Optimization using SYCL training course with code samples",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],

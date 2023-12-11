@@ -41,8 +41,7 @@ cd <path-to-oneAPI-samples>\RenderingToolkit\GettingStarted\03_openvkl_gsg\gpu
 mkdir build
 cd build
 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=icx-cl ..
-cmake --build . --config Release
-cd Release
+cmake --build .
 .\vklTutorialGPU.exe
 ```
 

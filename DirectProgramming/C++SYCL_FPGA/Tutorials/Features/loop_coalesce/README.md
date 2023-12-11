@@ -20,17 +20,17 @@ The `loop_coalesce` attribute enables you to direct the compiler to combine nest
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> For using the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
 >
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 > **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
@@ -199,7 +199,7 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
 ## Read the Reports
 Locate `report.html` in the `loop_coalesce_report.prj/reports/` directory. 
 
-On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel, for example, KernelCompute<2> uses a `loop_coalesce` argument of 2. You can verify that the number of registers, MLABs, and DSPs used for each kernel decreases after nested loops are coalesced.
+On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel; for example, KernelCompute<2> uses a `loop_coalesce` argument of `2`. You can verify that the number of ALMs used decreases when the loops are coalesced. Since KernelCompute<2> has fewer loops than KernelCompute<1>, it requires less hardware for loop overhead. 
 
 ## Run the `Loop Coalesce` Sample
 
@@ -234,21 +234,6 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
    ```
    loop_coalesce.fpga.exe
    ```
-
-## Example Output
-
-The output displays the execution time and throughput for each kernel. The emulator will not reflect performance differences generally.
-
-```
-Loop Coalesce: 1 -- kernel time : 156 microseconds
-Throughput for kernel with coalesce_factor 1: 6550KB/S
-Loop Coalesce: 2 -- kernel time : 113 microseconds
-Throughput for kernel with coalesce_factor 2: 9064KB/S
-PASSED: The results are correct
-
-```
-
-Applying the `loop_coalesce` attribute in this example reduced the kernel execution time by a factor of ~1.5. **You will only see this result when executing on FPGA hardware.**
 
 ## License
 

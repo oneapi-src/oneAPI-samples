@@ -12,13 +12,9 @@
         "linux": [
       {
             "env": [
-                "source /opt/intel/oneapi/setvars.sh --force", 
-                "conda env remove -n user_pytorch",
-                "conda create --name user_pytorch --clone pytorch",
-                "conda activate user_pytorch",
-                "pip install -r requirements.txt",
-                "pip install ipykernel",
-                "~/.conda/envs/user_pytorch/bin/python -m ipykernel install --user --name=user_pytorch"
+                "source /root/intel/oneapi/intelpython/bin/activate", 
+                "conda activate pytorch",
+                "pip install -r requirements.txt"
             ],
             "id": "inc_text_classification_quantization_py",
             "steps": [
