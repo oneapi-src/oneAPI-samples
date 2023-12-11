@@ -34,6 +34,7 @@
 // Devices of compute capability 2.0 or higher can overlap the kernels
 //
 #include <sycl/sycl.hpp>
+#include <fstream>
 #include <dpct/dpct.hpp>
 #include <stdio.h>
 
@@ -41,7 +42,6 @@
 #include <helper_functions.h>
 #include <time.h>
 #include <chrono>
-#include <fstream>
 
 // This is a kernel that does no real work but runs at least for a specified
 // number of count
