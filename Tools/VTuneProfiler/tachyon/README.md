@@ -1,6 +1,6 @@
 # `Tachyon` Sample
 
-The `Tachyon` sample shows how to improve the performance of serial programs by using parallel processing with OpenMP* or Intel® oneAPI Threading Building Blocks (Intel® oneTBB). The `Tachyon` sample is an implementation of the tachyon program; it is a 2-D raytracer program that renders objects described in data files. 
+The `Tachyon` sample shows how to improve the performance of serial programs by using parallel processing with OpenMP* or Intel® oneAPI Threading Building Blocks (Intel® oneTBB). The `Tachyon` sample is an implementation of the tachyon program; it is a 2-D raytracer program that renders objects described in data files.
 
 | Area                              | Description
 |:---                               |:---
@@ -9,9 +9,9 @@ The `Tachyon` sample shows how to improve the performance of serial programs by 
 
 ## Purpose
 
-The `Tachyon` sample shows how to use OpenMP or Intel® oneAPI Threading Building Blocks (oneTBB) to improve the performance of serial applications by using parallel processing. 
+The `Tachyon` sample shows how to use OpenMP or Intel® oneAPI Threading Building Blocks (oneTBB) to improve the performance of serial applications by using parallel processing.
 
-The sample starts with a serial CPU implementation of the tachyon program and shows how to use OpenMP or Intel® oneTBB to implement effective threading in the program. 
+The sample starts with a serial CPU implementation of the tachyon program and shows how to use OpenMP or Intel® oneTBB to implement effective threading in the program.
 
 The sample application displays the execution time required to render the object. This time is an indication of the speedup obtained with parallel implementations compared to a baseline established with the initial serial implementation.
 
@@ -35,47 +35,49 @@ The time to generate the image varies according to the parallel scheduling metho
 | Hardware                          | Intel&reg; CPU
 | Software                          | Intel® oneAPI DPC++/C++ Compiler<br>Intel oneAPI Threading Building Blocks (oneTBB) <br>Intel VTune&trade; Profiler<br><br>For Linux the `libXext.so` and `libX11.so` libraries must be installed to display the rendered graphic.
 
-
-
 ## Key Implementation Details
 
 The sample implements the following OpenMP and oneTBB features.
 
 OpenMP:
 
-Uses the **omp parallel for** pragma to thread the horizontal rendering of pixels. 
+Uses the **omp parallel for** pragma to thread the horizontal rendering of pixels.
 
-oneTBB: 
+oneTBB:
 
 Uses the **tbb::parallel_for** function to thread the horizontal rendering of pixels.
 
 >**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 
-
-## Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
-
 ## Build the Tachyon Sample
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+### Setting Environment Variables
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
@@ -95,9 +97,9 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake ..
    make
    ```
-   
 
-To build a specific version of the program, run cmake with the version name. For example: 
+
+To build a specific version of the program, run cmake with the version name. For example:
 
 ```
 make tachyon.serial
@@ -148,20 +150,20 @@ Run the serial version of the program to establish a baseline execution time.
 
 #### On Linux
 
-Run the serial version of the program to establish a baseline execution time. 
+Run the serial version of the program to establish a baseline execution time.
 
 1. Change to the build directory in your sample directory.
-2. Run the executable, providing the balls.dat data file. 
+2. Run the executable, providing the balls.dat data file.
 
    ```
-   ./tachyon.serial ../dat/balls.dat 
+   ./tachyon.serial ../dat/balls.dat
    ```
 
-   You will see the following output: 
+   You will see the following output:
 
    ```
-   Scene contains 7386 bounded objects. 
-   tachyon.serial ../dat/balls.dat: 3.706 seconds 
+   Scene contains 7386 bounded objects.
+   tachyon.serial ../dat/balls.dat: 3.706 seconds
    ```
 
 #### On Windows
@@ -180,32 +182,32 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
 
 #### On Linux
 
-1. Change to the build directory in your sample directory. 
+1. Change to the build directory in your sample directory.
 2. Run the basic OpenMP version.  
 
    ```
-   ./tachyon.openmp ../dat/balls.dat 
+   ./tachyon.openmp ../dat/balls.dat
    ```
-   
-   You will see the following output: 
- 
-   ```
-   Scene contains 7386 bounded objects. 
-   tachyon.openmp ../dat/balls.dat: 0.283 seconds 
-   ```
-3. Run optimized OpenMP version. 
+
+   You will see the following output:
 
    ```
-   ./tachyon.openmp_solution ../dat/balls.dat 
+   Scene contains 7386 bounded objects.
+   tachyon.openmp ../dat/balls.dat: 0.283 seconds
    ```
-   
-   You will see the following output: 
+3. Run optimized OpenMP version.
 
    ```
-   Scene contains 7386 bounded objects. 
+   ./tachyon.openmp_solution ../dat/balls.dat
+   ```
+
+   You will see the following output:
+
+   ```
+   Scene contains 7386 bounded objects.
    tachyon.openmp_solution ../dat/balls.dat: 0.153 seconds    ```
 
-4. Compare the render time between the basic OpenMP and optimized OpenMP versions. The optimized version shows an improvement in render time. 
+4. Compare the render time between the basic OpenMP and optimized OpenMP versions. The optimized version shows an improvement in render time.
 
 <span style="color:red">
 
@@ -216,7 +218,7 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
 #### On Windows
 
 1. First run the basic OpenMP implementation. Run the build_with_openmp project in VS, or run **build_with_openmp.exe ..\..\dat\balls.dat** directly. There should be a noticeable improvement in the rendering time. To see how threads performed with the omp parallel for pragma, run a hotspots analysis with Intel VTune Profiler:
-   
+
 ![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/1e3e15b1-045e-4714-b8c2-a716454066b2)
 
 The elapsed time is almost half of the serial implementation at 2.021s. The CPU histogram still shows a large amount of time where only one CPU was utilized, but the application does make simultaneous use of up to 14 CPUs. The Bottom-up tab has a timeline view which shows thread behavior over time:
@@ -233,7 +235,7 @@ The elapsed time for the optimized version is 1.875s, which is a small improveme
 
 ![image](https://github.com/jenniferdimatteo/oneAPI-samples/assets/32850114/1e63669c-74e4-4466-bce0-5095d9d9fbd1)
 
-The threads now complete at the same time, although there is some spinning as one thread completes its work. 
+The threads now complete at the same time, although there is some spinning as one thread completes its work.
 
 ### Run the Intel® oneAPI Threading Building Blocks Versions
 
@@ -241,36 +243,36 @@ Run the Intel® oneAPI Threading Building Blocks (Intel® oneTBB) versions of th
 
 #### On Linux
 
-1. Change to the build directory in your sample directory. 
-2. Run the basic Intel TBB version. 
- 
-   ```
-   ./tachyon.tbb ../dat/balls.dat 
-   ```
-   
-   You will see the following output: 
- 
-   ``` 
-   Scene contains 7386 bounded objects. 
-   tachyon.tbb ../dat/balls.dat: 6.504 seconds 
-   ```
- 
-3. Run the optimized Intel® oneTBB version. 
+1. Change to the build directory in your sample directory.
+2. Run the basic Intel TBB version.
 
    ```
-   ./tachyon.tbb_optimized ../dat/balls.dat 
-   ```
-   
-   You will see the following output: 
- 
-   ``` 
-   Scene contains 7386 bounded objects. 
-   tachyon.tbb_optimized ../dat/balls.dat: 0.158 seconds 
+   ./tachyon.tbb ../dat/balls.dat
    ```
 
-4. Compare the render time between the basic Intel oneTBB and optimized Intel oneTBB versions. The optimized version shows an improvement in render time. 
+   You will see the following output:
 
-The basic version of the Intel oneTBB program uses the oneTBB version of a mutex lock, which prevents multiple threads from working on the code at the same time. In comparison, the optimized version of the oneTBB program removes mutex lock to allow all threads to work concurrently. 
+   ```
+   Scene contains 7386 bounded objects.
+   tachyon.tbb ../dat/balls.dat: 6.504 seconds
+   ```
+
+3. Run the optimized Intel® oneTBB version.
+
+   ```
+   ./tachyon.tbb_optimized ../dat/balls.dat
+   ```
+
+   You will see the following output:
+
+   ```
+   Scene contains 7386 bounded objects.
+   tachyon.tbb_optimized ../dat/balls.dat: 0.158 seconds
+   ```
+
+4. Compare the render time between the basic Intel oneTBB and optimized Intel oneTBB versions. The optimized version shows an improvement in render time.
+
+The basic version of the Intel oneTBB program uses the oneTBB version of a mutex lock, which prevents multiple threads from working on the code at the same time. In comparison, the optimized version of the oneTBB program removes mutex lock to allow all threads to work concurrently.
 
 #### On Windows
 1. Run the build_with_tbb project in VS or run **build_with_tbb.exe ..\..\dat\balls.dat** directly. Running a hotspots analysis with the Intel VTune Profiler shows worse performance than the serial implementation, with an elapsed time of 5.290s:
@@ -299,4 +301,3 @@ The bottom-up view shows a thread timeline similar to the dynamic openmp impleme
         <A HREF="http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/">here</A> for license information.
     </I>
 </p>
-

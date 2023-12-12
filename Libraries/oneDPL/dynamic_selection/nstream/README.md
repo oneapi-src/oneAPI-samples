@@ -31,8 +31,7 @@ The varying policies are helpful as follows:
 
 [Detailed Descriptions of the Policies](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/current/policies.html) are available in the Intel® oneAPI DPC++ Library Developer Guide and Reference.
 
->NOTE: Given the simplicity of this example, performance benefits may not be gained depending on the available devices.
->
+> NOTE: Given the simplicity of this example, performance benefits may not be gained depending on the available devices.
 
 Dynamic Device Selection support customization to allow frameworks or application developers to define custom logic for making device selections. Complete reference documentation is available in the [oneAPI DPC++ Library Developer Guide](https://www.intel.com/content/www/us/en/docs/onedpl/developer-guide/2022-2/overview.html).
 
@@ -45,19 +44,29 @@ The basic SYCL standards implemented in the code include the use of the followin
 
 ## Building the `nstreams_device_selection` Program for CPU and GPU
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+### Setting Environment Variables
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
-> Linux:
+> Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Windows:
+> Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-linux-or-macos.html#GUID-D01C791A-E72A-4EA5-A45A-AEF22F1E8506), or [Windows](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-windows.html#GUID-A76C1E1B-5235-4A16-9AA3-F5BD35F8C7F1).
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Using Visual Studio Code*  (Optional)
 
@@ -165,7 +174,6 @@ Using Static Policy (CPU) to iterate on CPU device with vector length: 10000
  Rate: larger better     (MB/s): 120.042
  Avg time: lower better  (ns):   1.33287e+06
 ```
-
 
 ## License
 

@@ -7,7 +7,7 @@ Discrete Cosine Transform (DCT) and Quantization are the first two steps in the 
 | Time to complete         | 15 minutes
 
 ## Purpose
-Discrete Cosine Transform (DCT) is a lossy compression algorithm used to represent every data point value using the sum of cosine functions, which are linearly orthogonal. 
+Discrete Cosine Transform (DCT) is a lossy compression algorithm used to represent every data point value using the sum of cosine functions, which are linearly orthogonal.
 
 The sample program shows the possible effect of quality reduction in the image when one performs DCT, followed by quantization as found in JPEG compression.
 
@@ -44,33 +44,34 @@ The program will attempt to run on a compatible GPU. If a compatible GPU is not 
 
 >**Note**: For comprehensive information about oneAPI programming, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
 
-## Set Environment Variables
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
-
 ## Build the `Discrete Cosine Transform` Program for CPU and GPU
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+
+### Setting Environment Variables
+When working with the Command Line Interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures your compiler, libraries, and tools are ready for development.
+
+> **Note**: If you have not already done so, set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> Microsoft Visual Studio:
+> - Open a command prompt window and execute `setx SETVARS_CONFIG " "`. This only needs to be set once and will automatically execute the `setvars` script every time Visual Studio is launched.
+>
+>For more information on environment variables, see "Use the setvars Script" for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample. 
+You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
->**Note**: You can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
-
+If you wish to fine tune the list of components and the version of those components, use
+a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
-You can use Visual Studio Code* (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+You can use Visual Studio Code* (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
@@ -78,7 +79,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
@@ -97,7 +98,7 @@ the `VERBOSE=1` argument:
 make VERBOSE=1
 ```
 
-### On Windows* 
+### On Windows*
 **Using Visual Studio***
 
 Build the program using **Visual Studio 2017** or newer.
@@ -148,22 +149,6 @@ where:
    ```
    DCT.exe ../../res/willyriver.bmp ../../res/willyriver_processed.bmp
    ```
-
-### Build and Run the `Discrete Cosine Transform` Sample in Intel® DevCloud (Optional)
-<This is the short version. Use ONLY the short version OR the long version NOT both.>
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
-- `-d .` makes the current folder as the working directory for the task.
-
-For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-For more information on using Intel® DevCloud, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ## Example Output
 ```
