@@ -34,6 +34,7 @@
 // Devices of compute capability 2.0 or higher can overlap the kernels
 //
 #include <sycl/sycl.hpp>
+#include <fstream>
 #include <dpct/dpct.hpp>
 #include <stdio.h>
 
@@ -102,16 +103,15 @@ int main(int argc, char **argv) {
   //cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-  checkCudaErrors(cuda_device = dpct::dev_mgr::instance().current_device_id());
+  DPCT_CHECK_ERROR(cuda_device = dpct::dev_mgr::instance().current_device_id());
 
-  checkCudaErrors((dpct::dev_mgr::instance()
+  DPCT_CHECK_ERROR(dpct::dev_mgr::instance()
                        .get_device(cuda_device)
-                       .get_device_info(deviceProp),
-                   0));
+                       .get_device_info(deviceProp));
 
   if ((true == 0)) {
     printf("> GPU does not support concurrent kernel execution\n");
-    printf("  CUDA kernel runs will be serialized\n");
+    printf("  SYCL kernel runs will be serialized\n");
   }
 
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
@@ -120,15 +120,14 @@ int main(int argc, char **argv) {
 
   // allocate host memory
   long *a = 0;  // pointer to the array data in host memory
-  checkCudaErrors(
-      (a = (long *)sycl::malloc_host(nbytes, dpct::get_default_queue()), 0));
+  DPCT_CHECK_ERROR(
+      (a = (long *)sycl::malloc_host(nbytes, dpct::get_default_queue())));
 
   // allocate device memory
   long *d_a = 0;  // pointers to data and init value in the device memory
 
-  checkCudaErrors(
-      (d_a = (long *)sycl::malloc_device(nbytes, dpct::get_default_queue()),
-       0));
+  DPCT_CHECK_ERROR(
+      (d_a = (long *)sycl::malloc_device(nbytes, dpct::get_default_queue())));
 
   // allocate and initialize an array of stream handles
   dpct::queue_ptr *streams =
@@ -136,8 +135,8 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < nstreams; i++) {
 
-    checkCudaErrors(
-        ((streams[i]) = dpct::get_current_device().create_queue(), 0));
+    DPCT_CHECK_ERROR(
+        ((streams[i]) = dpct::get_current_device().create_queue()));
   }
 
   // create CUDA event handles
@@ -145,8 +144,8 @@ int main(int argc, char **argv) {
   std::chrono::time_point<std::chrono::steady_clock> start_event_ct1;
   std::chrono::time_point<std::chrono::steady_clock> stop_event_ct1;
 
-  checkCudaErrors((start_event = new sycl::event(), 0));
-  checkCudaErrors((stop_event = new sycl::event(), 0));
+  DPCT_CHECK_ERROR(start_event = new sycl::event());
+  DPCT_CHECK_ERROR(stop_event = new sycl::event());
 
   // the events are used for synchronization only and hence do not need to
   // record timings this also makes events not introduce global sync points when
@@ -156,7 +155,7 @@ int main(int argc, char **argv) {
   kernelEvent = (dpct::event_ptr *)malloc(nkernels * sizeof(dpct::event_ptr));
 
   for (int i = 0; i < nkernels; i++) {
-    checkCudaErrors((kernelEvent[i] = new sycl::event(), 0));
+    DPCT_CHECK_ERROR(kernelEvent[i] = new sycl::event());
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -189,13 +188,12 @@ int main(int argc, char **argv) {
     total_count += time_count;
 
     kernelEvent_ct1_i = std::chrono::steady_clock::now();
-    checkCudaErrors(
-        (*kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier(), 0));
+    DPCT_CHECK_ERROR(
+        *kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier());
 
     // make the last stream wait for the kernel event to be recorded
-    checkCudaErrors(
-        (streams[nstreams - 1]->ext_oneapi_submit_barrier({*kernelEvent[i]}),
-         0));
+    DPCT_CHECK_ERROR(
+        streams[nstreams - 1]->ext_oneapi_submit_barrier({*kernelEvent[i]}));
   }
 
   // queue a sum kernel and a copy back to host in the last stream.
@@ -211,9 +209,8 @@ int main(int argc, char **argv) {
         });
   });
 
-  checkCudaErrors((stop_event_streams_nstreams_1 =
-                       streams[nstreams - 1]->memcpy(a, d_a, sizeof(long)),
-                   0));
+  DPCT_CHECK_ERROR(stop_event_streams_nstreams_1 =
+                       streams[nstreams - 1]->memcpy(a, d_a, sizeof(long)));
 
   // at this point the CPU has dispatched all work for the GPU and can continue
   // processing other tasks in parallel
@@ -223,14 +220,13 @@ int main(int argc, char **argv) {
   dpct::get_current_device().queues_wait_and_throw();
   stop_event_streams_nstreams_1.wait();
   stop_event_ct1 = std::chrono::steady_clock::now();
-  checkCudaErrors(
-      (*stop_event = dpct::get_default_queue().ext_oneapi_submit_barrier(), 0));
-  checkCudaErrors(0);
+  DPCT_CHECK_ERROR(
+      *stop_event = dpct::get_default_queue().ext_oneapi_submit_barrier());
 
-  checkCudaErrors((elapsed_time = std::chrono::duration<float, std::milli>(
+  DPCT_CHECK_ERROR((elapsed_time = std::chrono::duration<float, std::milli>(
                                       stop_event_ct1 - start_event_ct1)
                                       .count(),
-                   0));
+                       0));
 
   printf("Expected time for serial execution of %d kernels = %.3fs\n", nkernels,
          nkernels * kernel_time / 1000.0f);
