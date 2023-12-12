@@ -25,7 +25,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part1_cpp",
+          "cmake .. -DPART=1",
           "make fpga_emu",
           "./vector_add.fpga_emu"
         ]
@@ -36,7 +36,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part2_dpcpp_functor_usm",
+          "cmake .. -DPART=2",
           "make fpga_emu",
           "./vector_add.fpga_emu"
         ]
@@ -47,7 +47,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part2_dpcpp_functor_usm",
+          "cmake .. -DPART=2",
           "make report"
         ]
       },
@@ -57,7 +57,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part3_dpcpp_lambda_usm",
+          "cmake .. -DPART=3",
           "make fpga_emu",
           "./vector_add.fpga_emu"
         ]
@@ -68,7 +68,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part3_dpcpp_lambda_usm",
+          "cmake .. -DPART=3",
           "make report"
         ]
       },
@@ -78,7 +78,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part4_dpcpp_lambda_buffers",
+          "cmake .. -DPART=4",
           "make fpga_emu",
           "./vector_add.fpga_emu"
         ]
@@ -89,7 +89,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ../part4_dpcpp_lambda_buffers",
+          "cmake .. -DPART=4",
           "make report"
         ]
       }
@@ -102,7 +102,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part1_cpp",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=1",
           "nmake fpga_emu",
           "vector_add.fpga_emu.exe"
         ]
@@ -114,7 +114,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part2_dpcpp_functor_usm",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=2",
           "nmake fpga_emu",
           "vector_add.fpga_emu.exe"
         ]
@@ -126,7 +126,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part2_dpcpp_functor_usm",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=2",
           "nmake report"
         ]
       },
@@ -137,7 +137,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part3_dpcpp_lambda_usm",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=3",
           "nmake fpga_emu",
           "vector_add.fpga_emu.exe"
         ]
@@ -149,7 +149,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part3_dpcpp_lambda_usm",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=3",
           "nmake report"
         ]
       },
@@ -160,7 +160,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part4_dpcpp_lambda_buffers",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=4",
           "nmake fpga_emu",
           "vector_add.fpga_emu.exe"
         ]
@@ -172,7 +172,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile/part4_dpcpp_lambda_buffers",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=4",
           "nmake report"
         ]
       }
