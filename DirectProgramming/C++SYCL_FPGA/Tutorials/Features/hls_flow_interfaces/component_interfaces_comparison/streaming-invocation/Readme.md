@@ -15,7 +15,7 @@ auto get(sycl::ext::oneapi::experimental::properties_tag) {
 ```
 The property `sycl::ext::intel::experimental::streaming_interface<>` configures a streaming invocation interface with a `ready_in` interface to allow down-stream components to backpressure. You can choose to remove the `ready_in` interface by using `sycl::ext::intel::experimental::streaming_interface_remove_downstream_stall` instead. If you omit the `streaming_interface` property, the compiler will configure your kernel with a register-mapped invocation interface.
 
-Detailed explanation of invocation interfaces can be found in this dedicated [Invocation Interfaces](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/invocation_interfaces) code sample.
+Detailed explanation of invocation interfaces can be found in this dedicated [Invocation Interfaces](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/hls_flow_interfaces/invocation_interfaces) code sample.
 
 ## Data Interface
 In this design, all kernel arguments (`A_in`, `B_in`, `C_out`, `len`) are implemented as conduits. In kernels with a streaming invocation interface, all unannotated arguments will be implemented as conduits by default. In kernels with a register-mapped invocation interface, all unannotated arguments will be implemented in the control/status register by default. In this design, they are explicitly specified as conduits to demonstrate the `annotated_arg` wrapper with property `sycl::ext::intel::experimental::conduit`.

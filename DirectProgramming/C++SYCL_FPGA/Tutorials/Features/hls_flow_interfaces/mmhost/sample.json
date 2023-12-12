@@ -1,7 +1,7 @@
 {
   "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
   "name": "Avalon Memory-Mapped Host Interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/ip_authoring_interfaces"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/hls_flow_interfaces"],
   "description": "An Intel® FPGA tutorial demonstrating how to use annotated pointers to customize Avalon memory-mapped host interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/ip_authoring_interfaces/mmhost",
+      "Tutorials/Features/hls_flow_interfaces/mmhost",
       "include"
     ],
     "exclude": []
@@ -112,7 +112,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART1",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART1",
           "nmake fpga_emu",
           "mmhost_part1.fpga_emu.exe"
         ]
@@ -124,7 +124,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART2",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART2",
           "nmake fpga_emu",
           "mmhost_part2.fpga_emu.exe"
         ]
@@ -136,7 +136,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART3",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART3",
           "nmake fpga_emu",
           "mmhost_part3.fpga_emu.exe"
         ]
@@ -148,7 +148,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART4",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART4",
           "nmake fpga_emu",
           "mmhost_part4.fpga_emu.exe"
         ]
@@ -160,7 +160,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART1",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART1",
           "nmake report"
         ]
       },
@@ -171,7 +171,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART2",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART2",
           "nmake report"
         ]
       },
@@ -182,7 +182,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART3",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART3",
           "nmake report"
         ]
       }, 
@@ -193,7 +193,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/mmhost -DTYPE=PART4",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART4",
           "nmake report"
         ]
       }
