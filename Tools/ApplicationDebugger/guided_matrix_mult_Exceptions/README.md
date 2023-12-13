@@ -75,7 +75,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
 
 ### On Linux*
@@ -120,30 +120,6 @@ make VERBOSE=1
 ```
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
 ## Guided Debugging
 
 The following instructions assume you have installed Intel® Distribution for GDB* and have a basic working knowledge of GDB.
@@ -169,7 +145,7 @@ In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` state
    ```
 3. Run a `backtrace` to get a summary showing the rough location that triggered the assert.
    ```
-   (gdb) backtrace 
+   (gdb) backtrace
    ```
 4. Notice in the results that the exception was triggered around line 95 (frame 9):
    ```

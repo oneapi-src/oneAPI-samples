@@ -109,9 +109,6 @@ By default, three output images are written to the same folder as the applicatio
 
 > **Note**: There is a known limitation due to an issue in the `Level0` driver. The sepia-filter fails with the default `Level0` backend. A workaround is in place to enable the OpenCL backend.
 
-### Run the `Sepia Filter` Sample in Intel&reg; DevCloud
-If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 ## Example Output
 ```
 Loaded image with a width of 3264, a height of 2448 and 3 channels

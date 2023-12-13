@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Race Condition` Sample
 
-The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit. 
+The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -112,31 +112,6 @@ make VERBOSE=1
 ```
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
-
 ## Guided Debugging
 
 This example shows what happens when code tries to access data provided by the device before the copy to the host is complete.
@@ -149,7 +124,7 @@ To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started 
 
 ### Getting the Tracing and Profiling Tool
 
-At an important step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit). 
+At an important step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
 You must download the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) code from GitHub and build the utility. The build instructions are included in the readme in the GitHub repository.
 
@@ -416,7 +391,7 @@ Note that `2_matrix_mul.cpp` still has a bug.  It is an example of problem (b) a
 
 This points out a potential trap in the training documentation you may have read while learning SYCL.   You could easily get the impression that if you use the buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parenthesis may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
 
-This is the trap of the buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot call `VerifyResult` with the `c_back` array until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing. 
+This is the trap of the buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot call `VerifyResult` with the `c_back` array until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing.
 
 >**Note**: You will find more the proper use of buffers and accessors in the *Buffer Accessor Mode* section of the *[oneAPI GPU Optimization Guide Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/memory/buffer-accessors.html)*.
 

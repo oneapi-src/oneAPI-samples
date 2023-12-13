@@ -18,17 +18,6 @@ See the [Intel® oneAPI Deep Neural Network Library](https://www.intel.com/conte
 | Component | [getting_started](getting_started)               | A C++ sample demonstrating basics of oneDNN programming model.
 | Component | [tutorials](tutorials)                           | Hands-on Jupyter notebook tutorials among different topics.
 
-# Using Samples in Intel® DevCloud for oneAPI
-
-You can use oneDNN samples in
-[Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/)
-the environment in the following ways:
-
-* Log in to a DevCloud system via SSH and
-  * use `git clone` to get a full copy of samples repository, or
-  * use the `oneapi-cli` tool to download specific sample.
-* Launch a JupyterLab server and run Jupyter Notebooks from your web browser.
-
 # Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,

@@ -57,7 +57,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
@@ -90,28 +90,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    ```
    make clean
    ```
-
-### Build and Run the `OpenMP* Reduction` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. You can specify a node using a single line script.
-
-```
-qsub  -I  -l nodes=1:xeon:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:xeon:ppn=2` (lower case L) assigns a CPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-|Available Nodes	    |Command Options
-|:---                   |:---
-|GPU	                | `qsub -l nodes=1:gpu:ppn=2 -d .`
-|CPU	                | `qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-For more information on using Intel® DevCloud, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 
 ## Example Output
 

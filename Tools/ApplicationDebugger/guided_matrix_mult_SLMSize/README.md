@@ -98,31 +98,6 @@ When working with the command-line interface (CLI), you should configure the one
 If you receive an error message, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors. See [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
-
 ## Guided Debugging
 
 The following instructions assume you have installed Intel® Distribution for GDB* and have a basic working knowledge of GDB.
@@ -150,7 +125,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    $ ./1_matrix_mul_SLM_size
    Initializing
    Computing
-   
+
    Problem size: c(150,600) = a(150,300) * b(300,600)
    terminate called after throwing an instance of 'sycl::_V1::runtime_error'
      what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
@@ -168,7 +143,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    ```
    (gdb) run
    ```
-   The application will fail and display the same message when we ran it outside of the debugger. 
+   The application will fail and display the same message when we ran it outside of the debugger.
 
    ```
    Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -182,7 +157,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 3. Run `backtrace` to get a summary showing the rough location that triggered the error.
    ```
-   (gdb) backtrace 
+   (gdb) backtrace
    ```
 
    Looking at the backtrace output, we can see that the error happened around line 104 (frame 15):
@@ -237,7 +212,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 #### Root-Cause the Issue
 
-You can see that there is something wrong in the submit at line `104`. You need some more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool. 
+You can see that there is something wrong in the submit at line `104`. You need some more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool.
 
 >**Note**: You must have already built the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GBD).
 
@@ -295,7 +270,7 @@ There are two very important clues in the output.
 
 #### Determine Device Limits
 
-If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables and values: `PrintDebugMessages=1` and `NEOReadDebugKeys=1`. 
+If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables and values: `PrintDebugMessages=1` and `NEOReadDebugKeys=1`.
 
 ```
 $ export NEOReadDebugKeys=1
@@ -339,7 +314,7 @@ The synthetic code in this example has nothing to do with matrix multiply and ca
 In real code, now that we have deduced the variable that is the source of the problem (the `acc` array in our synthetic code, which is defined as a `local_accessor`, meaning it will be stored in device shared-local memory), the "fix" is to rethink your algorithm. For example, can you break up `acc` into smaller sections that will fit on SLM and operate on them separately, one after the other?  You should determine whether `acc` really needs to be in work-group local memory.
 
 As noted in *Shared Local Memory* topic of the *[oneAPI GPU Optimization Guide
-Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/slm.html)*, this really only makes sense when work-items need to share data and communicate with each other within a work-group. 
+Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/slm.html)*, this really only makes sense when work-items need to share data and communicate with each other within a work-group.
 
 In the synthetic code shown above, none of this is happening (each iteration is independent of every other since `i` is a SYCL `id` class, meaning that `i.get_id()` returns a unique index for each of the 163850 iterations). There is no reason why `acc` needs to be in work-group local memory. Instead, `acc` could be a normal `accessor` with a `device` target and a `read_write` access mode that would live in device global memory.
 
