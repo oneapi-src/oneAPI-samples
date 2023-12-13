@@ -8,10 +8,11 @@ sampling functionality for a variety of data formats.
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br> Windows* 10 or 11
-| Hardware                          | Intel&reg; Arc Graphics (Xe-HPG architecture, DG2-128, DG2-512) or higher
-| Compiler Toolchain                | Windows OS: MSVS 2022 (or 2019) installed with Windows* SDK and CMake*; All Platforms: Intel&reg; oneAPI DPC++ Compiler from the Intel&reg; oneAPI Base Toolkit
+| Hardware                          | Intel&reg; Arc&trade; GPU (DG2-128, DG2-512) or higher, compatible with Intel Xe-HPG or Intel Xe-HPC architectures
+| Compiler Toolchain                | <ul><li>Windows* OS only: MSVS 2022 (or 2019) installed with Windows* SDK and CMake*</li><li> All Platforms: Intel&reg; oneAPI DPC++ Compiler from the Intel&reg; oneAPI Base Toolkit</li></ul>
 | SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher
-| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel&reg; Open VKL
+| Libraries                         | <ul><li>Install Intel&reg; Rendering Toolkit (Render Kit) including Intel&reg; Embree, Intel&reg; Open VKL</li><li> Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtime Libraries</li></ul>
+| GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#)
 | Knowledge                         | First, build and run the [CPU](../cpu) get started program `vklTutorialCPU`
 
 | Objective                         | Description
@@ -27,7 +28,7 @@ Open VKL. Output is written to the console (stdout).
 
 ## Key Implementation Details
 
-`vklTutorialGPU` is written for C++17 with SYCL. It is constructed to build with the Intel&reg; oneAPI DPC++ Compiler. On Windows* OS it must also build with MSVS system libraries.
+`vklTutorialGPU` is written for C++17 with SYCL. The application is constructed to build with the Intel&reg; oneAPI DPC++ Compiler. On Windows* OS, it must also link to MSVS system libraries.
 
 ## Build and Run
 
