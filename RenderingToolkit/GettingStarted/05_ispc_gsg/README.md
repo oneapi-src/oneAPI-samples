@@ -1,4 +1,4 @@
-# Getting Started Sample for Intel&reg; oneAPI Rendering Toolkit (Render Kit): Intel&reg; Implicit SPMD Program Compiler (Intel&reg; ISPC)
+# Getting Started Sample for Intel&reg; Rendering Toolkit (Render Kit): Intel&reg; Implicit SPMD Program Compiler (Intel&reg; ISPC)
 
 The Intel&reg; Implicit SPMD Program Compiler (Intel&reg; ISPC) optimizes single
 program, multiple data kernels for execution on modern SIMD hardware. Intel&reg;
@@ -6,14 +6,14 @@ ISPC is often used with high performing Intel&reg; Embree and Intel&reg; Open
 Volume Kernel Library (Intel® Open VKL) based programs. Intel&reg; ISPC compiles
 a C programming language variant, and the language includes helpful constructs
 for modern parallelism. This sample introduces Intel&reg; ISPC within the scope
-of the Intel&reg; oneAPI Rendering Toolkit (Render Kit).
+of the Intel&reg; Rendering Toolkit (Render Kit).
 
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux*Ubuntu* 18.04 <br>CentOS*8 (or compatible) <br> Windows* 10 <br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions; or an ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extensions; or ARM64 with NEON extensions)
 | Compiler Toolchain                | Windows*OS: MSVS 2019 installed with Windows* SDK and CMake*; Other platforms: C++11 compiler and CMake*
-| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including the Intel&reg; Implicit SPMD Program Compiler
+| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), including the Intel&reg; Implicit SPMD Program Compiler
 
 | Objective                         | Description
 |:---                               |:---

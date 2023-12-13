@@ -38,7 +38,7 @@ rendering API at a higher layer, perhaps at an _engine_ layer. Such developers
 should consider examining the Intel&reg; OSPRay API and library, which implements
 rendering facilities on top of Embree.
 
-You can find more information by visiting [Intel&reg; oneAPI Rendering
+You can find more information by visiting [Intel&reg; Rendering
 Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
 
 ## License
