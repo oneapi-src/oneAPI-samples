@@ -91,7 +91,7 @@ REM close imdisplay and delete get started images
 del firstFrameCpp.ppm
 del AccumulatedFrameCpp.ppm
 REM run program
-.\ospTutorialCpp.exe
+.\ospTutorialCpp.exe --osp:load-modules=gpu --osp:device=gpu
 
 ```
 
@@ -142,7 +142,7 @@ picked geometry [instance: 0000028FEA8F9860, model: 0000028FEA8CAE50, primitive:
 rm firstFrameCpp.ppm
 rm AccumulatedFrameCpp.ppm
 # run program
-./ospTutorialCpp
+./ospTutorialCpp --osp:load-modules=gpu --osp:device=gpu
 
 ```
 
