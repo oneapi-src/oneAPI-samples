@@ -29,16 +29,16 @@ This sample contains two versions in the following folders:
 
 | Optimized for         | Description
 |:---                   |:---
-| OS                    | Ubuntu* 20.04
+| OS                    | Ubuntu* 22.04
 | Hardware              | Intel® Gen9 <br>Intel® Gen11 <br>Intel® Xeon CPU <br>Intel® Data Center GPU Max <br> Nvidia Testa P100 <br> Nvidia A100 <br> Nvidia H100 
-| Software              | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPU plugin from Codeplay (to run SYCL™ applications on NVIDIA® GPUs)
+| Software              | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2024.0 <br> oneAPI for NVIDIA GPU plugin from Codeplay (to run SYCL™ applications on NVIDIA® GPUs)
 
 For information on how to use SYCLomatic, refer to the materials at *[Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html)*.<br> How to run SYCL™ applications on NVIDIA® GPUs, refer to 
 [oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin from Codeplay.
 
 ## Key Implementation Details
 
-This sample demonstrates the migration of the following prominent CUDA feature: 
+This sample demonstrates the migration of the following prominent CUDA features: 
 - Random Number Generator
 
 Calls to cuRAND function APIs are being translated to equivalent Intel® oneAPI Math Kernel Library (oneMKL) function calls. 
@@ -49,7 +49,7 @@ The `rngSetupStates()` kernel initializes the random number generator states for
 
 The `initMonteCarloGPU()` function allocates memory on the GPU, sets up the random number generator states, and initializes other variables. 
 
-The `closeMonteCarloGPU()` function computes statistics and deallocates memory on the GPU. 
+The `closeMonteCarloGPU()` function computes statistics and deallocates the memory on the GPU. 
 
 Finally, the `MonteCarloGPU()` function performs the main computations by copying data to the GPU, launching the computation kernel, and copying the results back to the host.
 
@@ -157,42 +157,8 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-0/overview.html) for more information on using the utility.
 
-### Example Output
-The following example is for `02_sycl_migrated` for GPU on Intel(R) UHD Graphics P630 [0x3e96] with Level Zero Backend.
-```
-./a.out Starting...
-
-Using single CPU thread for multiple GPUs
-MonteCarloMultiGPU
-==================
-Parallelization method  = streamed
-Problem scaling         = weak
-Number of GPUs          = 1
-Total number of options = 8192
-Number of paths         = 262144
-main(): generating input data...
-main(): starting 1 host threads...
-main(): GPU statistics, streamed
-GPU Device #0: Intel(R) UHD Graphics [0x9a60]
-Options         : 8192
-Simulation paths: 262144
-
-Total time (ms.): 5408.881836
-        Note: This is elapsed time for all to compute.
-Options per sec.: 1514.545935
-main(): comparing Monte Carlo and Black-Scholes results...
-Shutting down...
-Test Summary...
-L1 norm        : 4.811539E-04
-Average reserve: 11.875348
-
-NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
-
-Test passed
-
-```
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
