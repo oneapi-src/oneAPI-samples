@@ -115,9 +115,10 @@ BilateralFilter1D(fpga_tools::ShiftReg<PixelT, filter_size>& buffer,
 
   // convert unsigned pixels to signed
   fpga_tools::ShiftReg<SignedPixelT, filter_size> buffer_signed;
-  fpga_tools::UnrolledLoop<filter_size>([&](auto i) {
+#pragma unroll
+  for (size_t i = 0; i < filter_size; ++i) {
     buffer_signed[i] = static_cast<SignedPixelT>(buffer[i]);
-  });
+  }
 
   // build the bilateral filter
   fpga_tools::ShiftReg<float, filter_size_eff> bilateral_filter;
@@ -175,9 +176,10 @@ BilateralFilter1D(fpga_tools::ShiftReg<PixelT, filter_size>& buffer,
 
   // Convolve the 1D bilateral filter with the pixel window
   float filtered_pixel = 0.0;
-  fpga_tools::UnrolledLoop<filter_size_eff>([&](auto i) {
+#pragma unroll
+  for (size_t i = 0; i < filter_size_eff; ++i) {
     filtered_pixel += (float(buffer[i * 2]) * bilateral_filter[i]);
-  });
+  }
   
   // Normalize the pixel value by the bilateral filter sum. Use the inverse
   // LUT to compute 1/filter_sum. This saves area by using a 32-bit
@@ -251,9 +253,10 @@ struct HorizontalFunctor {
     // grab just the pixel data, pixel_n is the 'new' pixel forwarded from the
     // vertical kernel (i.e., the partially filtered one)
     fpga_tools::ShiftReg<PixelT, filter_size> buffer_pixels;
-    fpga_tools::UnrolledLoop<filter_size>([&](auto i) {
+#pragma unroll
+    for (size_t i = 0; i < filter_size; ++i) {
       buffer_pixels[i] = buffer[i].pixel_n;
-    });
+    }
 
     // perform the horizontal 1D bilateral filter
     auto output_pixel_float = BilateralFilter1D<filter_size>(

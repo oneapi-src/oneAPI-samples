@@ -107,7 +107,8 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
         bool row_valid[kElementsPerCycle];
 
         // multiple elements per cycle
-        UnrolledLoop<0, kElementsPerCycle>([&](auto p) {
+#pragma unroll
+        for (size_t p = 0; p < kElementsPerCycle; ++p) {
           // is data in range of the table
           // (data size may not be divisible by kElementsPerCycle)
           size_t idx = r * kElementsPerCycle + p;
@@ -149,10 +150,11 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
           disc_price_tmp[p] = extendedprice[p] * (100 - discount[p]);
           charge_tmp[p] =
               extendedprice[p] * (100 - discount[p]) * (100 + tax[p]);
-        });
+        }
 
         // reduction accumulation
-        UnrolledLoop<0, kElementsPerCycle>([&](auto p) {
+#pragma unroll
+        for (size_t p = 0; p < kElementsPerCycle; ++p) {
           sum_qty_local.Accumulate(out_idx[p],
                                    row_valid[p] ? qty[p] : 0);
           sum_base_price_local.Accumulate(out_idx[p],
@@ -165,7 +167,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
                                  row_valid[p] ? count_tmp[p] : 0);
           avg_discount_local.Accumulate(out_idx[p],
                                         row_valid[p] ? discount[p] : 0);
-        });
+        }
       }
 
 // perform averages and push back to global memory

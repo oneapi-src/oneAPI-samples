@@ -170,7 +170,8 @@ struct StreamingCovarianceMatrix {
 
       // Update the global mean array and the diagonal replicates array with the
       // partial results
-      fpga_tools::UnrolledLoop<columns>([&](auto t) {
+#pragma unroll
+      for (size_t t = 0; t < columns; ++t) {
         T mean_to_add = block == 0 ? 0 : means[t];
         means[t] = means_partial[t] + mean_to_add;
         T t_matrix_diagonal_replicate_to_add =
@@ -178,7 +179,7 @@ struct StreamingCovarianceMatrix {
         t_matrix_diagonal_replicate[t] =
             t_matrix_diagonal_replicate_partial[t] +
             t_matrix_diagonal_replicate_to_add;
-      });
+      }
 
       // For the computation of COV
       [[intel::max_replicates(1)]]    // NO-FORMAT: Attribute
@@ -189,12 +190,13 @@ struct StreamingCovarianceMatrix {
       // to the t_matrix_consume array for better memory structure in the
       // computation of COV
       for (row = 0; row < columns; row++) {
-        fpga_tools::UnrolledLoop<columns>([&](auto column) {
+#pragma unroll
+        for (size_t column = 0; column < columns; ++column) {
           T t_matrix_to_add = block == 0 ? 0 : t_matrix[row * columns + column];
           T sum = t_matrix_compute[row * columns + column] + t_matrix_to_add;
           t_matrix[row * columns + column] = sum;
           t_matrix_consume[row][column] = sum;
-        });
+        }
       }
 
       // t_matrix_consume now contains the full matrix product of the transpose
@@ -233,10 +235,11 @@ struct StreamingCovarianceMatrix {
       for (int li = 0; li < kLoopIterations; li++) {
         int column_iter = li % kLoopIterationPerRow;
         bool get[kLoopIterationPerRow];
-        fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto k) {
+#pragma unroll
+        for (size_t k = 0; k < kLoopIterationPerRow; ++k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
+        }
 
         fpga_tools::NTuple<T, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {

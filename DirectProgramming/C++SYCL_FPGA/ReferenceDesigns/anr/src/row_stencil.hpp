@@ -123,19 +123,21 @@ void RowStencil(IndexT rows, IndexT cols, const InType zero_val,
 
       // Perform the convolution on the 1D window
       OutPipeT out_data(OutType(0));
-      fpga_tools::UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
+#pragma unroll
+      for (size_t stencil_idx = 0; stencil_idx < parallel_cols; ++stencil_idx) {
         const int col_local = col + stencil_idx;
         fpga_tools::ShiftReg<InType, filter_size> shifty_pixels_copy;
 
         // first, make an offsetted copy of the shift register
-        fpga_tools::UnrolledLoop<0, filter_size>([&](auto x) {
+#pragma unroll
+        for (size_t x = 0; x < filter_size; ++x) {
           shifty_pixels_copy[x] = shifty_pixels[x + stencil_idx];
-        });
+        }
 
         // call the user's callback function for the operator
         out_data[stencil_idx] = func(row, (col_local - kColThreshLow),
                                       shifty_pixels_copy, stencil_args...);
-      });
+      }
 
       // write the output data if it is in range (i.e., it is a real pixel
       // and not part of the padding)
