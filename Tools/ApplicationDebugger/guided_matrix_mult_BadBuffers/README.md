@@ -70,7 +70,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
 
 ### On Linux*
@@ -121,31 +121,6 @@ make VERBOSE=1
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. 
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
-
 ## Guided Debugging
 
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
@@ -156,7 +131,7 @@ To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started 
 
 ### Getting the Tracing and Profiling Tool
 
-At an important step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit). 
+At an important step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
 You must download the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) code from GitHub and build the utility. The build instructions are included in the readme in the GitHub repository.
 
@@ -219,7 +194,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    #14 0x000000000040839f in sycl::_V1::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffc8d8, CGF=..., CodeLoc=...) at /home/opt/intel/oneapi/compiler/2023.1.0/linux/bin-llvm/../include/sycl/queue.hpp:326
    #15 0x0000000000408089 in main () at /home/guided_matrix_mult_BadBuffers/src/a1_matrix_mul_zero_buff.cpp:74
    ```
-   
+
     Looking at the backtrace output, notice that the exception was triggered around line 74 of `a1_matrix_mul_zero_buff` (frame 15 in the example output listed shown above).
 
 6. Examine the final frame (the frame number might be different from the output shown).
@@ -248,7 +223,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
 
    This isn't very helpful since anything in the `submit` might have been the cause. Looking a little deeper into the backtrace, we see that the exception happened in the accessor code (frame 6), so that indicates something was wrong in line 76 (the only accessor code in this `submit).
 
-8. Inspect `a_buf` in the debugger using the `print` command. 
+8. Inspect `a_buf` in the debugger using the `print` command.
    ```
    (gdb) print /r a_buf
    ```
@@ -259,7 +234,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
    $1 = {impl = warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<cl::sycl::detail::buffer_impl, std::allocator<cl::sycl::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
    warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<cl::sycl::detail::buffer_impl, std::allocator<cl::sycl::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   std::shared_ptr<cl::sycl::detail::buffer_impl> (use count 1, weak count 0) = {get() = 0xed9160}, Range = {<cl::sycl::detail::array<2>> = {common_array = {0, 
+   std::shared_ptr<cl::sycl::detail::buffer_impl> (use count 1, weak count 0) = {get() = 0xed9160}, Range = {<cl::sycl::detail::array<2>> = {common_array = {0,
            0}}, <No data fields>}, OffsetInBytes = 0, IsSubBuffer = false}
    ```
 
@@ -271,7 +246,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
    $2 = {impl = warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<cl::sycl::detail::buffer_impl, std::allocator<cl::sycl::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
    warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<cl::sycl::detail::buffer_impl, std::allocator<cl::sycl::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   std::shared_ptr<cl::sycl::detail::buffer_impl> (use count 1, weak count 0) = {get() = 0xed9230}, Range = {<cl::sycl::detail::array<2>> = {common_array = {300, 
+   std::shared_ptr<cl::sycl::detail::buffer_impl> (use count 1, weak count 0) = {get() = 0xed9230}, Range = {<cl::sycl::detail::array<2>> = {common_array = {300,
            600}}, <No data fields>}, OffsetInBytes = 0, IsSubBuffer = false}
    ```
 
@@ -443,7 +418,7 @@ Let's see what caused the problem by running in the debugger using the OpenCL dr
    ```
 
 9. Let's check the pointers in use at line 122.
-   1. Check the first variable. 
+   1. Check the first variable.
       ```
       (gdb) print dev_a
       ```
@@ -476,7 +451,7 @@ In the call stack you will see the crash at the submit statement with the bad va
 
 #### Other Debug Techniques
 
-If you are trying to debug bad values on the GPU, you will be very challenged to figure out whether or not this is due to bad inputs. You *might* be able to catch the bad pointer if you breakpoint at the correct line. You also *might* see something odd if you capture the API calls with `onetrace`. 
+If you are trying to debug bad values on the GPU, you will be very challenged to figure out whether or not this is due to bad inputs. You *might* be able to catch the bad pointer if you breakpoint at the correct line. You also *might* see something odd if you capture the API calls with `onetrace`.
 
 You need to build onetrace before you can use it. See the instructions at [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GDB).
 

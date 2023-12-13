@@ -120,9 +120,6 @@ When working with the command-line interface (CLI), configure the software tools
 >
 > `sudo echo dev.i915.perf_stream_paranoid=0 > /etc/sysctl.d/60-mdapi.conf`
 
-### Running Samples in Intel&reg; DevCloud
-
-To run a sample in the Intel&reg; DevCloud, specify the compute node (CPU, GPU, FPGA) and the operating mode (batch or interactive). For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 

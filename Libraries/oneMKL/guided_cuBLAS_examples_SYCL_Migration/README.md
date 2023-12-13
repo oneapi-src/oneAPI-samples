@@ -1,6 +1,6 @@
 # `cuBLAS Migration` Sample
 
-The `cuBLAS Migration` sample is a collection of code samples that demonstrate the cuBLAS equivalent in Intel® oneAPI Math Kernel Library (oneMKL). 
+The `cuBLAS Migration` sample is a collection of code samples that demonstrate the cuBLAS equivalent in Intel® oneAPI Math Kernel Library (oneMKL).
 
 | Area                   | Description
 |:---                    |:---
@@ -91,10 +91,6 @@ Run the programs on a CPU or GPU. Each sample uses a default device, which in mo
    make run_amax
    ```
 
-### Build and Run the `cuBLAS Migration` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 #### Build and Run Samples in Batch Mode (Optional)
 
 You can submit build and run jobs through a Portable Bash Script (PBS). A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`.
@@ -143,7 +139,7 @@ This is example output if you built the default and ran `run_amax`.
 [100%] Linking CXX executable amax
 [100%] Built target amax
 A
-1.00 2.00 3.00 4.00 
+1.00 2.00 3.00 4.00
 =====
 result
 4

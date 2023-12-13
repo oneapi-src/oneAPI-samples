@@ -45,7 +45,7 @@ The basic SYCL* standards implemented in the code include the use of the followi
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Build and Run the `Guided Matrix Multiplication Invalid Contexts` Programs 
+## Build and Run the `Guided Matrix Multiplication Invalid Contexts` Programs
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -68,7 +68,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
 
 ### On Linux*
@@ -110,31 +110,6 @@ make VERBOSE=1
 ```
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 
-
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. 
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
 ## Guided Debugging
 
 The following instructions assume you have installed Intel® Distribution for GDB* and have a basic working knowledge of GDB.
@@ -143,7 +118,7 @@ To learn how setup and use Intel® Distribution for GDB*, see *[Get Started with
 
 >**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see *[Using the oneAPI Level Zero Interface: A Brief Introduction to the Level Zero API](https://www.intel.com/content/www/us/en/developer/articles/technical/using-oneapi-level-zero-interface.html?wapkw=Level%20Zero#gs.dxm4t4)*.
 
-This guided example demonstrates what might happen when a developer mixes up queues owned by different contexts. 
+This guided example demonstrates what might happen when a developer mixes up queues owned by different contexts.
 
 ### Getting the Tracing and Profiling Tool
 
@@ -210,7 +185,7 @@ In this section, you will use the Intel® Distribution for GDB* to determine wha
    This will launch the application and provide some indication of where the code failed.
 
    ```
-   Starting program: .../1_matrix_mul_invalid_contexts 
+   Starting program: .../1_matrix_mul_invalid_contexts
    :
    [Thread debugging using libthread_db enabled]
    Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
@@ -252,10 +227,10 @@ In this section, you will use the Intel® Distribution for GDB* to determine wha
    #10 0x00001555551bb744 in cl::sycl::detail::queue_impl::submit(std::function<void (cl::sycl::handler&)> const&, std::shared_ptr<cl::sycl::detail::queue_impl> const&, cl::sycl::detail::code_location const&, std::function<void (bool, bool, cl::sycl::event&)> const*) () from /opt/intel/oneapi_customer/compiler/2022.1.0/linux/lib/libsycl.so.5
    #11 0x00001555551bb715 in cl::sycl::queue::submit_impl(std::function<void (cl::sycl::handler&)>, cl::sycl::detail::code_location const&) ()
    from /opt/intel/oneapi_customer/compiler/2022.1.0/linux/lib/libsycl.so.5
-   #12 0x0000000000404536 in cl::sycl::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, cl::sycl::detail::code_location const&) (this=0x7fffffffa750, CGF=..., 
+   #12 0x0000000000404536 in cl::sycl::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, cl::sycl::detail::code_location const&) (this=0x7fffffffa750, CGF=...,
     CodeLoc=...) at /opt/intel/oneapi_customer/compiler/2022.1.0/linux/bin-llvm/../include/sycl/CL/sycl/queue.hpp:275
    #13 0x000000000040408a in main () at src/1_matrix_mul_invalid_contexts.cpp:101
-   (gdb) 
+   (gdb)
    ```
 
 5. Note that the last frame number in the call stack (your last frame may vary from the example above).
@@ -267,14 +242,14 @@ In this section, you will use the Intel® Distribution for GDB* to determine wha
    ```
    #13 0x000000000040408a in main () at src/1_matrix_mul_invalid_contexts.cpp:101
    101         q.submit([&](auto &h) {
-   (gdb) 
+   (gdb)
    ```
 7. Examine the source code in that region.
    ```
    (gdb) list
    ```
    You should see the code around the line reporting the problem.
-   
+
    ```
    96
    97          // Submit command group to queue to initialize matrix b
@@ -286,7 +261,7 @@ In this section, you will use the Intel® Distribution for GDB* to determine wha
    103         });
    104
    105         q.wait();
-   (gdb) 
+   (gdb)
    ```
 
    As you can see, there is something wrong in line 101.  Unfortunately, the generic `CL_OUT_OF_RESOURCES` we saw when it crashed doesn't really mean anything - it just tells us there is a problem.

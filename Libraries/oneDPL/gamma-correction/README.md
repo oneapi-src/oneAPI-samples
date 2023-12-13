@@ -66,9 +66,6 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### Running Samples In Intel® DevCloud
-If running a sample in the Intel® DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
-
 ### On a Linux* System
 Perform the following steps:
 

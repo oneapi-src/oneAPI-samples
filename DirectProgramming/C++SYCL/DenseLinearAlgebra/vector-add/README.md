@@ -115,16 +115,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
    > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
-   > 
+   >
    > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
-   > 
+   >
    >     intel_a10gx_pac:pac_a10
    >
    > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
    >
    >     intel_s10sx_pac:pac_s10
    >     intel_s10sx_pac:pac_s10_usm
-   > 
+   >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
@@ -197,16 +197,16 @@ time.)
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
    > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
-   > 
+   >
    > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
-   > 
+   >
    >     intel_a10gx_pac:pac_a10
    >
    > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
    >
    >     intel_s10sx_pac:pac_s10
    >     intel_s10sx_pac:pac_s10_usm
-   > 
+   >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 #### Build for CPU and GPU
@@ -329,41 +329,6 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
     vector-add-buffers.fpga.exe
     vector-add-usm.fpga.exe
     ```
-
-### Build and Run the `Base: Vector Add` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes           |Command Options
-  |:---                      |:---
-  |GPU	                    |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	                    |`qsub -l nodes=1:xeon:ppn=2 -d .`
-  |FPGA Compile Time         |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime (Arria 10)   |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
-
-
->**Note**: For more information on how to specify compute nodes, read [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to **24 hours**.
-
-Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10`.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
-
 
 ## Example Output
 ```
