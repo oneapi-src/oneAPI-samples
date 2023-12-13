@@ -9,11 +9,14 @@ Volume Kernel Library (Intel&reg; Open VKL), and Intel&reg; Open Image Denoise.
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
-| Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions, ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extentions, ARM64 with NEON extensions)
+| Hardware                          | <ul><li>Intel 64 Penryn CPU or higher with SSE4.1 extensions</li><ul><li>Optimized requirements: Intel 64 Skylake CPU or higher with AVX512 extentions) </li></ul><li>ARM64 with NEON extensions</li><li>GPUs: Xe-HPG, or Xe-HPC architecture based Intel&reg; Graphics devices including Intel&reg; Arc&trade; Graphics and Intel&reg; Data Center Graphics</li></ul>
 | Compiler Toolchain                | Windows OS: MSVS 2022 (or 2019) installed with Windows SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example, gcc/c++/clang), and CMake*
-| Libraries                         | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise; Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtimes
+| Libraries                         | <ul><li>Install Intel&reg; Rendering Toolkit (Render Kit), including Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise</li><li> Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtimes</li></ul>
 | Image Display Tool                | A .ppm filetype viewer (for example, [ImageMagick](https://www.imagemagick.org)).
 
+| Optional Requirement                    | Description
+|:---                                     |:---
+| Intel GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#)
 
 | Objective                         | Description
 |:---                               |:---

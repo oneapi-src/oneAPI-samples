@@ -20,11 +20,12 @@ output](example_images/rkRayTracerGPU.png)
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
-| Hardware                          | Intel&reg; Arc Graphics (Xe-HPG architecture, DG2-128, DG2-512) or higher
+| Hardware                          | Intel&reg; Arc&trade; GPU (DG2-128, DG2-512) or higher, compatible with Intel Xe-HPG or Intel Xe-HPC architectures
 | Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit) including Intel&reg; Embree, and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler
 | SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher
 | Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++17 compiler and CMake*
 | Tools                             | .png capable image viewer
+| Intel GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#)
 | Knowledge                         | First, build and run the IntroToRayTracingWithEmbree `rkRayTracer` [CPU](../cpu) sample program
 
 ## Build and Run
