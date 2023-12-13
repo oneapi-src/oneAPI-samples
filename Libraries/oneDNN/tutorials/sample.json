@@ -47,5 +47,6 @@
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_vtune_profiling.ipynb"
 		 ]
 	}
+ ]}
 }
    
