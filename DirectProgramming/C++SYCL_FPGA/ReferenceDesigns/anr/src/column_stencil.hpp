@@ -185,19 +185,21 @@ void ColumnStencil(IndexT rows, IndexT cols, const InType zero_val,
 
       // Perform the convolution on the 1D window
       OutPipeT out_data((OutType)0);
-      fpga_tools::UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
+#pragma unroll
+      for (size_t stencil_idx = 0; stencil_idx < parallel_cols; ++stencil_idx) {
         fpga_tools::ShiftReg<InType, kShiftRegRows> shifty_copy;
 
         int col_local = col + stencil_idx;
 
-        fpga_tools::UnrolledLoop<0, filter_size>([&](auto stencil_row) {
+#pragma unroll
+        for (size_t stencil_row = 0; stencil_row < filter_size; ++stencil_row) {
           shifty_copy[stencil_row] = shifty_2d[stencil_row][stencil_idx];
-        });
+        }
 
         // pass a copy of the line buffer's register window.
         out_data[stencil_idx] = func((row - kRowOutputThreshLow), col_local,
                                       shifty_copy, stencil_args...);
-      });
+      }
 
       // write the output data if it is in range (i.e., it is a real pixel
       // and not part of the padding)

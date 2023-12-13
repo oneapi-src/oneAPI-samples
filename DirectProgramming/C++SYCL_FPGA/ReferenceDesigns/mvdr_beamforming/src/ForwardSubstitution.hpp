@@ -154,14 +154,15 @@ event SubmitForwardSubstitutionKernel(queue& q) {
           for (short i = 0; i < kNumCalcTypePerVector; i++) {
             CalcType y_elements;
 
-            fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
+#pragma unroll
+            for (size_t j = 0; j < k_unroll_factor; ++j) {
               y_elements[j] = y_vectors[vector_num][i][j];
               y_vector_initial[i][j] = y_elements[j];
               if (i == 0 && j == 0) {
                 // initialize the first value of y_at_next_col_pos
                 y_at_next_col_pos = y_elements[0];
               }
-            });
+            }
           }
 
           // calculate x for the current y vector
@@ -186,7 +187,8 @@ event SubmitForwardSubstitutionKernel(queue& q) {
               CalcType l_val, y_val, y_initial_val, y_current, y_new;
               short row[k_unroll_factor];
 
-              fpga_tools::UnrolledLoop<k_unroll_factor>([&](auto j) {
+#pragma unroll
+              for (size_t j = 0; j < k_unroll_factor; ++j) {
                 // calculate current location within the vector
                 row[j] = j + (i * (short)k_unroll_factor);
 
@@ -217,7 +219,7 @@ event SubmitForwardSubstitutionKernel(queue& q) {
                 if (row[j] == col + 1) {
                   y_at_next_col_pos = y_new[j];
                 }
-              });  // end of unrolled loop
+              }  // end of unrolled loop
 
             }  // end of for( i... )
 

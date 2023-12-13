@@ -12,7 +12,7 @@
       "base": "../../../..",
       "include": [
         "README.md",
-        "Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison",
+        "Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison",
         "include"
       ],
       "exclude": []
@@ -133,7 +133,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=CSR",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=CSR",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -145,7 +145,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -157,7 +157,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=CSR",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=CSR",
             "nmake report"
           ]
         },
@@ -168,7 +168,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=STREAMING",
             "nmake report"
           ]
         },
@@ -179,7 +179,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=PIPES",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=PIPES",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -191,7 +191,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=PIPES",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=PIPES",
             "nmake report"
           ]
         },
@@ -202,7 +202,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -214,7 +214,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=MMHOST",
             "nmake report"
           ]
         },
@@ -225,7 +225,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
             "nmake fpga_emu",
             "vector_add.fpga_emu.exe"
           ]
@@ -237,7 +237,7 @@
             "cd ../../../..",
             "mkdir build",
             "cd build",
-            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
+            "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison -DTYPE=NAIVE",
             "nmake report"
           ]
         }

@@ -1,6 +1,6 @@
 # `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ip_authoring_interfaces/component_interfaces_comparison) tutorial before continuing with this one.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison) tutorial before continuing with this one.
 
 | Area                  | Description
 |:--                    |:--

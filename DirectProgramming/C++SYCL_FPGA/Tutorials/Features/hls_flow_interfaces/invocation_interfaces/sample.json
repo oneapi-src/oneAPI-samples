@@ -1,7 +1,7 @@
 {
   "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
   "name": "Invocation Interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/ip_authoring_interfaces"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/hls_flow_interfaces"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of register_map and streaming invocation interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/ip_authoring_interfaces/invocation_interfaces",
+      "Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
       "include"
     ],
     "exclude": []
@@ -54,7 +54,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/invocation_interfaces",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
           "nmake fpga_emu",
           "reg_map_functor.fpga_emu.exe",
           "stream_functor.fpga_emu.exe",
@@ -71,7 +71,7 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ip_authoring_interfaces/invocation_interfaces",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
           "nmake report"
         ]
       }
