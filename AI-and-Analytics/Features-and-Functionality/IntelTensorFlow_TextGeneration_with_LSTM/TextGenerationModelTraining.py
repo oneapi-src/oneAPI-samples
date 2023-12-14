@@ -126,14 +126,15 @@ sequences = tokenizer.texts_to_sequences(lines)
 # In[ ]:
 
 
+# Get vocabulary size of our model
+vocab_size = len(tokenizer.word_index) + 1
+
 # Convert to numpy matrix
 sequences = np.array(sequences)
 x, y = sequences[:, :-1], sequences[:, -1]
 y = to_categorical(y, num_classes=vocab_size)
 seq_length = x.shape[1]
 
-# Get vocabulary size of our model
-vocab_size = len(tokenizer.word_index) + 1
 vocab_size
 
 
@@ -233,7 +234,7 @@ random_seed_text
 number_of_words_to_generate = 10
 generated_text = generate_text_seq(model, tokenizer, seq_length, random_seed_text, number_of_words_to_generate)
 print("::: SEED TEXT::: " + random_seed_text)
-prit("::: GENERATED TEXT::: " + generated_text)
+print("::: GENERATED TEXT::: " + generated_text)
 
 
 # # Summary
