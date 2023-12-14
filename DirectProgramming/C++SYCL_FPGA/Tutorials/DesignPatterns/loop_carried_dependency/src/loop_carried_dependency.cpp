@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <string>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
@@ -16,6 +16,12 @@ using namespace std;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class UnOptKernel;
 class OptKernel;
+
+#if defined(FPGA_SIMULATOR)
+constexpr size_t kMaxN = 200;
+#else
+constexpr size_t kMaxN = 500;
+#endif
 
 event Unoptimized(queue &q, const vector<double> &vec_a,
                   const vector<double> &vec_b, double &result, size_t N) {
@@ -30,11 +36,17 @@ event Unoptimized(queue &q, const vector<double> &vec_a,
 
     h.single_task<UnOptKernel>([=]() {
       double sum = 0;
+      double local_a[kMaxN * kMaxN], local_b[kMaxN];
+
+      // Copy to local memory for speed
+      for (size_t i = 0; i < N * N; i++) local_a[i] = a[i];
+      for (size_t i = 0; i < N; i++) local_b[i] = b[i];
+
       for (size_t i = 0; i < N; i++) {
         for (size_t j = 0; j < N; j++) {
-          sum += a[i * N + j];
+          sum += local_a[i * N + j];
         }
-        sum += b[i];
+        sum += local_b[i];
       }
       result[0] = sum;
     });
@@ -55,6 +67,11 @@ event Optimized(queue &q, const vector<double> &vec_a,
 
     h.single_task<OptKernel>([=]() [[intel::kernel_args_restrict]] {
       double sum = 0;
+      double local_a[kMaxN * kMaxN], local_b[kMaxN];
+
+      // Copy to local memory
+      for (size_t i = 0; i < N * N; i++) local_a[i] = a[i];
+      for (size_t i = 0; i < N; i++) local_b[i] = b[i];
 
       for (size_t i = 0; i < N; i++) {
         // Step 1: Definition
@@ -62,12 +79,12 @@ event Optimized(queue &q, const vector<double> &vec_a,
 
         // Step 2: Accumulation of array A values for one outer loop iteration
         for (size_t j = 0; j < N; j++) {
-          sum_2 += a[i * N + j];
+          sum_2 += local_a[i * N + j];
         }
 
         // Step 3: Addition of array B value for an outer loop iteration
         sum += sum_2;
-        sum += b[i];
+        sum += local_b[i];
       }
 
       result[0] = sum;
@@ -91,11 +108,6 @@ void PrintTime(const event &e, queue &q, const char *kind) {
 }
 
 int main(int argc, char *argv[]) {
-#if defined(FPGA_SIMULATOR)
-  constexpr size_t kMaxN = 400;
-#else
-  constexpr size_t kMaxN = 16000;
-#endif
   size_t n = kMaxN;
 
   if (argc > 1) {
@@ -129,11 +141,11 @@ int main(int argc, char *argv[]) {
   // Initialize queue with device selector and enabling profiling
   // Create queue, get platform and device
 #if FPGA_SIMULATOR
-    auto selector = sycl::ext::intel::fpga_simulator_selector_v;
+  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
-    auto selector = sycl::ext::intel::fpga_selector_v;
+  auto selector = sycl::ext::intel::fpga_selector_v;
 #else  // #if FPGA_EMULATOR
-    auto selector = sycl::ext::intel::fpga_emulator_selector_v;
+  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
 #ifndef FPGA_HARDWARE
