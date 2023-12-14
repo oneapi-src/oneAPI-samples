@@ -1,6 +1,6 @@
 ﻿# `Simple Cuda Graphs` Sample
  
-The `SimpleCudaGraphs` sample demonstrates the migration of CUDA Graph explicit API calls to SYCL using the Taskflow programming model which manages a task dependency graph. This sample is implemented using SYCL* by migrating code from the original CUDA source code and offloading computations to a CPU, GPU, or accelerator.
+The `SimpleCudaGraphs` sample demonstrates the migration of CUDA Graph explicit API calls to SYCL using the Taskflow programming model which manages a task dependency graph. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
 
 | Area                      | Description
 |:---                       |:---
@@ -20,13 +20,13 @@ The sample shows the migration of simple explicit CUDA Graph APIs such as cudaGr
 - cooperative groups
 - warp-level primitives. 
 
-> **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. Users can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
+> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment the Base Toolkit.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
 |:---                           |:---
-| `01_dpct_output`              | Contains the output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some code that is not migrated and has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
+| `01_dpct_output`              | Contains the output of the SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some code that is not migrated and has to be manually fixed to get full functionality. (The code does not functionally work as supplied.)
 | `02_sycl_migrated`            | Contains manually migrated SYCL code from CUDA code.
 
 ## Prerequisites
@@ -34,11 +34,11 @@ This sample contains two versions in the following folders:
 | Optimized for              | Description
 |:---                        |:---
 | OS                         | Ubuntu* 22.04
-| Hardware                   | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Data Center GPU Max <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100 
-| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2023.2.1 <br> oneAPI for NVIDIA GPUs plugin (version 2023.2.0) from Codeplay
+| Hardware                   | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon CPU <br> Intel® Data Center GPU Max <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100 
+| Software                   | SYCLomatic (Tag - 20230720) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2024.0 <br> oneAPI for NVIDIA GPUs plugin (version 2024.0) from Codeplay
 
 For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
-Refer [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute sample on NVIDIA GPU.
+Refer to [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute a sample on NVIDIA GPU.
 
 ## Key Implementation Details
 
@@ -65,7 +65,7 @@ The CUDA Graph API is demonstrated in two CUDA functions:
 
 Reduction is performed in two CUDA kernels `reduce ()` and `reduceFinal()`. We only migrate the cudaGraphsManual() using SYCLomatic Tool and manually migrate the code section which is not migrated using [Taskflow](https://github.com/taskflow/taskflow) Programming Model. We do not migrate `cudaGraphsUsingStreamCapture()` because CUDA Stream Capture APIs are not yet supported in SYCL.
 
-> **Note**: For more information on how to use Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.vmhplg).
+> **Note**: For more information on how to use the Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.vmhplg).
 
 ## Set Environment Variables
 
@@ -91,14 +91,14 @@ For this sample, the SYCLomatic tool automatically migrates ~80% of the CUDA run
    ```
    The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the SYCLomatic tool. The result is written to a folder named dpct_output. The `--in-root` specifies the path to the root of the source tree to be migrated. The `--gen-helper-function ` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as `include` folder. The `--use-experimental-features` option specifies an experimental helper function used to logically group work-items.
+4. Pass the JSON file as input to the SYCLomatic tool. The result is written to a folder named dpct_output. The `--in-root` specifies the path to the root of the source tree to be migrated. The `--gen-helper-function ` option will make a copy of the dpct header files/functions used in migrated code into the dpct_output folder as `include` folder. The `--use-experimental-features` option specifies an experimental helper function used to logically group work-items.
    ```
    c2s -p compile_commands.json --in-root ../../.. --gen-helper-function --use-experimental-features=logical-group
    ```
 
 ### Manual workarounds 
 
-The following warnings in the "DPCT1XXX" format are generated by the tool to indicate the code has not been migrated by the tool and needs to be manually modified in order to complete the migration. 
+The following warnings in the "DPCT1XXX" format are generated by the tool to indicate the code has not been migrated by the tool and needs to be manually modified to complete the migration. 
 
 1.	DPCT1007: Migration of cudaGraphCreate is not supported.
     ```
@@ -115,7 +115,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     ```
     cudaGraphAddMemcpyNode(&memcpyNode, graph, NULL, 0, &memcpyParams);
     ```
-    The tf::syclFlow provides memcpy method to creates a memcpy task that copies untyped data in bytes.
+    The tf::syclFlow provides memcpy method to create a memcpy task that copies untyped data in bytes.
     ```
     tf::syclTask inputVec_h2d = sf.memcpy(inputVec_d, inputVec_h, sizeof(float) * inputSize) .name("inputVec_h2d");
     ```  
@@ -134,7 +134,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     cudaGraphAddKernelNode(&kernelNode, graph, nodeDependencies.data(),
                              nodeDependencies.size(), &kernelNodeParams);
     ```
-    The tf::syclFlow::on creates a task to launch the given command group function object and tf::syclFlow::parallel_for creates a kernel task from a parallel_for method through the handler object associated with a command group. The SYCL runtime schedules command group function objects from out-of-order queue and constructs a task graph based on submitted events.
+    The tf::syclFlow::on creates a task to launch the given command group function object and tf::syclFlow::parallel_for creates a kernel task from a parallel_for method through the handler object associated with a command group. The SYCL runtime schedules command group function objects from an out-of-order queue and constructs a task graph based on submitted events.
     ```
     tf::syclTask reduce_kernel = sf.on([=] (sycl::handler& cgh){
       sycl::local_accessor<double, 1> tmp(sycl::range<1>(THREADS_PER_BLOCK), cgh);
@@ -149,7 +149,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     ```
     cudaGraphAddHostNode(&hostNode, graph, nodeDependencies.data(),   nodeDependencies.size(), &hostParams);
     ```
-    The tf::syclFlow doesn’t have a host method to run the callable on the host, instead we can achieve this by creating a subflow graph since Taskflow supports dynamic tasking and runs the callable on the host.
+    The tf::syclFlow doesn’t have a host method to run the callable on the host, instead, we can achieve this by creating a subflow graph since Taskflow supports dynamic tasking and runs the callable on the host.
     ```
     tf::Task syclHostTask = tflow.emplace([&](){
       myHostNodeCallback(&hostFnData);
@@ -162,7 +162,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     ```
     cudaGraphGetNodes(graph, nodes, &numNodes);
     ```
-    CUDA graph nodes are equivalent to SYCL tasks, both tf::Taskflow and tf::syclFlow class include num_tasks() function to query the total number of tasks.
+    CUDA graph nodes are equivalent to SYCL tasks, both tf::Taskflow and tf::syclFlow classes include num_tasks() function to query the total number of tasks.
     ```
     sf_Task = sf.num_tasks();
     ```
@@ -170,18 +170,18 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     ```
     cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0);
     ```
-    SYCL Task graph doesn’t need to be instantiated before executing but need to establish the task dependencies using precede and succeed.
+    SYCL Task graph doesn’t need to be instantiated before executing but needs to establish the task dependencies using precede and succeed.
     ```
     reduce_kernel.succeed(inputVec_h2d, outputVec_memset).precede(reduceFinal_kernel);
     reduceFinal_kernel.succeed(resultd_memset).precede(result_d2h);
     ```
-    The inputVec_h2d and outputVec_memset tasks run parallelly followed by reduce_kernel task.
+    The inputVec_h2d and outputVec_memset tasks run parallelly followed by the reduce_kernel task.
    
 8. DPCT1007: Migration of cudaGraphClone is not supported.
     ```
     cudaGraphClone(&clonedGraph, graph);
     ```
-    In SYCL, there is no clone function available as Taskflow graph objects are move-only. To achieve functionality, we can use std::move() function as shown below.
+    In SYCL, there is no clone function available as Taskflow graph objects are move-only. To achieve functionality, we can use the std::move() function as shown below.
     ```
     tf::Taskflow tflow_clone(std::move(tflow));
     ```
@@ -208,7 +208,7 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
     ~Executor() 
     ~Taskflow()
     ```
-    To ensure that all the taskflow submissions are completed before calling destructor, we must use wait() during the execution.
+    To ensure that all the taskflow submissions are completed before calling the destructor, we must use wait() during the execution.
 
 > **Note**: The SYCL Task Graph Programming Model, syclFlow, leverages the out-of-order property of the SYCL queue to design a simple and efficient scheduling algorithm using topological sort. SYCL can be slower than CUDA graphs because of execution overheads.
 
@@ -216,13 +216,13 @@ The following warnings in the "DPCT1XXX" format are generated by the tool to ind
 ```
     findCudaDevice (argc, (const char **) argv);
 ```
-Since its a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the `sycl get_device()` API
+Since it is a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the `sycl get_device()` API
 
 
 ## Build and Run the `Simple CUDA Graphs` Sample
 
 >  **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> environment by sourcing  the `setvars` script at the root of your oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
@@ -248,8 +248,8 @@ Since its a custom API SYCLomatic tool will not act on it and we can either remo
    ```
 
    **Note**: By default, no flag are enabled during build which supports Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU. <br>
-    Enable **INTEL_MAX_GPU** flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performace. <br>
-    Enable **NVIDIA_GPU** flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs ) <br>
+    Enable **INTEL_MAX_GPU** flag during the build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance. <br>
+    Enable **NVIDIA_GPU** flag during the build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/) plugin   from Codeplay is required to build for NVIDIA GPUs ) <br>
 
    By default, this command sequence will build the `02_sycl_migrated` versions of the program.
    
@@ -273,25 +273,6 @@ If an error occurs, you can get more details by running `make` with the `VERBOSE
 $ make VERBOSE=1
 ```
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-  
-## Example Output
-
-The following example is for `02_sycl_migrated` for GPU on **Intel(R) UHD Graphics P630 [0x3e96]**.
-```
-16777216 elements
-threads per block  = 256
-Graph Launch iterations = 3
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-
-Number of tasks(nodes) in the syclTaskFlow(graph) created manually = 7
-Cloned Graph Output.. 
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-[syclTaskFlowManual] Host callback final reduced sum = 0.996214
-Built target run_gpu
-```
 
 ## License
 Code samples are licensed under the MIT license. See
