@@ -13,7 +13,7 @@
 	{
 		"id": "intel extension for pytorch hello world",
 		"steps": [
-      "source /root/intel/oneapi/intelpython/bin/activate",
+      "source ~/intel/oneapi/intelpython/bin/activate",
 			"conda activate pytorch",
 			"python Intel_Extension_For_PyTorch_Hello_World.py"
 		 ]
