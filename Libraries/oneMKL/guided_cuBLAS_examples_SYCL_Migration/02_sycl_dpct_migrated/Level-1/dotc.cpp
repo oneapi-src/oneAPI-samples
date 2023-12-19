@@ -61,7 +61,8 @@
 using data_type = sycl::double2;
 
 int main(int argc, char* argv[]) try {
-  dpct::device_ext& dev_ct1 = dpct::get_current_device();
+  // dpct::device_ext& dev_ct1 = dpct::get_current_device();
+  dpct::device_ext dev_ct1 = sycl::device{aspect_selector(sycl::aspect::cpu)};
   sycl::queue& q_ct1 = dev_ct1.default_queue();
   sycl::queue* cublasH = NULL;
   dpct::queue_ptr stream = &q_ct1;
