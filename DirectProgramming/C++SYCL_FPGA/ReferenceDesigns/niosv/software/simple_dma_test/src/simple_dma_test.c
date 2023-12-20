@@ -77,20 +77,30 @@
 /// @param[in] length_bytes Number of bytes of data to copy
 void configure_and_start_dma(unsigned int *source, unsigned int *destination,
                              unsigned int length_bytes) {
+  // Make these pointers volatile since they point to registers. Repeated
+  // accesses to volatile pointers will not be optimized away. Since these
+  // pointers are only accessed once, marking them volatile is not strictly
+  // necessary, but they are made volatile so that future potential
+  // modifications will be safe.
+
   // DMA source
-  unsigned int **reg_arg_source_ptr = (unsigned int **)REG_ARG_SOURCE_BASE;
+  volatile unsigned int **reg_arg_source_ptr =
+      (volatile unsigned int **)REG_ARG_SOURCE_BASE;
   *reg_arg_source_ptr = source;
 
   // DMA destination
-  unsigned int **reg_arg_destination_ptr = (unsigned int **)REG_ARG_DEST_BASE;
+  volatile unsigned int **reg_arg_destination_ptr =
+      (volatile unsigned int **)REG_ARG_DEST_BASE;
   *reg_arg_destination_ptr = destination;
 
   // DMA length
-  unsigned int *reg_arg_length_ptr = (unsigned int *)REG_ARG_LENGTH_BASE;
+  volatile unsigned int *reg_arg_length_ptr =
+      (volatile unsigned int *)REG_ARG_LENGTH_BASE;
   *reg_arg_length_ptr = length_bytes;
 
   // DMA start
-  unsigned int *reg_start_ptr = (unsigned int *)REG_START_BASE;
+  volatile unsigned int *reg_start_ptr =
+      (volatile unsigned int *)REG_START_BASE;
   *reg_start_ptr = 1;
 
   // The DMA kernel should immediately start at this point
@@ -137,9 +147,10 @@ int test_simple_dma() {
   // main memory
   alt_dcache_flush(destination, BUFFER_LENGTH);
 
-  //  Configure and start the DMA kernel
+  // Configure and start the DMA kernel
   configure_and_start_dma(source, destination, BUFFER_LENGTH);
 
+  // Make this volatile so the compiler doesn't optimize repeated accesses away
   volatile unsigned int *status_reg_ptr = (unsigned int *)REG_STATUS;
 
   // Busy-waiting for the accelerator to complete (kernel will fire off
