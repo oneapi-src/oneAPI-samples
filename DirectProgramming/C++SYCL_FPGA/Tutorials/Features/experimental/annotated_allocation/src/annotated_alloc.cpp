@@ -5,7 +5,8 @@
 #include "annotated_class_util.hpp"
 
 constexpr int kBL1 = 1;
-constexpr int kAlignment = 256;
+constexpr int kAlignment = 32;
+constexpr int kWidth = 256;
 
 // Create type alias for the annotated kernel arguments, so it can be
 // reused in the annotated memory allocation in the host code
@@ -14,6 +15,7 @@ constexpr int kAlignment = 256;
 using annotated_arg_t= sycl::ext::oneapi::experimental::annotated_arg<
     int *, decltype(sycl::ext::oneapi::experimental::properties{
         sycl::ext::intel::experimental::buffer_location<kBL1>,
+        sycl::ext::intel::experimental::dwidth<kWidth>,
         sycl::ext::oneapi::experimental::alignment<kAlignment> })>;
 
 struct VectorAdd {
@@ -21,6 +23,7 @@ struct VectorAdd {
   int size;
 
   void operator()() const {
+    #pragma unroll 8
     for (int i = 0; i < size; i++) {
       a[i] *= 2;
     }
