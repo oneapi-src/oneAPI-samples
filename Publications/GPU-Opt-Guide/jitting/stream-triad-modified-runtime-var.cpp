@@ -105,9 +105,8 @@ int main(int argc, char *argv[]) {
     array_size = std::stoi(argv[1]);
     inner_loop_size = std::stoi(argv[2]);
   } else {
-    std::cout
-        << "Run as ./<progname> <arraysize in elements> <inner loop size>\n";
-    return 1;
+    array_size = 134217728;
+    inner_loop_size = 10;
   }
   std::cout << "Running with stream size of " << array_size << " elements ("
             << (array_size * sizeof(double)) / (double)1024 / 1024 << "MB)\n";
