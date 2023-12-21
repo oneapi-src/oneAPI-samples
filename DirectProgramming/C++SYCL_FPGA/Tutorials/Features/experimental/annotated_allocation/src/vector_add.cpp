@@ -1,56 +1,46 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
-#include "annotated_class_util.hpp"
 #include "exception_handler.hpp"
+#include "annotated_class_util.hpp"
 
 constexpr int kBL1 = 1;
-constexpr int kBL2 = 2;
-constexpr int kBL3 = 3;
-constexpr int kAlignment = 4;
+constexpr int kAlignment = 256;
 
 // Create type alias for the annotated kernel arguments, so it can be
 // reused in the annotated memory allocation in the host code
 // Each annotated pointer is configured with a unique `buffer_location`,
 // resulting in three unique Avalon memory-mapped host interfaces.
-using arg_a_t= sycl::ext::oneapi::experimental::annotated_arg<
+using annotated_arg_t= sycl::ext::oneapi::experimental::annotated_arg<
     int *, decltype(sycl::ext::oneapi::experimental::properties{
         sycl::ext::intel::experimental::buffer_location<kBL1>,
         sycl::ext::oneapi::experimental::alignment<kAlignment> })>;
-using arg_b_t = sycl::ext::oneapi::experimental::annotated_arg<
-    int *, decltype(sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::buffer_location<kBL2>,
-        sycl::ext::oneapi::experimental::alignment<kAlignment>})>;
-using arg_c_t = sycl::ext::oneapi::experimental::annotated_arg<
-    int *, decltype(sycl::ext::oneapi::experimental::properties{
-        sycl::ext::intel::experimental::buffer_location<kBL3>,
-        sycl::ext::oneapi::experimental::alignment<kAlignment>})>;
 
 struct VectorAdd {
-  arg_a_t a;
-  arg_b_t b;
-  arg_c_t c;
-
+  annotated_arg_t a;
   int size;
 
   void operator()() const {
     for (int i = 0; i < size; i++) {
-      c[i] = a[i] + b[i];
+      a[i] *= 2;
     }
   }
 };
 
-bool check_sum(int *a, int *b, int *c) {
-  for (int i = 0; i < kN; i++) {
-      if (c[i] != a[i] + b[i]) {
+bool checkResult(int *arr, int size) {
+  bool passed = true;
+  for (int i = 0; i < size; i++) {
+    int golden = 2 * i;
+      if (arr[i] != golden) {
         std::cout << "ERROR! At index: " << i << " , expected: " << golden
-                  << " , found: " << array_c[i] << "\n";
+                  << " , found: " << arr[i] << "\n";
         passed = false;
       }
     }
+    return passed;
 }
 
-bool VectorAddWithUsmMalloc(queue &q) {
+bool runWithUsmMalloc(sycl::queue &q) {
     // Create and initialize the host arrays
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
@@ -64,27 +54,18 @@ bool VectorAddWithUsmMalloc(queue &q) {
     int *array_a = sycl::aligned_alloc_shared<int>(
         kAlignment, kN, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
-    int *array_b = sycl::aligned_alloc_shared<int>(
-        kAlignment, kN, q,
-        sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
-    int *array_c = sycl::aligned_alloc_shared<int>(
-        kAlignment, kN, q,
-        sycl::ext::intel::experimental::property::usm::buffer_location(kBL3));
 
     for (int i = 0; i < kN; i++) {
       array_a[i] = i;
-      array_b[i] = 2 * i;
     }
 
-    q.single_task(VectorAdd{array_a, array_b, array_c, kN}).wait();
-    check_sum(array_a, array_b, array_c);
-
+    q.single_task(VectorAdd{array_a, kN}).wait();
+    bool passed = checkResult(array_a, kN);
     free(array_a, q);
-    free(array_b, q);
-    free(array_c, q);
+    return passed;
 }
 
-bool VectorAddWithAnnotatedAlloc(queue &q) {
+bool runWithAnnotatedAlloc(sycl::queue &q) {
     // Create and initialize the host arrays
     constexpr int kN = 8;
     std::cout << "Elements in vector : " << kN << "\n";
@@ -95,23 +76,17 @@ bool VectorAddWithAnnotatedAlloc(queue &q) {
     // as the template parameter, and returns an instance of such annotated_arg. This
     // ensures the properties of the returned memory (for example, buffer location and
     // alignment) match with the annotations on the kernel arguments.
-    arg_a_t array_a = fpga_tools::alloc_annotated<arg_a_t>(kN, q);
-    arg_b_t array_b = fpga_tools::alloc_annotated<arg_b_t>(kN, q);
-    arg_c_t array_c = fpga_tools::alloc_annotated<arg_c_t>(kN, q);
+    annotated_arg_t array_a = fpga_tools::alloc_annotated<annotated_arg_t>(kN, q);
 
     for (int i = 0; i < kN; i++) {
       array_a[i] = i;
-      array_b[i] = 2 * i;
     }
 
-    q.single_task(VectorAdd{array_a, array_b, array_c, kN}).wait();
-    check_sum(array_a, array_b, array_c);
-
+    q.single_task(VectorAdd{array_a, kN}).wait();
+    bool passed = checkResult(array_a, kN);
     free(array_a, q);
-    free(array_b, q);
-    free(array_c, q);
+    return passed;
 }
-
 
 
 int main(void) {
@@ -123,6 +98,7 @@ int main(void) {
   auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
+  bool passed = false;
   try {
     // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler);
@@ -133,11 +109,8 @@ int main(void) {
               << q.get_device().get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    
-
-    bool passed = true;
-    passed &= VectorAddWithUsmMalloc();
-    passed &= VectorAddWithAnnotatedAlloc();
+    passed = runWithUsmMalloc(q);
+    passed &= runWithAnnotatedAlloc(q);
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
   } catch (sycl::exception const &e) {
