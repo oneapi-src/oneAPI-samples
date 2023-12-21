@@ -162,7 +162,6 @@ void init_input(float *a, size_t size) {
 void myHostNodeCallback(void *data) {
   // Check status of GPU after stream operations are done
   callBackData_t *tmp = (callBackData_t *)(data);
-  // checkCudaErrors(tmp->status);
 
   double *result = (double *)(tmp->data);
   char *function = (char *)(tmp->fn_name);
@@ -281,14 +280,14 @@ int main(int argc, char **argv) {
   float *inputVec_d = NULL, *inputVec_h = NULL;
   double *outputVec_d = NULL, *result_d;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      inputVec_h = sycl::malloc_host<float>(size, q_ct1)));
-  checkCudaErrors(DPCT_CHECK_ERROR(inputVec_d = sycl::malloc_device<float>(
-                                       size, q_ct1)));
-  checkCudaErrors(DPCT_CHECK_ERROR(outputVec_d = sycl::malloc_device<double>(
-                                       maxBlocks, q_ct1)));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      result_d = sycl::malloc_device<double>(1, q_ct1)));
+  DPCT_CHECK_ERROR(
+      inputVec_h = sycl::malloc_host<float>(size, q_ct1));
+  DPCT_CHECK_ERROR(inputVec_d = sycl::malloc_device<float>(
+                                       size, q_ct1));
+  DPCT_CHECK_ERROR(outputVec_d = sycl::malloc_device<double>(
+                                       maxBlocks, q_ct1));
+  DPCT_CHECK_ERROR(
+      result_d = sycl::malloc_device<double>(1, q_ct1));
 
   init_input(inputVec_h, size);
 
@@ -300,13 +299,9 @@ int main(int argc, char **argv) {
       std::chrono::duration_cast<float_ms>(stopTimer1 - startTimer1).count();
   printf("Elapsed Time of SYCL TaskFlow Manual : %f (ms)\n", Timer_duration1);
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(inputVec_d, q_ct1)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(outputVec_d, q_ct1)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(result_d, q_ct1)));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(inputVec_h, q_ct1)));
+  DPCT_CHECK_ERROR(sycl::free(inputVec_d, q_ct1));
+  DPCT_CHECK_ERROR(sycl::free(outputVec_d, q_ct1));
+  DPCT_CHECK_ERROR(sycl::free(result_d, q_ct1));
+  DPCT_CHECK_ERROR(sycl::free(inputVec_h, q_ct1));
   return EXIT_SUCCESS;
 }
