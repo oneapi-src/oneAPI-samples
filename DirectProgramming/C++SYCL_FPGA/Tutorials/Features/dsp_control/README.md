@@ -31,6 +31,8 @@ This tutorial shows how to apply global and local controls to set the implementa
 
 > **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
+> **Warning** Although this sample will compile when targeting a Cyclone® V FPGA, the DSP controls will be ignored as this feature is not supported on this FPGA family.
+
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 3 sample that demonstrates a compiler feature.
 
