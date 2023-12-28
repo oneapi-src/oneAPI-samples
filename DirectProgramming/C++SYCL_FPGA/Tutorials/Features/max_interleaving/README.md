@@ -239,8 +239,8 @@ Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 
 |                 | ALM  | ALUT | REG   | MLAB | RAM | DSP |
 | ---             | ---  | ---  | ---   | ---  | --- | --- |
-| KernelCompute_0 | 3564 | 3957 | 11898 | 38   | 66  | 6   |
-| KernelCompute_1 | 3380 | 3768 | 11177 | 35   | 66  | 6   | 
+| KernelCompute_0 | 3506 | 3940 | 11393 | 37   | 66  | 6   |
+| KernelCompute_1 | 3318 | 3743 | 11028 | 34   | 66  | 6   | 
 
 ## Run the `max_interleaving` Sample
 
@@ -280,11 +280,11 @@ Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
 
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 0 kernel time : 1.00186 ms
-Throughput for kernel with max_interleaving 0: 1.047 GFlops
+Max interleaving 0 kernel time : 0.10368 ms
+Throughput for kernel with max_interleaving 0: 0.632 GFlops
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 1 kernel time : 14.467 ms
-Throughput for kernel with max_interleaving 1: 0.072 GFlops
+Max interleaving 1 kernel time : 0.922 ms
+Throughput for kernel with max_interleaving 1: 0.071 GFlops
 PASSED: The results are correct
 ```
 

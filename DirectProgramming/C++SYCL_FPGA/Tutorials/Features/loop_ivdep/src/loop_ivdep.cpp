@@ -10,11 +10,7 @@
 
 #include "exception_handler.hpp"
 
-#if defined(FPGA_SIMULATOR)
-  constexpr size_t kRowLength = 16;
-#else
-  constexpr size_t kRowLength = 128;
-#endif
+constexpr size_t kRowLength = 16;
 constexpr size_t kMinSafelen = 1;
 constexpr size_t kMaxSafelen = kRowLength;
 constexpr size_t kMatrixSize = kRowLength * kRowLength;
