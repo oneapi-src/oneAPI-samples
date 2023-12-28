@@ -19,7 +19,7 @@ using namespace sycl;
 // (malloc can be used but is out of scope of this tutorial)
 constexpr size_t kSize = 32;
 #else
-constexpr size_t kSize = 512;
+constexpr size_t kSize = 128;
 #endif
 constexpr float kErrorThreshold = 0.5;
 constexpr int kTotalOps = 4 * kSize * kSize;

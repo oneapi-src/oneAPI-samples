@@ -13,7 +13,7 @@ class KernelComputeStallFree;
 class KernelComputeStallEnable;
 
 constexpr int kSeed = 0;
-constexpr int kWork = 50;
+constexpr int kWork = 25;
 constexpr int kNumElements = 1000;
 constexpr int kTotalOps = kNumElements * kWork;
 

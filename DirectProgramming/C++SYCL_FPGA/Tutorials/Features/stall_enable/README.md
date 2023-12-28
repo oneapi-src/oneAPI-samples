@@ -225,16 +225,18 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 ### Example Output for `stall_free.fpga_emu`
 
 ```
-Stall free Kernel -- kernel time : 72.5 microseconds
-Throughput for kernel: 2758621KB/s
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Stall free Kernel -- kernel time : 23.552 microseconds
+Throughput for kernel: 8491848KB/s
 PASSED: The results are correct
 ```
 
 ### Example Output for `stall_enable.fpga_emu`
 
 ```
-Stall enable Kernel -- kernel time : 77.7 microseconds
-Throughput for kernel: 2574003KB/s
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Stall enable Kernel -- kernel time : 23.04 microseconds
+Throughput for kernel: 8680556KB/s
 PASSED: The results are correct
 ```
 
