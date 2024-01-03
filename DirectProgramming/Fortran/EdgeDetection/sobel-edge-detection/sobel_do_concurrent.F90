@@ -58,6 +58,10 @@ program sobel_do_conc
     gv     = reshape([-1, -2, -1,  0,  0,  0,  1,  2,  1], [3, 3])
     smooth = reshape([ 1,  2,  1,  2,  4,  2,  1,  2,  1], [3, 3])
 
+    ! Dummy target region to avoid measuring startup time
+    !$omp target
+    !$omp end target
+
     call system_clock(start_time)   ! Start timer
 
     do concurrent (c = 2:img_width - 1, r = 2:img_height - 1)
