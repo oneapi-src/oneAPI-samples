@@ -86,6 +86,12 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 Run the programs on a CPU or GPU. Each sample uses a default device, which in most cases is a GPU.
 
+> **Note**: The code runs on a CPU by default
+> If the user wants to run it on a compatible GPU,
+> he has to comment/uncomment the device selection
+> line in the code.
+
+
 1. Run the samples in the `02_sycl_dpct_migrated` folder.
    ```
    make run_amax
