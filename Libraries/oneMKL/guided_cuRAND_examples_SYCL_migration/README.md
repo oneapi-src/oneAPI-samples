@@ -33,7 +33,7 @@ This sample contains two sets of sources in the following folders:
 | Folder Name             | Description
 |:---                     |:---
 | `01_sycl_dpct_output`   | Contains initial output of the Intel® DPC++ Compatibility Tool used to migrate SYCL-compliant code from CUDA code. <br> It may contain not fully migrated or incorrectly generated code that has to be manually fixed before it is functional. (The code does not work as supplied.)
-| `02_sycl_dpct_migrated` | Contains SYCL to CUDA migrated code generated using the Intel® DPC++ Compatibility Tool with the manual changes implemented to make the code fully functional.
+| `02_sycl_dpct_migrated` | Contains CUDA to SYCL migrated code generated using the Intel® DPC++ Compatibility Tool with the manual changes implemented to make the code fully functional.
 
 These functions are classified into eight different directories, each based on an RNG engine. There are **48** samples:
 
