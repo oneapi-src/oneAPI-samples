@@ -19,7 +19,7 @@
                     "cmake ..",
                     "cmake --build . ",
                     "./vklTutorialCPU",
-		    "cd ../gpu",
+		    "cd ../../gpu",
 		    "mkdir build",
 		    "cd build",
 		    "cmake -DCMAKE_CXX_COMPILER=icpx ..",
