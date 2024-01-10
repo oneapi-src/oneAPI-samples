@@ -20,7 +20,7 @@ This sample shows how to train the model for text generation using LSTM on Intel
 |:---                     |:---
 | OS                      | Ubuntu* 22.04 (or newer)
 | Hardware                | Intel® Arc™, Data and Max series GPU
-| Software                | Intel® oneAPI and AI Analytics Toolkit (AI Kit)
+| Software                | Intel® AI Analytics Toolkit (AI Kit)
 
 ### For Local Development Environments
 
@@ -76,8 +76,8 @@ When working with the command-line interface (CLI), you should configure the one
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
 > Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For system wide installations: `. /opt/intel/oneapi/intelpython/bin/activate`
+> - For private installations: `source $HOME/intel/oneapi/intelpython/bin/activate`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
