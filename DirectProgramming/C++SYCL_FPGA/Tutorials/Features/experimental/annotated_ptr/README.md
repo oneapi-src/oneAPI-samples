@@ -1,6 +1,6 @@
 # `annotated_ptr` Sample
 
-This project serves as a template for Intel® oneAPI FPGA designs, and demonstrates the features of the base CMake build system in our code samples.
+This tutorial demonstrates how to use `annotated_ptr` to annotate properties to pointers inside the kernel, which enables certain compiler optimization that reduces the area usage of the FPGA IP components produced by the Intel® oneAPI DPC++/C++ Compiler.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -8,7 +8,7 @@ This project serves as a template for Intel® oneAPI FPGA designs, and demonstra
 | Hardware                          | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Best practices for creating and managing a oneAPI FPGA project
-| Time to complete                  | 10 minutes
+| Time to complete                  | 15 minutes
 
 > **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
@@ -21,12 +21,10 @@ This project serves as a template for Intel® oneAPI FPGA designs, and demonstra
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are only supported by Board Support Packages (BSPs) with USM support. Kernels that use these types of allocations can always be used to generate standalone IPs.
-
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 1 sample that helps you getting started.
+It is categorized as a Tier 2 sample that helps you getting started.
 
 ```mermaid
 flowchart LR
@@ -48,51 +46,44 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-Use this project as a starting point when you build designs for the Intel® oneAPI DPC++/C++ compiler when targeting FPGAs. It includes a CMake build system to automate selecting the various command-line flags for the oneAPI DPC++/C++ compiler, and a simple single-source design to serve as an example. You can customize the build flags by modifying the top part of `CMakeLists.txt`: if you want to pass additional flags to the Intel® oneAPI DPC++/C++ compiler, you can change the `USER_FLAGS` and `USER_FPGA_FLAGS` variables defined in `CMakeLists.txt`. Similarly, you can add additional include paths to the `USER_INCLUDE_PATHS` variable. You can also explicitly define these variables at the command-line if you want to perform a quick test without changing the CMake build system.
+In the `hls_flow_interface/mmhost` sample(/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost), we demonstrated the usage of `annotated_arg` class in customizing Avalon memory-mapped interfaces for the FPGA IP component. Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizatoins. This tutorial shows how to use `annotated_ptr` to annotate a specific buffer location  to a pointer, which reduces the LSUs use in the produced FPGA IP component.
 
-> **Note**: The code sample in this design uses USM shared allocations for improved code simplicity as compared with buffers/accessors. The included CMake build system can also be used for designs that use buffers and accessors or USM device allocations.
+### Using `annotated_ptr` to annotate the buffer location of a pointer
+In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector located in buffer location 1.
 
-| Variable              | Description
-|:---                   |:---
-| `USER_FPGA_FLAGS` | This semicolon-separated list of flags will be applied **only** to flows that generate FPGA hardware (namely report, simulation, hardware). You can specify flags such as `-Xsclock` or `-Xshyper-optimized-handshaking=off`
-| `USER_FLAGS`          | This semicolon-separated list of flags applies to **all** flows, including emulation. You can specify flags such as `-v` or define macros such as `-DYOUR_OWN_MACRO=3`
-| `USER_INCLUDE_PATHS`  | This semicolon-separated list of include paths applies to all flows, including emulation. Specify include paths relative to the `CMakeLists.txt` file, or using absolute paths in the filesystem.
-
-```bash
-###############################################################################
-### Customize these build variables
-###############################################################################
-set(SOURCE_FILES src/fpga_template.cpp)
-set(TARGET_NAME fpga_template)
-
-# Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
-# different device. 
-# Note that depending on your installation, you may need to specify the full 
-# path to the board support package (BSP), this usually is in your install 
-# folder.
-#
-# You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
-# specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
-if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex7")
-endif()
-
-# Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
-# compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
-
-# Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
-
-# Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
-# compilation.
-set(USER_INCLUDE_PATHS ../../../include;${USER_INCLUDE_PATHS})
+Both of the input and output vectors are kernel arguments annotated by `annotated_arg` class:
+```
+struct pipeWithAnnotatedPtr {
+  annotated_arg<float *, decltype(properties{buffer_location<1>})> result;
+  annotated_arg<float *, decltype(properties{buffer_location<2>})> mul;
+  ...
+};
 ```
 
-Everything below this in the `CMakeLists.txt` is necessary for selecting the compiler flags that are necessary to support the build targets specified below, and should not need to be modified.
+The address of the weight matrix, however, is transferred into the kernel via a host pipe. The kernel reads the row pointers of the weight matrix:
+```
+using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
+...
+float *p = MyPipe::read();
+```
 
-## Building the `fpga_template` Tutorial
+Since the pointer `p` is read from a pipe, the buffer lcoation of the pointer is ambiguous. The compiler will build two sets of LSUs that connect to buffer locatoin 1 and buffer location 2 separately, which increases the kernel area.
 
+You can provide the buffer location information to the compiler by using `annotated_ptr`:
+```
+annotated_ptr<float, decltype(properties{buffer_location<1>})> data{p};
+```
+As a result, the compiler will build only one set of LSUs that connect to buffer locatoin 1.
+
+The `annotated_ptr` variable `data` is then used in the dot-product computation
+```
+result[i] = 0.0f;
+#pragma unroll COLS
+for (int j = 0; j < COLS; j++)
+   result[i] += data[j] * mul[j];
+```
+
+## Building the `anntotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
@@ -141,13 +132,6 @@ This design uses CMake to generate a build script for GNU/make.
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
 3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -156,7 +140,7 @@ This design uses CMake to generate a build script for GNU/make.
    | `make fpga_emu` | Seconds        | x86-64 binary                                                                | Compiles the FPGA device code to the CPU. Use the Intel® FPGA Emulation Platform for OpenCL™ software to verify your SYCL code’s functional correctness.
    | `make report`   | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package. The generated RTL may be exported to Intel® Quartus Prime software.
    | `make fpga_sim` | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
-   | `make fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime. If you specified a BSP with `FPGA_DEVICE`, this will generate an FPGA image that you can run on the corresponding accelerator board.
+   | `make fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime.
 
    The `fpga_emu`, `fpga_sim` and `fpga` targets produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu`, `TARGET_NAME.fpga_sim`, and `TARGET_NAME.fpga`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
 
@@ -165,10 +149,10 @@ This design uses CMake to generate a build script for GNU/make.
    ```bash
    build $> make report
    [ 33%] To compile manually:
-   /[ ... ]/linux64/bin/icpx -I../../../../include -fsycl -fintelfpga    -Wall -qactypes -DFPGA_HARDWARE -c ../src/fpga_template.cpp -o CMakeFiles/report.dir/src/ fpga_template.cpp.o
+   /[ ... ]/linux64/bin/icpx -I../../../../include -fsycl -fintelfpga    -Wall -qactypes -DFPGA_HARDWARE -c ../src/annotated_ptr.cpp -o CMakeFiles/report.dir/src/ annotated_ptr.cpp.o
 
    To link manually:
-   /[ ... ]/linux64/bin/icpx -fsycl -fintelfpga -Xshardware  -Xstarget=Agilex7 -fsycl-link=early -o fpga_template.report CMakeFiles/report.dir/src/  fpga_template.cpp.o
+   /[ ... ]/linux64/bin/icpx -fsycl -fintelfpga -Xshardware  -Xstarget=Agilex7 -fsycl-link=early -o annotated_ptr.report CMakeFiles/report.dir/src/  annotated_ptr.cpp.o
    
    [ ... ]
 
@@ -206,14 +190,6 @@ This design uses CMake to generate a build script for  `nmake`.
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   >
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
-
 3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    | Target           | Expected Time  | Output                                                                       | Description
@@ -221,7 +197,7 @@ This design uses CMake to generate a build script for  `nmake`.
    | `nmake fpga_emu` | Seconds        | x86-64 binary                                                                | Compiles the FPGA device code to the CPU. Use the Intel® FPGA Emulation Platform for OpenCL™ software to verify your SYCL code’s functional correctness.
    | `nmake report`   | Minutes        | RTL + FPGA reports                                                           | Compiles the FPGA device code to RTL and generates an optimization report that describes the structures generated on the FPGA, identifies performance bottlenecks, and estimates resource utilization. This report will include the interfaces defined in your selected Board Support Package. The generated RTL may be exported to Intel® Quartus Prime software.
    | `nmake fpga_sim` | Minutes        | RTL + FPGA reports + x86-64 binary                                           | Compiles the FPGA device code to RTL and generates a simulation testbench. Use the Questa*-Intel® FPGA Edition simulator to verify your design.
-   | `nmake fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime. If you specified a BSP with `FPGA_DEVICE`, this will generate an FPGA image that you can run on the corresponding accelerator board.
+   | `nmake fpga`     | Multiple Hours | Quartus Place & Route (Full accelerator) + FPGA reports + x86-64 host binary | Compiles the FPGA device code to RTL and compiles the generated RTL using Intel® Quartus® Prime.
 
    The `fpga_emu`, `fpga_sim`, and `fpga` targets also produce binaries that you can run. The executables will be called `TARGET_NAME.fpga_emu.exe`, `TARGET_NAME.fpga_sim.exe`, and `TARGET_NAME.fpga.exe`, where `TARGET_NAME` is the value you specify in `CMakeLists.txt`.
 
@@ -233,53 +209,50 @@ This design uses CMake to generate a build script for  `nmake`.
    build> nmake report
 
    [ 33%] To compile manually:
-   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -I../../../../include   -fsycl -fintelfpga -Wall /EHsc -Qactypes -DFPGA_HARDWARE -c ../src/fpga_template.cpp -o  CMakeFiles/report.dir/src/fpga_template.cpp.obj
+   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -I../../../../include   -fsycl -fintelfpga -Wall /EHsc -Qactypes -DFPGA_HARDWARE -c ../src/annotated_ptr.cpp -o  CMakeFiles/report.dir/src/annotated_ptr.cpp.obj
 
    To link manually:
-   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -fsycl -fintelfpga   -Xshardware -Xstarget=Agilex7 -fsycl-link=early -o fpga_template.report.exe   CMakeFiles/report.dir/src/fpga_template.cpp.obj
+   C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx-cl.exe -fsycl -fintelfpga   -Xshardware -Xstarget=Agilex7 -fsycl-link=early -o annotated_ptr.report.exe   CMakeFiles/report.dir/src/annotated_ptr.cpp.obj
    
    [ ... ]
 
    [100%] Built target report
    ```
 
-## Run the `fpga_template` Executable
+### Read the Reports
+
+Build the `report` target and locate `report.html` in the `annotated_ptr.report.prj/reports/` directory.
+
+Navigate to *System Viewer* (*Views* > *System Viewer*) and click on *Global memory* in the *System* hierarchy. Observe that the compiler generates a number of `COLS` LD nodes connected to global memory 1, which correspond to `COLS` times of read access over `data[j]` in the inner loop of the computation. You can verify that using the unannotated pointer `p[j]` directly in the inner loop will result in an additional number of `COLS` LD nodes generated and connected to global memory 2, and thereby an increase in the *Area Estimates* tag.
+
+## Run the `annotated_ptr` Executable
 
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./fpga_template.fpga_emu
+   ./annotated_ptr.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./fpga_template.fpga_sim
-   ```
-3. Alternatively, run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   ./fpga_template.fpga
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./annotated_ptr.fpga_sim
    ```
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   fpga_template.fpga_emu.exe
+   annotated_ptr.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   fpga_template.fpga_sim.exe
+   annotated_ptr.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-   ```
-3. Alternatively, run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   fpga_template.fpga.exe
    ```
 
 ## Example Output
 
 ```
 Running on device: Intel(R) FPGA Emulation Device
-add two vectors of size 256
-PASSED
+PASSED: The results are correct
 ```
 ## License
 Code samples are licensed under the MIT license. See

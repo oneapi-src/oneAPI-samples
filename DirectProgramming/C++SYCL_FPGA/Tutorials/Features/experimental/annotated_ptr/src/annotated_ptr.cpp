@@ -15,8 +15,8 @@ constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
 
-#define ROWS 10
-#define COLS 20
+#define ROWS 2
+#define COLS 5
 
 // Launch a kernel that does a weighted sum over a matrix
 // result[0] = data[0][0]*mul[0] + data[0][1]*mul[1] + ... +
@@ -27,17 +27,18 @@ struct pipeWithAnnotatedPtr {
   annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> mul;
 
   void operator()() const {
-#pragma unroll ROWS
     for (int i = 0; i < ROWS; i++) {
       float *p = MyPipe::read();
 
       // set buffer location on p with annotated_ptr
-      annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> data{p};
+      annotated_ptr<float, decltype(properties{buffer_location<kBL1>})> data{p};
 
-      result[i] = 0.0f;
+      float sum = 0.0f;
 #pragma unroll COLS
       for (int j = 0; j < COLS; j++)
-        result[i] += data[j] * mul[j];
+        sum += data[j] * mul[j];
+
+      result[i] = sum;
     }
   }
 };

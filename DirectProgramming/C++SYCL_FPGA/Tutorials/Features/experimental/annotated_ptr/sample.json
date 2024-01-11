@@ -1,8 +1,8 @@
 {
-  "guid": "418AA4D8-0A61-4FDB-845A-CDA4DA0655E7",
-  "name": "FPGA Template",
+  "guid": "A40887C1-25D3-41EA-9695-1260ADE5EAAA",
+  "name": "annotated_ptr",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
-  "description": "This project serves as a template for Intel® oneAPI DPC++/C++ designs targeting FPGAs. ",
+  "description": "An Intel® FPGA tutorial demonstrating using annotated_ptr to annotate pointers inside kernel",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../..",
     "include": [
       "README.md",
-      "Tutorials/GettingStarted/fpga_template",
+      "DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/annotated_ptr",
       "include"
     ],
     "exclude": []
@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./fpga_template.fpga_emu"
+          "./annotated_ptr.fpga_emu"
         ]
       },
       {
@@ -49,9 +49,9 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_template",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_ptr",
           "nmake fpga_emu",
-          "fpga_template.fpga_emu.exe"
+          "annotated_ptr.fpga_emu.exe"
         ]
       },
       {
@@ -61,11 +61,11 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_template",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_ptr",
           "nmake report"
         ]
       }
     ]
   },
-  "expertise": "Getting Started"
+  "expertise": "Concepts and Functionality"
 }

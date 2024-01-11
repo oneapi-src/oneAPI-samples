@@ -120,6 +120,7 @@ flowchart LR
 
 | Sample                                                                            | Category                                             | Description
 |:---                                                                               |:---                                                  |:---
+| [annotated_ptr (experimental)](Tutorials/Features/experimental/annotated_ptr) | [Tutorials/Features](Tutorials/Features)             | How to annotate a pointer inside the kernel using `annotated_ptr`
 | [autorun](Tutorials/DesignPatterns/autorun)                                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to use autorun kernels
 | [buffered_host_streaming](Tutorials/DesignPatterns/buffered_host_streaming)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimally stream data between the host and device to maximize throughput
 | [compute_units](Tutorials/DesignPatterns/compute_units)                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate multiple compute units using template metaprogramming
