@@ -13,7 +13,7 @@
 
 # # Leveraging Intel Extension for TensorFlow with LSTM for Text Generation
 # 
-# The sample will present the way to train the model for text generation with LSTM (Long short-term Memory) using the Intel extension for TensorFlow. It will focus on the parts that are relevant for faster execution on Intel hardware enabling transition of existing model training notebooks to use Intel extension for TensorFlow.
+# The sample will present the way to train the model for text generation with LSTM (Long short-term Memory) using the Intel extension for TensorFlow. It will focus on the parts that are relevant for faster execution on Intel hardware enabling transition of existing model training notebooks to use Intel extension for TensorFlow (later in the text Itex).
 # 
 # In order to have text generated, one needs a deep learning model. The goal of text generation model is to predict the probability distribution of the next word in a sequence given the previous words. For that, large amount of text is feed to the model training.
 
@@ -99,6 +99,12 @@ xpus
 # tf.compat.v1.disable_eager_execution()
 # ```
 
+# In[ ]:
+
+
+tf.compat.v1.disable_eager_execution()
+
+
 # ## Preparing and training the model
 # 
 # As a final step for training the model, the data needs to be tokenized (every word gets the index assigned) and converted to sequences.
@@ -161,25 +167,62 @@ import intel_extension_for_tensorflow as itex
 
 
 neuron_coef = 4
-model = Sequential()
-model.add(Embedding(input_dim=vocab_size, output_dim=seq_length, input_length=seq_length))
-model.add(itex.ops.ItexLSTM(seq_length * neuron_coef, return_sequences=True))
-model.add(itex.ops.ItexLSTM(seq_length * neuron_coef))
-model.add(Dense(units=seq_length * neuron_coef, activation='relu'))
-model.add(Dense(units=vocab_size, activation='softmax'))
+itex_lstm_model = Sequential()
+itex_lstm_model.add(Embedding(input_dim=vocab_size, output_dim=seq_length, input_length=seq_length))
+itex_lstm_model.add(itex.ops.ItexLSTM(seq_length * neuron_coef, return_sequences=True))
+itex_lstm_model.add(itex.ops.ItexLSTM(seq_length * neuron_coef))
+itex_lstm_model.add(Dense(units=seq_length * neuron_coef, activation='relu'))
+itex_lstm_model.add(Dense(units=vocab_size, activation='softmax'))
+itex_lstm_model.summary()
+itex_lstm_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+itex_lstm_model.fit(x,y, batch_size=256, epochs=200)
 
+
+# ## Compared to LSTM from Keras
+# 
+# The training done with Itex LSTM has efficient memory management on Intel GPU. As a reference, on the system with Intel® Arc™ 770, GPU memory was constant at around 4.5GB.
+# 
+# Below is the example cell with the same dataset using LSTM layer from keras. To run on the same system, parameters such as sequence length, number of epochs, and other training layer parameters had to be lowered.
+# 
+# Compared to parameters that were used by training with Itex LSTM (3192280 total parameters), with keras LSTM only 221870 total parameters were used. Besides accelerating the model training, Itex LSTM offers better memory management in Intel platform.
 
 # In[ ]:
 
 
-model.summary()
+from tensorflow.keras.layers import LSTM
 
+# Reducing the sequence to 10 compared to 50 with Itex LSTM
+train_data_width = 10
+tokens[:train_data_width]
 
-# In[ ]:
+length = train_data_width + 1
+lines = []
 
+for i in range(length, len(tokens)): 
+    seq = tokens[i - length:i]
+    line = ' '.join(seq)
+    lines.append(line)
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x,y, batch_size=256, epochs=200)
+# Tokenization
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(lines)
+sequences = tokenizer.texts_to_sequences(lines)
+vocab_size = len(tokenizer.word_index) + 1
+sequences = np.array(sequences)
+x, y = sequences[:, :-1], sequences[:, -1]
+y = to_categorical(y, num_classes=vocab_size)
+seq_length = x.shape[1]
+
+neuron_coef = 1
+keras_lstm_model = Sequential()
+keras_lstm_model.add(Embedding(input_dim=vocab_size, output_dim=seq_length, input_length=seq_length))
+keras_lstm_model.add(LSTM(seq_length * neuron_coef, return_sequences=True))
+keras_lstm_model.add(LSTM(seq_length * neuron_coef))
+keras_lstm_model.add(Dense(units=seq_length * neuron_coef, activation='relu'))
+keras_lstm_model.add(Dense(units=vocab_size, activation='softmax'))
+keras_lstm_model.summary()
+keras_lstm_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+keras_lstm_model.fit(x,y, batch_size=256, epochs=20)
 
 
 # ## Generating text based on the input
@@ -232,7 +275,7 @@ random_seed_text
 
 
 number_of_words_to_generate = 10
-generated_text = generate_text_seq(model, tokenizer, seq_length, random_seed_text, number_of_words_to_generate)
+generated_text = generate_text_seq(itex_lstm_model, tokenizer, 50, random_seed_text, number_of_words_to_generate)
 print("::: SEED TEXT::: " + random_seed_text)
 print("::: GENERATED TEXT::: " + generated_text)
 
