@@ -1,6 +1,10 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 
+#include "exception_handler.hpp"
+
+#include <iomanip>
+
 using namespace sycl;
 using namespace ext::intel::experimental;
 using namespace ext::oneapi::experimental;
@@ -27,7 +31,7 @@ struct pipeWithAnnotatedPtr {
       float *p = MyPipe::read();
 
       // set buffer location on p with annotated_ptr
-      annotated_ptr_t1 t{p};
+      annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> t{p};
 
 #pragma unroll 20
       for (int j = 0; j < COLS; j++)
@@ -88,7 +92,7 @@ int main() {
     // run kernel
     auto event = q.single_task(pipeWithAnnotatedPtr{returnData, divide});
 
-    // write data to kernel via pipes
+    // write pointers to each row to kernel via host pipe
     for (int i = 0; i < ROWS; i++)
       MyPipe::write(q, testDataArray[i]);
 
@@ -96,7 +100,8 @@ int main() {
 
     // verify results
     if (*returnData != expected) {
-      std::cout << "result error! expected " << expected << ". Received "
+      std::cout << std::setprecision(10)
+                << "result error! expected " << expected << ". Received "
                 << *returnData << "\n";
       success = false;
     }
