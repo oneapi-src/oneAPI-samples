@@ -19,23 +19,25 @@ using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
 #define COLS 20
 
 // Launch a kernel that does a weighted sum over a matrix
-// result = data[0][0]/div[0] + data[0][1]/div[1] + ... +
-//          data[1][0]/div[0] + data[1][1]/div[1] + ... +
+// result[0] = data[0][0]*mul[0] + data[0][1]*mul[1] + ... +
+// result[1] = data[1][0]*mul[0] + data[1][1]*mul[1] + ... +
 //          ...
 struct pipeWithAnnotatedPtr {
   annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> result;
-  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> div;
+  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> mul;
 
   void operator()() const {
+#pragma unroll ROWS
     for (int i = 0; i < ROWS; i++) {
       float *p = MyPipe::read();
 
       // set buffer location on p with annotated_ptr
-      annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> t{p};
+      annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> data{p};
 
-#pragma unroll 20
+      result[i] = 0.0f;
+#pragma unroll COLS
       for (int j = 0; j < COLS; j++)
-        *result += t[j] / div[j];
+        result[i] += data[j] * mul[j];
     }
   }
 };
@@ -60,37 +62,39 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    float expected = 0;
-
     float *testDataArray[ROWS];
     // create testData
     for (int i = 0; i < ROWS; i++) {
       testDataArray[i] =
           malloc_shared<float>(COLS, q, usm_buffer_location(kBL1));
       assert(testDataArray[i]);
+      // init data
+      for (int j = 0; j < COLS; j++) {
+        testDataArray[i][j] = rand() % 10;
+      }
     }
-    // create divideData
-    auto divide = malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
-    assert(divide);
+    
+    // create weight data
+    auto mul = malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
+    assert(mul);
+    for (int j = 0; j < COLS; j++)
+      mul[j] = rand() % 10;
 
     // create returnData
-    auto returnData = malloc_shared<float>(1, q, usm_buffer_location(kBL1));
-    assert(returnData);
-    *returnData = 0;
+    auto returnData = malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
+    assert(returnData); 
 
-    // init data
-    for (int j = 0; j < COLS; j++)
-      divide[j] = rand();
-
+    // Compute expected result
+    float expected[ROWS];
     for (int i = 0; i < ROWS; i++) {
+      expected[i] = 0;
       for (int j = 0; j < COLS; j++) {
-        testDataArray[i][j] = rand() * 10;
-        expected += testDataArray[i][j] / divide[j];
+        expected[i] += testDataArray[i][j] * mul[j];
       }
     }
 
     // run kernel
-    auto event = q.single_task(pipeWithAnnotatedPtr{returnData, divide});
+    auto event = q.single_task(pipeWithAnnotatedPtr{returnData, mul});
 
     // write pointers to each row to kernel via host pipe
     for (int i = 0; i < ROWS; i++)
@@ -99,11 +103,13 @@ int main() {
     event.wait();
 
     // verify results
-    if (*returnData != expected) {
-      std::cout << std::setprecision(10)
-                << "result error! expected " << expected << ". Received "
-                << *returnData << "\n";
-      success = false;
+    for (int i = 0; i < ROWS; i++) {
+      if (returnData[i] != expected[i]) {
+        std::cout << std::setprecision(10)
+                << "result error! expected " << expected[i] << ". Received "
+                << returnData[i] << "\n";
+        success = false;
+      }
     }
 
   } catch (sycl::exception const &e) {
