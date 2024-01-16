@@ -19,26 +19,27 @@ using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
 #define COLS 5
 
 // Launch a kernel that does a weighted sum over a matrix
-// result[0] = data[0][0]*mul[0] + data[0][1]*mul[1] + ... +
-// result[1] = data[1][0]*mul[0] + data[1][1]*mul[1] + ... +
+// out_vec[0] = mat[0][0] * in_vec[0] + mat[0][1] * in_vec[1] + ... +
+// out_vec[1] = mat[1][0] * in_vec[0] + mat[1][1] * in_vec[1] + ... +
 //          ...
 struct pipeWithAnnotatedPtr {
-  annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> result;
-  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> mul;
+  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
+  annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
 
   void operator()() const {
     for (int i = 0; i < ROWS; i++) {
+      // read the starting pointer of the i-th row of the weight matrix
       float *p = MyPipe::read();
 
       // set buffer location on p with annotated_ptr
-      annotated_ptr<float, decltype(properties{buffer_location<kBL1>})> data{p};
+      annotated_ptr<float, decltype(properties{buffer_location<kBL1>})> mat{p};
 
       float sum = 0.0f;
 #pragma unroll COLS
       for (int j = 0; j < COLS; j++)
-        sum += data[j] * mul[j];
+        sum += mat[j] * in_vec[j];
 
-      result[i] = sum;
+      out_vec[i] = sum;
     }
   }
 };
@@ -63,52 +64,52 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    float *testDataArray[ROWS];
-    // create testData
+    // allocate memory and initialize for weight matrix
+    float *weight[ROWS];
     for (int i = 0; i < ROWS; i++) {
-      testDataArray[i] =
+      weight[i] =
           malloc_shared<float>(COLS, q, usm_buffer_location(kBL1));
-      assert(testDataArray[i]);
+      assert(weight[i]);
       // init data
       for (int j = 0; j < COLS; j++) {
-        testDataArray[i][j] = rand() % 10;
+        weight[i][j] = rand() % 10;
       }
     }
     
-    // create weight data
-    auto mul = malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
-    assert(mul);
+    // allocate memory and initialize for input vector
+    auto input_vec = malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
+    assert(input_vec);
     for (int j = 0; j < COLS; j++)
-      mul[j] = rand() % 10;
+      input_vec[j] = rand() % 10;
 
-    // create returnData
-    auto returnData = malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
-    assert(returnData); 
+    // allocate memory for output vector
+    auto output_vec = malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
+    assert(output_vec); 
 
     // Compute expected result
     float expected[ROWS];
     for (int i = 0; i < ROWS; i++) {
       expected[i] = 0;
       for (int j = 0; j < COLS; j++) {
-        expected[i] += testDataArray[i][j] * mul[j];
+        expected[i] += weight[i][j] * input_vec[j];
       }
     }
 
     // run kernel
-    auto event = q.single_task(pipeWithAnnotatedPtr{returnData, mul});
+    auto event = q.single_task(pipeWithAnnotatedPtr{input_vec, output_vec});
 
     // write pointers to each row to kernel via host pipe
     for (int i = 0; i < ROWS; i++)
-      MyPipe::write(q, testDataArray[i]);
+      MyPipe::write(q, weight[i]);
 
     event.wait();
 
     // verify results
     for (int i = 0; i < ROWS; i++) {
-      if (returnData[i] != expected[i]) {
+      if (output_vec[i] != expected[i]) {
         std::cout << std::setprecision(10)
                 << "result error! expected " << expected[i] << ". Received "
-                << returnData[i] << "\n";
+                << output_vec[i] << "\n";
         success = false;
       }
     }
