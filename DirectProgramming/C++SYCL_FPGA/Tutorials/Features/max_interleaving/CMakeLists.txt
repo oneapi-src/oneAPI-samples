@@ -39,7 +39,9 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
+# This design uses loop labels in the source code to improve report readability, 
+# so add -Wno-unused-label to disable warnings about unused labels. 
+set(USER_FLAGS -Wno-unused-label;${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
