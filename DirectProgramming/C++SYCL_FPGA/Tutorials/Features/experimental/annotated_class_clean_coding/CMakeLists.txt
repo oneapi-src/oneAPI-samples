@@ -10,7 +10,7 @@ endif()
 
 cmake_minimum_required (VERSION 3.7.2)
 
-project(annotated_alloc CXX)
+project(annotated_class_clean_coding CXX)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -19,8 +19,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-set(SOURCE_FILES src/annotated_alloc.cpp)
-set(TARGET_NAME annotated_alloc)
+set(SOURCE_FILES src/annotated_coding.cpp)
+set(TARGET_NAME annotated_coding)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device.
@@ -98,7 +98,7 @@ else()
     set(DEBUG_FLAGS "")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall -std=c++20 ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

@@ -7,15 +7,17 @@ using namespace sycl::ext::oneapi::experimental;
 
 namespace fpga_tools {
 ///////////////////////////////////////////////////////////////////////////////
+//
 // This header provides a utility function: "alloc_annotated", which improves
 // "malloc_shared" in allocating host/share memory in the following aspects:
 //   (1) better code brevity
 //   (2) support compile-time type check
 //
 // "annotated_alloc" function takes an annotated_arg type as the only template
-// parameter, and returns an instance of that annotated_arg's template type. This provides
-// a compile-time guarantee that the properties of the allocated memory (for example,
-// buffer location, alignment) match with the annotations on the kernel arguments.
+// parameter, and returns an instance of that annotated_arg's template type.
+// This provides a compile-time guarantee that the properties of the allocated
+// memory (for example, buffer location, alignment) match with the annotations
+// on the kernel arguments.
 //
 // To use "alloc_annotated",
 //
@@ -31,8 +33,8 @@ namespace fpga_tools {
 //                          sycl::ext::intel::experimental::read_write_mode_write,
 //                          sycl::ext::oneapi::experimental::alignment<4>})>;
 //
-// Furthermore, if you add the "-std=c++20" compiler flag, the type alias declaration above
-// can be simplified as:
+// Furthermore, if you add the "-std=c++20" compiler flag, the type alias
+// declaration above can be simplified as:
 //
 //  using annotated_arg_t = sycl::ext::oneapi::experimental::annotated_arg<
 //      int *, fpga_tools::properties_t<
@@ -42,13 +44,15 @@ namespace fpga_tools {
 //                  sycl::ext::intel::experimental::read_write_mode_write,
 //                  sycl::ext::oneapi::experimental::alignment<4>>;
 //
-// 3. in the host code, replace the "malloc_shared" call by:
+// 3. in the host code, replace the USM allocation call (e.g. malloc_shared,
+//    aligned_alloc_shared, etc) with:
 //
 //  annotated_arg_t c = fpga_tools::alloc_annotated<annotated_arg_t>(count, q);
 //
 //
-// NOTE: "annotated_alloc" function only takes annotated_ptr or annotated_arg with
-// pointer type as valid template parameter. Other types cause a compiler error.
+// NOTE: The template parameter for the "alloc_annotated" function must be either
+// an "annotated_arg" with a pointer type, or an "annotated_ptr". Other types
+// cause a compiler error.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -156,3 +160,5 @@ T alloc_annotated(size_t count, const sycl::queue &syclQueue,
 }
 
 } // namespace fpga_tools
+
+#endif

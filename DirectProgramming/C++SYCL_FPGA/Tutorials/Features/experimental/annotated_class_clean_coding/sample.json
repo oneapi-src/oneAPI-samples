@@ -1,8 +1,8 @@
 {
   "guid": "7D36D250-D1B5-40B1-8B91-BB1851B0C293",
-  "name": "Annotated Allocation",
+  "name": "Annotated Classes Clean Coding",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
-  "description": "An Intel® FPGA tutorial demonstrating the usage of the helper function for annotated allocation",
+  "description": "This Intel® FPGA tutorial demonstrates how to use the alloc_annotated helper function to create annotated pointers more neatly than the standard USM allocation APIs, and how to utilize propertes_t class to simplify the declaration of annotated types",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/experimental/annotated_allocation",
+      "Tutorials/Features/experimental/annotated_class_clean_coding",
       "include"
     ],
     "exclude": []
@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./annotated_alloc.fpga_emu"
+          "./annotated_coding.fpga_emu"
         ]
       },
       {
@@ -49,9 +49,9 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_allocation",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_class_clean_coding",
           "nmake fpga_emu",
-          "annotated_alloc.fpga_emu.exe"
+          "annotated_coding.fpga_emu.exe"
         ]
       },
       {
@@ -61,11 +61,11 @@
           "cd ../../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_allocation",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/annotated_class_clean_coding",
           "nmake report"
         ]
       }
     ]
   },
-  "expertise": "Concepts and Functionality"
+  "expertise": "Code Optimization"
 }

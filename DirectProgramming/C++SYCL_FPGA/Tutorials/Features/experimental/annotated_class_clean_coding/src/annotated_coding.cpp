@@ -8,17 +8,15 @@ constexpr int kBL1 = 1;
 constexpr int kAlignment = 32;
 constexpr int kWidth = 256;
 
-// Create type alias for the annotated kernel arguments, so it can be
-// reused in the annotated memory allocation in the host code
-// Each annotated pointer is configured with a unique `buffer_location`,
-// resulting in three unique Avalon memory-mapped host interfaces.
+// This type alias groups together all the properties used by the `a` pointer,
+// and can be re-used in the annotated memory allocation in the host code.
 using annotated_arg_t= sycl::ext::oneapi::experimental::annotated_arg<
-    int *, decltype(sycl::ext::oneapi::experimental::properties{
+    int *, fpga_tools::properties_t<
         sycl::ext::intel::experimental::buffer_location<kBL1>,
         sycl::ext::intel::experimental::dwidth<kWidth>,
-        sycl::ext::oneapi::experimental::alignment<kAlignment> })>;
+        sycl::ext::oneapi::experimental::alignment<kAlignment>>>;
 
-struct VectorAdd {
+struct MyIP {
   annotated_arg_t a;
   int size;
 
@@ -46,14 +44,14 @@ bool checkResult(int *arr, int size) {
 bool runWithUsmMalloc(sycl::queue &q) {
     // Create and initialize the host arrays
     constexpr int kN = 8;
-    std::cout << "Elements in vector : " << kN << "\n";
+    std::cout << "using aligned_alloc_shared to allocate a block of shared memory\n";
 
-    // Allocating host/shared memory using SYCL USM allocation API:
-    // We need to specify buffer_location when allocating the host array to ensure
-    // the allocated memory shares the same buffer location property as defined in the
-    // corresponding kernel argument. Also since we are specifying alignment on the
-    // kernel argument, we need to also specify that to the allocation call by using
-    // aligned_alloc_shared API
+    // The SYCL USM allocation API requires us to explicitly specify buffer_location
+    // and alignment when allocating the host array to ensure the allocated memory
+    // shares the same buffer location property as the corresponding kernel argument.
+    // This results in your explicitly defining these as constants in your device code
+    // (which is not very tidy) or it could result in you accidentally mis-matching
+    // these properties between your host code and device code.
     int *array_a = sycl::aligned_alloc_shared<int>(
         kAlignment, kN, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
@@ -62,32 +60,33 @@ bool runWithUsmMalloc(sycl::queue &q) {
       array_a[i] = i;
     }
 
-    q.single_task(VectorAdd{array_a, kN}).wait();
+    q.single_task(MyIP{array_a, kN}).wait();
     bool passed = checkResult(array_a, kN);
-    free(array_a, q);
+    if (passed) {
+
+    }
+    sycl::free(array_a, q);
     return passed;
 }
 
 bool runWithAnnotatedAlloc(sycl::queue &q) {
     // Create and initialize the host arrays
     constexpr int kN = 8;
-    std::cout << "Elements in vector : " << kN << "\n";
+    std::cout << "using fpga_tools::alloc_annotated to allocate a block of shared memory\n";
 
-    // Allocating USM host/shared memory using the utility function `alloc_annotated`
-    // defined in annotated_class_util.hpp: 
-    // `alloc_annotated` takes the annotated_arg type defined for the kernel argument
-    // as the template parameter, and returns an instance of such annotated_arg. This
-    // ensures the properties of the returned memory (for example, buffer location and
-    // alignment) match with the annotations on the kernel arguments.
+    // The "alloc_annotated" function extracts the buffer location and alignment
+    // properties from the type alias annotated_arg_t, rather than forcing you to
+    // explicitly define them in your code. This ensures the properties of the
+    // returned pointer match with the annotations on the kernel arguments.
     annotated_arg_t array_a = fpga_tools::alloc_annotated<annotated_arg_t>(kN, q);
 
     for (int i = 0; i < kN; i++) {
       array_a[i] = i;
     }
 
-    q.single_task(VectorAdd{array_a, kN}).wait();
+    q.single_task(MyIP{array_a, kN}).wait();
     bool passed = checkResult(array_a, kN);
-    free(array_a, q);
+    sycl::free(array_a, q);
     return passed;
 }
 
@@ -114,7 +113,12 @@ int main(void) {
 
     passed = runWithUsmMalloc(q);
     passed &= runWithAnnotatedAlloc(q);
-    std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
+
+    if (passed) {
+      std::cout << "PASSED: all kernel results are correct\n";
+    } else {
+      std::cout << "FAILED\n";
+    }
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
