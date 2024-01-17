@@ -1,6 +1,6 @@
 # `annotated_ptr` Sample
 
-This tutorial demonstrates how to use `annotated_ptr` to annotate properties to pointers inside the kernel, which enables certain compiler optimization that reduces the area usage of the FPGA IP components produced by the Intel® oneAPI DPC++/C++ Compiler.
+This tutorial demonstrates how to use `annotated_ptr` to constrain memory accesses in your kernel code. This can help you build more efficient FPGA IP components with the Intel® oneAPI DPC++/C++ Compiler.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -24,7 +24,7 @@ This tutorial demonstrates how to use `annotated_ptr` to annotate properties to 
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 2 sample that helps you getting started.
+It is categorized as a Tier 3 sample that demonstrates a design pattern.
 
 ```mermaid
 flowchart LR
@@ -46,44 +46,55 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-The `hls_flow_interface/mmhost` sample (/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) demonstrates the usage of `annotated_arg` class in customizing Avalon memory-mapped interfaces for the FPGA IP component.
-Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizations. This tutorial shows how to use `annotated_ptr` to annotate a specific buffer location to a pointer variable inside the kernel, which reduces the LSUs use in the produced FPGA IP component.
+The [`hls_flow_interfaces/mmhost`] (/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample demonstrates the usage of `annotated_arg` class in customizing Avalon memory-mapped interfaces for an FPGA IP component.
 
-### Using `annotated_ptr` to annotate the buffer location of a pointer
+Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizations. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the LSUs use in the produced FPGA IP component.
+
+### An FPGA component that contains memory access to unknown buffer location
 In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector located in buffer location 1.
 
-Both of the input and output vectors are kernel arguments annotated by `annotated_arg` class:
-```
-struct pipeWithAnnotatedPtr {
+![](assets/interfaces.svg)
+
+The input and output vectors are kernel arguments passed by the host and annotated with `annotated_arg`:
+```c++
+struct DotProductIP {
   annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
   annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
   ...
 };
 ```
 
-The address of the weight matrix is transferred into the kernel via a host pipe. The kernel reads the row pointers of the weight matrix:
-```
-using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
+On the other hand, the address to each row of the weight matrix is transferred into the kernel via a host pipe. The kernel reads the row pointers of the weight matrix and then perform the dot product
+```c++
+using Pipe2DotProductIP = ext::intel::experimental::pipe<class MyPipeName1, float *>;
 ...
 float *p = MyPipe::read();
+
+float sum = 0.0f;
+#pragma unroll COLS
+for (int j = 0; j < COLS; j++)
+   sum += p[j] * in_vec[j];
+out_vec[i] = sum;
 ```
 
-Since the pointer `p` is read from a pipe, the buffer location of the pointer is not inferrable. The compiler will build two sets of LSUs that connect to buffer location 1 and buffer location 2 respectively, which increases the kernel area.
+The global memory access of the kernel is distributed as follows
+- `p[j]`: buffer location is not inferrable. So the compiler will generate `COLS` Load units connected to buffer location 1 and `COLS` Load units connected to buffer location 2, because of the loop unroll.
+- `in_vec[j]`: located in buffer location 2. The compiler will generate `COLS` Load units because of the loop unroll.
+- `out_vec[j]`: located in buffer location 1. The compiler will generate 1 Store unit.
 
-To resolve this, you can provide the buffer location information to the compiler by using `annotated_ptr` as follows
-```
+### Use `annotated_ptr` to constrain the memory access
+You can provide the buffer location information of `p` to the compiler by using `annotated_ptr`, and then use the annotated_ptr local variable in the dot-product computation
+```c++
 annotated_ptr<float, decltype(properties{buffer_location<1>})> mat{p};
-```
-As a result, the compiler will build only one set of LSUs that connect to buffer location 1.
 
-The `annotated_ptr` variable `mat` is then used in the dot-product computation
-```
 float sum = 0.0f;
 #pragma unroll COLS
 for (int j = 0; j < COLS; j++)
    sum += mat[j] * in_vec[j];
 out_vec[i] = sum;
 ```
+
+Now all the global memory access are specified to a buffer location including `p`, which is located in buffer location 1. This will eliminate the `COLS` Load units connected to buffer location 2, reducing the LSUs consumption by an approximate of 1/3.
 
 ## Building the `annotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
@@ -123,6 +134,7 @@ This design uses CMake to generate a build script for GNU/make.
 	   | FPGA Emulator       | `make fpga_emu`
 	   | Optimization Report | `make report`
 	   | FPGA Simulator      | `make fpga_sim`
+	   | FPGA Hardware       | `make fpga`
 
 ### On a Windows* System
 This design uses CMake to generate a build script for  `nmake`.
@@ -151,7 +163,13 @@ This design uses CMake to generate a build script for  `nmake`.
 
 Build the `report` target and locate `report.html` in the `annotated_ptr.report.prj/reports/` directory.
 
-Navigate to *System Viewer* (*Views* > *System Viewer*) and click on *Global memory* in the *System* hierarchy. Observe that the compiler generates a number of `COLS` LD nodes connected to global memory 1, which correspond to `COLS` times of read access over `data[j]` in the inner loop of the computation. You can verify that using the unannotated pointer `p[j]` directly in the inner loop will result in an additional number of `COLS` LD nodes generated and connected to global memory 2, and thereby an increase in the *Area Estimates* tag.
+Navigate to *System Viewer* (*Views* > *System Viewer*) and click on the *AnnotatedPtrIP* kernel in the *System* hierarchy. Observe that the compiler generates a number of `COLS` LD nodes connected to global memory 1, which correspond to `COLS` times of read access over annotated_ptr `mat` in the inner loop of the computation.
+
+![](assets/annotation.png)
+
+By clicking on the *DotProductIP* kernel, you can verify that using the unannotated pointer `p` in the inner loop of dot product will result in an additional number of `COLS` LD nodes generated and connected to global memory 2, and thereby an increase in the *Area Estimates* tab.
+
+![](assets/no_annotation.png)
 
 ## Run the `annotated_ptr` Executable
 

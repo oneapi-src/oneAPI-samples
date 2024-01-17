@@ -5,31 +5,52 @@
 
 #include <iomanip>
 
-using namespace sycl;
-using namespace ext::intel::experimental;
-using namespace ext::oneapi::experimental;
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
 using usm_buffer_location =
-    ext::intel::experimental::property::usm::buffer_location;
+    sycl::ext::intel::experimental::property::usm::buffer_location;
+using Pipe2DotProductIP = sycl::ext::intel::experimental::pipe<class MyPipeName1, float *>;
+using Pipe2AnnotatedPtrIP = sycl::ext::intel::experimental::pipe<class MyPipeName2, float *>;
 
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
-using MyPipe = ext::intel::experimental::pipe<class MyPipeName, float *>;
 
-#define ROWS 2
-#define COLS 5
+constexpr int ROWS = 2;
+constexpr int COLS = 5;
 
-// Launch a kernel that does a weighted sum over a matrix
+// The kernel 'DotProductIP' computes a weighted sum over a matrix and a vector:
 // out_vec[0] = mat[0][0] * in_vec[0] + mat[0][1] * in_vec[1] + ... +
 // out_vec[1] = mat[1][0] * in_vec[0] + mat[1][1] * in_vec[1] + ... +
 //          ...
-struct pipeWithAnnotatedPtr {
+struct DotProductIP {
   annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
   annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
 
   void operator()() const {
     for (int i = 0; i < ROWS; i++) {
       // read the starting pointer of the i-th row of the weight matrix
-      float *p = MyPipe::read();
+      float *p = Pipe2DotProductIP::read();
+
+      float sum = 0.0f;
+#pragma unroll COLS
+      for (int j = 0; j < COLS; j++)
+        sum += p[j] * in_vec[j];
+
+      out_vec[i] = sum;
+    }
+  }
+};
+
+// The kernel 'AnnotatedPtrIP' computes the same function, but with `annotated_ptr`
+// specifying the buffer location of pointers read from the host pipe.
+struct AnnotatedPtrIP {
+  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
+  annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
+
+  void operator()() const {
+    for (int i = 0; i < ROWS; i++) {
+      // read the starting pointer of the i-th row of the weight matrix
+      float *p = Pipe2AnnotatedPtrIP::read();
 
       // set buffer location on p with annotated_ptr
       annotated_ptr<float, decltype(properties{buffer_location<kBL1>})> mat{p};
@@ -43,6 +64,20 @@ struct pipeWithAnnotatedPtr {
     }
   }
 };
+
+// verify results
+bool check_result(float *result, float *expected, int size) {
+  bool passed = true;
+  for (int i = 0; i < size; i++) {
+    if (result[i] != expected[i]) {
+      std::cout << std::setprecision(10)
+              << "result error! expected " << expected[i] << ". Received "
+              << result[i] << "\n";
+      passed = false;
+    }
+  }
+  return passed;
+}
 
 int main() {
   bool success = true;
@@ -64,16 +99,12 @@ int main() {
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    // allocate memory and initialize for weight matrix
-    float *weight[ROWS];
-    for (int i = 0; i < ROWS; i++) {
-      weight[i] =
-          malloc_shared<float>(COLS, q, usm_buffer_location(kBL1));
-      assert(weight[i]);
-      // init data
-      for (int j = 0; j < COLS; j++) {
-        weight[i][j] = rand() % 10;
-      }
+    // allocate memory for the flattened weight matrix. The pointers to each row
+    // will be written to each kernel through a pipe.
+    float *weight = malloc_shared<float>(ROWS*COLS, q, usm_buffer_location(kBL1));
+    assert(weight);
+    for (int i = 0; i < ROWS*COLS; i++) {
+      weight[i] = rand() % 10;
     }
     
     // allocate memory and initialize for input vector
@@ -82,37 +113,48 @@ int main() {
     for (int j = 0; j < COLS; j++)
       input_vec[j] = rand() % 10;
 
-    // allocate memory for output vector
+    // allocate memory and initialize for output vector
     auto output_vec = malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
-    assert(output_vec); 
+    assert(output_vec);
+    for (int i = 0; i < ROWS; i++)
+      output_vec[i] = 0.0f;
 
     // Compute expected result
     float expected[ROWS];
     for (int i = 0; i < ROWS; i++) {
-      expected[i] = 0;
+      expected[i] = 0.0f;
       for (int j = 0; j < COLS; j++) {
-        expected[i] += weight[i][j] * input_vec[j];
+        expected[i] += weight[i * COLS + j] * input_vec[j];
       }
     }
 
-    // run kernel
-    auto event = q.single_task(pipeWithAnnotatedPtr{input_vec, output_vec});
-
-    // write pointers to each row to kernel via host pipe
-    for (int i = 0; i < ROWS; i++)
-      MyPipe::write(q, weight[i]);
-
-    event.wait();
-
-    // verify results
+    // run kernel DotProductIP
+    auto event1 = q.single_task(DotProductIP{input_vec, output_vec});
+    // write pointers to each row to the kernels via host pipe
     for (int i = 0; i < ROWS; i++) {
-      if (output_vec[i] != expected[i]) {
-        std::cout << std::setprecision(10)
-                << "result error! expected " << expected[i] << ". Received "
-                << output_vec[i] << "\n";
-        success = false;
-      }
+      Pipe2DotProductIP::write(q, weight + i * COLS);
     }
+    event1.wait();
+    // verify the result
+    success = check_result(output_vec, expected, ROWS);
+
+
+    // reinitialize the output vector and run kernel AnnotatedPtrIP
+    for (int j = 0; j < COLS; j++)
+      output_vec[j] = 0.0f;
+    auto event2 = q.single_task(AnnotatedPtrIP{input_vec, output_vec});
+    // write pointers to each row to the kernels via host pipe
+    for (int i = 0; i < ROWS; i++) {
+      Pipe2AnnotatedPtrIP::write(q, weight + i * COLS);
+    }
+    event2.wait();
+    // verify the result
+    success &= check_result(output_vec, expected, ROWS);
+    
+
+    sycl::free(input_vec, q);
+    sycl::free(output_vec, q);
+    sycl::free(weight, q);
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
