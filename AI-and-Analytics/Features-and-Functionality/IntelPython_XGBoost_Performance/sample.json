@@ -13,7 +13,7 @@
     {
   		"id": "idp_xgb_performance",
   		"steps": [
-         	"source /root/intel/oneapi/intelpython/bin/activate",
+         	"source /intel/oneapi/intelpython/bin/activate",
           "python IntelPython_XGBoost_Performance.py",
           "conda remove xgboost --y",
           "pip install -r requirements.txt",
