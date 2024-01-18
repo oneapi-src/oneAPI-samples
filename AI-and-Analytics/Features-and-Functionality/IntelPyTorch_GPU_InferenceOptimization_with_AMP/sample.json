@@ -12,7 +12,7 @@
     {
         "id": "intel pytorch gpu inference optimization with amp",
         "steps": [
-            "source /root/intel/oneapi/intelpython/bin/activate",
+            "source /intel/oneapi/intelpython/bin/activate",
             "source activate pytorch-gpu",
             "pip install -r requirements.txt",
             "pip install jupyter ipykernel",  
