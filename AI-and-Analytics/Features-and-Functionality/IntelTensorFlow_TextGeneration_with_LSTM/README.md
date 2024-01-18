@@ -42,10 +42,6 @@ You will need to download and install the following toolkits, tools, and compone
   pip install -r requirements.txt
   ```
 
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See *[Intel® DevCloud for oneAPI](https://DevCloud.intel.com/oneapi/get_started/)* for information.
-
 ## Key Implementation Details
 
 This code sample implements text generation model training with LSTM.
@@ -121,24 +117,6 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    python TextGenerationModelTraining.py
    ```
-
-### Run the Sample on Intel® DevCloud (Optional)
-
-1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-2. On a Linux* system, open a terminal.
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://DevCloud.intel.com/oneapi/get_started).
-
-4. Follow the instructions to open the URL with the token in your browser.
-5. Locate and select the Notebook.
-   ```
-   TextGenerationModelTraining.ipynb
-   ````
-6. Change your Jupyter Notebook kernel to corresponding environment.
-7. Run every cell in the Notebook in sequence.
 
 ### Troubleshooting
 

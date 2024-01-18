@@ -60,17 +60,19 @@ tokens = clean_text(data)
 # In[ ]:
 
 
-train_data_width = 50
-tokens[:train_data_width]
+def get_aligned_training_data(text_tokens, train_data_width):
+    text_tokens[:train_data_width]
+    
+    length = train_data_width + 1
+    lines = []
+    
+    for i in range(length, len(text_tokens)): 
+        seq = text_tokens[i - length:i]
+        line = ' '.join(seq)
+        lines.append(line)
+    return lines
 
-length = train_data_width + 1
-lines = []
-
-for i in range(length, len(tokens)): 
-    seq = tokens[i - length:i]
-    line = ' '.join(seq)
-    lines.append(line)
-
+lines = get_aligned_training_data(tokens, 50)
 len(lines)
 
 
@@ -124,23 +126,23 @@ from tensorflow.keras.models import Sequential
 # In[ ]:
 
 
-tokenizer = Tokenizer()
-tokenizer.fit_on_texts(lines)
-sequences = tokenizer.texts_to_sequences(lines)
+def tokenize_prepare_dataset(lines):
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(lines)
+    
+    # Get vocabulary size of our model
+    vocab_size = len(tokenizer.word_index) + 1
+    sequences = tokenizer.texts_to_sequences(lines)
+    
+    # Convert to numpy matrix
+    sequences = np.array(sequences)
+    x, y = sequences[:, :-1], sequences[:, -1]
+    y = to_categorical(y, num_classes=vocab_size)
+    return x, y
 
-
-# In[ ]:
-
-
-# Get vocabulary size of our model
-vocab_size = len(tokenizer.word_index) + 1
-
-# Convert to numpy matrix
-sequences = np.array(sequences)
-x, y = sequences[:, :-1], sequences[:, -1]
-y = to_categorical(y, num_classes=vocab_size)
+x, y = tokenize_prepare_dataset(lines)
 seq_length = x.shape[1]
-
+vocab_size = y.shape[1]
 vocab_size
 
 
@@ -192,26 +194,12 @@ itex_lstm_model.fit(x,y, batch_size=256, epochs=200)
 from tensorflow.keras.layers import LSTM
 
 # Reducing the sequence to 10 compared to 50 with Itex LSTM
-train_data_width = 10
-tokens[:train_data_width]
-
-length = train_data_width + 1
-lines = []
-
-for i in range(length, len(tokens)): 
-    seq = tokens[i - length:i]
-    line = ' '.join(seq)
-    lines.append(line)
+lines = get_aligned_training_data(tokens, 10)
 
 # Tokenization
-tokenizer = Tokenizer()
-tokenizer.fit_on_texts(lines)
-sequences = tokenizer.texts_to_sequences(lines)
-vocab_size = len(tokenizer.word_index) + 1
-sequences = np.array(sequences)
-x, y = sequences[:, :-1], sequences[:, -1]
-y = to_categorical(y, num_classes=vocab_size)
+x, y = tokenize_prepare_dataset(lines)
 seq_length = x.shape[1]
+vocab_size = y.shape[1]
 
 neuron_coef = 1
 keras_lstm_model = Sequential()
