@@ -1,6 +1,6 @@
 # `Leveraging Intel Extension for TensorFlow with LSTM for Text Generation` Sample
 
-The `Leveraging Intel Extension for TensorFlow with LSTM for Text Generation` sample demonstrates how to train your model for text generation with LSTM (Long short-term Memory) faster by using Intel Extension for TensorFlow's LSTM training layer on Intel platform. A model trained for text generation can be adopted later to flollow specific instructions. Some examples include various chat assistants, code generators, stories generation and many more.
+The `Leveraging Intel Extension for TensorFlow with LSTM for Text Generation` sample demonstrates how to train your model for text generation with LSTM (Long short-term Memory) faster by using Intel Extension for TensorFlow's LSTM training layer on Intel platform. A model trained for text generation can be adopted later to follow specific instructions. Some examples include various chat assistants, code generators, stories generation and many more.
 
 To train the model for text generation, a concept of memory needs to be included in the neural network. Those neural network are called RNN (Recurrent Neural Network). In this sample, a LSTM type of RNN will be used. A LSTM (Long Short-term Memory) Neural Network is just another kind of Artificial Neural Network, containing LSTM cells as neurons in some of its layers. Much like Convolutional Layers help a Neural Network learn about image features, LSTM cells help the Network learn about temporal data, something which other Machine Learning models traditionally struggled with.
 
@@ -12,7 +12,7 @@ To train the model for text generation, a concept of memory needs to be included
 
 ## Purpose
 
-This sample shows how to train the model for text generation using LSTM on Intel's GPU. It will also highlight the key parts required for transitioning the existing script for model training with LSTM to Intel hardware. Leveraging Intel Extenstion for TensorFlow and its LSTM layer with Intel's GPU will provide faster training time.
+This sample shows how to train the model for text generation using LSTM on Intel's GPU. It will also highlight the key parts required for transitioning the existing script for model training with LSTM to Intel hardware. Leveraging Intel Extenstion for TensorFlow and its LSTM layer with Intel's GPU will provide faster training time and less GPU memory consumption.
 
 ## Prerequisites
 
@@ -20,15 +20,15 @@ This sample shows how to train the model for text generation using LSTM on Intel
 |:---                     |:---
 | OS                      | Ubuntu* 22.04 (or newer)
 | Hardware                | Intel® Arc™, Data and Max series GPU
-| Software                | Intel® AI Analytics Toolkit (AI Kit)
+| Software                | Intel® AI Tools (AI Kit)
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **Intel® AI Tools (AI Kit)**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 
@@ -86,7 +86,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 2. Activate Conda environment without Root access (Optional).
 
-   By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+   By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
 
