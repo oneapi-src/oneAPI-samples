@@ -1,4 +1,4 @@
-# Component Interfaces Overview
+# Component Interfaces Comparison
 This sample introduces different invocation/data interfaces that can be used when creating FPGA IP with the Intel® oneAPI DPC++/C++ Compiler.
 
 | Area                 | Description
@@ -26,8 +26,7 @@ This sample introduces different invocation/data interfaces that can be used whe
 
 > **Warning**: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-This sample is part of the FPGA code samples. It is categorized as a Tier 2 sample that demonstrates compiler features.
-
+This sample is part of the FPGA code samples. It is categorized as a Tier 1 sample that helps you getting started.
 ```mermaid
 flowchart LR
    tier1("Tier 1: Get Started")
@@ -37,8 +36,8 @@ flowchart LR
 
    tier1 --> tier2 --> tier3 --> tier4
 
-   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier2 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier1 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```

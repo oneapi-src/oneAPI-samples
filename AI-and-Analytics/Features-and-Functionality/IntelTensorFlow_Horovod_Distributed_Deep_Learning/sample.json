@@ -12,7 +12,7 @@
         "linux": [
       {
             "env": [
-                "source /root/intel/oneapi/intelpython/bin/activate", 
+                "source /intel/oneapi/intelpython/bin/activate", 
                 "conda activate tensorflow-gpu",
                 "pip install intel-optimization-for-horovod",
                 "pip install jupyter ipykernel",

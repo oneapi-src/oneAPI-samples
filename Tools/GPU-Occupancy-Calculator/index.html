@@ -233,13 +233,13 @@ var targets = [
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
 		"Threads_Per_EU": 8,
-		"EU_Count": [448, 1024],
+		"EU_Count": [448, 512, 896, 1024],
 		"Max_Threads_Per_Sub_Slice": 64,
 		"Large_GRF_Mode": true,
 		"Subgroup_Sizes": [32, 16],
 		"SLM_Size_Per_Sub_Slice": 128,
 		"SLM_Size_Per_Work_Group": 128,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 48, 64, 96, 128],
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 64,
 		"Max_Num_Of_Barrier_Registers": 32
@@ -871,7 +871,7 @@ var pci_targets=[
 		"Subgroup_Sizes": [32, 16],
 		"SLM_Size_Per_Sub_Slice": 128,
 		"SLM_Size_Per_Work_Group": 128,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 48, 64, 96, 128],
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 64,
 		"Max_Num_Of_Barrier_Registers": 32
@@ -891,7 +891,7 @@ var pci_targets=[
 		"Subgroup_Sizes": [32, 16],
 		"SLM_Size_Per_Sub_Slice": 128,
 		"SLM_Size_Per_Work_Group": 128,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 48, 64, 96, 128],
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 64,
 		"Max_Num_Of_Barrier_Registers": 32

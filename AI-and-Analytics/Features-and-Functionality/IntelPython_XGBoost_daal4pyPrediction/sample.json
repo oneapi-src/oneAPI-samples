@@ -13,7 +13,7 @@
       {
         "id": "idp_xgb_d4p_prediction",
         "steps": [
-          "source /root/intel/oneapi/intelpython/bin/activate",
+          "source /intel/oneapi/intelpython/bin/activate",
           "pip install ipykernel jupyter",
           "python -m ipykernel install --user --name=xgboost",
           "jupyter nbconvert --to notebook --execute IntelPython_XGBoost_daal4pyPrediction.ipynb"

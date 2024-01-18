@@ -12,7 +12,7 @@
       "linux": [
     {
           "env": [
-            "source /root/intel/oneapi/intelpython/bin/activate", 
+            "source /intel/oneapi/intelpython/bin/activate", 
             "conda activate pytorch", 
             "pip install transformers jupyter ipykernel",
             "python -m ipykernel install --name=pytorch"
