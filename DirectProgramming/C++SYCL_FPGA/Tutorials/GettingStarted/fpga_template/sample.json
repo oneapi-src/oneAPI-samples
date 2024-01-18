@@ -2,7 +2,7 @@
   "guid": "418AA4D8-0A61-4FDB-845A-CDA4DA0655E7",
   "name": "FPGA Template",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
-  "description": "This project serves as a template for Intel® oneAPI DPC++/C++ designs targeting FPGAs. ",
+  "description": "An Intel® FPGA tutorial that explains the CMake build system that is used in other code samples, and serves as a template that you can re-use in your own designs",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
