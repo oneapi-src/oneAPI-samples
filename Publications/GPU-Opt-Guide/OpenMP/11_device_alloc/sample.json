@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make test_declare_target test_map_alloc test_map_to test_target_alloc",
           "make clean"

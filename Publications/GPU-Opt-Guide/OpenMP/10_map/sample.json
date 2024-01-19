@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make test_map_tofrom test_map_to_or_from",
           "make clean"

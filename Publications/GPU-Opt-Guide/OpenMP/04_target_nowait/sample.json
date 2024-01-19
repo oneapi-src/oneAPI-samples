@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make  test_target_no_nowait test_target_nowait test_target_nowait_f",
           "make clean"

@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make dgemm_pad_c_01 dgemm_pad_f_01",
           "make clean"
