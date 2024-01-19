@@ -10,6 +10,8 @@ constexpr int kWidth = 256;
 
 // This type alias groups together all the properties used by the `a` pointer,
 // and can be re-used in the annotated memory allocation in the host code.
+// This syntax works if you have added the `-std=c++20` flag to your compiler
+// command.
 using annotated_arg_t= sycl::ext::oneapi::experimental::annotated_arg<
     int *, fpga_tools::properties_t<
         sycl::ext::intel::experimental::buffer_location<kBL1>,
@@ -47,11 +49,10 @@ bool runWithUsmMalloc(sycl::queue &q) {
     std::cout << "using aligned_alloc_shared to allocate a block of shared memory\n";
 
     // The SYCL USM allocation API requires us to explicitly specify buffer_location
-    // and alignment when allocating the host array to ensure the allocated memory
-    // shares the same buffer location property as the corresponding kernel argument.
-    // This results in your explicitly defining these as constants in your device code
-    // (which is not very tidy) or it could result in you accidentally mis-matching
-    // these properties between your host code and device code.
+    // and alignment when allocating the host array.
+    // Unless you explicitly define these as named constants in your device code
+    // (which is not very tidy), you may accidentally mis-match these properties
+    // between your host code and device code.
     int *array_a = sycl::aligned_alloc_shared<int>(
         kAlignment, kN, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));

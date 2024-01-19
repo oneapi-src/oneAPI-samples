@@ -1,6 +1,8 @@
 # `Annotated Classes Clean Coding` Sample
 
-This Intel® FPGA tutorial demonstrates how to write cleaner code by: (i) using `properties_t` class to simplify the declaration of annotated types, and (ii) using the `alloc_annotated` helper function to create annotated pointers more neatly than the standard USM allocation APIs.
+This Intel® FPGA tutorial demonstrates how to use the included `annotated_class_util.hpp` header file to write cleaner code. This header lets you:
+* use the `properties_t` class to simplify the declaration of annotated types
+* use the `alloc_annotated` helper function to create annotated pointers more neatly than the standard USM allocation APIs.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -48,40 +50,50 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 
 ## Purpose
-The `hls_flow_interfaces/mmhost` code sample demonstrates the usage of `annotated_arg` class in customizing Avalon memory-mapped interfaces for the FPGA IP component. (To learn more about `annotated_arg` class, refer to the code sample [hls_flow_interfaces](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces)). This tutorial will further demonstrate how to utilize certain helper function/class to write cleaner designs with `annotated_arg`.
+The `annotated_arg` class can be used to customize Avalon memory-mapped interfaces for FPGA IP components. (To learn more about `annotated_arg` class, refer to the code sample [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost)). This tutorial will further demonstrate how to use the helper code in `annotated_class_util.hpp` to clean up your code that uses `annotated_arg`. You may add `annotated_class_util.hpp` to your designs.
 
 
 ### Use helper class `properties_t` to simplify the declaration of annotated classes
 
-The code sample [hls_flow_interfaces/mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) has demonstrated how to declare an annotated_arg type using `decltype`. For example,
+Most oneAPI code assigns properties to an `annotated_arg` type using `decltype`. For example,
 ```c++
 using ArgProps = decltype(sycl::ext::oneapi::experimental::properties{
-                              propertiesA,
-                              propertiesB,
-                              propertiesC});
-
+      sycl::ext::intel::experimental::buffer_location<1>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::latency<0>});
 sycl::ext::oneapi::experimental::annotated_arg<int *, ArgProps> arg_x;
 ```
 
-The header file "annotated_class_util.hpp" provides a helper class `properties_t` (in `fpga_tools` namespace) that simplifies the code as follows
+The header file "annotated_class_util.hpp" provides a helper class `properties_t` (in `fpga_tools` namespace) that lets you simplify your code as follows:
 ```c++
 #include "annotated_class_util.hpp"
 
-using ArgProps = fpga_tools::properties_t<propertiesA, propertiesB, propertiesC>;
-
+using ArgProps = fpga_tools::properties_t<
+      sycl::ext::intel::experimental::buffer_location<1>,
+      sycl::ext::intel::experimental::awidth<32>,
+      sycl::ext::intel::experimental::dwidth<256>,
+      sycl::ext::oneapi::experimental::alignment<32>,
+      sycl::ext::intel::experimental::maxburst<8>,
+      sycl::ext::intel::experimental::latency<0>>>;
 sycl::ext::oneapi::experimental::annotated_arg<int *, ArgProps> arg_x;
 ```
 
-> **Note**: to use the helper class `properties_t`, you need to add the compiler flag "-std=c++20" in your compiling command. "-std=c++20" has been added to the CMakeLists.txt file of this tutorial.
+> **Note**: to use the helper class `properties_t`, you need to add the compiler flag "-std=c++20" to your compilation command. "-std=c++20" has been added to the `USER_FLAGS` variable in the CMakeLists.txt file of this tutorial:
+> ```
+> set(USER_FLAGS ${USER_FLAGS} -std=c++20)
+>```
 
-> **Note**: The helper class `properties_t` can be used on other annotated classes that specify properties in form of `decltype(sycl::ext::oneapi::experimental::properties{...})`, such as [device_global](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/device_global) and [pipe](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/hostpipes), provided the header file "annotation_class_util.hpp".
+> **Note**: The helper class `properties_t` can be used on other annotated classes that specify properties in form of `decltype(sycl::ext::oneapi::experimental::properties{...})`, such as [device_global](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/device_global) and [pipe](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces), provided the header file "annotation_class_util.hpp".
 
 
 ### Use helper function `alloc_annotated` to allocate host/shared memory with properties that match with Avalon memory-mapped host interfaces
 
-When testing the functionality and performance of an IP component using FPGA simulation, it is the responsibility of the SYCL host code to provide valid runtime values that matches with the properties specified in the `annotated_arg` kernel arguments. This section shows how to use the helper function `alloc_annotated` (defined in the utility header file "annotation_class_util.hpp") to ensure such requirement. 
+While SYCL device code must specify `annotated_arg` properties at **compile** time, the SYCL specification allows host code to specify these properties at **run** time. If you are designing and testing an IP component, this additional flexibility is of no use to you, so you can use the helper function `alloc_annotated()` (defined in the utility header file "annotation_class_util.hpp") to simplify your code, while still ensuring that the properties in your host allocations match the properties you defined in your device code.
 
-In the example, the device code defines a SYCL kernel functor that multiplies a factor of 2 to an input vector as follows
+In the example, the device code defines a SYCL kernel functor that multiplies a factor of 2 to an input vector as follows:
 
 ```c++
 using annotated_arg_t= sycl::ext::oneapi::experimental::annotated_arg<

@@ -39,7 +39,8 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
+# add -std=c++20 to enable cleaner declaration of a group of properties
+set(USER_FLAGS ${USER_FLAGS} -std=c++20)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
@@ -98,7 +99,7 @@ else()
     set(DEBUG_FLAGS "")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall -std=c++20 ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
