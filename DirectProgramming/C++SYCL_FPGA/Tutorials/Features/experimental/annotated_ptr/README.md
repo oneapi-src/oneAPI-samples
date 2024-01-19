@@ -24,7 +24,7 @@ This tutorial demonstrates how to use `annotated_ptr` to constrain memory access
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstrates a design pattern.
+It is categorized as a Tier 3 sample that demonstrates an advanced code optimization.
 
 ```mermaid
 flowchart LR
@@ -35,10 +35,10 @@ flowchart LR
 
    tier1 --> tier2 --> tier3 --> tier4
 
-   style tier1 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
-   style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+	style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+	style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+	style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff   
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
@@ -46,12 +46,12 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-The [`hls_flow_interfaces/mmhost`] (/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample demonstrates the usage of `annotated_arg` class in customizing Avalon memory-mapped interfaces for an FPGA IP component.
+The [hls_flow_interfaces/mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample demonstrates how to use the `annotated_arg` wrapper class to customize an Avalon memory-mapped interface for an FPGA IP component.
 
-Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizations. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the LSUs use in the produced FPGA IP component.
+Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizations. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the number of Load/Store Units (LSUs) used in the generated FPGA IP component.
 
-### An FPGA component that contains memory access to unknown buffer location
-In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector located in buffer location 1.
+### An FPGA component that contains memory access to an ambiguous buffer location
+In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector (located in buffer location 1).
 
 ![](assets/interfaces.svg)
 
@@ -64,7 +64,7 @@ struct DotProductIP {
 };
 ```
 
-On the other hand, the address to each row of the weight matrix is transferred into the kernel via a host pipe. The kernel reads the row pointers of the weight matrix and then perform the dot product
+The address to each row of the weight matrix is transferred into the kernel via a host pipe. The kernel reads the row pointers of the weight matrix and then performs the dot product operation.
 ```c++
 using Pipe2DotProductIP = ext::intel::experimental::pipe<class MyPipeName1, float *>;
 ...
@@ -78,12 +78,12 @@ out_vec[i] = sum;
 ```
 
 The global memory access of the kernel is distributed as follows
-- `p[j]`: buffer location is not inferrable. So the compiler will generate `COLS` Load units connected to buffer location 1 and `COLS` Load units connected to buffer location 2, because of the loop unroll.
-- `in_vec[j]`: located in buffer location 2. The compiler will generate `COLS` Load units because of the loop unroll.
-- `out_vec[j]`: located in buffer location 1. The compiler will generate 1 Store unit.
+- `p[j]`: buffer location is ambiguous because `p` is simply a `float *` without any annotations telling the compiler which buffer locations it should be assigned to. So the compiler will generate load units connected to buffer location 1 **and** load units connected to buffer location 2. This is illustrated in the FPGA report, see [Read the Reports](#read-the-reports) below for more details.
+- `in_vec[j]`: The compiler knows this accesses buffer location 2 because `in_vec` is an annotated kernel argument.
+- `out_vec[j]`: The compiler knows this accesses buffer location 1 because `out_vec` is an annotated kernel argument.
 
 ### Use `annotated_ptr` to constrain the memory access
-You can provide the buffer location information of `p` to the compiler by using `annotated_ptr`, and then use the annotated_ptr local variable in the dot-product computation
+You can provide the buffer location information of `p` to the compiler by wrapping it in an `annotated_ptr`, and then use the `annotated_ptr` local variable in the dot-product computation
 ```c++
 annotated_ptr<float, decltype(properties{buffer_location<1>})> mat{p};
 
@@ -94,7 +94,7 @@ for (int j = 0; j < COLS; j++)
 out_vec[i] = sum;
 ```
 
-Now all the global memory access are specified to a buffer location including `p`, which is located in buffer location 1. This will eliminate the `COLS` Load units connected to buffer location 2, reducing the LSUs consumption by an approximate of 1/3.
+Now all the global memory accesses are assigned to a specific buffer location, including `p`, which is located in buffer location 1. This removes half of the Load units connected to buffer location 2, saving significant FPGA resources.
 
 ## Building the `annotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.

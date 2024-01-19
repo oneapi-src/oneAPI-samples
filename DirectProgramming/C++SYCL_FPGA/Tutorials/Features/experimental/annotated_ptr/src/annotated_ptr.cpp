@@ -1,9 +1,8 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <iomanip>
 
 #include "exception_handler.hpp"
-
-#include <iomanip>
 
 using namespace sycl::ext::intel::experimental;
 using namespace sycl::ext::oneapi::experimental;
@@ -101,20 +100,20 @@ int main() {
 
     // allocate memory for the flattened weight matrix. The pointers to each row
     // will be written to each kernel through a pipe.
-    float *weight = malloc_shared<float>(ROWS*COLS, q, usm_buffer_location(kBL1));
+    float *weight = sycl::malloc_shared<float>(ROWS*COLS, q, usm_buffer_location(kBL1));
     assert(weight);
     for (int i = 0; i < ROWS*COLS; i++) {
       weight[i] = rand() % 10;
     }
     
     // allocate memory and initialize for input vector
-    auto input_vec = malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
+    auto input_vec = sycl::malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
     assert(input_vec);
     for (int j = 0; j < COLS; j++)
       input_vec[j] = rand() % 10;
 
     // allocate memory and initialize for output vector
-    auto output_vec = malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
+    auto output_vec = sycl::malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
     assert(output_vec);
     for (int i = 0; i < ROWS; i++)
       output_vec[i] = 0.0f;

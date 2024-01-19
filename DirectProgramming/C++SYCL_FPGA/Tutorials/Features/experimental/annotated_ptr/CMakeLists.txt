@@ -32,6 +32,13 @@ endif()
 # compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
+# set floating-point precision
+if(WIN32)
+    set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} /fp:precise /Qfma-)
+else()
+    set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} -fp-model=precise -no-fma)
+endif()
+
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS ${USER_FLAGS})
 
@@ -73,15 +80,11 @@ message(STATUS "Additional USER_LIBS=${USER_LIBS}")
 if(WIN32)
     # add qactypes for Windows
     set(QACTYPES "-Qactypes")
-    set(FP_MODEL "/fp:precise")
-    set(FMA_FLAG "/Qfma-")
     # This is a Windows-specific flag that enables exception handling in host code
     set(WIN_FLAG "/EHsc")
 else()
     # add qactypes for Linux
     set(QACTYPES "-qactypes")
-    set(FP_MODEL "-fp-model=precise")
-    set(FMA_FLAG "-no-fma")
 endif()
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" LOWER_BUILD_TYPE)
@@ -96,7 +99,7 @@ else()
     set(DEBUG_FLAGS "")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${FMA_FLAG} ${FP_MODEL} ${USER_FLAGS})
+set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
@@ -117,7 +120,6 @@ set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reu
 ### FPGA Emulator
 ###############################################################################
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILES})
-target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 target_compile_options(${EMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${EMULATOR_TARGET} PRIVATE ${EMULATOR_COMPILE_FLAGS})
 target_link_libraries(${EMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -128,7 +130,6 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${EMULATOR_OUTPU
 ### FPGA Simulator
 ###############################################################################
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
-target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${SIMULATOR_TARGET} PRIVATE ${SIMULATOR_COMPILE_FLAGS})
 target_link_libraries(${SIMULATOR_TARGET} ${COMMON_LINK_FLAGS})
@@ -139,7 +140,6 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES OUTPUT_NAME ${SIMULATOR_OUT
 ### Generate Report
 ###############################################################################
 add_executable(${REPORT_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
-target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 target_compile_options(${REPORT_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${REPORT_TARGET} PRIVATE ${REPORT_COMPILE_FLAGS})
 
@@ -155,7 +155,6 @@ set_target_properties(${REPORT_TARGET} PROPERTIES OUTPUT_NAME ${REPORT_OUTPUT_NA
 ### FPGA Hardware
 ###############################################################################
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILES})
-target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 target_compile_options(${FPGA_TARGET} PRIVATE ${COMMON_COMPILE_FLAGS})
 target_compile_options(${FPGA_TARGET} PRIVATE ${FPGA_COMPILE_FLAGS})
 target_link_libraries(${FPGA_TARGET} ${COMMON_LINK_FLAGS})
