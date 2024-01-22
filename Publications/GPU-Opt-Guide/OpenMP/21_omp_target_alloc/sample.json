@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make test_omp_target_alloc test_omp_target_alloc_device test_omp_target_alloc_host test_omp_target_alloc_shared test_omp_target_memcpy test_target_map test_target_map2",
           "make test_omp_target_alloc_device_f test_omp_target_alloc_host_f test_omp_target_alloc_shared_f test_target_map_f test_target_map2_f",
