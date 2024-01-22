@@ -52,6 +52,15 @@ Run `make` to build and run the sample. Three programs are generated:
 
 Note that the makefile only runs small tests to verify that the executables are working correctly. The problem sizes are too small to justify accelerator offload. Use the following command-line options to run the tests shown in [Solving Linear Systems Using oneMKL and OpenMP Target Offloading](https://www.intel.com/content/www/us/en/developer/articles/technical/solve-linear-systems-onemkl-openmp-target-offload.html): `-n 16000 -b 8 -r 1 -c 5`.
 
+> **Note**: By default this makefile will be executable on devices with double precision support (fp64).
+> To execute on devices with only single precision support(e.g., gen11, gen12) include -DSP option as follows in makefile
+>
+> ```
+> IFX_OPTS_OFFLOAD = -DSP -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -L${MKLROOT}/lib/intel64 -lmkl_sycl -  
+>lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl
+> ```
+>
+
 You can remove all generated files with `make clean`.
 
 ### Example of Output
