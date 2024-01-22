@@ -11,7 +11,7 @@ class SpecializedKernel;
 // Identify the specialization constant.
 constexpr sycl::specialization_id<int> nx_sc;
 
-int main() {
+int main(int argc, char *argv[]) {
   sycl::queue queue;
 
   std::cout << "Running on "
@@ -23,8 +23,13 @@ int main() {
 
     // Application execution stops here asking for input from user
     int Nx;
-    std::cout << "Enter input number ..." << std::endl;
-    std::cin >> Nx;
+    if (argc > 1) {
+      Nx = std::stoi(argv[1]);
+    } else {
+      Nx = 1024;
+    }
+
+    std::cout << "Nx = " << Nx << std::endl;
 
     queue.submit([&](sycl::handler &h) {
       sycl::accessor acc(buf, h, sycl::write_only, sycl::no_init);
