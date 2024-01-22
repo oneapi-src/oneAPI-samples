@@ -15,6 +15,7 @@ int main() {
   size_t num_of_ccs;
   if (part_prop.empty()) {
     num_of_tiles = 1;
+    subdevices->push_back(d);
   } else {
     for (int i = 0; i < part_prop.size(); i++) {
       if (part_prop[i] ==
@@ -48,12 +49,11 @@ int main() {
     } else {
       for (int i = 0; i < part_prop1.size(); i++) {
         if (part_prop1[i] ==
-            sycl::info::partition_property::partition_by_affinity_domain) {
+            sycl::info::partition_property::ext_intel_partition_by_cslice) {
           auto ccses =
               (*subdevices)[j]
                   .create_sub_devices<sycl::info::partition_property::
-                                          partition_by_affinity_domain>(
-                      sycl::info::partition_affinity_domain::numa);
+                                          ext_intel_partition_by_cslice>();
           num_of_ccs = ccses.size();
           for (int k = 0; k < num_of_ccs; k++)
             CCS->push_back(ccses[k]);
