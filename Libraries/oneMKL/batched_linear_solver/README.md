@@ -42,7 +42,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 >For more information on environment variables, see [Use the setvars Script for Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Running Samples on the DevCloud
-When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 Run `make` to build and run the sample. Three programs are generated: 
 
@@ -53,7 +53,7 @@ Run `make` to build and run the sample. Three programs are generated:
 Note that the makefile only runs small tests to verify that the executables are working correctly. The problem sizes are too small to justify accelerator offload. Use the following command-line options to run the tests shown in [Solving Linear Systems Using oneMKL and OpenMP Target Offloading](https://www.intel.com/content/www/us/en/developer/articles/technical/solve-linear-systems-onemkl-openmp-target-offload.html): `-n 16000 -b 8 -r 1 -c 5`.
 
 > **Note**: By default this makefile will be executable on devices with double precision support (fp64).
-> To execute on devices with only single precision support(e.g., gen11, gen12) include -DSP option as follows in makefile
+> To execute on devices with only single precision support(e.g., gen11, gen12) include `-DSP` option as follows in makefile
 >
 > ```
 > IFX_OPTS_OFFLOAD = -DSP -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -L${MKLROOT}/lib/intel64 -lmkl_sycl -  
