@@ -68,7 +68,7 @@ class LineBuffer2d {
   // If we have multiple pixels in parallel, we need to insert some dummy
   // pixels before the 'real data' so the output has the same alignment as
   // the input.
-  constexpr static short kBufferOffset = min(
+  constexpr static short kBufferOffset = fpga_tools::min(
       (short)((kParallelPixels - (short)(kStencilSize / 2))), kParallelPixels);
 
   constexpr static short kPreBufferSize = kParallelPixels + kBufferOffset;
