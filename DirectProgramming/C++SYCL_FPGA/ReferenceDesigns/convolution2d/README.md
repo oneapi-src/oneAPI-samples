@@ -6,11 +6,11 @@ This project demonstrates how to use SYCL HLS to create a 2D Convolution IP that
 
 Convolution is a cornerstone problem in video processing designs. It commonly appears in both hardware and software systems, but in general, software implementations do not efficiently synthesize into RTL. This reference design includes:
 
-* A re-usable C++ library that generates an efficient line buffer hardware module. This hardware module is the foundation of convolution algorithms, and other similar algorithms.
+* A reusable C++ library that generates an efficient line buffer hardware module. This hardware module is the foundation of convolution algorithms, and other similar algorithms.
 
 * An example of how to chain together multiple video processing modules using `sycl::pipe`s, which behave like streaming interfaces in hardware designs.
 
-* A video-processing testbench that you can use to test your own designs. This testbench consumes image data from RAM and parcels it into streaming transactions. This makes it easy to 'stream' a test image into your video design.
+* A video-processing testbench that you can use to test your own designs. This testbench consumes image data from RAM and parcels it into streaming transactions. This makes it easy to stream a test image into your video design.
 
 ## Prerequisites
 
@@ -54,18 +54,18 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area/fMAX estimates are averaged across 8 seeds. Testing conducted January 22, 2024. These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. Testing conducted January 22, 2024. These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 #### Intel® Arria® 10 FPGA
 
-| Parallel Pixels | Window Dimensions | Coefficient Type | Input Type     | fMAX (MHz) | ALMs  | DSP blocks | M20K Block RAM
-|---              |---                |---               |---             |---         |---    |---         |---
-| 1               | 3x3               | `float`          | 10-bit Integer | 388.05     | 2314  |   9        | 19
-| 2               | 3x3               | `float`          | 10-bit Integer | 379.65     | 3994  |  18        | 16
-| 4               | 3x3               | `float`          | 10-bit Integer | 355.63     | 7315  |  36        | 17
-| 8               | 3x3               | `float`          | 10-bit Integer | 338.23     | 14394 |  72        | 18
+| Parallel Pixels | Window Dimensions | Coefficient Type | Input Type     | f<sub>MAX</sub> (MHz) | ALMs  | DSP blocks | M20K Block RAM
+|---              |---                |---               |---             |---                    |---    |---         |---
+| 1               | 3x3               | `float`          | 10-bit Integer | 388.05                | 2314  |   9        | 19
+| 2               | 3x3               | `float`          | 10-bit Integer | 379.65                | 3994  |  18        | 16
+| 4               | 3x3               | `float`          | 10-bit Integer | 355.63                | 7315  |  36        | 17
+| 8               | 3x3               | `float`          | 10-bit Integer | 338.23                | 14394 |  72        | 18
 
 > **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `convolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
 
@@ -73,13 +73,11 @@ Performance results are based on testing conducted with a pre-release version of
 
 ### Line Buffer Hardware
 
-The `LineBuffer2d` class describes a line buffer that behaves like in this figure:
+The `LineBuffer2d` class describes a line buffer data structure that compiles into efficient FPGA hardware. The user code inserts pixels into the line buffer data structure, which buffers the pixels so as to effectively slide a 2-D 'window' across the input data stream. A user-specified function operates on the 'window'.
 
 ![](assets/animation_fir_filter.gif)
 
-Pixels are inserted into the line buffer data structure, which buffers the pixels so as to effectively slide a 2-D 'window' across the input data stream. A user-specified function operates on the 'window'.
-
-The `LineBuffer2d` class lets you specify the number of concurrent pixels your design processes each transaction. This number affects the width and depth of the line buffer, and controls number of copies of your window function. Increasing the number of parallel pixels improves throughput, but also consumes more FPGA resources.
+The `LineBuffer2d` class lets you specify the number of concurrent pixels your design processes each transaction. This number affects the width and depth of the line buffer, and controls number of copies of your window function. Increasing the number of parallel pixels improves throughput, but also consumes more FPGA resources. The line buffer structure compiles into hardware like in the following figure:
 
 ![](assets/FIR2d_pip2.svg)
 
@@ -162,7 +160,7 @@ struct Convolution2d {
 };
 ```
 
-The window function that you supply to `LineBuffer2d::filter<>()` should be of the form 
+The window function that you supply to `LineBuffer2d::filter<>()` should be of the following form:
 
 ```c++
 OutputPixelType WindowFunction(short row, short col, short rows,
