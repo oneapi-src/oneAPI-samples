@@ -57,9 +57,9 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   // DataBundle
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
-      hldutils::extractDataBundleType<DataBundleType>::BundlePayloadCount;
+      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
   using PixelTypeCalc =
-      typename hldutils::extractDataBundleType<DataBundleType>::BundlePayloadT;
+      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");
@@ -159,9 +159,9 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
   // DataBundle
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
-      hldutils::extractDataBundleType<DataBundleType>::BundlePayloadCount;
+      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
   using PixelTypeCalc =
-      typename hldutils::extractDataBundleType<DataBundleType>::BundlePayloadT;
+      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");
@@ -298,9 +298,9 @@ bool writeDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
   // DataBundle
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
-      hldutils::extractDataBundleType<DataBundleType>::BundlePayloadCount;
+      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
   using PixelTypeCalc =
-      typename hldutils::extractDataBundleType<DataBundleType>::BundlePayloadT;
+      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");

@@ -4,7 +4,7 @@
 #include <sycl/ext/intel/prototype/pipes_ext.hpp>
 
 #include "data_bundle.hpp"
-#include "shift-reg.hpp"
+
 namespace conv2d {
 
 #ifndef PIXEL_BITS
@@ -55,17 +55,13 @@ struct Pixel_rgb {
 using PixelType = uint16_t;
 using WeightType = float;
 
-using WindowType = hldutils::ShiftReg2d<PixelType, kWindowSize, kWindowSize>;
-using KernelWindowType =
-    hldutils::ShiftReg2d<WeightType, kWindowSize, kWindowSize>;
-
 // Bundle of `PixelType`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
-using GreyPixelBundle = hldutils::DataBundle<PixelType, kParallelPixels>;
+using GreyPixelBundle = fpga_tools::DataBundle<PixelType, kParallelPixels>;
 
 // Bundle of `Pixel_rgb`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
-using RGBPixelBundle = hldutils::DataBundle<Pixel_rgb, kParallelPixels>;
+using RGBPixelBundle = fpga_tools::DataBundle<Pixel_rgb, kParallelPixels>;
 
 // A beat that may be transferred on a streaming interface, including sideband
 // signals and a payload of `GreyPixelBundle`.

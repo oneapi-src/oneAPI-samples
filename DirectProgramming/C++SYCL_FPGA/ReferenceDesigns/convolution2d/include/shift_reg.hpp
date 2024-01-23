@@ -1,15 +1,15 @@
 //  Copyright (c) 2021 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
-// shift-reg.hpp
+// shift_reg.hpp
 
 #ifndef __SHIFT_REG_HPP__
 #define __SHIFT_REG_HPP__
 
 #include "data_bundle.hpp"
-#include "unroller.hpp"
+#include "unrolled_loop.hpp"
 
-namespace hldutils {
+namespace fpga_tools {
 
 template <typename T, int REG_DEPTH>
 class ShiftReg {
@@ -28,7 +28,7 @@ class ShiftReg {
     //       }
     //     }
 
-    // empty default constructor since you should fill a shift-register by
+    // empty default constructor since you should fill a shift register by
     // priming it, and if `T` is a struct, we might get a looping constructor.
     ShiftReg() {}
 
@@ -42,7 +42,7 @@ class ShiftReg {
     //        └───┴───┴───┘
     // ```
     void shift(T in) {
-        UnrolledLoop<0, (REG_DEPTH - 1)>([&](int i) {
+        fpga_tools::UnrolledLoop<0, (REG_DEPTH - 1)>([&](int i) {
             registers[i] = registers[i + 1];
         });
         registers[REG_DEPTH - 1] = in;
@@ -50,22 +50,22 @@ class ShiftReg {
 
     template <int SHIFT_AMT>
     void shiftSingleVal(T in) {
-        UnrolledLoop<0, (REG_DEPTH - SHIFT_AMT)>([&](int i) {
+        fpga_tools::UnrolledLoop<0, (REG_DEPTH - SHIFT_AMT)>([&](int i) {
             registers[i] = registers[i + SHIFT_AMT];
         });
 
-        UnrolledLoop<(REG_DEPTH - SHIFT_AMT), REG_DEPTH>([&](int i) {
+        fpga_tools::UnrolledLoop<(REG_DEPTH - SHIFT_AMT), REG_DEPTH>([&](int i) {
             registers[i] = in;
         });
     }
 
     template <size_t SHIFT_AMT>
     void shiftMultiVals(DataBundle<T, SHIFT_AMT> in) {
-        UnrolledLoop<0, (REG_DEPTH - SHIFT_AMT)>([&](int i) {
+        fpga_tools::UnrolledLoop<0, (REG_DEPTH - SHIFT_AMT)>([&](int i) {
             registers[i] = registers[i + SHIFT_AMT];
         });
 
-        UnrolledLoop<0, SHIFT_AMT>([&](int i) {
+        fpga_tools::UnrolledLoop<0, SHIFT_AMT>([&](int i) {
             registers[(REG_DEPTH - SHIFT_AMT) + i] = in[i];
         });
     }
@@ -96,7 +96,7 @@ class ShiftReg2d {
     //       }
     //     }
 
-    // empty default constructor since you should fill a shift-register by
+    // empty default constructor since you should fill a shift register by
     // priming it, and if `T` is a struct, we might get a looping constructor.
     ShiftReg2d() {}
 
@@ -113,7 +113,7 @@ class ShiftReg2d {
     //          │ r ◄ e ◄ g ◄─ input i=2
     //          └───┴───┴───┘
     void shift(T in) {
-        UnrolledLoop<0, (REG_ROWS - 1)>([&](int i) {
+        fpga_tools::UnrolledLoop<0, (REG_ROWS - 1)>([&](int i) {
             registers[i].shift(registers[i + 1][0]);
         });
         registers[(REG_ROWS - 1)].shift(in);
@@ -130,14 +130,14 @@ class ShiftReg2d {
     //      ◄─ r ◄ e ◄ g ◄─
     //       └───┴───┴───┘
     void shiftCol(T in[REG_ROWS]) {
-        UnrolledLoop<0, REG_ROWS>([&](int i) {
+        fpga_tools::UnrolledLoop<0, REG_ROWS>([&](int i) {
             registers[i].shift(in[i]);
         });
     }
 
     template <size_t SHIFT_AMT>
     void shiftCols(DataBundle<T, SHIFT_AMT> in[REG_ROWS]) {
-        UnrolledLoop<0, REG_ROWS>([&](int i) {
+        fpga_tools::UnrolledLoop<0, REG_ROWS>([&](int i) {
             registers[i].template shiftMultiVals<SHIFT_AMT>(in[i]);
         });
     }
@@ -154,6 +154,6 @@ class ShiftReg2d {
     }
 };
 
-} // namespace hldutils
+} // namespace fpga_tools
 
 #endif

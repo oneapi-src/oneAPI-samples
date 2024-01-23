@@ -7,8 +7,7 @@
 #include "convolution_types.hpp"
 #include "data_bundle.hpp"
 #include "linebuffer2d.hpp"
-#include "shift-reg.hpp"
-#include "unroller.hpp"
+#include "unrolled_loop.hpp"
 
 /////////////////////////////////////////////
 // Define input/output streaming interfaces

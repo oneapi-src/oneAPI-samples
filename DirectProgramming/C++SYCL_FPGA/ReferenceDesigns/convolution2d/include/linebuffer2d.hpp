@@ -2,7 +2,7 @@
 
 #include "comparisons.hpp"
 #include "data_bundle.hpp"
-#include "shift-reg.hpp"
+#include "shift_reg.hpp"
 
 namespace linebuffer2d {
 
@@ -25,9 +25,9 @@ class LineBuffer2d {
  public:
   // types used by LineBuffer2d
   using StencilDataBundleIn =
-      hldutils::DataBundle<PixelTypeIn, kParallelPixels>;
+      fpga_tools::DataBundle<PixelTypeIn, kParallelPixels>;
   using StencilDataBundleOut =
-      hldutils::DataBundle<PixelTypeOut, kParallelPixels>;
+      fpga_tools::DataBundle<PixelTypeOut, kParallelPixels>;
 
   // public members
   [[intel::fpga_register]]  //
@@ -39,7 +39,7 @@ class LineBuffer2d {
  private:
   // types used internally
   using PixelWithSignals = PixelWithSignals_Templated<PixelTypeIn>;
-  using BundledPixels = hldutils::DataBundle<PixelWithSignals, kParallelPixels>;
+  using BundledPixels = fpga_tools::DataBundle<PixelWithSignals, kParallelPixels>;
   constexpr static short kRowWriteInit = (short)(0 - kStencilSize);
   constexpr static short kColWriteInit = (short)(0 - kStencilSize);
 
@@ -51,7 +51,7 @@ class LineBuffer2d {
 
   // line buffer
   [[intel::fpga_register]]  //
-  hldutils::ShiftReg2d<PixelWithSignals, kStencilSize, ShifterCols>
+  fpga_tools::ShiftReg2d<PixelWithSignals, kStencilSize, ShifterCols>
       myShifter;
 
   constexpr static int kFifoCols =
@@ -74,7 +74,7 @@ class LineBuffer2d {
   constexpr static short kPreBufferSize = kParallelPixels + kBufferOffset;
 
   [[intel::fpga_register]]  //
-  hldutils::DataBundle<PixelWithSignals, kPreBufferSize>
+  fpga_tools::DataBundle<PixelWithSignals, kPreBufferSize>
       preBuffer;
 
   // separate the loop bound calculation so loop iterations are easier to
@@ -101,7 +101,7 @@ class LineBuffer2d {
   template <typename... FunctionArgs_T>
   using WindowFunction = PixelTypeOut (*)(
       short rows, short cols, short row, short col,
-      hldutils::ShiftReg2d<PixelTypeIn, kStencilSize, kStencilSize> pixels,
+      fpga_tools::ShiftReg2d<PixelTypeIn, kStencilSize, kStencilSize> pixels,
       FunctionArgs_T... stencilArgs);
 
   /// @brief This function structures a sliding-window stencil function in a way
@@ -175,7 +175,7 @@ class LineBuffer2d {
     // │ r ◄─e ◄─g ◄─────────────────Input
     // └───┴───┴───┘
 
-    hldutils::UnrolledLoop<kStencilSize>([&](auto stencilRow) {
+    fpga_tools::UnrolledLoop<kStencilSize>([&](auto stencilRow) {
       if constexpr (stencilRow == (kStencilSize - 1)) {
         pixelColumn[stencilRow] = inputVal;
       } else {
@@ -196,7 +196,7 @@ class LineBuffer2d {
     //  └─┤ FIFO        ◄───┐
     //    └─────────────┘   │
     //                      └─Input
-    hldutils::UnrolledLoop<(kStencilSize - 1)>([&](auto fifoRow) {
+    fpga_tools::UnrolledLoop<(kStencilSize - 1)>([&](auto fifoRow) {
       if constexpr (fifoRow != (kStencilSize - 2)) {
         line_buffer_FIFO[fifoIdx][fifoRow] = pixelColumn[fifoRow + 1];
       } else {

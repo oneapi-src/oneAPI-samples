@@ -71,7 +71,7 @@ set(USER_FLAGS ${USER_FLAGS};-DPARALLEL_PIXELS=${PARALLEL_PIXELS};
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ./include;${USER_INCLUDE_PATHS})
+set(USER_INCLUDE_PATHS ./include;../../include;${USER_INCLUDE_PATHS})
 
 ###############################################################################
 ### no changes after here

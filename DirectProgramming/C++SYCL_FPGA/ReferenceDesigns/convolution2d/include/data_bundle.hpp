@@ -6,7 +6,7 @@
 #ifndef __DATA_BUNDLE_HPP__
 #define __DATA_BUNDLE_HPP__
 
-namespace hldutils {
+namespace fpga_tools {
 
 /////////////////////////////////////////////////////////////////////////////////
 // C++ magic that lets us extract template parameters from DataBundle instances
@@ -14,7 +14,7 @@ namespace hldutils {
 
 /// @brief Extract template parameters from a DataBundle. Usage: `constexpr int
 /// kPixelsInParallel =
-/// hldutils::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
+/// fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
 /// @tparam T The DataBundle whose parameters you wish to extract
 template <typename T>
 struct extractDataBundleType {
@@ -24,7 +24,7 @@ struct extractDataBundleType {
 
 /// @brief Extract template parameters from a DataBundle. Usage: `constexpr int
 /// kPixelsInParallel =
-/// hldutils::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
+/// fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
 /// @tparam T The DataBundle whose parameters you wish to extract
 template <template <typename, int> typename DATA_BUNDLE,
           typename BUNDLE_PAYLOAD, int BUNDLE_COUNT>
@@ -181,6 +181,6 @@ struct DataBundle {
   }
 };
 
-}  // namespace hldutils
+}  // namespace fpga_tools
 
 #endif

@@ -230,7 +230,7 @@ For convenience, you may use the header file included in `quartus_project_files/
 
 > ⚠️ Note for reviewer: This will go in a separate reference design in the future, but I want to get conv2d out since there are many customers asking for it already.
 
-In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`hldutils::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `writeFrameToPipe()` and `readFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
+In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `writeFrameToPipe()` and `readFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
 
 `writeFrameToPipe()` writes the contents of an array of pixels into a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a video/vision processing (VVP) FPGA IP would, so you can test that your IP complies with the VVP standard. 
 
