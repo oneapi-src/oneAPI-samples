@@ -48,7 +48,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The [hls_flow_interfaces/mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample demonstrates how to use the `annotated_arg` wrapper class to customize an Avalon memory-mapped interface for an FPGA IP component.
 
-A useful design optimization in FPGA SYCL code is to design with multiple buffer locations, (either multiple memory channels in a full SYCL system, or multiple memory-mapped host interfaces in a SYCL HLS IP). If your code contains un-annotated pointers, the compiler will not know at compile time which buffer location to assign to load/store units (LSUs) associated with that pointer. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the number of LSUs used in the generated FPGA IP component.
+A useful design optimization in FPGA SYCL code is to design with multiple buffer locations, (either multiple memory channels in a full SYCL system, or multiple memory-mapped host interfaces in a SYCL HLS IP). If your code contains un-annotated pointers (e.g. `float *`), the compiler will not know at compile time which buffer location to assign to load/store units (LSUs) associated with that pointer. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the number of LSUs used in the generated FPGA IP component.
 
 ### An FPGA component that contains memory access to an ambiguous buffer location
 In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector (located in buffer location 1).
@@ -96,8 +96,11 @@ out_vec[i] = sum;
 
 Now all the global memory accesses are assigned to a specific buffer location, including `p`, which is located in buffer location 1. This removes half of the load units connected to buffer location 2, saving significant FPGA resources.
 
-> **Note**: The buffer_location that is passed to `annotated_ptr` must be one of the buffer locations already assigned to global memory kernel arguments (in this case, buffer location `kBL1` and `kBL2`).
-> **Note**: Right now the `alignment` property is not supported by the `annotated_ptr` class. Therefore, the consecutive memory accesses via the pointer `mat` in the unrolled loop will not result in the generation of a statically coalesced load unit.
+> [!WARNING]
+> The buffer location that is passed to `annotated_ptr` must be one of the buffer locations already assigned to global memory kernel arguments (in this case, buffer location `kBL1` and `kBL2`).
+
+> [!WARNING]
+> The `annotated_ptr` class does not currently support the `alignment` property. Therefore, the consecutive memory accesses via the pointer `mat` in the unrolled loop cannot be configured to generate a statically coalesced load unit.
 
 ## Building the `annotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
