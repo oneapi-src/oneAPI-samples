@@ -1,7 +1,7 @@
 # `Annotated Classes Clean Coding` Sample
 
 This Intel® FPGA tutorial demonstrates how to use the included `annotated_class_util.hpp` header file to write cleaner code. This header lets you:
-* use the `properties_t` class to simplify the declaration of annotated types
+* use the `properties_t` alias to simplify the declaration of annotated types
 * use the `alloc_annotated` helper function to create annotated pointers more neatly than the standard USM allocation APIs.
 
 | Optimized for                     | Description
@@ -28,7 +28,7 @@ This Intel® FPGA tutorial demonstrates how to use the included `annotated_class
 
 ## Prerequisites
 This sample is part of the FPGA code samples.
-It is categorized as a Tier 3 sample that demonstrates a compiler feature.
+It is categorized as a Tier 3 sample that demonstrates an advanced code optimization.
 
 ```mermaid
 flowchart LR
@@ -39,9 +39,9 @@ flowchart LR
 
    tier1 --> tier2 --> tier3 --> tier4
 
-   style tier1 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
@@ -50,10 +50,10 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 
 ## Purpose
-The `annotated_arg` class can be used to customize Avalon memory-mapped interfaces for FPGA IP components. (To learn more about `annotated_arg` class, refer to the code sample [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost)). This tutorial will further demonstrate how to use the helper code in `annotated_class_util.hpp` to clean up your code that uses `annotated_arg`. You may add `annotated_class_util.hpp` to your designs.
+The `annotated_arg` class can be used to customize Avalon memory-mapped interfaces for FPGA IP components. (To learn more about the `annotated_arg` class, refer to the code sample [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost)). This tutorial will further demonstrate how to use the helper code in `annotated_class_util.hpp` to clean up your code that uses `annotated_arg`. You may add `annotated_class_util.hpp` to your designs.
 
 
-### Use helper class `properties_t` to simplify the declaration of annotated classes
+### Use `properties_t` to simplify the declaration of annotated classes
 
 Most oneAPI code assigns properties to an `annotated_arg` type using `decltype`. For example,
 ```c++
@@ -67,7 +67,7 @@ using ArgProps = decltype(sycl::ext::oneapi::experimental::properties{
 sycl::ext::oneapi::experimental::annotated_arg<int *, ArgProps> arg_x;
 ```
 
-The header file "annotated_class_util.hpp" provides a helper class `properties_t` (in `fpga_tools` namespace) that lets you simplify your code as follows:
+The header file "annotated_class_util.hpp" provides a type alias `properties_t` (in `fpga_tools` namespace) that lets you simplify your code as follows:
 ```c++
 #include "annotated_class_util.hpp"
 
@@ -81,12 +81,12 @@ using ArgProps = fpga_tools::properties_t<
 sycl::ext::oneapi::experimental::annotated_arg<int *, ArgProps> arg_x;
 ```
 
-> **Note**: to use the helper class `properties_t`, you need to add the compiler flag "-std=c++20" to your compilation command. "-std=c++20" has been added to the `USER_FLAGS` variable in the CMakeLists.txt file of this tutorial:
+> **Note**: to use the `properties_t` alias, you need to add the compiler flag `-std=c++20` to your compilation command. `-std=c++20` has been added to the `USER_FLAGS` variable in the CMakeLists.txt file of this tutorial:
 > ```
 > set(USER_FLAGS ${USER_FLAGS} -std=c++20)
 >```
 
-> **Note**: The helper class `properties_t` can be used on other annotated classes that specify properties in form of `decltype(sycl::ext::oneapi::experimental::properties{...})`, such as [device_global](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/device_global) and [pipe](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces), provided the header file "annotation_class_util.hpp".
+> **Note**: The `properties_t` alias can be used on other annotated classes that specify properties in form of `decltype(sycl::ext::oneapi::experimental::properties{...})`, such as [device_global](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/device_global) and [pipe](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces), assuming you have included the header file "annotation_class_util.hpp" that appears in this code sample.
 
 
 ### Use helper function `alloc_annotated` to allocate host/shared memory with properties that match with Avalon memory-mapped host interfaces
@@ -129,7 +129,7 @@ annotated_arg_t array_a = fpga_tools::alloc_annotated<annotated_arg_t>(kN, q);
 q.single_task(MyIP{array_a, kN}).wait();
 ```
 
-> **Note**: "alloc_annotated" function only takes `annotated_arg` over **pointer types** as the valid template parameters.
+> **Note**: "alloc_annotated" function only takes `annotated_arg` templated with **pointer types** as the valid template parameter.
 
 
 ## Building the `annotated_class_clean_coding` Sample

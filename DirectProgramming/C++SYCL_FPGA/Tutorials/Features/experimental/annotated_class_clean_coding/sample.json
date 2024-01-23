@@ -2,7 +2,7 @@
   "guid": "7D36D250-D1B5-40B1-8B91-BB1851B0C293",
   "name": "Annotated Classes Clean Coding",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
-  "description": "An Intel® FPGA tutorial demonstrating how to use the annotated_class_util.hpp to simplify your oneAPI code",
+  "description": "An Intel® FPGA tutorial demonstrating how to use annotated_class_util.hpp to simplify your oneAPI code that annotates properties to pipes and annotated_arg",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

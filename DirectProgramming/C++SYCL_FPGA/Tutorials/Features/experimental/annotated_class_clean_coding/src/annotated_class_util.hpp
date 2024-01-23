@@ -14,7 +14,8 @@ namespace fpga_tools {
 //   (2) support compile-time type check
 //
 // "alloc_annotated" function takes an annotated_arg type as the only template
-// parameter, and returns an instance of that annotated_arg's template type.
+// parameter, and returns an instance of the same template type, with memory
+// allocated for the underlying pointer.
 // This provides a compile-time guarantee that the properties of the allocated
 // memory (for example, buffer location, alignment) match with the annotations
 // on the kernel arguments.
