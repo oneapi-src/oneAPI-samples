@@ -1,15 +1,13 @@
-#include <sycl/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
-using namespace sycl::ext::intel::experimental;
-using namespace sycl::ext::oneapi::experimental;
-using usm_buffer_location =
-    sycl::ext::intel::experimental::property::usm::buffer_location;
-using Pipe2DotProductIP = sycl::ext::intel::experimental::pipe<class MyPipeName1, float *>;
-using Pipe2AnnotatedPtrIP = sycl::ext::intel::experimental::pipe<class MyPipeName2, float *>;
+using Pipe2DotProductIP =
+    sycl::ext::intel::experimental::pipe<class MyPipeName1, float *>;
+using Pipe2AnnotatedPtrIP =
+    sycl::ext::intel::experimental::pipe<class MyPipeName2, float *>;
 
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
@@ -22,8 +20,14 @@ constexpr int COLS = 5;
 // out_vec[1] = mat[1][0] * in_vec[0] + mat[1][1] * in_vec[1] + ... +
 //          ...
 struct DotProductIP {
-  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
-  annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      float *, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::buffer_location<kBL2>})>
+      in_vec;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      float *, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::buffer_location<kBL1>})>
+      out_vec;
 
   void operator()() const {
     for (int i = 0; i < ROWS; i++) {
@@ -32,19 +36,25 @@ struct DotProductIP {
 
       float sum = 0.0f;
 #pragma unroll COLS
-      for (int j = 0; j < COLS; j++)
-        sum += p[j] * in_vec[j];
+      for (int j = 0; j < COLS; j++) sum += p[j] * in_vec[j];
 
       out_vec[i] = sum;
     }
   }
 };
 
-// The kernel 'AnnotatedPtrIP' computes the same function, but with `annotated_ptr`
-// specifying the buffer location of pointers read from the host pipe.
+// The kernel 'AnnotatedPtrIP' computes the same function, but with
+// `annotated_ptr` specifying the buffer location of pointers read from the host
+// pipe.
 struct AnnotatedPtrIP {
-  annotated_arg<float *, decltype(properties{buffer_location<kBL2>})> in_vec;
-  annotated_arg<float *, decltype(properties{buffer_location<kBL1>})> out_vec;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      float *, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::buffer_location<kBL2>})>
+      in_vec;
+  sycl::ext::oneapi::experimental::annotated_arg<
+      float *, decltype(sycl::ext::oneapi::experimental::properties{
+                   sycl::ext::intel::experimental::buffer_location<kBL1>})>
+      out_vec;
 
   void operator()() const {
     for (int i = 0; i < ROWS; i++) {
@@ -52,12 +62,14 @@ struct AnnotatedPtrIP {
       float *p = Pipe2AnnotatedPtrIP::read();
 
       // set buffer location on p with annotated_ptr
-      annotated_ptr<float, decltype(properties{buffer_location<kBL1>})> mat{p};
+      sycl::ext::oneapi::experimental::annotated_ptr<
+          float, decltype(sycl::ext::oneapi::experimental::properties{
+                     sycl::ext::intel::experimental::buffer_location<kBL1>})>
+          mat{p};
 
       float sum = 0.0f;
 #pragma unroll COLS
-      for (int j = 0; j < COLS; j++)
-        sum += mat[j] * in_vec[j];
+      for (int j = 0; j < COLS; j++) sum += mat[j] * in_vec[j];
 
       out_vec[i] = sum;
     }
@@ -69,9 +81,8 @@ bool check_result(float *result, float *expected, int size) {
   bool passed = true;
   for (int i = 0; i < size; i++) {
     if (result[i] != expected[i]) {
-      std::cout << std::setprecision(10)
-              << "result error! expected " << expected[i] << ". Received "
-              << result[i] << "\n";
+      std::cout << std::setprecision(10) << "result error! expected "
+                << expected[i] << ". Received " << result[i] << "\n";
       passed = false;
     }
   }
@@ -85,7 +96,7 @@ int main() {
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else // #if FPGA_EMULATOR
+#else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
@@ -100,23 +111,27 @@ int main() {
 
     // allocate memory for the flattened weight matrix. The pointers to each row
     // will be written to each kernel through a pipe.
-    float *weight = sycl::malloc_shared<float>(ROWS*COLS, q, usm_buffer_location(kBL1));
+    float *weight = sycl::malloc_shared<float>(
+        ROWS * COLS, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
     assert(weight);
-    for (int i = 0; i < ROWS*COLS; i++) {
+    for (int i = 0; i < ROWS * COLS; i++) {
       weight[i] = rand() % 10;
     }
-    
+
     // allocate memory and initialize for input vector
-    auto input_vec = sycl::malloc_shared<float>(COLS, q, usm_buffer_location(kBL2));
+    auto input_vec = sycl::malloc_shared<float>(
+        COLS, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
     assert(input_vec);
-    for (int j = 0; j < COLS; j++)
-      input_vec[j] = rand() % 10;
+    for (int j = 0; j < COLS; j++) input_vec[j] = rand() % 10;
 
     // allocate memory and initialize for output vector
-    auto output_vec = sycl::malloc_shared<float>(ROWS, q, usm_buffer_location(kBL1));
+    auto output_vec = sycl::malloc_shared<float>(
+        ROWS, q,
+        sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
     assert(output_vec);
-    for (int i = 0; i < ROWS; i++)
-      output_vec[i] = 0.0f;
+    for (int i = 0; i < ROWS; i++) output_vec[i] = 0.0f;
 
     // Compute expected result
     float expected[ROWS];
@@ -137,10 +152,8 @@ int main() {
     // verify the result
     success = check_result(output_vec, expected, ROWS);
 
-
     // reinitialize the output vector and run kernel AnnotatedPtrIP
-    for (int j = 0; j < COLS; j++)
-      output_vec[j] = 0.0f;
+    for (int j = 0; j < COLS; j++) output_vec[j] = 0.0f;
     auto event2 = q.single_task(AnnotatedPtrIP{input_vec, output_vec});
     // write pointers to each row to the kernels via host pipe
     for (int i = 0; i < ROWS; i++) {
@@ -149,7 +162,6 @@ int main() {
     event2.wait();
     // verify the result
     success &= check_result(output_vec, expected, ROWS);
-    
 
     sycl::free(input_vec, q);
     sycl::free(output_vec, q);

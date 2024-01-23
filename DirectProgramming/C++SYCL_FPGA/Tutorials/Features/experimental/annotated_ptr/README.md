@@ -48,7 +48,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 The [hls_flow_interfaces/mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample demonstrates how to use the `annotated_arg` wrapper class to customize an Avalon memory-mapped interface for an FPGA IP component.
 
-Sometimes annotations need to be applied on pointers inside the kernel to enable certain compiler optimizations. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the number of Load/Store Units (LSUs) used in the generated FPGA IP component.
+A useful design optimization in FPGA SYCL code is to design with multiple buffer locations, (either multiple memory channels in a full SYCL system, or multiple memory-mapped host interfaces in a SYCL HLS IP). If your code contains un-annotated pointers, the compiler will not know at compile time which buffer location to assign to load/store units (LSUs) associated with that pointer. This tutorial shows how to use `annotated_ptr` to constrain memory accesses to a pointer variable inside the kernel, which reduces the number of LSUs used in the generated FPGA IP component.
 
 ### An FPGA component that contains memory access to an ambiguous buffer location
 In the example, the device code defines a SYCL kernel functor that computes the dot product between a weight matrix (located in buffer location 1) and a vector (located in buffer location 2), and saves to the result vector (located in buffer location 1).
@@ -78,7 +78,7 @@ out_vec[i] = sum;
 ```
 
 The global memory access of the kernel is distributed as follows
-- `p[j]`: buffer location is ambiguous because `p` is simply a `float *` without any annotations telling the compiler which buffer locations it should be assigned to. So the compiler will generate load units connected to buffer location 1 **and** load units connected to buffer location 2. This is illustrated in the FPGA report, see [Read the Reports](#read-the-reports) below for more details.
+- `p[j]`: buffer location is ambiguous because `p` is simply a `float *` without any annotations telling the compiler which buffer location it should be assigned to. So the compiler will generate load units connected to buffer location 1 **and** load units connected to buffer location 2. This is illustrated in the FPGA report, see [Read the Reports](#read-the-reports) below for more details.
 - `in_vec[j]`: The compiler knows this accesses buffer location 2 because `in_vec` is an annotated kernel argument.
 - `out_vec[j]`: The compiler knows this accesses buffer location 1 because `out_vec` is an annotated kernel argument.
 
@@ -94,7 +94,7 @@ for (int j = 0; j < COLS; j++)
 out_vec[i] = sum;
 ```
 
-Now all the global memory accesses are assigned to a specific buffer location, including `p`, which is located in buffer location 1. This removes half of the Load units connected to buffer location 2, saving significant FPGA resources.
+Now all the global memory accesses are assigned to a specific buffer location, including `p`, which is located in buffer location 1. This removes half of the load units connected to buffer location 2, saving significant FPGA resources.
 
 ## Building the `annotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
