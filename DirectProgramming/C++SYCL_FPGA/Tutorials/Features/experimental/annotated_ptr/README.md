@@ -96,6 +96,9 @@ out_vec[i] = sum;
 
 Now all the global memory accesses are assigned to a specific buffer location, including `p`, which is located in buffer location 1. This removes half of the load units connected to buffer location 2, saving significant FPGA resources.
 
+> **Note**: The buffer_location that is passed to `annotated_ptr` must be one of the buffer locations already assigned to global memory kernel arguments (in this case, buffer location `kBL1` and `kBL2`).
+> **Note**: Right now the `alignment` property is not supported by the `annotated_ptr` class. Therefore, the consecutive memory accesses via the pointer `mat` in the unrolled loop will not result in the generation of a statically coalesced load unit.
+
 ## Building the `annotated_ptr` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
