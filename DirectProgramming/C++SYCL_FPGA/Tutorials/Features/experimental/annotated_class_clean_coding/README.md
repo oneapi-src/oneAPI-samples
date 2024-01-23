@@ -1,7 +1,7 @@
 # `Annotated Classes Clean Coding` Sample
 
 This Intel® FPGA tutorial demonstrates how to use the included `annotated_class_util.hpp` header file to write cleaner code. This header lets you:
-* use the `properties_t` alias to simplify the declaration of annotated types
+* use the `properties_t` alias to simplify the declaration of annotated types with groups of properties
 * use the `alloc_annotated` helper function to create annotated pointers more neatly than the standard USM allocation APIs.
 
 | Optimized for                     | Description
@@ -53,7 +53,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 The `annotated_arg` class can be used to customize Avalon memory-mapped interfaces for FPGA IP components. (To learn more about the `annotated_arg` class, refer to the code sample [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost)). This tutorial will further demonstrate how to use the helper code in `annotated_class_util.hpp` to clean up your code that uses `annotated_arg`. You may add `annotated_class_util.hpp` to your designs.
 
 
-### Use `properties_t` to simplify the declaration of annotated classes
+### Use `properties_t` to simplify the declaration of annotated types with groups of properties
 
 Most oneAPI code assigns properties to an `annotated_arg` type using `decltype`. For example,
 ```c++
