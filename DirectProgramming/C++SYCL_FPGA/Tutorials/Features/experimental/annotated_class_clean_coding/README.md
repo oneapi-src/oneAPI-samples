@@ -1,8 +1,8 @@
 # `Annotated Classes Clean Coding` Sample
 
-This Intel® FPGA tutorial demonstrates how to use the included `annotated_class_util.hpp` header file to write cleaner code. This header lets you:
-* use the `properties_t` alias to simplify the declaration of annotated types with groups of properties
-* use the `alloc_annotated` helper function to create annotated pointers more neatly than the standard USM allocation APIs.
+This Intel® FPGA tutorial demonstrates how to use the included `annotated_class_util.hpp` header file to write cleaner code. You can use this header file to write cleaner code as follows:
+* simplify the declaration of annotated types with groups of properties by using the `properties_t` alias.
+* create annotated pointers more neatly than the standard USM allocation APIs by using the `alloc_annotated` helper function.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -24,7 +24,7 @@ This Intel® FPGA tutorial demonstrates how to use the included `annotated_class
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> **Note**: This tutorial will not work for a Full System compile as it demonstrates a SYCL HLS flow specific feature.
+> **Note**: This tutorial does not apply to the FPGA acceleration flow as it demonstrates a SYCL HLS flow specific feature.
 
 ## Prerequisites
 This sample is part of the FPGA code samples.
@@ -53,7 +53,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 The `annotated_arg` class can be used to customize Avalon memory-mapped interfaces for FPGA IP components. (To learn more about the `annotated_arg` class, refer to the code sample [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost)). This tutorial will further demonstrate how to use the helper code in `annotated_class_util.hpp` to clean up your code that uses `annotated_arg`. You may add `annotated_class_util.hpp` to your designs.
 
 
-### Use `properties_t` to simplify the declaration of annotated types with groups of properties
+### Simplify the Declaration of Annotated Types with Groups of Properties by Using the `properties_t` Alias
 
 Most oneAPI code assigns properties to an `annotated_arg` type using `decltype`. For example,
 ```c++
@@ -89,7 +89,7 @@ sycl::ext::oneapi::experimental::annotated_arg<int *, ArgProps> arg_x;
 > **Note**: The `properties_t` alias can be used on other annotated classes that specify properties in form of `decltype(sycl::ext::oneapi::experimental::properties{...})`, such as [device_global](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/device_global) and [pipe](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces), assuming you have included the header file "annotation_class_util.hpp" that appears in this code sample.
 
 
-### Use helper function `alloc_annotated` to allocate host/shared memory with properties that match with Avalon memory-mapped host interfaces
+### Allocate Host/Shared Memory with Properties That Match with Avalon Memory-Mapped Host Interfaces by Using the Helper Function `alloc_annotated`
 
 While SYCL device code must specify `annotated_arg` properties at **compile** time, the SYCL specification allows host code to specify these properties at **run** time. If you are designing and testing an IP component, this additional flexibility is of no use to you, so you can use the helper function `alloc_annotated()` (defined in the utility header file "annotation_class_util.hpp") to simplify your code, while still ensuring that the properties in your host allocations match the properties you defined in your device code.
 
@@ -115,7 +115,7 @@ struct MyIP {
 };
 ```
 
-The type of the kernel argument `a` is annotated_arg specified with properties `buffer location` and `alignment`. To test the IP component in the FPGA simulation, the SYCL host code is required to provide for the kernel arguments runtime values that match with the `buffer location` and `alignment`. The helper function `alloc_annotated` (in `fpga_tools` namespace) provides this functionality with code simplicity, as it takes the annotated_arg type as the only template parameter and returns an instance of the same annotated_arg type, as the following code snippet shows
+The type of the kernel argument `a` is `annotated_arg` specified with properties `buffer location` and `alignment`. To test the IP component in the FPGA simulation, the SYCL host code is required to provide for the kernel arguments runtime values that match with the `buffer location` and `alignment`. The helper function `alloc_annotated` (in `fpga_tools` namespace) provides this functionality with code simplicity, as it takes the `annotated_arg` type as the only template parameter and returns an instance of the same `annotated_arg` type, as the following code snippet shows
 
 ```c++
 #include "annotated_class_util.hpp"

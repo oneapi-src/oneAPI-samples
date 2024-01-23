@@ -120,7 +120,7 @@ flowchart LR
 
 | Sample                                                                            | Category                                             | Description
 |:---                                                                               |:---                                                  |:---
-| [annotated_class_clean_coding](Tutorials/Features/experimental/annotated_class_clean_coding)  | [Tutorials/Features](Tutorials/Features)             | An Intel® FPGA tutorial demonstrating how to use `annotated_class_util.hpp` to simplify your oneAPI code that annotates properties to `pipe`s and `annotated_arg`
+| [annotated_class_clean_coding](Tutorials/Features/experimental/annotated_class_clean_coding)  | [Tutorials/Features](Tutorials/Features)             | How to use `annotated_class_util.hpp` to simplify your oneAPI code that annotates properties to `pipe`s and `annotated_arg`
 | [autorun](Tutorials/DesignPatterns/autorun)                                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to use autorun kernels
 | [buffered_host_streaming](Tutorials/DesignPatterns/buffered_host_streaming)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimally stream data between the host and device to maximize throughput
 | [compute_units](Tutorials/DesignPatterns/compute_units)                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate multiple compute units using template metaprogramming
