@@ -8,23 +8,23 @@
 		"python": {}
 	}],
 	"os": ["linux"],
-	"targetDevice": ["CPU","GPU"],
-	"gpuRequired": ["ats-m","pvc"],
+	"targetDevice": ["CPU", "GPU"],
+	"gpuRequired": ["ats-m", "pvc"],
 	"ciTests": {
 		"linux": [{
 			"env": [
-                "source /root/intel/oneapi/intelpython/bin/activate", 
-			    "conda activate tensorflow",
+				"source /intel/oneapi/intelpython/bin/activate",
+				"conda activate tensorflow",
 				"pip install -r requirements.txt",
 				"pip install jupyter ipykernel",
-				"python  -m ipykernel install --user --name=tensorflow",
+				"python -m ipykernel install --user --name=tensorflow",
 				"conda deactivate",
 				"conda activate tensorflow-gpu",
 				"pip install -r requirements.txt",
 				"pip install jupyter ipykernel",
-				"python  -m ipykernel install --user --name=tensorflow-gpu",
+				"python -m ipykernel install --user --name=tensorflow-gpu",
 				"conda deactivate"
-            ],
+			],
 			"id": "itex_sample_test",
 			"steps": [
 				"conda activate tensorflow",
@@ -32,5 +32,5 @@
 			]
 		}]
 	},
-    "expertise": "Code Optimization"
+	"expertise": "Code Optimization"
 }

@@ -8,6 +8,7 @@
   "dependencies": ["tbb","openvkl","embree","rkcommon"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU","GPU"],
+  "gpuRequired": ["dg2","ats-m","pvc"], 
   "ciTests": {
         "linux": [
                 {
@@ -19,7 +20,7 @@
                     "cmake ..",
                     "cmake --build . ",
                     "./vklTutorialCPU",
-		    "cd ../gpu",
+		    "cd ../../gpu",
 		    "mkdir build",
 		    "cd build",
 		    "cmake -DCMAKE_CXX_COMPILER=icpx ..",

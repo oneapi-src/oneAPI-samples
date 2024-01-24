@@ -27,7 +27,7 @@
 #include "system.h"
 
 // including the kernel register map directly from the kernel build directory
-#include "../../../kernels/simple_dma/build/simple_dma.report.prj/include/register_map_offsets.hpp"
+#include "../../../kernels/simple_dma/build/simple_dma.report.prj/include/register_map_offsets.h"
 
 // In bytes, must be a multiple of 4.  Keep it a small number to shorten the
 // simulation time and do not exceed the 1MB memory size (remember this code is
@@ -46,62 +46,62 @@
 /// offsets from register_map_offsets.hpp
 
 #define REG_ARG_SOURCE_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_SOURCE_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_SOURCE_REG)
 
 #define REG_ARG_DEST_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_DEST_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_ARG_ARG_DEST_REG)
 
 #define REG_ARG_LENGTH_BASE      \
   (SIMPLE_DMA_ACCELERATOR_BASE + \
-   ZTS9SIMPLEDMA_REGISTER_MAP_ARG_ARG_LENGTH_BYTES_REG)
+   SIMPLEDMA_REGISTER_MAP_ARG_ARG_LENGTH_BYTES_REG)
 
 #define REG_START_BASE \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_START_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_START_REG)
 
 #define REG_STATUS \
-  (SIMPLE_DMA_ACCELERATOR_BASE + ZTS9SIMPLEDMA_REGISTER_MAP_STATUS_REG)
+  (SIMPLE_DMA_ACCELERATOR_BASE + SIMPLEDMA_REGISTER_MAP_STATUS_REG)
 
 /// @brief configure and start the Simple DMA Accelerator IP
 ///
 /// @details `configure_and_start_dma` will accept the source, destination, and
-/// transfer length and write them into the kernel CSRs using the old Nios
-/// IORW/IORD_32DIRECT macros, since those also work for Nios II.
+/// transfer length and write them into the kernel CSRs.
 ///
-/// @note Since the kernel is located in the I/O space of the Nios V processor,
-/// you may choose to simply dereference a pointer to bypass the data cache but
-/// that doesn't port to Nios II directly so that has been avoided here.
+/// @note Since the kernel is located in the peripheral space of the Nios V
+/// processor, we simply dereference a pointer to bypass the data
+/// cache.
 ///
 /// @param[in] source Pointer to source memory to copy from
 ///
 /// @param[in] destination Pointer to which to copy data
 ///
 /// @param[in] length_bytes Number of bytes of data to copy
-void configure_and_start_dma(unsigned int* source, unsigned int* destination,
+void configure_and_start_dma(unsigned int *source, unsigned int *destination,
                              unsigned int length_bytes) {
-  // Nios V/g is 32-bit, but FPGA IP produced with the Intel® oneAPI DPC++/C++
-  // Compiler uses 64-bit pointers, so we have to write the source pointer 32
-  // bits at a time. The source pointer needs to be cast to unsigned int since
-  // the Nios macros do not expect a pointer.
-
-  // According to io.h there is an upper limitation of 12-bits of the offset
-  // field, so this code instead adds the offset to the base (first argument of
-  // macro) and hardcodes the offset field to 0 (second argument of macro).
+  // Make these pointers volatile since they point to registers. Repeated
+  // accesses to volatile pointers will not be optimized away. Since these
+  // pointers are only accessed once, marking them volatile is not strictly
+  // necessary, but they are made volatile so that future potential
+  // modifications will be safe.
 
   // DMA source
-  IOWR_32DIRECT(REG_ARG_SOURCE_BASE, 0, (unsigned int)source);
-  // padding upper 32 bits to all zeros
-  IOWR_32DIRECT(REG_ARG_SOURCE_BASE + 4, 0, 0);
+  volatile unsigned int **reg_arg_source_ptr =
+      (volatile unsigned int **)REG_ARG_SOURCE_BASE;
+  *reg_arg_source_ptr = source;
 
   // DMA destination
-  IOWR_32DIRECT(REG_ARG_DEST_BASE, 0, (unsigned int)destination);
-  // padding upper 32 bits to all zeros
-  IOWR_32DIRECT(REG_ARG_DEST_BASE + 4, 0, 0);
+  volatile unsigned int **reg_arg_destination_ptr =
+      (volatile unsigned int **)REG_ARG_DEST_BASE;
+  *reg_arg_destination_ptr = destination;
 
   // DMA length
-  IOWR_32DIRECT(REG_ARG_LENGTH_BASE, 0, BUFFER_LENGTH);
+  volatile unsigned int *reg_arg_length_ptr =
+      (volatile unsigned int *)REG_ARG_LENGTH_BASE;
+  *reg_arg_length_ptr = length_bytes;
 
   // DMA start
-  IOWR_32DIRECT(REG_START_BASE, 0, 1);
+  volatile unsigned int *reg_start_ptr =
+      (volatile unsigned int *)REG_START_BASE;
+  *reg_start_ptr = 1;
 
   // The DMA kernel should immediately start at this point
 }
@@ -147,12 +147,15 @@ int test_simple_dma() {
   // main memory
   alt_dcache_flush(destination, BUFFER_LENGTH);
 
-  //  Configure and start the DMA kernel
+  // Configure and start the DMA kernel
   configure_and_start_dma(source, destination, BUFFER_LENGTH);
+
+  // Make this volatile so the compiler doesn't optimize repeated accesses away
+  volatile unsigned int *status_reg_ptr = (unsigned int *)REG_STATUS;
 
   // Busy-waiting for the accelerator to complete (kernel will fire off
   // interrupt as well but there is no register as of 2024.0 to clear it)
-  while ((IORD_32DIRECT(REG_STATUS, 0) & KERNEL_REGISTER_MAP_DONE_MASK) !=
+  while ((*status_reg_ptr & KERNEL_REGISTER_MAP_DONE_MASK) !=
          KERNEL_REGISTER_MAP_DONE_MASK) {
   }
 

@@ -133,6 +133,7 @@ https://fpgasoftware.intel.com/eula.-->
  <parameter name="device" value="10AS016C3U19E2LG" />
  <parameter name="deviceFamily" value="Arria 10" />
  <parameter name="deviceSpeedGrade" value="2" />
+ <parameter name="dflBitArray" value="" />
  <parameter name="fabricMode" value="QSYS" />
  <parameter name="generateLegacySim" value="false" />
  <parameter name="generationId" value="0" />
@@ -184,6 +185,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -440,6 +442,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -722,6 +725,41 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureGuid</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhGroupId</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterId</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterName</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterVersion</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterData</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterDataLength</key>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMajorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMinorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureId</key>
+                            <value>35</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -769,7 +807,7 @@ https://fpgasoftware.intel.com/eula.-->
     </boundary>
     <originalModuleInfo>
         <className>intel_onchip_memory</className>
-        <version>1.4.4</version>
+        <version>1.4.7</version>
         <displayName>On-Chip Memory II (RAM or ROM) Intel FPGA IP</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
@@ -1101,6 +1139,41 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>writeWaitTime</key>
                         <value>0</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureGuid</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhGroupId</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterId</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterName</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterVersion</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterData</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterDataLength</key>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMajorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMinorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureId</key>
+                        <value>35</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -1283,6 +1356,7 @@ https://fpgasoftware.intel.com/eula.-->
   <parameter name="svInterfaceDefinition" value="" />
  </module>
  <module name="nios" kind="altera_generic_component" version="1.0" enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -1623,6 +1697,15 @@ https://fpgasoftware.intel.com/eula.-->
                         <terminationValue>0</terminationValue>
                     </port>
                     <port>
+                        <name>instruction_manager_rlast</name>
+                        <role>rlast</role>
+                        <direction>Input</direction>
+                        <width>1</width>
+                        <lowerBound>0</lowerBound>
+                        <vhdlType>STD_LOGIC</vhdlType>
+                        <terminationValue>0</terminationValue>
+                    </port>
+                    <port>
                         <name>instruction_manager_rready</name>
                         <role>rready</role>
                         <direction>Output</direction>
@@ -1650,6 +1733,22 @@ https://fpgasoftware.intel.com/eula.-->
                             <value>true</value>
                         </entry>
                         <entry>
+                            <key>wakeupSignals</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>uniqueIdSupport</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>poison</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>traceSignals</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
                             <key>maximumOutstandingReads</key>
                             <value>1</value>
                         </entry>
@@ -1672,14 +1771,6 @@ https://fpgasoftware.intel.com/eula.-->
                         <entry>
                             <key>combinedIssuingCapability</key>
                             <value>8</value>
-                        </entry>
-                        <entry>
-                            <key>enableConcurrentSubordinateAccess</key>
-                            <value>0</value>
-                        </entry>
-                        <entry>
-                            <key>noRepeatedIdsBetweenSubordinates</key>
-                            <value>0</value>
                         </entry>
                         <entry>
                             <key>issuesINCRBursts</key>
@@ -1945,6 +2036,22 @@ https://fpgasoftware.intel.com/eula.-->
                             <value>true</value>
                         </entry>
                         <entry>
+                            <key>wakeupSignals</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>uniqueIdSupport</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>poison</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
+                            <key>traceSignals</key>
+                            <value>false</value>
+                        </entry>
+                        <entry>
                             <key>maximumOutstandingReads</key>
                             <value>1</value>
                         </entry>
@@ -1967,14 +2074,6 @@ https://fpgasoftware.intel.com/eula.-->
                         <entry>
                             <key>combinedIssuingCapability</key>
                             <value>1</value>
-                        </entry>
-                        <entry>
-                            <key>enableConcurrentSubordinateAccess</key>
-                            <value>0</value>
-                        </entry>
-                        <entry>
-                            <key>noRepeatedIdsBetweenSubordinates</key>
-                            <value>0</value>
                         </entry>
                         <entry>
                             <key>issuesINCRBursts</key>
@@ -2258,6 +2357,41 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureGuid</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhGroupId</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterId</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterName</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterVersion</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterData</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterDataLength</key>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMajorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMinorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureId</key>
+                            <value>35</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -2519,6 +2653,41 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureGuid</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhGroupId</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterId</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterName</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterVersion</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterData</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterDataLength</key>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMajorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMinorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureId</key>
+                            <value>35</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -2526,8 +2695,8 @@ https://fpgasoftware.intel.com/eula.-->
     </boundary>
     <originalModuleInfo>
         <className>intel_niosv_g</className>
-        <version>1.0.0</version>
-        <displayName>Nios V/g Processor Intel FPGA IP</displayName>
+        <version>2.0.0</version>
+        <displayName>Nios V/g General Purpose Processor Intel FPGA IP</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
         <descriptors>
@@ -3059,6 +3228,15 @@ https://fpgasoftware.intel.com/eula.-->
                     <terminationValue>0</terminationValue>
                 </port>
                 <port>
+                    <name>instruction_manager_rlast</name>
+                    <role>rlast</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                    <terminationValue>0</terminationValue>
+                </port>
+                <port>
                     <name>instruction_manager_rready</name>
                     <role>rready</role>
                     <direction>Output</direction>
@@ -3086,6 +3264,22 @@ https://fpgasoftware.intel.com/eula.-->
                         <value>true</value>
                     </entry>
                     <entry>
+                        <key>wakeupSignals</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>uniqueIdSupport</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>poison</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>traceSignals</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
                         <key>maximumOutstandingReads</key>
                         <value>1</value>
                     </entry>
@@ -3108,14 +3302,6 @@ https://fpgasoftware.intel.com/eula.-->
                     <entry>
                         <key>combinedIssuingCapability</key>
                         <value>8</value>
-                    </entry>
-                    <entry>
-                        <key>enableConcurrentSubordinateAccess</key>
-                        <value>0</value>
-                    </entry>
-                    <entry>
-                        <key>noRepeatedIdsBetweenSubordinates</key>
-                        <value>0</value>
                     </entry>
                     <entry>
                         <key>issuesINCRBursts</key>
@@ -3381,6 +3567,22 @@ https://fpgasoftware.intel.com/eula.-->
                         <value>true</value>
                     </entry>
                     <entry>
+                        <key>wakeupSignals</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>uniqueIdSupport</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>poison</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>traceSignals</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
                         <key>maximumOutstandingReads</key>
                         <value>1</value>
                     </entry>
@@ -3403,14 +3605,6 @@ https://fpgasoftware.intel.com/eula.-->
                     <entry>
                         <key>combinedIssuingCapability</key>
                         <value>1</value>
-                    </entry>
-                    <entry>
-                        <key>enableConcurrentSubordinateAccess</key>
-                        <value>0</value>
-                    </entry>
-                    <entry>
-                        <key>noRepeatedIdsBetweenSubordinates</key>
-                        <value>0</value>
                     </entry>
                     <entry>
                         <key>issuesINCRBursts</key>
@@ -3694,6 +3888,41 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>writeWaitTime</key>
                         <value>0</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureGuid</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhGroupId</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterId</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterName</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterVersion</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterData</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterDataLength</key>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMajorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMinorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureId</key>
+                        <value>35</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -3955,6 +4184,41 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>writeWaitTime</key>
                         <value>0</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureGuid</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhGroupId</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterId</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterName</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterVersion</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterData</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterDataLength</key>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMajorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMinorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureId</key>
+                        <value>35</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -4021,6 +4285,10 @@ https://fpgasoftware.intel.com/eula.-->
             <value>4096</value>
         </entry>
         <entry>
+            <key>embeddedsw.CMacro.HAS_CSR_SUPPORT</key>
+            <value>1</value>
+        </entry>
+        <entry>
             <key>embeddedsw.CMacro.HAS_DEBUG_STUB</key>
             <value></value>
         </entry>
@@ -4045,6 +4313,10 @@ https://fpgasoftware.intel.com/eula.-->
             <value>0x00110000</value>
         </entry>
         <entry>
+            <key>embeddedsw.CMacro.NIOSV_CORE_VARIANT</key>
+            <value>3</value>
+        </entry>
+        <entry>
             <key>embeddedsw.CMacro.NUM_GPR</key>
             <value>32</value>
         </entry>
@@ -4065,8 +4337,52 @@ https://fpgasoftware.intel.com/eula.-->
             <value>1</value>
         </entry>
         <entry>
+            <key>embeddedsw.configuration.NiosVDTCM1Base</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVDTCM1Size</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVDTCM2Base</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVDTCM2Size</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVITCM1Base</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVITCM1Size</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVITCM2Base</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVITCM2Size</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.NiosVTCMVersion</key>
+            <value>2.0.0</value>
+        </entry>
+        <entry>
             <key>embeddedsw.configuration.cpuArchitecture</key>
             <value>Bantam Lake</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.fpuEnabled</key>
+            <value>0</value>
+        </entry>
+        <entry>
+            <key>embeddedsw.configuration.hideDevice</key>
+            <value>1</value>
         </entry>
         <entry>
             <key>embeddedsw.configuration.isTimerDevice</key>
@@ -4117,6 +4433,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -4416,6 +4733,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -4773,10 +5091,6 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
-                        <entry>
-                            <key>enableConcurrentSubordinateAccess</key>
-                            <value>0</value>
-                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -4978,10 +5292,6 @@ https://fpgasoftware.intel.com/eula.-->
                         </entry>
                         <entry>
                             <key>writeWaitTime</key>
-                            <value>0</value>
-                        </entry>
-                        <entry>
-                            <key>enableConcurrentSubordinateAccess</key>
                             <value>0</value>
                         </entry>
                     </parameterValueMap>
@@ -5253,6 +5563,41 @@ https://fpgasoftware.intel.com/eula.-->
                         <entry>
                             <key>writeWaitTime</key>
                             <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureGuid</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhGroupId</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterId</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterName</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterVersion</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterData</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterDataLength</key>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMajorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMinorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureId</key>
+                            <value>35</value>
                         </entry>
                     </parameterValueMap>
                 </parameters>
@@ -6179,6 +6524,7 @@ https://fpgasoftware.intel.com/eula.-->
   <parameter name="svInterfaceDefinition" value="" />
  </module>
  <module name="uart" kind="altera_generic_component" version="1.0" enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -6501,6 +6847,41 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>writeWaitTime</key>
                             <value>0</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureGuid</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhGroupId</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterId</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterName</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterVersion</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterData</key>
+                        </entry>
+                        <entry>
+                            <key>dfhParameterDataLength</key>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMajorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureMinorVersion</key>
+                            <value>0</value>
+                        </entry>
+                        <entry>
+                            <key>dfhFeatureId</key>
+                            <value>35</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
                 <cmsisInfo>
@@ -6651,7 +7032,7 @@ https://fpgasoftware.intel.com/eula.-->
     </boundary>
     <originalModuleInfo>
         <className>altera_avalon_jtag_uart</className>
-        <version>19.2.1</version>
+        <version>19.2.3</version>
         <displayName>JTAG UART Intel FPGA IP</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
@@ -7031,6 +7412,41 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>writeWaitTime</key>
                         <value>0</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureGuid</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhGroupId</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterId</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterName</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterVersion</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterData</key>
+                    </entry>
+                    <entry>
+                        <key>dfhParameterDataLength</key>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMajorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureMinorVersion</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>dfhFeatureId</key>
+                        <value>35</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
             <cmsisInfo>
@@ -7257,7 +7673,7 @@ https://fpgasoftware.intel.com/eula.-->
  </module>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7282,7 +7698,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7307,7 +7723,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.data_manager"
    end="uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -7332,7 +7748,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.data_manager"
    end="simple_dma_accelerator.csr_ring_root_avs">
   <parameter name="arbitrationPriority" value="1" />
@@ -7357,7 +7773,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.data_manager"
    end="nios.dm_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7382,7 +7798,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.data_manager"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7407,7 +7823,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.data_manager"
    end="nios.timer_sw_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7432,7 +7848,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.instruction_manager"
    end="nios.dm_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7457,7 +7873,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.1"
+   version="23.3"
    start="nios.instruction_manager"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7482,53 +7898,53 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="clock"
-   version="23.1"
+   version="23.3"
    start="clock_in.out_clk"
    end="reset_in.clk" />
- <connection kind="clock" version="23.1" start="clock_in.out_clk" end="nios.clk" />
- <connection kind="clock" version="23.1" start="clock_in.out_clk" end="uart.clk" />
+ <connection kind="clock" version="23.3" start="clock_in.out_clk" end="nios.clk" />
+ <connection kind="clock" version="23.3" start="clock_in.out_clk" end="uart.clk" />
  <connection
    kind="clock"
-   version="23.1"
+   version="23.3"
    start="clock_in.out_clk"
    end="code_data_ram.clk1" />
  <connection
    kind="clock"
-   version="23.1"
+   version="23.3"
    start="clock_in.out_clk"
    end="simple_dma_accelerator.clock" />
  <connection
    kind="interrupt"
-   version="23.1"
+   version="23.3"
    start="nios.platform_irq_rx"
    end="uart.irq">
   <parameter name="irqNumber" value="0" />
  </connection>
  <connection
    kind="interrupt"
-   version="23.1"
+   version="23.3"
    start="nios.platform_irq_rx"
    end="simple_dma_accelerator.kernel_irqs">
   <parameter name="irqNumber" value="1" />
  </connection>
  <connection
    kind="reset"
-   version="23.1"
+   version="23.3"
    start="reset_in.out_reset"
    end="nios.reset" />
  <connection
    kind="reset"
-   version="23.1"
+   version="23.3"
    start="reset_in.out_reset"
    end="uart.reset" />
  <connection
    kind="reset"
-   version="23.1"
+   version="23.3"
    start="reset_in.out_reset"
    end="code_data_ram.reset1" />
  <connection
    kind="reset"
-   version="23.1"
+   version="23.3"
    start="reset_in.out_reset"
    end="simple_dma_accelerator.resetn" />
 </system>

@@ -30,9 +30,9 @@
     "linux": [
       {
         "steps": [
-          "rm -rf ../build || true",
-          "mkdir ../build",
-          "cd ../build",
+          "rm -rf ../../build || true",
+          "mkdir ../../build",
+          "cd ../../build",
           "cmake ..",
           "make c_is_device_ptr_01 c_use_device_ptr_01 f_has_device_addr_01 f_use_device_addr_01",
           "make clean"

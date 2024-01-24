@@ -114,11 +114,32 @@ int main() {
 
   std::cout << "Running on device: "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
+  
+  auto sgsizes = q.get_device().get_info<sycl::info::device::sub_group_sizes>();
+
+  constexpr int sgsize = 16;
+  bool supported = false;
+  std::cout << "Sub-group sizes supported:"; 
+  for (auto sz : sgsizes) {
+    std::cout << " " << sz;
+    if (sz == sgsize) {
+      supported = true;
+    }
+  }
+  std::cout << std::endl;
+  
+  if (!supported) {
+    std::cout << "Sub-group size " << sgsize << " is not supported. Please change sgsize to one of the supported sizes"
+              << std::endl;
+    return 0;
+  }
+  
+  std::cout << "Using sub-group size " << sgsize << std::endl;
   std::cout << "Vector size: " << a.size() << "\n";
 
   // check results
   Initialize(sum);
-  VectorAdd3<6, 320, 8>(q, a, b, sum, 1);
+  VectorAdd3<6, 320, sgsize>(q, a, b, sum, 1);
 
   for (int i = 0; i < mysize; i++)
     if (sum[i] != 2 * i) {
@@ -126,7 +147,7 @@ int main() {
     }
 
   Initialize(sum);
-  VectorAdd4<6, 320, 8>(q, a, b, sum, 1);
+  VectorAdd4<6, 320, sgsize>(q, a, b, sum, 1);
   for (int i = 0; i < mysize; i++)
     if (sum[i] != 2 * i) {
       std::cout << "add4 Did not match\n";
@@ -134,16 +155,16 @@ int main() {
 
   // group1
   Initialize(sum);
-  VectorAdd3<8, 320, 8>(q, a, b, sum, 10000);
+  VectorAdd3<8, 320, sgsize>(q, a, b, sum, 10000);
   Initialize(sum);
-  VectorAdd4<8, 320, 8>(q, a, b, sum, 10000);
+  VectorAdd4<8, 320, sgsize>(q, a, b, sum, 10000);
   // end group1
 
   // group2
   Initialize(sum);
-  VectorAdd3<24, 224, 8>(q, a, b, sum, 10000);
+  VectorAdd3<24, 224, sgsize>(q, a, b, sum, 10000);
   Initialize(sum);
-  VectorAdd4<24, 224, 8>(q, a, b, sum, 10000);
+  VectorAdd4<24, 224, sgsize>(q, a, b, sum, 10000);
   // end group2
   return 0;
 }

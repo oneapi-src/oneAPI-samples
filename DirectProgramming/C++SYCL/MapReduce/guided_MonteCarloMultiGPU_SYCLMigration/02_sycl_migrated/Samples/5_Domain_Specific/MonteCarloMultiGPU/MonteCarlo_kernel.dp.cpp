@@ -153,36 +153,32 @@ static void rngSetupStates(oneapi::mkl::rng::device::philox4x32x10<1> *rngState,
 ////////////////////////////////////////////////////////////////////////////////
 
 extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(
+  
+    DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(
                            sizeof(__TOptionData) * (plan->optionCount),
-                           dpct::get_default_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(
+                           dpct::get_default_queue()));
+
+    DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(
                            sizeof(__TOptionValue) * (plan->optionCount),
-                           dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
+                           dpct::get_default_queue()));
+    DPCT_CHECK_ERROR(
       plan->h_OptionData =
           (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount),
-                                    dpct::get_default_queue())));
+                                    dpct::get_default_queue()));
   // Allocate internal device memory
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
-                           (plan->optionCount), dpct::get_default_queue())));
+  
+    DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
+                           (plan->optionCount), dpct::get_default_queue()));
   // Allocate states for pseudo random number generators
-  checkCudaErrors(DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(
       plan->rngStates = sycl::malloc_device<oneapi::mkl::rng::device::philox4x32x10<1>>(
-          plan->gridSize * THREAD_N, dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
+          plan->gridSize * THREAD_N, dpct::get_default_queue()));
+    DPCT_CHECK_ERROR(
       dpct::get_default_queue()
           .memset(plan->rngStates, 0,
-                  /*
-                  DPCT1032:36: A different random number generator is used. You
-                  may need to adjust the code.
-                  */
                   plan->gridSize * THREAD_N *
                       sizeof(oneapi::mkl::rng::device::philox4x32x10<1>))
-          .wait()));
+          .wait());
 
   // place each device pathN random numbers apart on the random number sequence
   dpct::get_default_queue().submit([&](sycl::handler &cgh) {
@@ -197,7 +193,6 @@ extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
                                       item_ct1);
                      });
   });
-  getLastCudaError("rngSetupStates kernel failed.\n");
 }
 
 // Compute statistics and deallocate internal device memory
@@ -217,16 +212,15 @@ extern "C" void closeMonteCarloGPU(TOptionPlan *plan) {
         (float)(exp(-RT) * 1.96 * stdDev / sqrt(pathN));
   }
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(plan->rngStates, dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      sycl::free(plan->h_CallValue, dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      sycl::free(plan->h_OptionData, dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      sycl::free(plan->d_CallValue, dpct::get_default_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      sycl::free(plan->d_OptionData, dpct::get_default_queue())));
+  DPCT_CHECK_ERROR(sycl::free(plan->rngStates, dpct::get_default_queue()));
+  DPCT_CHECK_ERROR(
+      sycl::free(plan->h_CallValue, dpct::get_default_queue()));
+  DPCT_CHECK_ERROR(
+      sycl::free(plan->h_OptionData, dpct::get_default_queue()));
+  DPCT_CHECK_ERROR(
+      sycl::free(plan->d_CallValue, dpct::get_default_queue()));
+  DPCT_CHECK_ERROR(
+      sycl::free(plan->d_OptionData, dpct::get_default_queue()));
 }
 
 // Main computations
@@ -252,9 +246,9 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
     h_OptionData[i].VBySqrtT = (real)VBySqrtT;
   }
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       stream->memcpy(plan->d_OptionData, h_OptionData,
-                     plan->optionCount * sizeof(__TOptionData))));
+                     plan->optionCount * sizeof(__TOptionData)));
 
   stream->submit([&](sycl::handler &cgh) {
 
@@ -286,11 +280,10 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
                                       s_Sum2Call_acc_ct1.get_pointer());
         });
   });
-  getLastCudaError("MonteCarloOneBlockPerOption() execution failed\n");
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       stream->memcpy(h_CallValue, plan->d_CallValue,
-                     plan->optionCount * sizeof(__TOptionValue))));
+                     plan->optionCount * sizeof(__TOptionValue)));
 
   // cudaDeviceSynchronize();
 }
