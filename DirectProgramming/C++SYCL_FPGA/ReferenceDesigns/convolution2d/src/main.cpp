@@ -1,4 +1,4 @@
-//  Copyright (c) 2021 Intel Corporation
+//  Copyright (c) 2024 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
 // main.cpp
@@ -48,7 +48,7 @@
 
 /// @brief Initialize a buffer meant to store an image. This helps with
 /// debugging, because you can see if an image was only partly written. The
-/// buffer is initialized with an incrementing pattern, ranging from `0` to 
+/// buffer is initialized with an incrementing pattern, ranging from `0` to
 /// `(1 << 24)`.
 /// @param[out] buf Buffer to initialize
 /// @param[in] size Number of pixels to initialize in the buffer
@@ -60,11 +60,12 @@ void initializeBuffer(conv2d::Pixel_rgb *buf, size_t size) {
   }
 }
 
-/// @brief Convert pixels read from a bmp image using the bmptools functions to pixels
-/// that can be parsed by our 2D convolution IP.
+/// @brief Convert pixels read from a bmp image using the bmptools functions to
+/// pixels that can be parsed by our 2D convolution IP.
 /// @param[in] bmp_buf pixels read by bmptools
 /// @param[out] vvp_buf pixels to be consumed by 2D convolution IP
-/// @param[in] pixel_count (input) number of pixels in input image and output image
+/// @param[in] pixel_count (input) number of pixels in input image and output
+/// image
 void convertToVvpRgb(unsigned int *bmp_buf, conv2d::Pixel_rgb *vvp_buf,
                      size_t pixel_count) {
   std::cout << "INFO: convert to vvp type." << std::endl;
@@ -82,8 +83,8 @@ void convertToVvpRgb(unsigned int *bmp_buf, conv2d::Pixel_rgb *vvp_buf,
   }
 }
 
-/// @brief Convert pixels read from the 2D convolution IP to a format that can be read
-/// by the bmptools functions.
+/// @brief Convert pixels read from the 2D convolution IP to a format that can
+/// be read by the bmptools functions.
 /// @param[in] vvp_buf pixels produced by 2D convolution IP
 /// @param[out] bmp_buf pixels to send to bmptools
 /// @param[in] pixel_count number of pixels in input image and output image
@@ -360,6 +361,15 @@ bool testGoodFramesSequence(sycl::queue q, size_t num_frames,
     allPassed &= passed & sidebands_ok;
     printf("frame %d %s\n", itr,
            (passed && sidebands_ok) ? "passed" : "failed");
+  }
+
+  int detected_version = VersionCSR::read(q);
+  std::cout << "\nKernel version = " << detected_version << " (Expected "
+            << kKernelVersion << ")" << std::endl;
+
+  if (detected_version != kKernelVersion) {
+    std::cerr << "ERROR: kernel version did not match!" << std::endl;
+    allPassed = false;
   }
 
   // Stop the kernel in case testbench wants to run again with different kernel

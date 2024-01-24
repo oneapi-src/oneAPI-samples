@@ -1,3 +1,8 @@
+//  Copyright (c) 2024 Intel Corporation
+//  SPDX-License-Identifier: MIT
+
+// convolution_kernel.hpp
+
 #pragma once
 #include <stdint.h>
 
@@ -8,6 +13,10 @@
 #include "data_bundle.hpp"
 #include "linebuffer2d.hpp"
 #include "unrolled_loop.hpp"
+
+// The kernel version may be polled by an Avalon memory-mapped host that manages
+// this IP. Update this when you make changes to kernel code.
+constexpr int kKernelVersion = 1;
 
 /////////////////////////////////////////////
 // Define input/output streaming interfaces
@@ -44,16 +53,24 @@ using OutputImageStream =
     sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::RGBBeat, 0,
                                          OutputImgStreamProperties>;
 
-class ID_StopCSR;
-using StopCSRProperties = decltype(sycl::ext::oneapi::experimental::properties(
+/////////////////////////////////////////////
+// Define CSR locations that attach to pipes
+/////////////////////////////////////////////
+using CsrProperties = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
         sycl::ext::intel::experimental::protocol_name::avalon_mm>));
-using StopCSR = sycl::ext::intel::experimental::pipe<ID_StopCSR, bool, 0,
-                                                     StopCSRProperties>;
+
+class ID_StopCSR;
+using StopCSR =
+    sycl::ext::intel::experimental::pipe<ID_StopCSR, bool, 0, CsrProperties>;
 
 class ID_BypassCSR;
-using BypassCSR = sycl::ext::intel::experimental::pipe<ID_BypassCSR, bool, 0,
-                                                       StopCSRProperties>;
+using BypassCSR =
+    sycl::ext::intel::experimental::pipe<ID_BypassCSR, bool, 0, CsrProperties>;
+
+class ID_VersionCSR;
+using VersionCSR =
+    sycl::ext::intel::experimental::pipe<ID_VersionCSR, int, 0, CsrProperties>;
 
 constexpr int NormalizeFactor = 1 << conv2d::kBitsPerChannel;
 
@@ -199,6 +216,9 @@ struct Convolution2d {
       coeffs;
 
   void operator()() const {
+    // Publish kernel version so that other IPs can poll it
+    VersionCSR::write(kKernelVersion);
+
     // This instance of the line buffer will store previously read pixels so
     // that they can be operated on in a local filter. The filter is invoked
     // below in the loop.
