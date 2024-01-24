@@ -1,36 +1,33 @@
 # Intel Extension for TensorFlow Getting Started Sample
-This code sample will guide users how to run a tensorflow inference workload on both GPU and CPU by using oneAPI AI Analytics Toolkit and also analyze the GPU and CPU usage via oneDNN verbose logs
+This code sample will guide users how to run a tensorflow inference workload on both GPU and CPU by using Intel® AI Tools and also analyze the GPU and CPU usage via oneDNN verbose logs
 
 ## Purpose
-  - Guide users how to use different conda environments in oneAPI AI Analytics Toolkit to run TensorFlow workloads on both CPU and GPU
+  - Guide users how to use different conda environments in Intel® AI Tools to run TensorFlow workloads on both CPU and GPU
   - Guide users how to validate the GPU or CPU usages for TensorFlow workloads on Intel CPU or GPU
  
 
 ## Key implementation details
-1. leverage the [resnet50 inference sample] (https://github.com/intel/intel-extension-for-tensorflow/tree/main/examples/infer_resnet50) from intel-extension-for-tensorflow
+1. leverage the [resnet50 inference sample](https://github.com/intel/intel-extension-for-tensorflow/tree/main/examples/infer_resnet50) from intel-extension-for-tensorflow
 2. use the resnet50v1.5 pretrained model from TensorFlow Hub
 3. infernece with images in intel caffe github
 4. guide users how to use different conda environment to run on Intel CPU and GPU
 5. analyze oneDNN verbose logs to validate GPU or CPU usage  
 
-## Running Samples on the Intel&reg; DevCloud
-If you are running this sample on the DevCloud, skip the Pre-requirements and go to the [Activate Conda Environment](#activate-conda) section.
-
 ## Pre-requirements (Local or Remote Host Installation)
 
-TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit (AI Kit) installation and have run the post installation script.
+TensorFlow* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
-You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; AI Analytics Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
+TensorFlow* is ready for use once you finish the Intel AI Tools installation. You can refer to the oneAPI [product page](https://software.intel.com/en-us/oneapi) for tools installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
 ## Environment Setup
 This sample requires two additional pip packages: tensorflow_hub and ipykerenl.  
 Therefore users need to clone the tensorflow conda environment into users' home folder and install those additional packages accordingly.   
 Please follow bellow steps to setup GPU environment.  
 
-1. Source oneAPI environment variables:  ```$source /opt/intel/oneapi/setvars.sh ```
+1. Source oneAPI environment variables:  ``` $source $HOME/intel/oneapi/intelpython/bin/activate  ```
 2. Create conda env:  ```$conda create --name user-tensorflow-gpu --clone tensorflow-gpu ```
 3. Activate the created conda env:  ```$source activate user-tensorflow-gpu ```
-4. Install the required packages:  ```(user-tensorflow-gpu) $pip install tensorflow_hub ipykernel ```
+4. Install the required packages:  ```(user-tensorflow-gpu) $pip install -r requirements.txt ```
 5. Deactivate conda env:  ```(user-tensorflow-gpu)$conda deactivate ```
 6. Register the kernel to Jupyter NB: ``` $~/.conda/envs/user-tensorflow-gpu/bin/python  -m ipykernel install --user --name=user-tensorflow-gpu ```  
 
@@ -40,9 +37,8 @@ In the end, you will have two new conda environments which are user-tensorflow-g
 ## How to Build and Run
 
 You can run the Jupyter notebook with the sample code on your local
-server or download the sample code from the notebook as a Python file and run it locally or on the Intel DevCloud.
+server or download the sample code from the notebook as a Python file and run it locally.
 
-**Note:** You can run this sample on the Intel DevCloud using the Dask and OmniSci engine backends for Modin. To learn how to set the engine backend for Intel Distribution of Modin, visit the [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html). The Ray backend cannot be used on Intel DevCloud at this time. Thank you for your patience.
 
 ### Run the Sample in Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
