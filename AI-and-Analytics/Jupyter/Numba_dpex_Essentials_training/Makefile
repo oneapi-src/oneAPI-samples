@@ -22,18 +22,18 @@ prog8: 03_dpex_Pairwise_Distance/lab/pairwise_distance.py
 	python -Wignore 03_dpex_Pairwise_Distance/lab/pairwise_distance.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog9: 03_dpex_Pairwise_Distance/lab/pairwise_distance_gpu.py
-	python -Wignore 03_dpex_Pairwise_Distance/lab/pairwise_distance_gpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
+	python -Wignore 03_dpex_Pairwise_Distance/lab/pairwise_distance_gpu.py --steps 1 --size 1024 --repeat 1
 prog10: 03_dpex_Pairwise_Distance/lab/pair_wise_kernel.py
-	python -Wignore 03_dpex_Pairwise_Distance/lab/pair_wise_kernel.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
+	python -Wignore 03_dpex_Pairwise_Distance/lab/pair_wise_kernel.py --steps 1 --size 1024 --repeat 1
 
 prog11: 04_dpex_Black_Sholes/lab/black_sholes_jit_cpu.py
-	python -Wignore 04_dpex_Black_Sholes/lab/black_sholes_jit_cpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
+	python -Wignore 04_dpex_Black_Sholes/lab/black_sholes_jit_cpu.py --steps 1 --size 1024 --repeat 1
 
 prog12: 04_dpex_Black_Sholes/lab/black_sholes_jit_gpu.py
-	python -Wignore 04_dpex_Black_Sholes/lab/black_sholes_jit_gpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
+	python -Wignore 04_dpex_Black_Sholes/lab/black_sholes_jit_gpu.py --steps 1 --size 1024 --repeat 1
 
 prog14: 05_dpex_Kmeans/lab/kmeans.py
 	python -Wignore 05_dpex_Kmeans/lab/kmeans.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog15: 05_dpex_Kmeans/lab/kmeans_kernel_atomic.py
-	python -Wignore 05_dpex_Kmeans/lab/kmeans_kernel_atomic.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
+	python -Wignore 05_dpex_Kmeans/lab/kmeans_kernel_atomic.py --steps 1 --size 1024 --repeat 1
