@@ -34,9 +34,9 @@ set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # set floating-point precision
 if(WIN32)
-    set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} /fp:precise /Qfma-)
+    set(USER_FLAGS ${USER_FLAGS};-fp:precise)
 else()
-    set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS} -fp-model=precise -no-fma)
+    set(USER_FLAGS ${USER_FLAGS} -fp-model=precise -no-fma)
 endif()
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
