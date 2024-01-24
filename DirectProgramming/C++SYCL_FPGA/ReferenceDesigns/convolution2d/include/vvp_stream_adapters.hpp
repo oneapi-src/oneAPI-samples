@@ -1,3 +1,8 @@
+//  Copyright (c) 2024 Intel Corporation
+//  SPDX-License-Identifier: MIT
+
+// vvp_stream_adapters.hpp
+
 #pragma once
 #include <algorithm>
 #include <string>
@@ -58,8 +63,8 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
       fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc =
-      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
+  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");
@@ -123,27 +128,18 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 /// frame. It will return once it has read a complete frame, so if your design
 /// does not completely output a frame, the `readFrameFromPipe()` function will
 /// hang.
-///
 /// @tparam PixelPipe The pipe from which pixels will be read. This pipe's
 /// payload should be a `StreamingBeat` templated on a `DataBundle`, which is
 /// itself templated on a payload of type `PixelType`.
-///
 /// @tparam PixelType The type that represents each pixel. This may be a scalar
 /// (such as an `int`) or a `struct` of 'plain old data'.
-///
 /// @param q SYCL queue where your oneAPI kernel will run
-///
 /// @param[in] rows Image rows (height)
-///
 /// @param[in] cols Image columns (width)
-///
 /// @param[out] out_img Pointer to place image pixels read from `PixelPipe`
-///
 /// @param[out] sidebands_ok Indicates if sideband signals are correct
-///
 /// @param[out] defective_frames Indicates how many defective frames were read
 /// before the current frame
-///
 /// @return `false` if the packet reader ends in an undefined state
 template <typename PixelPipe, typename PixelType>
 bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
@@ -160,8 +156,8 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
       fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc =
-      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
+  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");
@@ -299,8 +295,8 @@ bool writeDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
   using DataBundleType = beat_payload_t<PixelPipe>;
   constexpr int kPixelsInParallel =
       fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc =
-      typename fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadT;
+  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      DataBundleType>::BundlePayloadT;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value, "mismatched");

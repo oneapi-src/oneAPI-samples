@@ -1,4 +1,4 @@
-//  Copyright (c) 2021 Intel Corporation
+//  Copyright (c) 2024 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
 // bmp_tools.h
@@ -84,8 +84,8 @@ static constexpr int BMP_HEADER_SIZE =
 ///
 /// @param[out] img_data A pointer to an array of pixels that has been allocated
 /// by `read_bmp`. The size of the allocated buffer will be equal to `height` *
-/// `width` * `sizeof(unsigned int)`. In your code, declare `unsigned int /
-//*myData`, then pass `&myData` as an argument to this function.
+/// `width` * `sizeof(unsigned int)`. Declare `unsigned int *myData`, then pass
+/// `&myData` as an argument to this function.
 ///
 /// @param[out] height Number of rows in the image that was read
 ///
@@ -234,21 +234,14 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
 }
 
 /// @brief Store pixels in `img_data` array to a bitmap pointed to by `fileame`
-///
 /// @paragraph For simplicity, we only support a certain type of BMP file,
 /// namely 24-bit Windows-style, with all important colors and a single color
 /// plane.
-///
 /// @param[in] filepath Filepath to write to
-///
 /// @param[in] img_data An array of pixels to write to a bmp file. The size of
-/// the
-// array must be equal to `height` * `width`.
-///
+/// the array must be equal to `height` * `width`.
 /// @param[in] height Number of rows in the image
-///
 /// @param[in] width Number of columns in the image
-///
 /// @return `true` if the image was successfully written to the filesystem,
 /// `false` if not.
 inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
@@ -258,9 +251,6 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
     std::cerr << "ERROR: height " << height << ", width " << width << std::endl;
     return false;
   }
-
-  // std::filesystem::path absoluteFilePath =
-  // std::filesystem::absolute(filepath);
 
   unsigned int file_size = width * height * 3 + BMP_HEADER_SIZE;
   unsigned char header[BMP_HEADER_SIZE] = {
@@ -386,7 +376,7 @@ struct PixelRGB {
   /// @param m_g Green color channel
   /// @param m_b Blue color channel
   PixelRGB(uint8_t m_r, uint8_t m_g, uint8_t m_b)
-      : b(m_b), g(m_g), r(m_r),reserved(0) {}
+      : b(m_b), g(m_g), r(m_r), reserved(0) {}
 
   /// @brief Transform a `BmpTools::PixelRGB` into an unsigned 32-bit pixel used
   /// by `BmpTools` functions.

@@ -1,3 +1,8 @@
+//  Copyright (c) 2024 Intel Corporation
+//  SPDX-License-Identifier: MIT
+
+// linebuffer2d.hpp
+
 #pragma once
 
 #include "comparisons.hpp"
@@ -39,7 +44,8 @@ class LineBuffer2d {
  private:
   // types used internally
   using PixelWithSignals = PixelWithSignals_Templated<PixelTypeIn>;
-  using BundledPixels = fpga_tools::DataBundle<PixelWithSignals, kParallelPixels>;
+  using BundledPixels =
+      fpga_tools::DataBundle<PixelWithSignals, kParallelPixels>;
   constexpr static short kRowWriteInit = (short)(0 - kStencilSize);
   constexpr static short kColWriteInit = (short)(0 - kStencilSize);
 
@@ -106,7 +112,7 @@ class LineBuffer2d {
 
   /// @brief This function structures a sliding-window stencil function in a way
   /// that is optimal for FPGAs. `filter()` inserts a new pixel into the
-  /// linebuffer, and runs the user-provided window function. Any additional
+  /// line buffer, and runs the user-provided window function. Any additional
   /// arguments you provide this function will be passed to your window function
   /// (in addition to the mandatory arguments it must accept). The return value
   /// of `filter()` is the concatenation of the results of all the copies of

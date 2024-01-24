@@ -1,4 +1,4 @@
-//  Copyright (c) 2021 Intel Corporation
+//  Copyright (c) 2024 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
 // data_bundle.hpp
