@@ -34,6 +34,7 @@
 		.st24 {marker-end:url(#mrkr4-232);stroke:#70ad47;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
 		.st25 {fill:#70ad47;fill-opacity:1;stroke:#70ad47;stroke-opacity:1;stroke-width:0.28409090909091}
 		.st26 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+		.st27 {font-size:1em;text-decoration:line-through}
 	]]>
 	</style>
 
@@ -236,7 +237,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="28.3465" cy="151.919" width="56.7" height="20"/>
 			<rect x="0" y="141.919" width="56.6929" height="20" class="st17"/>
-			<text x="18.94" y="154.62" class="st18" v:langID="4105"><v:paragraph v:horizAlign="2"/><v:tabList/>Ready_in</text>		</g>
+			<text x="18.94" y="154.62" class="st18" v:langID="4105"><v:paragraph v:horizAlign="2"/><v:tabList/><tspan class="st27">Ready_in</tspan></text>		</g>
 		<g id="shape1041-78" v:mID="1041" v:groupContext="shape" transform="translate(224.721,-98.6516)">
 			<title>Sheet.1041</title>
 			<desc>Ready_out</desc>
@@ -339,7 +340,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="28.3465" cy="151.919" width="56.7" height="20"/>
 			<rect x="0" y="141.919" width="56.6929" height="20" class="st17"/>
-			<text x="18.94" y="154.62" class="st18" v:langID="4105"><v:paragraph v:horizAlign="2"/><v:tabList/>Ready_in</text>		</g>
+			<text x="18.94" y="154.62" class="st18" v:langID="4105"><v:paragraph v:horizAlign="2"/><v:tabList/><tspan class="st27">Ready_in</tspan></text>		</g>
 		<g id="shape1059-140" v:mID="1059" v:groupContext="shape" transform="translate(613.615,-103.167)">
 			<title>Sheet.1059</title>
 			<desc>Ready_out</desc>
