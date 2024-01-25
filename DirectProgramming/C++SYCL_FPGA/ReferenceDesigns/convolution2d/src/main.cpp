@@ -169,6 +169,10 @@ constexpr std::array<float, 9> identity_coeffs = {
 /// @param q The SYCL queue to assign work to
 /// @return `true` if successful, `false` otherwise
 bool TestTinyFrameOnStencil(sycl::queue q) {
+  std::cout << "\n**********************************\n"
+            << "Check Tiny frame... "
+            << "\n**********************************\n"
+            << std::endl;
   constexpr int rows_small = 3;
   constexpr int cols_small = 8;
 
@@ -182,7 +186,7 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
   vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
       q, rows_small, cols_small, grey_pixels_in);
 
-  // add extra pixels to flush out the FIFO after all image frames 
+  // add extra pixels to flush out the FIFO after all image frames
   // have been added
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
@@ -209,6 +213,62 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
     conv2d::PixelType grey_pixel_expected =
         ((float)grey_pixels_in[i] / kNormalizationFactor) * kOutputOffset +
         kOutputOffset;
+    pixels_match &= (grey_pixel_expected == grey_pixels_out[i]);
+  }
+
+  // Stop the kernel in case testbench wants to run again with different kernel
+  // arguments.
+  StopCSR::write(q, true);
+  e.wait();
+
+  return sidebands_ok & pixels_match;
+}
+
+/// @brief Test that the 'bypass' control works correctly.
+/// @param q The SYCL queue to assign work to
+/// @return `true` if input image matches output image
+bool TestBypass(sycl::queue q) {
+  std::cout << "\n**********************************\n"
+            << "Check bypass... "
+            << "\n**********************************\n"
+            << std::endl;
+
+  constexpr int rows_small = 3;
+  constexpr int cols_small = 8;
+
+  constexpr int pixels_count = rows_small * cols_small;
+
+  conv2d::PixelType grey_pixels_in[] = {
+      101, 201, 301, 401, 501, 601, 701, 801,  //
+      102, 202, 302, 402, 502, 602, 702, 802,  //
+      103, 203, 303, 403, 503, 603, 703, 803};
+
+  vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
+      q, rows_small, cols_small, grey_pixels_in);
+
+  // add extra pixels to flush out the FIFO after all image frames
+  // have been added
+  int dummy_pixels = cols_small * conv2d::kWindowSize;
+  vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
+      q, dummy_pixels, (uint16_t)69);
+
+  // enable bypass
+  BypassCSR::write(q, true);
+
+  sycl::event e = q.single_task<ID_Convolution2d>(
+      Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
+          (int)rows_small, (int)cols_small, identity_coeffs});
+
+  conv2d::PixelType grey_pixels_out[pixels_count];
+  bool sidebands_ok;
+  int defective_frames;
+  vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok,
+      defective_frames);
+
+  bool pixels_match = true;
+  for (int i = 0; i < pixels_count; i++) {
+    conv2d::PixelType grey_pixel_expected = grey_pixels_in[i];
     pixels_match &= (grey_pixel_expected == grey_pixels_out[i]);
   }
 
@@ -252,6 +312,9 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
   bool all_passed = true;
 
   size_t rows = 0, cols = 0;
+
+  // disable bypass since it's on by default
+  BypassCSR::write(q, false);
 
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
@@ -421,6 +484,9 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
     return false;
   }
 
+  // Disable bypass since it's on by default
+  BypassCSR::write(q, false);
+
   size_t rows = 0;
   size_t cols = 0;
   bool image_ok = UpdateAndCheckImageDimensions(rows, cols, rows_new, cols_new);
@@ -439,8 +505,8 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
 
   ConvertToVvpRgb(in_img, in_img_vvp, rows * cols);
 
-  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
-                                                          in_img_vvp, end_pixel);
+  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
+      q, rows, cols, in_img_vvp, end_pixel);
 
   // Now enqueue a good frame.
   vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
@@ -545,13 +611,11 @@ int main(int argc, char **argv) {
 
 #if TEST_CONV2D_ISOLATED
     all_passed &= TestTinyFrameOnStencil(q);
+    all_passed &= TestBypass(q);
 #else
-    BypassCSR::write(q, false);
     all_passed &=
         TestGoodFramesSequence(q, NUM_FRAMES, input_bmp_filename,
                                output_bmp_filename, expected_bmp_filename);
-
-    BypassCSR::write(q, false);
     all_passed &=
         TestDefectiveFrame(q, input_bmp_filename + "_0", output_bmp_filename,
                            expected_bmp_filename + "_0");
