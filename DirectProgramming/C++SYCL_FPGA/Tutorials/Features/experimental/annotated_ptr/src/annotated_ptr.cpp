@@ -12,8 +12,8 @@ using Pipe2AnnotatedPtrIP =
 constexpr int kBL1 = 1;
 constexpr int kBL2 = 2;
 
-constexpr int ROWS = 2;
-constexpr int COLS = 5;
+constexpr int kRows = 2;
+constexpr int kCols = 5;
 
 // The kernel 'DotProductIP' computes a weighted sum over a matrix and a vector:
 // out_vec[0] = mat[0][0] * in_vec[0] + mat[0][1] * in_vec[1] + ... +
@@ -30,13 +30,13 @@ struct DotProductIP {
       out_vec;
 
   void operator()() const {
-    for (int i = 0; i < ROWS; i++) {
+    for (int i = 0; i < kRows; i++) {
       // read the starting pointer of the i-th row of the weight matrix
       float *p = Pipe2DotProductIP::read();
 
       float sum = 0.0f;
-#pragma unroll COLS
-      for (int j = 0; j < COLS; j++) sum += p[j] * in_vec[j];
+#pragma unroll kCols
+      for (int j = 0; j < kCols; j++) sum += p[j] * in_vec[j];
 
       out_vec[i] = sum;
     }
@@ -57,7 +57,7 @@ struct AnnotatedPtrIP {
       out_vec;
 
   void operator()() const {
-    for (int i = 0; i < ROWS; i++) {
+    for (int i = 0; i < kRows; i++) {
       // read the starting pointer of the i-th row of the weight matrix
       float *p = Pipe2AnnotatedPtrIP::read();
 
@@ -68,8 +68,8 @@ struct AnnotatedPtrIP {
           mat{p};
 
       float sum = 0.0f;
-#pragma unroll COLS
-      for (int j = 0; j < COLS; j++) sum += mat[j] * in_vec[j];
+#pragma unroll kCols
+      for (int j = 0; j < kCols; j++) sum += mat[j] * in_vec[j];
 
       out_vec[i] = sum;
     }
@@ -77,7 +77,7 @@ struct AnnotatedPtrIP {
 };
 
 // verify results
-bool check_result(float *result, float *expected, int size) {
+bool CheckResult(float *result, float *expected, int size) {
   bool passed = true;
   for (int i = 0; i < size; i++) {
     if (result[i] != expected[i]) {
@@ -112,56 +112,56 @@ int main() {
     // allocate memory for the flattened weight matrix. The pointers to each row
     // will be written to each kernel through a pipe.
     float *weight = sycl::malloc_shared<float>(
-        ROWS * COLS, q,
+        kRows * kCols, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
     assert(weight);
-    for (int i = 0; i < ROWS * COLS; i++) {
+    for (int i = 0; i < kRows * kCols; i++) {
       weight[i] = rand() % 10;
     }
 
     // allocate memory and initialize for input vector
-    auto input_vec = sycl::malloc_shared<float>(
-        COLS, q,
+    float *input_vec = sycl::malloc_shared<float>(
+        kCols, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL2));
     assert(input_vec);
-    for (int j = 0; j < COLS; j++) input_vec[j] = rand() % 10;
+    for (int j = 0; j < kCols; j++) input_vec[j] = rand() % 10;
 
     // allocate memory and initialize for output vector
-    auto output_vec = sycl::malloc_shared<float>(
-        ROWS, q,
+    float *output_vec = sycl::malloc_shared<float>(
+        kRows, q,
         sycl::ext::intel::experimental::property::usm::buffer_location(kBL1));
     assert(output_vec);
-    for (int i = 0; i < ROWS; i++) output_vec[i] = 0.0f;
+    for (int i = 0; i < kRows; i++) output_vec[i] = 0.0f;
 
     // Compute expected result
-    float expected[ROWS];
-    for (int i = 0; i < ROWS; i++) {
+    float expected[kRows];
+    for (int i = 0; i < kRows; i++) {
       expected[i] = 0.0f;
-      for (int j = 0; j < COLS; j++) {
-        expected[i] += weight[i * COLS + j] * input_vec[j];
+      for (int j = 0; j < kCols; j++) {
+        expected[i] += weight[i * kCols + j] * input_vec[j];
       }
     }
 
     // run kernel DotProductIP
     auto event1 = q.single_task(DotProductIP{input_vec, output_vec});
     // write pointers to each row to the kernels via host pipe
-    for (int i = 0; i < ROWS; i++) {
-      Pipe2DotProductIP::write(q, weight + i * COLS);
+    for (int i = 0; i < kRows; i++) {
+      Pipe2DotProductIP::write(q, weight + i * kCols);
     }
     event1.wait();
     // verify the result
-    success = check_result(output_vec, expected, ROWS);
+    success = CheckResult(output_vec, expected, kRows);
 
     // reinitialize the output vector and run kernel AnnotatedPtrIP
-    for (int j = 0; j < COLS; j++) output_vec[j] = 0.0f;
+    for (int j = 0; j < kCols; j++) output_vec[j] = 0.0f;
     auto event2 = q.single_task(AnnotatedPtrIP{input_vec, output_vec});
     // write pointers to each row to the kernels via host pipe
-    for (int i = 0; i < ROWS; i++) {
-      Pipe2AnnotatedPtrIP::write(q, weight + i * COLS);
+    for (int i = 0; i < kRows; i++) {
+      Pipe2AnnotatedPtrIP::write(q, weight + i * kCols);
     }
     event2.wait();
     // verify the result
-    success &= check_result(output_vec, expected, ROWS);
+    success &= CheckResult(output_vec, expected, kRows);
 
     sycl::free(input_vec, q);
     sycl::free(output_vec, q);
