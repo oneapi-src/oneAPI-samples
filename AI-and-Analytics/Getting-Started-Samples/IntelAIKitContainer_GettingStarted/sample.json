@@ -1,7 +1,7 @@
 {
   "guid": "0F95DA9E-0A5D-4CF2-B791-885B09675004",
   "name": "Intel(R) AI Analytics Toolkit (AI Kit) Container Getting Started",
-  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+  "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
   "description": "This sample illustrates how to utilize the oneAPI AI Kit container.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
