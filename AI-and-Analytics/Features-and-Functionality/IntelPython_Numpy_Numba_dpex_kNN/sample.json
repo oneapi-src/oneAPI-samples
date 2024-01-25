@@ -1,7 +1,7 @@
 {
   "guid": "20ED32F3-671E-4710-A857-2821DB56CC22",
   "name": "Intel® Python NumPy vs Numba_dpex",
-  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+  "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
   "description": "This sample shows how to achieve the same accuracy of the k-NN model classification while using numpy, numba and numba_dpex.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
