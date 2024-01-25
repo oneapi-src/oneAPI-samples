@@ -169,12 +169,12 @@ struct split_annotated_type {
 // Wrapper function that allocates USM host memory with compile-time properties
 // and returns annotated_ptr
 template <typename T>
-T alloc_annotated(size_t count, const sycl::queue &syclQueue,
-                  sycl::usm::alloc usmKind = sycl::usm::alloc::host) {
+T alloc_annotated(size_t count, const sycl::queue &q,
+                  sycl::usm::alloc usm_kind = sycl::usm::alloc::host) {
   auto ann_ptr = sycl::ext::oneapi::experimental::aligned_alloc_annotated<
       typename split_annotated_type<T>::raw_type,
       typename split_annotated_type<T>::properties>(
-      split_annotated_type<T>::alignment, count, syclQueue, usmKind);
+      split_annotated_type<T>::alignment, count, q, usm_kind);
 
   if (ann_ptr.get() == nullptr) {
     std::cerr << "Memory allocation returns null" << std::endl;
