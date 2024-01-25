@@ -1,7 +1,7 @@
 {
     "guid": "0A887217-5621-4C8D-9418-17558088698B",
     "name": "Intel® Extension for TensorFlow* BF16 Inference",
-    "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
+    "categories": ["Toolkit/oneAPI AI And Analytics/Features and Functionality"],
     "description": "This sample illustrates how to inference a TensorFlow model using Advanced Matrix Extensions Bfloat16",
     "builder": ["cli"],
     "languages": [{"python":{}}],
