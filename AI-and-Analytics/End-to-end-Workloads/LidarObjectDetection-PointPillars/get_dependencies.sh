@@ -23,14 +23,10 @@ export OpenCLHeadersCpp_DIR=$PWD/OpenCL-CLHPP/build/OpenCLHeadersCpp
 
 # Install OpenVINO 2023.1.0 and Boost libraries
 wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-gpg --no-default-keyring --keyring INTEL-SW-PRODUCTS-KEYRING.GPG --import GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-gpg --no-default-keyring --keyring INTEL-SW-PRODUCTS-KEYRING.GPG --export > INTEL-SW-PRODUCTS.GPG
-mv INTEL-SW-PRODUCTS.GPG /etc/apt/trusted.gpg.d/
+apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 
-#apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-#rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-
-echo "deb https://apt.repos.intel.com/openvino/2023 ubuntu22 main" | sudo tee /etc/apt/sources.list.d/intel-openvino-2023.list
+echo "deb https://apt.repos.intel.com/openvino/2023 ubuntu22 main" | tee /etc/apt/sources.list.d/intel-openvino-2023.list
 
 apt update
 apt -y install openvino-2023.1.0 libboost-all-dev
