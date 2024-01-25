@@ -1,7 +1,7 @@
 {
   "guid": "91B5893E-028B-47BC-9D84-395A60CC1B33",
   "name": "Intel PyTorch GPU Inference Optimization with AMP",
-  "categories": ["Toolkit/oneAPI AI And Analytics/AI Features and Functionality"],
+  "categories": ["Toolkit/oneAPI AI And Analytics/Features and Functionality"],
   "description": "This sample illustrates how to use AMP BFLOAT16 in PyTorch on Intel dGPU",
   "builder": ["cli"],
   "languages": [{"python":{}}],
