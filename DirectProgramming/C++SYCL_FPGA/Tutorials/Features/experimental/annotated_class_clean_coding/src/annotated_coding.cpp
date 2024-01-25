@@ -30,7 +30,7 @@ struct MyIP {
   }
 };
 
-bool checkResult(int *arr, int size) {
+bool CheckResult(int *arr, int size) {
   bool passed = true;
   for (int i = 0; i < size; i++) {
     int golden = 2 * i;
@@ -43,7 +43,7 @@ bool checkResult(int *arr, int size) {
   return passed;
 }
 
-bool runWithUsmMalloc(sycl::queue &q) {
+bool RunWithUsmMalloc(sycl::queue &q) {
   // Create and initialize the host arrays
   constexpr int kN = 8;
   std::cout
@@ -63,14 +63,12 @@ bool runWithUsmMalloc(sycl::queue &q) {
   }
 
   q.single_task(MyIP{array_a, kN}).wait();
-  bool passed = checkResult(array_a, kN);
-  if (passed) {
-  }
+  bool passed = CheckResult(array_a, kN);
   sycl::free(array_a, q);
   return passed;
 }
 
-bool runWithAnnotatedAlloc(sycl::queue &q) {
+bool RunWithAnnotatedAlloc(sycl::queue &q) {
   // Create and initialize the host arrays
   constexpr int kN = 8;
   std::cout << "using fpga_tools::alloc_annotated to allocate a block of "
@@ -87,7 +85,7 @@ bool runWithAnnotatedAlloc(sycl::queue &q) {
   }
 
   q.single_task(MyIP{array_a, kN}).wait();
-  bool passed = checkResult(array_a, kN);
+  bool passed = CheckResult(array_a, kN);
   sycl::free(array_a, q);
   return passed;
 }
@@ -112,8 +110,8 @@ int main(void) {
               << q.get_device().get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
-    passed = runWithUsmMalloc(q);
-    passed &= runWithAnnotatedAlloc(q);
+    passed = RunWithUsmMalloc(q);
+    passed &= RunWithAnnotatedAlloc(q);
 
     if (passed) {
       std::cout << "PASSED: all kernel results are correct\n";
