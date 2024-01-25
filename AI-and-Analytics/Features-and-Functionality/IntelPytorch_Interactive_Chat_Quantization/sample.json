@@ -19,8 +19,7 @@
           ],
           "id": "ipex_chat_quantization_py",
           "steps": [
-            "python IntelPytorch_Interactive_Chat_Quantization.py < insert.txt",
-            "jupyter nbconvert --to notebook --execute IntelPytorch_Interactive_Chat_Quantization.ipynb" 
+            "python IntelPytorch_Interactive_Chat_Quantization.py < insert.txt"
            ]
       }
     ]
