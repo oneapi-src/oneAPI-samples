@@ -1,7 +1,7 @@
 {
  "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
  "name": "Intel® Neural Compressor Accelerate Inference with Intel® Optimization for TensorFlow*",
- "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+ "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
  "description": "This sample illustrates how to run Intel® Neural Compressor to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
  "languages": [{"python":{}}],
  "dependencies": ["tensorflow","neural-compressor"],
