@@ -72,91 +72,91 @@ class ID_VersionCSR;
 using VersionCSR =
     sycl::ext::intel::experimental::pipe<ID_VersionCSR, int, 0, CsrProperties>;
 
-constexpr int NormalizeFactor = 1 << conv2d::kBitsPerChannel;
-
 /// @brief Handle pixels at the edge of the input image by reflecting them.
-/// @param[in] sRow current row in stencil
-/// @param[in] sCol current column in stencil
-/// @param[in] row row coordinate of pixel in the center of the stencil
-/// @param[in] col column coordinate of pixel in the center of the stencil
+/// @param[in] w_row current row in window
+/// @param[in] w_col current column in window
+/// @param[in] row row coordinate of pixel in the center of the window
+/// @param[in] col column coordinate of pixel in the center of the window
 /// @param[in] rows total rows in input image
 /// @param[in] cols total columns in input image
-/// @param[out] rWindow row of stencil to select
-/// @param[out] cWindow column of stencil to select
-void saturateWindowCoordinates(short sRow, short sCol, short row, short col,
-                               short rows, short cols, short &rWindow,
-                               short &cWindow) {
+/// @param[out] r_select row of window to select
+/// @param[out] c_select column of window to select
+void SaturateWindowCoordinates(short w_row, short w_col, short row, short col,
+                               short rows, short cols, short &r_select,
+                               short &c_select) {
   // logic to deal with image borders: border pixel duplication
-  rWindow = sRow;
-  int rDiff = sRow - (conv2d::kWindowSize / 2) + row;
+  r_select = w_row;
+  int rDiff = w_row - (conv2d::kWindowSize / 2) + row;
   if (rDiff < 0) {
-    rWindow = (conv2d::kWindowSize / 2) - row;
+    r_select = (conv2d::kWindowSize / 2) - row;
   }
   if (rDiff >= rows) {
-    rWindow = (conv2d::kWindowSize / 2) + ((rows - 1) - row);
+    r_select = (conv2d::kWindowSize / 2) + ((rows - 1) - row);
   }
 
-  cWindow = sCol;
-  int cDiff = sCol - (conv2d::kWindowSize / 2) + col;
+  c_select = w_col;
+  int cDiff = w_col - (conv2d::kWindowSize / 2) + col;
   if (cDiff < 0) {
-    cWindow = (conv2d::kWindowSize / 2) - col;
+    c_select = (conv2d::kWindowSize / 2) - col;
   }
   if (cDiff >= cols) {
-    cWindow = (conv2d::kWindowSize / 2) + ((cols - 1) - col);
+    c_select = (conv2d::kWindowSize / 2) + ((cols - 1) - col);
   }
 }
 
-/// @brief Window function that performs a 2D Convolution in a stencil framework
-/// @param row y-coordinate of pixel at the center of the stencil window
-/// @param col x-coordinate of pixel at the center of the stencil window
+/// @brief Window function that performs a 2D Convolution in a line buffer
+/// framework
+/// @param row y-coordinate of pixel at the center of the window
+/// @param col x-coordinate of pixel at the center of the window
 /// @param rows total rows in input image
 /// @param cols total columns in input image
 /// @param buffer Window of pixels from input image
 /// @param coefficients
 /// @return pixel value to stream out
-conv2d::PixelType convolutionFunction(
+conv2d::PixelType ConvolutionFunction(
     short row, short col, short rows, short cols, conv2d::PixelType *buffer,
-    const std::array<conv2d::WeightType,
-                     conv2d::kWindowSize * conv2d::kWindowSize>
+    const std::array<float, conv2d::kWindowSize * conv2d::kWindowSize>
         coefficients) {
   float sum = 0.0f;
 #pragma unroll
-  for (int sRow = 0; sRow < conv2d::kWindowSize; sRow++) {
+  for (int w_row = 0; w_row < conv2d::kWindowSize; w_row++) {
 #pragma unroll
-    for (int sCol = 0; sCol < conv2d::kWindowSize; sCol++) {
-      short cWindow, rWindow;
+    for (int w_col = 0; w_col < conv2d::kWindowSize; w_col++) {
+      short c_select, r_select;
 
       // handle the case where the center of the window is at the image edge.
       // In this design, simply 'reflect' pixels that are already in the
       // window.
-      saturateWindowCoordinates(sRow, sCol,  //
-                                row, col,    //
-                                rows, cols,  //
-                                rWindow, cWindow);
-      conv2d::PixelType pixel = buffer[cWindow + rWindow * conv2d::kWindowSize];
+      SaturateWindowCoordinates(w_row, w_col,  //
+                                row, col,      //
+                                rows, cols,    //
+                                r_select, c_select);
+      conv2d::PixelType pixel =
+          buffer[c_select + r_select * conv2d::kWindowSize];
 
-      constexpr float normalization_factor = (1 << conv2d::kBitsPerChannel);
+      constexpr float kNormalizationFactor = (1 << conv2d::kBitsPerChannel);
 
       // converting `pixel` to a floating-point value uses lots of FPGA
       // resources. If your expected coefficients have a narrow range, it will
       // be worthwhile to convert these operations to fixed-point.
-      float normalizedPixel = (float)pixel / normalization_factor;
+      float normalized_pixel = (float)pixel / kNormalizationFactor;
 
-      float normalizedWeight = coefficients[sCol + sRow * conv2d::kWindowSize];
+      float normalized_coeff =
+          coefficients[w_col + w_row * conv2d::kWindowSize];
 
-      sum += normalizedPixel * normalizedWeight;
+      sum += normalized_pixel * normalized_coeff;
     }
   }
 
   // map range [0, 1.0) to [0, 1<<kBitsPerChannel)
-  // conv2d::PixelType retVal = sum * (float)(1 << conv2d::kBitsPerChannel);
+  // conv2d::PixelType return_val = sum * (float)(1 << conv2d::kBitsPerChannel);
 
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
-  constexpr int kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType retVal =
-      (int16_t)kOutputOffset + (int16_t)(sum * (float)(kOutputOffset));
+  constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
+  conv2d::PixelType return_val = (conv2d::PixelType)kOutputOffset +
+                                 (conv2d::PixelType)(sum * (kOutputOffset));
 
-  return retVal;
+  return return_val;
 }
 
 //////////////////////////////////////////////////////
@@ -212,8 +212,7 @@ struct Convolution2d {
   // confusion. Since kernel are a kernel argument, kernel can be specified at
   // runtime. The coefficients can only be updated by stopping the kernel and
   // re-starting it.
-  std::array<conv2d::WeightType, conv2d::kWindowSize * conv2d::kWindowSize>
-      coeffs;
+  std::array<float, conv2d::kWindowSize * conv2d::kWindowSize> coeffs;
 
   void operator()() const {
     // Publish kernel version so that other IPs can poll it
@@ -222,57 +221,57 @@ struct Convolution2d {
     // This instance of the line buffer will store previously read pixels so
     // that they can be operated on in a local filter. The filter is invoked
     // below in the loop.
-    linebuffer2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
-                               conv2d::kWindowSize, conv2d::kMaxCols,
-                               conv2d::kParallelPixels>
+    line_buffer_2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
+                                 conv2d::kWindowSize, conv2d::kMaxCols,
+                                 conv2d::kParallelPixels>
         myLineBuffer(rows, cols);
 
-    bool keepGoing = true;
+    bool keep_going = true;
     bool bypass = true;
 
     [[intel::initiation_interval(1)]]  //
-    while (keepGoing) {
+    while (keep_going) {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.
-      bool didReadBeat = false;
-      conv2d::GreyScaleBeat newBeat = PipeIn::read(didReadBeat);
+      bool did_read_beat = false;
+      conv2d::GreyScaleBeat new_beat = PipeIn::read(did_read_beat);
 
       // the bypass signal lets the user disable the line buffer processing.
-      bool didReadBypass = false;
-      bool shouldBypass = BypassCSR::read(didReadBypass);
+      bool did_read_bypass = false;
+      bool should_bypass = BypassCSR::read(did_read_bypass);
 
       // the stop signal lets the user instruct the kernel to halt so that new
       // coefficients can be read.
-      bool didReadStop = false;
-      bool shouldStop = StopCSR::read(didReadStop);
+      bool did_read_stop = false;
+      bool should_stop = StopCSR::read(did_read_stop);
 
-      if (didReadBypass) {
-        bypass = shouldBypass;
+      if (did_read_bypass) {
+        bypass = should_bypass;
       }
 
-      if (didReadBeat) {
-        conv2d::GreyScaleBeat outputBeat;
+      if (did_read_beat) {
+        conv2d::GreyScaleBeat output_beat;
         if (bypass) {
-          outputBeat = newBeat;
+          output_beat = new_beat;
         } else {
           bool sop, eop;
 
-          // Call `filter()` function on `LineBuffer2d` object. This inserts a
-          // new pixel into the linebuffer, and runs the user-provided window
-          // function (`convolutionFunction()`). The additional argument
-          // `coeffs` is passed to `convolutionFunction()`. The return value of
-          // `filter()` is the pixel data that we should propagate on to the
+          // Call `Filter()` function on `LineBuffer2d` object. This inserts a
+          // new pixel into the line buffer, and runs the user-provided window
+          // function (`ConvolutionFunction()`). The additional argument
+          // `coeffs` is passed to `ConvolutionFunction()`. The return value of
+          // `Filter()` is the pixel data that we should propagate on to the
           // next link in the processing chain.
-          conv2d::GreyPixelBundle outputBundle =
-              myLineBuffer.filter<convolutionFunction>(
-                  newBeat.data, newBeat.sop, newBeat.eop, sop, eop, coeffs);
-          outputBeat = conv2d::GreyScaleBeat(outputBundle, sop, eop, 0);
+          conv2d::GreyPixelBundle output_bundle =
+              myLineBuffer.Filter<ConvolutionFunction>(
+                  new_beat.data, new_beat.sop, new_beat.eop, sop, eop, coeffs);
+          output_beat = conv2d::GreyScaleBeat(output_bundle, sop, eop, 0);
         }
-        PipeOut::write(outputBeat);
+        PipeOut::write(output_beat);
       }
 
-      if (didReadStop) {
-        keepGoing = !shouldStop;
+      if (did_read_stop) {
+        keep_going = !should_stop;
       }
     }
   }

@@ -39,31 +39,31 @@ namespace vvp_stream_adapters {
 /// @param[in] cols Image columns (width)
 /// @param in_img Pointer to a buffer containing a single image to pass to your
 /// oneAPI kernel.
-/// @param endPixel Optional parameter that lets you simulate a defective video
+/// @param end_pixel Optional parameter that lets you simulate a defective video
 /// frame, by ending the stream of pixels prematurely.
 /// @return `true` after successfully writing the input image to a SYCL pipe.
 template <typename PixelPipe, typename PixelType>
-bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
-                      int endPixel = -1) {
-  if (endPixel == -1) endPixel = rows * cols;
+bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
+                      int end_pixel = -1) {
+  if (end_pixel == -1) end_pixel = rows * cols;
 
-  if (endPixel != rows * cols)
-    std::cout << "INFO: writeFrameToPipe: will end frame early, after "
-              << endPixel << " pixels." << std::endl;
+  if (end_pixel != rows * cols)
+    std::cout << "INFO: WriteFrameToPipe: will end frame early, after "
+              << end_pixel << " pixels." << std::endl;
 
   ///////////////////////////////////////
   // Extract parameters from PixelPipe
   ///////////////////////////////////////
 
   // the payload of PixelPipe should be a StreamingBeat
-  using StreamingBeatType = typename extract_pipe_type<PixelPipe>::value_type;
+  using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
   // DataBundle
-  using DataBundleType = beat_payload_t<PixelPipe>;
+  using DataBundleType = BeatPayload<PixelPipe>;
   constexpr int kPixelsInParallel =
-      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
+  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
       DataBundleType>::BundlePayloadT;
 
   // sanity check
@@ -80,8 +80,8 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   std::cout << "INFO: Storing data to pipe with " << kPixelsInParallel
             << " pixels in parallel. " << std::endl;
 
-  for (int i_base = 0; i_base < endPixel; i_base += kPixelsInParallel) {
-    DataBundleType inPixelBundle = {};
+  for (int i_base = 0; i_base < end_pixel; i_base += kPixelsInParallel) {
+    DataBundleType in_pixel_bundle = {};
     // sop at the beginning of each frame
     bool sop = (i_base == 0);
     // eop at the end of each line
@@ -94,24 +94,23 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
       PixelType subpixel;  // TODO: figure out what to do with structs
       if (i < (rows * cols)) {
         subpixel = in_img[i];
-        inPixelBundle[i_subpixel] = subpixel;
+        in_pixel_bundle[i_subpixel] = subpixel;
       } else {
         empty++;
       }
     }
 
     // handle different combinations of usePackets and useEmpty
-    if constexpr (beat_use_empty<PixelPipe>() &&
-                  beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle, sop, eop, empty);
+    if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle, sop, eop, empty);
       PixelPipe::write(q, in_beat);
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle, sop, eop);
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle, sop, eop);
       PixelPipe::write(q, in_beat);
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         !beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle);
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         !BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle);
       PixelPipe::write(q, in_beat);
     } else {
       std::cerr << "ERROR: Invalid beat parameterization." << std::endl;
@@ -126,7 +125,7 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 /// `out_img`. If this function detects an un-expected start-of-packet signal,
 /// it will print a note and write the new frame over the previous partial
 /// frame. It will return once it has read a complete frame, so if your design
-/// does not completely output a frame, the `readFrameFromPipe()` function will
+/// does not completely output a frame, the `ReadFrameFromPipe()` function will
 /// hang.
 /// @tparam PixelPipe The pipe from which pixels will be read. This pipe's
 /// payload should be a `StreamingBeat` templated on a `DataBundle`, which is
@@ -142,21 +141,21 @@ bool writeFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 /// before the current frame
 /// @return `false` if the packet reader ends in an undefined state
 template <typename PixelPipe, typename PixelType>
-bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
+bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
                        bool &sidebands_ok, int &defective_frames) {
   ///////////////////////////////////////
   // Extract parameters from PixelPipe
   ///////////////////////////////////////
 
   // the payload of PixelPipe should be a StreamingBeat
-  using StreamingBeatType = typename extract_pipe_type<PixelPipe>::value_type;
+  using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
   // DataBundle
-  using DataBundleType = beat_payload_t<PixelPipe>;
+  using DataBundleType = BeatPayload<PixelPipe>;
   constexpr int kPixelsInParallel =
-      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
+  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
       DataBundleType>::BundlePayloadT;
 
   // sanity check
@@ -195,19 +194,18 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     DataBundleType outBundle;
 
     // handle different combinations of usePackets and useEmpty
-    if constexpr (beat_use_empty<PixelPipe>() &&
-                  beat_use_packets<PixelPipe>()) {
+    if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
       sop_calc = out_beat.sop;
       eop_calc = out_beat.eop;
       empty_calc = out_beat.empty;
       outBundle = out_beat.data;
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         beat_use_packets<PixelPipe>()) {
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         BeatUsePackets<PixelPipe>()) {
       sop_calc = out_beat.sop;
       eop_calc = out_beat.eop;
       outBundle = out_beat.data;
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         !beat_use_packets<PixelPipe>()) {
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         !BeatUsePackets<PixelPipe>()) {
       sop_calc = sop_expected;
       eop_calc = eop_expected;
       outBundle = out_beat.data;
@@ -236,7 +234,7 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     if (!empty_itr) {
       char buf[256];
       snprintf(buf, 256,
-               "INFO: readFrameFromPipe(): [i = %d] - expect empty=%d. saw "
+               "INFO: ReadFrameFromPipe(): [i = %d] - expect empty=%d. saw "
                "empty=%d.\n",
                i_base, empty_expected, empty_calc);
       std::cout << buf << std::endl;
@@ -247,7 +245,7 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     if (!sop_eop_itr) {
       char buf[256];
       snprintf(buf, 256,
-               "INFO: readFrameFromPipe(): [i = %d] - expect sop=%s eop=%s. "
+               "INFO: ReadFrameFromPipe(): [i = %d] - expect sop=%s eop=%s. "
                "saw sop=%s "
                "eop=%s.",
                i_base, (sop_expected ? "TRUE" : "FALSE"),
@@ -282,20 +280,20 @@ bool readFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
 /// @param[in] val the dummy value to write
 /// @return `true` after successfully writing the input image to a SYCL pipe.
 template <typename PixelPipe, typename PixelType>
-bool writeDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
+bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
   ///////////////////////////////////////
   // Extract parameters from PixelPipe
   ///////////////////////////////////////
 
   // the payload of PixelPipe should be a StreamingBeat
-  using StreamingBeatType = typename extract_pipe_type<PixelPipe>::value_type;
+  using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
   // DataBundle
-  using DataBundleType = beat_payload_t<PixelPipe>;
+  using DataBundleType = BeatPayload<PixelPipe>;
   constexpr int kPixelsInParallel =
-      fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::extractDataBundleType<
+      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
+  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
       DataBundleType>::BundlePayloadT;
 
   // sanity check
@@ -310,7 +308,7 @@ bool writeDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
 
   int written_dummy_beats = 0;
   for (int i_base = 0; i_base < len; i_base += kPixelsInParallel) {
-    DataBundleType inPixelBundle = {};
+    DataBundleType in_pixel_bundle = {};
     int empty = 0;
     bool sop = true;
     bool eop = true;
@@ -318,23 +316,22 @@ bool writeDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
     // construct beat with n>=1 parallel pixels
     for (int i_subpixel = 0; i_subpixel < kPixelsInParallel; i_subpixel++) {
       PixelType subpixel = val;
-      inPixelBundle[i_subpixel] = subpixel;
+      in_pixel_bundle[i_subpixel] = subpixel;
     }
 
     // handle different combinations of usePackets and useEmpty
-    if constexpr (beat_use_empty<PixelPipe>() &&
-                  beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle, sop, eop, empty);
+    if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle, sop, eop, empty);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle, sop, eop);
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle, sop, eop);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
-    } else if constexpr (!beat_use_empty<PixelPipe>() &&
-                         !beat_use_packets<PixelPipe>()) {
-      StreamingBeatType in_beat(inPixelBundle);
+    } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
+                         !BeatUsePackets<PixelPipe>()) {
+      StreamingBeatType in_beat(in_pixel_bundle);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
     } else {

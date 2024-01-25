@@ -67,7 +67,7 @@ Performance results are based on testing conducted with a pre-release version of
 | 4               | 3x3               | `float`          | 10-bit Integer | 355.63                | 7315  |  36        | 17
 | 8               | 3x3               | `float`          | 10-bit Integer | 338.23                | 14394 |  72        | 18
 
-> **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `convolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
+> **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `ConvolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
 
 ## Key Implementation Details
 
@@ -140,12 +140,12 @@ struct Convolution2d {
 
           // Call `filter()` function on `LineBuffer2d` object. This inserts a
           // new pixel into the linebuffer, and runs the user-provided window
-          // function (`convolutionFunction()`). The additional argument
-          // `coeffs` is passed to `convolutionFunction()`. The return value of
+          // function (`ConvolutionFunction()`). The additional argument
+          // `coeffs` is passed to `ConvolutionFunction()`. The return value of
           // `filter()` is the pixel data that we should propagate on to the
           // next link in the processing chain.
           conv2d::GreyPixelBundle outputBundle =
-              myLineBuffer.filter<convolutionFunction>(
+              myLineBuffer.filter<ConvolutionFunction>(
                   newBeat.data, newBeat.sop, newBeat.eop, sop, eop, coeffs);
           outputBeat = conv2d::GreyScaleBeat(outputBundle, sop, eop, 0);
         }
@@ -175,40 +175,46 @@ OutputPixelType WindowFunction(short row, short col, short rows,
 You can use this line buffer to implement a convolution operation by specifying a window function like this:
 
 ```c++
-conv2d::PixelType convolutionFunction(short row, short col, short rows,
-                                      short cols, conv2d::PixelType *buffer,
-                                      const conv2d::WeightType *kernel) {
+conv2d::PixelType ConvolutionFunction(
+    short row, short col, short rows, short cols, conv2d::PixelType *buffer,
+    const std::array<float, conv2d::kWindowSize * conv2d::kWindowSize>
+        coefficients) {
   float sum = 0.0f;
 #pragma unroll
-  for (int sRow = 0; sRow < conv2d::kWindowSize; sRow++) {
+  for (int w_row = 0; w_row < conv2d::kWindowSize; w_row++) {
 #pragma unroll
-    for (int sCol = 0; sCol < conv2d::kWindowSize; sCol++) {
-      short cWindow, rWindow;
+    for (int w_col = 0; w_col < conv2d::kWindowSize; w_col++) {
+      short c_select, r_select;
 
-      // handle the case where the center of the window is at the image edge. 
+      // handle the case where the center of the window is at the image edge.
       // In this design, simply 'reflect' pixels that are already in the window.
-      saturateWindowCoordinates(sRow, sCol, 
-                                row, col,   
-                                rows, cols, 
-                                rWindow, cWindow);
+      SaturateWindowCoordinates(w_row, w_col, 
+                                row, col,     
+                                rows, cols,   
+                                r_select, c_select);
       conv2d::PixelType pixel =
-          buffer[cWindow + rWindow * conv2d::kWindowSize];
+          buffer[c_select + r_select * conv2d::kWindowSize];
 
-      constexpr float normalization_factor = (1 << conv2d::kBitsPerChannel);
-      float normalizedPixel = (float)pixel / normalization_factor;
+      constexpr float kNormalizationFactor = (1 << conv2d::kBitsPerChannel);
 
-      float normalizedWeight = kernel[sCol + sRow * conv2d::kWindowSize];
+      // converting `pixel` to a floating-point value uses lots of FPGA
+      // resources. If your expected coefficients have a narrow range, it will
+      // be worthwhile to convert these operations to fixed-point.
+      float normalized_pixel = (float)pixel / kNormalizationFactor;
 
-      sum += normalizedPixel * normalizedWeight;
+      float normalized_coeff =
+          coefficients[w_col + w_row * conv2d::kWindowSize];
+
+      sum += normalized_pixel * normalized_coeff;
     }
   }
 
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
-  constexpr int kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType retVal =
-      (int16_t)kOutputOffset + (int16_t)(sum * (float)(kOutputOffset));
+  constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
+  conv2d::PixelType return_val = (conv2d::PixelType)kOutputOffset +
+                                 (conv2d::PixelType)(sum * (kOutputOffset));
 
-  return retVal;
+  return return_val;
 }
 ```
 
@@ -230,13 +236,13 @@ For convenience, you may use the header file included in `quartus_project_files/
 
 > ⚠️ Note for reviewer: This will go in a separate reference design in the future, but I want to get conv2d out since there are many customers asking for it already.
 
-In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `writeFrameToPipe()` and `readFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
+In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `WriteFrameToPipe()` and `ReadFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
 
-`writeFrameToPipe()` writes the contents of an array of pixels into a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a video/vision processing (VVP) FPGA IP would, so you can test that your IP complies with the VVP standard. 
+`WriteFrameToPipe()` writes the contents of an array of pixels into a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a video/vision processing (VVP) FPGA IP would, so you can test that your IP complies with the VVP standard. 
 
-`readFrameFromPipe()` consumes groups of pixels from a SYCL pipe and writes the pixels sequentially to a block of memory. Like `writeFrameToPipe()`, this function also detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It parses start-of-packet and end-of-packet sideband signals like a video/vision processing (VVP) FPGA IP would, and informs you of any errors via its output arguments. If this function detects an un-expected start-of-packet signal, it will print a note and write the new frame over the previous partial frame. It will return once it has read a complete frame, so if your design does not completely output a frame, the `readFrameFromPipe()` function will hang. 
+`ReadFrameFromPipe()` consumes groups of pixels from a SYCL pipe and writes the pixels sequentially to a block of memory. Like `WriteFrameToPipe()`, this function also detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It parses start-of-packet and end-of-packet sideband signals like a video/vision processing (VVP) FPGA IP would, and informs you of any errors via its output arguments. If this function detects an un-expected start-of-packet signal, it will print a note and write the new frame over the previous partial frame. It will return once it has read a complete frame, so if your design does not completely output a frame, the `ReadFrameFromPipe()` function will hang. 
 
-Finally, `writeDummyPixelsToPipe()` writes dummy pixels to a SYCL pipe to let you flush a kernel that buffers data. This function behaves similarly to `writeFrameToPipe()`, except that the pixels it writes always have both the `start-of-frame` and `end-of-line` signals high, so they will be easily identifiable in simulation waveforms.
+Finally, `WriteDummyPixelsToPipe()` writes dummy pixels to a SYCL pipe to let you flush a kernel that buffers data. This function behaves similarly to `WriteFrameToPipe()`, except that the pixels it writes always have both the `start-of-frame` and `end-of-line` signals high, so they will be easily identifiable in simulation waveforms.
 
 The following diagram illustrates how these functions adapt image data to pipes, and how they add and process sideband signals.
 
@@ -245,52 +251,51 @@ The following diagram illustrates how these functions adapt image data to pipes,
 The following code snippet demonstrates how you can use these functions to populate a pipe with image data before invoking a kernel, and how you can parse the output.
 
 ```c++
-bool testTinyFrameOnStencil(sycl::queue q) {
+bool TestTinyFrameOnStencil(sycl::queue q) {
+  constexpr int rows_small = 3;
+  constexpr int cols_small = 8;
 
-  // allocate a tiny image in memory
-  constexpr int rowsSmall = 3;
-  constexpr int colsSmall = 8;
+  constexpr int pixels_count = rows_small * cols_small;
 
-  constexpr int pixelsCount = rowsSmall * colsSmall;
-
-  conv2d::PixelType greyPixelsIn[] = {
+  conv2d::PixelType grey_pixels_in[] = {
       101, 201, 301, 401, 501, 601, 701, 801,  //
       102, 202, 302, 402, 502, 602, 702, 802,  //
       103, 203, 303, 403, 503, 603, 703, 803};
 
-  // place the image in a pipe
-  vvp_stream_adapters::writeFrameToPipe<InputImageStreamGrey>(
-      q, rowsSmall, colsSmall, greyPixelsIn);
+  vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
+      q, rows_small, cols_small, grey_pixels_in);
 
-  // add extra pixels to flush out the FIFO after all image frames 
-  // have been added
-  int dummyPixels = colsSmall * conv2d::kWindowSize;
-  vvp_stream_adapters::writeDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummyPixels, (uint16_t)99);
+  // extra pixels to flush out the FIFO
+  int dummy_pixels = cols_small * conv2d::kWindowSize;
+  vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
+      q, dummy_pixels, (uint16_t)69);
 
-  // invoke the kernel
-  sycl::event frameEvent = q.single_task<ID_Convolution2d>(
+  // disable bypass, since it's on by default
+  BypassCSR::write(q, false);
+
+  sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
-          (int)rowsSmall, (int)colsSmall, sobel_vertical});
+          (int)rows_small, (int)cols_small, identity_coeffs});
 
-  // place the output image into a buffer
-  conv2d::PixelType greyPixelsOut[pixelsCount];
-  bool sidebandsOk;
-  int defectiveFrames;
-  vvp_stream_adapters::readFrameFromPipe<OutputImageStreamGrey>(
-      q, rowsSmall, colsSmall, greyPixelsOut, sidebandsOk, defectiveFrames);
+  conv2d::PixelType grey_pixels_out[pixels_count];
+  bool sidebands_ok;
+  int defective_frames;
+  vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok,
+      defective_frames);
 
-  // verify that calculated output matches expected values
-  bool pixelsMatch = true;
-  for (int i = 0; i < pixelsCount; i++) {
-    pixelsMatch &= (greyPixelsIn[i] == greyPixelsOut[i]);
+  bool pixels_match = true;
+  for (int i = 0; i < pixels_count; i++) {
+    conv2d::PixelType grey_pixel_expected = <...>
+    pixels_match &= (grey_pixel_expected == grey_pixels_out[i]);
   }
 
-  // stop the kernel
-  StopCSR::write(true);
-  frameEvent.wait();
+  // Stop the kernel in case testbench wants to run again with different kernel
+  // arguments.
+  StopCSR::write(q, true);
+  e.wait();
 
-  return sidebandsOk & pixelsMatch;
+  return sidebands_ok & pixels_match;
 }
 ```
 
@@ -423,15 +428,15 @@ Launch kernels!
 Reading out frame 0
 Expect some unexpected start-of-packets as the kernel flushes its initial state.
 INFO: Reading data from pipe with 2 pixels in parallel.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 
 <More notes about unexpected start-of-packets...>
 
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
 INFO: convert to bmp type.
 Wrote convolved image ./output_0.bmp
 Compare with ../expected_sobel_0.bmp.
@@ -479,7 +484,7 @@ Check a defective frame followed by a good frame...
 
 Reading input image ../test_0.bmp
 INFO: convert to vvp type.
-INFO: writeFrameToPipe: will end frame early, after 2048 pixels.
+INFO: WriteFrameToPipe: will end frame early, after 2048 pixels.
 INFO: Storing data to pipe with 2 pixels in parallel.
 INFO: Storing data to pipe with 2 pixels in parallel. 
 INFO: Storing dummy pixels to pipe with 2 pixels in parallel. 
@@ -489,23 +494,23 @@ Info: Wrote 96 dummy streaming beats.
 Read out good frame (defective frame overwritten)
 Expect some unexpected start-of-packets as the kernel flushes its initial state, and the defective frame.
 INFO: Reading data from pipe with 2 pixels in parallel.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 
 <More notes about unexpected start-of-packets...>
 
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
 INFO: Saw unexpected start of packet; reset counters.
-INFO: readFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
 INFO: convert to bmp type.
 Wrote convolved image ./output_defect.bmp
 frame 'defect' passed

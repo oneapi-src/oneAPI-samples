@@ -13,26 +13,26 @@
 #include <sycl/ext/intel/prototype/pipes_ext.hpp>
 
 template <typename T>
-struct extract_value_type {
+struct ExtractValueType {
   typedef T value_type;
 };
 
 template <template <typename, typename...> typename X, typename T,
           typename... Args>
-struct extract_value_type<X<T, Args...>>  // specialization
+struct ExtractValueType<X<T, Args...>>  // specialization
 {
   typedef T value_type;
 };
 
 template <typename T>
-struct extract_pipe_type {
+struct ExtractPipeType {
   typedef T value_type;
 };
 
 template <template <class, class, int32_t, class, typename...> class PIPE_CLASS,
           class PIPE_NAME, class PIPE_DATA_T, int32_t PIPE_MIN_CAPACITY,
           class PIPE_PROPERTIES, typename... Args>
-struct extract_pipe_type<
+struct ExtractPipeType<
     PIPE_CLASS<PIPE_NAME, PIPE_DATA_T, PIPE_MIN_CAPACITY, PIPE_PROPERTIES,
                Args...>>  // specialization
 {
@@ -40,7 +40,7 @@ struct extract_pipe_type<
 };
 
 template <typename T>
-struct extract_streaming_beat_type {
+struct ExtractStreamingBeatType {
   typedef T value_type;
   static constexpr bool use_packets = false;
   static constexpr bool use_empty = false;
@@ -48,7 +48,7 @@ struct extract_streaming_beat_type {
 
 template <template <class, bool, bool> class BEAT_CLASS, class BEAT_DATA_T,
           bool BEAT_USE_PACKETS, bool BEAT_EMPTY>
-struct extract_streaming_beat_type<
+struct ExtractStreamingBeatType<
     BEAT_CLASS<BEAT_DATA_T, BEAT_USE_PACKETS, BEAT_EMPTY>>  // specialization
 {
   typedef BEAT_DATA_T value_type;
@@ -57,17 +57,17 @@ struct extract_streaming_beat_type<
 };
 
 template <typename PipeWithStreamingType>
-using beat_payload_t = typename extract_streaming_beat_type<
-    typename extract_pipe_type<PipeWithStreamingType>::value_type>::value_type;
+using BeatPayload = typename ExtractStreamingBeatType<
+    typename ExtractPipeType<PipeWithStreamingType>::value_type>::value_type;
 
 template <typename PipeWithStreamingType>
-constexpr bool beat_use_packets() {
-  return extract_streaming_beat_type<typename extract_pipe_type<
+constexpr bool BeatUsePackets() {
+  return ExtractStreamingBeatType<typename ExtractPipeType<
       PipeWithStreamingType>::value_type>::use_packets;
 }
 
 template <typename PipeWithStreamingType>
-constexpr bool beat_use_empty() {
-  return extract_streaming_beat_type<
-      typename extract_pipe_type<PipeWithStreamingType>::value_type>::use_empty;
+constexpr bool BeatUseEmpty() {
+  return ExtractStreamingBeatType<
+      typename ExtractPipeType<PipeWithStreamingType>::value_type>::use_empty;
 }

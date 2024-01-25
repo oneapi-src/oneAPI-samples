@@ -1,7 +1,7 @@
 //  Copyright (c) 2024 Intel Corporation
 //  SPDX-License-Identifier: MIT
 
-// linebuffer2d.hpp
+// line_buffer_2d.hpp
 
 #pragma once
 
@@ -9,14 +9,14 @@
 #include "data_bundle.hpp"
 #include "shift_reg.hpp"
 
-namespace linebuffer2d {
+namespace line_buffer_2d {
 
 #pragma pack(push, 1)
 // struct type to wrap a pixel type with sop and eop signals. Could use the
 // StreamingBeat type but this results in compilation failures due to
 // https://hsdes.intel.com/appstore/article/#/18034529956.
 template <typename PixelTypeIn>
-struct PixelWithSignals_Templated {
+struct PixelWithSignals_ {
   PixelTypeIn val;
   bool sop;
   bool eop;
@@ -29,9 +29,9 @@ template <typename PixelTypeIn, typename PixelTypeOut, short kStencilSize,
 class LineBuffer2d {
  public:
   // types used by LineBuffer2d
-  using StencilDataBundleIn =
+  using LineBufferDataBundleIn =
       fpga_tools::DataBundle<PixelTypeIn, kParallelPixels>;
-  using StencilDataBundleOut =
+  using LineBufferDataBundleOut =
       fpga_tools::DataBundle<PixelTypeOut, kParallelPixels>;
 
   // public members
@@ -43,7 +43,7 @@ class LineBuffer2d {
 
  private:
   // types used internally
-  using PixelWithSignals = PixelWithSignals_Templated<PixelTypeIn>;
+  using PixelWithSignals = PixelWithSignals_<PixelTypeIn>;
   using BundledPixels =
       fpga_tools::DataBundle<PixelWithSignals, kParallelPixels>;
   constexpr static short kRowWriteInit = (short)(0 - kStencilSize);
@@ -53,12 +53,12 @@ class LineBuffer2d {
   // initialize state variables
   ///////////////////////////////
   // infer parameterization of FIFO and register windows
-  constexpr static int ShifterCols = kStencilSize + kParallelPixels - 1;
+  constexpr static int kShifterCols = kStencilSize + kParallelPixels - 1;
 
   // line buffer
   [[intel::fpga_register]]  //
-  fpga_tools::ShiftReg2d<PixelWithSignals, kStencilSize, ShifterCols>
-      myShifter;
+  fpga_tools::ShiftReg2d<PixelWithSignals, kStencilSize, kShifterCols>
+      my_shifter;
 
   constexpr static int kFifoCols =
       (kMaxImgCols / kParallelPixels) + kStencilSize;
@@ -66,22 +66,22 @@ class LineBuffer2d {
 
   // Line buffer for image Data
   [[intel::fpga_memory]]  //
-  BundledPixels line_buffer_FIFO[kFifoCols][kFifoRows];
+  BundledPixels line_buffer_fifo[kFifoCols][kFifoRows];
 
-  short fifoIdx = 0;  // track top of FIFO
+  short fifo_idx = 0;  // track top of FIFO
   short fifo_wrap = cols / kParallelPixels;
 
   // If we have multiple pixels in parallel, we need to insert some dummy
   // pixels before the 'real data' so the output has the same alignment as
   // the input.
-  constexpr static short kBufferOffset = fpga_tools::min(
+  constexpr static short kBufferOffset = fpga_tools::Min(
       (short)((kParallelPixels - (short)(kStencilSize / 2))), kParallelPixels);
 
   constexpr static short kPreBufferSize = kParallelPixels + kBufferOffset;
 
   [[intel::fpga_register]]  //
   fpga_tools::DataBundle<PixelWithSignals, kPreBufferSize>
-      preBuffer;
+      pre_buffer;
 
   // separate the loop bound calculation so loop iterations are easier to
   // compute.
@@ -96,7 +96,7 @@ class LineBuffer2d {
  public:
   LineBuffer2d(short m_rows, short m_cols) : rows(m_rows), cols(m_cols) {}
 
-  /// @brief Callback function used by `filter` function. This function must
+  /// @brief Callback function used by `Filter` function. This function must
   /// accept the following parameters:
   /// @param[in] rows The total number of rows in the image being processed
   /// @param[in] cols The total number of columns in the image being processed
@@ -108,14 +108,14 @@ class LineBuffer2d {
   using WindowFunction = PixelTypeOut (*)(
       short rows, short cols, short row, short col,
       fpga_tools::ShiftReg2d<PixelTypeIn, kStencilSize, kStencilSize> pixels,
-      FunctionArgs_T... stencilArgs);
+      FunctionArgs_T... window_fn_args);
 
   /// @brief This function structures a sliding-window stencil function in a way
-  /// that is optimal for FPGAs. `filter()` inserts a new pixel into the
+  /// that is optimal for FPGAs. `Filter()` inserts a new pixel into the
   /// line buffer, and runs the user-provided window function. Any additional
   /// arguments you provide this function will be passed to your window function
   /// (in addition to the mandatory arguments it must accept). The return value
-  /// of `filter()` is the concatenation of the results of all the copies of
+  /// of `Filter()` is the concatenation of the results of all the copies of
   /// your window function.
   ///
   /// @paragraph Schematic
@@ -130,45 +130,47 @@ class LineBuffer2d {
   /// │ r ◄ e ◄ g ◄───────────────────────┴─Input  <br/>
   /// └───┴───┴───┘                                <br/>
   ///```                                           <br/>
-  /// @tparam windowFunction operation to perform on window. Must be a template
+  /// @tparam window_function operation to perform on window. Must be a template
   /// parameter rather than a function pointer due to SYCL.
-  /// @param[in] newPixels input data
-  /// @param[in] isNewFrame Set this to `true` if the pixel(s) you pass in
-  /// `newPixels` is/are at the start of a frame.
-  /// @param[in] isLineEnd Set this to `true` if the pixel(s) you pass in
-  /// `newPixels` is/are at the end of a line.
-  /// @param[out] startOfFrame This is set to `true` if the returned pixel(s)
+  /// @param[in] new_pixels input data
+  /// @param[in] is_new_frame Set this to `true` if the pixel(s) you pass in
+  /// `new_pixels` is/are at the start of a frame.
+  /// @param[in] is_line_end Set this to `true` if the pixel(s) you pass in
+  /// `new_pixels` is/are at the end of a line.
+  /// @param[out] start_of_frame This is set to `true` if the returned pixel(s)
   /// is/are at the start of a new frame.
-  /// @param[out] endOfLine This is set to `true` if the returned pixel(s)
+  /// @param[out] end_of_line This is set to `true` if the returned pixel(s)
   /// is/are at the end of a line.
-  /// @return filter result
-  template <auto(&windowFunction), typename... FunctionArgs_T>
-  StencilDataBundleOut filter(StencilDataBundleIn newPixels, bool isNewFrame,
-                              bool isLineEnd, bool &startOfFrame,
-                              bool &endOfLine, FunctionArgs_T... stencilArgs) {
+  /// @return Filter result
+  template <auto(&window_function), typename... FunctionArgs_T>
+  LineBufferDataBundleOut Filter(LineBufferDataBundleIn new_pixels, bool is_new_frame,
+                              bool is_line_end, bool &start_of_frame,
+                              bool &end_of_line,
+                              FunctionArgs_T... window_fn_args) {
     [[intel::fpga_register]]  //
-    BundledPixels newPixelsStructs;
+    BundledPixels new_pixels_structs;
 
 #pragma unroll
     for (int i = 0; i < kParallelPixels; i++) {
       // wrap each pixel value in a struct
-      PixelTypeIn newPixel = newPixels[i];
+      PixelTypeIn new_pixel = new_pixels[i];
 
       [[intel::fpga_register]]  //
-      PixelWithSignals pixelStruct{newPixel, isNewFrame, isLineEnd, empty};
-      newPixelsStructs[i] = pixelStruct;
+      PixelWithSignals pixel_struct{new_pixel, is_new_frame, is_line_end,
+                                    empty};
+      new_pixels_structs[i] = pixel_struct;
     }
 
-    preBuffer.template shiftMultiVals<kParallelPixels>(newPixelsStructs);
+    pre_buffer.template ShiftMultiVals<kParallelPixels>(new_pixels_structs);
 
     // grab the first `kParallelPixels` samples to push into the stencil
     [[intel::fpga_register]]  //
-    BundledPixels inputVal;
-    inputVal.template shiftMultiVals<kParallelPixels, kPreBufferSize>(
-        preBuffer);
+    BundledPixels input_val;
+    input_val.template ShiftMultiVals<kParallelPixels, kPreBufferSize>(
+        pre_buffer);
 
     [[intel::fpga_register]]  //
-    BundledPixels pixelColumn[kStencilSize];
+    BundledPixels pixel_column[kStencilSize];
 
     // load from FIFO to shift register
     //
@@ -181,17 +183,18 @@ class LineBuffer2d {
     // │ r ◄─e ◄─g ◄─────────────────Input
     // └───┴───┴───┘
 
-    fpga_tools::UnrolledLoop<kStencilSize>([&](auto stencilRow) {
-      if constexpr (stencilRow == (kStencilSize - 1)) {
-        pixelColumn[stencilRow] = inputVal;
+    // using UnrolledLoop enables if constexpr
+    fpga_tools::UnrolledLoop<kStencilSize>([&](auto stencil_row) {
+      if constexpr (stencil_row == (kStencilSize - 1)) {
+        pixel_column[stencil_row] = input_val;
       } else {
-        pixelColumn[stencilRow] = line_buffer_FIFO[fifoIdx][stencilRow];
+        pixel_column[stencil_row] = line_buffer_fifo[fifo_idx][stencil_row];
       }
     });
 
     // use this fix:
     // http://www.aerialmantis.co.uk/blog/2017/03/17/template-keywords/
-    myShifter.template shiftCols<kParallelPixels>(pixelColumn);
+    my_shifter.template ShiftCols<kParallelPixels>(pixel_column);
 
     // Continue processing through FIFOs
     //    ┌─────────────┐
@@ -202,34 +205,22 @@ class LineBuffer2d {
     //  └─┤ FIFO        ◄───┐
     //    └─────────────┘   │
     //                      └─Input
-    fpga_tools::UnrolledLoop<(kStencilSize - 1)>([&](auto fifoRow) {
-      if constexpr (fifoRow != (kStencilSize - 2)) {
-        line_buffer_FIFO[fifoIdx][fifoRow] = pixelColumn[fifoRow + 1];
+
+    // using UnrolledLoop enables if constexpr
+    fpga_tools::UnrolledLoop<(kStencilSize - 1)>([&](auto fifo_row) {
+      if constexpr (fifo_row != (kStencilSize - 2)) {
+        line_buffer_fifo[fifo_idx][fifo_row] = pixel_column[fifo_row + 1];
       } else {
-        line_buffer_FIFO[fifoIdx][(kStencilSize - 2)] = inputVal;
+        line_buffer_fifo[fifo_idx][(kStencilSize - 2)] = input_val;
       }
     });
 
-    // get the sop and eop signals from the pixel currently being processed
+    // Get the sop and eop signals from the pixel currently being processed
     constexpr int kStencilCenter = (kStencilSize - 1) / 2;
 
-    sop_curr = myShifter[kStencilCenter][kStencilCenter].sop;
-    eop_curr = myShifter[kStencilCenter][kStencilCenter].eop;
-    empty_curr = myShifter[kStencilCenter][kStencilCenter].empty;
-
-    // compute EOP/SOP by looking at the pixels that will be combined into the
-    // output
-    /*
-        sop_curr = false;
-        eop_curr = false;
-        empty_curr = kParallelPixels * sizeof(PixelTypeIn);
-    #pragma unroll
-        for (int i = 0; i < kParallelPixels; i++) {
-          sop_curr |= myShifter[kStencilCenter][kStencilCenter + i].sop;
-          eop_curr |= myShifter[kStencilCenter][kStencilCenter + i].eop;
-          empty_curr = 0;
-        }
-        */
+    sop_curr = my_shifter[kStencilCenter][kStencilCenter].sop;
+    eop_curr = my_shifter[kStencilCenter][kStencilCenter].eop;
+    empty_curr = my_shifter[kStencilCenter][kStencilCenter].empty;
 
     // SOP=1 corresponds with the current pixel having Row=0 and col=0.
     // EOP=1 corresponds with the NEXT pixel having row=row+1 and col=0;
@@ -238,50 +229,50 @@ class LineBuffer2d {
       col_write = 0;
     }
 
-    StencilDataBundleOut stencilResults;
+    LineBufferDataBundleOut window_results;
 
 #pragma unroll
-    for (int stencilIdx = 0; stencilIdx < kParallelPixels; stencilIdx++) {
-      PixelTypeIn shifterCopy[kStencilSize * kStencilSize];
+    for (int stencil_idx = 0; stencil_idx < kParallelPixels; stencil_idx++) {
+      PixelTypeIn shifter_copy[kStencilSize * kStencilSize];
 
-      short col_local = (col_write + stencilIdx);
+      short col_local = (col_write + stencil_idx);
 
-      // use the pixels in myShifter to generate a window to pass to
-      // windowFunction. This is where we could add some customization to
+      // Use the pixels in my_shifter to generate a window to pass to
+      // window_function. This is where we could add some customization to
       // change the 'edge' behaviour (e.g. what do we do when we are at column
       // 0). That is probably up to the user to decide though, so we just copy
-      // pixels from myShifter and let windowFunction decide how to handle
+      // pixels from my_shifter and let window_function decide how to handle
       // edges.
 
 #pragma unroll
-      for (int stencilRow = 0; stencilRow < kStencilSize; stencilRow++) {
+      for (int stencil_row = 0; stencil_row < kStencilSize; stencil_row++) {
 #pragma unroll
         for (int stencilCol = 0; stencilCol < kStencilSize; stencilCol++) {
-          shifterCopy[stencilCol + stencilRow * kStencilSize] =
-              myShifter[stencilRow][stencilCol + stencilIdx].val;
+          shifter_copy[stencilCol + stencil_row * kStencilSize] =
+              my_shifter[stencil_row][stencilCol + stencil_idx].val;
         }
       }
 
       // in-line this function on a copy of the appropriate shifter data
-      PixelTypeOut stencilResult = windowFunction(
-          row_write, col_local, rows, cols, shifterCopy, stencilArgs...);
-      stencilResults[stencilIdx] = stencilResult;
+      PixelTypeOut window_result = window_function(
+          row_write, col_local, rows, cols, shifter_copy, window_fn_args...);
+      window_results[stencil_idx] = window_result;
     }
 
     if ((row_write >= 0) && (col_write >= 0)) {
-      startOfFrame = sop_curr;
-      endOfLine = eop_curr;
+      start_of_frame = sop_curr;
+      end_of_line = eop_curr;
     } else {
-      startOfFrame = true;
-      endOfLine = true;
+      start_of_frame = true;
+      end_of_line = true;
     }
 
-    // increment fifo fifoIdx_prev = fifoIdx;
-    fifoIdx++;
-    if (fifoIdx == (fifo_wrap)) {
+    // increment fifo fifoIdx_prev = fifo_idx;
+    fifo_idx++;
+    if (fifo_idx == (fifo_wrap)) {
       // TODO: make the index reset depend on previous EOP read from input to
       // remove need to compare with fifo_wrap.
-      fifoIdx = (short)0;  // Reset Index
+      fifo_idx = (short)0;  // Reset Index
     }
 
     // update loop counter variables
@@ -289,23 +280,15 @@ class LineBuffer2d {
     if (col_loop == col_loop_bound) {
       col_loop = 0;
     }
-
-    // SOP=1 corresponds with the current pixel having Row=0 and col=0.
-    // EOP=1 corresponds with the NEXT pixel having row=row+1 and col=0;
-    // if (eop_curr) {
-    //   col_write = 0;
-    //   row_write++;
-    // }
-
     col_write += kParallelPixels;
-    // reset col_write and row_write when SOP and EOP appear
 
+    // reset col_write and row_write when SOP and EOP appear
     if (col_write >= cols) {
       col_write = 0;
       row_write++;
     }
 
-    return stencilResults;
+    return window_results;
   }
 };
-}  // namespace linebuffer2d
+}  // namespace line_buffer_2d

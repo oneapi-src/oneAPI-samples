@@ -14,25 +14,25 @@ namespace fpga_tools {
 
 /// @brief Extract template parameters from a DataBundle. Usage: `constexpr int
 /// kPixelsInParallel =
-/// fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
+/// fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;`
 /// @tparam T The DataBundle whose parameters you wish to extract
 template <typename T>
-struct extractDataBundleType {
+struct ExtractDataBundleType {
   typedef T BundlePayloadT;
-  static constexpr int BundlePayloadCount = 0;
+  static constexpr int kBundlePayloadCount = 0;
 };
 
-/// @brief Extract template parameters from a DataBundle. Usage: `constexpr int
-/// kPixelsInParallel =
-/// fpga_tools::extractDataBundleType<DataBundleType>::BundlePayloadCount;`
+/// @brief Extract template parameters from a DataBundle. Usage:
+/// `constexpr int kPixelsInParallel =
+/// fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;`
 /// @tparam T The DataBundle whose parameters you wish to extract
-template <template <typename, int> typename DATA_BUNDLE,
-          typename BUNDLE_PAYLOAD, int BUNDLE_COUNT>
-struct extractDataBundleType<
-    DATA_BUNDLE<BUNDLE_PAYLOAD, BUNDLE_COUNT>>  // specialization
+template <template <typename, int> typename DataBundle, typename BundlePayload,
+          int kBundleCount>
+struct ExtractDataBundleType<
+    DataBundle<BundlePayload, kBundleCount>>  // specialization
 {
-  typedef BUNDLE_PAYLOAD BundlePayloadT;
-  static constexpr int BundlePayloadCount = BUNDLE_COUNT;
+  typedef BundlePayload BundlePayloadT;
+  static constexpr int kBundlePayloadCount = kBundleCount;
 };
 
 /// @brief Utility class for handling vectorized data
@@ -43,22 +43,22 @@ struct extractDataBundleType<
 /// is fully unrolled, take care to keep your `DataBundle` objects to a
 /// reasonable size, or you may experience routing congestion in the FPGA
 /// fabric. A good rule of thumb is to ensure that you select `T` and
-/// `BUNDLE_SIZE` such that `sizeof(DataBundle<T, BUNDLE_SIZE>)` is less than
+/// `kBundleSize` such that `sizeof(DataBundle<T, kBundleSize>)` is less than
 /// 512 bytes.
 ///
 /// @tparam T The type of elements in the `DataBundle`
 ///
-/// @tparam BUNDLE_SIZE the number of elements in the `DataBundle`
-template <typename T, int BUNDLE_SIZE>
+/// @tparam kBundleSize the number of elements in the `DataBundle`
+template <typename T, int kBundleSize>
 struct DataBundle {
-  T data_[BUNDLE_SIZE];
+  T data_[kBundleSize];
 
   DataBundle() {}
 
   DataBundle(const T op) {
     // unroll in case this constructor is implemented in a oneAPI FPGA kernel
 #pragma unroll
-    for (int idx = 0; idx < BUNDLE_SIZE; idx++) {
+    for (int idx = 0; idx < kBundleSize; idx++) {
       data_[idx] = op;
     }
   }
@@ -67,7 +67,7 @@ struct DataBundle {
     // unroll in case this copy constructor is implemented in a oneAPI FPGA
     // kernel
 #pragma unroll
-    for (int idx = 0; idx < BUNDLE_SIZE; idx++) {
+    for (int idx = 0; idx < kBundleSize; idx++) {
       data_[idx] = op.data_[idx];
     }
   }
@@ -76,7 +76,7 @@ struct DataBundle {
     // unroll in case this assign operator is implemented in a oneAPI FPGA
     // kernel
 #pragma unroll
-    for (int idx = 0; idx < BUNDLE_SIZE; idx++) {
+    for (int idx = 0; idx < kBundleSize; idx++) {
       data_[idx] = other.data_[idx];
     }
 
@@ -84,14 +84,14 @@ struct DataBundle {
   }
 
   bool operator==(const DataBundle &rhs) {
-    bool isEqual = true;
+    bool is_equal = true;
     // unroll in case this comparison is implemented in a oneAPI FPGA kernel
 #pragma unroll
-    for (int b = 0; b < BUNDLE_SIZE; b++) {
-      isEqual &= (data_[b] == rhs.data_[b]);
+    for (int b = 0; b < kBundleSize; b++) {
+      is_equal &= (data_[b] == rhs.data_[b]);
     }
 
-    return isEqual;
+    return is_equal;
   }
 
   /// @brief Access a specific value in the bundle (like a C-array)
@@ -99,14 +99,14 @@ struct DataBundle {
   /// @return the reference to the type
   T &operator[](int i) { return data_[i]; }
 
-  /// @brief get a pointer to underlying data.
+  /// @brief Get a pointer to underlying data.
   /// @note This may be useful for bulk copy operations in SYCL* host
   /// code, or for passing references to the underlying data to subroutines in
   /// SYCL* device code.
   /// @return A C-style pointer to the underlying data of the `DataBundle`.
   T *data() { return &data_[0]; }
 
-  /// @brief Add a new element to the `DataBundle` at location `[BUNDLE_SIZE -
+  /// @brief Add a new element to the `DataBundle` at location `[kBundleSize -
   /// 1]`, and shift all members of the `DataBundle` to the left. The element at
   /// location `0` is removed.
   ///
@@ -123,60 +123,64 @@ struct DataBundle {
   /// @param in The value to insert
   ///
   /// @return The value that was removed
-  void shift(T &in) {
-    T retVal = data_[0];
+  void Shift(T &in) {
+    T return_val = data_[0];
 #pragma unroll
-    for (int i = 0; i < (BUNDLE_SIZE - 1); i++) {
+    for (int i = 0; i < (kBundleSize - 1); i++) {
       data_[i] = data_[i + 1];
     }
-    data_[BUNDLE_SIZE - 1] = in;
+    data_[kBundleSize - 1] = in;
 
-    return retVal;
+    return return_val;
   }
 
   /// @brief Add multiple copies of a new element to the `DataBundle` at
-  /// locations `[BUNDLE_SIZE - 1]`, `[BUNDLE_SIZE - 2]`, etc. and shift all
+  /// locations `[kBundleSize - 1]`, `[kBundleSize - 2]`, etc. and shift all
   /// members of the `DataBundle` to the left. The elements at location `0`,
   /// `1`, etc. are removed.
-  /// @tparam SHIFT_AMT The number of copies of the new element to insert
+  /// @tparam kShiftAmt The number of copies of the new element to insert
   /// @param in The new element to insert
-  template <int SHIFT_AMT>
-  void shiftSingleVal(T &in) {
+  template <int kShiftAmt>
+  void ShiftSingleVal(T &in) {
 #pragma unroll
-    for (int i = 0; i < (BUNDLE_SIZE - SHIFT_AMT); i++) {
-      data_[i] = data_[i + SHIFT_AMT];
+    for (int i = 0; i < (kBundleSize - kShiftAmt); i++) {
+      data_[i] = data_[i + kShiftAmt];
     }
 
 #pragma unroll
-    for (int i = 0; i < (SHIFT_AMT); i++) {
-      data_[(BUNDLE_SIZE - SHIFT_AMT) + i] = in;
+    for (int i = 0; i < (kShiftAmt); i++) {
+      data_[(kBundleSize - kShiftAmt) + i] = in;
     }
   }
 
   /// @brief  Add multiple new elements to the `DataBundle` at locations
-  /// `[BUNDLE_SIZE - 1]`, `[BUNDLE_SIZE - 2]`, etc. and shift all members of
+  /// `[kBundleSize - 1]`, `[kBundleSize - 2]`, etc. and shift all members of
   /// the `DataBundle` to the left. The elements at location `0`, `1`, etc.
   /// are removed.
   ///
-  /// @tparam SHIFT_AMT The number of new elements to insert
+  /// @tparam kShiftAmt The number of new elements to insert
   ///
-  /// @tparam BUNDLE_SZ (Optional) The number of new elements in the
+  /// @tparam kBundleSize2 (Optional) The number of new elements in the
   /// `DataBundle` containing the new elements. This number should be greater
-  /// than or equal to `SHIFT_AMT`.
+  /// than or equal to `kShiftAmt`.
   ///
   /// @param in A `DataBundle` holding new elements to shift in. If the size
-  /// of this type is not `SHIFT_AMT`, you must set the `BUNDLE_SZ` template
+  /// of this type is not `kShiftAmt`, you must set the `kBundleSize2` template
   /// parameter.
-  template <int SHIFT_AMT, int BUNDLE_SZ = SHIFT_AMT>
-  void shiftMultiVals(DataBundle<T, BUNDLE_SZ> &in) {
+  template <int kShiftAmt, int kBundleSize2 = kShiftAmt>
+  void ShiftMultiVals(DataBundle<T, kBundleSize2> &in) {
+    static_assert(
+        kBundleSize2 >= kShiftAmt,
+        "kBundleSize2 should be greater than or equal to `kShiftAmt`.");
+
 #pragma unroll
-    for (int i = 0; i < (BUNDLE_SIZE - SHIFT_AMT); i++) {
-      data_[i] = data_[i + SHIFT_AMT];
+    for (int i = 0; i < (kBundleSize - kShiftAmt); i++) {
+      data_[i] = data_[i + kShiftAmt];
     }
 
 #pragma unroll
-    for (int i = 0; i < (SHIFT_AMT); i++) {
-      data_[(BUNDLE_SIZE - SHIFT_AMT) + i] = in[i];
+    for (int i = 0; i < (kShiftAmt); i++) {
+      data_[(kBundleSize - kShiftAmt) + i] = in[i];
     }
   }
 };

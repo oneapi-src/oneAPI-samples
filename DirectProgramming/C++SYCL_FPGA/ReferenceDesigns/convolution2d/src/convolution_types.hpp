@@ -40,7 +40,7 @@ constexpr uint32_t kWindowSize = WINDOW_SZ;
 constexpr uint32_t kMaxCols = MAX_COLS;
 
 #pragma pack(push, 1)
-struct Pixel_rgb {
+struct PixelRGB {
   // no constructor as this results in additional loops that kill performance
 
   // VVP expects the red channel in the most significant bits, so put it last
@@ -53,15 +53,14 @@ struct Pixel_rgb {
 
 // Pixels are represented as a 16-bit integer
 using PixelType = uint16_t;
-using WeightType = float;
 
 // Bundle of `PixelType`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
 using GreyPixelBundle = fpga_tools::DataBundle<PixelType, kParallelPixels>;
 
-// Bundle of `Pixel_rgb`, containing a number of parallel pixels equal to
+// Bundle of `PixelRGB`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
-using RGBPixelBundle = fpga_tools::DataBundle<Pixel_rgb, kParallelPixels>;
+using RGBPixelBundle = fpga_tools::DataBundle<PixelRGB, kParallelPixels>;
 
 // A beat that may be transferred on a streaming interface, including sideband
 // signals and a payload of `GreyPixelBundle`.

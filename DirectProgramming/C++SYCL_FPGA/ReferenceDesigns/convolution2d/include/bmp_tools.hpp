@@ -29,7 +29,7 @@
 // #define ENABLE_EXCEPTION_HANDLING 0
 // #endif
 
-namespace BmpTools {
+namespace bmp_tools {
 
 enum BmpHeaderField : uint16_t {
   BM = 0x4D42,  // "BM"
@@ -80,10 +80,10 @@ static constexpr int BMP_HEADER_SIZE =
 /// namely 24-bit Windows-style, with all important colors and a single color
 /// plane.
 ///
-/// @param[in] filepath Filepath to read from
+/// @param[in] file_path File path to read from
 ///
 /// @param[out] img_data A pointer to an array of pixels that has been allocated
-/// by `read_bmp`. The size of the allocated buffer will be equal to `height` *
+/// by `ReadBmp`. The size of the allocated buffer will be equal to `height` *
 /// `width` * `sizeof(unsigned int)`. Declare `unsigned int *myData`, then pass
 /// `&myData` as an argument to this function.
 ///
@@ -92,19 +92,19 @@ static constexpr int BMP_HEADER_SIZE =
 /// @param[out] width Number of columns in the image that was read
 ///
 /// @return `true` if succeeded, `false` if failed.
-inline bool read_bmp(std::string &filepath, unsigned int **img_data,
+inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
                      int &height, int &width) {
   if (NULL == img_data) {
     std::cerr << "ERROR: img_data must not be null." << std::endl;
     return false;
   }
-  std::ifstream inputbmp;
+  std::ifstream input_bmp;
 #if ENABLE_EXCEPTION_HANDLING
   try {
 #endif
-    inputbmp.open(filepath, std::ios::in | std::ios::binary);
-    if (!inputbmp) {
-      std::cerr << "ERROR: input file " << filepath << " does not exist."
+    input_bmp.open(file_path, std::ios::in | std::ios::binary);
+    if (!input_bmp) {
+      std::cerr << "ERROR: input file " << file_path << " does not exist."
                 << std::endl;
       return false;
     }
@@ -112,7 +112,7 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
 #if ENABLE_EXCEPTION_HANDLING
   } catch (std::ios_base::failure &e) {
     std::cerr << e.what() << '\n';
-    std::cerr << "ERROR: can't open file " << filepath << " for binary reading"
+    std::cerr << "ERROR: can't open file " << file_path << " for binary reading"
               << std::endl;
     return false;
   }
@@ -122,7 +122,7 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
 
   // load file header
   BmpFileHeader file_header;
-  inputbmp.read(reinterpret_cast<char *>(&file_header), sizeof(BmpFileHeader));
+  input_bmp.read(reinterpret_cast<char *>(&file_header), sizeof(BmpFileHeader));
 
   if (file_header.header_field != BmpHeaderField::BM) {
     std::cerr << "ERROR: only Windows-format bitmap header is supported. "
@@ -132,7 +132,7 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
   }
 
   WindowsBitmapInfoHeader dib_header;
-  inputbmp.read(reinterpret_cast<char *>(&dib_header),
+  input_bmp.read(reinterpret_cast<char *>(&dib_header),
                 sizeof(WindowsBitmapInfoHeader));
 
   width = dib_header.img_width;
@@ -184,7 +184,7 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
   // scroll to image data
   int read_bytes = sizeof(WindowsBitmapInfoHeader) + sizeof(BmpFileHeader);
   while (read_bytes < file_header.img_data_offset) {
-    inputbmp.get();
+    input_bmp.get();
     read_bytes++;
   }
 
@@ -195,34 +195,34 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
   // Color order is BGR, read across bottom row, then repeat going up rows
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
-      unsigned char b = inputbmp.get();  // B
-      unsigned char g = inputbmp.get();  // G
+      unsigned char b = input_bmp.get();  // B
+      unsigned char g = input_bmp.get();  // G
 
-      std::ios_base::iostate state = inputbmp.rdstate();
+      std::ios_base::iostate state = input_bmp.rdstate();
 
       bool earlyEOF = state & std::ifstream::eofbit;
-      unsigned char r = inputbmp.get();  // R
+      unsigned char r = input_bmp.get();  // R
       (*img_data)[idx] = (((unsigned int)r << 16) | ((unsigned int)g << 8) |
                           ((unsigned int)b << 0));
       idx++;
       if (earlyEOF) failed |= earlyEOF;
 
-      state = inputbmp.rdstate();
+      state = input_bmp.rdstate();
       bool failBit = state & std::ifstream::failbit;
 
       if (failBit) failed |= failBit;
     }
     // Discard the padding bytes
     for (int j = 0; j < padding; j++) {
-      inputbmp.get();
-      bool earlyEOF = inputbmp.rdstate() & std::ifstream::eofbit;
+      input_bmp.get();
+      bool earlyEOF = input_bmp.rdstate() & std::ifstream::eofbit;
       if (earlyEOF) failed |= earlyEOF;
 
-      bool failBit = inputbmp.rdstate() & std::ifstream::failbit;
+      bool failBit = input_bmp.rdstate() & std::ifstream::failbit;
       if (failBit) failed |= failBit;
     }
   }
-  inputbmp.close();
+  input_bmp.close();
 
   if (failed) {
     std::cerr << "ERROR: File I/O error" << std::endl;
@@ -237,14 +237,14 @@ inline bool read_bmp(std::string &filepath, unsigned int **img_data,
 /// @paragraph For simplicity, we only support a certain type of BMP file,
 /// namely 24-bit Windows-style, with all important colors and a single color
 /// plane.
-/// @param[in] filepath Filepath to write to
+/// @param[in] file_path Filepath to write to
 /// @param[in] img_data An array of pixels to write to a bmp file. The size of
 /// the array must be equal to `height` * `width`.
 /// @param[in] height Number of rows in the image
 /// @param[in] width Number of columns in the image
 /// @return `true` if the image was successfully written to the filesystem,
 /// `false` if not.
-inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
+inline bool WriteBmp(std::string &file_path, unsigned int *img_data, int height,
                       int width) {
   // sanity check that inputs are valid, check that width*height is also valid
   if ((height < 0 || width < 0) || (height * width > (1 << 30))) {
@@ -292,16 +292,16 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
 #if ENABLE_EXCEPTION_HANDLING
   try {
 #endif
-    output_bmp.open(filepath);
+    output_bmp.open(file_path);
     if (!output_bmp) {
-      std::cerr << "ERROR: output file " << filepath << " does not exist."
+      std::cerr << "ERROR: output file " << file_path << " does not exist."
                 << std::endl;
       return false;
     }
 #if ENABLE_EXCEPTION_HANDLING
   } catch (std::ios_base::failure &e) {
     std::cerr << e.what() << '\n';
-    std::cerr << "ERROR: can't open file " << filepath << " for binary writing"
+    std::cerr << "ERROR: can't open file " << file_path << " for binary writing"
               << std::endl;
     return false;
   }
@@ -309,9 +309,9 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
 
   // Write header
   output_bmp.write(reinterpret_cast<char *>(header), BMP_HEADER_SIZE);
-  bool writeErr = (output_bmp.rdstate() != std::ofstream::goodbit);
-  if (writeErr) {
-    std::cerr << "ERROR: could not write header to " << filepath << std::endl;
+  bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
+  if (write_err) {
+    std::cerr << "ERROR: could not write header to " << file_path << std::endl;
     return false;
   }
 
@@ -328,9 +328,9 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
       idx++;
 
       output_bmp.write(reinterpret_cast<char *>(p), 3);
-      bool writeErr = (output_bmp.rdstate() != std::ofstream::goodbit);
-      if (writeErr) {
-        std::cerr << "ERROR: could not write data to " << filepath << std::endl;
+      bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
+      if (write_err) {
+        std::cerr << "ERROR: could not write data to " << file_path << std::endl;
         return false;
       }
     }
@@ -338,9 +338,9 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
     if (padding) {
       p[0] = p[1] = p[2] = 0;
       output_bmp.write(reinterpret_cast<char *>(p), 3);
-      bool writeErr = (output_bmp.rdstate() != std::ofstream::goodbit);
-      if (writeErr) {
-        std::cerr << "ERROR: could not write padding to " << filepath
+      bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
+      if (write_err) {
+        std::cerr << "ERROR: could not write padding to " << file_path
                   << std::endl;
         return false;
       }
@@ -351,7 +351,7 @@ inline bool write_bmp(std::string &filepath, unsigned int *img_data, int height,
 }
 
 /// @brief This convenience struct lets you manipulate color channels within
-/// pixels used by BmpTools functions.
+/// pixels used by bmp_tools functions.
 struct PixelRGB {
   // blue is least significant
   uint8_t b;
@@ -359,9 +359,9 @@ struct PixelRGB {
   uint8_t r;
   uint8_t reserved;
 
-  /// @brief Construct a `BmpTools::PixelRGB` using an unsigned 32-bit pixel
-  /// used by `BmpTools` functions.
-  /// @param img_pixel An unsigned 32-bit pixel used by `BmpTools` functions
+  /// @brief Construct a `bmp_tools::PixelRGB` using an unsigned 32-bit pixel
+  /// used by `bmp_tools` functions.
+  /// @param img_pixel An unsigned 32-bit pixel used by `bmp_tools` functions
   PixelRGB(uint32_t img_pixel) {
     b = (img_pixel >> 0) & 0xff;
     g = (img_pixel >> 8) & 0xff;
@@ -371,17 +371,17 @@ struct PixelRGB {
   /// @brief Default constructor that initializes all color channels to `0`.
   PixelRGB() { PixelRGB(0); }
 
-  /// @brief Construct a `BmpTools::PixelRGB` using members
+  /// @brief Construct a `bmp_tools::PixelRGB` using members
   /// @param m_r Red color channel
   /// @param m_g Green color channel
   /// @param m_b Blue color channel
   PixelRGB(uint8_t m_r, uint8_t m_g, uint8_t m_b)
       : b(m_b), g(m_g), r(m_r), reserved(0) {}
 
-  /// @brief Transform a `BmpTools::PixelRGB` into an unsigned 32-bit pixel used
-  /// by `BmpTools` functions.
-  /// @return An unsigned 32-bit pixel used by `BmpTools` functions.
-  uint32_t getImgPixel() {
+  /// @brief Transform a `bmp_tools::PixelRGB` into an unsigned 32-bit pixel used
+  /// by `bmp_tools` functions.
+  /// @return An unsigned 32-bit pixel used by `bmp_tools` functions.
+  uint32_t GetImgPixel() {
     uint32_t img_pixel =
         ((b & 0xff) << 0) + ((g & 0xff) << 8) + ((r & 0xff) << 16);
     return img_pixel;
@@ -392,7 +392,7 @@ struct PixelRGB {
   /// @param other The pixel to compare against
   /// @param thresh Maximum amount by any two color channels may deviate
   /// @return `true` if `this` and `other` differ by no more than `thresh`
-  bool check_similarity(PixelRGB other, unsigned char threshold) {
+  bool CheckSimilarity(PixelRGB other, unsigned char threshold) {
     bool similar = true;
     if (abs(r - other.r) > threshold) similar = false;
     if (abs(g - other.g) > threshold) similar = false;
@@ -410,12 +410,12 @@ struct PixelRGB {
 /// @param expectedFilePath Path to a BMP file to compare `frame` against. The
 /// BMP file will be parsed using the functions in `bmp_tools.hpp`.
 /// @return `true` if `frame` matches the file pointed to by `expectedFilePath
-bool compareFrames(unsigned int *frame, int rows, int cols,
+bool CompareFrames(unsigned int *frame, int rows, int cols,
                    std::string &expectedFilePath, unsigned char threshold = 2) {
   unsigned int *exp_img = 0;
   int exp_rows, exp_cols;
   bool passed = false;
-  if (BmpTools::read_bmp(expectedFilePath, &exp_img, exp_rows, exp_cols)) {
+  if (bmp_tools::ReadBmp(expectedFilePath, &exp_img, exp_rows, exp_cols)) {
     // check dimensions
     bool dims_ok = (rows == exp_rows) && (cols == exp_cols);
     if (!dims_ok) {
@@ -440,7 +440,7 @@ bool compareFrames(unsigned int *frame, int rows, int cols,
     if (passed) {
       for (int i = 0; i < (rows * cols); ++i) {
         // Allow for some error due to fpc and fp-relaxed
-        passed &= PixelRGB(frame[i]).check_similarity(PixelRGB(exp_img[i]),
+        passed &= PixelRGB(frame[i]).CheckSimilarity(PixelRGB(exp_img[i]),
                                                       threshold);
       }
     }
@@ -452,6 +452,6 @@ bool compareFrames(unsigned int *frame, int rows, int cols,
   return passed;
 }
 
-}  // namespace BmpTools
+}  // namespace bmp_tools
 
 #endif  // BMP_TOOLS_H

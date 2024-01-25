@@ -1,8 +1,2 @@
 *build*/
-*output*
 .vscode/*
-
-# Visual Studio stuff
-out/
-visualstudio/
-.vs

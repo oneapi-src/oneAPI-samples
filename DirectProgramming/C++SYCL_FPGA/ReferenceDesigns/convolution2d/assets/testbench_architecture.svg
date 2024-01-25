@@ -885,7 +885,7 @@
 			<title>Sheet.1066</title>
 			<g id="shape1003-164" v:mID="1003" v:groupContext="shape" transform="translate(-9.74409,-30.0675)">
 				<title>Rectangle.1003</title>
-				<desc>vvp_stream_adapters:: readFrameFromPipe</desc>
+				<desc>vvp_stream_adapters:: ReadFrameFromPipe</desc>
 				<v:userDefs>
 					<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 				</v:userDefs>
@@ -893,7 +893,7 @@
 				<v:textRect cx="84.8622" cy="379.966" width="169.73" height="48.189"/>
 				<rect x="0" y="355.872" width="169.724" height="48.189" class="st7"/>
 				<text x="4.04" y="375.77" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>vvp_stream_adapters:: <tspan
-							x="19.44" dy="1.2em" class="st3">readFrameFromPipe</tspan></text>			</g>
+							x="19.44" dy="1.2em" class="st3">ReadFrameFromPipe</tspan></text>			</g>
 			<g id="shape1058-168" v:mID="1058" v:groupContext="shape" transform="translate(106.299,778.054) rotate(180)">
 				<title>Sheet.1058</title>
 				<desc>Streaming Sink</desc>
@@ -939,7 +939,7 @@
 			<title>Sheet.1073</title>
 			<g id="shape1002-201" v:mID="1002" v:groupContext="shape" transform="translate(-7.08661,-30.8167)">
 				<title>Rectangle.1002</title>
-				<desc>vvp_stream_adapters:: writeFrameToPipe</desc>
+				<desc>vvp_stream_adapters:: WriteFrameToPipe</desc>
 				<v:userDefs>
 					<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 				</v:userDefs>
@@ -947,7 +947,7 @@
 				<v:textRect cx="87.5197" cy="379.966" width="175.04" height="48.189"/>
 				<rect x="0" y="355.872" width="175.039" height="48.189" class="st7"/>
 				<text x="6.7" y="375.77" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>vvp_stream_adapters:: <tspan
-							x="25.94" dy="1.2em" class="st3">writeFrameToPipe</tspan></text>			</g>
+							x="25.94" dy="1.2em" class="st3">WriteFrameToPipe</tspan></text>			</g>
 			<g id="shape1068-205" v:mID="1068" v:groupContext="shape" transform="translate(111.614,778.054) rotate(180)">
 				<title>Sheet.1068</title>
 				<desc>Streaming Source</desc>
