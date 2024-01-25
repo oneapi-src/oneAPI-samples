@@ -153,8 +153,8 @@ conv2d::PixelType ConvolutionFunction(
 
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
   constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType return_val = (conv2d::PixelType)kOutputOffset +
-                                 (conv2d::PixelType)(sum * (kOutputOffset));
+  conv2d::PixelType return_val =
+      ((int16_t)kOutputOffset + (int16_t)(sum * (kOutputOffset)));
 
   return return_val;
 }
