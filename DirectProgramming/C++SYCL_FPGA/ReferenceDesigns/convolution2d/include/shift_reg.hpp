@@ -49,20 +49,20 @@ class ShiftReg {
 
   template <int kShiftAmt>
   void shiftSingleVal(T in) {
-    fpga_tools::UnrolledLoop<0, (kRegDepth - SHIFT_AMT)>(
+    fpga_tools::UnrolledLoop<0, (kRegDepth - kShiftAmt)>(
         [&](int i) { registers[i] = registers[i + kShiftAmt]; });
 
-    fpga_tools::UnrolledLoop<(kRegDepth - SHIFT_AMT), kRegDepth>(
+    fpga_tools::UnrolledLoop<(kRegDepth - kShiftAmt), kRegDepth>(
         [&](int i) { registers[i] = in; });
   }
 
-  template <size_t SHIFT_AMT>
-  void ShiftMultiVals(DataBundle<T, SHIFT_AMT> in) {
-    fpga_tools::UnrolledLoop<0, (kRegDepth - SHIFT_AMT)>(
-        [&](int i) { registers[i] = registers[i + SHIFT_AMT]; });
+  template <size_t kShiftAmt>
+  void ShiftMultiVals(DataBundle<T, kShiftAmt> in) {
+    fpga_tools::UnrolledLoop<0, (kRegDepth - kShiftAmt)>(
+        [&](int i) { registers[i] = registers[i + kShiftAmt]; });
 
-    fpga_tools::UnrolledLoop<0, SHIFT_AMT>(
-        [&](int i) { registers[(kRegDepth - SHIFT_AMT) + i] = in[i]; });
+    fpga_tools::UnrolledLoop<0, kShiftAmt>(
+        [&](int i) { registers[(kRegDepth - kShiftAmt) + i] = in[i]; });
   }
 
   // use an accessor like this to force static accesses
@@ -128,10 +128,10 @@ class ShiftReg2d {
         [&](int i) { registers[i].Shift(in[i]); });
   }
 
-  template <size_t SHIFT_AMT>
-  void ShiftCols(DataBundle<T, SHIFT_AMT> in[kRegRows]) {
+  template <size_t kShiftAmt>
+  void ShiftCols(DataBundle<T, kShiftAmt> in[kRegRows]) {
     fpga_tools::UnrolledLoop<0, kRegRows>(
-        [&](int i) { registers[i].template ShiftMultiVals<SHIFT_AMT>(in[i]); });
+        [&](int i) { registers[i].template ShiftMultiVals<kShiftAmt>(in[i]); });
   }
 
   // use an accessor like this to force static accesses
