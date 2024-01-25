@@ -64,6 +64,11 @@ set(USER_FLAGS ${USER_FLAGS};-DPARALLEL_PIXELS=${PARALLEL_PIXELS};
                              -DWINDOW_SZ=${WINDOW_SZ}; 
                              -DMAX_COLS=${MAX_COLS}
                              -DTEST_CONV2D_ISOLATED=${TEST_CONV2D_ISOLATED};)
+#                            -Weverything;
+#                            -Wno-old-style-cast;
+#                            -Wno-c++98-compat;
+#                            -Wno-c++98-compat-pedantic;
+#                            -Wno-unsafe-buffer-usage)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

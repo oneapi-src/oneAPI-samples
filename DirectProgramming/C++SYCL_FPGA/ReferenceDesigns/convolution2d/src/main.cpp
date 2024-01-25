@@ -69,7 +69,7 @@ void InitializeBuffer(conv2d::PixelRGB *buf, size_t size) {
 void ConvertToVvpRgb(unsigned int *bmp_buf, conv2d::PixelRGB *vvp_buf,
                      size_t pixel_count) {
   std::cout << "INFO: convert to vvp type." << std::endl;
-  for (int idx = 0; idx < pixel_count; idx++) {
+  for (size_t idx = 0; idx < pixel_count; idx++) {
     uint32_t pixel_int = bmp_buf[idx];
     bmp_tools::PixelRGB bmp_rgb(pixel_int);
 
@@ -91,7 +91,7 @@ void ConvertToVvpRgb(unsigned int *bmp_buf, conv2d::PixelRGB *vvp_buf,
 void ConvertToBmpRgb(conv2d::PixelRGB *vvp_buf, unsigned int *bmp_buf,
                      size_t pixel_count) {
   std::cout << "INFO: convert to bmp type." << std::endl;
-  for (int idx = 0; idx < pixel_count; idx++) {
+  for (size_t idx = 0; idx < pixel_count; idx++) {
     conv2d::PixelRGB pixel_conv = vvp_buf[idx];
 
     // convert the VVP IP back to 8-bit
@@ -232,10 +232,10 @@ constexpr std::array<float, 9> sobel_coeffs = {
 /// the IP.
 /// @param q SYCL queue
 /// @param num_frames Number of times to pass the image frame through the IP
-/// @param input_bmp_filename base filename to use for reading input frames
+/// @param input_bmp_filename_base base filename to use for reading input frames
 /// @param output_bmp_filename_base base filename to use for writing output
 /// files
-/// @param canonical_expected_bmp_path 'known good' file to compare IP output
+/// @param expected_bmp_filename_base 'known good' file to compare IP output
 /// against
 /// @return `true` if all frames emitted by the IP match the `known good` file,
 /// `false` otherwise.
@@ -253,7 +253,7 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 
   size_t rows = 0, cols = 0;
 
-  for (int itr = 0; itr < num_frames; itr++) {
+  for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
     unsigned int *in_img = 0;
     int rows_new, cols_new;
@@ -312,7 +312,7 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
   q.single_task<ID_Grey2RGB>(
       Grey2RGB<OutputImageStreamGrey, OutputImageStream>{});
 
-  for (int itr = 0; itr < num_frames; itr++) {
+  for (size_t itr = 0; itr < num_frames; itr++) {
     std::cout << "\n*********************\n"  //
               << "Reading out frame " << itr  //
               << std::endl;
@@ -360,7 +360,7 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 
     delete[] out_img;
     all_passed &= passed & sidebands_ok;
-    printf("frame %d %s\n", itr,
+    printf("frame %zu %s\n", itr,
            (passed && sidebands_ok) ? "passed" : "failed");
   }
 
@@ -392,7 +392,7 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 /// @param cols Number of columns in the image frame
 /// @param in_img Buffer containing the image frame to process
 /// @param output_bmp_filename_base File to output the processed frame to
-/// @param canonical_expected_bmp_path 'known good' file to compare IP output
+/// @param expected_bmp_filename 'known good' file to compare IP output
 /// against
 /// @return `true` if the second frame emitted by the IP matches the `known
 /// good` file, `false` otherwise.
@@ -405,7 +405,7 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
             << std::endl;
 
   // load image
-  unsigned int *in_img = 0;
+  unsigned int *in_img = nullptr;
   int rows_new, cols_new;
 
   std::string canonical_input_bmp_path =  //

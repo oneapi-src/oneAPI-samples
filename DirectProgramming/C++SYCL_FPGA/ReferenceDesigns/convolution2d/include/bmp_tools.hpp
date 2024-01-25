@@ -94,7 +94,7 @@ static constexpr int BMP_HEADER_SIZE =
 /// @return `true` if succeeded, `false` if failed.
 inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
                      int &height, int &width) {
-  if (NULL == img_data) {
+  if (nullptr == img_data) {
     std::cerr << "ERROR: img_data must not be null." << std::endl;
     return false;
   }
@@ -182,7 +182,7 @@ inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
   }
 
   // scroll to image data
-  int read_bytes = sizeof(WindowsBitmapInfoHeader) + sizeof(BmpFileHeader);
+  auto read_bytes = sizeof(WindowsBitmapInfoHeader) + sizeof(BmpFileHeader);
   while (read_bytes < file_header.img_data_offset) {
     input_bmp.get();
     read_bytes++;
@@ -390,7 +390,7 @@ struct PixelRGB {
   /// @brief Check that two pixels are similar to one another, that is, that
   /// they differ by no more than `thresh`.
   /// @param other The pixel to compare against
-  /// @param thresh Maximum amount by any two color channels may deviate
+  /// @param threshold Maximum amount by any two color channels may deviate
   /// @return `true` if `this` and `other` differ by no more than `thresh`
   bool CheckSimilarity(PixelRGB other, unsigned char threshold) {
     bool similar = true;
@@ -410,9 +410,9 @@ struct PixelRGB {
 /// @param expectedFilePath Path to a BMP file to compare `frame` against. The
 /// BMP file will be parsed using the functions in `bmp_tools.hpp`.
 /// @return `true` if `frame` matches the file pointed to by `expectedFilePath
-bool CompareFrames(unsigned int *frame, int rows, int cols,
+ bool CompareFrames(unsigned int *frame, int rows, int cols,
                    std::string &expectedFilePath, unsigned char threshold = 2) {
-  unsigned int *exp_img = 0;
+  unsigned int *exp_img = nullptr;
   int exp_rows, exp_cols;
   bool passed = false;
   if (bmp_tools::ReadBmp(expectedFilePath, &exp_img, exp_rows, exp_cols)) {
@@ -424,12 +424,12 @@ bool CompareFrames(unsigned int *frame, int rows, int cols,
                 << exp_rows << ")." << std::endl;
     }
 
-    bool frame_ok = (NULL != frame);
+    bool frame_ok = (nullptr != frame);
     if (!frame_ok) {
       std::cerr << "ERROR: frame pointer invalid." << std::endl;
     }
 
-    bool exp_ok = (NULL != exp_img);
+    bool exp_ok = (nullptr != exp_img);
     if (!exp_ok) {
       std::cerr << "ERROR: exp_img pointer invalid." << std::endl;
     }

@@ -111,7 +111,7 @@ void SaturateWindowCoordinates(short w_row, short w_col, short row, short col,
 /// @param rows total rows in input image
 /// @param cols total columns in input image
 /// @param buffer Window of pixels from input image
-/// @param coefficients
+/// @param coefficients Array of coefficients to use for convolution
 /// @return pixel value to stream out
 conv2d::PixelType ConvolutionFunction(
     short row, short col, short rows, short cols, conv2d::PixelType *buffer,
