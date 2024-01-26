@@ -329,7 +329,7 @@ if (d.has_aspect_fp64 == False):
     print("Double precision floating points not supported on this Device. Exiting!\n")
     
 else:
-    with dpctl.device_context("d"):
+    with dpctl.device_context(d):
             knn_numba_dpex[numba_dpex.Range(len(X_test.values))](X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst)
             predictions_numba = dpctl.tensor.to_numpy(predictions)
             true_values = y_test.to_numpy()
