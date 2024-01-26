@@ -102,7 +102,7 @@ def run(name, alg, sizes=7, step=2, nopt=2**10):
 
     d = dpctl.SyclDevice("gpu")
     if (d.has_aspect_fp64 == False):
-        print("Double precision floating points not supported on this Device. Exiting!\n")
+        print(d.name + " does not provide native support for double-precision floating point type, Exiting!\n")
         return
 
     if args.test:
