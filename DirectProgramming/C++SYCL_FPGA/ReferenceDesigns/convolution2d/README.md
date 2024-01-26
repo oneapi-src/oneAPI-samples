@@ -58,14 +58,14 @@ Performance results are based on testing conducted with a pre-release version of
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
-#### Intel® Arria® 10 FPGA
+#### Intel Agilex® 7 FPGA
 
 | Parallel Pixels | Window Dimensions | Coefficient Type | Input Type     | f<sub>MAX</sub> (MHz) | ALMs  | DSP blocks | M20K Block RAM
 |---              |---                |---               |---             |---                    |---    |---         |---
-| 1               | 3x3               | `float`          | 10-bit Integer | 388.05                | 2314  |   9        | 19
-| 2               | 3x3               | `float`          | 10-bit Integer | 379.65                | 3994  |  18        | 16
-| 4               | 3x3               | `float`          | 10-bit Integer | 355.63                | 7315  |  36        | 17
-| 8               | 3x3               | `float`          | 10-bit Integer | 338.23                | 14394 |  72        | 18
+| 1               | 3x3               | `float`          | 10-bit Integer | 550.97                | 2705  |   9        | 18
+| 2               | 3x3               | `float`          | 10-bit Integer | 548.65                | 4324  |  18        | 18
+| 4               | 3x3               | `float`          | 10-bit Integer | 547.58                | 6938  |  36        | 17
+| 8               | 3x3               | `float`          | 10-bit Integer | 525.12                | 14226 |  72        | 18
 
 > **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `ConvolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
 
