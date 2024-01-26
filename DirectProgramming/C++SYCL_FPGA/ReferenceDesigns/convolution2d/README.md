@@ -170,8 +170,6 @@ OutputPixelType WindowFunction(short row, short col, short rows,
 
 `row`, `col`, `rows`, `cols`, and `buffer` are mandatory, but you can add additional arguments. For example, a runtime-defined set of coefficients.
 
-> ⚠️I would like a better way to specify this in the API – C++ alternatives? Perhaps use a functor to add other arguments rather than varargs?
-
 You can use this line buffer to implement a convolution operation by specifying a window function like this:
 
 ```c++
@@ -233,8 +231,6 @@ Finally, this design includes a pair of gasket IP files that enable the generate
 For convenience, you may use the header file included in `quartus_project_files/software` to control your IP from a Nios® 2 or Nios V softcore processor.
 
 ### Test bench utilities
-
-> ⚠️ Note for reviewer: This will go in a separate reference design in the future, but I want to get conv2d out since there are many customers asking for it already.
 
 In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `WriteFrameToPipe()` and `ReadFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
 
@@ -473,6 +469,8 @@ INFO: convert to bmp type.
 Wrote convolved image ./output_4.bmp
 Compare with ../expected_sobel_4.bmp.
 frame 4 passed
+
+Kernel version = 1 (Expected 1)
 
 Finished checking a sequence of good frames.
 
