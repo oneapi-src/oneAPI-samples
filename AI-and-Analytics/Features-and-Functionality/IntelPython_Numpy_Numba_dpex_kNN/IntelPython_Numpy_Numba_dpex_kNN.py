@@ -324,8 +324,21 @@ X_train_dpt = dpctl.tensor.asarray(X_train.values)
 y_train_dpt = dpctl.tensor.asarray(y_train.values)
 X_test_dpt = dpctl.tensor.asarray(X_test.values)
 
-with dpctl.device_context("opencl:cpu:0"):
-    knn_numba_dpex[numba_dpex.Range(len(X_test.values))](X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst)
+d = dpctl.SyclDevice("gpu")
+if (d.has_aspect_fp64 == False):
+    print("Double precision floating points not supported on this Device. Exiting!\n")
+    
+else:
+    with dpctl.device_context(d):
+            knn_numba_dpex[numba_dpex.Range(len(X_test.values))](X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst)
+            predictions_numba = dpctl.tensor.to_numpy(predictions)
+            true_values = y_test.to_numpy()
+            accuracy = np.mean(predictions_numba == true_values)
+            print('Numba_dpex accuracy:', accuracy)
+            print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+
+#with dpctl.device_context("opencl:cpu:0"):
+    #knn_numba_dpex[numba_dpex.Range(len(X_test.values))](X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst)
 
 
 # Like before, let's measure the accuracy of the prepared implementation. It is measured as the number of well-assigned classes for the test set. The final result is the same for all: NumPy, numba and numba-dpex implementations.
@@ -333,14 +346,11 @@ with dpctl.device_context("opencl:cpu:0"):
 # In[ ]:
 
 
-predictions_numba = dpctl.tensor.to_numpy(predictions)
-true_values = y_test.to_numpy()
-accuracy = np.mean(predictions_numba == true_values)
-print('Numba_dpex accuracy:', accuracy)
+
 
 
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+#print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
 
