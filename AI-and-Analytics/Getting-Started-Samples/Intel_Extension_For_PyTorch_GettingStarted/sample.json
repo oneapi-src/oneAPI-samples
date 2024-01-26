@@ -1,7 +1,7 @@
 {
 	"guid": "3E6FD81F-76A0-430C-AD82-0F94A45F93DC",
 	"name": "Intel® Extension for PyTorch* Getting Started",
-	"categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
 	"description": "This sample illustrates how to train a PyTorch model and run inference with Intel® Extension for PyTorch*",
 	"builder": ["cli"],
 	"languages": [{

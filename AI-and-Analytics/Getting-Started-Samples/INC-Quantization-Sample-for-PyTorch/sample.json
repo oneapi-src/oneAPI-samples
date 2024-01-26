@@ -1,7 +1,7 @@
 {
     "guid": "E8BCAF15-96AC-460A-BD45-595D48D36444",
     "name": "Getting Started with Intel® Neural Compressor for Quantization",
-    "categories": ["Toolkit/oneAPI AI And Analytics/Getting-Started-Samples"],
+    "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
     "description": "This sample is a getting started guide for Intel® Neural Compressor to do INT8 quantization on a Huggingface BERT model. This allows us to achieve performance boosts on Intel hardware.",
     "builder": ["cli"],
     "languages": [{"python":{}}],

@@ -1,7 +1,7 @@
 {
     "guid": "1C4791A0-4189-43D0-8B42-A4318E771DEA",
     "name": "Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)",
-    "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+    "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
     "description": "This sample demonstrates how to fine-tune text model for emotion classification task using Intel® Neural Compressor Quantization Aware Training (QAT).",
     "builder": ["cli"],
 	"toolchain": ["jupyter"],
