@@ -1,7 +1,7 @@
 {
 	"guid": "111213A0-C930-45B4-820F-02472BABBF34",
 	"name": "Intel® Optimization for TensorFlow* Getting Started",
-	"categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
 	"description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
 	"builder": ["cli"],
 	"languages": [{
@@ -13,7 +13,7 @@
 		"linux": [{
 			"id": "tensorflow hello world",
 			"steps": [
-				"source $HOME/intel/oneapi/intelpython/bin/activate",
+				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
 				"python TensorFlow_HelloWorld.py"
 			]
