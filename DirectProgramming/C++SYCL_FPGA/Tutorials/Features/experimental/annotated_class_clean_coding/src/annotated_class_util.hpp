@@ -3,12 +3,6 @@
 
 #include <sycl/sycl.hpp>
 
-template <typename T, typename P>
-using annotated_arg = sycl::ext::oneapi::experimental::annotated_arg<T, P>;
-
-template <typename T, typename P>
-using annotated_ptr = sycl::ext::oneapi::experimental::annotated_ptr<T, P>;
-
 namespace fpga_tools {
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -75,12 +69,12 @@ template <typename T>
 struct is_annotated_class : std::false_type {};
 
 template <typename T, typename... Props>
-struct is_annotated_class<annotated_ptr<
+struct is_annotated_class<sycl::ext::oneapi::experimental::annotated_ptr<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>>
     : std::true_type {};
 
 template <typename T, typename... Props>
-struct is_annotated_class<annotated_arg<
+struct is_annotated_class<sycl::ext::oneapi::experimental::annotated_arg<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>>
     : std::true_type {};
 
@@ -89,13 +83,13 @@ template <typename T>
 struct get_raw_type {};
 
 template <typename T, typename... Props>
-struct get_raw_type<annotated_ptr<
+struct get_raw_type<sycl::ext::oneapi::experimental::annotated_ptr<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>> {
   using type = T;
 };
 
 template <typename T, typename... Props>
-struct get_raw_type<annotated_arg<
+struct get_raw_type<sycl::ext::oneapi::experimental::annotated_arg<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>> {
   static constexpr bool is_annotated_arg_for_pointer = false;
   static_assert(is_annotated_arg_for_pointer,
@@ -104,7 +98,7 @@ struct get_raw_type<annotated_arg<
 };
 
 template <typename T, typename... Props>
-struct get_raw_type<annotated_arg<
+struct get_raw_type<sycl::ext::oneapi::experimental::annotated_arg<
     T *, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>> {
   using type = T;
 };
@@ -115,13 +109,13 @@ template <typename T>
 struct get_property_list {};
 
 template <typename T, typename... Props>
-struct get_property_list<annotated_ptr<
+struct get_property_list<sycl::ext::oneapi::experimental::annotated_ptr<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>> {
   using type = sycl::ext::oneapi::experimental::detail::properties_t<Props...>;
 };
 
 template <typename T, typename... Props>
-struct get_property_list<annotated_arg<
+struct get_property_list<sycl::ext::oneapi::experimental::annotated_arg<
     T, sycl::ext::oneapi::experimental::detail::properties_t<Props...>>> {
   using type = sycl::ext::oneapi::experimental::detail::properties_t<Props...>;
 };

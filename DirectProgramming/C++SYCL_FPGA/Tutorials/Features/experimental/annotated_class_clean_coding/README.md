@@ -24,7 +24,7 @@ This Intel® FPGA tutorial demonstrates how to use the included `annotated_class
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
-> :warning: Make sure the GCC (for Linux) or Visual Studio (for Windows) in your system supports C++20 features. This requires GCC 8 or later (for Linux) or Visual Studio 2019 version 16.11 or later (for Windows).
+> :warning: Make sure the GCC (for Linux) or Visual Studio (for Windows) in your system supports C++20 features. This requires GCC 9 or later (for Linux) or Visual Studio 2019 version 16.11 or later (for Windows).
 
 > **Note**: This tutorial does not apply to the FPGA acceleration flow as it demonstrates a SYCL HLS flow specific feature.
 
