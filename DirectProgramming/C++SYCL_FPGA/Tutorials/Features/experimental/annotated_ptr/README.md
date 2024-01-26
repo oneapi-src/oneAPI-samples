@@ -135,12 +135,12 @@ This design uses CMake to generate a build script for GNU/make.
 
 3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-	   | Compilation Type    | Command
-	   |:---                 |:---
-	   | FPGA Emulator       | `make fpga_emu`
-	   | Optimization Report | `make report`
-	   | FPGA Simulator      | `make fpga_sim`
-	   | FPGA Hardware       | `make fpga`
+	| Compilation Type    | Command
+	|:---                 |:---
+	| FPGA Emulator       | `make fpga_emu`
+	| Optimization Report | `make report`
+	| FPGA Simulator      | `make fpga_sim`
+	| FPGA Hardware       | `make fpga`
 
 ### On a Windows* System
 This design uses CMake to generate a build script for  `nmake`.
@@ -157,12 +157,12 @@ This design uses CMake to generate a build script for  `nmake`.
    
 3. Compile the design with the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-	   | Compilation Type    | Command (Windows)
-	   |:---                 |:---
-	   | FPGA Emulator       | `nmake fpga_emu`
-	   | Optimization Report | `nmake report`
-	   | FPGA Simulator      | `nmake fpga_sim`
-	   | FPGA Hardware       | `nmake fpga`
+	| Compilation Type    | Command (Windows)
+	|:---                 |:---
+	| FPGA Emulator       | `nmake fpga_emu`
+	| Optimization Report | `nmake report`
+	| FPGA Simulator      | `nmake fpga_sim`
+	| FPGA Hardware       | `nmake fpga`
 
 
 ### Read the Reports
