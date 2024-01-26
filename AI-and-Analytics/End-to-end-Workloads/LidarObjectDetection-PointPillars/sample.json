@@ -12,6 +12,7 @@
           "linux": [{
                   "steps": [
                           "source ./get_dependencies.sh",
+                          "source /opt/intel/oneapi/setvars.sh",                      
                           "mkdir build",
                           "cd build",
                           "cmake ..",
