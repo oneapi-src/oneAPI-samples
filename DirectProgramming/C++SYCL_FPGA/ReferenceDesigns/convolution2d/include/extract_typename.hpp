@@ -29,14 +29,14 @@ struct ExtractPipeType {
   typedef T value_type;
 };
 
-template <template <class, class, int32_t, class, typename...> class PIPE_CLASS,
-          class PIPE_NAME, class PIPE_DATA_T, int32_t PIPE_MIN_CAPACITY,
-          class PIPE_PROPERTIES, typename... Args>
+template <template <class, class, int32_t, class, typename...> class PipeClass,
+          class PipeName, class PipeDataT, int32_t kPipeMinCapacity,
+          class PipeProperties, typename... Args>
 struct ExtractPipeType<
-    PIPE_CLASS<PIPE_NAME, PIPE_DATA_T, PIPE_MIN_CAPACITY, PIPE_PROPERTIES,
+    PipeClass<PipeName, PipeDataT, kPipeMinCapacity, PipeProperties,
                Args...>>  // specialization
 {
-  typedef PIPE_DATA_T value_type;
+  typedef PipeDataT value_type;
 };
 
 template <typename T>
@@ -46,14 +46,14 @@ struct ExtractStreamingBeatType {
   static constexpr bool use_empty = false;
 };
 
-template <template <class, bool, bool> class BEAT_CLASS, class BEAT_DATA_T,
-          bool BEAT_USE_PACKETS, bool BEAT_EMPTY>
+template <template <class, bool, bool> class BeatClass, class BeatDataT,
+          bool kBeatUsePackets, bool kBeatEmpty>
 struct ExtractStreamingBeatType<
-    BEAT_CLASS<BEAT_DATA_T, BEAT_USE_PACKETS, BEAT_EMPTY>>  // specialization
+    BeatClass<BeatDataT, kBeatUsePackets, kBeatEmpty>>  // specialization
 {
-  typedef BEAT_DATA_T value_type;
-  static constexpr bool use_packets = BEAT_USE_PACKETS;
-  static constexpr bool use_empty = BEAT_EMPTY;
+  typedef BeatDataT value_type;
+  static constexpr bool use_packets = kBeatUsePackets;
+  static constexpr bool use_empty = kBeatEmpty;
 };
 
 template <typename PipeWithStreamingType>

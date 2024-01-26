@@ -85,7 +85,7 @@ void stop() {
   IOWR_32DIRECT(KERNEL_STOP_VALID, 0, 0x1);
 }
 
-int getStopCount() {
+int get_stop_count() {
   return IORD_32DIRECT(KERNEL_FINISH_COUNTER, 0);
 }
 
@@ -102,7 +102,7 @@ void set_convolution_coeffs(size_t len, uint8_t *coeffs)
   printf("\n");
 }
 
-void init_coeffs_identity3x3() {
+void init_coeffs_identity_3x3() {
   float coeffs[9] = K_COEFFS_IDENTITY;
 
   // re-cast to int to be compatible with the macro
@@ -119,7 +119,7 @@ void init_coeffs_sobel_vertical() {
   set_convolution_coeffs(9 * sizeof(float), coeffs_bytes);
 }
 
-uint64_t pollStatusRegister() {
+uint64_t poll_status_register() {
   uint64_t status_register_data;
   uint32_t *sr_low = reinterpret_cast<uint32_t *>(&status_register_data);
   uint32_t *sr_high = &sr_low[1];
@@ -129,25 +129,25 @@ uint64_t pollStatusRegister() {
   return status_register_data;
 }
 
-uint32_t pollFinishCounter() {
+uint32_t poll_finish_counter() {
   return IORD_32DIRECT(KERNEL_FINISH_COUNTER, 0);
 }
 
-uint32_t getKernelVersion() {
+uint32_t get_kernel_version() {
   return IORD_32DIRECT(KERNEL_VERSION, 0);
 }
 
-void setBypass(bool bypass)
+void set_bypass(bool bypass)
 {
   IOWR_32DIRECT(KERNEL_BYPASS, 0, bypass);
   IOWR_32DIRECT(KERNEL_BYPASS_VALID, 0, 0x1);
 }
 
-void setRows(int rows) {
+void set_rows(int rows) {
   IOWR_32DIRECT(ARG_ROWS, 0, rows);
 }
 
-void setCols(int cols) {
+void set_cols(int cols) {
   IOWR_32DIRECT(ARG_COLS, 0, cols);
 }
 }  // namespace oneapiconvolution
