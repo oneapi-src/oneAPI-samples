@@ -112,7 +112,10 @@ def run(name, alg, sizes=10, step=2, nopt=2**19):
     nopt = int(args.size)
     repeat = int(args.repeat)
 
-    dpctl.SyclDevice("gpu")
+    d = dpctl.SyclDevice("gpu")
+    if (d.has_aspect_fp64 == False):
+        print("Double precision floating points not supported on this Device. Exiting!\n")
+        return
 
     if args.test:
         price, strike, t, p_call, p_put = gen_data_np(nopt)

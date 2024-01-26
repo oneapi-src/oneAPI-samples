@@ -100,7 +100,10 @@ def run(name, alg, sizes=7, step=2, nopt=2**10):
     repeat = int(args.repeat)
     dims = int(args.d)
 
-    dpctl.SyclDevice("gpu")
+    d = dpctl.SyclDevice("gpu")
+    if (d.has_aspect_fp64 == False):
+        print("Double precision floating points not supported on this Device. Exiting!\n")
+        return
 
     if args.test:
         X, Y, p_D = gen_data(nopt, dims)

@@ -127,7 +127,10 @@ def run(name, alg, sizes=6, step=2, nopt=2**17):
     ndims = 2
     niters = 30
 
-    dpctl.SyclDevice("gpu")
+    d = dpctl.SyclDevice("gpu")
+    if (d.has_aspect_fp64 == False):
+        print("Double precision floating points not supported on this Device. Exiting!\n")
+        return
     
     f = open("perf_output.csv", "w")
     f2 = open("runtimes.csv", "w", 1)
