@@ -21,12 +21,13 @@ cmake --build ./OpenCL-CLHPP/build --target install
 
 export OpenCLHeadersCpp_DIR=$PWD/OpenCL-CLHPP/build/OpenCLHeadersCpp
 
-# Install OpenVINO 2023.1.0 and Boost libraries
+# Install OpenVINO 2023.1.0, Boost, and oneAPI Base Toolkit
 wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 
 echo "deb https://apt.repos.intel.com/openvino/2023 ubuntu22 main" | tee /etc/apt/sources.list.d/intel-openvino-2023.list
+echo "deb https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
 
 apt update
-apt -y install openvino-2023.1.0 libboost-all-dev
+apt -y install openvino-2023.1.0 libboost-all-dev intel-basekit
