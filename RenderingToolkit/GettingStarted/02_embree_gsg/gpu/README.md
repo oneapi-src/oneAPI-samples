@@ -1,6 +1,6 @@
 # `Getting Started` GPU Sample for Intel&reg; Rendering Toolkit (Render Kit): Intel&reg; Embree
 
-This sample program, `minimal_sycl`, performs two ray-to-triangle-intersect tests with the Intel&reg; Embree API. One test is a successful intersection, and the second test misses. The program performs intersection tests on the GPU device. The program writes output results to the console (stdout).
+This sample program, `minimal_sycl`, performs two ray-to-triangle intersect tests with the Intel&reg; Embree API. One test is a successful intersection, and the second test misses. The program performs intersection tests on the GPU device. The program writes output results to the console (stdout).
 
 | Area                 | Description
 |:---                  |:---
@@ -12,7 +12,7 @@ This sample program, `minimal_sycl`, performs two ray-to-triangle-intersect test
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Ubuntu* 22.04 <br> RHEL 8.5, 8.6 (or compatible) <br>Windows* 10 64-bit 20H2 or higher<br>Windows 11* 64-bit
-| Hardware                          | Intel&reg; Arc&trade; GPU or higher, compatible with Intel Xe-HPG or Intel Xe-HPC architectures
+| Hardware                          | Intel&reg; GPU compatible with Intel Xe-HPG or Intel Xe-HPC architectures<ul><li>Intel&reg; Arc&trade; A-Series GPU or higher</li><li>Intel&reg; Data Center GPU or higher</li></ul>
 | Compiler Toolchain                | **Windows\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, MSVS 2019 or higher with Windows* SDK and CMake*<br>**Linux\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, C++17 system compiler (for example g++), and CMake*
 | Libraries                         | Intel&reg; oneAPI DPC++ Compiler and Runtime Library (Base Toolkit)<br>Intel&reg; Rendering Toolkit (Render Kit), includes Embree
 | GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#) 
@@ -20,7 +20,6 @@ This sample program, `minimal_sycl`, performs two ray-to-triangle-intersect test
 
 - Embree computation is offloaded to the GPU device via the SYCL* implementation.
 - The SYCL* implementation is provided with Intel DPC/C++ runtime libraries. It uses the system graphics driver.
-- Note: Embree releases with Beta GPU functionality may report a Beta message.
 
 ## Build and Run the `Getting Started` Sample Program
 
@@ -52,7 +51,12 @@ cd <path-to-oneAPI-samples>\RenderingToolkit\GettingStarted\02_embree_gsg
 cd gpu
 ```
 
-3. Build and run the `Getting Started` program:
+3. On Intel&reg; Data Center GPU devices, set the level zero flat device [hierarchy](https://www.intel.com/content/www/us/en/developer/articles/technical/flattening-gpu-tile-hierarchy.html) environment variable to composite:
+```
+set ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+```
+
+4. Build and run the `Getting Started` program:
 ```
 mkdir build
 cd build
@@ -65,7 +69,7 @@ cd ..\bin
 
 > Note: Replace the generator flag *"Visual Studio 17 2022"* with *"Visual Studio 16 2019"* as needed for MSVS 2019.
 
-4. Review the terminal output (stdout).
+5. Review the terminal output (stdout).
 
 ### On Linux*
 
@@ -75,7 +79,13 @@ cd ..\bin
 cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/02_embree_gsg
 cd gpu
 ```
-3. Build and run the `Getting Started` program:
+
+3. On Intel&reg; Data Center GPU devices, set the level zero flat device [hierarchy](https://www.intel.com/content/www/us/en/developer/articles/technical/flattening-gpu-tile-hierarchy.html) environment variable to composite:
+```
+export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+```
+
+4. Build and run the `Getting Started` program:
 ```
 mkdir build
 cd build
@@ -85,7 +95,7 @@ cmake --install .
 cd ../bin
 ./minimal_sycl
 ```
-4. Review the terminal output (stdout).
+5. Review the terminal output (stdout).
 
 ### Example Output
 ```
@@ -97,6 +107,29 @@ cd ../bin
 ## Next Steps
 
 Continue with the [Getting Started Guide](../../../GettingStarted/03_openvkl_gsg) or review the detailed [walkthrough tutorial programs](../../../Tutorial) using Embree to raytrace and pathtrace images.
+
+## Troubleshoot
+
+If you observe segmentation faults on Intel&reg; Data Center Max GPU, please ensure you have set environment variables by:
+1. Using the setvars script
+2. Setting level zero flat device hierarchy environment variable to composite.
+
+To look for variables on Linux* OS:
+```
+env | grep LD_LIBRARY_PATH
+env | grep ONEAPI
+env | grep ZE_
+```
+
+Windows* OS:
+```
+set | findstr PATH
+set | findstr ONEAPI
+set | findstr ZE_
+```
+
+Intel&reg; Xe-LP architecture devices are not supported.
+
 
 ## License
 
