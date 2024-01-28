@@ -45,7 +45,7 @@ module avalon_to_axi_gasket(
     assign axi_tx_tdata    = {2'b0, pixel1_r, pixel1_g, pixel1_b, 2'b0, pixel0_r, pixel0_g, pixel0_b};
 
     // don't support interlaced video, so ignore TUSER[1].
-    assign axi_tx_tuser[0] = {6'b0, 1'b0, avst_sink_sop};
+    assign axi_tx_tuser    = {6'b0, 1'b0, avst_sink_sop};
 
     // eop will go high at the end of each line
     assign axi_tx_tlast    = avst_sink_eop;
