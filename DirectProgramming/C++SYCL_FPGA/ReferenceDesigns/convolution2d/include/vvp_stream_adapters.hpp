@@ -81,7 +81,7 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
             << " pixels in parallel. " << std::endl;
 
   for (int i_base = 0; i_base < end_pixel; i_base += kPixelsInParallel) {
-    DataBundleType in_pixel_bundle = {};
+    DataBundleType in_bundle = {};
     // sop at the beginning of each frame
     bool sop = (i_base == 0);
     // eop at the end of each line
@@ -94,7 +94,7 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
       PixelType subpixel;  // TODO: figure out what to do with structs
       if (i < (rows * cols)) {
         subpixel = in_img[i];
-        in_pixel_bundle[i_subpixel] = subpixel;
+        in_bundle[i_subpixel] = subpixel;
       } else {
         empty++;
       }
@@ -102,15 +102,15 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 
     // handle different combinations of usePackets and useEmpty
     if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle, sop, eop, empty);
+      StreamingBeatType in_beat(in_bundle, sop, eop, empty);
       PixelPipe::write(q, in_beat);
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle, sop, eop);
+      StreamingBeatType in_beat(in_bundle, sop, eop);
       PixelPipe::write(q, in_beat);
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          !BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle);
+      StreamingBeatType in_beat(in_bundle);
       PixelPipe::write(q, in_beat);
     } else {
       std::cerr << "ERROR: Invalid beat parameterization." << std::endl;
@@ -191,24 +191,24 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     bool eop_calc = false;
     int empty_calc = 0;
     StreamingBeatType out_beat = PixelPipe::read(q);
-    DataBundleType outBundle;
+    DataBundleType out_bundle;
 
     // handle different combinations of usePackets and useEmpty
     if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
       sop_calc = out_beat.sop;
       eop_calc = out_beat.eop;
       empty_calc = out_beat.empty;
-      outBundle = out_beat.data;
+      out_bundle = out_beat.data;
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          BeatUsePackets<PixelPipe>()) {
       sop_calc = out_beat.sop;
       eop_calc = out_beat.eop;
-      outBundle = out_beat.data;
+      out_bundle = out_beat.data;
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          !BeatUsePackets<PixelPipe>()) {
       sop_calc = sop_expected;
       eop_calc = eop_expected;
-      outBundle = out_beat.data;
+      out_bundle = out_beat.data;
     } else {
       std::cerr << "ERROR: Invalid beat parameterization." << std::endl;
       return false;
@@ -226,7 +226,7 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     for (int i_subpixel = 0; i_subpixel < kPixelsInParallel; i_subpixel++) {
       int i = i_base + i_subpixel;
       if (i < (rows * cols)) {
-        PixelType subpixel = outBundle[i_subpixel];
+        PixelType subpixel = out_bundle[i_subpixel];
         out_img[i] = subpixel;
       }
     }
@@ -308,7 +308,7 @@ bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
 
   int written_dummy_beats = 0;
   for (int i_base = 0; i_base < len; i_base += kPixelsInParallel) {
-    DataBundleType in_pixel_bundle = {};
+    DataBundleType in_bundle = {};
     int empty = 0;
     bool sop = true;
     bool eop = true;
@@ -316,22 +316,22 @@ bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
     // construct beat with n>=1 parallel pixels
     for (int i_subpixel = 0; i_subpixel < kPixelsInParallel; i_subpixel++) {
       PixelType subpixel = val;
-      in_pixel_bundle[i_subpixel] = subpixel;
+      in_bundle[i_subpixel] = subpixel;
     }
 
     // handle different combinations of usePackets and useEmpty
     if constexpr (BeatUseEmpty<PixelPipe>() && BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle, sop, eop, empty);
+      StreamingBeatType in_beat(in_bundle, sop, eop, empty);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle, sop, eop);
+      StreamingBeatType in_beat(in_bundle, sop, eop);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
     } else if constexpr (!BeatUseEmpty<PixelPipe>() &&
                          !BeatUsePackets<PixelPipe>()) {
-      StreamingBeatType in_beat(in_pixel_bundle);
+      StreamingBeatType in_beat(in_bundle);
       PixelPipe::write(q, in_beat);
       written_dummy_beats++;
     } else {
