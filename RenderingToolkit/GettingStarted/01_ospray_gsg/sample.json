@@ -14,11 +14,13 @@
                 {
   		"id": "Intel_OSPRay_ospTutorial_lin",
   		"steps": [
+                    "unset ZE_FLAT_DEVICE_HIERARCHY",
                     "mkdir build",
                     "cd build",
                     "cmake -DCMAKE_BUILD_TYPE=Release ..",
                     "cmake --build .",
                     "./ospTutorialCpp",
+		    "export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE",
 		    "./ospTutorialCpp --osp:load-modules=gpu --osp:device=gpu"
   		 ]
   	         }
@@ -27,12 +29,14 @@
 		{
 		"id": "Intel_OSPRay_ospTutorial_win",
 		"steps":[
+                    "set \"ZE_FLAT_DEVICE_HIERARCHY=\"",
                     "mkdir build",
                     "cd build",
 		    "cmake ..",
 		    "cmake --build . --config Release",
 		    "cd Release",
 		    ".\\ospTutorialCpp.exe",
+		    "set ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE",
 		    ".\\ospTutorialCpp.exe --osp:load-modules=gpu --osp:device=gpu"
 		]
 
@@ -46,7 +50,6 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-		    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/lib && ./ospTutorialCpp",
                     "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./ospTutorialCpp"
                  ]
                  }

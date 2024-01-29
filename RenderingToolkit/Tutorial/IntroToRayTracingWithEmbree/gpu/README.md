@@ -20,7 +20,7 @@ output](example_images/rkRayTracerGPU.png)
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
-| Hardware                          | Intel&reg; Arc&trade; GPU (DG2-128, DG2-512) or higher, compatible with Intel Xe-HPG or Intel Xe-HPC architectures
+| Hardware                          | Intel&reg; GPU compatible with Intel Xe-HPG or Intel Xe-HPC architectures<ul><li>Intel&reg; Arc&trade; A-Series GPU or higher</li><li>Intel&reg; Data Center GPU or higher</li></ul>
 | Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit) including Intel&reg; Embree, and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler
 | SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher
 | Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++17 compiler and CMake*
@@ -95,6 +95,11 @@ cd build
 cmake -G"Visual Studio 17 2022" -A x64 -T"Intel(R) oneAPI DPC++ Compiler 2024" ..
 ```
 
+On Intel&reg; Data Center GPU devices, set the level zero flat device [hierarchy](https://www.intel.com/content/www/us/en/developer/articles/technical/flattening-gpu-tile-hierarchy.html) environment variable to composite:
+```
+set ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+```
+
 Build and run the application:
 ```
 cmake --build . --config Release
@@ -113,6 +118,11 @@ Open a new Terminal session. Navigate to the source folder.
 
 ```
 cd <path-to-oneAPI-Samples>/RenderingToolkit/Tutorial/IntroToRayTracingWithEmbree/gpu
+```
+
+On Intel&reg; Data Center GPU devices, set the level zero flat device [hierarchy](https://www.intel.com/content/www/us/en/developer/articles/technical/flattening-gpu-tile-hierarchy.html) environment variable to composite:
+```
+export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
 ```
 
 Build and run the application:
@@ -191,6 +201,28 @@ rendering facilities on top of Embree.
 
 You can find more information by visiting [Intel&reg; Rendering
 Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
+
+## Troubleshoot
+
+If you observe segmentation faults on Intel&reg; Data Center Max GPU, please ensure you have set environment variables by:
+1. Using the setvars script
+2. Setting level zero flat device hierarchy environment variable to composite.
+
+To look for variables on Linux* OS:
+```
+env | grep LD_LIBRARY_PATH
+env | grep ONEAPI
+env | grep ZE_
+```
+
+Windows* OS:
+```
+set | findstr PATH
+set | findstr ONEAPI
+set | findstr ZE_
+```
+
+Intel&reg; Xe-LP architecture devices are not supported.
 
 ## License
 
