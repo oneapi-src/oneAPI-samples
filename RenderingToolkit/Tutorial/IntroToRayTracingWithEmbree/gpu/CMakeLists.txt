@@ -18,6 +18,7 @@ set(PATHADDITIONS_DIRS "")
 if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
   set(EMBREE_BASE_DIR ${ONEAPI_ROOT})
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT})
+  #no MacOS
   set(TBB_BASE_DIR ${ONEAPI_ROOT})
   set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT})
   #Compiler runtimes help for windows MSVS debugger DLL help only
@@ -26,6 +27,7 @@ if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat
 else()
   set(EMBREE_BASE_DIR ${ONEAPI_ROOT}/embree/latest)
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT}/rkcommon/latest)
+  #no MacOS
   set(TBB_BASE_DIR ${ONEAPI_ROOT}/tbb/latest)
   set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT}/dev-utilities/latest)
   #Compiler runtimes help for windows MSVS debugger DLL help only
