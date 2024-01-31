@@ -49,7 +49,7 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/etc/rkcommon/tbb/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./oidnDenoise -d cpu -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ]
