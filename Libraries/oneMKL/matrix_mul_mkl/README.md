@@ -50,7 +50,7 @@ To learn more about the extensions, see the
 >
 > Linux User: . ~/intel/oneapi/setvars.sh
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows: C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 

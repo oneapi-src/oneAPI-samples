@@ -54,7 +54,7 @@ When working with the Command Line Interface (CLI), you should configure the one
 > - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
 > - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > Microsoft Visual Studio:
