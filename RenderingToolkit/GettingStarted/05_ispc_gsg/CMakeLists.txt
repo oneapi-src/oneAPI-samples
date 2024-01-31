@@ -1,5 +1,5 @@
-project(ispc_gsg)
 cmake_minimum_required(VERSION 3.1)
+project(ispc_gsg)
 
 set(ONEAPI_ROOT "")
 if(WIN32)
