@@ -13,12 +13,13 @@
       {
           "id": "intel amx bf16 training",
           "steps": [
-              "source activate pytorch",
+              "source /root/intel/oneapi/intelpython/bin/activate",
+              "conda activate pytorch",
               "python -m pip install -r requirements.txt",
               "python -m ipykernel install --user --name=user_pytorch",
               "python pytorch_training_avx512_bf16.py",
               "python pytorch_training_amx_bf16.py",
-              "python ci_test.py"
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb"
            ]
       }
        ]

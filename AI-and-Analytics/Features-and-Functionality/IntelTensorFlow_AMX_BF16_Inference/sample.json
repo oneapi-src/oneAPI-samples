@@ -13,12 +13,13 @@
       {
           "id": "intel amx bf16 inference",
           "steps": [
-              "source activate tensorflow",
+              "source /root/intel/oneapi/intelpython/bin/activate",
+              "conda activate tensorflow",
               "pip install -r requirements.txt",
-              "python -m pip install py-cpuinfo",
+              "pip install ipykernel jupyter",
               "python Intel_TensorFlow_AMX_BF16_Inference.py",
-              "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
-              "python ci_test.py"
+              "python -m ipykernel install --user --name=tensorflow",
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
            ]
       }
        ]
