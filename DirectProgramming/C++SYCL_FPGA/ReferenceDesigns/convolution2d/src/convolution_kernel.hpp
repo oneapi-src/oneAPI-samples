@@ -176,7 +176,7 @@ struct RGB2Grey {
   void operator()() const {
     // this loop is not necessary in hardware since I will pin the
     // `start` bit high, but it makes the testbench easier.
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
     while (1) {
       conv2d::RGBBeat rgb_beat = PipeIn::read();
       conv2d::GreyScaleBeat grey_beat;
@@ -295,7 +295,7 @@ struct Grey2RGB {
   void operator()() const {
     // this loop is not necessary in hardware since the `start` bit will be
     // pulled high, but it makes the testbench easier.
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
     while (1) {
       conv2d::GreyScaleBeat grey_beat = PipeIn::read();
       conv2d::RGBBeat rgb_beat;
