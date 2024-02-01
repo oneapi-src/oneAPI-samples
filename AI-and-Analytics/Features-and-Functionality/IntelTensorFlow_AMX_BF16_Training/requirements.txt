@@ -8,6 +8,7 @@ matplotlib
 numpy
 pandas
 Pillow
+py-cpuinfo
 tensorboard
 tensorboard-data-server
 tensorboard-plugin-wit

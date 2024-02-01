@@ -14,6 +14,7 @@
   		"env": [],
   		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
   		"steps": [
+      "source /root/intel/oneapi/intelpython/bin/activate",
 			"conda activate tensorflow",
 			"conda install -y jupyter",
 			"jupyter nbconvert --execute --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
