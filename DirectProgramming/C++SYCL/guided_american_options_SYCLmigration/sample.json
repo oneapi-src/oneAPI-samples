@@ -1,0 +1,28 @@
+{
+  "guid": "172DA0C8-3716-4432-A8D4-8BAEC662385E",
+  "name": "american_options",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "description": "",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run_host_api",
+                        "cmake -D USE_DEVICE_API=1 ..",
+                        "make",
+                        "make run_device_api"
+                 ]
+        }]
+
+  },
+  "expertise": "Code Optimization"
+}
