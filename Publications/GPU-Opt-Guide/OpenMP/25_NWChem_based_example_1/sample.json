@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make test-Map-UpdateTo",
+          "make test-SharedMem",
           "make clean"
         ]
       }

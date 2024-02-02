@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make ",
+          "make test-Map-UpdateTo",
           "make clean"
         ]
       }
