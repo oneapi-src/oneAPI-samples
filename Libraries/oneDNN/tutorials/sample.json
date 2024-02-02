@@ -37,15 +37,6 @@
 			"python3 -m ipykernel install --user --name=base",
 			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_analyze_isa_with_dispatcher_control.ipynb"
 		 ]
-	},
-	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
-		"id": "vtune_itt",
-		"steps": [
-			"pip install jupyter ipykernel",
-			"python3 -m ipykernel install --user --name=base",
-			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_vtune_profiling.ipynb"
-		 ]
 	}
  ]}
 }
