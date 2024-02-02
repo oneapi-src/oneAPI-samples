@@ -74,7 +74,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 endif(NOT MSVC)
 
 #stb headers are located in dev-utilities with the old oneAPI dires layout
-include_directories(${STB_HEADERS_DIR}/include)
+include_directories(${STB_HEADERS_DIR})
 
 set(HEADERS src/CornellBox.h  src/DefaultCubeAndPlane.h  src/Geometry.h  src/Lights.h src/Materials.h src/PathTracer.h src/Pool.h src/Renderer.h src/SceneGraph.h src/Sphere.h src/definitions.h src/RandomSampler.h)
 add_executable(rkPathTracer src/rkPathTracer.cpp ${HEADERS})
