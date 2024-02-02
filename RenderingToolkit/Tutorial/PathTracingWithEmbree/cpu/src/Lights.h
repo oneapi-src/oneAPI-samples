@@ -37,6 +37,8 @@ class Light {
   virtual Light_EvalRes eval(const Vec3fa& org, const Vec3fa&);
 
   LightType m_type;
+
+  virtual ~Light() = default;
 };
 
 Light_EvalRes Light::eval(const Vec3fa& dg, const Vec3fa& dir) {
