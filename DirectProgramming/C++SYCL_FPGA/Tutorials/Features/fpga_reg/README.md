@@ -283,4 +283,4 @@ You will be able to observe the improvement in the throughput going from Part 1 
 
 Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).
