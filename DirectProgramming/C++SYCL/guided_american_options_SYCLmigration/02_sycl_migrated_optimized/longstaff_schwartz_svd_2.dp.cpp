@@ -1176,11 +1176,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
         })
         .wait();
   }
-  /*
-  DPCT1010:12: SYCL uses exceptions to report errors and does not use the error
-  codes. The call was replaced with 0. You need to rewrite this code.
-  */
-  CHECK_CUDA(0);
   auto stop_ct1 = std::chrono::steady_clock::now();
   auto elapsed_time = std::chrono::duration<float, std::milli>(stop_ct1 - start_ct1).count();
   printf("RNG time   : %.3fms\n", elapsed_time);
@@ -1191,11 +1186,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
 
   // Prepare the SVDs.
   const int NUM_THREADS_PER_BLOCK1 = 256;
-  /*
-  DPCT1027:22: The call to cudaFuncSetSharedMemConfig was replaced with 0
-  because SYCL currently does not support configuring shared memory on devices.
-  */
-  CHECK_CUDA(0);
   {
     dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
     stream->submit([&](sycl::handler &cgh) {
@@ -1226,11 +1216,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
           });
     });
   }
-  /*
-  DPCT1010:14: SYCL uses exceptions to report errors and does not use the error
-  codes. The call was replaced with 0. You need to rewrite this code.
-  */
-  CHECK_CUDA(0);
 
   // The constant to discount the payoffs.
   const double exp_min_r_dt = std::exp(-r*dt);
@@ -1250,16 +1235,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
 
   // Enable 8B mode for SMEM.
   const int NUM_THREADS_PER_BLOCK2 = 128;
-  /*
-  DPCT1027:23: The call to cudaFuncSetSharedMemConfig was replaced with 0
-  because SYCL currently does not support configuring shared memory on devices.
-  */
-  CHECK_CUDA(0);
-  /*
-  DPCT1027:15: The call to cudaFuncSetSharedMemConfig was replaced with 0
-  because SYCL currently does not support configuring shared memory on devices.
-  */
-  CHECK_CUDA(0);
 
   // Update the cashflows.
   grid_dim = (num_paths + NUM_THREADS_PER_BLOCK2-1) / NUM_THREADS_PER_BLOCK2;
@@ -1317,11 +1292,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
             });
       });
     }
-    /*
-    DPCT1010:16: SYCL uses exceptions to report errors and does not use the
-    error codes. The call was replaced with 0. You need to rewrite this code.
-    */
-    CHECK_CUDA(0);
 
 #if defined(WITH_FUSED_BETA) || defined(WITH_ATOMIC_BETA)
 #else
@@ -1350,11 +1320,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
             });
       });
     }
-    /*
-    DPCT1010:17: SYCL uses exceptions to report errors and does not use the
-    error codes. The call was replaced with 0. You need to rewrite this code.
-    */
-    CHECK_CUDA(0);
   }
 #endif // WITH_CDP
 
@@ -1362,11 +1327,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
   const int NUM_THREADS_PER_BLOCK4 = 128;
   grid_dim = (num_paths + NUM_THREADS_PER_BLOCK4-1) / NUM_THREADS_PER_BLOCK4;
 
-  /*
-  DPCT1027:18: The call to cudaFuncSetSharedMemConfig was replaced with 0
-  because SYCL currently does not support configuring shared memory on devices.
-  */
-  CHECK_CUDA(0);
   {
     dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
     stream->parallel_for(
@@ -1378,17 +1338,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
               num_paths, d_cashflows, d_temp_storage, item_ct1);
         });
   }
-  /*
-  DPCT1010:19: SYCL uses exceptions to report errors and does not use the error
-  codes. The call was replaced with 0. You need to rewrite this code.
-  */
-  CHECK_CUDA(0);
-
-  /*
-  DPCT1027:20: The call to cudaFuncSetSharedMemConfig was replaced with 0
-  because SYCL currently does not support configuring shared memory on devices.
-  */
-  CHECK_CUDA(0);
   {
     dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
     stream->parallel_for(
@@ -1399,11 +1348,6 @@ auto start_ct1 = std::chrono::steady_clock::now();
               num_paths, grid_dim, exp_min_r_dt, d_temp_storage, item_ct1);
         });
   }
-  /*
-  DPCT1010:21: SYCL uses exceptions to report errors and does not use the error
-  codes. The call was replaced with 0. You need to rewrite this code.
-  */
-  CHECK_CUDA(0);
 
   // Copy the result to the host.
   CHECK_CUDA(DPCT_CHECK_ERROR(
