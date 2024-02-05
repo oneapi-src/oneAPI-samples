@@ -14,7 +14,7 @@ You can customize memory-mapped interfaces of your IP component if the component
 ### Declare `annotated_arg`
 An explicit MM Host interface should be declared as a member of your kernel functor as shown in the  next section.
 
-A list of properties that can be used to customize `annotated_arg` can be found in this dedicated [mmhost](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/mmhost) code sample.
+A list of properties that can be used to customize `annotated_arg` can be found in this dedicated [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample.
 
 ### Example of how to use `annotated_arg` to customize an Avalon memory-mapped host interface
 

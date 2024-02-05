@@ -228,7 +228,7 @@ You can manually follow the steps below, or run the `build_and_sim_testsystem.tc
 
 ### On both Linux* and Windows*
 
-5. Add the DMA IP to the Platform Designer system. The included `components.ipx` file shows Platform Designer where to look for FPGA IPs produced with the Intel® oneAPI DPC++/C++ Compiler. See the [Platform Designer tutorial](/../../Tutorials/Tools//experimental/platform_designer) for detailed instructions on how to add an FPGA IP to a Platform Designer system. Here are some specific directions for this example:
+5. Add the DMA IP to the Platform Designer system. The included `components.ipx` file shows Platform Designer where to look for FPGA IPs produced with the Intel® oneAPI DPC++/C++ Compiler. See the [Platform Designer tutorial](/DirectProgramming/C++SYCL_FPGA/Tutorials/Tools/platform_designer) for detailed instructions on how to add an FPGA IP to a Platform Designer system. Here are some specific directions for this example:
     1. Change the HDL entity name to `simple_dma_accelerator` to match names used in the Nios V software.
     2. Connect the interrupt port to the Nios V interrupt receiver and assign its IRQ number to 1 (or any number besides 0 which is used by the UART)
     3. Connect the Nios V data host port to the IP component's `csr_ring_root_avs` port. Ensure the base address is assigned between `0x0010_0000` and `0x001F_FFFF`.

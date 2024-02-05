@@ -82,7 +82,7 @@ When your data resides in an off-kernel memory (for example: global memory or of
 
 ![](assets/data_mm_host.svg)
 
-You can customize this interface by explicitly declaring interfaces with the `annotated_arg` type. See [mm-host](mm-host/) part of this tutorial for an example of how to do this. For more information on the customization of Memory-mapped host interfaces, see this dedicated [mmhost](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/mmhost) code sample.
+You can customize this interface by explicitly declaring interfaces with the `annotated_arg` type. See [mm-host](mm-host/) part of this tutorial for an example of how to do this. For more information on the customization of Memory-mapped host interfaces, see this dedicated [mmhost](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/mmhost) code sample.
 
 ### Stream (Pipe)
 You may also choose to stream data into/out of your kernel using pipes. Pipes are a first-in first-out (FIFO) buffer construct that provide links between elements of a design. The Intel® oneAPI DPC++/C++ Compiler provides host pipes for host-kernel streaming and inter-kernel pipes for kernel-kernel streaming. The [pipes](pipes/) example demonstrates how to use host pipes to read and write data through an Avalon streaming interface that can be connected to other IP components in an FPGA design. 
@@ -100,7 +100,7 @@ There are two ways you can do this:
 
 ## Sample Structure
 There are 5 different example designs in this sample, all of which implement a simple vector addition. You can compare the C++ source code for each of these designs.
-1. [Naive](naive/) This simple vector add implementation is similar to the one presented in the [fpga_compile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/GettingStarted/fpga_compile) code sample. It demonstrates a kernel that uses a register-mapped invocation interface, and a single shared memory-mapped host data interface. This is the only design that can support the full-system compilation flow, since the other designs implement interface customizations that are not supported by any BSP.
+1. [Naive](naive/) This simple vector add implementation is similar to the one presented in the [fpga_compile](/DirectProgramming/C++SYCL_FPGA/Tutorials/GettingStarted/fpga_compile) code sample. It demonstrates a kernel that uses a register-mapped invocation interface, and a single shared memory-mapped host data interface. This is the only design that can support the full-system compilation flow, since the other designs implement interface customizations that are not supported by any BSP.
 2. [Streaming invocation](streaming-invocation/) This implementation uses a streaming invocation interface and conduits to pass the input pointer arguments instead of the CSR. It uses a single, shared memory-mapped host data interface.
 3. [Customized memory-mapped host data interface](mm-host/) This implementation uses a register-mapped invocation interface, and demonstrates how to use `annotated_arg` to customize the memory-mapped host data interface.
 4. [Streaming Data (pipes)](pipes/) This implementation uses a register-mapped invocation interface, and demonstrates how to use pipes to configure a streaming data interface.
