@@ -108,7 +108,7 @@ There are 5 different example designs in this sample, all of which implement a s
 
 ## Build a Design
 
-All designs in this sample supports four compilation options: Emulator, Simulator, Optimization Report, FPGA Hardware. For details on the different compilation options, see the [fpga_compile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/GettingStarted/fpga_compile) tutorial.
+All designs in this sample supports four compilation options: Emulator, Simulator, Optimization Report, FPGA Hardware. For details on the different compilation options, see the [fpga_compile](/DirectProgramming/C++SYCL_FPGA/Tutorials/GettingStarted/fpga_compile) tutorial.
 
 Use the appropriate TYPE parameter when running CMake to config which design to compile:
 | Example                                      | Directory             | Type (-DTYPE=) |
