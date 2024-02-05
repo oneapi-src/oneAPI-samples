@@ -1,5 +1,5 @@
 # Naive Design
-This simple vector addition implementation is similar to the one presented in the [fpga_compile]((https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/GettingStarted/fpga_compile)) code sample. It demonstrates a kernel that uses a register-mapped invocation interface as well as a register-mapped data interface. The compiler generates a single shared memory-mapped host data interface for the pointer kernel arguments and the arguments are stored in the register map. These are the default interfaces that are selected by the Intel® oneAPI DPC++/C++ Compiler, and therefore this is the only design that can support the full-system compilation flow.
+This simple vector addition implementation is similar to the one presented in the [fpga_compile]((/DirectProgramming/C++SYCL_FPGA/Tutorials/GettingStarted/fpga_compile)) code sample. It demonstrates a kernel that uses a register-mapped invocation interface as well as a register-mapped data interface. The compiler generates a single shared memory-mapped host data interface for the pointer kernel arguments and the arguments are stored in the register map. These are the default interfaces that are selected by the Intel® oneAPI DPC++/C++ Compiler, and therefore this is the only design that can support the full-system compilation flow.
 
 ![](../assets/naive.svg)
 
@@ -20,6 +20,6 @@ PASSED
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).

@@ -1,6 +1,6 @@
 # `Streaming Data Interfaces` Sample
 
-This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison) tutorial before continuing with this one.
+This FPGA sample is a tutorial that demonstrates how to implement streaming data interfaces on an IP component. It is recommended that you review the [Component Interfaces Comparison](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison) tutorial before continuing with this one.
 
 | Area                  | Description
 |:--                    |:--
@@ -149,7 +149,7 @@ SecondPipeInstance::write(out_beat);
 
 Pipes expose read and write interfaces that allow a single element to be read or written in FIFO order to the pipe.
 
-See the [Host Pipes](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/hostpipes) code sample for more details on the read and write APIs.
+See the [Host Pipes](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/hostpipes) code sample for more details on the read and write APIs.
 
 ## Build the `Streaming Data Interfaces` Tutorial
 
@@ -286,6 +286,6 @@ After compiling in the simulation flow and running the resulting executable, loc
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).

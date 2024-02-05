@@ -28,10 +28,10 @@ using InputPipeA =
 ### Pipe API
 Pipes expose read and write interfaces that allow a single element to be read or written in FIFO order to the pipe.
 
-See the [Host Pipes](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/experimental/hostpipes) code sample for more details on the read and write APIs.
+See the [Host Pipes](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/hostpipes) code sample for more details on the read and write APIs.
 
 ## Build the Design
-This design supports four compilation options: Emulator, Simulator, Optimization Report, FPGA Hardware. For details on the different compilation options, see [fpga_compile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/GettingStarted/fpga_compile) tutorial.
+This design supports four compilation options: Emulator, Simulator, Optimization Report, FPGA Hardware. For details on the different compilation options, see [fpga_compile](/DirectProgramming/C++SYCL_FPGA/Tutorials/GettingStarted/fpga_compile) tutorial.
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
@@ -57,6 +57,6 @@ PASSED
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](/third-party-programs.txt).
