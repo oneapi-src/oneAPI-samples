@@ -61,7 +61,7 @@ codes. The original code was commented out and a warning string was inserted.
 You need to rewrite this code.
 */
 #define CHECK_CUDA(call) do {                                                  \
-    dpct::err0 status = call;                                                  \
+    call;                                                                      \
                                                                                \
   } while (0)
 
