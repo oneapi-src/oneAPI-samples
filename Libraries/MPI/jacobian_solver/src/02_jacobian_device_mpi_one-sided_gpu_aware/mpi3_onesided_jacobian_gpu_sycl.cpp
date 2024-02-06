@@ -56,6 +56,9 @@ void InitDeviceArrays(double **A_dev_1, double **A_dev_2, sycl::queue q, struct 
     q.memcpy(*A_dev_1, A, sizeof(double) * total_size);
     q.memcpy(*A_dev_2, A, sizeof(double) * total_size);
     q.wait();
+
+    sycl::free(A, q);
+    A = NULL;
 }
 
 /* Setup subarray size and layout processed by current rank */
@@ -201,5 +204,9 @@ int main(int argc, char *argv[])
     MPI_Win_free(&win[1]);
     MPI_Win_free(&win[0]);
     MPI_Finalize();
+
+    sycl::free(A_device[0], q);
+    sycl::free(A_device[1], q);
+
     return 0;
 }

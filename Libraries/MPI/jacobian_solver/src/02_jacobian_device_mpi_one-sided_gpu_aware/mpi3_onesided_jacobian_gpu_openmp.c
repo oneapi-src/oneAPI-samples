@@ -199,5 +199,9 @@ int main(int argc, char *argv[])
     MPI_Win_free(&win[1]);
     MPI_Win_free(&win[0]);
     MPI_Finalize();
+
+    omp_target_free((void*)A_device1, omp_get_default_device());
+    omp_target_free((void*)A_device2, omp_get_default_device());
+
     return 0;
 }

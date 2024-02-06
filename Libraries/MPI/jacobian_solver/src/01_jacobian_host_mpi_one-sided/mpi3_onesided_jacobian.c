@@ -186,5 +186,9 @@ int main(int argc, char *argv[])
     MPI_Win_free(&win[1]);
     MPI_Win_free(&win[0]);
     MPI_Finalize();
+
+    free((void*) A_1);
+    free((void*) A_2);
+
     return 0;
 }
