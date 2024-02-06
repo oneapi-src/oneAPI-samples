@@ -138,9 +138,9 @@ def tokenize_prepare_dataset(lines):
     sequences = np.array(sequences)
     x, y = sequences[:, :-1], sequences[:, -1]
     y = to_categorical(y, num_classes=vocab_size)
-    return x, y
+    return x, y, tokenizer
 
-x, y = tokenize_prepare_dataset(lines)
+x, y, itex_tokenizer = tokenize_prepare_dataset(lines)
 seq_length = x.shape[1]
 vocab_size = y.shape[1]
 vocab_size
@@ -197,7 +197,7 @@ from tensorflow.keras.layers import LSTM
 lines = get_aligned_training_data(tokens, 10)
 
 # Tokenization
-x, y = tokenize_prepare_dataset(lines)
+x, y, keras_tokenizer = tokenize_prepare_dataset(lines)
 seq_length = x.shape[1]
 vocab_size = y.shape[1]
 
@@ -263,7 +263,7 @@ random_seed_text
 
 
 number_of_words_to_generate = 10
-generated_text = generate_text_seq(itex_lstm_model, tokenizer, 50, random_seed_text, number_of_words_to_generate)
+generated_text = generate_text_seq(itex_lstm_model, itex_tokenizer, 50, random_seed_text, number_of_words_to_generate)
 print("::: SEED TEXT::: " + random_seed_text)
 print("::: GENERATED TEXT::: " + generated_text)
 
