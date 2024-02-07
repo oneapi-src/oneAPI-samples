@@ -1,18 +1,18 @@
 # `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` Sample
 
-The `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` sample demonstrates how to fine-tune BERT tiny model for emotion classification task using Quantization Aware Training (QAT) from Intel® Neural Compressor.
+The `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` sample demonstrates how to fine-tune BERT tiny model for emotion classification task using Quantization Aware Training (QAT) from Intel® Neural Compressor (INC).
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to fine-tune text model using Intel® Neural Compressor Quantization Aware Training
+| What you will learn   | How to fine-tune text model using Intel® Neural Compressor (INC) Quantization Aware Training
 | Time to complete      | 10 minutes
 | Category              | Concepts and Functionality
 
-Intel® Neural Compressor simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference as part of Intel® AI Analytics Toolkit (AI Kit).
+Intel® Neural Compressor (INC) simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor (INC) tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference as part of Intel® AI Analytics Toolkit (AI Kit).
 
 ## Purpose
 
-This sample shows how to fine-tune text model for emotion classification on pre-trained `bert-tiny` model from Hugging Face and how to perform fine-tuning using Intel® Neural Compressor Quantization Aware Training. Fine-tuning allows you to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
+This sample shows how to fine-tune text model for emotion classification on pre-trained `bert-tiny` model from Hugging Face and how to perform fine-tuning using Intel® Neural Compressor (INC) Quantization Aware Training. Fine-tuning allows you to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample implements fine-tuning process for text classification using Intel® Neural Compressor quantization aware training.
+This code sample implements fine-tuning process for text classification using Intel® Neural Compressor (INC) quantization aware training.
 
 The sample tutorial contains one Jupyter Notebook and a Python script. You can use either.
 
@@ -56,19 +56,19 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Notebook                                                 | Description
 |:---                                                      |:---
-|`mINC_QuantizationAwareTraining_TextClassification.ipynb` | Performs chat creation with Intel® Extension for PyTorch* quantization and provides interface for interactions in Jupyter Notebook.
+|`mINC_QuantizationAwareTraining_TextClassification.ipynb` | Performs chat creation with Intel® Extension for PyTorch (IPEX) quantization and provides interface for interactions in Jupyter Notebook.
 
 ### Python Scripts
 
 | Script                                                   | Description
 |:---                                                      |:---
-|`INC_QuantizationAwareTraining_TextClassification.py`     | The script performs chat creation with Intel® Extension for PyTorch* quantization and provides simple interactions based on prepared input.
+|`INC_QuantizationAwareTraining_TextClassification.py`     | The script performs chat creation with Intel® Extension for PyTorch (IPEX) quantization and provides simple interactions based on prepared input.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `Fine-tuning Text Classification Model with Intel® Neural Compressor` Sample
+## Run the `Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)` Sample
 
 ### On Linux*
 

@@ -6,12 +6,12 @@ Languages are selected from the CommonVoice dataset for training, validation, an
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch* inference, Intel® Neural Compressor quantization, and a oneapi-aikit container
+| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch (IPEX) inference, Intel® Neural Compressor (INC) quantization, and a oneapi-aikit container
 | Time to complete      | 60 minutes
 
 ## Purpose
 
-Spoken audio comes in different languages and this sample uses a model to identify what that language is. The user will use an Intel® AI Analytics Toolkit container environment to train a model and perform inference leveraging Intel-optimized libraries for PyTorch*. There is also an option to quantize the trained model with Neural Compressor to speed up inference.
+Spoken audio comes in different languages and this sample uses a model to identify what that language is. The user will use an Intel® AI Analytics Toolkit container environment to train a model and perform inference leveraging Intel-optimized libraries for PyTorch*. There is also an option to quantize the trained model with Intel® Neural Compressor (INC) to speed up inference.
 
 ## Prerequisites
 
@@ -27,7 +27,7 @@ The [CommonVoice](https://commonvoice.mozilla.org/) dataset is used to train an 
 
 After you have downloaded the CommonVoice dataset, the data must be preprocessed by converting the MP3 files into WAV format and separated into training, validation, and testing sets.
 
-The model is then trained from scratch using the Hugging Face SpeechBrain library. This model is then used for inference on the testing dataset or a user-specified dataset. There is an option to utilize SpeechBrain's Voice Activity Detection (VAD) where only the speech segments from the audio files are extracted and combined before samples are randomly selected as input into the model. To improve performance, the user may quantize the trained model to INT8 using Neural Compressor to decrease latency.
+The model is then trained from scratch using the Hugging Face SpeechBrain library. This model is then used for inference on the testing dataset or a user-specified dataset. There is an option to utilize SpeechBrain's Voice Activity Detection (VAD) where only the speech segments from the audio files are extracted and combined before samples are randomly selected as input into the model. To improve performance, the user may quantize the trained model to INT8 using Intel® Neural Compressor (INC) to decrease latency.
 
 The sample contains three discreet phases:
 - [Prepare the Environment](#prepare-the-environment)
@@ -105,7 +105,7 @@ This section explains how to train a model for language identification using the
    ```
    source initialize.sh
    ```
-   This installs PyTorch*, the Intel® Extension for PyTorch*, and other components.
+   This installs PyTorch*, the Intel® Extension for PyTorch (IPEX), and other components.
 
 ### Run in Jupyter Notebook
 
@@ -232,7 +232,7 @@ To run inference, you must have already run all of the training scripts, generat
    ```
    source initialize.sh
    ```
-3. Patch the Intel® Extension for PyTorch* to use SpeechBrain models. (This patch is required for PyTorch* TorchScript to work because the output of the model must contain only tensors.)
+3. Patch the Intel® Extension for PyTorch (IPEX) to use SpeechBrain models. (This patch is required for PyTorch* TorchScript to work because the output of the model must contain only tensors.)
    ```
    patch ./speechbrain/speechbrain/pretrained/interfaces.py < interfaces.patch
    ```
@@ -275,9 +275,9 @@ Both scripts support input options; however, some options can be use on `inferen
 | `-d`                       | Specify the duration of wave sample. Default value is **3**.
 | `-s`                       | Specify size of sample waves, default is **100**.
 | `--vad`                    | (`inference_custom.py` only) Enable VAD model to detect active speech. The VAD option will identify speech segments in the audio file and construct a new **.wav** file containing only the speech segments. This improves the quality of speech data used as input into the language identification model.
-| `--ipex`                   | Run inference with optimizations from Intel® Extension for PyTorch*. This option will apply optimizations to the pretrained model. Using this option should result in performance improvements related to latency.
+| `--ipex`                   | Run inference with optimizations from Intel® Extension for PyTorch (IPEX). This option will apply optimizations to the pretrained model. Using this option should result in performance improvements related to latency.
 | `--bf16`                   | Run inference with auto-mixed precision featuring Bfloat16.
-| `--int8_model`             | Run inference with the INT8 model generated from Intel® Neural Compressor
+| `--int8_model`             | Run inference with the INT8 model generated from Intel® Neural Compressor (INC)
 | `--ground_truth_compare`   | (`inference_custom.py` only) Enable comparison of prediction labels to ground truth values.
 | `--verbose`                | Print additional debug information, like latency.
 
@@ -321,7 +321,7 @@ The following examples describe how to use the scripts to produce specific outco
 
    >**Note**: The audio input into the VAD model must be sampled at **16kHz**. The code performs this conversion by default.
 
-**Optimization with Intel® Extension for PyTorch***
+**Optimization with Intel® Extension for PyTorch (IPEX)**
 
 1. To optimize user-defined data, enter commands similar to the following:
    ```
@@ -329,9 +329,9 @@ The following examples describe how to use the scripts to produce specific outco
    ```
    >**Note**: The `--verbose` option is required to view the latency measurements.
 
-**Quantization with Neural Compressor**
+**Quantization with Intel® Neural Compressor (INC)**
 
-1. To improve inference latency, you can use the Neural Compressor to quantize the trained model from FP32 to INT8 by running `quantize_model.py`.
+1. To improve inference latency, you can use the Intel® Neural Compressor (INC) to quantize the trained model from FP32 to INT8 by running `quantize_model.py`.
    ```
    python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/dev
    ```

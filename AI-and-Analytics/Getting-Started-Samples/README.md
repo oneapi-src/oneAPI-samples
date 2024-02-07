@@ -16,8 +16,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 |AI Tools preset | Component      | Folder                                             | Description
 |--------------------------| --------- | ------------------------------------------------ | -
-|Inference Optimization| Intel® Neural Compressor | [INC-Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     | Performs INT8 quantization on a Hugging Face BERT model.
-|Inference Optimization| Intel® Neural Compressor | [INC-Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     | Quantizes a FP32 model into INT8 by Intel® Neural Compressor and compares the performance between FP32 and INT8.
+|Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     | Performs INT8 quantization on a Hugging Face BERT model.
+|Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     | Quantizes a FP32 model into INT8 by Intel® Neural Compressor (INC) and compares the performance between FP32 and INT8.
 |Data Analytics <br/> Classical Machine Learning <br/> Deep Learning <br/> Inference Optimization | oneAPI docker image | [IntelAIKitContainer_GettingStarted](IntelAIKitContainer_GettingStarted)         | Configuration script to automatically configure the environment.
 |Data Analytics <br/> Classical Machine Learning  | Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain.
 |Data Analytics <br/> Classical Machine Learning | Modin |[IntelModin_Vs_Pandas](IntelModin_Vs_Pandas)| Compares the performance of Intel® Distribution of Modin* and the performance of Pandas.

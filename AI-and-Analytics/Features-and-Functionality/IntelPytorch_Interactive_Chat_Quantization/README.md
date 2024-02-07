@@ -1,18 +1,18 @@
-# `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch* Quantization` Sample
+# `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch (IPEX) Quantization` Sample
 
-The `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch* Quantization` sample demonstrates how to create interactive chat based on pre-trained DialoGPT model and add the Intel® Extension for PyTorch* quantization to it.
+The `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch (IPEX) Quantization` sample demonstrates how to create interactive chat based on pre-trained DialoGPT model and add the Intel® Extension for PyTorch (IPEX) quantization to it.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to create interactive chat and add INT8 dynamic quantization form Intel Extension for PyTorch* (IPEX)
+| What you will learn   | How to create interactive chat and add INT8 dynamic quantization form Intel® Extension for PyTorch (IPEX)
 | Time to complete      | 10 minutes
 | Category              | Concepts and Functionality
 
-The Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
+The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 ## Purpose
 
-This sample shows how to create interactive chat based on the pre-trained DialoGPT model from HuggingFace and how to add INT8 dynamic quantization to it. The Intel® Extension for PyTorch* gives users the ability to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
+This sample shows how to create interactive chat based on the pre-trained DialoGPT model from HuggingFace and how to add INT8 dynamic quantization to it. The Intel® Extension for PyTorch (IPEX) gives users the ability to speed up operations on processors with INT8 data format and specialized computer instructions. The INT8 data format uses quarter the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process with minimum to zero accuracy loss.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ This sample shows how to create interactive chat based on the pre-trained DialoG
 |:---                     |:---
 | OS                      | Ubuntu* 20.04 or newer
 | Hardware                | Intel® Xeon® Scalable Processor family
-| Software                | Intel® Extension for PyTorch*
+| Software                | Intel® Extension for PyTorch (IPEX)
 
 ### For Local Development Environments
 
@@ -40,7 +40,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample implements interactive chat based on DialoGPT pre-trained model and quantizes it using Intel® Extension for PyTorch*.
+This code sample implements interactive chat based on DialoGPT pre-trained model and quantizes it using Intel® Extension for PyTorch (IPEX).
 
 The sample tutorial contains one Jupyter Notebook and a Python script. You can use either.
 
@@ -48,19 +48,19 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Notebook                         | Description
 |:---                              |:---
-|`IntelPytorch_Interactive_Chat_Quantization.ipynb` | Performs chat creation with IPEX quantization and provides interface for interactions in Jupyter Notebook.
+|`IntelPytorch_Interactive_Chat_Quantization.ipynb` | Performs chat creation with Intel® Extension for PyTorch (IPEX) quantization and provides interface for interactions in Jupyter Notebook.
 
 ### Python Scripts
 
 | Script                        | Description
 |:---                           |:---
-|`IntelPytorch_Interactive_Chat_Quantization.py` | The script performs chat creation with IPEX quantization and provides simple interactions based on prepared input.
+|`IntelPytorch_Interactive_Chat_Quantization.py` | The script performs chat creation with Intel® Extension for PyTorch (IPEX) quantization and provides simple interactions based on prepared input.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch* Quantization` Sample
+## Run the `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch (IPEX) Quantization` Sample
 
 ### On Linux*
 
@@ -113,7 +113,7 @@ When working with the command-line interface (CLI), you should configure the one
    python IntelPytorch_Interactive_Chat_Quantization.py < input.txt
    ```
 
-### Run the `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch* Quantization` Sample on Intel® DevCloud
+### Run the `Interactive chat based on DialoGPT model using Intel® Extension for PyTorch (IPEX) Quantization` Sample on Intel® DevCloud
 
 1. If you do not already have an account, request an Intel® DevCloud account at [*Create an Intel® DevCloud Account*](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 2. On a Linux* system, open a terminal.
