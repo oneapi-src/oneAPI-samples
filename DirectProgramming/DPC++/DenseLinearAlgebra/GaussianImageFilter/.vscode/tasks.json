@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "gaussian_blur Debug C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
+			"args": [
+				"-fsycl",
+				"-fdiagnostics-color=always",
+				"-fsycl-device-code-split=per_kernel",
+				"-fno-limit-debug-info",
+				"-g",
+				"-O0",
+				"${workspaceFolder}/src/${config:programName}.cpp",
+				"-o",
+				"${workspaceFolder}/bin/${config:programName}_d"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/icpx"
+		},
+		{
+			"type": "cppbuild",
+			"label": "gaussian_blur Release C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
+			"args": [
+				"-fsycl",
+				"-DNDEBUG",
+                "${workspaceFolder}/src/${config:programName}.cpp",
+				"-o",
+				"${workspaceFolder}/bin/${config:programName}"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/icpx"
+		}
+	]
+}

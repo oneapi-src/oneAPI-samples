@@ -1,0 +1,48 @@
+{
+    "configurations": [
+    {
+        "name": "C/C++: Intel icpx build and debug MonteCarloPi",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/bin/${config:programName}_d",
+        "args": ["${input:args}"],
+        "stopAtEntry": true,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            },
+            {
+                "description":  "Set Disassembly Flavor to Intel",
+                "text": "-gdb-set disassembly-flavor intel",
+                "ignoreFailures": true
+            },
+            {
+                "description": "Needed by Intel oneAPI: Disable target async",
+                "text": "set target-async off",
+                "ignoreFailures": true
+            }
+        ],
+        "preLaunchTask": "MonteCarloPi Debug C/C++: Intel icpx build active file",
+        "miDebuggerPath": "/opt/intel/oneapi/debugger/latest/gdb/intel64/bin/gdb-oneapi"
+    }
+    ],
+    "inputs" : [
+        {
+            "id": "args",
+            "type": "pickString",
+            "description": "Program args",
+            "default": "cpu",
+            "options": [
+                "cpu",
+                "gpu",
+                "accelerator"
+            ]
+        }
+    ]
+}
