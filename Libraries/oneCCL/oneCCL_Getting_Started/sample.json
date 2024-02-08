@@ -17,8 +17,7 @@
         "cd build",
         "cmake ..",
         "make",
-        "mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
-        "mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
+        "mpirun -n 2 out/cpu/cpu_allreduce_test",
       ]
     }]
   },
