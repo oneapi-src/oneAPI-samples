@@ -122,7 +122,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-You should see diagrams demonstrating performance analysis formatted, as pie charts, for JIT Kernel Type Time breakdown for both AVX512 and AMX.
+You should see diagrams demonstrating performance analysis formatted, as pie charts, for JIT Kernel Type Time breakdown for both AVX512 and Intel® AMX.
 
 The following image shows a typical example of JIT Kernel Time breakdown file analysis diagrams.
 

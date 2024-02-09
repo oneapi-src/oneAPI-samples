@@ -2,17 +2,17 @@
 
 The `PyTorch* Inference Optimizations with Advanced Matrix Extensions Bfloat16 Integer8` sample demonstrates how to perform inference using the ResNet50 and BERT models using the Intel® Extension for PyTorch (IPEX).
 
-The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
+The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® Intel® AMX).
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch (IPEX) with Intel® AMX BF16/INT8
+| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch (IPEX) with Intel® Intel® AMX BF16/INT8
 | Time to complete      | 5 minutes
 | Category              | Code Optimization
 
 ## Purpose
 
-The Intel® Extension for PyTorch (IPEX) allows you to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), which lessens the amount of memory needed and execution time to process. Likewise, the integer8 (INT8) data format uses half the bit width of BF16. You should notice performance optimization with the AMX instruction set when compared to Vector Neural Network Instructions (VNNI).
+The Intel® Extension for PyTorch (IPEX) allows you to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), which lessens the amount of memory needed and execution time to process. Likewise, the integer8 (INT8) data format uses half the bit width of BF16. You should notice performance optimization with the Intel® AMX instruction set when compared to Vector Neural Network Instructions (VNNI).
 
 ## Prerequisites
 
@@ -36,14 +36,14 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample will perform inference on the ResNet50 and BERT models while using Intel® Extension for PyTorch (IPEX). For each pretrained model, there is a warm-up run of 20 samples before running inference on the specified number of samples (i.e. 1000) to record the time. AMX is supported on BF16 and INT8 data types starting with the 4th Gen Xeon Scalable Processors. The inference time will be compared, which showcases the speedup over FP32 when using VNNI and AMX on both BF16 and INT8. The following run cases are executed:
+This code sample will perform inference on the ResNet50 and BERT models while using Intel® Extension for PyTorch (IPEX). For each pretrained model, there is a warm-up run of 20 samples before running inference on the specified number of samples (i.e. 1000) to record the time. Intel® AMX is supported on BF16 and INT8 data types starting with the 4th Gen Xeon Scalable Processors. The inference time will be compared, which showcases the speedup over FP32 when using VNNI and Intel® AMX on both BF16 and INT8. The following run cases are executed:
 
 1. FP32 (baseline)
 2. BF16 using AVX512_CORE_AMX
 3. INT8 using AVX512_CORE_VNNI
 4. INT8 using AVX512_CORE_AMX
 
-The Intel® oneAPI Deep Neural Network Library (oneDNN) reference guide contains a page about [CPU Dispatcher Control](https://www.intel.com/content/www/us/en/develop/documentation/onednn-developer-guide-and-reference/top/performance-profiling-and-inspection/cpu-dispatcher-control.html) where you can set the instruction set to AVX-512 and AMX during runtime. Previous instruction sets are also available.
+The Intel® oneAPI Deep Neural Network Library (oneDNN) reference guide contains a page about [CPU Dispatcher Control](https://www.intel.com/content/www/us/en/develop/documentation/onednn-developer-guide-and-reference/top/performance-profiling-and-inspection/cpu-dispatcher-control.html) where you can set the instruction set to AVX-512 and Intel® AMX during runtime. Previous instruction sets are also available.
 
 To run with INT8, the model is quantized using the quantization feature from Intel® Extension for PyTorch (IPEX). TorchScript is also used in all inference run cases to deploy the model in graph mode instead of imperative mode for faster runtime.
 
@@ -59,7 +59,7 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                                                | Description
 |:---                                                   |:---
-|`pytorch_inference_amx.py`                             | The script performs inference with AMX BF16/INT8 and compares the performance against the baseline of FP32
+|`pytorch_inference_amx.py`                             | The script performs inference with Intel® AMX BF16/INT8 and compares the performance against the baseline of FP32
 |`pytorch_inference_vnni.py`                            | The script performs inference with VNNI INT8 and compares the performance against the baseline of FP32
 
 ## Set Environment Variables
@@ -148,7 +148,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample will print out the runtimes and charts of relative performance with the FP32 model without any optimizations as the baseline.  
 
-The performance speedups using AMX BF16 and INT8 are approximate on ResNet50 and BERT. Performance will vary based on your hardware and software versions. To see a larger performance gap between VNNI and AMX, increase the batch size. For even more speedup, consider using the Intel® Extension for PyTorch (IPEX) [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html).  
+The performance speedups using Intel® AMX BF16 and INT8 are approximate on ResNet50 and BERT. Performance will vary based on your hardware and software versions. To see a larger performance gap between VNNI and Intel® AMX, increase the batch size. For even more speedup, consider using the Intel® Extension for PyTorch (IPEX) [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html).  
 
 ## License
 

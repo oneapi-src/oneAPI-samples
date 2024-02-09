@@ -48,7 +48,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample quantizes a ResNet50 model that is calibrated with the CIFAR10 dataset while using Intel® Extension for PyTorch (IPEX). The model is inferenced using FP32 and INT8 precision, including the use of Intel® Advanced Matrix Extensions (AMX). AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of INT8.
+This code sample quantizes a ResNet50 model that is calibrated with the CIFAR10 dataset while using Intel® Extension for PyTorch (IPEX). The model is inferenced using FP32 and INT8 precision, including the use of Intel® AMX. Intel® AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of INT8.
 
 The sample tutorial contains one Jupyter Notebook and a Python script. You can use either.
 

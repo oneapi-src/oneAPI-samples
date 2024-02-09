@@ -12,7 +12,7 @@ The Intel® Optimization for TensorFlow* enables TensorFlow* with optimizations 
 
 ## Purpose
 
-The Intel® Optimization for TensorFlow* gives users the ability to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the AMX instruction set when compared to AVX-512.
+The Intel® Optimization for TensorFlow* gives users the ability to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the Intel® AMX instruction set when compared to AVX-512.
 
 ## Prerequisites
 
@@ -63,7 +63,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample uses a pre-trained on ResNet50v1.5 pretrained model, trained on the ImageNet dataset and fine-tuned on TensorFlow Flower dataset. The FP32 model is validated using FP32 and BF16 precision, including the use of Intel® Advanced Matrix Extensions (AMX) on BF16. AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of BF16 and AMX.
+This code sample uses a pre-trained on ResNet50v1.5 pretrained model, trained on the ImageNet dataset and fine-tuned on TensorFlow Flower dataset. The FP32 model is validated using FP32 and BF16 precision, including the use of Intel® AMX on BF16. Intel® AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The inference time will be compared, showcasing the speedup of BF16 and Intel® AMX.
 The sample tutorial contains one Jupyter Notebook and one Python script. You can use either.
 
 ### Jupyter Notebook
@@ -76,7 +76,7 @@ The sample tutorial contains one Jupyter Notebook and one Python script. You can
 
 | Script                                                        | Description
 |:---                                                              |:---
-|`IntelTensorFlow_AMX_BF16_Inference.py` | The script performs inference with AMX BF16 and compares the performance against the baseline
+|`IntelTensorFlow_AMX_BF16_Inference.py` | The script performs inference with Intel® AMX BF16 and compares the performance against the baseline
 
 
 ## Run the Sample on Linux*
@@ -119,9 +119,9 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Example Output
 If successful, the sample displays [CODE_SAMPLE_COMPLETED_SUCCESSFULLY]. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The diagrams show approximate performance speed increases using AMX BF16 with auto-mixed precision during inference. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
+The diagrams show approximate performance speed increases using Intel® AMX BF16 with auto-mixed precision during inference. To see more performance improvement between AVX-512 BF16 and Intel® AMX BF16, increase the number of required computations in one batch.
 
-With the imporovement on model inference speed, using AMX BF16 with auto-mixed precision during inference will not influence the inference accuracy.
+With the imporovement on model inference speed, using Intel® AMX BF16 with auto-mixed precision during inference will not influence the inference accuracy.
 
 ## License
 
