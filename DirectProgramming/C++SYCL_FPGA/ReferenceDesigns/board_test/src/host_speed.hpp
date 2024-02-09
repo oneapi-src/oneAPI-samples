@@ -42,13 +42,12 @@ struct Speed WriteSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
   assert(num_xfers > 0);
 
   // Sycl event for each transfer
-  sycl::event evt[num_xfers];
+  std::vector<sycl::event> evt;
 
   // **** Write to device **** //
-
   for (size_t i = 0; i < num_xfers; i++) {
     // Submit copy operation (explicit copy from host to device)
-    evt[i] = q.submit([&](sycl::handler &h) {
+    evt.push_back(q.submit([&](sycl::handler &h) {
       // Range of buffer that needs to accessed
       auto buf_range = block_bytes / sizeof(char);
       // offset starts at 0 - incremented by transfer size each iteration (i.e.
@@ -58,7 +57,7 @@ struct Speed WriteSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
       sycl::accessor<char, 1, sycl::access::mode::write> mem(
           device_buffer, h, buf_range, buf_offset);
       h.copy(&hostbuf_wr[buf_offset], mem);
-    });
+    }));
   }
   // Wait for copy to complete
   q.wait();
@@ -120,13 +119,13 @@ struct Speed ReadSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
   assert(num_xfers > 0);
 
   // Sycl event for each transfer
-  sycl::event evt[num_xfers];
+  std::vector<sycl::event> evt;
 
   // **** Read from device **** //
 
   for (size_t i = 0; i < num_xfers; i++) {
     // Submit copy operation (explicit copy from device to host)
-    evt[i] = q.submit([&](sycl::handler &h) {
+    evt.push_back(q.submit([&](sycl::handler &h) {
       // Range of buffer that needs to accessed
       auto buf_range = block_bytes / sizeof(char);
       // offset starts at 0 - incremented by transfer size each iteration (i.e
@@ -136,7 +135,7 @@ struct Speed ReadSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
       sycl::accessor<char, 1, sycl::access::mode::read> mem(
           device_buffer, h, buf_range, buf_offset);
       h.copy(mem, &hostbuf_rd[buf_offset]);
-    });
+    }));
   }
   // Wait for copy to complete
   q.wait();
