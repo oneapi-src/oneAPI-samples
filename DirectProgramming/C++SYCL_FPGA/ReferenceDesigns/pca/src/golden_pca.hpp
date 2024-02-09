@@ -159,7 +159,12 @@ class GoldenPCA {
     int offset = matrix_index * samples * features;
 
     // Compute the mean of each column
-    double mean[features];
+    double* mean = (double*) malloc(features * sizeof(double));
+
+    if (!mean) {
+        std::cerr << "failed to allocated host DDR" << std::endl;
+        std::terminate();
+    }
 
     if (debug) std::cout << "\nMean of each column: " << std::endl;
     for (int column = 0; column < features; column++) {
@@ -173,7 +178,12 @@ class GoldenPCA {
     if (debug) std::cout << std::endl;
 
     // Compute the standard deviation of each column
-    double standard_deviation[features];
+    double* standard_deviation = (double*)malloc(features * sizeof(double));
+    
+    if (!standard_deviation) {
+        std::cerr << "failed to allocated host DDR" << std::endl;
+        std::terminate();
+    }
 
     if (debug)
       std::cout << "\nStandard deviation of each column: " << std::endl;
@@ -202,7 +212,11 @@ class GoldenPCA {
                     << " ";
       }
       if (debug) std::cout << std::endl;
-    }
+    }   
+
+    free(mean);
+    free(standard_deviation);
+
   }
 
   // Standardize all the A matrices
