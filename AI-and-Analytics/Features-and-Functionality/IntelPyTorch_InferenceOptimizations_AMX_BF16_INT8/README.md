@@ -2,17 +2,17 @@
 
 The `PyTorch* Inference Optimizations with Advanced Matrix Extensions Bfloat16 Integer8` sample demonstrates how to perform inference using the ResNet50 and BERT models using the Intel® Extension for PyTorch (IPEX).
 
-The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® Intel® AMX).
+The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch (IPEX) with Intel® Intel® AMX BF16/INT8
+| What you will learn   | Inference performance improvements using Intel® Extension for PyTorch (IPEX) with Intel® AMX BF16/INT8
 | Time to complete      | 5 minutes
 | Category              | Code Optimization
 
 ## Purpose
 
-The Intel® Extension for PyTorch (IPEX) allows you to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), which lessens the amount of memory needed and execution time to process. Likewise, the integer8 (INT8) data format uses half the bit width of BF16. You should notice performance optimization with the Intel® AMX instruction set when compared to Vector Neural Network Instructions (VNNI).
+The Intel® Extension for PyTorch (IPEX) allows you to speed up inference on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), which lessens the amount of memory needed and execution time to process. Likewise, the integer8 (INT8) data format uses half the bit width of BF16. You should notice performance optimization with the Intel® AMX instruction set when compared to Intel® Vector Neural Network Instructions (Intel® VNNI).
 
 ## Prerequisites
 
