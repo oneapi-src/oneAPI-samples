@@ -325,13 +325,35 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
 
   // Create events for the various parts of the execution so that we can profile
   // their performance.
-  event e_input_dma     [kNumEngines][buffers_count]; // Input to the GZIP engine. This is a transfer from host to device.
-  event e_output_dma    [kNumEngines][buffers_count]; // Output from the GZIP engine. This is transfer from device to host.
-  event e_crc_dma       [kNumEngines][buffers_count]; // Transfer CRC from device to host
-  event e_size_dma      [kNumEngines][buffers_count]; // Transfer compressed file size from device to host
-  event e_k_crc         [kNumEngines][buffers_count]; // CRC kernel
-  event e_k_lz          [kNumEngines][buffers_count]; // LZ77 kernel
-  event e_k_huff        [kNumEngines][buffers_count]; // Huffman Encoding kernel
+  event* e_input_dma     [kNumEngines]; // Input to the GZIP engine. This is a transfer from host to device.
+  event* e_output_dma    [kNumEngines]; // Output from the GZIP engine. This is transfer from device to host.
+  event* e_crc_dma       [kNumEngines]; // Transfer CRC from device to host
+  event* e_size_dma      [kNumEngines]; // Transfer compressed file size from device to host
+  event* e_k_crc         [kNumEngines]; // CRC kernel
+  event* e_k_lz          [kNumEngines]; // LZ77 kernel
+  event* e_k_huff        [kNumEngines]; // Huffman Encoding kernel
+
+  for (int i = 0; i < kNumEngines; i++) {
+    e_input_dma[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_output_dma[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_crc_dma[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_size_dma[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_k_crc[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_k_lz[i] = (event*) malloc(buffers_count * sizeof(event));
+    e_k_huff[i] = (event*) malloc(buffers_count * sizeof(event));
+
+    if (!e_input_dma[i] || 
+        !e_output_dma[i] ||
+        !e_crc_dma[i] ||
+        !e_size_dma[i] ||
+        !e_k_crc[i] ||
+        !e_k_lz[i] ||
+        !e_k_huff[i]) {
+      std::cerr << "Failed to allocate CPU DDR for storing events" << std::endl;
+      std::terminate();
+    }
+  }
+
 
 #ifdef FPGA_EMULATOR
 #elif FPGA_SIMULATOR
@@ -519,6 +541,14 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
       free(kinfo[eng][i].pobuf_decompress);
     }
     free(kinfo[eng]);
+
+    free(e_input_dma[eng]);
+    free(e_output_dma[eng]);
+    free(e_crc_dma[eng]);
+    free(e_size_dma[eng]);
+    free(e_k_crc[eng]);
+    free(e_k_lz[eng]);
+    free(e_k_huff[eng]);
   }
 
   if (report) std::cout << "PASSED\n";
