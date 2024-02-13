@@ -4,11 +4,9 @@
 This sample demonstrates building and running a basic geometric ray tracing
 application with Intel&reg; Embree on an Intel CPU.
 
-- Use this code and accompanying walkthrough to understand basic ray tracing of an image with the Intel&reg; Embree API. This sample prepares an API
-explorer for further self-directed exploration of Intel&reg; Embree repository
-tutorial programs. 
+- Use this code and accompanying walkthrough to understand basic ray tracing of an image with the Intel&reg; Embree API. This sample prepares a developer for further self-directed exploration of Intel&reg; Embree repository tutorial programs.
 
-- You can expect to need less than 5 minutes to compile, run,
+- Time estimate: less than 5 minutes to compile, run,
 and review the ouput imagery. However, you might need 20 minutes (or more) to
 understand the walkthrough and code depending on rendering algorithm and math
 familiarity.
@@ -29,7 +27,7 @@ output](example_images/rkRayTracer.png)
 | OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions <br>(Optimization requirement: Intel&reg; Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions)
 | Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++11 compiler and CMake*
-| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler runtimes
+| Libraries                         | <ul><li>Install Intel Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB)</li><li>Install Intel&reg; oneAPI Base Toolkit (Base Kit) for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler Runtimes</li><li>macOS: Base Kit not required</li></ul>
 | Tools                             | .png capable image viewer
 
 ## Build and Run

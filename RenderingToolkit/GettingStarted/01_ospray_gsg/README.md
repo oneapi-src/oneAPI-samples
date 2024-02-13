@@ -11,7 +11,7 @@ Volume Kernel Library (Intel&reg; Open VKL), and Intel&reg; Open Image Denoise.
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | <ul><li>Intel 64 Penryn CPU or higher with SSE4.1 extensions</li><ul><li>Optimized requirements: Intel 64 Skylake CPU or higher with AVX512 extentions) </li></ul><li>ARM64 with NEON extensions</li><li>GPUs: Xe-HPG, or Xe-HPC architecture based Intel&reg; Graphics devices including Intel&reg; Arc&trade; A-Series Graphics and Intel&reg; Data Center Graphics</li></ul>
 | Compiler Toolchain                | Windows OS: MSVS 2022 (or 2019) installed with Windows SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example, gcc/c++/clang), and CMake*
-| Libraries                         | <ul><li>Install Intel&reg; Rendering Toolkit (Render Kit), for Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise</li><li> Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtimes</li></ul>
+| Libraries                         | <ul><li>Install Intel&reg; Rendering Toolkit (Render Kit), for Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open VKL, and Intel&reg; Open Image Denoise</li><li> Install Intel&reg; oneAPI Base Toolkit (Base Kit) for Intel&reg; oneAPI DPC++ Compiler and Runtimes</li><li>macOS: Base Kit not required on macOS</li></ul>
 | Image Display Tool                | A .ppm filetype viewer (for example, [ImageMagick](https://www.imagemagick.org)).
 
 | Optional Requirement                    | Description

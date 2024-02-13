@@ -14,7 +14,7 @@ This sample program, `minimal`, performs two ray-to-triangle-intersect tests wit
 | OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or higher<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions; ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extentions, ARM64 with NEON extensions)
 | Compiler Toolchain                | **Windows\***: MSVS 2019 or higher with Windows* SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example gcc/c++/clang), and CMake*
-| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), includes Embree
+| Libraries                         | <ul><li>Install Intel&reg; Rendering Toolkit (Render Kit), includes Embree</li><li>Install Intel&reg; oneAPI Base Toolkit (Base Kit) for compiler runtimes</li><li>macOS: Base Kit not required</li></ul>
 
 ## Build and Run the `Getting Started` Sample Program
 

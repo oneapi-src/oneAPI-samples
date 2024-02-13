@@ -12,31 +12,31 @@ This sample program illustrates path tracing using Intel Embree from the Intel&r
 
 ## Purpose
 
-In completing this pathtracer tutorial, you should understand how to implement a basic pathtracer with Intel Embree. You should better understand:
-- Pathtracing as a type of rendering, including the `pathtracer` as implemented within Intel&reg; OSPRay.
+In completing this pathtracer tutorial, you should better understand how to implement a basic pathtracer with Intel Embree. Concepts:
+- Pathtracing as a type of rendering, including the `pathtracer` renderer as implemented within Intel&reg; OSPRay.
 - Considerations of visual quality when implementing applications with Intel Embree.
-- Meaning behind the rendering control parameters in Intel&reg; OSPRay Studio reference application or other professional rendering solutions.
+- Rendering control parameters in Intel&reg; OSPRay Studio reference application or other professional rendering solutions.
 - Exploration of the full featured tutorial codes on the Intel Embree github [repository](https://github.com/embree/embree).
 
 This tutorial follows two paths:
-1. A _key features_ description of the logical additions to the previous '[Introduction to Ray Tracing with Intel Embree](../IntroToRayTracingWithEmbree)' `rkRayTracer`/`triangle_geometry` application. These additions help create a Monte Carlo path tracer.
+1. A _key features_ description of the logical additions to the previous '[Introduction to Ray Tracing with Intel Embree](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit/Tutorial/IntroToRayTracingWithEmbree)' `rkRayTracer`/`triangle_geometry` application. These additions help create a Monte Carlo path tracer.
 2. A _source code_ walk-through describing how the features are implemented with Embree API calls.
 
 >**Note**: This sample source code is a consolidated refactor of the `pathtracer` source hosted as part of the Embree tutorials in the [Embree
 repository](https://github.com/embree/embree) on GitHub.
 
-You can expect less than 10 minutes to compile and run the unmodified application. Expect at least an hour for following the algorithm, self-directed edits, then to rebuild, rerun, and understand the application.
+On a typical system, 10 minutes is estimated to compile and run the unmodified application. Expect at least an hour for following the algorithm, self-directed edits, then to rebuild, rerun, and understand the application.
 
 ## Prerequisites
 
-Make sure to try the [rkRayTracer](../IntroToRayTracingWithEmbree) sample program first.
+Make sure to try the [rkRayTracer](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit/Tutorial/IntroToRayTracingWithEmbree) sample program first.
 
 | Minimum Requirements | Description                                                                                                                                                                                                                     |
 |:-------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | OS                   | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+                                                                                                                                            |
 | Hardware             | <ul><li>Intel&reg; 64 (Intel 64 Penryn or higher with SSE4.1 extensions compatible) <ul><li>Intel Atom&reg; processors</li><li>Intel&reg; Core&trade; processor family</li><li>Intel&reg; Xeon&reg; processor family</li><li>Intel&reg; Xeon&reg; Scalable processor family</li></ul></li><li>ARM</li><ul><li>ARM64 with NEON extensions (ex: Apple* M1)</li></ul></li><li>Intel Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions</li></ul>  |
 | Compiler Toolchain   | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake* <br>Other platforms: C++14 compiler and CMake*                                                                                                                 |
-| Libraries            | Install Intel Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler Runtimes |
+| Libraries            | <ul><li>Install Intel Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB) </li><li>Install Intel&reg; oneAPI Base Toolkit (Base Kit) for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler Runtimes</li><li>macOS: Base Kit not required</li></ul>  |
 | Tools                | .png capable image viewer                                                                                                                                                                                                       |
 
 ## Build and Run
@@ -103,10 +103,6 @@ cmake --build .
 ```
 
 4. Open the resulting .png image files with an image viewer. The .png files will be in the working directory for the executing program.
-
-### Build Troubleshoot
-
-Imaging headers are used from `%ONEAPI_ROOT%\dev-utilities\latest\include` in the `stb` folder. If needed, these headers are also available common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
 
 ## Path Tracing Concepts
 

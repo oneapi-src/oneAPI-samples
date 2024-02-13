@@ -14,7 +14,7 @@ This sample program, `minimal_sycl`, performs two ray-to-triangle intersect test
 | OS                                | Ubuntu* 22.04 <br> RHEL 8.5, 8.6 (or compatible) <br>Windows* 10 64-bit 20H2 or higher<br>Windows 11* 64-bit
 | Hardware                          | Intel&reg; GPU compatible with Intel Xe-HPG or Intel Xe-HPC architectures<ul><li>Intel&reg; Arc&trade; A-Series GPU or higher</li><li>Intel&reg; Data Center GPU or higher</li></ul>
 | Compiler Toolchain                | **Windows\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, MSVS 2019 or higher with Windows* SDK and CMake*<br>**Linux\***: Intel&reg; oneAPI DPC++ Compiler 2024.0 or higher, C++17 system compiler (for example g++), and CMake*
-| Libraries                         | Intel&reg; oneAPI DPC++ Compiler and Runtime Library (Base Toolkit)<br>Intel&reg; Rendering Toolkit (Render Kit), includes Embree
+| Libraries                         | <ul><li>Intel&reg; oneAPI DPC++ Compiler and Runtime Library (Base Toolkit)</li><li>Intel&reg; Rendering Toolkit (Render Kit), includes Embree</li></ul>
 | GPU Configuration                 | **System BIOS**: [Quick Start](https://www.intel.com/content/www/us/en/support/articles/000091128/graphics.html) <br> **Windows\***: [Drivers for Intel&reg; Graphics products](https://www.intel.com/content/www/us/en/support/articles/000090440/graphics.html ) <br> **Linux\***: [Install Guide](https://dgpu-docs.intel.com/installation-guides/index.html#) 
 ## Key Implementation Details
 
