@@ -6,7 +6,7 @@ The original [CUDA* source code](https://github.com/NVIDIA-developer-blog/code-s
 | Area                       | Description
 |:---                        |:---
 | What you will learn        | Migrate American Options from CUDA to SYCL and optimize
-| Time to complete           | 15 minutes
+| Time to complete           | 10 minutes or less
 | Category                   | Code Optimization
 
 ## Purpose

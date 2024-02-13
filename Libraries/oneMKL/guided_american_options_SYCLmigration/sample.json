@@ -2,7 +2,7 @@
   "guid": "172DA0C8-3716-4432-A8D4-8BAEC662385E",
   "name": "american_options",
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
-  "description": "",
+  "description": "American Options Pricing is a model that is based on the Monte Carlo method and widely used in financial services industry. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
