@@ -80,6 +80,8 @@ int main(int argc, char **argv) {
         /* Send host buffer to another rank (device recieve buffer) */
         printf("[%d] Sending host buffer %p to rank %d\n", rank, host_values, 1 - rank); fflush(stdout);
         MPI_Send(host_values, num_values, MPI_INT, 1 - rank, 123, MPI_COMM_WORLD);
+        sycl::free(device_values, q);
+        sycl::free(host_values, q);
     } else {
         int result [num_values];
         int *device_result = sycl::malloc_device < int >(num_values, q);
@@ -104,6 +106,8 @@ int main(int argc, char **argv) {
         VerifyResult(result, values, num_values, rank);
 
         printf("[%d] SUCCESS\n", rank);
+        sycl::free(device_result, q);
+        sycl::free(host_result, q);
     }
 
     MPI_Finalize();

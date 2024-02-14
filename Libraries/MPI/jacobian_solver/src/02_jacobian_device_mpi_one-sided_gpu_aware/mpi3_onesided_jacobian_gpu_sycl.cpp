@@ -56,6 +56,9 @@ void InitDeviceArrays(double **A_dev_1, double **A_dev_2, sycl::queue q, struct 
     q.memcpy(*A_dev_1, A, sizeof(double) * total_size);
     q.memcpy(*A_dev_2, A, sizeof(double) * total_size);
     q.wait();
+
+    sycl::free(A, q);
+    A = NULL;
 }
 
 /* Setup subarray size and layout processed by current rank */
@@ -146,8 +149,8 @@ int main(int argc, char *argv[])
         /* Recalculate internal points  in parallel with communications */
         {
             q.submit([&](auto & h) {
-                h.parallel_for(sycl::range(my_subarray.y_size - 2, my_subarray.x_size), [ =] (auto index) {
-                    int idx = XY_2_IDX(index[1], index[0] + 1, my_subarray);
+                h.parallel_for(sycl::range(my_subarray.x_size, my_subarray.y_size - 2), [ =] (auto index) {
+                    int idx = XY_2_IDX(index[0], index[1] + 1, my_subarray);
                     a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
                                          + a[idx - ROW_SIZE(my_subarray)]
                                          + a[idx + ROW_SIZE(my_subarray)]);
@@ -164,7 +167,7 @@ int main(int argc, char *argv[])
                 q.submit([&](auto & h) {
                     auto sumr = sycl::reduction(norm_buf, h, sycl::plus<>());
                     h.parallel_for(sycl::range(my_subarray.x_size, my_subarray.y_size), sumr, [=] (auto index, auto &v) {
-                        int idx = XY_2_IDX(index[1], index[0], my_subarray);
+                        int idx = XY_2_IDX(index[0], index[1], my_subarray);
                         double diff = a_out[idx] - a[idx];
                         v += (diff * diff);
                     });
@@ -201,5 +204,9 @@ int main(int argc, char *argv[])
     MPI_Win_free(&win[1]);
     MPI_Win_free(&win[0]);
     MPI_Finalize();
+
+    sycl::free(A_device[0], q);
+    sycl::free(A_device[1], q);
+
     return 0;
 }
