@@ -20,7 +20,7 @@
           "echo \"deb https://apt.repos.intel.com/oneapi all main\" | tee /etc/apt/sources.list.d/oneAPI.list",
 	  "apt update",
 	  "apt -y install intel-hpckit",
-	  "source /opt/intel/oneapi/setvars.sh",
+	  "source /opt/intel/oneapi/setvars.sh --force",
           "make clean",
           "make"
         ]
