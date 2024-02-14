@@ -716,7 +716,11 @@ int main(int argc, char *argv[]) {
   string infilename = "";
   string outfilename = "";
 
+#if FPGA_SIMULATOR
+  const string default_ifile = "src/data/small_ordered_inputs.csv";
+#else
   const string default_ifile = "src/data/ordered_inputs.csv";
+#endif
   const string default_ofile = "src/data/ordered_outputs.csv";
 
   char str_buffer[kMaxStringLen] = {0};
