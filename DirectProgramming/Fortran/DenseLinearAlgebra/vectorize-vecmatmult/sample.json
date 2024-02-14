@@ -3,7 +3,7 @@
   "name": "Vectorize VecMatMult",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Tutorial - Using Auto Vectorization",
-  "toolchain": [ "ifort" ],
+  "toolchain": [ "ifx" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
   "os": [ "linux" ],
