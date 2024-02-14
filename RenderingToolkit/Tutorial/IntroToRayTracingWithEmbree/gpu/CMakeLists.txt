@@ -12,15 +12,14 @@ endif(DEFINED ENV{ONEAPI_ROOT})
 set(EMBREE_BASE_DIR "")
 set(RKCOMMON_BASE_DIR "")
 set(TBB_BASE_DIR "")
-set(DEVUTILITIES_BASE_DIR "")
 set(COMPILERRUNTIMES_BASE_DIR "")
 set(PATHADDITIONS_DIRS "")
+set(STB_HEADERS_DIR ${CMAKE_SOURCE_DIR})
 if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
   set(EMBREE_BASE_DIR ${ONEAPI_ROOT})
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT})
   #no MacOS
   set(TBB_BASE_DIR ${ONEAPI_ROOT})
-  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT})
   #Compiler runtimes help for windows MSVS debugger DLL help only
   set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT})
   set(PATHADDITIONS_DIRS "PATH=%PATH%;${ONEAPI_ROOT}/bin")
@@ -29,7 +28,6 @@ else()
   set(RKCOMMON_BASE_DIR ${ONEAPI_ROOT}/rkcommon/latest)
   #no MacOS
   set(TBB_BASE_DIR ${ONEAPI_ROOT}/tbb/latest)
-  set(DEVUTILITIES_BASE_DIR ${ONEAPI_ROOT}/dev-utilities/latest)
   #Compiler runtimes help for windows MSVS debugger DLL help only
   set(COMPILERRUNTIMES_BASE_DIR ${ONEAPI_ROOT}/compiler/latest)
 endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
@@ -79,7 +77,7 @@ endif(NOT MSVC)
 
 
 #stb headers are located in dev-utilities with the old oneAPI dirs layout
-include_directories(${DEVUTILITIES_BASE_DIR}/include)
+include_directories(${STB_HEADERS_DIR})
 include_directories(SYSTEM "${SYCL_COMPILER_DIR}/../include/sycl" "${SYCL_COMPILER_DIR}/../include")
 
 add_executable(rkRayTracerGPU src/rkRayTracerGPU.cpp)

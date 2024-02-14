@@ -10,7 +10,7 @@ sampling functionality for a variety of data formats.
 | OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br> Windows* 10 or 11<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions, ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extentions, ARM64 with NEON extensions) 
 | Compiler Toolchain                | Windows OS: MSVS 2022 (or 2019) installed with Windows* SDK and CMake*; Other platforms: C++11 compiler, a C99 compiler (for example. gcc/c++/clang), and CMake*
-| Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit),  including Intel&reg; Embree and Intel&reg; Open VKL
+| Libraries                         | <ul><li>Install Intel&reg; oneAPI Base Toolkit (Base Kit) for DPC++ Runtimes</li><li>macOS: Base Kit not required</li><li>Install Intel&reg; Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel&reg; Open VKL</li></ul>
 
 | Objective                         | Description
 |:---                               |:---
