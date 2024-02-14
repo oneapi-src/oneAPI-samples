@@ -16,7 +16,7 @@ class Threshold;
 
 // StreamingBeat struct enables sideband signals in Avalon streaming interface
 using StreamingBeatT = sycl::ext::intel::experimental::StreamingBeat<
-    unsigned short, // type carried over this Avalon streaming interface's data
+    unsigned char,  // type carried over this Avalon streaming interface's data
                     // signal
     true,           // enable startofpacket and endofpacket signals
     false>;         // disable the empty signal
@@ -24,30 +24,29 @@ using StreamingBeatT = sycl::ext::intel::experimental::StreamingBeat<
 // Pipe properties
 using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::ready_latency<0>,
-    sycl::ext::intel::experimental::bits_per_symbol<16>,
+    sycl::ext::intel::experimental::bits_per_symbol<8>,
     sycl::ext::intel::experimental::uses_valid<true>,
     sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>,
     sycl::ext::intel::experimental::protocol_avalon_streaming_uses_ready));
 
 // Image streams
 using InPixelPipe = sycl::ext::intel::experimental::pipe<
-    InStream,       // An identifier for the pipe
-    StreamingBeatT, // The type of data in the pipe
-    0,              // The capacity of the pipe
-    PipePropertiesT // Customizable pipe properties
+    InStream,        // An identifier for the pipe
+    StreamingBeatT,  // The type of data in the pipe
+    0,               // The capacity of the pipe
+    PipePropertiesT  // Customizable pipe properties
     >;
 using OutPixelPipe = sycl::ext::intel::experimental::pipe<
-    OutStream,      // An identifier for the pipe
-    StreamingBeatT, // The type of data in the pipe
-    0,              // The capacity of the pipe
-    PipePropertiesT // Customizable pipe properties
+    OutStream,       // An identifier for the pipe
+    StreamingBeatT,  // The type of data in the pipe
+    0,               // The capacity of the pipe
+    PipePropertiesT  // Customizable pipe properties
     >;
 
 // A kernel that thresholds pixel values in an image over a stream. Uses start
 // of packet and end of packet signals on the streams to determine the beginning
 // and end of the image.
 struct ThresholdKernel {
-
   void operator()() const {
     bool start_of_packet = false;
     bool end_of_packet = false;
@@ -60,8 +59,7 @@ struct ThresholdKernel {
       end_of_packet = in_beat.eop;
 
       // Threshold
-      if (pixel > kThreshold)
-        pixel = kThreshold;
+      if (pixel > kThreshold) pixel = kThreshold;
 
       // Write out result
       StreamingBeatT out_beat(pixel, start_of_packet, end_of_packet);
@@ -71,14 +69,12 @@ struct ThresholdKernel {
 };
 
 int main() {
-
   try {
-
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else // #if FPGA_EMULATOR
+#else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
     sycl::queue q(selector, fpga_tools::exception_handler);
