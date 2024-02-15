@@ -40,6 +40,7 @@
         ],
         "darwin": [
                 {
+                "env": ["export ONEAPI_ROOT=/opt/intel/oneapi"],                  
                 "id": "Intel_Embree_pathrtracer_oneapi_mac",
                 "steps": [
                     "cd cpu",
@@ -51,7 +52,5 @@
                  ]
                  }
         ]
-
-
   }
 }
