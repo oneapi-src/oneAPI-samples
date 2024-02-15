@@ -1,0 +1,2656 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1564
+    Length:          0
+    ReplacementText: "#include <oneapi/dpl/execution>\n#include <oneapi/dpl/algorithm>\n#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1637
+    Length:          0
+    ReplacementText: "\n#include <dpct/rng_utils.hpp>\n\n#include <dpct/dpl_utils.hpp>\n\n#include <cmath>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1638
+    Length:          30
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1668
+    Length:          20
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1688
+    Length:          23
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1943
+    Length:          0
+    ReplacementText: "/*\nDPCT1009:13: SYCL uses exceptions to report errors and does not use the error codes. The original code was commented out and a warning string was inserted. You need to rewrite this code.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          1977
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2008
+    Length:          169
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2228
+    Length:          14
+    ReplacementText: int
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2276
+    Length:          21
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2586
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2595
+    Length:          10
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2633
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2642
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2653
+    Length:          15
+    ReplacementText: __dpct_inline__
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2791
+    Length:          0
+    ReplacementText: "/*\nDPCT1011:6: The tool detected overloaded operators for built-in vector types, which may conflict with the SYCL 2020 standard operators (see 4.14.2.1 Vec interface). The tool inserted a namespace to avoid the conflict. Use SYCL 2020 standard operators instead.\n*/\nnamespace dpct_operator_overloading {\n\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2810
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2834
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2852
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2876
+    Length:          39
+    ReplacementText: 'sycl::double3(u.x()+v.x(), u.y()+v.y(), u.z()+v.z())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          2918
+    Length:          0
+    ReplacementText: "\n}  // namespace dpct_operator_overloading\n\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3041
+    Length:          0
+    ReplacementText: "/*\nDPCT1011:7: The tool detected overloaded operators for built-in vector types, which may conflict with the SYCL 2020 standard operators (see 4.14.2.1 Vec interface). The tool inserted a namespace to avoid the conflict. Use SYCL 2020 standard operators instead.\n*/\nnamespace dpct_operator_overloading {\n\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3060
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3084
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3102
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3126
+    Length:          48
+    ReplacementText: 'sycl::double4(u.x()+v.x(), u.y()+v.y(), u.z()+v.z(), u.w()+v.w())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3177
+    Length:          0
+    ReplacementText: "\n}  // namespace dpct_operator_overloading\n\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3452
+    Length:          17
+    ReplacementText: 'std::max(S - m_K, 0.0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          3704
+    Length:          17
+    ReplacementText: 'std::max(m_K - S, 0.0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          4526
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          4537
+    Length:          40
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          4981
+    Length:          0
+    ReplacementText: ",\n                           const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5038
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5073
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5309
+    Length:          8
+    ReplacementText: 'sycl::sqrt(dt)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5561
+    Length:          59
+    ReplacementText: 'sycl::exp(r_min_half_sigma_sq_dt + sigma_sqrt_dt*samples[offset])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5682
+    Length:          59
+    ReplacementText: 'sycl::exp(r_min_half_sigma_sq_dt + sigma_sqrt_dt*samples[offset])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5930
+    Length:          0
+    ReplacementText: "/*\nDPCT1110:1: The total declared local variable size in device function assemble_R exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5937
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5948
+    Length:          15
+    ReplacementText: __dpct_inline__
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          5987
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          6169
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          6198
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          6230
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          6265
+    Length:          6
+    ReplacementText: 'sums.w()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          6367
+    Length:          14
+    ReplacementText: 'sycl::sqrt(m_as_dbl)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          7140
+    Length:          10
+    ReplacementText: 'sycl::fabs(sigma)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          7199
+    Length:          19
+    ReplacementText: 'sycl::sqrt(x0_sq + sigma)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8027
+    Length:          10
+    ReplacementText: 'sycl::fabs(sigma)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8086
+    Length:          19
+    ReplacementText: 'sycl::sqrt(x0*x0 + sigma)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8449
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8458
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8537
+    Length:          41
+    ReplacementText: 'sycl::sqrt(2.0 * (A01*A01 + A02*A02 + A12*A12))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8711
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8722
+    Length:          15
+    ReplacementText: __dpct_inline__
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8926
+    Length:          0
+    ReplacementText: "/*\nDPCT1110:2: The total declared local variable size in device function svd_3x3 exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8933
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8944
+    Length:          15
+    ReplacementText: __dpct_inline__
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          8980
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          10364
+    Length:          19
+    ReplacementText: 'sycl::sqrt(1.0 + tau*tau)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          10409
+    Length:          15
+    ReplacementText: 'sycl::sqrt(1.0 + t*t)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          11185
+    Length:          19
+    ReplacementText: 'sycl::sqrt(1.0 + tau*tau)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          11230
+    Length:          15
+    ReplacementText: 'sycl::sqrt(1.0 + t*t)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          12006
+    Length:          19
+    ReplacementText: 'sycl::sqrt(1.0 + tau*tau)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          12051
+    Length:          15
+    ReplacementText: 'sycl::sqrt(1.0 + t*t)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          13153
+    Length:          8
+    ReplacementText: 'sycl::fabs(A00)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          13209
+    Length:          8
+    ReplacementText: 'sycl::fabs(A11)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          13265
+    Length:          8
+    ReplacementText: 'sycl::fabs(A22)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15303
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15314
+    Length:          43
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15656
+    Length:          0
+    ReplacementText: ",\n                        const sycl::nd_item<3> &item_ct1,\n                        uint8_t *smem_storage_ct1,\n                        double *smem_svds"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15729
+    Length:          61
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15882
+    Length:          70
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          15955
+    Length:          70
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16244
+    Length:          0
+    ReplacementText: "\n  TempStorage &smem_storage = *(TempStorage *)smem_storage_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16270
+    Length:          36
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16344
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16467
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16573
+    Length:          7
+    ReplacementText: 'sycl::double4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16712
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16766
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16788
+    Length:          15
+    ReplacementText: 'item_ct1.barrier(sycl::access::fence_space::local_space)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          16937
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17366
+    Length:          83
+    ReplacementText: 'partial_sum = dpct::group::exclusive_scan(item_ct1, in_the_money, 0, sycl::plus<>(), total_sum)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17559
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1118:3: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17565
+    Length:          15
+    ReplacementText: 'item_ct1.barrier(sycl::access::fence_space::local_space)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17673
+    Length:          36
+    ReplacementText: 'sycl::any_of_group(item_ct1.get_sub_group(), (0xFFFFFFFF & (0x1 << item_ct1.get_sub_group().get_local_linear_id())) && in_the_money)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17972
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          17989
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18009
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18031
+    Length:          6
+    ReplacementText: 'sums.w()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18096
+    Length:          15
+    ReplacementText: 'item_ct1.barrier(sycl::access::fence_space::local_space)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18155
+    Length:          45
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), m, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18226
+    Length:          0
+    ReplacementText: "/*\n  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18249
+    Length:          58
+    ReplacementText: '(item_ct1.barrier(), sycl::any_of_group(item_ct1.get_group(), item_ct1.get_local_id(2) == 0 && m < min_in_the_money))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18393
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18439
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18517
+    Length:          48
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sums, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18658
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18712
+    Length:          15
+    ReplacementText: 'item_ct1.barrier(sycl::access::fence_space::local_space)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18766
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18818
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18831
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          18856
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19049
+    Length:          11
+    ReplacementText: "/*\nDPCT1110:5: The total declared local variable size in device function compute_partial_beta_kernel exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19060
+    Length:          43
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19546
+    Length:          0
+    ReplacementText: ",\n                                 const sycl::nd_item<3> &item_ct1,\n                                 double *shared_svd"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19552
+    Length:          69
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19659
+    Length:          61
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          19767
+    Length:          54
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          20001
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          20070
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          20125
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          20144
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          20160
+    Length:          15
+    ReplacementText: 'item_ct1.barrier(sycl::access::fence_space::local_space)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21082
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1013:8: The rounding mode could not be specified and the generated code may have different accuracy than the original code. Verify the correctness. SYCL math built-in function rounding mode is aligned with OpenCL C 1.2 standard.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21120
+    Length:          14
+    ReplacementText: '(1.0/R00)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21142
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1013:9: The rounding mode could not be specified and the generated code may have different accuracy than the original code. Verify the correctness. SYCL math built-in function rounding mode is aligned with OpenCL C 1.2 standard.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21180
+    Length:          14
+    ReplacementText: '(1.0/R11)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21202
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1013:10: The rounding mode could not be specified and the generated code may have different accuracy than the original code. Verify the correctness. SYCL math built-in function rounding mode is aligned with OpenCL C 1.2 standard.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21240
+    Length:          14
+    ReplacementText: '(1.0/R22)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21785
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          21820
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23032
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23047
+    Length:          67
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sycl::double3(beta0, beta1, beta2), sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23361
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23427
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23441
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23492
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23506
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23557
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23571
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23752
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23763
+    Length:          40
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23902
+    Length:          0
+    ReplacementText: ",\n                               const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          23908
+    Length:          69
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24023
+    Length:          61
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24155
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24184
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24244
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24290
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24330
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24346
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24386
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24402
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24442
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24491
+    Length:          38
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sums, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24555
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24671
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24694
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          24716
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25204
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25215
+    Length:          40
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25653
+    Length:          0
+    ReplacementText: ",\n                            const sycl::nd_item<3> &item_ct1,\n                            double *smem_beta"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25692
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25853
+    Length:          69
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          25968
+    Length:          61
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26073
+    Length:          31
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26129
+    Length:          7
+    ReplacementText: 'sycl::double3'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26211
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26251
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26267
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26307
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26323
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26363
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26412
+    Length:          38
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sums, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26476
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26518
+    Length:          6
+    ReplacementText: 'sums.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26546
+    Length:          6
+    ReplacementText: 'sums.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26573
+    Length:          6
+    ReplacementText: 'sums.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26587
+    Length:          15
+    ReplacementText: "/*\n  DPCT1065:11: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n  item_ct1.barrier()"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          26970
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          27005
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          29682
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          29693
+    Length:          40
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          29841
+    Length:          0
+    ReplacementText: ",\n                                 const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          29847
+    Length:          68
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          29964
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30084
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30121
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30278
+    Length:          34
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sum, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30367
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30395
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30576
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30587
+    Length:          40
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30733
+    Length:          0
+    ReplacementText: ",\n                              const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30739
+    Length:          68
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30856
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          30968
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31103
+    Length:          34
+    ReplacementText: 'sycl::reduce_over_group(item_ct1.get_group(), sum, sycl::plus<>())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31192
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31453
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31486
+    Length:          17
+    ReplacementText: 'dpct::rng::host_rng_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31928
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          31975
+    Length:          77
+    ReplacementText: 'DPCT_CHECK_ERROR(rng->generate_gaussian(d_samples, num_timesteps*num_paths, 0.0, 1.0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32052
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32210
+    Length:          208
+    ReplacementText: "{\n    dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n    stream->parallel_for(\n      sycl::nd_range<3>(sycl::range<3>(1, 1, grid_dim) * sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK0), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK0)), \n      [=](sycl::nd_item<3> item_ct1) {\n        generate_paths_kernel<NUM_THREADS_PER_BLOCK0>(num_timesteps, num_paths, payoff, dt, S0, r, sigma, d_samples, d_paths, item_ct1);\n      });\n  }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32418
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32420
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1010:12: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32433
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32511
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32579
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32588
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32657
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:22: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32670
+    Length:          110
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32785
+    Length:          196
+    ReplacementText: "{\n    dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n    stream->submit(\n      [&](sycl::handler &cgh) {\n        /*\n        DPCT1054:24: The type of variable smem_storage is declared in device function with the name TempStorage. Adjust the code to make the TempStorage declaration visible at the accessor declaration point.\n        */\n        sycl::local_accessor<uint8_t[sizeof(TempStorage)], 0> smem_storage_ct1_acc_ct1(cgh);\n        /*\n        DPCT1101:25: 'R_W_MATRICES_SMEM_SLOTS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n        */\n        sycl::local_accessor<double, 1> smem_svds_acc_ct1(sycl::range<1>(12/*R_W_MATRICES_SMEM_SLOTS*/), cgh);\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, num_timesteps-1) * sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK1), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK1)), \n          [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n            prepare_svd_kernel<NUM_THREADS_PER_BLOCK1>(num_paths, 4, payoff, d_paths, d_all_out_of_the_money, d_svds, item_ct1, smem_storage_ct1_acc_ct1.get_pointer(), smem_svds_acc_ct1.get_pointer());\n          });\n      });\n  }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32981
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32983
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1010:14: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          32996
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33176
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33234
+    Length:          22
+    ReplacementText: 'device = dpct::dev_mgr::instance().current_device_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33272
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33296
+    Length:          11
+    ReplacementText: properties
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33309
+    Length:          6
+    ReplacementText: 'dpct::dev_mgr::instance().get_device(device)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33316
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33377
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33511
+    Length:          27
+    ReplacementText: 'get_max_work_items_per_compute_unit()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33621
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:23: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33634
+    Length:          119
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33756
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:15: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          33769
+    Length:          109
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          35673
+    Length:          292
+    ReplacementText: "{\n      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n      stream->submit(\n        [&](sycl::handler &cgh) {\n          /*\n          DPCT1101:26: 'R_W_MATRICES_SMEM_SLOTS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> shared_svd_acc_ct1(sycl::range<1>(12/*R_W_MATRICES_SMEM_SLOTS*/), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK2) * sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK2), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK2)), \n            [=](sycl::nd_item<3> item_ct1) {\n              compute_partial_beta_kernel<NUM_THREADS_PER_BLOCK2>(num_paths, payoff, d_svds + 16*timestep, d_paths + timestep*num_paths, d_cashflows, d_all_out_of_the_money + timestep, d_temp_storage, item_ct1, shared_svd_acc_ct1.get_pointer());\n            });\n        });\n    }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          35965
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          35967
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1010:16: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          35982
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36277
+    Length:          277
+    ReplacementText: "{\n      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n      stream->submit(\n        [&](sycl::handler &cgh) {\n          sycl::local_accessor<double, 1> smem_beta_acc_ct1(sycl::range<1>(3), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(sycl::range<3>(1, 1, update_cashflow_grid) * sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK2), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK2)), \n            [=](sycl::nd_item<3> item_ct1) {\n              update_cashflow_kernel<NUM_THREADS_PER_BLOCK2>(num_paths, payoff, exp_min_r_dt, d_temp_storage, d_paths + timestep*num_paths, d_all_out_of_the_money + timestep, d_cashflows, item_ct1, smem_beta_acc_ct1.get_pointer());\n            });\n        });\n    }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36554
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36556
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1010:17: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36571
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36767
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:18: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36780
+    Length:          111
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          36896
+    Length:          153
+    ReplacementText: "{\n    dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n    stream->parallel_for(\n      sycl::nd_range<3>(sycl::range<3>(1, 1, grid_dim) * sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK4), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK4)), \n      [=](sycl::nd_item<3> item_ct1) {\n        compute_partial_sums_kernel<NUM_THREADS_PER_BLOCK4>(num_paths, d_cashflows, d_temp_storage, item_ct1);\n      });\n  }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37049
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37051
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1010:19: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37064
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37086
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1027:20: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37099
+    Length:          108
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37212
+    Length:          158
+    ReplacementText: "{\n    dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n    stream->parallel_for(\n      sycl::nd_range<3>(sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK4), sycl::range<3>(1, 1, NUM_THREADS_PER_BLOCK4)), \n      [=](sycl::nd_item<3> item_ct1) {\n        compute_final_sum_kernel<NUM_THREADS_PER_BLOCK4>(num_paths, grid_dim, exp_min_r_dt, d_temp_storage, item_ct1);\n      });\n  }"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37370
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37372
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1010:21: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37385
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37454
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37509
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37533
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37542
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          37546
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          38893
+    Length:          12
+    ReplacementText: 'sycl::erfc(-d2 / -sycl::sqrt(2.0)) / 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          38911
+    Length:          12
+    ReplacementText: 'sycl::erfc(-d1 / -sycl::sqrt(2.0)) / 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          39162
+    Length:          11
+    ReplacementText: 'sycl::erfc(d1 / -sycl::sqrt(2.0)) / 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          39193
+    Length:          11
+    ReplacementText: 'sycl::erfc(d2 / -sycl::sqrt(2.0)) / 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          47173
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          47174
+    Length:          0
+    ReplacementText: "\n  dpct::device_ext &dev_ct1 = dpct::get_current_device();\n  sycl::queue &q_ct1 = dev_ct1.in_order_queue();"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          49341
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          49375
+    Length:          25
+    ReplacementText: 'DPCT_CHECK_ERROR(stream = dev_ct1.create_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          49514
+    Length:          71
+    ReplacementText: 'DPCT_CHECK_ERROR(d_samples = sycl::malloc_device<double>(num_timesteps*num_paths, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          49742
+    Length:          69
+    ReplacementText: 'DPCT_CHECK_ERROR(d_paths = sycl::malloc_device<double>(num_timesteps*num_paths, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50014
+    Length:          61
+    ReplacementText: 'DPCT_CHECK_ERROR(d_svds = sycl::malloc_device<double>(16*num_timesteps, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50202
+    Length:          71
+    ReplacementText: 'DPCT_CHECK_ERROR(d_all_out_of_the_money = sycl::malloc_device<int>(num_timesteps, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50443
+    Length:          69
+    ReplacementText: 'DPCT_CHECK_ERROR(d_temp_storage = sycl::malloc_device<double>(max_temp_storage, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50570
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1048:0: The original value cudaHostAllocDefault is not meaningful in the migrated code and was removed or replaced with 0. You may need to check the migrated code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50583
+    Length:          70
+    ReplacementText: 'DPCT_CHECK_ERROR(h_price = sycl::malloc_host<double>(1, q_ct1))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50717
+    Length:          17
+    ReplacementText: 'dpct::rng::host_rng_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50755
+    Length:          55
+    ReplacementText: 'DPCT_CHECK_ERROR(rng = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mrg32k3a)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50810
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50828
+    Length:          28
+    ReplacementText: 'DPCT_CHECK_ERROR(rng->set_queue(stream)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50856
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50874
+    Length:          42
+    ReplacementText: 'DPCT_CHECK_ERROR(rng->set_seed(0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          50916
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          51227
+    Length:          32
+    ReplacementText: 'DPCT_CHECK_ERROR(rng->skip_ahead(0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          51259
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53124
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_price, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53145
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53163
+    Length:          27
+    ReplacementText: 'DPCT_CHECK_ERROR(rng.reset()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53190
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53206
+    Length:          24
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(d_temp_storage, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53230
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53246
+    Length:          32
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(d_all_out_of_the_money, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53278
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53294
+    Length:          16
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(d_svds, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53310
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53326
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(d_paths, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53343
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53359
+    Length:          19
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(d_samples, q_ct1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53378
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53394
+    Length:          25
+    ReplacementText: 'DPCT_CHECK_ERROR(dev_ct1.destroy_queue(stream))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53479
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dev_ct1.reset())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Offset:          53513
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo/longstaff_schwartz_svd_2.cu'
+    Digest:          e9fc83bc23f5986006559cfdcc28d1d4
+DpctVersion:     2024.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/nfs/site/home/andreyfe/applications.hpc.workloads.fsi.fsi-gpu/american_monte_carlo'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           ''
+    Specified:       false
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  NoUseGenericSpace:
+    Value:           ''
+    Specified:       true
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
