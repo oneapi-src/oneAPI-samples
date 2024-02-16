@@ -161,6 +161,15 @@ The following block diagram shows an overview of a typical oneAPI FPGA BSP hardw
    cd build
    cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    > **Note**: You must set FPGA_DEVICE to point to your BSP in order to build this sample.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
