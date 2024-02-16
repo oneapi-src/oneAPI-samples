@@ -1,20 +1,20 @@
-# `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
+# `Intel® Neural Compressor (INC) TensorFlow* Getting Started*` Sample
 
-The  `Intel® Neural Compressor TensorFlow* Getting Started*` Sample demonstrates using the Intel® Neural Compressor, which is part of the Intel® AI Tools with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
+The  `Intel® Neural Compressor (INC) TensorFlow* Getting Started*` Sample demonstrates using the Intel® Neural Compressor (INC), which is part of the Intel® AI Tools with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
 
 | Area                     | Description
 |:---                      |:---
-| What you will learn      | How to use Intel® Neural Compressor tool to quantize the AI model based on TensorFlow* and speed up the inference on Intel® Xeon® CPUs
+| What you will learn      | How to use Intel® Neural Compressor (INC) tool to quantize the AI model based on TensorFlow* and speed up the inference on Intel® Xeon® CPUs
 | Time to complete         | 10 minutes
 | Category                 | Getting Started
 
 ## Purpose
 
-This sample shows the process of building a convolutional neural network (CNN) model to recognize handwritten numbers and demonstrates how to increase the inference performance by using Intel® Neural Compressor. Low-precision optimizations can speed up inference. Intel® Neural Compressor simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
+This sample shows the process of building a convolutional neural network (CNN) model to recognize handwritten numbers and demonstrates how to increase the inference performance by using Intel® Neural Compressor (INC). Low-precision optimizations can speed up inference. Intel® Neural Compressor (INC) simplifies the process of converting the FP32 model to INT8/BF16. At the same time, Intel® Neural Compressor (INC) tunes the quantization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
 
 You can achieve higher inference performance by converting the FP32 model to INT8 or BF16 model. Additionally, Intel® Deep Learning Boost (Intel® DL Boost) in Intel® Xeon® Scalable processors and Xeon® processors provides hardware acceleration for INT8 and BF16 models.
 
-You will learn how to train a CNN model with Keras and TensorFlow*, use Intel® Neural Compressor to quantize the model, and compare the performance to see the benefit of Intel® Neural Compressor.
+You will learn how to train a CNN model with Keras and TensorFlow*, use Intel® Neural Compressor (INC) to quantize the model, and compare the performance to see the benefit of Intel® Neural Compressor (INC).
 
 ## Prerequisites
 
@@ -22,13 +22,13 @@ You will learn how to train a CNN model with Keras and TensorFlow*, use Intel® 
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 (or newer) <br> Windows 11, 10*
 | Hardware                          | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
-| Software                          | Intel® Neural Compressor, Intel Optimization for TensorFlow
+| Software                          | Intel® Neural Compressor (INC), Intel Optimization for TensorFlow
 
-### Intel® Neural Compressor and Sample Code Versions
+### Intel® Neural Compressor (INC) and Sample Code Versions
 
->**Note**: See the [Intel® Neural Compressor](https://github.com/intel/neural-compressor) GitHub repository for more information and recent changes. 
+>**Note**: See the [Intel® Neural Compressor (INC)](https://github.com/intel/neural-compressor) GitHub repository for more information and recent changes. 
 
-This sample is updated regularly to match the Intel® Neural Compressor version in the latest Intel® AI Tools release. If you want to get the sample code for an earlier toolkit release, check out the corresponding git tag.
+This sample is updated regularly to match the Intel® Neural Compressor (INC) version in the latest Intel® AI Tools release. If you want to get the sample code for an earlier toolkit release, check out the corresponding git tag.
 
 1. List the available git tags.
    ```
@@ -63,9 +63,9 @@ You will need to download and install the following toolkits, tools, and compone
 The sample demonstrates how to:
 
 - Use Keras from TensorFlow* to build and train a CNN model.
-- Define a function and class for Intel® Neural Compressor to
+- Define a function and class for Intel® Neural Compressor (INC) to
   quantize the CNN model.
-  - The Intel® Neural Compressor can run on any Intel® CPU to quantize the AI model.
+  - The Intel® Neural Compressor (INC) can run on any Intel® CPU to quantize the AI model.
   - The quantized AI model has better inference performance than the FP32 model on Intel CPUs.
   - Specifically, the latest Intel® Xeon® Scalable  processors and  Xeon® processors provide hardware acceleration for such tasks.
 - Test the performance of the FP32 model and INT8 (quantization) model.
@@ -115,7 +115,7 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
       ```
       source activate usr_tensorflow
       ```
-2. Install Intel® Neural Compressor from the local channel.
+2. Install Intel® Neural Compressor (INC) from the local channel.
    ```
    conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline
    ```
@@ -144,7 +144,7 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
    conda install -n user_tensorflow jupyter runipy notebook -y
    ```
 
-## Run the `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
+## Run the `Intel® Neural Compressor (INC) TensorFlow* Getting Started*` Sample
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.

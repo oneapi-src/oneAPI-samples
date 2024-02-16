@@ -1,12 +1,12 @@
-# `Intel® Extension for PyTorch* Getting Started` Sample
+# `Intel® Extension for PyTorch (IPEX) Getting Started` Sample
 
-Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel hardware. Most of the optimizations will be included in stock PyTorch* releases eventually, and the intention of the extension is to deliver up-to-date features and optimizations for PyTorch* on Intel hardware, examples include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
+Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel hardware. Most of the optimizations will be included in stock PyTorch* releases eventually, and the intention of the extension is to deliver up-to-date features and optimizations for PyTorch* on Intel hardware, examples include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 This sample contains a Jupyter* NoteBook that guides you through the process of running a PyTorch* inference workload on both GPU and CPU by using Intel® AI Tools and also analyze the GPU and CPU usage via Intel® oneAPI Deep Neural Network Library (oneDNN) verbose logs.
 
 | Area                 | Description
 |:---                  |:---
-| What you will learn  | How to get started with Intel® Extension for PyTorch
+| What you will learn  | How to get started with Intel® Extension for PyTorch (IPEX)
 | Time to complete     | 15 minutes
 
 ## Prerequisites
@@ -15,7 +15,7 @@ This sample contains a Jupyter* NoteBook that guides you through the process of 
 |:---                  |:---
 | OS                   | Ubuntu* 22.04
 | Hardware             | Intel® Xeon® scalable processor family <br> Intel® Data Center GPUs
-| Software             | Intel® Extension for PyTorch
+| Software             | Intel® Extension for PyTorch (IPEX)
 
 
 ## Hardware requirement
@@ -30,18 +30,18 @@ Verified Hardware Platforms for GPU samples:
 
 ## Purpose
 
-This sample code demonstrates how to begin using the Intel® Extension for PyTorch*. 
+This sample code demonstrates how to begin using the Intel® Extension for PyTorch (IPEX). 
 
 The sample implements an example neural network with one convolution layer, one normalization layer, and one ReLU layer.
 
-You can quickly build and train a PyTorch* neural network using the simple Python code. Also, by controlling the built-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and shows the performance during PyTorch* model training and inference with Intel® Extension for PyTorch*.
+You can quickly build and train a PyTorch* neural network using the simple Python code. Also, by controlling the built-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and shows the performance during PyTorch* model training and inference with Intel® Extension for PyTorch (IPEX).
 
 The Jupyter notebook in this sample also guides users how to change PyTorch* codes to run on Intel® Data Center GPU family and how to validate the GPU or CPU usages for PyTorch* workloads on Intel CPU or GPU.
 
->**Note**: Intel® Extension for PyTorch* can be installed via the Intel® AI Tools Offline Installer or via the Intel AI Tools Selector. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+>**Note**: Intel® Extension for PyTorch (IPEX) can be installed via the Intel® AI Tools Offline Installer or via the Intel AI Tools Selector. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
 
 >
->Find more examples in the [*Examples*](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html) topic of the [*Intel® Extension for PyTorch* Documentation*](https://intel.github.io/intel-extension-for-pytorch).
+>Find more examples in the [*Examples*](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html) topic of the [*Intel® Extension for PyTorch (IPEX) Documentation*](https://intel.github.io/intel-extension-for-pytorch).
 
 
 ## Key Implementation Details
@@ -49,13 +49,13 @@ The Jupyter notebook in this sample also guides users how to change PyTorch* cod
 The sample uses pretrained model provided by Intel and published as part of [Intel AI Reference Models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
 
 
-- The Jupyter Notebook, `ResNet50_Inference.ipynb`, is implemented for both CPU and GPU using Intel® Extension for PyTorch*.
+- The Jupyter Notebook, `ResNet50_Inference.ipynb`, is implemented for both CPU and GPU using Intel® Extension for PyTorch (IPEX).
 - The `Intel_Extension_For_PyTorch_Hello_World.py` script is implemented for CPU using the Python language.
 - You must export the environment variable `DNNL_VERBOSE=1` to display the deep learning primitives trace during execution.
 
 > **Note**: The test dataset is inherited from `torch.utils.data.Dataset`, and the model is inherited from `torch.nn.Module`.
 
-## Run the `Intel® Extension for PyTorch* Getting Started` Sample
+## Run the `Intel® Extension for PyTorch (IPEX) Getting Started` Sample
 
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 

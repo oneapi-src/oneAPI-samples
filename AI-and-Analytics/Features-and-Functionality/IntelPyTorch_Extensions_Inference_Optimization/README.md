@@ -1,10 +1,10 @@
-# `Optimize PyTorch* Models using Intel® Extension for PyTorch* (IPEX)` Sample
+# `Optimize PyTorch* Models using Intel® Extension for PyTorch (IPEX)` Sample
 
-This notebook guides you through the process of extending your PyTorch* code with Intel® Extension for PyTorch* (IPEX) with optimizations to achieve performance boosts on Intel® hardware.
+This notebook guides you through the process of extending your PyTorch* code with Intel® Extension for PyTorch (IPEX) with optimizations to achieve performance boosts on Intel® hardware.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Applying IPEX Optimizations to a PyTorch workload in a step-by-step manner to gain performance boost
+| What you will learn   | Applying Intel® Extension for PyTorch (IPEX) Optimizations to a PyTorch workload in a step-by-step manner to gain performance boost
 | Time to complete      | 30 minutes
 | Category              | Code Optimization
 
@@ -12,7 +12,7 @@ This notebook guides you through the process of extending your PyTorch* code wit
 
 This sample notebook shows how to get started with Intel® Extension for PyTorch (IPEX) for sample Computer Vision and NLP workloads.
 
-The sample starts by loading two models from the PyTorch hub: **Faster-RCNN** (Faster R-CNN) and **distilbert** (DistilBERT). After loading the models, the sample applies sequential optimizations from IPEX and examines performance gains for each incremental change.
+The sample starts by loading two models from the PyTorch hub: **Faster-RCNN** (Faster R-CNN) and **distilbert** (DistilBERT). After loading the models, the sample applies sequential optimizations from Intel® Extension for PyTorch (IPEX) and examines performance gains for each incremental change.
 
 You can make code changes quickly on top of existing PyTorch code to obtain the performance speedups for model inference.
 
@@ -53,20 +53,20 @@ This sample tutorial contains one Jupyter Notebook and one Python script.
 
 | Notebook                                 | Description
 |:---                                      |:---
-|`optimize_pytorch_models_with_ipex.ipynb` |Gain performance boost during inference using IPEX.
+|`optimize_pytorch_models_with_ipex.ipynb` |Gain performance boost during inference using Intel® Extension for PyTorch (IPEX).
 
 ### Python Script
 
 | Script              | Description
 |:---                 |:---
-|`resnet50.py`        |The script optimizes a Faster R-CNN model to be used with IPEX Launch Script.
+|`resnet50.py`        |The script optimizes a Faster R-CNN model to be used with Intel® Extension for PyTorch (IPEX) Launch Script.
 
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `Optimize PyTorch* Models using Intel® Extension for PyTorch* (IPEX)` Sample
+## Run the `Optimize PyTorch* Models using Intel® Extension for PyTorch (IPEX)` Sample
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -138,7 +138,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-Users should be able to see some diagrams for performance comparison and analysis for inference speedup obtained by enabling IPEX optimizations.
+Users should be able to see some diagrams for performance comparison and analysis for inference speedup obtained by enabling Intel® Extension for PyTorch (IPEX) optimizations.
 
 ## License
 

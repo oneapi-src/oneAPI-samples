@@ -1,4 +1,4 @@
-# `TensorFlow* fine-tuning of LLMs with AMX and Bfloat16` Sample
+# `TensorFlow* fine-tuning of LLMs with Intel® AMX and Bfloat16` Sample
 
 The `TensorFlow fine-tuning with Advanced Matrix Extensions and Bfloat16` sample demonstrates how to finetune a GPT-J (LLM) model using the GLUE cola dataset with the Intel® Optimization for TensorFlow*.
 
@@ -12,7 +12,7 @@ The Intel® Optimization for TensorFlow* enables TensorFlow* with optimizations 
 
 ## Purpose
 
-The Intel® Optimization for TensorFlow* gives users the ability to speed up fine-tuning and inference of LLMs on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the AMX instruction set when compared to AVX-512.
+The Intel® Optimization for TensorFlow* gives users the ability to speed up fine-tuning and inference of LLMs on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the Intel® AMX instruction set when compared to AVX-512.
 
 This also demostrates the use of a single CPU for LLM fine-tuning and inference.
 ## Prerequisites
@@ -49,7 +49,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample trains a DistilBERT model using the Disaster Tweet Classification dataset while using Intel® Optimization for TensorFlow*. The model is trained using FP32 and BF16 precision, including the use of Intel® Advanced Matrix Extensions (AMX) on BF16. AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors.
+This code sample trains a DistilBERT model using the Disaster Tweet Classification dataset while using Intel® Optimization for TensorFlow*. The model is trained using FP32 and BF16 precision, including the use of Intel® AMX on BF16. Intel® AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors.
 
 >**Note**: Fine-tuning is not performed using INT8 since using a lower precision will train a model with fewer parameters, which is likely to underfit and not generalize well.
 
@@ -66,8 +66,8 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                                 | Description
 |:---                                    |:---
-|`GPTJ_finetuning.py`                    | The script performs fine-tuning with AMX BF16.
-|`GPTJ_inference.py`                     | The script performs inference with AMX BF16.
+|`GPTJ_finetuning.py`                    | The script performs fine-tuning with Intel® AMX BF16.
+|`GPTJ_inference.py`                     | The script performs inference with Intel® AMX BF16.
 
 ## Set Environment Variables
 

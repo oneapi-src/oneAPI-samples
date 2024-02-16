@@ -12,7 +12,7 @@ The Intel® Optimization for TensorFlow* enables TensorFlow* with optimizations 
 
 ## Purpose
 
-The Intel® Optimization for TensorFlow* gives users the ability to speed up training on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the AMX instruction set when compared to AVX-512.
+The Intel® Optimization for TensorFlow* gives users the ability to speed up training on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the Intel® AMX instruction set when compared to AVX-512.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample trains a DistilBERT model using the Disaster Tweet Classification dataset while using Intel® Optimization for TensorFlow*. The model is trained using FP32 and BF16 precision, including the use of Intel® Advanced Matrix Extensions (AMX) on BF16. AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The training time will be compared, showcasing the speedup of BF16 and AMX.
+This code sample trains a DistilBERT model using the Disaster Tweet Classification dataset while using Intel® Optimization for TensorFlow*. The model is trained using FP32 and BF16 precision, including the use of Intel® AMX on BF16. Intel® AMX is supported on BF16 and INT8 data types starting with 4th Gen Xeon Scalable Processors. The training time will be compared, showcasing the speedup of BF16 and Intel® AMX.
 
 >**Note**: Training is not performed using INT8 since using a lower precision will train a model with fewer parameters, which is likely to underfit and not generalize well.
 
@@ -64,7 +64,7 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                                 | Description
 |:---                                    |:---
-|`Intel_TensorFlow_AMX_BF16_Training.py` | The script performs training with AMX BF16 and compares the performance against the baseline
+|`Intel_TensorFlow_AMX_BF16_Training.py` | The script performs training with Intel® AMX BF16 and compares the performance against the baseline
 
 ## Set Environment Variables
 
@@ -133,7 +133,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The diagrams show approximate performance speed increases using AMX BF16 with auto-mixed precision during training. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the number of required computations in one batch.
+The diagrams show approximate performance speed increases using Intel® AMX BF16 with auto-mixed precision during training. To see more performance improvement between AVX-512 BF16 and Intel® AMX BF16, increase the number of required computations in one batch.
 
 ## License
 

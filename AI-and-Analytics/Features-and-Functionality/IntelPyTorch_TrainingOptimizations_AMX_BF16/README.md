@@ -1,18 +1,18 @@
 ﻿# `PyTorch Training Optimizations with Advanced Matrix Extensions Bfloat16` Sample
 
-The `PyTorch Training Optimizations with Advanced Matrix Extensions Bfloat16` sample will demonstrate how to train a ResNet50 model using the CIFAR10 dataset using the Intel® Extension for PyTorch*.
+The `PyTorch Training Optimizations with Advanced Matrix Extensions Bfloat16` sample will demonstrate how to train a ResNet50 model using the CIFAR10 dataset using the Intel® Extension for PyTorch (IPEX).
 
-The Intel® Extension for PyTorch* extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
+The Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel® hardware. While most of the optimizations will be included in future PyTorch* releases, the extension delivers up-to-date features and optimizations for PyTorch on Intel® hardware. For example, newer optimizations include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Training performance improvements using Intel® Extension for PyTorch* with Intel® AMX BF16
+| What you will learn   | Training performance improvements using Intel® Extension for PyTorch (IPEX) with Intel® AMX BF16
 | Time to complete      | 20 minutes
 | Category              | Code Optimization
 
 ## Purpose
 
-The Intel® Extension for PyTorch* gives users the ability to speed up training on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the AMX instruction set when compared to AVX-512.
+The Intel® Extension for PyTorch (IPEX) gives users the ability to speed up training on Intel® Xeon Scalable processors with lower precision data formats and specialized computer instructions. The bfloat16 (BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. You should notice performance optimization with the Intel® AMX instruction set when compared to AVX-512.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ The Intel® Extension for PyTorch* gives users the ability to speed up training 
 |:---                     |:---
 | OS                      | Ubuntu* 18.04 or newer
 | Hardware                | 4th Gen Intel® Xeon® Scalable Processors or newer
-| Software                | Intel® Extension for PyTorch*
+| Software                | Intel® Extension for PyTorch (IPEX)
 
 ### For Local Development Environments
 
@@ -36,7 +36,7 @@ The necessary tools and components are already installed in the environment. You
 
 ## Key Implementation Details
 
-This code sample will train a ResNet50 model using the CIFAR10 dataset while using Intel® Extension for PyTorch*. The model is trained using FP32 and BF16 precision, including the use of Intel® Advanced Matrix Extensions (AMX) on BF16. AMX is supported on BF16 and INT8 data types starting with the 4th Generation of Xeon Scalable Processors. The training time will be compared, showcasing the speedup of BF16 and AMX.
+This code sample will train a ResNet50 model using the CIFAR10 dataset while using Intel® Extension for PyTorch (IPEX). The model is trained using FP32 and BF16 precision, including the use of Intel® AMX on BF16. Intel® AMX is supported on BF16 and INT8 data types starting with the 4th Generation of Xeon Scalable Processors. The training time will be compared, showcasing the speedup of BF16 and Intel® AMX.
 
 >**Note**: Training is not performed using INT8 since using a lower precision will train a model with fewer parameters, which is likely to underfit and not generalize well.
 
@@ -52,7 +52,7 @@ The sample tutorial contains one Jupyter Notebook and a Python script. You can u
 
 | Script                             | Description
 |:---                                |:---
-|`pytorch_training_amx_bf16.py`      | The script performs training with AMX BF16 and compares the performance against the baseline
+|`pytorch_training_amx_bf16.py`      | The script performs training with Intel® AMX BF16 and compares the performance against the baseline
 |`pytorch_training_avx512_bf16.py`   | The script performs training with AVX512 in BF16
 
 ## Set Environment Variables
@@ -138,7 +138,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample will print out the runtimes and charts of relative performance with the FP32 model without any optimizations as the baseline. 
 
-The performance speedups using AMX BF16 are approximate on ResNet50. Performance will vary based on your hardware and software versions. To see more performance improvement between AVX-512 BF16 and AMX BF16, increase the batch size with CIFAR10 or use another dataset. For even more speedup, consider using the Intel® Extension for PyTorch* [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html). 
+The performance speedups using Intel® AMX BF16 are approximate on ResNet50. Performance will vary based on your hardware and software versions. To see more performance improvement between AVX-512 BF16 and Intel® AMX BF16, increase the batch size with CIFAR10 or use another dataset. For even more speedup, consider using the Intel® Extension for PyTorch (IPEX) [Launch Script](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html). 
 
 ## License
 

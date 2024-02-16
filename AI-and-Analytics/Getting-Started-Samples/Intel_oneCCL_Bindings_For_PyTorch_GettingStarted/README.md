@@ -13,7 +13,7 @@ The oneAPI Collective Communications Library Bindings for PyTorch* (oneCCL Bindi
 |:---                               |:---
 | OS                                | Ubuntu* 22.04
 | Hardware                          | Intel® Xeon® scalable processor family <br> Intel® Data Center GPU
-| Software                          | Intel® Extension for PyTorch*
+| Software                          | Intel® Extension for PyTorch (IPEX)
 
 
 ### For Local Development Environments

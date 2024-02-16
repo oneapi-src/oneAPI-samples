@@ -1,18 +1,18 @@
 # `Intel PyTorch GPU Inference Optimization with AMP` Sample
 
-The `Intel PyTorch GPU Inference Optimization with AMP` sample will demonstrate how to use PyTorch ResNet50 model transfer learning and inference using the CIFAR10 dataset on Intel discrete GPU with Intel® Extension for PyTorch*.
+The `Intel PyTorch GPU Inference Optimization with AMP` sample will demonstrate how to use PyTorch ResNet50 model transfer learning and inference using the CIFAR10 dataset on Intel discrete GPU with Intel® Extension for PyTorch (IPEX).
 
-Intel® Extension for PyTorch* extends PyTorch* with up-to-date features optimizations for an extra performance boost on Intel hardware. Optimizations take advantage of Intel Xe Matrix Extensions (XMX) AI engines on Intel discrete GPUs. Moreover, through PyTorch* XPU device, Intel® Extension for PyTorch* provides easy GPU acceleration for Intel discrete GPUs with PyTorch*.
+Intel® Extension for PyTorch (IPEX) extends PyTorch* with up-to-date features optimizations for an extra performance boost on Intel hardware. Optimizations take advantage of Intel Xe Matrix Extensions (XMX) AI engines on Intel discrete GPUs. Moreover, through PyTorch* XPU device, Intel® Extension for PyTorch (IPEX) provides easy GPU acceleration for Intel discrete GPUs with PyTorch*.
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | Training with FP32 and AMP BF16 and Inference improvements with AMP BF16 on GPU using Intel® Extension for PyTorch*
+| What you will learn   | Training with FP32 and AMP BF16 and Inference improvements with AMP BF16 on GPU using Intel® Extension for PyTorch (IPEX)
 | Time to complete      | 20 minutes
 | Category              | Code Optimization
 
 ## Purpose
 
-The Intel® Extension for PyTorch* gives users the ability to perform PyTorch model training and inference on Intel® discrete GPUs. It also supports lower-precision data formats and specialized computer instructions. The bfloat16(BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. Due to its special nature of having the same number of bits for exponent as FP32, BF16 can easily be converted to FP32 and Vice Versa. This allows Auto-Mixed Precision(AMP) Training and Inference easy with FP32 and BF16. To support and accelerate BF16 data type, Intel discrete GPUs have Intel® Xe Matrix Extensions(XMX) instructions, with that you should notice performance optimization over FP32.
+The Intel® Extension for PyTorch (IPEX) gives users the ability to perform PyTorch model training and inference on Intel® discrete GPUs. It also supports lower-precision data formats and specialized computer instructions. The bfloat16(BF16) data format uses half the bit width of floating-point-32 (FP32), lowering the amount of memory needed and execution time to process. Due to its special nature of having the same number of bits for exponent as FP32, BF16 can easily be converted to FP32 and Vice Versa. This allows Auto-Mixed Precision(AMP) Training and Inference easy with FP32 and BF16. To support and accelerate BF16 data type, Intel discrete GPUs have Intel® Xe Matrix Extensions(XMX) instructions, with that you should notice performance optimization over FP32.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 ## Key Implementation Details
 
-This code sample will train a ResNet50 model using the CIFAR10 dataset while using Intel® Extension for PyTorch*. The model is trained using FP32 by default but can also be trained with AMP BF16 precision by passing BF16 parameter in the Train function. Then the same trained model is taken and inference with FP32 and AMP BF16 is done and latency is compared to see the performance improvement with the use of Intel® Xe Matrix Extensions(XMX) for BF16. XMX is supported on BF16 and INT8 data types on Intel discrete GPUs.
+This code sample will train a ResNet50 model using the CIFAR10 dataset while using Intel® Extension for PyTorch (IPEX). The model is trained using FP32 by default but can also be trained with AMP BF16 precision by passing BF16 parameter in the Train function. Then the same trained model is taken and inference with FP32 and AMP BF16 is done and latency is compared to see the performance improvement with the use of Intel® Xe Matrix Extensions(XMX) for BF16. XMX is supported on BF16 and INT8 data types on Intel discrete GPUs.
 
 >**Note**: Training is not performed using INT8 since a lower precision will train a model with fewer parameters, which is likely to underfit and not generalize well.
 
@@ -130,7 +130,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]`. Additionally, the sample generates performance and analysis diagrams for comparison.
 
-The following image shows approximate performance speed increases using AMX BF16 with auto-mixed precision during training.
+The following image shows approximate performance speed increases using Intel® Advanced Matrix Extensions (Intel® AMX) BF16 with auto-mixed precision during training.
 
 
 
