@@ -47,48 +47,23 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get Intel® AI Tools**
 
 Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
-<br>Select and install needed AI Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
+<br>Select and install needed AI Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 **2. Install dependencies**
 ```
 pip install -r requirements.txt
 ```
-
-**3. Install Jupyter Notebook**
-```
-pip install notebook
-``` 
-Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
 
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#ai-tools-offline-installer-validated)
 * [Conda/PIP](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#condapip) 
 * [Docker](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#docker)
-* [AI Tools Offline Installer (Validated)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#ai-tools-offline-installer-validated)
-  
-### Conda/PIP
-> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
-1. Clone the GitHub repository:
-``` 
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
-```
-2. Launch Jupyter Notebook: 
-```
-jupyter notebook --ip=0.0.0.0
-```
-4. Follow the instructions to open the URL with the token in your browser.
-5. Select the Notebook:
-```
-optimize_pytorch_models_with_ipex.ipynb
-```
-6. Run every cell in the Notebook in sequence.
 
-### Docker
-AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 ### AI Tools Offline Installer (Validated)  
 1. If you have not already done so, complete [Configure you system](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/2024-0/before-you-begin.html) section from AI Tools Get Started Guide.
 2. Activate the Conda environment:
@@ -101,6 +76,9 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 4. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction]
+(https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 ```
 jupyter notebook --ip=0.0.0.0
 ```
@@ -112,6 +90,30 @@ optimize_pytorch_models_with_ipex.ipynb
 7. Change the kernel to `pytorch`
 8. Run every cell in the Notebook in sequence.
 
+### Conda/PIP
+> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
+1. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+```
+2. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction]
+(https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+4. Follow the instructions to open the URL with the token in your browser.
+5. Select the Notebook:
+```
+optimize_pytorch_models_with_ipex.ipynb
+```
+6. Run every cell in the Notebook in sequence.
+
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+ 
 ## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
