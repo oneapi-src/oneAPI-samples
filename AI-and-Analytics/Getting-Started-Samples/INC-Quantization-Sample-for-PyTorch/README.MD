@@ -77,8 +77,7 @@ cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 4. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
-feel free to check [the instruction]
-(https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 ```
 jupyter notebook --ip=0.0.0.0
 ```
@@ -99,8 +98,7 @@ cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 2. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
-feel free to check [the instruction]
-(https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 ```
 jupyter notebook --ip=0.0.0.0
 ```
