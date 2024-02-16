@@ -197,6 +197,9 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+  ```
 ## Run the `Zero Copy Data Transfer` Sample
 
 ### On Linux

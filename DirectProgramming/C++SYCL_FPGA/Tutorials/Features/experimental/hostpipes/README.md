@@ -341,6 +341,9 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+  ```
 #### Read the Reports
 
 1. Locate `report.html` in the `hostpipes_report.prj/reports/` directory.

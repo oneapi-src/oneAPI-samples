@@ -400,6 +400,9 @@ This code sample contains 6 source files that together demonstrate a full spectr
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+  ```
 ### Read the Reports
 
 1. Locate `report.html` in the corresponding `<source_file>_report.prj/reports/` directory.

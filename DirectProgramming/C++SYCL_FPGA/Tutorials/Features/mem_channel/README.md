@@ -276,6 +276,9 @@ Windows*, you may have to create your ‘build’ directory in a shorter path, f
 example c:\samples\build.  You can then run cmake from that directory, and
 provide cmake with the full path to your sample directory.
 
+  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+  ```
 ## Examining the Reports
 Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
 and `mem_channel_no_interleaving.prj` directories. Open the reports in 

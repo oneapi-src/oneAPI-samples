@@ -236,6 +236,9 @@ To disable interleaving on a loop, place `[[intel::max_interleaving(1)]]` above 
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+  ```
 ### Read the Reports
 
 Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
