@@ -11,12 +11,11 @@
   "builder": [ "cmake" ],
   "ciTests": {
 	"linux": [{
-		"env": [ "source /opt/intel/oneapi/setvars.sh --force" ],
 		"steps": [
 			"mkdir build",
-      "cd build",
-      "cmake ..",
-      "make",
+			"cd build",
+      			"cmake ..",
+      			"make",
 			"make run_matrix_mul"
 		 ]
 	}]
