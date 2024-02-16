@@ -11,7 +11,6 @@
   "ciTests": {
     "linux": [
       {
-        "env": [ "source /opt/intel/oneapi/setvars.sh --force" ],
         "steps": [
           "make all",
           "make Run",
