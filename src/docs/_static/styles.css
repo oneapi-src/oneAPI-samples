@@ -1155,3 +1155,37 @@ a:hover {
 #footer-blk-2{
   padding: 5px 10px;
 }
+
+.template-wrapper {
+  display: flex;
+  margin: 15px;
+  /* background-color: red; */
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.left-column {
+  background-color: #E9E9E9;
+  height: 100vh;
+  flex: 15%;
+}
+
+.right-column {
+  background-color: transparent;
+  height: 100vh;
+  flex: 85%;
+  outline: dotted;
+  outline-color: blue;
+}
