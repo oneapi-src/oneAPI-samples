@@ -122,6 +122,15 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
