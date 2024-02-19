@@ -193,10 +193,10 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
       nmake fpga
       ```
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
-
-  ```
+>
+>  ```
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
-  ```
+>  ```
 ## Read the Reports
 
 Locate `report.html` in the `stall_enable_report.prj/reports/` and `stall_free_report.prj/reports/` directories.

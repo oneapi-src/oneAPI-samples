@@ -244,10 +244,10 @@ We are currently working on an API and tutorial to address both of these drawbac
       ```
 
 > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
-
-  ```
+>
+>  ```
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
-  ```
+>  ```
 ## Run the `Host-Device Streaming using USM` Sample
 
 ### On Linux
