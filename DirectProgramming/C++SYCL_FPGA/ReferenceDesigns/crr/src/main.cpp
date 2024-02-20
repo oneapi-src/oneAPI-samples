@@ -108,13 +108,26 @@
 using namespace std;
 using namespace sycl;
 
+#ifdef FPGA_SIMULATOR
+#define OUTER_UNROLL 1
+#define INNER_UNROLL 2
+#define OUTER_UNROLL_POW2 1
+#else
+#define OUTER_UNROLL OUTER_UNROLL_V
+#define INNER_UNROLL INNER_UNROLL_V
+#define OUTER_UNROLL_POW2 OUTER_UNROLL_POW2_V
+#endif
+
 class CRRSolver;
 double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
                   vector<CRRResParams> &res_params,
                   vector<CRRPerStepMeta> &in_params2, queue &q) {
   auto start = std::chrono::steady_clock::now();
 
-  constexpr int steps = kMaxNSteps2;
+  int steps = std::max_element(in_params.begin(), in_params.end(),
+                               [](const CRRMeta &a, const CRRMeta &b) {
+                                 return a.n_steps < b.n_steps;
+                               })->n_steps;
 
   const int n_crr =
       (((n_items + (OUTER_UNROLL - 1)) / OUTER_UNROLL) * OUTER_UNROLL) * 3;
@@ -716,7 +729,11 @@ int main(int argc, char *argv[]) {
   string infilename = "";
   string outfilename = "";
 
+#if FPGA_SIMULATOR
+  const string default_ifile = "src/data/small_ordered_inputs.csv";
+#else
   const string default_ifile = "src/data/ordered_inputs.csv";
+#endif
   const string default_ofile = "src/data/ordered_outputs.csv";
 
   char str_buffer[kMaxStringLen] = {0};

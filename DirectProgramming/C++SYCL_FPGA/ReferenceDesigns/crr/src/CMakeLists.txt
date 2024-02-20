@@ -37,21 +37,21 @@ endif()
 # Set design parameters according to the selected board
 if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
-    set(OUTER_UNROLL 1)
-    set(INNER_UNROLL 64)
-    set(OUTER_UNROLL_POW2 1)
+    set(OUTER_UNROLL_V 1)
+    set(INNER_UNROLL_V 64)
+    set(OUTER_UNROLL_POW2_V 1)
     set(SEED "-Xsseed=1")
 elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
-    set(OUTER_UNROLL 2)
-    set(INNER_UNROLL 64)
-    set(OUTER_UNROLL_POW2 2)
+    set(OUTER_UNROLL_V 2)
+    set(INNER_UNROLL_V 64)
+    set(OUTER_UNROLL_POW2_V 2)
     set(SEED "-Xsseed=3")
 elseif(DEVICE_FLAG MATCHES "Agilex7")
     # Agilex 7
-    set(OUTER_UNROLL 2)
-    set(INNER_UNROLL 64)
-    set(OUTER_UNROLL_POW2 2)
+    set(OUTER_UNROLL_V 2)
+    set(INNER_UNROLL_V 64)
+    set(OUTER_UNROLL_POW2_V 2)
     set(SEED "-Xsseed=4")
 else()
     message(FATAL_ERROR "Unknown board!")
@@ -61,25 +61,25 @@ if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-message(STATUS "OUTER_UNROLL=${OUTER_UNROLL}")
-message(STATUS "INNER_UNROLL=${INNER_UNROLL}")
-message(STATUS "OUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
+message(STATUS "OUTER_UNROLL_V=${OUTER_UNROLL_V}")
+message(STATUS "INNER_UNROLL_V=${INNER_UNROLL_V}")
+message(STATUS "OUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V}")
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} -Xssimulation -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -Xsdaz -Xsrounding=faithful -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V} -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -Xsdaz -Xsrounding=faithful -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DOUTER_UNROLL_V=${OUTER_UNROLL_V} -DINNER_UNROLL_V=${INNER_UNROLL_V} -DOUTER_UNROLL_POW2_V=${OUTER_UNROLL_POW2_V} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Copy input data
 configure_file("data/ordered_inputs.csv" "data/ordered_inputs.csv" COPYONLY)
-configure_file("data/ordered_inputs.csv" "data/small_ordered_inputs.csv" COPYONLY)
+configure_file("data/small_ordered_inputs.csv" "data/small_ordered_inputs.csv" COPYONLY)
 
 ###############################################################################
 ### FPGA Emulator
@@ -94,11 +94,6 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-add_custom_command(TARGET ${SIMULATOR_TARGET} PRE_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan
-                     ""
-                     COMMENT "Running the simulation flow on the CRR design is very long and is therefore not recommended"
-                    )
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
