@@ -35,10 +35,10 @@ class LineBuffer2d {
       fpga_tools::DataBundle<PixelTypeOut, kParallelPixels>;
 
   // public members
-  [[intel::fpga_register]]  //
+  [[intel::fpga_register]]  // NO-FORMAT: Attribute
   short rows;
 
-  [[intel::fpga_register]]  //
+  [[intel::fpga_register]]  // NO-FORMAT: Attribute
   short cols;
 
  private:
@@ -56,7 +56,7 @@ class LineBuffer2d {
   constexpr static int kShifterCols = kStencilSize + kParallelPixels - 1;
 
   // line buffer
-  [[intel::fpga_register]]  //
+  [[intel::fpga_register]]  // NO-FORMAT: Attribute
   fpga_tools::ShiftReg2d<PixelWithSignals, kStencilSize, kShifterCols>
       my_shifter;
 
@@ -65,7 +65,7 @@ class LineBuffer2d {
   constexpr static int kFifoRows = kStencilSize - 1;
 
   // Line buffer for image Data
-  [[intel::fpga_memory]]  //
+  [[intel::fpga_memory]]  // NO-FORMAT: Attribute
   BundledPixels line_buffer_fifo[kFifoCols][kFifoRows];
 
   short fifo_idx = 0;  // track top of FIFO
@@ -79,7 +79,7 @@ class LineBuffer2d {
 
   constexpr static short kPreBufferSize = kParallelPixels + kBufferOffset;
 
-  [[intel::fpga_register]]  //
+  [[intel::fpga_register]]  // NO-FORMAT: Attribute
   fpga_tools::DataBundle<PixelWithSignals, kPreBufferSize>
       pre_buffer;
 
@@ -88,7 +88,12 @@ class LineBuffer2d {
   const short col_loop_bound = (cols / kParallelPixels);
 
   short row_write = kRowWriteInit;
-  short col_loop = 0, col_write = kColWriteInit;
+  short col_loop = 0;
+
+  // Shannonize col_write variable to get better fMAX
+  short col_write = kColWriteInit;
+  short col_write_next = kColWriteInit + kParallelPixels;
+
   bool eop_curr = false;
   bool sop_curr = false;
   int empty = 0, empty_curr = 0;
@@ -143,11 +148,11 @@ class LineBuffer2d {
   /// is/are at the end of a line.
   /// @return Filter result
   template <auto(&window_function), typename... FunctionArgs_T>
-  LineBufferDataBundleOut Filter(LineBufferDataBundleIn new_pixels, bool is_new_frame,
-                              bool is_line_end, bool &start_of_frame,
-                              bool &end_of_line,
-                              FunctionArgs_T... window_fn_args) {
-    [[intel::fpga_register]]  //
+  LineBufferDataBundleOut Filter(LineBufferDataBundleIn new_pixels,
+                                 bool is_new_frame, bool is_line_end,
+                                 bool &start_of_frame, bool &end_of_line,
+                                 FunctionArgs_T... window_fn_args) {
+    [[intel::fpga_register]]  // NO-FORMAT: Attribute
     BundledPixels new_pixels_structs;
 
 #pragma unroll
@@ -155,7 +160,7 @@ class LineBuffer2d {
       // wrap each pixel value in a struct
       PixelTypeIn new_pixel = new_pixels[i];
 
-      [[intel::fpga_register]]  //
+      [[intel::fpga_register]]  // NO-FORMAT: Attribute
       PixelWithSignals pixel_struct{new_pixel, is_new_frame, is_line_end,
                                     empty};
       new_pixels_structs[i] = pixel_struct;
@@ -164,12 +169,12 @@ class LineBuffer2d {
     pre_buffer.template ShiftMultiVals<kParallelPixels>(new_pixels_structs);
 
     // grab the first `kParallelPixels` samples to push into the stencil
-    [[intel::fpga_register]]  //
+    [[intel::fpga_register]]  // NO-FORMAT: Attribute
     BundledPixels input_val;
     input_val.template ShiftMultiVals<kParallelPixels, kPreBufferSize>(
         pre_buffer);
 
-    [[intel::fpga_register]]  //
+    [[intel::fpga_register]]  // NO-FORMAT: Attribute
     BundledPixels pixel_column[kStencilSize];
 
     // load from FIFO to shift register
@@ -227,6 +232,7 @@ class LineBuffer2d {
     if (sop_curr) {
       row_write = 0;
       col_write = 0;
+      col_write_next = kParallelPixels;
     }
 
     LineBufferDataBundleOut window_results;
@@ -280,11 +286,17 @@ class LineBuffer2d {
     if (col_loop == col_loop_bound) {
       col_loop = 0;
     }
-    col_write += kParallelPixels;
+
+    // shannonize col_write variable to improve fMAX. This lets us break up the
+    // the accumulate and the comparison operation to occur on separate loop
+    // itertations.
+    col_write = col_write_next;
+    col_write_next += kParallelPixels;
 
     // reset col_write and row_write when SOP and EOP appear
     if (col_write >= cols) {
       col_write = 0;
+      col_write_next = kParallelPixels;
       row_write++;
     }
 

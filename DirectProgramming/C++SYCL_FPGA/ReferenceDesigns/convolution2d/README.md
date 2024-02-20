@@ -97,63 +97,66 @@ struct Convolution2d {
   // confusion. Since kernel are a kernel argument, kernel can be specified at
   // runtime. The coefficients can only be updated by stopping the kernel and
   // re-starting it.
-  conv2d::WeightType coeffs[conv2d::kWindowSize * conv2d::kWindowSize];
+  std::array<float, conv2d::kWindowSize * conv2d::kWindowSize> coeffs;
 
   void operator()() const {
+    // Publish kernel version so that other IPs can poll it
+    VersionCSR::write(kKernelVersion);
+
     // This instance of the line buffer will store previously read pixels so
     // that they can be operated on in a local filter. The filter is invoked
     // below in the loop.
-    linebuffer2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
-                               conv2d::kWindowSize, conv2d::kMaxCols,
-                               conv2d::kParallelPixels>
+    line_buffer_2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
+                                 conv2d::kWindowSize, conv2d::kMaxCols,
+                                 conv2d::kParallelPixels>
         myLineBuffer(rows, cols);
 
-    bool keepGoing = true;
+    bool keep_going = true;
     bool bypass = true;
 
-    [[intel::initiation_interval(1)]]  //
-    while (keepGoing) {
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+    while (keep_going) {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.
-      bool didReadBeat = false;
-      conv2d::GreyScaleBeat newBeat = PipeIn::read(didReadBeat);
+      bool did_read_beat = false;
+      conv2d::GreyScaleBeat new_beat = PipeIn::read(did_read_beat);
 
       // the bypass signal lets the user disable the line buffer processing.
-      bool didReadBypass = false;
-      bool shouldBypass = BypassCSR::read(didReadBypass);
+      bool did_read_bypass = false;
+      bool should_bypass = BypassCSR::read(did_read_bypass);
 
       // the stop signal lets the user instruct the kernel to halt so that new
       // coefficients can be read.
-      bool didReadStop = false;
-      bool shouldStop = StopCSR::read(didReadStop);
+      bool did_read_stop = false;
+      bool should_stop = StopCSR::read(did_read_stop);
 
-      if (didReadBypass) {
-        bypass = shouldBypass;
+      if (did_read_bypass) {
+        bypass = should_bypass;
       }
 
-      if (didReadBeat) {
-        conv2d::GreyScaleBeat outputBeat;
+      if (did_read_beat) {
+        conv2d::GreyScaleBeat output_beat;
         if (bypass) {
-          outputBeat = newBeat;
+          output_beat = new_beat;
         } else {
           bool sop, eop;
 
-          // Call `filter()` function on `LineBuffer2d` object. This inserts a
-          // new pixel into the linebuffer, and runs the user-provided window
+          // Call `Filter()` function on `LineBuffer2d` object. This inserts a
+          // new pixel into the line buffer, and runs the user-provided window
           // function (`ConvolutionFunction()`). The additional argument
           // `coeffs` is passed to `ConvolutionFunction()`. The return value of
-          // `filter()` is the pixel data that we should propagate on to the
+          // `Filter()` is the pixel data that we should propagate on to the
           // next link in the processing chain.
-          conv2d::GreyPixelBundle outputBundle =
-              myLineBuffer.filter<ConvolutionFunction>(
-                  newBeat.data, newBeat.sop, newBeat.eop, sop, eop, coeffs);
-          outputBeat = conv2d::GreyScaleBeat(outputBundle, sop, eop, 0);
+          conv2d::GreyPixelBundle output_bundle =
+              myLineBuffer.Filter<ConvolutionFunction>(
+                  new_beat.data, new_beat.sop, new_beat.eop, sop, eop, coeffs);
+          output_beat = conv2d::GreyScaleBeat(output_bundle, sop, eop, 0);
         }
-        PipeOut::write(outputBeat);
+        PipeOut::write(output_beat);
       }
 
-      if (didReadStop) {
-        keepGoing = !shouldStop;
+      if (did_read_stop) {
+        keep_going = !should_stop;
       }
     }
   }
@@ -185,10 +188,11 @@ conv2d::PixelType ConvolutionFunction(
       short c_select, r_select;
 
       // handle the case where the center of the window is at the image edge.
-      // In this design, simply 'reflect' pixels that are already in the window.
-      SaturateWindowCoordinates(w_row, w_col, 
-                                row, col,     
-                                rows, cols,   
+      // In this design, simply 'reflect' pixels that are already in the
+      // window.
+      SaturateWindowCoordinates(w_row, w_col,  //
+                                row, col,      //
+                                rows, cols,    //
                                 r_select, c_select);
       conv2d::PixelType pixel =
           buffer[c_select + r_select * conv2d::kWindowSize];
@@ -207,10 +211,13 @@ conv2d::PixelType ConvolutionFunction(
     }
   }
 
+  // map range [0, 1.0) to [0, 1<<kBitsPerChannel)
+  // conv2d::PixelType return_val = sum * (float)(1 << conv2d::kBitsPerChannel);
+
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
   constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType return_val = (conv2d::PixelType)kOutputOffset +
-                                 (conv2d::PixelType)(sum * (kOutputOffset));
+  conv2d::PixelType return_val =
+      ((int16_t)kOutputOffset + (int16_t)(sum * (kOutputOffset)));
 
   return return_val;
 }
@@ -374,21 +381,21 @@ This design uses CMake to generate a build script for  `nmake`.
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./convolution.fpga_emu
+   ./conv.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./convolution.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./conv.fpga_sim
    ```
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   convolution.fpga_emu.exe
+   conv.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   convolution.fpga_sim.exe
+   conv.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
