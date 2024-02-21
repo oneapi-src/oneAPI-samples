@@ -271,7 +271,7 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
   // extra pixels to flush out the FIFO
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummy_pixels, (uint16_t)69);
+      q, dummy_pixels, (uint16_t)15);
 
   // disable bypass, since it's on by default
   BypassCSR::write(q, false);
