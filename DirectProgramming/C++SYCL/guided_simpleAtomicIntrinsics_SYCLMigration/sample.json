@@ -1,0 +1,26 @@
+{
+    "guid": "932A37FE-8CF0-4E01-8F5C-5159C991DEF9",	
+    "name": "guided_simpleAtomicIntrinsics_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+    "description": "This sample demonstrates the use of various SYCL arithmetic Atomic Intrinsic functions.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm_gpu",
+	      "make run_sm_gpu_opencl"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }
