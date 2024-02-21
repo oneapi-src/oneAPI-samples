@@ -422,13 +422,11 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
   // struct Speed in defined in hostspeed.hpp and is used to store transfer
   // times Creating array of struct to store output from each iteration The
   // values from each iteration are analyzed to report bandwidth
-  struct Speed* rd_bw = (struct Speed*) malloc(iterations * sizeof(struct Speed));
-  struct Speed* wr_bw = (struct Speed*) malloc(iterations * sizeof(struct Speed));
+  std::vector<struct Speed> rd_bw;
+  rd_bw.resize(iterations);
 
-  if (!rd_bw || !wr_bw) {
-    std::cerr << "failed to allocated host DDR" << std::endl;
-    std::terminate();
-  }
+  std::vector<struct Speed> wr_bw;
+  wr_bw.resize(iterations);
 
   // std::cout is manipulated to format output
   // Storing old state of std::cout to restore
@@ -503,9 +501,6 @@ int ShimMetrics::HostSpeed(sycl::queue &q) {
     // correct format in current loop
     std::cout.copyfmt(old_state);
   }
-
-  free(rd_bw);
-  free(wr_bw);
 
   h2d_rd_bw_ = read_topspeed;
   h2d_wr_bw_ = write_topspeed;

@@ -713,12 +713,12 @@ void SubmitGzipTasksSingleEngine(
     size_t block_size,  // size of block to compress.
     buffer<char, 1> *pibuf, buffer<char, 1> *pobuf,
     buffer<struct GzipOutInfo, 1> *gzip_out_buf,
-    buffer<unsigned, 1> *result_crc, bool last_block, event &e_crc, event &e_lz,
-    event &e_huff) {
+    buffer<unsigned, 1> *result_crc, bool last_block, std::vector<event> &e_crc, std::vector<event> &e_lz,
+    std::vector<event> &e_huff, int buffer_index) {
   using acc_dist_channel = ext::intel::pipe<class some_pipe, struct DistLen>;
   using acc_dist_channel_last = ext::intel::pipe<class some_pipe2, struct DistLen>;
 
-  e_crc = q.submit([&](handler &h) {
+  e_crc[buffer_index] = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
     auto acc_pibuf = pibuf->get_access<access::mode::read>(h);
     auto accresult_crc = result_crc->get_access<access::mode::discard_write>(h);
@@ -1974,7 +1974,7 @@ void SubmitGzipTasksSingleEngine(
     });
   });
 
-  e_lz = q.submit([&](handler &h) {
+  e_lz[buffer_index] = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
     auto acc_pibuf = pibuf->get_access<access::mode::read>(h);
 
@@ -2282,7 +2282,7 @@ void SubmitGzipTasksSingleEngine(
     });
   });
 
-  e_huff = q.submit([&](handler &h) {
+  e_huff[buffer_index] = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
     auto acc_gzip_out =
         gzip_out_buf->get_access<access::mode::discard_write>(h);
@@ -2352,20 +2352,20 @@ void SubmitGzipTasks(queue &q,
                      buffer<char, 1> *pibuf, buffer<char, 1> *pobuf,
                      buffer<struct GzipOutInfo, 1> *gzip_out_buf,
                      buffer<unsigned, 1> *result_crc, bool last_block,
-                     event &e_crc, event &e_lz, event &e_huff,
-                     size_t engineID) {
+                     std::vector<event> &e_crc, std::vector<event> &e_lz, std::vector<event> &e_huff,
+                     size_t engineID, int buffer_index) {
   // Statically declare the engines so that the hardware is created for them.
   // But at run time, the host can dynamically select which engine(s) to use via
   // engineID.
   if (engineID == 0) {
     SubmitGzipTasksSingleEngine<0>(q, block_size, pibuf, pobuf, gzip_out_buf,
-                                   result_crc, last_block, e_crc, e_lz, e_huff);
+                                   result_crc, last_block, e_crc, e_lz, e_huff, buffer_index);
   }
 
   #if NUM_ENGINES > 1
     if (engineID == 1) {
       SubmitGzipTasksSingleEngine<1>(q, block_size, pibuf, pobuf, gzip_out_buf,
-                                     result_crc, last_block, e_crc, e_lz, e_huff);
+                                     result_crc, last_block, e_crc, e_lz, e_huff, buffer_index);
     }
   #endif
 
