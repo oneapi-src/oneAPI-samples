@@ -15,9 +15,10 @@
       "steps": [
         "mkdir build",
         "cd build",
+        "cp -r ${CCL_ROOT}/share/doc/ccl/examples/* .",
         "cmake ..",
         "make",
-        "mpirun -n 2 out/cpu/cpu_allreduce_test",
+        "out/cpu/cpu_allreduce_test"
       ]
     }]
   },
