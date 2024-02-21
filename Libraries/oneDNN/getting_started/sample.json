@@ -15,7 +15,8 @@
 		"steps": [
 			"mkdir build",
       		        "cd build",
-           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icx",
+			"cp -r ${DNNLROOT}/share/doc/dnnl/examples/* .",
+           		"cmake ..",
            		"make getting-started-cpp",
 			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
 		 ]
