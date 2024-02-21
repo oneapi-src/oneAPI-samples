@@ -1,0 +1,16 @@
+if(INTEL_MAX_GPU)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -fsycl-targets=intel_gpu_pvc -D INTEL_MAX_GPU")
+elseif(NVIDIA_GPU)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -fsycl-targets=nvptx64-nvidia-cuda -D NVIDIA_GPU")
+else()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl ")
+endif()
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "-qmkl ${CMAKE_EXE_LINKER_FLAGS}")
+include_directories(${CMAKE_SOURCE_DIR}/01_dpct_output/Common/)
+include_directories(${CMAKE_SOURCE_DIR}/01_dpct_output/include/)
+
+add_executable (01_dpct_output Samples/5_Domain_Specific/dwtHaar1D/dwtHaar1D_kernel.dp.hpp Samples/5_Domain_Specific/dwtHaar1D/dwtHaar1D.dp.cpp)
+target_link_libraries(01_dpct_output sycl)
+
+add_custom_target (run cd ${CMAKE_SOURCE_DIR}/01_dpct_output/ && ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/01_dpct_output)
