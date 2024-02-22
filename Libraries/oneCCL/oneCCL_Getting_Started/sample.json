@@ -16,9 +16,9 @@
         "mkdir build",
         "cd build",
         "cp -r ${CCL_ROOT}/share/doc/ccl/examples/* .",
-        "cmake ..",
+        "cmake .",
         "make",
-        "out/cpu/cpu_allreduce_test"
+        "cpu/cpu_allreduce_test"
       ]
     }]
   },
