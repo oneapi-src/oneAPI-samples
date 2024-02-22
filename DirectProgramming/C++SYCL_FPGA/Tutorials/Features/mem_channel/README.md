@@ -187,6 +187,15 @@ board.
   >  ```
   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
   >  ``` 
+  > **Note**: You **must** set `FPGA_DEVICE` to point to a BSP in order to build this sample. You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -230,6 +239,15 @@ board.
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
   >  ``` 
+  > **Note**: You **must** set `FPGA_DEVICE` to point to a BSP in order to build this sample.You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
   >
   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -254,10 +272,13 @@ board.
      ```
 
 > **Note**: If you encounter any issues with long paths when compiling under
-Windows*, you may have to create your ‘build’ directory in a shorter path, for
+Windows*, you may have to create your 'build' directory in a shorter path, for
 example c:\samples\build.  You can then run cmake from that directory, and
-provide cmake with the full path to your sample directory.
-
+provide cmake with the full path to your sample directory, for example:
+>
+>  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+>  ```
 ## Examining the Reports
 Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
 and `mem_channel_no_interleaving.prj` directories. Open the reports in 

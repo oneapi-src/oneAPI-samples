@@ -319,6 +319,15 @@ This code sample contains 6 source files that together demonstrate a full spectr
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -360,6 +369,15 @@ This code sample contains 6 source files that together demonstrate a full spectr
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -380,8 +398,11 @@ This code sample contains 6 source files that together demonstrate a full spectr
    4. Run the generated HDL through Intel® Quartus® Prime to generate accurate f<sub>MAX</sub> and area estimates.
       > **Warning**: The FPGA executables generated in this tutorial are **not** supported to be run on FPGA devices directly.
 
-> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+>
+>  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+>  ```
 ### Read the Reports
 
 1. Locate `report.html` in the corresponding `<source_file>_report.prj/reports/` directory.

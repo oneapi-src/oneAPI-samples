@@ -170,6 +170,15 @@ The kernel design requests data from global memory in a contiguous manner. There
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -210,6 +219,15 @@ The kernel design requests data from global memory in a contiguous manner. There
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -231,8 +249,11 @@ The kernel design requests data from global memory in a contiguous manner. There
       ```
       nmake fpga
       ```
-> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+>
+>  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+>  ```
 ### Read the Reports
 
 Locate `report.html` in the `lsu_control.prj/reports/` directory.

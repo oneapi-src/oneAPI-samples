@@ -312,8 +312,11 @@ This design uses CMake to generate a build script for GNU/make.
       ```
       nmake fpga
       ```
-   > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
-
+   > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+>
+>  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+>  ```
 ## Examining the Generated RTL
 Locate `mmhost_partx_report_di_inst.v` in the `build/mmhost_partx.report.prj/` directory and open it with a text editor. This file demonstrates how to instantiate your IP component using Verilog or System Verilog code.
 
