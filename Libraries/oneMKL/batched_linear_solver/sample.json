@@ -7,6 +7,7 @@
   "dependencies": [ "oneMKL" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["gen9","pvc"],
   "os": [ "linux" ],
   "builder": [ "make" ],
   "ciTests": {
