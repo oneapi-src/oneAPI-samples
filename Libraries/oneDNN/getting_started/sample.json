@@ -16,9 +16,9 @@
 			"mkdir build",
       		        "cd build",
 			"cp -r ${DNNLROOT}/share/doc/dnnl/examples/* .",
-           		"cmake ..",
+           		"cmake . -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icx",
            		"make getting-started-cpp",
-			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
+			"SYCL_BE=PI_OPENCL ./getting-started-cpp gpu"
 		 ]
 	}]
  },
