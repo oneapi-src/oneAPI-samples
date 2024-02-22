@@ -15,7 +15,7 @@
       "steps": [
         "mkdir build",
         "cd build",
-        "cp -r ${CCL_ROOT}/share/doc/ccl/examples/* .",
+        "cp -lr ${CCL_ROOT}/share/doc/ccl/examples/* .",
         "cmake .",
         "make",
         "cpu/cpu_allreduce_test"
