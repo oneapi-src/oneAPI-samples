@@ -4,13 +4,14 @@
     "categories": ["Toolkit/oneAPI AI And Analytics/Features and Functionality"],
     "description": "This sample demonstrates how to train your model with LSTM (Long short-term memory) faster by using Intel Extension for TensorFlow's LSTM training layer on Intel platform",
     "builder": ["cli"],
-	"toolchain": ["jupyter"],
+    "toolchain": ["jupyter"],
     "languages": [{"python":{}}],
-    "os":["linux"],
+    "os": ["linux"],
     "targetDevice": ["GPU"],
+    "gpuRequired": ["pvc"],
     "ciTests": {
-        "linux": [
-      {
+      "linux": [
+        {
             "env": [
                 "source /intel/oneapi/intelpython/bin/activate",
                 "conda env remove -n user_tensorflow-gpu",
@@ -21,10 +22,10 @@
             ],
             "id": "inc_text_generation_lstm_py",
             "steps": [
-              "python TextGenerationModelTraining.py"
+                "python TextGenerationModelTraining.py"
              ]
         }
       ]
-  },
-  "expertise": "Concepts and Functionality"
-  }
+    },
+    "expertise": "Concepts and Functionality"
+}
