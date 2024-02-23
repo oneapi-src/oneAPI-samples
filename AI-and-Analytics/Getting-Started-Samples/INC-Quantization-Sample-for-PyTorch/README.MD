@@ -20,20 +20,9 @@ The sample starts by loading a BERT model from Hugging Face. After loading the m
 |:---                     |:---
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel® Xeon® Scalable processor family
-| Software                | Intel® Neural Compressor, Intel Optimization for PyTorch
+| Software                | Intel® Neural Compressor, Intel® Extension of PyTorch*
 
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Tools**
-
-  You can get the Intel AI Tools from [the product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI KitTools installation information and post-installation steps and scripts.
-
-- **Jupyter Notebook**
-
-  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Key Implementation Details
 
@@ -51,58 +40,86 @@ The sample contains one Jupyter Notebook and one Python script.
 |:---                      |:---
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
+## Environment Setup
+
+You will need to download and install the following toolkits, tools, and components to use the sample.
+
+**1. Get Intel® AI Tools**
+
+Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
+<br>Select and install needed AI Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+**2. Install dependencies**
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
 
-If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.  
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
-### Steps for Intel AI Tools Offline Installer  
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+### AI Tools Offline Installer (Validated)  
+1. If you have not already done so, complete [Configure you system](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/2024-0/before-you-begin.html) section from AI Tools Get Started Guide.
+2. Activate the Conda environment:
+```
+conda activate pytorch
+``` 
+3. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+```
+4. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+5. Follow the instructions to open the URL with the token in your browser.
+6. Select the Notebook:
+```
+optimize_pytorch_models_with_ipex.ipynb
+```
+7. Change the kernel to `pytorch`
+8. Run every cell in the Notebook in sequence.
 
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+### Conda/PIP
+> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
+1. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+```
+2. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+4. Follow the instructions to open the URL with the token in your browser.
+5. Select the Notebook:
+```
+optimize_pytorch_models_with_ipex.ipynb
+```
+6. Run every cell in the Notebook in sequence.
+
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
  
-#### Activate Conda
-
-1. Activate the Conda environment.
-
-    ```
-    conda activate pytorch
-    ```
-
-   By default, the Intel AI Tools are installed in the `/opt/intel/oneapi` folder and require root privileges to manage them.
-
-   You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
-
-### Run the Notebook
-
-1. Launch Jupyter Notebook.
-   ```
-   jupyter notebook --ip=0.0.0.0
-   ```
-2. Follow the instructions to open the URL with the token in your browser.
-3. Locate and select the Notebook.
-   ```
-   optimize_pytorch_models_with_ipex.ipynb
-   ```
-4. Change the kernel to **pytorch**.
-5. Run every cell in the Notebook in sequence.
-
-#### Troubleshooting
-
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.   
-
 ## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
+## Related Samples
+* [Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/INC_QuantizationAwareTraining_TextClassification)
+* [Optimize PyTorch* Models using Intel® Extension for PyTorch* (IPEX)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/INC_QuantizationAwareTraining_TextClassification)
 ## License
 
 Code samples are licensed under the MIT license. See
