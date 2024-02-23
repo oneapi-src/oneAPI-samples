@@ -8,7 +8,7 @@
     "cpp": {}
   }],
   "targetDevice": ["CPU", "GPU"],
-  "gpuRequired": ["gen9"],
+  "gpuRequired": ["gen9","pvc"],
   "os": ["linux"],
   "builder": ["cmake"],
   "ciTests": {
