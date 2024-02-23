@@ -60,9 +60,9 @@ pip install -r requirements.txt
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
-* [AI Tools Offline Installer (Validated)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#ai-tools-offline-installer-validated)
-* [Conda/PIP](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#condapip) 
-* [Docker](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#docker)
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
 
 ### AI Tools Offline Installer (Validated)  
 1. If you have not already done so, complete [Configure you system](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/2024-0/before-you-begin.html) section from AI Tools Get Started Guide.
