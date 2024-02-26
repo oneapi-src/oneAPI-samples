@@ -36,7 +36,7 @@ endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsclock=600MHz;-Xsoptimize=latency)
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsoptimize=latency)
 
 if(NOT DEFINED PARALLEL_PIXELS)
     SET(PARALLEL_PIXELS 2)

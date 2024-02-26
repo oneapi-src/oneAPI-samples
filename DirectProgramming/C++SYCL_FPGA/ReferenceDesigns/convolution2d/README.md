@@ -54,7 +54,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. Testing conducted January 22, 2024. These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. Testing conducted January 22, 2024. 
+* These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+* These estimates were achieved by setting a 600 MHz clock target for the `Agilex7` device. You can set the clock target by adding the `-Xsclock=600MHz` flag to CMakeLists.txt, or by passing it to the `cmake` command as shown in [Building the `convolution2d` Tutorial](#building-the-convolution2d-tutorial).
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -335,9 +337,15 @@ This design uses CMake to generate a build script for GNU/make.
    ```
 
    > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
+   > ```
+   > cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   > ```
+
+   > **Note**: The performance table above was produced by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag.
+   > ```
+   > cmake .. -DTEST_CONV2D_ISOLATED=1 -DUSER_FPGA_FLAGS="-Xsclock=600MHz"
+   > ```
+
 
 3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -361,11 +369,14 @@ This design uses CMake to generate a build script for  `nmake`.
    ```
 
    > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
+   > ```
+   > cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   > ```
 
-   > **Note**: The performance table above was produced by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+   > **Note**: The performance table above was produced by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag.
+   > ```
+   > cmake -G "NMake Makefiles" .. -DTEST_CONV2D_ISOLATED=1 -DUSER_FPGA_FLAGS="-Xsclock=600MHz"
+   > ```
 
 3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
