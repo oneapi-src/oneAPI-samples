@@ -54,7 +54,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. Testing conducted January 22, 2024. These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. Testing conducted January 22, 2024. 
+* These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
+* These estimates were achieved by setting a 600 MHz clock target for the `Agilex7` device. You can set the clock target by adding the `-Xsclock=600MHz` flag to CMakeLists.txt, or by passing it to the `cmake` command as shown in [Building the `convolution2d` Tutorial](#building-the-convolution2d-tutorial).
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -62,10 +64,10 @@ Performance results are based on testing conducted with a pre-release version of
 
 | Parallel Pixels | Window Dimensions | Coefficient Type | Input Type     | f<sub>MAX</sub> (MHz) | ALMs  | DSP blocks | M20K Block RAM
 |---              |---                |---               |---             |---                    |---    |---         |---
-| 1               | 3x3               | `float`          | 10-bit Integer | 550.97                | 2705  |   9        | 18
-| 2               | 3x3               | `float`          | 10-bit Integer | 548.65                | 4324  |  18        | 18
-| 4               | 3x3               | `float`          | 10-bit Integer | 547.58                | 6938  |  36        | 17
-| 8               | 3x3               | `float`          | 10-bit Integer | 525.12                | 14226 |  72        | 18
+| 1               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 2742  |   9        | 19
+| 2               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 4326  |  18        | 19
+| 4               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 7341  |  36        | 18
+| 8               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 13791 |  72        | 19
 
 > **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `ConvolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
 
@@ -97,63 +99,66 @@ struct Convolution2d {
   // confusion. Since kernel are a kernel argument, kernel can be specified at
   // runtime. The coefficients can only be updated by stopping the kernel and
   // re-starting it.
-  conv2d::WeightType coeffs[conv2d::kWindowSize * conv2d::kWindowSize];
+  std::array<float, conv2d::kWindowSize * conv2d::kWindowSize> coeffs;
 
   void operator()() const {
+    // Publish kernel version so that other IPs can poll it
+    VersionCSR::write(kKernelVersion);
+
     // This instance of the line buffer will store previously read pixels so
     // that they can be operated on in a local filter. The filter is invoked
     // below in the loop.
-    linebuffer2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
-                               conv2d::kWindowSize, conv2d::kMaxCols,
-                               conv2d::kParallelPixels>
+    line_buffer_2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
+                                 conv2d::kWindowSize, conv2d::kMaxCols,
+                                 conv2d::kParallelPixels>
         myLineBuffer(rows, cols);
 
-    bool keepGoing = true;
+    bool keep_going = true;
     bool bypass = true;
 
-    [[intel::initiation_interval(1)]]  //
-    while (keepGoing) {
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+    while (keep_going) {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.
-      bool didReadBeat = false;
-      conv2d::GreyScaleBeat newBeat = PipeIn::read(didReadBeat);
+      bool did_read_beat = false;
+      conv2d::GreyScaleBeat new_beat = PipeIn::read(did_read_beat);
 
       // the bypass signal lets the user disable the line buffer processing.
-      bool didReadBypass = false;
-      bool shouldBypass = BypassCSR::read(didReadBypass);
+      bool did_read_bypass = false;
+      bool should_bypass = BypassCSR::read(did_read_bypass);
 
       // the stop signal lets the user instruct the kernel to halt so that new
       // coefficients can be read.
-      bool didReadStop = false;
-      bool shouldStop = StopCSR::read(didReadStop);
+      bool did_read_stop = false;
+      bool should_stop = StopCSR::read(did_read_stop);
 
-      if (didReadBypass) {
-        bypass = shouldBypass;
+      if (did_read_bypass) {
+        bypass = should_bypass;
       }
 
-      if (didReadBeat) {
-        conv2d::GreyScaleBeat outputBeat;
+      if (did_read_beat) {
+        conv2d::GreyScaleBeat output_beat;
         if (bypass) {
-          outputBeat = newBeat;
+          output_beat = new_beat;
         } else {
           bool sop, eop;
 
-          // Call `filter()` function on `LineBuffer2d` object. This inserts a
-          // new pixel into the linebuffer, and runs the user-provided window
+          // Call `Filter()` function on `LineBuffer2d` object. This inserts a
+          // new pixel into the line buffer, and runs the user-provided window
           // function (`ConvolutionFunction()`). The additional argument
           // `coeffs` is passed to `ConvolutionFunction()`. The return value of
-          // `filter()` is the pixel data that we should propagate on to the
+          // `Filter()` is the pixel data that we should propagate on to the
           // next link in the processing chain.
-          conv2d::GreyPixelBundle outputBundle =
-              myLineBuffer.filter<ConvolutionFunction>(
-                  newBeat.data, newBeat.sop, newBeat.eop, sop, eop, coeffs);
-          outputBeat = conv2d::GreyScaleBeat(outputBundle, sop, eop, 0);
+          conv2d::GreyPixelBundle output_bundle =
+              myLineBuffer.Filter<ConvolutionFunction>(
+                  new_beat.data, new_beat.sop, new_beat.eop, sop, eop, coeffs);
+          output_beat = conv2d::GreyScaleBeat(output_bundle, sop, eop, 0);
         }
-        PipeOut::write(outputBeat);
+        PipeOut::write(output_beat);
       }
 
-      if (didReadStop) {
-        keepGoing = !shouldStop;
+      if (did_read_stop) {
+        keep_going = !should_stop;
       }
     }
   }
@@ -185,10 +190,11 @@ conv2d::PixelType ConvolutionFunction(
       short c_select, r_select;
 
       // handle the case where the center of the window is at the image edge.
-      // In this design, simply 'reflect' pixels that are already in the window.
-      SaturateWindowCoordinates(w_row, w_col, 
-                                row, col,     
-                                rows, cols,   
+      // In this design, simply 'reflect' pixels that are already in the
+      // window.
+      SaturateWindowCoordinates(w_row, w_col,  //
+                                row, col,      //
+                                rows, cols,    //
                                 r_select, c_select);
       conv2d::PixelType pixel =
           buffer[c_select + r_select * conv2d::kWindowSize];
@@ -207,10 +213,13 @@ conv2d::PixelType ConvolutionFunction(
     }
   }
 
+  // map range [0, 1.0) to [0, 1<<kBitsPerChannel)
+  // conv2d::PixelType return_val = sum * (float)(1 << conv2d::kBitsPerChannel);
+
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
   constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType return_val = (conv2d::PixelType)kOutputOffset +
-                                 (conv2d::PixelType)(sum * (kOutputOffset));
+  conv2d::PixelType return_val =
+      ((int16_t)kOutputOffset + (int16_t)(sum * (kOutputOffset)));
 
   return return_val;
 }
@@ -264,7 +273,7 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
   // extra pixels to flush out the FIFO
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummy_pixels, (uint16_t)69);
+      q, dummy_pixels, (uint16_t)15);
 
   // disable bypass, since it's on by default
   BypassCSR::write(q, false);
@@ -328,9 +337,15 @@ This design uses CMake to generate a build script for GNU/make.
    ```
 
    > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
+   > ```
+   > cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   > ```
+
+   > **Note**: The performance table above was produced by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag.
+   > ```
+   > cmake .. -DTEST_CONV2D_ISOLATED=1 -DUSER_FPGA_FLAGS="-Xsclock=600MHz"
+   > ```
+
 
 3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -354,9 +369,14 @@ This design uses CMake to generate a build script for  `nmake`.
    ```
 
    > **Note**: You can change the default target by using the command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
+   > ```
+   > cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   > ```
+
+   > **Note**: The performance table above was produced by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag.
+   > ```
+   > cmake -G "NMake Makefiles" .. -DTEST_CONV2D_ISOLATED=1 -DUSER_FPGA_FLAGS="-Xsclock=600MHz"
+   > ```
 
 3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -377,21 +397,21 @@ This design uses CMake to generate a build script for  `nmake`.
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./convolution.fpga_emu
+   ./conv.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./convolution.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./conv.fpga_sim
    ```
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   convolution.fpga_emu.exe
+   conv.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   convolution.fpga_sim.exe
+   conv.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 

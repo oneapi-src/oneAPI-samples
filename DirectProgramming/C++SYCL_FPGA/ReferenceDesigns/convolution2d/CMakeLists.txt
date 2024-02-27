@@ -20,7 +20,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ### Customize these build variables
 ###############################################################################
 set(SOURCE_FILES src/main.cpp)
-set(TARGET_NAME convolution)
+set(TARGET_NAME conv)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device.
@@ -36,7 +36,7 @@ endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsclock=300MHz;-Xsoptimize=latency)
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};-Xsoptimize=latency)
 
 if(NOT DEFINED PARALLEL_PIXELS)
     SET(PARALLEL_PIXELS 2)

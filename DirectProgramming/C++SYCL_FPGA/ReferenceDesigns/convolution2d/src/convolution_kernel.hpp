@@ -127,9 +127,9 @@ conv2d::PixelType ConvolutionFunction(
       // handle the case where the center of the window is at the image edge.
       // In this design, simply 'reflect' pixels that are already in the
       // window.
-      SaturateWindowCoordinates(w_row, w_col,  //
-                                row, col,      //
-                                rows, cols,    //
+      SaturateWindowCoordinates(w_row, w_col,  // NO-FORMAT: Alignment
+                                row, col,      // NO-FORMAT: Alignment
+                                rows, cols,    // NO-FORMAT: Alignment
                                 r_select, c_select);
       conv2d::PixelType pixel =
           buffer[c_select + r_select * conv2d::kWindowSize];
@@ -176,7 +176,7 @@ struct RGB2Grey {
   void operator()() const {
     // this loop is not necessary in hardware since I will pin the
     // `start` bit high, but it makes the testbench easier.
-    [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (1) {
       conv2d::RGBBeat rgb_beat = PipeIn::read();
       conv2d::GreyScaleBeat grey_beat;
@@ -187,9 +187,9 @@ struct RGB2Grey {
 
 #pragma unroll
       for (int i = 0; i < conv2d::kParallelPixels; i++) {
-        grey_beat.data[i] = (rgb_beat.data[i].r / 4) +  //
-                            (rgb_beat.data[i].g / 2) +  //
-                            (rgb_beat.data[i].b / 4);   //
+        grey_beat.data[i] = (rgb_beat.data[i].r / 4) +  // NO-FORMAT: Alignment
+                            (rgb_beat.data[i].g / 2) +  // NO-FORMAT: Alignment
+                            (rgb_beat.data[i].b / 4);   // NO-FORMAT: Alignment
       }
       PipeOut::write(grey_beat);
     }
@@ -230,7 +230,7 @@ struct Convolution2d {
     bool keep_going = true;
     bool bypass = true;
 
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (keep_going) {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.
@@ -295,7 +295,7 @@ struct Grey2RGB {
   void operator()() const {
     // this loop is not necessary in hardware since the `start` bit will be
     // pulled high, but it makes the testbench easier.
-    [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (1) {
       conv2d::GreyScaleBeat grey_beat = PipeIn::read();
       conv2d::RGBBeat rgb_beat;

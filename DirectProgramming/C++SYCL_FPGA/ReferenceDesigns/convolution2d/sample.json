@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./convolution.fpga_emu"
+          "./conv.fpga_emu"
         ]
       },
       {
@@ -51,7 +51,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/convolution2d",
           "nmake fpga_emu",
-          "convolution.fpga_emu.exe"
+          "conv.fpga_emu.exe"
         ]
       },
       {
