@@ -1189,3 +1189,30 @@ a:hover {
   outline: dotted;
   outline-color: blue;
 }
+
+/* Add bootstrap 5.1 classes for collapse */
+
+/* .accordion {
+  color: transparent;
+  background-color: transparent;
+} */
+
+
+/* .collapse {
+  &:not(.show) {
+    display: none;
+  }
+}
+
+.collapsing {
+  height: 0;
+  overflow: hidden;
+  @include transition($transition-collapse);
+
+  &.collapse-horizontal {
+    width: 0;
+    height: auto;
+    @include transition($transition-collapse-width);
+  }
+} */
+

@@ -113,7 +113,7 @@
     </div>
 
     <div class="filter-input-wrapper">       
-        <!-- <div> -->
+
                 <input id="collapsible" class="toggle" type="checkbox">
                 <label for="collapsible" class="label-toggle">
                     <span class="filter-text">Filter</span>
@@ -124,7 +124,7 @@
                         </span>
                 </label>
 
-            <div class="collapsible-content">
+            <!-- <div class="collapsible-content">
 
                 <div class="filter-content"> 
 
@@ -136,7 +136,7 @@
                                 </div> Expertise
                             </span>
 
-                            <div id="expertise-col"> <!--onclick="checkBoxClick(event)"-->
+                            <div id="expertise-col">
                                 <span class="checkmark"> 
                                     <input type="checkbox" class="checkoption" value="getStart" name="data-filter"/> 
                                     <label class="container-filter">
@@ -172,16 +172,16 @@
                                 </span>
                             </div>
                         </div>
-                </form>
+                </form> -->
 
-                    <div class="filter-children language-checkboxes">
+                    <!-- <div class="filter-children language-checkboxes">
 
                         <span class="badge-col-head">
                             <div class="circle badge2-circle">
                             </div>Language
-                        </span>
+                        </span> -->
 
-                        <div id=""> <!--onclick="checkBoxClick(event)"-->
+                        <!-- <div id="">
                             <span class="checkmark"> 
                                 <input type="checkbox" value="cpp" name="data-filter"/> 
                                 <label class="container-filter">
@@ -200,17 +200,17 @@
                                     Python
                                 </label>
                             </span>
-                        </div>
-                    </div>
+                        </div> -->
+                    <!-- </div> -->
                     
-                    <div class="filter-children device-checkboxes"> 
+                    <!-- <div class="filter-children device-checkboxes"> 
     
                         <span class="badge-col-head"> 
                             <div class="circle badge3-circle"></div>
                             Target Device
                         </span>
                                         
-                        <div> <!--onclick="checkBoxClick(event)"-->
+                        <div> 
                             <span class="checkmark"> 
                                 <input type="checkbox" value="cpu" name="data-filter"/> 
                                 <label class="container-filter">
@@ -231,10 +231,9 @@
                             </span>
                         </div>      
                     </div>
-                <!-- <  /form> -->
-                </div>
-            </div>
-        <!-- </div> -->
+                 </div>
+            </div> -->
+     
     </div>
     <!-- HIDE TEMPLATE @ DEV
     <div class="toolkit-cards" data-toolkit-cards-container> </div>
@@ -261,7 +260,127 @@
         <div class='left-column'>
             Search 
             Filters
-        </div>
+
+            <div class="accordion accordion-flush" id="accordionExample">
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      Filters
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <!--TEST-->
+                        </h3> Expertise </h3>
+                            <form id="filter-menu">
+                                <div class="filter-children expertise-checkboxes"> 
+        
+                                    <span class="badge-col-head">
+                                        <div class="circle badge1-circle">
+                                        </div> Expertise
+                                    </span>
+        
+                                    <div id="expertise-col">
+                                        <span class="checkmark"> 
+                                            <input type="checkbox" class="checkoption" value="getStart" name="data-filter"/> 
+                                            <label class="container-filter">
+                                                Getting Started
+                                            </label>
+                                        </span>
+                                        <span class="checkmark"> 
+                                            <input type="checkbox" class="checkoption" value="tutorial"  name="data-filter"/>
+                                            <label class="container-filter">
+                                                Tutorial
+                                            </label>
+                                        </span>
+        
+                                        <span class="checkmark"> 
+                                            <input type="checkbox" class="checkoption" value="conFunc"  name="data-filter"/>
+                                            <label class="container-filter">
+                                                Concepts and Functionality
+                                            </label>
+                                        </span>
+                                        
+                                        <span class="checkmark"> 
+                                            <input type="checkbox" class="checkoption" value="refDesEnd2End"  name="data-filter"/>
+                                            <label class="container-filter">
+                                                Reference Designs and End to End
+                                            </label>
+                                        </span>
+        
+                                        <span class="checkmark"> 
+                                            <input type="checkbox" class="checkoption" value="codeOpt"  name="data-filter"/>
+                                            <label class="container-filter">
+                                                Code Optimization
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+                        </form>
+
+                        <div class="filter-children language-checkboxes"> 
+                            </h3> Language </h3>
+                            <div id="">
+                                <span class="checkmark"> 
+                                    <input type="checkbox" value="cpp" name="data-filter"/> 
+                                    <label class="container-filter">
+                                        CPP
+                                    </label>
+                                </span>
+                                <span class="checkmark"> 
+                                    <input type="checkbox" value="fortran" name="data-filter"/>
+                                    <label class="container-filter">
+                                        Fortran
+                                    </label>
+                                </span>
+                                <span class="checkmark"> 
+                                    <input type="checkbox" value="python" name="data-filter"/>
+                                    <label class="container-filter">
+                                        Python
+                                    </label>
+                                </span>
+                            </div>
+                        </div> 
+                        </h3> Target Device </h3>
+
+                            <div class="filter-children device-checkboxes"> 
+        
+                                <span class="badge-col-head"> 
+                                    <div class="circle badge3-circle"></div>
+                                    Target Device
+                                </span>
+                                                
+                                <div> <!--onclick="checkBoxClick(event)"-->
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="cpu" name="data-filter"/> 
+                                        <label class="container-filter">
+                                            CPU
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="gpu" name="data-filter"/>
+                                        <label class="container-filter">
+                                            GPU
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="fpga" name="data-filter"/>
+                                        <label class="container-filter">
+                                            FPGA
+                                        </label>
+                                    </span>
+                                </div>      
+                            </div>
+
+                    </div>
+                  </div>
+                </div>
+
+
+            </div>
+            
+        </div> <!--end left-column-->
 
         <div class='right-column'>
 
