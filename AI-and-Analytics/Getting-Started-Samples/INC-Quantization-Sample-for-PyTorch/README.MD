@@ -65,7 +65,15 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 * [Docker](#docker)
 
 ### AI Tools Offline Installer (Validated)  
-1. If you have not already done so, complete [Configure you system](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/2024-0/before-you-begin.html) section from AI Tools Get Started Guide.
+1. If you have not already done so, activate the AI Tools bundle base environment. 
+If you used the default location to install AI Tools, open a terminal and type the following
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
 2. Activate the Conda environment:
 ```
 conda activate pytorch
