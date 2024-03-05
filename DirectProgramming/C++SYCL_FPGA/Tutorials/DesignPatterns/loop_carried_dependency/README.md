@@ -269,25 +269,27 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 >**Note**: In the sample, applying the optimization yields a total execution time reduction by almost a factor of 4. The Initiation Interval (II) for the inner loop is 12 because a double floating point add takes 11 cycles on the FPGA.
 
 ```
-Number of elements: 16000
+Number of elements: 150
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Run: Unoptimized:
-kernel time : 10685.3 ms
+kernel time : 0.441344 ms
 Run: Optimized:
-kernel time : 2736.47 ms
+kernel time : 0.368128 ms
 PASSED
 ```
 
 ### Example Output on FPGA Emulation
 
 ```
-Number of elements: 16000
+Number of elements: 150
 
-Emulator output does not demonstrate true hardware performance. The design may need to run on actual hardware to observe the performance benefit of the optimization exemplified in this tutorial.
+Emulator and simulator outputs do not demonstrate true hardware performance. The design may need to run on actual hardware to observe the performance benefit of the optimization exemplified in this tutorial.
 
+Running on device: Intel(R) FPGA Emulation Device
 Run: Unoptimized:
-kernel time : 334.33 ms
+kernel time : 0.142848 ms
 Run: Optimized:
-kernel time : 335.345 ms
+kernel time : 0.12928 ms
 PASSED
 ```
 

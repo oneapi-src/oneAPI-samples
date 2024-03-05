@@ -17,11 +17,8 @@ using namespace std;
 class UnOptKernel;
 class OptKernel;
 
-#if defined(FPGA_SIMULATOR)
-constexpr size_t kMaxN = 200;
-#else
-constexpr size_t kMaxN = 500;
-#endif
+constexpr size_t kMaxN = 150;
+
 
 event Unoptimized(queue &q, const vector<double> &vec_a,
                   const vector<double> &vec_b, double &result, size_t N) {
