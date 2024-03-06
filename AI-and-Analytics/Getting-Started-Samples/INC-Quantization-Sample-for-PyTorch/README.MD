@@ -25,10 +25,9 @@ The sample starts by loading a BERT model from Hugging Face. After loading the m
 > **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Key Implementation Details
+The sample contains one Jupyter Notebook and one Python script. It can be run using Jupyter notebooks or the offline installer.
 
-The sample contains one Jupyter Notebook and one Python script.
-
-### Jupyter Notebook
+### Use the following steps to run using Jupyter notebook or Python script
 
 |Notebook                  |Description
 |:---                      |:---
@@ -40,14 +39,14 @@ The sample contains one Jupyter Notebook and one Python script.
 |:---                      |:---
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
-## Environment Setup
+### Setup your environment for the offline installer
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
 **1. Get Intel® AI Tools**
 
 Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
-<br>Select and install needed AI Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI samples samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 **2. Install dependencies**
 ```
