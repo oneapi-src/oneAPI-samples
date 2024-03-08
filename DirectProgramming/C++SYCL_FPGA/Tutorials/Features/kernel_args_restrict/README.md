@@ -60,6 +60,8 @@ The sample illustrates some important concepts.
 - The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel.
 - The effect this attribute can have on your kernel's performance on FPGA.
 
+Additionally, this code sample demonstrates how to apply the `kernel_args_restrict` attribute to kernels defined in both the lambda coding style and the functor coding style.
+
 ### Pointer Aliasing Explained
 
 Pointer aliasing occurs when the same memory location can be accessed using different *names* (i.e., variables). For example, consider the code below. Here, the value of the variable `pi` can be changed in three ways: `pi=3.14159`, `*a=3.14159` or `*b=3.14159`. In general, the compiler has to be conservative about which accesses may alias to each other and avoid making optimizations that reorder and/or parallelize operations.
@@ -94,7 +96,7 @@ C and OpenCL programmers may recognize this concept as the `restrict` keyword.
 
 ### Tutorial Code Description
 
-In this tutorial, we will show how to use the `kernel_args_restrict` attribute for your kernel and its effect on performance. We show two kernels that perform the same function; one with and one without `[[intel::kernel_args_restrict]]` being applied to it. The function of the kernel is simple: copy the contents of one buffer to another. We will analyze the effect of the `[[intel::kernel_args_restrict]]` attribute on the kernel's performance by analyzing loop II in the reports and the latency of the kernel on actual hardware.
+In this tutorial, we will show how to use the `kernel_args_restrict` attribute for your kernel and its effect on performance. We show four kernels that perform the same function. Two kernels are designed in the lambda coding style, and the other two in functor coding style. Within each coding style category, one kernel applies the `[[intel::kernel_args_restrict]]`, while the other does not. The function of the kernel is simple: copy the contents of one buffer to another. We will analyze the effect of the `[[intel::kernel_args_restrict]]` attribute on the kernel's performance by analyzing loop II in the reports and the latency of the kernel on actual hardware.
 
 ## Build the `Kernel Args Restrict` Tutorial
 
@@ -218,24 +220,24 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
 
 Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory.
 
-Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see two kernels: one is the kernel without the attribute applied (*KernelArgsNoRestrict*) and the other with the attribute applied (*KernelArgsRestrict*). Each kernel has a single for-loop, which appears in the *Loop List* pane. Click the loop under each kernel to see how the compiler optimized it.
+Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see four kernels as described in the [Tutorial Code Description](#tutorial-code-description) section of this README. Each kernel has a single for-loop, which appears in the *Loop List* pane. Click the loop under each kernel to see how the compiler optimized it.
 
-Compare the loop initiation interval (II) between the two kernels. Notice that the loop in the *KernelArgsNoRestrict* kernel has a large estimated II, while the loop in the *KernelArgsRestrict* kernel has an estimated II of ~1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
+Compare the loop initiation interval (II) between the kernels with or without `[[intel::kernel_args_restrict]]` attribute. Notice that the loop in the *KernelArgsNoRestrict_Lambda* and *KernelArgsNoRestrict_Functor* kernels has a large estimated II, while the loop in the *KernelArgsRestrict_Lambda* and *KernelArgsRestrict_Functor* kernels has an estimated II of ~1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
 
-For the *KernelArgsNoRestrict* kernel, the compiler assumed that the kernel arguments can alias each other. Since`out[i]` and `in[i+1]` could be the same memory location, the compiler cannot overlap the iteration of the loop performing `out[i] = in[i]` with the next iteration of the loop performing `out[i+1] = in[i+1]` (and likewise for iterations `in[i+2]`, `in[i+3]`, ...). This results in an II equal to the latency of the global memory read of `in[i]` plus the latency of the global memory write to `out[i]`.
+For the *KernelArgsNoRestrict_Lambda* and *KernelArgsNoRestrict_Functor* kernel, the compiler assumed that the kernel arguments can alias each other. Since`out[i]` and `in[i+1]` could be the same memory location, the compiler cannot overlap the iteration of the loop performing `out[i] = in[i]` with the next iteration of the loop performing `out[i+1] = in[i+1]` (and likewise for iterations `in[i+2]`, `in[i+3]`, ...). This results in an II equal to the latency of the global memory read of `in[i]` plus the latency of the global memory write to `out[i]`.
 
-We can confirm this by looking at the details of the loop. Click the *KernelArgsNoRestrict* kernel in the *Loop List* pane and then click the loop in the *Loop Analysis* pane. Now consider the *Details* pane below. You should see something like:
+We can confirm this by looking at the details of the loop. Click the *KernelArgsNoRestrict_Lambda* kernel (similarly for the *KernelArgsNoRestrict_Functor* kernel) in the *Loop List* pane and then click the loop in the *Loop Analysis* pane. Now consider the *Details* pane below. You should see something like:
 
-- *Compiler failed to schedule this loop with smaller II due to memory dependency*
-  - *From: Load Operation (kernel_args_restrict.cpp: 74 > accessor.hpp: 945)*
-  - *To: Store Operation (kernel_args_restrict.cpp: 74)*
+- *Compiler failed to schedule this loop with smaller II due to memory dependency:*
+  - *From: Load Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
+  - *To: Store Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
 - *Most critical loop feedback path during scheduling:*
-  - *144.00 clock cycles Load Operation (kernel_args_restrict.cpp: 74 > accessor.hpp: 945)*
-  - *42.00 clock cycles Store Operation (kernel_args_restrict.cpp: 74)*
+  - *32.00 clock cycles Load Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
+  - *31.00 clock cycles Store Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
 
 The first bullet (and its sub-bullets) tells you that a memory dependency exists between the load and store operations in the loop. This is the conservative pointer aliasing memory dependency described earlier. The second bullet shows you the estimated latencies for the load and store operations (note that these are board-dependent). The sum of these two latencies (plus 1) is the II of the loop.
 
-Next, look at the loop details of the *KernelArgsRestrict* kernel. You will notice that the *Details* pane doesn't show a memory dependency. The usage of the `[[intel::kernel_args_restrict]]` attribute allowed the compiler to schedule a new iteration of the for-loop every cycle since it knows that accesses to `in` and `out` will never alias.
+Next, look at the loop details of the *KernelArgsRestrict_Lambda* kernel (similarly for the *KernelArgsRestrict_Functor* kernel). You will notice that the *Details* pane doesn't show a memory dependency. The usage of the `[[intel::kernel_args_restrict]]` attribute allowed the compiler to schedule a new iteration of the for-loop every cycle since it knows that accesses to `in` and `out` will never alias.
 
 ## Run the `Kernel Args Restrict` Sample
 

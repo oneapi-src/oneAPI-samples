@@ -23,27 +23,27 @@ class KernelArgsNoRestrict_Functor;
 
 template <class InputAcc, class OutputAcc>
 struct ArgsRestrictFunctor {
-  InputAcc input;
-  OutputAcc output;
+  InputAcc in;
+  OutputAcc out;
   size_t len;
 
   [[intel::kernel_args_restrict]] 
   void operator()() const {
     for (int idx = 0; idx < len; ++idx) {
-      output[idx] = input[idx];
+      out[idx] = in[idx];
     }
   };
 };
 
 template <class InputAcc, class OutputAcc>
 struct ArgsNoRestrictFunctor {
-  InputAcc input;
-  OutputAcc output;
+  InputAcc in;
+  OutputAcc out;
   size_t len;
 
   void operator()() const {
     for (int idx = 0; idx < len; ++idx) {
-      output[idx] = input[idx];
+      out[idx] = in[idx];
     }
   };
 };
