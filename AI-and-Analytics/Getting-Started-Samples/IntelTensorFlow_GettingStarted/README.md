@@ -54,9 +54,9 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: < ><!-- List specific AI Tools that needs to be installed before running this sample --> 
-<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
-or simple installation in your current ready python environment 
+Required AI Tools: <Tensorflow* ><!-- List specific AI Tools that needs to be installed before running this sample --> 
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
+or simple pip install in your current ready python environment 
 ```
 pip install tensorflow==2.14
 ([supported versions] please see (https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html)
@@ -87,12 +87,10 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
 ```
 ### Run the Script
-TensorFlow* is ready for use once you finish the Intel AI Tools installation. 
-
   Run the Python script.
-   ```
-   python TensorFlow_HelloWorld.py
-   ```
+```
+python TensorFlow_HelloWorld.py
+```
 ## Example Output
 
 1. With the initial run, you should see results similar to the following:
