@@ -115,19 +115,18 @@ python TensorFlow_HelloWorld.py
 
 3. Run the sample again. You should see verbose results similar to the following:
    ```
-   2022-04-24 16:56:02.497963: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
-   To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-   onednn_verbose,info,oneDNN v2.5.0 (commit N/A)
-   onednn_verbose,info,cpu,runtime:OpenMP
-   onednn_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
-   onednn_verbose,info,gpu,runtime:none
-   onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
-   onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba:f dst_f32:p:blocked:Acdb16a:f,,,10x4x3x3,0.00195312
-   onednn_verbose,exec,cpu,convolution,brgconv:avx512_core,forward_training,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_f32::blocked:a:f dst_f32::blocked:acdb:f,attr-post-ops:eltwise_relu ,alg:convolution_direct,mb,4.96411
-   onednn_verbose,exec,cpu,convolution,jit:avx512_common,backward_weights,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_undef::undef::f dst_f32::blocked:acdb:f,,alg:convolution_direct,mb,0.567871
+2024-03-12 16:01:59.784340: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:117] Plugin optimizer for device_type CPU is enabled.
+onednn_verbose,info,oneDNN v3.2.0 (commit 8f2a00d86546e44501c61c38817138619febbb10)
+onednn_verbose,info,cpu,runtime:OpenMP,nthr:24
+onednn_verbose,info,cpu,isa:Intel AVX2 with Intel DL Boost
+onednn_verbose,info,gpu,runtime:none
+onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
+onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba::f0 dst_f32:p:blocked:Acdb16a::f0,,,10x4x3x3,0.00195312
+onednn_verbose,exec,cpu,convolution,brgconv:avx2,forward_training,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:Acdb16a::f0 bia_f32::blocked:a::f0 dst_f32::blocked:acdb::f0,attr-scratchpad:user attr-post-ops:eltwise_relu ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.19702
+onednn_verbose,exec,cpu,eltwise,jit:avx2,backward_data,data_f32::blocked:abcd::f0 diff_f32::blocked:abcd::f0,attr-scratchpad:user ,alg:eltwise_relu alpha:0 beta:0,4x128x128x10,0.112061
+onednn_verbose,exec,cpu,convolution,jit:avx2,backward_weights,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:ABcd8b8a::f0 bia_undef::undef::: dst_f32::blocked:acdb::f0,attr-scratchpad:user ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.358887
    ...
    ```
-
 >**Note**: See the *[oneAPI Deep Neural Network Library Developer Guide and Reference](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html)* for more details on the verbose log.
 
 4. Troubleshooting
