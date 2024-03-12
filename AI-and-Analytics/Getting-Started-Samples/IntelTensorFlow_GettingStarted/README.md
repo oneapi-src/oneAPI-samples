@@ -18,9 +18,11 @@ This sample code shows how to get started with TensorFlow*. It implements an exa
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | Ubuntu* 18.0.x (and newer) <br> Windows* 10 
+| OS                     | Ubuntu* 22.0.x (and newer) <br> Windows* 10 
 | Hardware               | Intel® Xeon® Scalable processor family
 | Software               | TensorFlow
+
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 TensorFlow* is ready for use once you finish the Intel AI Tools installation. You can refer to the oneAPI [product page](https://software.intel.com/en-us/oneapi) for tools installation and the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
 
@@ -46,9 +48,25 @@ Runtime settings for `ONEDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Thre
 
 ### Run the Sample on Intel GPUs
 
-The sample code is CPU based, but you can run it using Intel® Extension for TensorFlow* with Intel® Data Center GPU Flex Series. If you are using the Intel GPU, refer to *[Intel GPU Software Installation Guide](https://intel.github.io/intel-extension-for-tensorflow/latest/docs/install/install_for_gpu.html)*. The sample should be able to run on GPU without any code changes. 
+The sample code is CPU based, but you can run it using Intel® Extension for TensorFlow* with Intel® Data Center GPU Flex Series. If you are using the Intel GPU, refer to *[Intel GPU Software Installation Guide](https://intel.github.io/intel-extension-for-tensorflow/latest/docs/install/install_for_gpu.html)*. The sample should be able to run on GPU **without any code changes**. 
 
 For details, refer to the *[Quick Example on Intel CPU and GPU](https://intel.github.io/intel-extension-for-tensorflow/latest/examples/quick_example.html)* topic of the *Intel® Extension for TensorFlow** documentation. 
+
+## Environment Setup
+
+You will need to download and install the following toolkits, tools, and components to use the sample.
+<!-- Use numbered steps instead of subheadings -->
+
+**1. Get Intel® AI Tools**
+
+Required AI Tools: < ><!-- List specific AI Tools that needs to be installed before running this sample --> 
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+**2. Install dependencies**
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 ### Steps for Intel AI Tools Offline Installer  
 
