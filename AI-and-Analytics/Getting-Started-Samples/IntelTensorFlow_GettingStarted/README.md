@@ -18,7 +18,7 @@ This sample code shows how to get started with TensorFlow*. It implements an exa
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | Ubuntu* 22.0.x (and newer) <br> Windows* 10 
+| OS                     | Ubuntu* 22.0.4 (and newer) <br> Windows* 10 and newer 
 | Hardware               | Intel® Xeon® Scalable processor family
 | Software               | TensorFlow
 
@@ -59,7 +59,7 @@ Required AI Tools: <Tensorflow* ><!-- List specific AI Tools that needs to be in
 or simple pip install in your current ready python environment 
 ```
 pip install tensorflow==2.14
-([supported versions] please see (https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html)
+( please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 ```
 ## Run the Sample
 >**Note**: Before running the sample, make sure Environment Setup is completed.
