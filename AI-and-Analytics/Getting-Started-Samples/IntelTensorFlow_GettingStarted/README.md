@@ -42,7 +42,7 @@ In order to show the harware information, you must export the environment variab
 
 Runtime settings for `ONEDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: *[Maximize TensorFlow* Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)*.
 
-### Run the Sample on Intel GPUs
+### Run the Sample on Intel® GPUs
 The sample code is CPU based, but you can run it using Intel® Extension for TensorFlow* with Intel® Data Center GPU Flex Series. If you are using the Intel GPU, refer to *[Intel GPU Software Installation Guide](https://intel.github.io/intel-extension-for-tensorflow/latest/docs/install/install_for_gpu.html)*. The sample should be able to run on GPU **without any code changes**. 
 
 For details, refer to the *[Quick Example on Intel CPU and GPU](https://intel.github.io/intel-extension-for-tensorflow/latest/examples/quick_example.html)* topic of the *Intel® Extension for TensorFlow** documentation. 
