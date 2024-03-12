@@ -1,12 +1,12 @@
 # ` TensorFlow* Getting Started` Sample
 
-The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow* model and run inference using Intel® oneAPI Deep Neural Networks (Intel® oneDNN).
+The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow* model and run inference on Intel® hardware. 
 
-| Area                       | Description
-|:---                        |:---
-| What you will learn        | The basics of using TensorFlow* with oneDNN optimizations
-| Time to complete           | 10 minutes
-| Category                   | Getting Started
+| Property            | Description 
+|:---                 |:---
+| Category            | Get Start Sample 
+| What you will learn | How to start using TensorFlow* on Intel® hardware.
+| Time to complete    | 10 minutes
 
 ## Purpose
 
