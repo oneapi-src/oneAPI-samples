@@ -136,7 +136,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
  
 ## Related Samples
 
-* [Intel Extension Fot TensorFlow Getting Started Sample]([link](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md))
+* [Intel Extension Fot TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
 
 ## License
 
