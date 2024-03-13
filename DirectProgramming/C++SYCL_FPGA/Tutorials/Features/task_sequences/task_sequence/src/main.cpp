@@ -16,7 +16,6 @@ constexpr int kVectSize = 128;
 // Host pipes
 using ValueT = int;
 constexpr size_t kPipeMinCapacity = 0;
-constexpr size_t kPipeDCapacity = 0;
 
 // Pipes for task_sequences
 class PipeIn0_ID;
@@ -62,10 +61,9 @@ using PipeCD = sycl::ext::intel::pipe<
 class PipeAD_ID;
 using PipeAD = sycl::ext::intel::pipe<
     // Usual pipe parameters
-    PipeAD_ID,      // An identifier for the pipe
-    ValueT,         // The type of data in the pipe
-    kPipeDCapacity  // Pipe D needs some extra capacity since it bypasses the
-                    // other tasks
+    PipeAD_ID,        // An identifier for the pipe
+    ValueT,           // The type of data in the pipe
+    kPipeMinCapacity  // CThe capacity of the pipe
     >;
 
 class PipeOut_ID;
