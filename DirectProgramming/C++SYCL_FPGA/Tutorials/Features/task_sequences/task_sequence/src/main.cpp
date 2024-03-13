@@ -94,7 +94,7 @@ void loopB(int len) {
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeAB::read();
     tmp += i;
-    PipeBC::write(tmp);  // 0,2,4,6,8
+    PipeBC::write(tmp);  
   }
 }
 
@@ -104,7 +104,7 @@ void loopC(int len) {
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeBC::read();
     tmp += i;
-    PipeCD::write(tmp);  // 0,3,6,9,12
+    PipeCD::write(tmp);  
   }
 }
 
@@ -115,7 +115,7 @@ void loopD(int len) {
     int tmp0 = PipeCD::read();
     int tmp1 = PipeAD::read();
     int out = tmp0 + tmp1;
-    PipeOut::write(out);  // 5,7,9,11,13
+    PipeOut::write(out);  
   }
 }
 
@@ -166,8 +166,8 @@ int main() {
     // declare arrays and fill them
     // allocate in shared memory so the kernel can see them
     for (int i = 0; i < kVectSize; i++) {
-      a[i] = i;                // 0,1,2,3,4
-      b[i] = (kVectSize - i);  // 5,4,3,2,1
+      a[i] = i;                
+      b[i] = (kVectSize - i);  
 
       PipeIn0::write(q, i);
       PipeIn1::write(q, kVectSize - i);
