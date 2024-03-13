@@ -109,12 +109,12 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} -DFPGA_EMULATOR ${BSP_FLAG} ${USER_FLAGS}")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_LINK_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} ${USER_HARDWARE_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} -DFPGA_HARDWARE ${BSP_FLAG} ${USER_FLAGS}")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} -DFPGA_EMULATOR ${BSP_FLAG} ${USER_FLAGS}")
+set(EMULATOR_LINK_FLAGS "-fintelfpga ${EMULATOR_PLATFORM_FLAGS} ${PLATFORM_SPECIFIC_LINK_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} ${USER_HARDWARE_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -DROWS_A=${ROWS_A} -DCOMMON=${COMMON} -DCOLS_B=${COLS_B} -DTILE_A=${TILE_A} -DTILE_B=${TILE_B} -DFPGA_HARDWARE ${BSP_FLAG} ${USER_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${BSP_FLAG} ${USER_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

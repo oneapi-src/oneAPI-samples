@@ -124,13 +124,13 @@ To use the generated library in your project, simply add the generated library a
 
 ```bash
 # Compile for FPGA emulator
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library_emu.fpga -DFPGA_EMULATOR
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library_emu.fpga -DFPGA_EMULATOR
 
 # Compile for FPGA Simulator
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
 
 # Compile for FPGA hardware
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
 ```
 
 Note that the library files (\*.a) must be included after all of the cpp files in the `icpx` command.

@@ -68,36 +68,36 @@ endif()
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 include_directories(${SDK_ROOT_PATH}/include/)
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall -Wno-c++2b-extensions ${WIN_FLAG} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR reg_map_functor.cpp -o reg_map_functor.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR stream_functor.cpp -o stream_functor.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR stream_rm_stall.cpp -o stream_rm_stall.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR reg_map_lambda.cpp -o reg_map_lambda.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR stream_lambda.cpp -o stream_lambda.fpga_emu
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR stream_pipelined.cpp -o stream_pipelined.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR reg_map_functor.cpp -o reg_map_functor.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR stream_functor.cpp -o stream_functor.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR stream_rm_stall.cpp -o stream_rm_stall.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR reg_map_lambda.cpp -o reg_map_lambda.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR stream_lambda.cpp -o stream_lambda.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR stream_pipelined.cpp -o stream_pipelined.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o reg_map_functor.cpp.o -c reg_map_functor.cpp
-#    [link]    icpx -fsycl -fintelfpga reg_map_functor.cpp.o -o reg_map_functor.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o stream_functor.cpp.o -c stream_functor.cpp
-#    [link]    icpx -fsycl -fintelfpga stream_functor.cpp.o -o stream_functor.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
-#    [link]    icpx -fsycl -fintelfpga stream_rm_stall.cpp.o -o stream_rm_stall.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
-#    [link]    icpx -fsycl -fintelfpga reg_map_lambda.cpp.o -o reg_map_lambda.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o stream_lambda.cpp.o -c stream_lambda.cpp
-#    [link]    icpx -fsycl -fintelfpga stream_lambda.cpp.o -o stream_lambda.fpga_emu
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o stream_pipelined.cpp.o -c stream_pipelined.cpp
-#    [link]    icpx -fsycl -fintelfpga stream_pipelined.cpp.o -o stream_pipelined.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o reg_map_functor.cpp.o -c reg_map_functor.cpp
+#    [link]    icpx -fintelfpga reg_map_functor.cpp.o -o reg_map_functor.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o stream_functor.cpp.o -c stream_functor.cpp
+#    [link]    icpx -fintelfpga stream_functor.cpp.o -o stream_functor.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
+#    [link]    icpx -fintelfpga stream_rm_stall.cpp.o -o stream_rm_stall.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
+#    [link]    icpx -fintelfpga reg_map_lambda.cpp.o -o reg_map_lambda.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o stream_lambda.cpp.o -c stream_lambda.cpp
+#    [link]    icpx -fintelfpga stream_lambda.cpp.o -o stream_lambda.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o stream_pipelined.cpp.o -c stream_pipelined.cpp
+#    [link]    icpx -fintelfpga stream_pipelined.cpp.o -o stream_pipelined.fpga_emu
 add_executable(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -134,25 +134,25 @@ add_custom_target(fpga_emu DEPENDS ${REGISTER_MAP_FUNCTOR_EMULATOR_TARGET} ${STR
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp -o reg_map_functor.fpga_sim
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp -o stream_functor.fpga_sim
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp -o stream_rm_stall.fpga_sim
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp -o reg_map_lambda.fpga_sim
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp -o stream_lambda.fpga_sim
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp -o stream_pipelined.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp -o reg_map_functor.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp -o stream_functor.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp -o stream_rm_stall.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp -o reg_map_lambda.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp -o stream_lambda.fpga_sim
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp -o stream_pipelined.fpga_sim
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o reg_map_functor.cpp.o -c reg_map_functor.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp.o -o reg_map_functor.fpga_sim
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o stream_functor.cpp.o -c stream_functor.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp.o -o stream_functor.fpga_sim
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp.o -o stream_rm_stall.fpga_sim
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp.o -o reg_map_lambda.fpga_sim
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o stream_lambda.cpp.o -c stream_lambda.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp.o -o stream_lambda.fpga_sim
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o stream_pipelined.cpp.o -c stream_pipelined.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp.o -o stream_pipelined.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o reg_map_functor.cpp.o -c reg_map_functor.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp.o -o reg_map_functor.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o stream_functor.cpp.o -c stream_functor.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp.o -o stream_functor.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp.o -o stream_rm_stall.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp.o -o reg_map_lambda.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o stream_lambda.cpp.o -c stream_lambda.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp.o -o stream_lambda.fpga_sim
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o stream_pipelined.cpp.o -c stream_pipelined.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp.o -o stream_pipelined.fpga_sim
 add_executable(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
@@ -189,25 +189,25 @@ add_custom_target(fpga_sim DEPENDS ${REGISTER_MAP_FUNCTOR_SIMULATOR_TARGET} ${ST
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp -o reg_map_functor.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp -o stream_functor.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp -o stream_rm_stall.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp -o reg_map_lambda.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp -o stream_lambda.fpga
-#   icpx -fsycl -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp -o stream_pipelined.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp -o reg_map_functor.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp -o stream_functor.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp -o stream_rm_stall.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp -o reg_map_lambda.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp -o stream_lambda.fpga
+#   icpx -fintelfpga -DFPGA_HARDWARE -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp -o stream_pipelined.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o reg_map_functor.cpp.o -c reg_map_functor.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp.o -o reg_map_functor.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o stream_functor.cpp.o -c stream_functor.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp.o -o stream_functor.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp.o -o stream_rm_stall.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp.o -o reg_map_lambda.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o stream_lambda.cpp.o -c stream_lambda.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp.o -o stream_lambda.fpga
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_HARDWARE -o stream_pipelined.cpp.o -c stream_pipelined.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp.o -o stream_pipelined.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o reg_map_functor.cpp.o -c reg_map_functor.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_functor.cpp.o -o reg_map_functor.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o stream_functor.cpp.o -c stream_functor.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_functor.cpp.o -o stream_functor.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o stream_rm_stall.cpp.o -c stream_rm_stall.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_rm_stall.cpp.o -o stream_rm_stall.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o reg_map_lambda.cpp.o -c reg_map_lambda.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> reg_map_lambda.cpp.o -o reg_map_lambda.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o stream_lambda.cpp.o -c stream_lambda.cpp
+#   [link]    icpx -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_lambda.cpp.o -o stream_lambda.fpga
+#   [compile] icpx -fintelfpga -DFPGA_HARDWARE -o stream_pipelined.cpp.o -c stream_pipelined.cpp
+#   [link]    icpx -fintelfpga -Xshardware  -Xstarget=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> stream_pipelined.cpp.o -o stream_pipelined.fpga
 add_executable(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})
 target_include_directories(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${REGISTER_MAP_FUNCTOR_FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -246,12 +246,12 @@ add_custom_target(fpga DEPENDS ${REGISTER_MAP_FUNCTOR_FPGA_TARGET} ${STREAMING_F
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early reg_map_functor.cpp -o reg_map_functor_report.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_functor.cpp -o stream_functor_report.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_rm_stall.cpp -o stream_rm_stall_report.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early reg_map_lambda.cpp -o reg_map_lambda_report.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_lambda.cpp -o stream_lambda_report.a
-#   icpx -fsycl -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_pipelined.cpp -o stream_pipelined_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early reg_map_functor.cpp -o reg_map_functor_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_functor.cpp -o stream_functor_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_rm_stall.cpp -o stream_rm_stall_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early reg_map_lambda.cpp -o reg_map_lambda_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_lambda.cpp -o stream_lambda_report.a
+#   icpx -fintelfpga -Xssimulation -Xsboard=<FPGA_FAMILY/FPGA_DEVICE_PART_NUMBER> -fsycl-link=early stream_pipelined.cpp -o stream_pipelined_report.a
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 set(REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE ${REGISTER_MAP_FUNCTOR_TARGET_NAME}_report.a)
 add_executable(${REGISTER_MAP_FUNCTOR_FPGA_EARLY_IMAGE} ${REGISTER_MAP_FUNCTOR_SOURCE_FILE})

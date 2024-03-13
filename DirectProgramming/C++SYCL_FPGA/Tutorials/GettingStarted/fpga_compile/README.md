@@ -156,14 +156,14 @@ The [Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/d
 
 ```
 # FPGA emulator image
-icpx -fsycl -fintelfpga -DFPGA_EMULATOR -I../../../../include vector_add.cpp -o vector_add.fpga_emu
+icpx -fintelfpga -DFPGA_EMULATOR -I../../../../include vector_add.cpp -o vector_add.fpga_emu
 ```
 
 #### Optimization Report
 
 ```
 # FPGA early image (with optimization report):
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex7 -o vector_add_report.a
+icpx -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -fsycl-link=early -Xstarget=Agilex7 -o vector_add_report.a
 ```
 Use the`-Xstarget` flag to target a supported board, a device family, or a specific FPGA part number.
 
@@ -171,7 +171,7 @@ Use the`-Xstarget` flag to target a supported board, a device family, or a speci
 
 ```
 # FPGA simulator image:
-icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex7 -Xsghdl -o vector_add_sim.fpga_sim
+icpx -fintelfpga -DFPGA_SIMULATOR -I../../../../include vector_add.cpp -Xssimulation -Xstarget=Agilex7 -Xsghdl -o vector_add_sim.fpga_sim
 ```
 Through `-Xstarget`, you can target an explicit board, a device family, or an FPGA part number.
 
@@ -179,7 +179,7 @@ Through `-Xstarget`, you can target an explicit board, a device family, or an FP
 
 ```
 # FPGA hardware image:
-icpx -fsycl -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex7 -o vector_add.fpga
+icpx -fintelfpga -DFPGA_HARDWARE -I../../../../include vector_add.cpp -Xshardware -Xstarget=Agilex7 -o vector_add.fpga
 ```
 Through `-Xstarget`, you can target an explicit board, a device family, or an FPGA part number.
 
