@@ -46,22 +46,22 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR ${CLOCK_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${CLOCK_FLAG} ${SEED} -fsycl-device-code-split=per_kernel")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG} -fsycl-device-code-split=per_kernel")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DFPGA_SIMULATOR ${CLOCK_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE ${CLOCK_FLAG} ${SEED} -fsycl-device-code-split=per_kernel")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${CLOCK_FLAG} -fsycl-device-code-split=per_kernel")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR memory_attributes.cpp -o memory_attributes.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR memory_attributes.cpp -o memory_attributes.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o memory_attributes.cpp.o -c memory_attributes.cpp
-#    [link]    icpx -fsycl -fintelfpga memory_attributes.cpp.o -o memory_attributes.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o memory_attributes.cpp.o -c memory_attributes.cpp
+#    [link]    icpx -fintelfpga memory_attributes.cpp.o -o memory_attributes.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -72,10 +72,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR mem_channel.cpp -o mem_channel.fpga_sim
+#    icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR mem_channel.cpp -o mem_channel.fpga_sim
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
-#    [link]    icpx -fsycl -fintelfpga -Xssimulation  mem_channel.cpp.o -o mem_channel.fpga_sim
+#    [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
+#    [link]    icpx -fintelfpga -Xssimulation  mem_channel.cpp.o -o mem_channel.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
@@ -86,7 +86,7 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early memory_attributes.cpp -o memory_attributes_report.a
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early memory_attributes.cpp -o memory_attributes_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -100,10 +100,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> memory_attributes.cpp -o memory_attributes.fpga
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> memory_attributes.cpp -o memory_attributes.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o memory_attributes.cpp.o -c memory_attributes.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> memory_attributes.cpp.o -o memory_attributes.fpga
+#   [compile] icpx -fintelfpga -o memory_attributes.cpp.o -c memory_attributes.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> memory_attributes.cpp.o -o memory_attributes.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})

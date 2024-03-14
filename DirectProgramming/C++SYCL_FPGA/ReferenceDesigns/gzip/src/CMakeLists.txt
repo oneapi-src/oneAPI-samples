@@ -124,12 +124,12 @@ message(STATUS "NUM_REORDER=${NUM_REORDER}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -Xssimulation -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_SIMULATOR_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

@@ -31,22 +31,22 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${HANDSHAKING} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR latency_control.cpp -o latency_control.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR latency_control.cpp -o latency_control.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o latency_control.cpp.o -c latency_control.cpp
-#    [link]    icpx -fsycl -fintelfpga latency_control.cpp.o -o latency_control.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o latency_control.cpp.o -c latency_control.cpp
+#    [link]    icpx -fintelfpga latency_control.cpp.o -o latency_control.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -57,7 +57,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early latency_control.cpp -o latency_control_report.a
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early latency_control.cpp -o latency_control_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -71,10 +71,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> latency_control.cpp -o latency_control.fpga
+#   icpx -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> latency_control.cpp -o latency_control.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o latency_control.cpp.o -c latency_control.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> latency_control.cpp.o -o latency_control.fpga
+#   [compile] icpx -fintelfpga -DFPGA_SIMULATOR -o latency_control.cpp.o -c latency_control.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> latency_control.cpp.o -o latency_control.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
@@ -85,10 +85,10 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> latency_control.cpp -o latency_control.fpga
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> latency_control.cpp -o latency_control.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o latency_control.cpp.o -c latency_control.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> latency_control.cpp.o -o latency_control.fpga
+#   [compile] icpx -fintelfpga -o latency_control.cpp.o -c latency_control.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> latency_control.cpp.o -o latency_control.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
