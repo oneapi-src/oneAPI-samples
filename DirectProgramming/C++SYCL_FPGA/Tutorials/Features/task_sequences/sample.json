@@ -1,0 +1,115 @@
+{
+  "guid": "AE05DF3B-27CD-4B2E-9698-1BD204AC42D4",
+  "name": "Task Sequences",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to achieve asynchronous parallelism within kernel",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/task_sequences",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NAIVE",
+          "make fpga_emu",
+          "./task_sequences.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NAIVE",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=TASK_SEQUENCE",
+          "make fpga_emu",
+          "./task_sequences.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=TASK_SEQUENCE",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
+          "nmake fpga_emu",
+          "task_sequences.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=TASK_SEQUENCE",
+          "nmake fpga_emu",
+          "task_sequences.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=TASK_SEQUENCE",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}
