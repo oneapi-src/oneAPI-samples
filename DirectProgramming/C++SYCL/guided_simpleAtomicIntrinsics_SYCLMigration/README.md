@@ -41,8 +41,9 @@ This sample demonstrates the migration of the following prominent CUDA features:
 
 - Atomic Intrinsics
 
-The kernel `testKernel` demonstrates SYCL arithmetic atomic functions in device code such as `atomic_fetch_add`, `atomic_fetch_sub`, `atomic_exchange`, `atomic_fetch_max`, `atomic_fetch_min`, `atomic_fetch_compare_inc`, `atomic_fetch_compare_dec`, `atomic_compare_exchange_strong`, `atomic_fetch_and`, `atomic_fetch_or`, and `atomic_fetch_xor` migrated from CUDA atomic instructions.
+The kernel `testKernel` demonstrates SYCL arithmetic atomic functions in device code such as `atomic_fetch_add`, `atomic_fetch_sub`, `atomic_exchange`, `atomic_fetch_max`, `atomic_fetch_min`, `atomic_compare_exchange_strong`, `atomic_fetch_and`, `atomic_fetch_or`, and `atomic_fetch_xor` migrated from CUDA atomic instructions.
 
+>**Note**: The DPC++ compiler is currently in the process of incorporating native support for atomic increment/decrement operations, along with ongoing performance enhancements.
 >**Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html) for general information about the migration workflow.
 
 ## CUDA source code evaluation
