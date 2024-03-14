@@ -1,10 +1,10 @@
 # `Task Sequences` Sample
 
-This sample is an FPGA tutorial that demonstrates how to use Task Sequences to achieve asynchronous parallelism within kernel.
+This sample is an FPGA tutorial that demonstrates how to use task sequences to achieve asynchronous parallelism within kernel.
 
 | Area                 | Description
 |:--                   |:--
-| What you will learn  | How to use a task sequence to add concurrency to your design
+| What you will learn  | How to use task sequences to add concurrency to your design
 | Time to complete     | 30 minutes
 | Category             | Concepts and Functionality
 
@@ -56,7 +56,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 This sample demonstrates some key concepts:
 - Basics of instantiating objects of parameterized instance of task_sequence.
-- Using async() function to invoke task functions for the task_sequence class.
+- Using async() function to invoke task functions for the task_sequence object.
 
 This design demonstrates a system structured like this:
 
@@ -81,10 +81,10 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 |--------------------|----------|---------------|---
 | Task function      | callable | N/A           | Callable `f` that defines the asynchronous task to be associated with the `task_sequence`. `f` must be statically resolvable at compile time, which means it is not a function pointer, and the return type and argument types of `f` must be resolvable and fixed.
 | Invocation Capacity* | `uint32_t` | 1 | The `async` invocations are guaranteed to not block the caller as long as the number of outstanding invocations is less than or equal to `invocation_capacity`. An outstanding invocation is an in-flight task sequence invocation that has not yet completed. 
-| Response Capacity* | `uint32_t` | 1 | Any task sequence invocation is allowed to write its results and completion status to the results data structure of the task sequence as long as the number of completed invocations in the results data structure is less than `response_capacity`. When an invocation is able to write its result to the results data structure, it can transition from an outstanding state to a completed state. At least one outstanding `async` call will make progress as long as the number of stored results is less than or equal to `response_capacity`.
+| Response Capacity* | `uint32_t` | 1 | Any tfask sequence invocation is allowed to write its results and completion status to the results data structure of the task sequence as long as the number of completed invocations in the results data structure is less than `response_capacity`. When an invocation is able to write its result to the results data structure, it can transition from an outstanding state to a completed state. At least one outstanding `async` call will make progress as long as the number of stored results is less than or equal to `response_capacity`.
 *optional parameter       
 
-The following example shows how to use Task Sequence.  
+The following example shows how to use task Sequence.  
 
 ```c++
 // Task function
@@ -103,13 +103,13 @@ C++ function, mult is the task function with asynchronous activity defined. The 
 async() function call is non-blocking, and it returns before the asynchronous f invocation completes executing and potentially before f even begins executing, as the return type from the async() function provides no implicit information on the execution status of f.
 The get() function retrieves the oldest result from this logical FIFO queue and blocks (waits) until a result is available if no result is available immediately upon the call to the get() function. The return type of the get() function is the same as the return type of the task function .
 
-You can see concrete example of kernel that use Task Sequences to run 4 loops concurrently in `task_sequence/main.cpp` and naively running the 4 loops sequentially in naive method in `naive/main.cpp`.
+You can see concrete example of kernel that use task sequences to run 4 loops concurrently in `task_sequence/main.cpp` and naively running the 4 loops sequentially in naive method in `naive/main.cpp`.
 
 ## Sample Structure
 The 2 different example designs in this sample perform similar operations.
 
 1. [Naive](naive/) This implementation uses arrays to pass data between loops and each loop are scheduled to run sequentially.
-2. [Task Sequence](task_sequence/) This implementation uses inter-kernel pipes to pass data between loops and applies Task Sequences to schedule loops to run concurrently.
+2. [Task sequence](task_sequence/) This implementation uses inter-kernel pipes to pass data between loops and applies task sequences to schedule loops to run concurrently.
 
 ## Build a Design
 
