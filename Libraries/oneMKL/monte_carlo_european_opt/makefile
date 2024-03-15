@@ -12,8 +12,8 @@ all: montecarlo
         INIT_ON_HOST=/DINIT_ON_HOST=1
 !endif
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /DMKL_ILP64 $(GENERATOR) -fsycl $(INIT_ON_HOST) -qmkl
-montecarlo_main.cpp
+DPCPP_OPTS=/I"$(MKLROOT)\include" /DMKL_ILP64 $(GENERATOR) -fsycl $(INIT_ON_HOST) -qmkl -lOpenCL
+montecarlo: src/montecarlo_main.cpp
 	icpx src/montecarlo_main.cpp /omontecarlo.exe $(DPCPP_OPTS)
 
 clean:
