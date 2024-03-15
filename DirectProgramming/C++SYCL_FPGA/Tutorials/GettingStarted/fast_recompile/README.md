@@ -80,14 +80,14 @@ Some examples are shown below.
 
 ```
 # Initial compilation
-icpx -fsycl -fintelfpga <files.cpp> -o out.fpga -Xshardware
+icpx -fintelfpga <files.cpp> -o out.fpga -Xshardware
 ```
 
 The initial compilation generates an FPGA device image, which takes several hours. Next, make changes to the host code.
 
 ```
 # Subsequent recompilation
-icpx -fsycl -fintelfpga <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware
+icpx -fintelfpga <files.cpp> -o out.fpga -reuse-exe=out.fpga -Xshardware
 ```
 
 If `out.fpga` does not exist, `-reuse-exe` is ignored and the FPGA device image is regenerated. This will always be the case the first time a project is compiled.
@@ -104,7 +104,7 @@ In the normal compilation process, FPGA device image generation happens at link 
 
 ```
 # normal compile command
-icpx -fsycl -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
+icpx -fintelfpga host.cpp kernel.cpp -Xshardware -o link.fpga
 ```
 
 The following image shows the compilation process.
@@ -115,26 +115,26 @@ If you want to iterate on the host code and avoid long compile time for your FPG
 
 ```
 # device link command
-icpx -fsycl -fintelfpga -fsycl-link=image <input files> [options]
+icpx -fintelfpga -fsycl-link=image <input files> [options]
 ```
 
 The compilation is a 3-step process:
 
 1. Compile the device code.
    ```
-   icpx -fsycl -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
+   icpx -fintelfpga -fsycl-link=image kernel.cpp -o dev_image.a -Xshardware
    ```
    Input files should include all source files that contain device code. This step may take several hours.
 
 2. Compile the host code.
    ```
-   icpx -fsycl -fintelfpga host.cpp -c -o host.o
+   icpx -fintelfpga host.cpp -c -o host.o
    ```
    Input files should include all source files that only contain host code. This takes seconds.
 
 3. Create the device link.
    ```
-   icpx -fsycl -fintelfpga host.o dev_image.a -o fast_recompile.fpga
+   icpx -fintelfpga host.o dev_image.a -o fast_recompile.fpga
    ```
    The input should have N (N >= 0) host object files *(.o)* and one device image file *(.a)*. This takes seconds.
 

@@ -126,8 +126,8 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fsycl -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS})
-set(COMMON_LINK_FLAGS -fsycl -fintelfpga ${QACTYPES} ${USER_FLAGS})
+set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS})
+set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate
@@ -161,7 +161,7 @@ endif()
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} @ONLY)
 
-set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --cpp_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT} ${USER_FLAGS})
+set(FPGA_CROSSGEN_COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --cpp_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} -o ${RTL_SOURCE_OBJECT} ${USER_FLAGS})
 
 # Create RTL source object
 add_custom_target(
@@ -171,9 +171,9 @@ add_custom_target(
 
 # Create library archive
 # This executes:
-# fpga_libtool lib_rtl.o --target sycl --create lib.a
+# fpga_libtool lib_rtl.o --create lib.a
 add_custom_target(create_library_archive DEPENDS ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
-set(FPGA_LIBTOOL_COMMAND fpga_libtool ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
+set(FPGA_LIBTOOL_COMMAND fpga_libtool ${RTL_SOURCE_OBJECT} --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
 add_custom_command(OUTPUT ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
                    COMMAND ${FPGA_LIBTOOL_COMMAND}
                    DEPENDS create_rtl_source_object)

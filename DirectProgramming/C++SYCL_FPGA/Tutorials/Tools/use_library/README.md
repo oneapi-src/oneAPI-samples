@@ -93,10 +93,10 @@ To create a library from  source code, use the following steps:
 
    ```bash
    # Linux
-   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp --target sycl -o lib_rtl.o
+   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp -o lib_rtl.o
 
    # Windows
-   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp --target sycl -o lib_rtl.obj
+   fpga_crossgen lib_rtl_spec.xml --cpp_model lib_rtl_model.cpp -o lib_rtl.obj
    ```
 
    Note that generating an RTL library requires that an `xml` file and a C++ model be provided in addition to the Verilog source code. The RTL is used when compiling for the hardware whereas the C++ model is used when the oneAPI program is run on the FPGA emulator. Examine the tutorial source code and the comments in `use_library.cpp` for more details.
@@ -111,10 +111,10 @@ To create a library from  source code, use the following steps:
 
    ```bash
    # Linux
-   fpga_libtool lib_rtl.o --target sycl --create lib_rtl.a
+   fpga_libtool lib_rtl.o --create lib_rtl.a
 
    # Windows
-   fpga_libtool lib_rtl.obj --target sycl --create lib_rtl.lib
+   fpga_libtool lib_rtl.obj --create lib_rtl.lib
 
    ```
 
@@ -124,13 +124,13 @@ To use the generated library in your project, simply add the generated library a
 
 ```bash
 # Compile for FPGA emulator
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library_emu.fpga -DFPGA_EMULATOR
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library_emu.fpga -DFPGA_EMULATOR
 
 # Compile for FPGA Simulator
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
 
 # Compile for FPGA hardware
-icpx -fsycl -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
+icpx -fintelfpga use_library.cpp lib_rtl.a -o use_library.fpga -Xshardware -DFPGA_HARDWARE
 ```
 
 Note that the library files (\*.a) must be included after all of the cpp files in the `icpx` command.

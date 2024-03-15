@@ -38,23 +38,23 @@ set(CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH} -DMIN_CACHE_DEPTH=${M
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG}")
-set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -Xssimulation -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_HARDWARE")
-set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -Xssimulation -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -DFPGA_HARDWARE")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR onchip_memory_cache.cpp -o onchip_memory_cache.fpga_emu
+#    icpx -fintelfpga -DFPGA_EMULATOR onchip_memory_cache.cpp -o onchip_memory_cache.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
-#    [link]    icpx -fsycl -fintelfpga onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga_emu
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
+#    [link]    icpx -fintelfpga onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
@@ -66,7 +66,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early onchip_memory_cache.cpp -o onchip_memory_cache_report.a
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early onchip_memory_cache.cpp -o onchip_memory_cache_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to SYCL.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -81,10 +81,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
+#   icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
+#   [compile] icpx -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
+#   [link]    icpx -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
@@ -97,10 +97,10 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
+#   icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
+#   [compile] icpx -fintelfpga -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
+#   [link]    icpx -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
