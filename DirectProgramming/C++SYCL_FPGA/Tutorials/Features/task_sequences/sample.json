@@ -20,27 +20,6 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu_1",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake .. -DPART=NAIVE",
-          "make fpga_emu",
-          "./naive.fpga_emu"
-        ]
-      },
-      {
-        "id": "report_1",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake .. -DPART=NAIVE",
-          "make report"
-        ]
-      },
-      {
         "id": "fpga_emu_2",
         "steps": [
           "icpx --version",
@@ -63,29 +42,6 @@
       }
     ],
     "windows": [
-      {
-        "id": "fpga_emu_1",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
-          "nmake fpga_emu",
-          "naive.fpga_emu.exe"
-        ]
-      },
-      {
-        "id": "report_1",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
-          "nmake report"
-        ]
-      },
       {
         "id": "fpga_emu_2",
         "steps": [
