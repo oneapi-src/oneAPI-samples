@@ -27,7 +27,7 @@
           "cd build",
           "cmake .. -DPART=NAIVE",
           "make fpga_emu",
-          "./task_sequences.fpga_emu"
+          "./naive.fpga_emu"
         ]
       },
       {
@@ -72,7 +72,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
           "nmake fpga_emu",
-          "task_sequences.fpga_emu.exe"
+          "naive.fpga_emu.exe"
         ]
       },
       {
