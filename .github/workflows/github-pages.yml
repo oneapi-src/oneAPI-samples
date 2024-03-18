@@ -1,5 +1,4 @@
 name: github-pages-app-dev
-permissions: read-all
 
 on:
   push:
@@ -27,6 +26,9 @@ on:
       - "src/docs/_static/script.js"
       - "src/docs/_templates/base.html"
       - "src/docs/_templates/index.html"
+permissions:
+  contents: read
+  
 # defaults:
 #   run:
 #     working-directory: src
