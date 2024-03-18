@@ -8,13 +8,17 @@
 
 #include "exception_handler.hpp"
 
+constexpr int kVectSize = 128;
+
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class IDNaive;
 
-constexpr int kVectSize = 128;
-
 using ValueT = int;
+
+// Minimum capacity of a pipe.
+// Set to 0 to let compiler decides on the pipe capacity.
+constexpr size_t kPipeMinCapacity = 0;
 constexpr size_t kPipeMinCapacity = 0;
 
 // Pipes
@@ -42,6 +46,8 @@ using PipeOut = sycl::ext::intel::experimental::pipe<
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
+///////////////////////////////////////
+
 struct NaiveKernel {
   int len;
 
@@ -52,7 +58,7 @@ struct NaiveKernel {
     int arrAD[kVectSize];
 
     // loopA
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
       int in0 = PipeIn0::read();
       int in1 = PipeIn1::read();
@@ -61,7 +67,7 @@ struct NaiveKernel {
     }
 
     // loopB
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
       int tmp = arrAB[i];
       tmp += i;
@@ -69,7 +75,7 @@ struct NaiveKernel {
     }
 
     // loopC
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
       int tmp = arrBC[i];
       tmp += i;
@@ -77,7 +83,7 @@ struct NaiveKernel {
     }
 
     // loopD
-    [[intel::initiation_interval(1)]]  //
+    [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
       int tmp0 = arrCD[i];
       int tmp1 = arrAD[i];
