@@ -8,16 +8,19 @@
 
 #include "exception_handler.hpp"
 
-// forward declare kernel and pipe names to reduce name mangling
-class IDOptimized;
-
 constexpr int kVectSize = 128;
 
-// Host pipes
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class IDOptimized;
+
 using ValueT = int;
+
+// Minimum capacity of a pipe.
+// Set to 0 to let compiler decides on the pipe capacity.
 constexpr size_t kPipeMinCapacity = 0;
 
-// Pipes for task_sequences
+// Pipes 
 class PipeIn0_ID;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
@@ -74,9 +77,9 @@ using PipeOut = sycl::ext::intel::experimental::pipe<
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-[[intel::use_stall_enable_clusters]] //
+[[intel::use_stall_enable_clusters]] 
 void loopA(int len) {
-  [[intel::initiation_interval(1)]]  //
+  [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int in0 = PipeIn0::read();
     int in1 = PipeIn1::read();
@@ -86,9 +89,9 @@ void loopA(int len) {
   }
 }
 
-[[intel::use_stall_enable_clusters]] //
+[[intel::use_stall_enable_clusters]] 
 void loopB(int len) {
-  [[intel::initiation_interval(1)]]  //
+  [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeAB::read();
     tmp += i;
@@ -96,9 +99,9 @@ void loopB(int len) {
   }
 }
 
-[[intel::use_stall_enable_clusters]] //
+[[intel::use_stall_enable_clusters]] 
 void loopC(int len) {
-  [[intel::initiation_interval(1)]]  //
+  [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeBC::read();
     tmp += i;
@@ -106,9 +109,9 @@ void loopC(int len) {
   }
 }
 
-[[intel::use_stall_enable_clusters]] //
+[[intel::use_stall_enable_clusters]] 
 void loopD(int len) {
-  [[intel::initiation_interval(1)]]  //
+  [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp0 = PipeCD::read();
     int tmp1 = PipeAD::read();
@@ -116,6 +119,8 @@ void loopD(int len) {
     PipeOut::write(out);  
   }
 }
+
+///////////////////////////////////////
 
 struct OptimizedKernel {
   int len;
@@ -161,8 +166,7 @@ int main() {
     int *a = new int[kVectSize];
     int *b = new int[kVectSize];
 
-    // declare arrays and fill them
-    // allocate in shared memory so the kernel can see them
+    // Generate input data
     for (int i = 0; i < kVectSize; i++) {
       a[i] = i;                
       b[i] = (kVectSize - i);  
@@ -171,6 +175,7 @@ int main() {
       PipeIn1::write(q, kVectSize - i);
     }
 
+    // Call the kernel
     auto e = q.single_task<IDOptimized>(OptimizedKernel{kVectSize});
     e.wait();
 

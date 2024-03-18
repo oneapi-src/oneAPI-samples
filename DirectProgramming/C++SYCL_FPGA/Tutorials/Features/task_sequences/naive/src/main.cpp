@@ -8,16 +8,16 @@
 
 #include "exception_handler.hpp"
 
-// forward declare kernel and pipe names to reduce name mangling
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class IDNaive;
 
 constexpr int kVectSize = 128;
 
-// Host pipes
 using ValueT = int;
 constexpr size_t kPipeMinCapacity = 0;
 
-// Pipes for Naive kernel
+// Pipes
 class PipeIn0_ID;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
@@ -115,6 +115,7 @@ int main() {
     int *a = new int[kVectSize];
     int *b = new int[kVectSize];
 
+    // Generate input data
     for (int i = 0; i < kVectSize; i++) {
       a[i] = i;                
       b[i] = (kVectSize - i); 
@@ -123,6 +124,7 @@ int main() {
       PipeIn1::write(q, kVectSize - i);
     }
 
+    // Call the kernel
     auto e = q.single_task<IDNaive>(NaiveKernel{kVectSize});
     e.wait();
 
