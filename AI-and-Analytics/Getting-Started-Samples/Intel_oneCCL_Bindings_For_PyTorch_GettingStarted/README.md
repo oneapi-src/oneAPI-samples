@@ -7,6 +7,10 @@ The oneAPI Collective Communications Library Bindings for PyTorch* (oneCCL Bindi
 | What you will learn   | How to get started with oneCCL Bindings for PyTorch*
 | Time to complete      | 60 minutes
 
+## Purpose
+
+From this sample code, you will learn how to perform distributed training with oneCCL in PyTorch*. The `oneCCL_Bindings_GettingStarted.ipynb` Jupyter Notebook targets both CPUs and GPUs using oneCCL Bindings for PyTorch*.
+
 ## Prerequisites
 
 | Optimized for                     | Description
@@ -15,20 +19,7 @@ The oneAPI Collective Communications Library Bindings for PyTorch* (oneCCL Bindi
 | Hardware                          | Intel® Xeon® scalable processor family <br> Intel® Data Center GPU
 | Software                          | Intel® Extension for PyTorch (IPEX)
 
-
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Tools**
-
-  You can get the AI Tools from [the product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Tools installation information and post-installation steps and scripts.
-
-  oneCCL Bindings for PyTorch* is ready for use once you finish the Intel® AI Tools installation via Offline Installer and have run the post-installation script.
-
-
-  You can refer to the *[Get Started with the Intel® AI Tools for Linux*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit)* for post-installation steps and scripts.
-
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Key Implementation Details
 
@@ -43,44 +34,41 @@ The Jupyter Notebook also demonstrates how to change PyTorch* distributed worklo
 >- [Intel® oneCCL Bindings for PyTorch*](https://github.com/intel/torch-ccl) 
 >- [Distributed Training with oneCCL in PyTorch*](https://github.com/intel/optimized-models/tree/master/pytorch/distributed)
 
-## Purpose
-
-From this sample code, you will learn how to perform distributed training with oneCCL in PyTorch*. The `oneCCL_Bindings_GettingStarted.ipynb` Jupyter Notebook targets both CPUs and GPUs using oneCCL Bindings for PyTorch*.
-
 
 ## Run the `oneCCL Bindings for PyTorch* Getting Started` Sample
 
-If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
-### Steps for Intel AI Tools Offline Installer  
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Docker](#docker)
 
+### AI Tools Offline Installer (Validated)  
+1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
+2. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/Intel_oneCCL_Bindings_For_PyTorch_GettingStarted/
+```
+3. Launch Jupyter Notebook.
+```
+jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
+```
+4. Follow the instructions to open the URL with the token in your browser.
+5. Locate and select the Notebook.
+     ```
+     oneCCL_Bindings_GettingStarted.ipynb
+     ```
+6. Change your Jupyter Notebook kernel to **PyTorch** or **PyTorch-GPU**.
+7. Run every cell in the Notebook in sequence.
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
-
-1. Read and follow the *Run Scripts and CPU Affinity* instructions at [https://github.com/intel/optimized-models/tree/master/pytorch/distributed#run-scripts--cpu-affinity](https://github.com/intel/optimized-models/tree/master/pytorch/distributed#run-scripts--cpu-affinity).
-
-### Run the Jupyter Notebook
-
-1. Change to the sample directory.
-2. Launch Jupyter Notebook.
-   ```
-   jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
-   ```
-3. Follow the instructions to open the URL with the token in your browser.
-4. Locate and select the Notebook.
-   ```
-   oneCCL_Bindings_GettingStarted.ipynb
-   ```
-5. Change your Jupyter Notebook kernel to **PyTorch** or **PyTorch-GPU**.
-6. Run every cell in the Notebook in sequence.
-
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
 ## License
 
