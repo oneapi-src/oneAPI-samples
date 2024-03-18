@@ -35,16 +35,6 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 > Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2024.1.0 Build 20240308
 > Copyright (C) 1985-2024 Intel Corporation. All rights reserved.
 > 
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lkernel32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-luser32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lgdi32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lwinspool' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lshell32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lole32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-loleaut32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-luuid' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-lcomdlg32' [-Wunknown-argument]
-> icx-cl: warning: unknown argument ignored in clang-cl: '-ladvapi32' [-Wunknown-argument]
 > 'C:/Program' is not recognized as an internal or external command,
 > operable program or batch file.
 > Couldn't find section with name '.acl.target'.
