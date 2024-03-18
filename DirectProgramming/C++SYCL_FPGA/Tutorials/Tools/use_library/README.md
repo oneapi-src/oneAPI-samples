@@ -29,6 +29,21 @@ This FPGA tutorial demonstrates how to build SYCL device libraries from RTL sour
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
+> :warning: This tutorial currently exposes a bug in the Windows* version of the Intel DPC++/C++ oneAPI compiler. Make sure you install the Intel DPC++/C++ oneAPI compiler in a path that does not include spaces (for example, `C:\oneAPI\`, or you may see an error message like this when you compile this tutorial:
+> ```
+> [100%] Linking CXX executable use_library.report.exe
+> Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2024.1.0 Build 20240308
+> Copyright (C) 1985-2024 Intel Corporation. All rights reserved.
+> 
+> 'C:/Program' is not recognized as an internal or external command,
+> operable program or batch file.
+> Couldn't find section with name '.acl.target'.
+> Error: Can't get value into file: 'pkg_editor c:/Users/whitepau/AppData/Local/Temp/use_library-6d1544-4f742f.32024.temp_value.txt get .acl.target c:/Users/whitepau/AppData/Local/Temp/use_library-6d1544-4f742f.32024.temp_value.txt' failed
+> 
+> llvm-foreach:
+> icx-cl: error: fpga compiler command failed with exit code 1 (use -v to see invocation)
+> ```
+
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 3 sample that demonstrates the usage of a tool.
