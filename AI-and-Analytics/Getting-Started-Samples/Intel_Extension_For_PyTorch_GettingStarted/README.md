@@ -56,7 +56,7 @@ Required AI Tools: <https://www.intel.com/content/www/us/en/developer/tools/onea
 
 
 ## Run the Sample
->**Note**: Before running the sample, make sure [Environment Setup](https://github.com/ZhaoqiongZ/oneAPI-samples/tree/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted#environment-setup) is completed.
+>**Note**: Before running the sample, make sure [Environment Setup](#environment-setup) is completed.
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Docker](#docker)
