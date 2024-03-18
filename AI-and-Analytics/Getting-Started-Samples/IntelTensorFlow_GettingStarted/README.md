@@ -1,4 +1,4 @@
-# ` TensorFlow* Getting Started` Sample
+# `TensorFlow* Getting Started` Sample
 
 The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow* model and run inference on Intel® hardware. 
 | Property            | Description 
