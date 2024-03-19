@@ -26,18 +26,22 @@ on:
       - "src/docs/_static/script.js"
       - "src/docs/_templates/base.html"
       - "src/docs/_templates/index.html"
-permissions:
-  contents: read
-  
+
 # defaults:
 #   run:
 #     working-directory: src
 
+# Top-level default; empty/no permissions 
+permissions: {}  
+
 jobs:
   pages:
     name: Build GitHub Pages
-    runs-on: ubuntu-latest 
-
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+      # Above required for publishing to gh-pages; see auth on Ln 92-93
+      
     steps:
     - name: Set up Python
       uses: actions/setup-python@v4
