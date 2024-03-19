@@ -42,6 +42,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |[SYCLMigration - Sorting Networks](02_SYCL_Migration_SortingNetworks/02_SYCL_Migration_SortingNetworks.ipynb)|+ Learn how to migrate a CUDA project with multiple sources files that uses Makefile for the project.
 |[SYCLMigration - Jacobi Iterative](03_SYCL_Migration_Jacobi_Iterative/03_SYCL_Migration_Jacobi_Iterative.ipynb)|+ Learn how to migrate a CUDA project that using CUDA features to access the GPU hardware like Shared Local Memory, warps and atomics in kernel code.
 |[SYCLMigration - Matrix Multiplication with CuBlas library](04_SYCL_Migration_MatrixMul_CuBlas/04_SYCL_Migration_MatrixMul_CuBlas.ipynb)|+ Learn how to migrate a CUDA project that uses CUDA library like cuBLAS.
+|[SYCLMigration - OceanFFT with oneMKL FFT library](05_SYCL_Migration_OceanFFT/05_SYCL_Migration_OceanFFT.ipynb)|+ Learn how to migrate a CUDA project that uses FFT from oneMKL library.
 
 #### Content Structure
 
