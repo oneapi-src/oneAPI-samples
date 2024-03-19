@@ -15,9 +15,7 @@
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate base",
-				"pip install -r requirements.txt",
-				"export OMPI_ALLOW_RUN_AS_ROOT=1",
-				"export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1"
+				"pip install -r requirements.txt"
 			],
 			"id": "idp_d4p_KM_Dist",
 			"steps": [
