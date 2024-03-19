@@ -27,7 +27,7 @@ Please follow bellow steps to setup GPU environment.
 1. Source oneAPI environment variables:  ``` $source $HOME/intel/oneapi/intelpython/bin/activate  ```
 2. Create conda env:  ```$conda create --name user-tensorflow-gpu --clone tensorflow-gpu ```
 3. Activate the created conda env:  ```$source activate user-tensorflow-gpu ```
-4. Install the required packages:  ```(user-tensorflow-gpu) $pip install -r requirements.txt ```
+4. Install the required packages:  ```(user-tensorflow-gpu) $pip install -r requirements.txt --no-deps```
 5. Deactivate conda env:  ```(user-tensorflow-gpu)$conda deactivate ```
 6. Register the kernel to Jupyter NB: ``` $~/.conda/envs/user-tensorflow-gpu/bin/python  -m ipykernel install --user --name=user-tensorflow-gpu ```  
 

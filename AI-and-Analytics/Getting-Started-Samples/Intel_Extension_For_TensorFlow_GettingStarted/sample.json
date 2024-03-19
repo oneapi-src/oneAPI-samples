@@ -15,12 +15,12 @@
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
-				"pip install -r requirements.txt",
+				"pip install -r requirements.txt --no-deps",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow",
 				"conda deactivate",
 				"conda activate tensorflow-gpu",
-				"pip install -r requirements.txt",
+				"pip install -r requirements.txt --no-deps",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow-gpu",
 				"conda deactivate"
