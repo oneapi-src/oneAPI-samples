@@ -13,7 +13,7 @@ namespace fpga_linalg {
   - Q is a unitary/orthogonal matrix
   - R is an upper triangular matrix
 
-  This function implements a OneAPI optimized version of the "High performance
+  This function implements a oneAPI optimized version of the "High performance
   QR Decomposition for FPGAs" FPGA'18 paper by Martin Langhammer and Bogdan
   Pasca.
 
@@ -62,7 +62,7 @@ struct StreamingQRD {
                   "only matrices of size 4x4 and over are supported");
 
     /*
-      This code implements a OneAPI optimized variation of the following
+      This code implements a oneAPI optimized variation of the following
       algorithm
 
       for i=0:n
