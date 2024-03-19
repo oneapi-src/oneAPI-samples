@@ -28,78 +28,41 @@
                 </div>
 
             </div>
-
         </div>
-            <div class="col"><!--#2-->
-            </div>    
+
+        <div class="col"><!--#2-->
+            #2
+        </div>    
 
         <div class="col"> <!--#3-->
-
-            <!-- <div class="search-container">            
-                
-                <div class="search-widget">   
-
-                    <i class="fa fa-search fa-2x"></i>
-                    <input type="text" 
-                            id="textInput" 
-                            class="searchBox" 
-                            name="searchInput" 
-                            placeholder="Search..."
-                            onkeypress=onlyAlphaNumInput(event) 
-                            data-search >
-    
-                    <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
-                        <i class="fa fa-remove fa-xl"></i> <fa fa-refresh>
-                    </button> -->
-                    
-                    <!-- <div class="error-container center">
-                        <div class="middle transparent" id="errormsg">  
-                        </div>
-                    </div> -->
-
-                </div>
-            </div>
-
+            #3
         </div>
         
         <div class="col"> <!--#4-->
             <div id="results-container">
                 <div id="qty-show-results" class="transparent"></div>
             </div>
+            <div id="total-records"></div> 
+            #4
         </div>
 
 
-        <div class="col"><!--#5-->
+        <div class="col wht-outline"><!--#5-->
+
                 <figure>
                     <a href="https://github.com/oneapi-src/oneAPI-samples">
                     <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
                     </a>
                     <figcaption>View on GitHub*</figcaption>
                 </figure>
+
+
+            
+
        </div>
     </div>
 
-    <div class="nav-titlebar"><!--#1-->
-
-        <div class="col"> 
-            <div class="col-nav-left"> for 
-                <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">&nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
-                </a>
-            </div>
-        </div>
-
-        <div class="col"></div><!--#2-->
-
-        <div class="col"> <!--#3-->
-            Get started on oneAPI development with code samples
-        </div>
-
-        <div class="col"></div><!--#4-->
-
-        <div class="col"><!--#5-->
-            <div id="total-records"></div> 
-        </div>
-
+    <div class="nav-titlebar"><!--ROW #1-->
     </div>
  
     <div class="nav-ctrls">
@@ -111,7 +74,9 @@
             <button class='pg-first-last' onclick="lastPage()">Last</button>
         <button class='arrow right' onclick="nextPage()"></button>
     </div>
-    <div class="filter-input-wrapper">       
+    
+    <!-- <div class="filter-input-wrapper">
+
                 <input id="collapsible" class="toggle" type="checkbox">
                 <label for="collapsible" class="label-toggle">
                     <span class="filter-text">Filter</span>
@@ -120,7 +85,7 @@
                                 <i class="fa-solid fa-filter-circle-xmark fa-2xl"></i>
                             </button>
                         </span>
-                </label>
+                </label> -->
 
             <!-- <div class="collapsible-content">
 
@@ -232,7 +197,8 @@
                  </div>
             </div> -->
      
-    </div>
+    <!-- </div> -->
+
     <!-- HIDE TEMPLATE @ DEV
     <div class="toolkit-cards" data-toolkit-cards-container> </div>
         <template data-toolkit-template >
@@ -471,3 +437,31 @@
     </div>
 </div>
 {% endblock %}
+
+<!-- <div class="col">  -->
+    <!--#1 ORIGINAL 2ND ROW BELOW STICKY NAV   -->
+    <!-- <div class="col-nav-left"> for 
+        <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">&nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
+        </a>
+    </div>
+</div>
+
+<div class="col"></div> -->
+    <!--#2-->
+
+<!-- <div class="col"> -->
+    <!--#3-->
+    <!-- Get started on oneAPI development with code samples
+</div>
+
+<div class="col"></div> -->
+    <!--#4-->
+
+<!-- <div class="col"> -->
+    <!--#5-->
+    <!-- <div id="total-records"></div> 
+</div> -->
+
+<!-- FILTER INPUT WRAPPER - PREVIOUS CHECKBOXES -->
+<!-- <div class="filter-input-wrapper">
+</div> -->

@@ -428,7 +428,7 @@ input[type=button] > #nobutton {
 
 .grid-row {
   display: flex;
-  grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
+  grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
   background-color: rgb(0,84,174);
   width: 100%;
   text-align: center;
@@ -485,6 +485,7 @@ input[type=button] > #nobutton {
 } 
 
 .search-container{
+  background-color: transparent !important;
   justify-content: center;
   position: relative;
 }
@@ -494,9 +495,11 @@ input[type=button] > #nobutton {
   justify-content: center;
   padding-left: 4%; /* offset to right; treat searchbar + X as one*/
   /* padding-bottom: 2%; */
-  margin-top: 2px;
-  margin-bottom: 6px; 
+  padding-top: 0.5em;
+  padding-bottom: 0.25em; 
   position: relative;
+  background-color: #E9E9E9;
+  outline: none;
 }
 
 
@@ -1196,9 +1199,35 @@ a:hover {
 
 /* Add bootstrap 5.1 classes for collapse */
 
+.accordion-item { /* DROPDOWN */
+  background-color: #E9E9E9;
+}
+
+.accordion-header{ /* seealso: search-widget*/
+  background-color: transparent;
+}
+
+#headingOne {
+  background-color: #E9E9E9;
+}
+
 .accordion-body {
   height: 100vh;
   width:fit-content;
+}
+
+.accordion-button.collapsed {
+  background-color:#E9E9E9;
+}
+
+
+#stayOpen-collapseOne {
+  background-color: #E9E9E9;
+}
+
+.wht-outline{
+  outline: dotted;
+  outline-color: #E9E9E9;
 }
 
 
