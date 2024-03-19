@@ -1,6 +1,6 @@
-# `Intel® Python Daal4py Getting Started` Sample
+# Intel® Python Daal4py Getting Started Sample
 
-The `Intel® Python Daal4py Getting Started` sample code shows how to do batch linear regression using the Python API package daal4py powered by the Intel® oneAPI Data Analytics Library (oneDAL).
+The `Intel® Python Daal4py Getting Started` sample code shows how to do batch linear regression using the Python API package daal4py powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html).
 
 | Area                   | Description
 | :---                   | :---
@@ -8,7 +8,6 @@ The `Intel® Python Daal4py Getting Started` sample code shows how to do batch l
 | Time to complete       | 5 minutes
 | Category               | Getting Started
 
-The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Purpose
 
@@ -23,6 +22,7 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
 | Software                | Intel® oneAPI Data Analytics Library (oneDAL)
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ### For Local Development Environments
 
@@ -35,11 +35,11 @@ You will need to download and install the following toolkits, tools, and compone
 
 ## Key Implementation Details
 
-This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel® AI Analytics Toolkit.
+- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel® AI Analytics Toolkit.
 
-The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
-## Configure Environment (Only applicable to AI Tools Offline Installer)
+## Environment Setup (Only applicable to AI Tools Offline Installer)
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
 > **Note**: If you have not already done so, set up your CLI
@@ -74,12 +74,12 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
       source activate usr_intelpython
       ```
 
-2. Install Jupyter Notebook. (Skip this step for Intel® DevCloud.)
+2. Install Jupyter Notebook.
    ```
    conda install jupyter nb_conda_kernels
    ```
 
-## Run the `Intel® Python Daal4py Getting Started` Sample
+## Run the Sample
 
 You can run the sample code in a Jupyter Notebook or as a Python script locally.
 
@@ -147,6 +147,10 @@ Here is one of our loaded model's features:
    1.58423529e-02 -4.57542900e-01]]
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
+## Related Samples
+
+* [Intel® Python XGBoost* Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted)
+* [Intel® Python Scikit-learn Extension Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted#intel-python-scikit-learn-extension-getting-started-sample)
 
 ## License
 
@@ -154,3 +158,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third-party program licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
