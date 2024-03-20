@@ -1,0 +1,29 @@
+{
+  "guid": "aa0383a1-f4d1-4ccf-bc60-2e7f0979f0f3",
+  "name": "OIDN Intro Jupyter Learning Path",
+  "categories": ["Toolkit/oneAPI Libraries/Open Image Denoise"],
+  "description": "Open Image Denoise minimal Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux"],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["pvc"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "OIDN_Intro_Jupyter_Learning_Path_Linux",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "cd ../bin/",
+		                "cp ../accumulatedFrameCpp.pfm .",
+                    "./oidnDenoise -d cpu -hdr accumulatedFrameCpp.pfm -o denoised.pfm",
+                    "./oidnDenoise -d sycl -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                 ]
+                 }
+        ]
+  }
+}
