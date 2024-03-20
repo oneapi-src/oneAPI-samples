@@ -81,19 +81,6 @@ void shfl_scan_test(int *data, int width, const sycl::nd_item<3> &item_ct1,
 #pragma unroll
   for (int i = 1; i <= width; i *= 2) {
     unsigned int mask = 0xffffffff;
-    /*
-    DPCT1023:5: The SYCL sub-group does not support mask options for
-    dpct::shift_sub_group_right. You can specify
-    "--use-experimental-features=masked-sub-group-operation" to use the
-    experimental helper function to migrate __shfl_up_sync.
-    */
-    /*
-    DPCT1096:48: The right-most dimension of the work-group used in the SYCL
-    kernel that calls this function may be less than "32". The function
-    "dpct::shift_sub_group_right" may return an unexpected result on the CPU
-    device. Modify the size of the work-group to ensure that the value of the
-    right-most dimension is a multiple of "32".
-    */
     int n =
         dpct::shift_sub_group_right(item_ct1.get_sub_group(), value, i, width);
 
@@ -252,18 +239,10 @@ bool shuffle_simple_test(int argc, char **argv) {
       deviceProp, dpct::dev_mgr::instance().get_device(cuda_device))));
 
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
-         /*
-         DPCT1005:36: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
          deviceProp.get_major_version(), deviceProp.get_minor_version(),
          deviceProp.get_max_compute_units());
 
   // __shfl intrinsic needs SM 3.0 or higher
-  /*
-  DPCT1005:37: The SYCL device version is different from CUDA Compute
-  Compatibility. You may need to rewrite this code.
-  */
   if (deviceProp.get_major_version() < 3) {
     printf("> __shfl() intrinsic requires device SM 3.0+\n");
     printf("> Waiving test.\n");
@@ -336,7 +315,8 @@ bool shuffle_simple_test(int argc, char **argv) {
                               sycl::range<3>(1, 1, blockSize),
                           sycl::range<3>(1, 1, blockSize)),
         [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
-          shfl_scan_test(d_data, 32, item_ct1, dpct_local_acc_ct1.get_multi_ptr() ,
+          shfl_scan_test(d_data, 32, item_ct1, dpct_local_acc_ct1.template get_multi_ptr<
+                              sycl::access::decorated::yes>(),
                          d_partial_sums);
         });
   });
@@ -350,7 +330,8 @@ bool shuffle_simple_test(int argc, char **argv) {
                           sycl::range<3>(1, 1, p_blockSize)),
         [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
           shfl_scan_test(d_partial_sums, 32, item_ct1,
-                         dpct_local_acc_ct1.get_pointer(), NULL);
+                         dpct_local_acc_ct1.template get_multi_ptr<
+                              sycl::access::decorated::yes>(), NULL);
         });
   });
   *stop = dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
@@ -457,7 +438,8 @@ bool shuffle_integral_image_test() {
         [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
           shfl_intimage_rows(reinterpret_cast<sycl::uint4 *>(d_data),
                              reinterpret_cast<sycl::uint4 *>(d_integral_image),
-                             item_ct1, sums_acc_ct1.get_pointer());
+                             item_ct1, sums_acc_ct1.template get_multi_ptr<
+                              sycl::access::decorated::yes>());
         });
   });
   stop->wait();
@@ -535,18 +517,10 @@ int main(int argc, char *argv[]) {
       deviceProp, dpct::dev_mgr::instance().get_device(cuda_device))));
 
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
-         /*
-         DPCT1005:46: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
          deviceProp.get_major_version(), deviceProp.get_minor_version(),
          deviceProp.get_max_compute_units());
 
   // __shfl intrinsic needs SM 3.0 or higher
-  /*
-  DPCT1005:47: The SYCL device version is different from CUDA Compute
-  Compatibility. You may need to rewrite this code.
-  */
   if (deviceProp.get_major_version() < 3) {
     printf("> __shfl() intrinsic requires device SM 3.0+\n");
     printf("> Waiving test.\n");
