@@ -14,11 +14,11 @@
                 {
                 "id": "OSPRAY_Intro_Jupyter_Learning_Path_Linux",
                 "steps": [
-                    "./build_tutorial.sh",
-                    "./run_tutorial_CPU.sh",
-                    "./run_tutorial_GPU.sh",
-                    "./build_denoise.sh",
-                    "./run_tutorial.sh"
+                    "sh ./build_tutorial.sh",
+                    "sh ./run_tutorial_CPU.sh",
+                    "sh ./run_tutorial_GPU.sh",
+                    "sh ./build_denoise.sh",
+                    "sh ./run_tutorial.sh"
                  ]
                  }
         ]
