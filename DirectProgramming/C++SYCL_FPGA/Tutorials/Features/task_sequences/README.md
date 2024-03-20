@@ -145,8 +145,8 @@ struct OptimizedKernel {
   }
 };
 ```
-C++ functions 'LoopA', 'LoopB', 'LoopC' and 'LoopD' are the task functions with asynchronous activities defined. Each of the task functions is used to parameterize a specific task_sequence class to create four task_sequence object instances, 'task_a', 'task_b', 'task_c' and 'task_d'. Parallel invocation of the task functions is launched through 'async()' method that accepts the same arguments as their respective task function. The
-async() function call is non-blocking, and it returns before the asynchronous task function invocation completes executing and potentially before the task function even begins executing, as the return type from the 'async()' function provides no implicit information on the execution status of task function.
+C++ functions `LoopA`, `LoopB`, `LoopC` and `LoopD` are the task functions with asynchronous activities defined. Each of the task functions is used to parameterize a specific task_sequence class to create four task_sequence object instances, `task_a`, `task_b`,`task_c` and `task_d`. Parallel invocation of the task functions is launched through `async()` method that accepts the same arguments as their respective task function. The
+`async()` function call is non-blocking, and it returns before the asynchronous task function invocation completes executing and potentially before the task function even begins executing, as the return type from the `async()` function provides no implicit information on the execution status of task function.
 
 You can see a concrete example of a kernel that naively uses four sequential loops in `naive/main.cpp`. This design is modified to use task sequences to run the loops concurrently in `task_sequence/main.cpp`.
 
