@@ -22,7 +22,12 @@ constexpr size_t kPipeMinCapacity = 0;
 class IDPipeIn0;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeIn0_ID,     class IDNaive;
+    IDPipeIn0,  
+    int,              // The type of data in the pipe
+    kPipeMinCapacity  // The capacity of the pipe
+    >;   
+    
+class IDPipeIn1;
 using PipeIn1 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     IDPipeIn1,       // An identifier for the pipe
