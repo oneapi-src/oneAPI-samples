@@ -84,21 +84,69 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 The following example shows how to use task Sequence.  
 
 ```c++
-// Task function
-int mult(int a, int b) {
-	 return a * b;
+[[intel::use_stall_enable_clusters]] 
+void LoopA(int len) {
+  [[intel::initiation_interval(1)]]  
+  for (size_t i = 0; i < len; i++) {
+    int in0 = PipeIn0::read();
+    int in1 = PipeIn1::read();
+
+    PipeAB::write(in0);
+    PipeAD::write(in1);
+  }
 }
 
-int mult_and_add(int a1, int b1, int a2, int b2) {
-  task_sequence<mult> task1, task2;
-  task1.async(a1, b1);
-  task2.async(a2, b2);
-  return task1.get() + task2.get();
+[[intel::use_stall_enable_clusters]] 
+void LoopB(int len) {
+  [[intel::initiation_interval(1)]]  
+  for (size_t i = 0; i < len; i++) {
+    int tmp = PipeAB::read();
+    tmp += i;
+    PipeBC::write(tmp);  
+  }
 }
+
+[[intel::use_stall_enable_clusters]] 
+void LoopC(int len) {
+  [[intel::initiation_interval(1)]]  
+  for (size_t i = 0; i < len; i++) {
+    int tmp = PipeBC::read();
+    tmp += i;
+    PipeCD::write(tmp);  
+  }
+}
+
+[[intel::use_stall_enable_clusters]] 
+void LoopD(int len) {
+  [[intel::initiation_interval(1)]]  
+  for (size_t i = 0; i < len; i++) {
+    int tmp0 = PipeCD::read();
+    int tmp1 = PipeAD::read();
+    int out = tmp0 + tmp1;
+    PipeOut::write(out);  
+  }
+}
+
+///////////////////////////////////////
+
+struct OptimizedKernel {
+  int len;
+
+  void operator()() const {
+    sycl::ext::intel::experimental::task_sequence<LoopA> task_a;
+    sycl::ext::intel::experimental::task_sequence<LoopB> task_b;
+    sycl::ext::intel::experimental::task_sequence<LoopC> task_c;
+    sycl::ext::intel::experimental::task_sequence<LoopD> task_d;
+
+    task_a.async(len);
+    task_b.async(len);
+    task_c.async(len);
+    task_d.async(len);
+  }
+};
 ```
-C++ function, mult is the task function with asynchronous activity defined. The task function is used to parameterize the task_sequence class with two object instances, task1 and task2. Parallel invocations of the task function is then launched through async() method of each object instance and their results collected by calls to the get() method on each object. The
-async() function call is non-blocking, and it returns before the asynchronous f invocation completes executing and potentially before f even begins executing, as the return type from the async() function provides no implicit information on the execution status of f.
-The get() function retrieves the oldest result from this logical FIFO queue and blocks (waits) until a result is available if no result is available immediately upon the call to the get() function. The return type of the get() function is the same as the return type of the task function .
+C++ functions 'LoopA', 'LoopB', 'LoopC' and 'LoopD' are the task functions with asynchronous activities defined. Each of the task functions is used to parameterize a specific task_sequence class to create four task_sequence object instances, 'task_a', 'task_b', 'task_c' and 'task_d'. Parallel invocation of the task functions is launched through 'async()' method that accepts the same arguments as their respective task function. The
+async() function call is non-blocking, and it returns before the asynchronous task function invocation completes executing and potentially before the task function even begins executing, as the return type from the 'async()' function provides no implicit information on the execution status of task function.
 
 You can see a concrete example of a kernel that naively uses four sequential loops in `naive/main.cpp`. This design is modified to use task sequences to run the loops concurrently in `task_sequence/main.cpp`.
 
