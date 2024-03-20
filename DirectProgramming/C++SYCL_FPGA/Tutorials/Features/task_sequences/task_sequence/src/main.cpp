@@ -21,50 +21,50 @@ constexpr size_t kPipeMinCapacity = 0;
 // Pipes 
 class IDPipeIn0;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
-    IDPipeIn0,  
+    IDPipeIn0,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;   
     
 class IDPipeIn1;
 using PipeIn1 = sycl::ext::intel::experimental::pipe<
-    IDPipeIn1,       // An identifier for the pipe
+    IDPipeIn1,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
 class IDPipeAB;
 using PipeAB = sycl::ext::intel::pipe<
-    IDPipeAB,        // An identifier for the pipe
+    IDPipeAB,         // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
 class IDPipeBC;
 using PipeBC = sycl::ext::intel::pipe<
-    IDPipeBC,        // An identifier for the pipe
+    IDPipeBC,         // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
 class IDPipeCD;
 using PipeCD = sycl::ext::intel::pipe<
-    IDPipeCD,        // An identifier for the pipe
+    IDPipeCD,         // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
 class IDPipeAD;
 using PipeAD = sycl::ext::intel::pipe<
-    IDPipeAD,        // An identifier for the pipe
+    IDPipeAD,         // An identifier for the pipe
     int,              // The type of data in the pipe
-    kPipeMinCapacity  // CThe capacity of the pipe
+    kPipeMinCapacity  // The capacity of the pipe
     >;
 
 class IDPipeOut;
 using PipeOut = sycl::ext::intel::experimental::pipe<
-    IDPipeOut,       // An identifier for the pipe
-    int,           // The type of data in the pipe
+    IDPipeOut,        // An identifier for the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
