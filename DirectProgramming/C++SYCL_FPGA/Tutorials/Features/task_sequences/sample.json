@@ -52,7 +52,7 @@
         ]
       },
       {
-        "id": "report_2",
+        "id": "report_task_sequence",
         "steps": [
           "icpx --version",
           "mkdir build",
@@ -64,7 +64,7 @@
     ],
     "windows": [
       {
-        "id": "fpga_emu_1",
+        "id": "fpga_emu_naive",
         "steps": [
           "icpx --version",
           "cd ../../..",
@@ -87,7 +87,7 @@
         ]
       },
       {
-        "id": "fpga_emu_2",
+        "id": "fpga_emu_task_sequence",
         "steps": [
           "icpx --version",
           "cd ../../..",
@@ -99,7 +99,7 @@
         ]
       },
       {
-        "id": "report_2",
+        "id": "report_task_sequence",
         "steps": [
           "icpx --version",
           "cd ../../..",
