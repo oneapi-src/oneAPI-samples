@@ -2,11 +2,12 @@
 
 The sample is a getting started tutorial for the Intel® Neural Compressor (INC), and demonstrates how to perform INT8 quantization on a Hugging Face BERT model. This sample shows how to achieve performance boosts using Intel hardware.
 
-| Area                  | Description
+| Property              | Description
 |:---                   |:---
+| Category              | Code Optimization
 | What you will learn   | How to quantize a BERT model using Intel® Neural Compressor
 | Time to complete      | 20 minutes
-| Category              | Code Optimization
+
 
 ## Purpose
 
@@ -22,19 +23,6 @@ The sample starts by loading a BERT model from Hugging Face. After loading the m
 | Hardware                | Intel® Xeon® Scalable processor family
 | Software                | Intel® Neural Compressor, Intel Optimization for PyTorch
 
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Tools**
-
-  You can get the Intel AI Tools from [the product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI KitTools installation information and post-installation steps and scripts.
-
-- **Jupyter Notebook**
-
-  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
-
 ## Key Implementation Details
 
 The sample contains one Jupyter Notebook and one Python script.
@@ -49,14 +37,32 @@ The sample contains one Jupyter Notebook and one Python script.
 
 |Script                    |Description
 |:---                      |:---
-|`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
+|`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data
 
 
-## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
+## Environment Setup
 
-If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.  
+You will need to download and install the following toolkits, tools, and components to use the sample.
 
-### Steps for Intel AI Tools Offline Installer  
+- **Intel® AI Tools**
+
+  You can get the Intel AI Tools from [the product page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI KitTools installation information and post-installation steps and scripts.
+
+- **Jupyter Notebook**
+
+  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
+
+- **Install Python Library**
+```
+   python -m pip install -r requirements.txt
+   python -m pip install ipykernel
+   python -m ipykernel install --user --nam=pytorch
+```
+## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample
+
+If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+
+### Steps for Intel AI Tools Offline Installer
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -67,7 +73,7 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
- 
+
 #### Activate Conda
 
 1. Activate the Conda environment.
@@ -96,13 +102,18 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
 
 #### Troubleshooting
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.   
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 ## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
+
+## Related Samples
+
+[`Intel® Neural Compressor TensorFlow* Getting Started*` Sample](../INC-Sample-for-Tensorflow)
+
 ## License
 
 Code samples are licensed under the MIT license. See

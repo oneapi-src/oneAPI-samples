@@ -13,11 +13,12 @@
 	{
 		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
 			"conda env remove -n user_tensorflow",
-			"conda create -n user_tensorflow --clone tensorflow -y",
 			"conda activate user_tensorflow",
-			"conda install -n user_tensorflow python-flatbuffers -y",
-			"conda install -n user_tensorflow -c intel neural-compressor -y",
-			"conda install -n user_tensorflow runipy notebook -y"
+			"conda install -n user_tensorflow pycocotools -c esri -y",
+			"conda install -n user_tensorflow neural-compressor tensorflow python-flatbuffers -c conda-forge -c intel -y",
+			"conda install -n user_tensorflow jupyter runipy notebook -y",
+			"conda install -c anaconda ipykernel",
+			"python -m ipykernel install --user --nam=user_tensorflow"
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
