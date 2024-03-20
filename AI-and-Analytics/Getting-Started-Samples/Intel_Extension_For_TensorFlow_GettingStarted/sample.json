@@ -27,7 +27,8 @@
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate tensorflow"
+				"conda activate tensorflow",
+				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
 			]
 		}]
 	},
