@@ -41,7 +41,7 @@
         ]
       },
       {
-        "id": "fpga_emu_2",
+        "id": "fpga_emu_task_sequence",
         "steps": [
           "icpx --version",
           "mkdir build",
