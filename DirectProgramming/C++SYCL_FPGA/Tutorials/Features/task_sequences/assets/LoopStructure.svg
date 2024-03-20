@@ -64,7 +64,6 @@
 				<v:textBlock v:margins="rect(1,1,1,1)" v:tabSpace="42.5197"/>
 				<v:textRect cx="36.9094" cy="310.446" width="108" height="18"/>
 				<path d="M43.25 303.36 A18.5683 18.5683 0 1 1 48.03 334.64 L47.72 334.45" class="st2"/>
-				<rect v:rectContext="textBkgnd" x="20.0784" y="303.246" width="33.6621" height="14.4001" class="st4"/>
 				<text x="20.08" y="314.05" class="st5" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Loop A</text>			</g>
 		</g>
 		<g id="group7-14" transform="translate(5.87008,-179.79)" v:mID="7" v:groupContext="group">
@@ -86,7 +85,6 @@
 				<v:textBlock v:margins="rect(1,1,1,1)" v:tabSpace="42.5197"/>
 				<v:textRect cx="36.9094" cy="310.446" width="108" height="18"/>
 				<path d="M43.25 303.36 A18.5683 18.5683 0 1 1 48.03 334.64 L47.72 334.45" class="st2"/>
-				<rect v:rectContext="textBkgnd" x="20.2863" y="303.246" width="33.2463" height="14.4001" class="st4"/>
 				<text x="20.29" y="314.05" class="st5" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Loop B</text>			</g>
 		</g>
 		<g id="group10-25" transform="translate(5.87008,-90.4985)" v:mID="10" v:groupContext="group">
@@ -108,7 +106,6 @@
 				<v:textBlock v:margins="rect(1,1,1,1)" v:tabSpace="42.5197"/>
 				<v:textRect cx="36.9094" cy="310.446" width="108" height="18"/>
 				<path d="M43.25 303.36 A18.5683 18.5683 0 1 1 48.03 334.64 L47.72 334.45" class="st2"/>
-				<rect v:rectContext="textBkgnd" x="20.3509" y="303.246" width="33.1172" height="14.4001" class="st4"/>
 				<text x="20.35" y="314.05" class="st5" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Loop C</text>			</g>
 		</g>
 		<g id="group13-36" transform="translate(94.4528,-1.20719)" v:mID="13" v:groupContext="group">
@@ -130,40 +127,35 @@
 				<v:textBlock v:margins="rect(1,1,1,1)" v:tabSpace="42.5197"/>
 				<v:textRect cx="36.9094" cy="310.446" width="108" height="18"/>
 				<path d="M43.25 303.36 A18.5683 18.5683 0 1 1 48.03 334.64 L47.72 334.45" class="st2"/>
-				<rect v:rectContext="textBkgnd" x="19.8587" y="303.246" width="34.1016" height="14.4001" class="st4"/>
 				<text x="19.86" y="314.05" class="st5" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Loop D</text>			</g>
 		</g>
 		<g id="shape16-47" v:mID="16" v:groupContext="shape" v:layerMember="0" transform="translate(148.783,-269.081)">
 			<title>Dynamic connector</title>
-			<desc>StreamAB</desc>
+			<desc>AB</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="-52.8792" cy="330.205" width="42.14" height="17.6036"/>
 			<path d="M0 317.53 L0 330.2 L-88.58 330.2 L-88.58 353.01" class="st6"/>
-			<rect v:rectContext="textBkgnd" x="-69.0428" y="325.405" width="32.3275" height="9.59985" class="st4"/>
-			<text x="-69.04" y="332.6" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>StreamAB</text>		</g>
+			<text x="-69.04" y="328.5" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>AB</text>		</g>
 		<g id="shape17-55" v:mID="17" v:groupContext="shape" v:layerMember="0" transform="translate(53.1142,-179.79)">
 			<title>Dynamic connector.17</title>
-			<desc>Stream BC</desc>
+			<desc>BC</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="7.08661" cy="338.792" width="43.59" height="17.6036"/>
 			<path d="M7.09 317.53 L7.09 353.01" class="st6"/>
-			<rect v:rectContext="textBkgnd" x="-9.79981" y="333.993" width="33.7731" height="9.59985" class="st4"/>
-			<text x="-9.8" y="341.19" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Stream BC</text>		</g>
+			<text x="-9.8" y="341.19" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>BC</text>		</g>
 		<g id="shape18-62" v:mID="18" v:groupContext="shape" v:layerMember="0" transform="translate(60.2008,-90.4985)">
 			<title>Dynamic connector.18</title>
-			<desc>Stream CD</desc>
+			<desc>CD</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="52.8792" cy="330.205" width="44.16" height="17.6036"/>
 			<path d="M0 317.53 L0 330.2 L88.58 330.2 L88.58 353.01" class="st6"/>
-			<rect v:rectContext="textBkgnd" x="35.7075" y="325.405" width="34.3435" height="9.59985" class="st4"/>
-			<text x="35.71" y="332.6" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Stream CD</text>		</g>
+			<text x="35.71" y="328.5" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>CD</text>		</g>
 		<g id="shape19-69" v:mID="19" v:groupContext="shape" v:layerMember="0" transform="translate(141.697,-269.081)">
 			<title>Dynamic connector.19</title>
-			<desc>Stream AD</desc>
+			<desc>AD</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="7.08661" cy="428.084" width="44.52" height="17.6036"/>
 			<path d="M7.09 317.53 L7.09 531.59" class="st6"/>
-			<rect v:rectContext="textBkgnd" x="-10.2666" y="423.284" width="34.7066" height="9.59985" class="st4"/>
-			<text x="-10.27" y="430.48" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>Stream AD</text>		</g>
+			<text x="-10.27" y="430.48" class="st8" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>AD</text>		</g>
 	</g>
 </svg>
