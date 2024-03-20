@@ -1,0 +1,25 @@
+{
+  "guid": "8edb16f3-db2e-42cb-9d96-ac999a793b39",
+  "name": "Embree Intro Jupyter Learning Path",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "Embree minimal Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
+  "os":["linux"],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["pvc"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Embree_Intro_Jupyter_Learning_Path_Linux",
+                "steps": [
+                    "./build_CPU.sh",
+                    "./run_CPU.sh",
+                    "./build_GPU.sh",
+                    "./run_GPU.sh"
+                 ]
+                 }
+        ]
+  }
+}
