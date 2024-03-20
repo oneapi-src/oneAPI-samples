@@ -1,0 +1,25 @@
+{
+  "guid": "69ac52f7-bcf4-4c26-b4ac-f9b571608992",
+  "name": "OpenVkL Intro Jupyter Learning Path",
+  "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
+  "description": "Open VKL minimal Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
+  "os":["linux"],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["pvc"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "OpenVkL_Intro_Jupyter_Learning_Path_Linux",
+                "steps": [
+                    "./build_CPU.sh",
+                    "./run_CPU.sh",
+		                "./build_GPU.sh",
+		                "./run_GPU.sh"
+                 ]
+                 }
+        ]
+  }
+}
