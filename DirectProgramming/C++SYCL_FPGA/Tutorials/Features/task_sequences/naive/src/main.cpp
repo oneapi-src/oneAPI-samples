@@ -17,29 +17,28 @@ class IDNaive;
 // Minimum capacity of a pipe.
 // Set to 0 to let compiler decides on the pipe capacity.
 constexpr size_t kPipeMinCapacity = 0;
-constexpr size_t kPipeMinCapacity = 0;
 
 // Pipes
-class PipeIn0_ID;
+class IDPipeIn0;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeIn0_ID,       // An identifier for the pipe
+    IDPipeIn0,       // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeIn1_ID;
+class IDPipeIn1;
 using PipeIn1 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeIn1_ID,       // An identifier for the pipe
+    IDPipeIn1,       // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeOut_ID;
+class IDPipeOut;
 using PipeOut = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeOut_ID,       // An identifier for the pipe
+    IDPipeOut,       // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
@@ -50,41 +49,41 @@ struct NaiveKernel {
   int len;
 
   void operator()() const {
-    int arrAB[kVectSize];
-    int arrBC[kVectSize];
-    int arrCD[kVectSize];
-    int arrAD[kVectSize];
+    int array_a_b[kVectSize];
+    int array_b_c[kVectSize];
+    int array_c_d[kVectSize];
+    int array_a_d[kVectSize];
 
     // loopA
     [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
       int in0 = PipeIn0::read();
       int in1 = PipeIn1::read();
-      arrAB[i] = in0;
-      arrAD[i] = in1;
+      array_a_b[i] = in0;
+      array_a_d[i] = in1;
     }
 
     // loopB
     [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
-      int tmp = arrAB[i];
+      int tmp = array_a_b[i];
       tmp += i;
-      arrBC[i] = tmp;
+      array_b_c[i] = tmp;
     }
 
     // loopC
     [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
-      int tmp = arrBC[i];
+      int tmp = array_b_c[i];
       tmp += i;
-      arrCD[i] = tmp;
+      array_c_d[i] = tmp;
     }
 
     // loopD
     [[intel::initiation_interval(1)]]  
     for (size_t i = 0; i < len; i++) {
-      int tmp0 = arrCD[i];
-      int tmp1 = arrAD[i];
+      int tmp0 = array_c_d[i];
+      int tmp1 = array_a_d[i];
       int out = tmp0 + tmp1;
       PipeOut::write(out);  
     }

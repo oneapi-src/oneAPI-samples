@@ -19,64 +19,59 @@ class IDOptimized;
 constexpr size_t kPipeMinCapacity = 0;
 
 // Pipes 
-class PipeIn0_ID;
+class IDPipeIn0;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeIn0_ID,       // An identifier for the pipe
-    int,              // The type of data in the pipe
-    kPipeMinCapacity  // The capacity of the pipe
-    >;
-
-class PipeIn1_ID;
+    PipeIn0_ID,     class IDNaive;
 using PipeIn1 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeIn1_ID,       // An identifier for the pipe
+    IDPipeIn1,       // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeAB_ID;
+class IDPipeAB;
 using PipeAB = sycl::ext::intel::pipe<
     // Usual pipe parameters
-    PipeAB_ID,        // An identifier for the pipe
+    IDPipeAB,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeBC_ID;
+class IDPipeBC;
 using PipeBC = sycl::ext::intel::pipe<
     // Usual pipe parameters
-    PipeBC_ID,        // An identifier for the pipe
+    IDPipeBC,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeCD_ID;
+class IDPipeCD;
 using PipeCD = sycl::ext::intel::pipe<
     // Usual pipe parameters
-    PipeCD_ID,        // An identifier for the pipe
+    IDPipeCD,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
-class PipeAD_ID;
+class IDPipeAD;
 using PipeAD = sycl::ext::intel::pipe<
     // Usual pipe parameters
-    PipeAD_ID,        // An identifier for the pipe
+    IDPipeAD,        // An identifier for the pipe
     int,              // The type of data in the pipe
     kPipeMinCapacity  // CThe capacity of the pipe
     >;
 
-class PipeOut_ID;
+class IDPipeOut;
 using PipeOut = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
-    PipeOut_ID,       // An identifier for the pipe
+    IDPipeOut,       // An identifier for the pipe
     int,           // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
 [[intel::use_stall_enable_clusters]] 
-void loopA(int len) {
+void LoopA(int len) {
   [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int in0 = PipeIn0::read();
@@ -88,7 +83,7 @@ void loopA(int len) {
 }
 
 [[intel::use_stall_enable_clusters]] 
-void loopB(int len) {
+void LoopB(int len) {
   [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeAB::read();
@@ -98,7 +93,7 @@ void loopB(int len) {
 }
 
 [[intel::use_stall_enable_clusters]] 
-void loopC(int len) {
+void LoopC(int len) {
   [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp = PipeBC::read();
@@ -108,7 +103,7 @@ void loopC(int len) {
 }
 
 [[intel::use_stall_enable_clusters]] 
-void loopD(int len) {
+void LoopD(int len) {
   [[intel::initiation_interval(1)]]  
   for (size_t i = 0; i < len; i++) {
     int tmp0 = PipeCD::read();
@@ -124,15 +119,15 @@ struct OptimizedKernel {
   int len;
 
   void operator()() const {
-    sycl::ext::intel::experimental::task_sequence<loopA> taskA;
-    sycl::ext::intel::experimental::task_sequence<loopB> taskB;
-    sycl::ext::intel::experimental::task_sequence<loopC> taskC;
-    sycl::ext::intel::experimental::task_sequence<loopD> taskD;
+    sycl::ext::intel::experimental::task_sequence<LoopA> task_a;
+    sycl::ext::intel::experimental::task_sequence<LoopB> task_b;
+    sycl::ext::intel::experimental::task_sequence<LoopC> task_c;
+    sycl::ext::intel::experimental::task_sequence<LoopD> task_d;
 
-    taskA.async(len);
-    taskB.async(len);
-    taskC.async(len);
-    taskD.async(len);
+    task_a.async(len);
+    task_b.async(len);
+    task_c.async(len);
+    task_d.async(len);
   }
 };
 
