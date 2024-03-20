@@ -18,7 +18,7 @@
                     "sh ./run_tutorial_CPU.sh",
                     "sh ./run_tutorial_GPU.sh",
                     "sh ./build_denoise.sh",
-                    "sh ./run_tutorial.sh"
+                    "sh ./run_denoise.sh"
                  ]
                  }
         ]
