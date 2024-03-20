@@ -14,8 +14,6 @@ constexpr int kVectSize = 128;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class IDOptimized;
 
-using ValueT = int;
-
 // Minimum capacity of a pipe.
 // Set to 0 to let compiler decides on the pipe capacity.
 constexpr size_t kPipeMinCapacity = 0;
@@ -25,7 +23,7 @@ class PipeIn0_ID;
 using PipeIn0 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     PipeIn0_ID,       // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
@@ -33,7 +31,7 @@ class PipeIn1_ID;
 using PipeIn1 = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     PipeIn1_ID,       // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
@@ -41,7 +39,7 @@ class PipeAB_ID;
 using PipeAB = sycl::ext::intel::pipe<
     // Usual pipe parameters
     PipeAB_ID,        // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
@@ -49,7 +47,7 @@ class PipeBC_ID;
 using PipeBC = sycl::ext::intel::pipe<
     // Usual pipe parameters
     PipeBC_ID,        // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
@@ -57,7 +55,7 @@ class PipeCD_ID;
 using PipeCD = sycl::ext::intel::pipe<
     // Usual pipe parameters
     PipeCD_ID,        // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
@@ -65,7 +63,7 @@ class PipeAD_ID;
 using PipeAD = sycl::ext::intel::pipe<
     // Usual pipe parameters
     PipeAD_ID,        // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,              // The type of data in the pipe
     kPipeMinCapacity  // CThe capacity of the pipe
     >;
 
@@ -73,7 +71,7 @@ class PipeOut_ID;
 using PipeOut = sycl::ext::intel::experimental::pipe<
     // Usual pipe parameters
     PipeOut_ID,       // An identifier for the pipe
-    ValueT,           // The type of data in the pipe
+    int,           // The type of data in the pipe
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
