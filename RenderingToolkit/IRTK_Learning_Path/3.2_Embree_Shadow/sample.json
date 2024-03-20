@@ -13,8 +13,8 @@
                 {
                 "id": "Embree_Shadow_Jupyter_Learning_Path_Linux",
                 "steps": [
-                    "./build.sh",
-                    "./run.sh"
+                    "sh ./build.sh",
+                    "sh ./run.sh"
                  ]
                  }
         ]
