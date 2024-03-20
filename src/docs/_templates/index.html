@@ -11,9 +11,9 @@
 
     <div class="grid-row"> 
 
-        <div class="col"> <!--#1-->
+        <div class="col wht-outline"> <!--#1-->
 
-            <div class="col-nav-left"> 
+            <div class="col-nav-grp"> 
 
                 <div class="logo" onclick="firstPage()"> 
                         <img src="_static/assets/logo-energyblue-white.svg" alt="Intel Logo" height="50" width="50">
@@ -30,34 +30,36 @@
             </div>
         </div>
 
-        <div class="col"><!--#2-->
+        <div class="col wht-outline"><!--#2-->
             #2
         </div>    
 
-        <div class="col"> <!--#3-->
+        <div class="col wht-outline"> <!--#3-->
             #3
         </div>
         
-        <div class="col"> <!--#4-->
+        <div class="col wht-outline"> <!--#4-->
             <div id="results-container">
                 <div id="qty-show-results" class="transparent"></div>
             </div>
-            <div id="total-records"></div> 
             #4
         </div>
 
 
         <div class="col wht-outline"><!--#5-->
 
-                <figure>
-                    <a href="https://github.com/oneapi-src/oneAPI-samples">
-                    <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
-                    </a>
-                    <figcaption>View on GitHub*</figcaption>
-                </figure>
+            <div class="col-nav-grp"> 
+                <div id="total-records"></div> 
 
-
-            
+                <div>
+                    <figure>
+                        <a href="https://github.com/oneapi-src/oneAPI-samples">
+                        <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
+                        </a>
+                        <figcaption>View on GitHub*</figcaption>
+                    </figure>
+                </div>
+            </div>
 
        </div>
     </div>
@@ -75,148 +77,6 @@
         <button class='arrow right' onclick="nextPage()"></button>
     </div>
     
-    <!-- <div class="filter-input-wrapper">
-
-                <input id="collapsible" class="toggle" type="checkbox">
-                <label for="collapsible" class="label-toggle">
-                    <span class="filter-text">Filter</span>
-                        <span title="Reset Filters">
-                            <button  onclick="resetFiltersGoHome()" class="filter-btn">
-                                <i class="fa-solid fa-filter-circle-xmark fa-2xl"></i>
-                            </button>
-                        </span>
-                </label> -->
-
-            <!-- <div class="collapsible-content">
-
-                <div class="filter-content"> 
-
-                <form id="filter-menu">
-                        <div class="filter-children expertise-checkboxes"> 
-
-                            <span class="badge-col-head">
-                                <div class="circle badge1-circle">
-                                </div> Expertise
-                            </span>
-
-                            <div id="expertise-col">
-                                <span class="checkmark"> 
-                                    <input type="checkbox" class="checkoption" value="getStart" name="data-filter"/> 
-                                    <label class="container-filter">
-                                        Getting Started
-                                    </label>
-                                </span>
-                                <span class="checkmark"> 
-                                    <input type="checkbox" class="checkoption" value="tutorial"  name="data-filter"/>
-                                    <label class="container-filter">
-                                        Tutorial
-                                    </label>
-                                </span>
-
-                                <span class="checkmark"> 
-                                    <input type="checkbox" class="checkoption" value="conFunc"  name="data-filter"/>
-                                    <label class="container-filter">
-                                        Concepts and Functionality
-                                    </label>
-                                </span>
-                                
-                                <span class="checkmark"> 
-                                    <input type="checkbox" class="checkoption" value="refDesEnd2End"  name="data-filter"/>
-                                    <label class="container-filter">
-                                        Reference Designs and End to End
-                                    </label>
-                                </span>
-
-                                <span class="checkmark"> 
-                                    <input type="checkbox" class="checkoption" value="codeOpt"  name="data-filter"/>
-                                    <label class="container-filter">
-                                        Code Optimization
-                                    </label>
-                                </span>
-                            </div>
-                        </div>
-                </form> -->
-
-                    <!-- <div class="filter-children language-checkboxes">
-
-                        <span class="badge-col-head">
-                            <div class="circle badge2-circle">
-                            </div>Language
-                        </span> -->
-
-                        <!-- <div id="">
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="cpp" name="data-filter"/> 
-                                <label class="container-filter">
-                                    CPP
-                                </label>
-                            </span>
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="fortran" name="data-filter"/>
-                                <label class="container-filter">
-                                    Fortran
-                                </label>
-                            </span>
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="python" name="data-filter"/>
-                                <label class="container-filter">
-                                    Python
-                                </label>
-                            </span>
-                        </div> -->
-                    <!-- </div> -->
-                    
-                    <!-- <div class="filter-children device-checkboxes"> 
-    
-                        <span class="badge-col-head"> 
-                            <div class="circle badge3-circle"></div>
-                            Target Device
-                        </span>
-                                        
-                        <div> 
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="cpu" name="data-filter"/> 
-                                <label class="container-filter">
-                                    CPU
-                                </label>
-                            </span>
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="gpu" name="data-filter"/>
-                                <label class="container-filter">
-                                    GPU
-                                </label>
-                            </span>
-                            <span class="checkmark"> 
-                                <input type="checkbox" value="fpga" name="data-filter"/>
-                                <label class="container-filter">
-                                    FPGA
-                                </label>
-                            </span>
-                        </div>      
-                    </div>
-                 </div>
-            </div> -->
-     
-    <!-- </div> -->
-
-    <!-- HIDE TEMPLATE @ DEV
-    <div class="toolkit-cards" data-toolkit-cards-container> </div>
-        <template data-toolkit-template >
-            <li class="card grid">
-                <div class="card-title" data-header></div>
-                    <div class="card-desc" data-body></div>
-                        <div class="badges-container"> 
-                            <p class="badges badge1" data-expertise></p>
-                            <p class="badges badge2" data-languages></p>
-                            <p class="badges-devices" data-targetDevice></p>
-                            <div url></div>
-                        </div>
-                    </div>
-                </div> 
-            </li>
-        </template>
-    </div>
-    -->
     <div class='template-wrapper'>
     
     <div class='row'>
@@ -234,7 +94,7 @@
                                     id="textInput" 
                                     class="searchBox" 
                                     name="searchInput" 
-                                    placeholder="Search..."
+                                    placeholder="Search toolkits..."
                                     onkeypress=onlyAlphaNumInput(event) 
                                     data-search
                             >
@@ -245,16 +105,7 @@
                 </div>
 
 
-
-
-
-
-
-
-
-
-
-                  <h2 class="accordion-header" id="headingOne">
+                  <div class="accordion-header" id="headingOne">
                     <button 
                         class="accordion-button collapsed" 
                         type="button" 
@@ -265,7 +116,7 @@
                     >
                       Filters
                     </button>
-                  </h2>
+                </div>
                   <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <!--TEST-->
@@ -274,7 +125,6 @@
                             <div class="filter-children expertise-checkboxes"> 
     
                                 <span class="badge-col-head">
-                                    <!-- <div class="circle badge1-circle"> </div> -->
                                     Expertise
                                 </span>
     

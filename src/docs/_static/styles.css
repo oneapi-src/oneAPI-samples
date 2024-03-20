@@ -155,7 +155,7 @@ body {
   }
 
 .filter-text {
-  font-family: var(--bs-header-font-family);
+  font-family: var(--bs-header-font-family) !important;
   font-weight: normal;
   font-weight: 400;
   font-size: 24px;
@@ -252,7 +252,7 @@ input[type=checkbox] label{
   display: inline;
   max-width: 350px;
   max-height: 300px;
-  padding: 10px;
+  /* padding: 10px; */
   /* background: -webkit-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));  
   background: -moz-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));   
   background: -o-linear-gradient(rgba(252,252,252,99),rgba(224,224,224,88));  
@@ -326,14 +326,13 @@ input[type=checkbox] label{
 
 .badge-col-head {
   font-family: var(--bs-header-font-family);
-  font-weight: normal;
-  font-weight: 600;
+  font-weight: bold;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   column-gap: 0.875rem;
   margin-bottom: 5px;
-  font-weight:700;
+  font-weight:600;
 }
 
 .badge1 {
@@ -420,6 +419,8 @@ input[type=button] > #nobutton {
   /* font-size: 18px; */
   font-weight: normal; 
   font-weight: 400;
+  color: rgb(255,255,255);
+  margin-top: 35px;
 }
 
 .logo {
@@ -428,7 +429,8 @@ input[type=button] > #nobutton {
 
 .grid-row {
   display: flex;
-  grid-template-columns: minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px) minmax(30px, 40px);
+  grid-template-columns: minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px);
+  /* See col-nav-grp padding*/
   background-color: rgb(0,84,174);
   width: 100%;
   text-align: center;
@@ -474,7 +476,7 @@ input[type=button] > #nobutton {
   margin-right: 12px;
 }
 
-.col-nav-left{
+.col-nav-grp{
   font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
   font-size: 18px;
   font-weight: normal; 
@@ -482,6 +484,7 @@ input[type=button] > #nobutton {
   display: flex;
   direction: row;
   overflow: hidden;
+  /* padding:  12px 0px 15px 20px; */
 } 
 
 .search-container{
@@ -493,7 +496,7 @@ input[type=button] > #nobutton {
 .search-widget {
   display: flex;
   justify-content: center;
-  padding-left: 4%; /* offset to right; treat searchbar + X as one*/
+  padding-left: 0.25em; /* offset to right; treat searchbar + X as one*/
   /* padding-bottom: 2%; */
   padding-top: 0.5em;
   padding-bottom: 0.25em; 
@@ -511,14 +514,13 @@ input[type=button] > #nobutton {
 }
 
 .search-widget .fa-remove { 
-  color: rgba(255,255,255,100);
   position: relative;
-  top: 2px;
-  left: 4px; 
+  top: 5px;
+  left: 2px; 
   outline: none;
   border: none;
   z-index: 25;
-  font-size: 28px;
+  font-size: 20px;
   /* opacity: .75; */
 }
 
@@ -574,6 +576,7 @@ input[type=button] > #nobutton {
 
 .fa-remove {
   padding-left: 0px;
+  color: rgb(128,128,128) !important;
 }
 
 .fa-home {
@@ -606,34 +609,38 @@ input::placeholder {
   color: rgba(128,128,128,0.8);
   z-index: 12;
 }
+
 ::-webkit-input-placeholder { /* Edge */
   color: rgba(128,128,128,0.8);
   z-index: 12;
 }
+
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
   color: rgba(128,128,128,0.8);
   z-index: 12;
 }
 
 .search-widget .searchBox {
-  font-family:var(--bs-header-font-family);
-  /* font-style:normal;
-  font-weight: 400; */
-  display: inline-flex;
+  /* font-family:var(--bs-header-font-family); */
+  font-family: var(--bs-body-font-family);
+  display: flex; /* inline-flex */
   flex: 1 1 350px;
-  /* height: 8%;
+  overflow: hidden;
   min-height: 5%;
-  width: 10%; */
-  background-color: rgba(233,233,233,91);
+  width: 10%; 
   border-radius: 10px;
   outline: none;
   border: none;
-  padding-left: 1.25em; /* left-indent the input text */
-  /*margin-right: -2px;  pull to left .fa-remove button closer to searchBox */
+  padding-left: 1.5em; /* left-indent input text for search */
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   z-index: 10;
 }
+
+.search-widget .searchBox:hover {
+  background-color: rgba(231, 241, 255, 1);
+}
+
 
 .search-widget .searchBox:focus{
   color: rgba(82,82,82,32); 
@@ -668,8 +675,8 @@ input:hover {
   margin: 0 auto; /* center card-grid in viewport */
   display: grid;
   grid-template-columns: minmax(360px, 480px) minmax(360px, 480px) minmax(360px, 480px);
-  grid-gap: .50rem;
-  margin-top: 1rem;
+  grid-gap: .5rem;
+  /* margin-top: .5rem; */
   margin-bottom: 2rem;
 }
 
@@ -764,7 +771,8 @@ input:hover {
   font-family: var(--bs-header-font-family);
   font-weight: normal;
   font-weight: 400;
-  padding-top: 1.25rem;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -902,7 +910,7 @@ label{
   display: flex;
   direction: row;
   align-items: center;
-  row-gap: 2px;
+  line-height: 1.25em;
 }
 
 /* Create the indicator (the dot/circle - hidden when not checked) */
@@ -1185,16 +1193,19 @@ a:hover {
 
 .left-column {
   background-color: #E9E9E9;
+  border-radius: 7px;
   height: 100vh;
   flex: 20%;
+  margin-top: 1.5rem;
 }
 
 .right-column {
   background-color: transparent;
   height: 100vh;
   flex: 80%;
-  outline: dotted;
-  outline-color: blue;
+  margin-top: -10px;
+  /* outline: dashed; */
+  /* outline-color: deeppink; */
 }
 
 /* Add bootstrap 5.1 classes for collapse */
@@ -1215,6 +1226,14 @@ a:hover {
   height: 100vh;
   width:fit-content;
 }
+
+.accordion-button {
+  font-family: var(--bs-header-font-family)!important;
+  font-weight: bold;
+  color: rgb(0,84,174) !important;
+  border-radius: 7px;
+}
+
 
 .accordion-button.collapsed {
   background-color:#E9E9E9;
