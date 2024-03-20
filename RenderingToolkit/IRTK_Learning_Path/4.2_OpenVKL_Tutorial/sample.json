@@ -14,10 +14,10 @@
                 {
                 "id": "OpenVkL_Tutorial_Jupyter_Learning_Path_Linux",
                 "steps": [
-                    "./build_CPU.sh",
-                    "./run_CPU.sh",
-		                "./build_GPU.sh",
-		                "./run_GPU.sh"
+                    "sh ./build_CPU.sh",
+                    "sh ./run_CPU.sh",
+		                "sh ./build_GPU.sh",
+		                "sh ./run_GPU.sh"
                  ]
                  }
         ]
