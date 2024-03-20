@@ -13,7 +13,7 @@ all:
 
 	icpx -fsycl -I 04_SYCL_Migration_MatrixMul_CuBlas/sycl_migrated/Common -I 04_SYCL_Migration_MatrixMul_CuBlas/sycl_migrated/include 04_SYCL_Migration_MatrixMul_CuBlas/sycl_migrated/Samples/4_CUDA_Libraries/matrixMulCUBLAS/*.cpp -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -o bin/app6 -w
 
-	icpx -fsycl -I 05_SYCL_Migration_OceanFFT/sycl_migrated/Common -I 05_SYCL_Migration_OCeanFFT/sycl_migrated/data -I 05_SYCL_Migration_OceanFFT/sycl_migrated/include 05_SYCL_Migration_OceanFFT/sycl_migrated/Samples/4_CUDA_Libraries/oceanFFT/*.cpp -qmkl -o bin/app7 -w && cp -rf 05_SYCL_Migration_OceanFFT/sycl_migrated/data/* bin/
+	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 05_SYCL_Migration_OceanFFT/sycl_migrated/Common -I 05_SYCL_Migration_OCeanFFT/sycl_migrated/data -I 05_SYCL_Migration_OceanFFT/sycl_migrated/include 05_SYCL_Migration_OceanFFT/sycl_migrated/Samples/4_CUDA_Libraries/oceanFFT/*.cpp -qmkl -o bin/app7 -w && cp -rf 05_SYCL_Migration_OceanFFT/sycl_migrated/data/* bin/
 
 run:
 	bin/app1
