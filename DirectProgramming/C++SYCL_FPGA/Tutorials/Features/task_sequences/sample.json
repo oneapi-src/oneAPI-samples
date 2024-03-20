@@ -2,7 +2,7 @@
   "guid": "AE05DF3B-27CD-4B2E-9698-1BD204AC42D4",
   "name": "Task Sequences",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to achieve asynchronous parallelism within kernel",
+  "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to describe parallel loops in a single kernel",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -20,7 +20,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu_1",
+        "id": "fpga_emu_naive",
         "steps": [
           "icpx --version",
           "mkdir build",
@@ -31,7 +31,7 @@
         ]
       },
       {
-        "id": "report_1",
+        "id": "report_naive",
         "steps": [
           "icpx --version",
           "mkdir build",
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "id": "report_1",
+        "id": "report_naive",
         "steps": [
           "icpx --version",
           "cd ../../..",
