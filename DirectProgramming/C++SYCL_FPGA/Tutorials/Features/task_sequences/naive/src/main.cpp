@@ -14,7 +14,7 @@ constexpr int kVectSize = 128;
 class IDNaive;
 
 // Minimum capacity of a pipe.
-// Set to 0 to let compiler decides on the pipe capacity.
+Set to 0 to allow the compiler to save area if possible.
 constexpr size_t kPipeMinCapacity = 0;
 
 // Pipes
