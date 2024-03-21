@@ -18,8 +18,11 @@
 
 template<typename Type, int>
 class k_MonteCarlo; // can be useful for profiling
+template<typename Type>
+class k_initialize_state; // can be useful for profiling
 
-int main(int argc, char** argv)
+template <typename DataType>
+void run()
 {
     try {
         std::cout << "MonteCarlo European Option Pricing in " <<
@@ -97,7 +100,7 @@ int main(int argc, char** argv)
         auto rng_states_uptr = std::unique_ptr<EngineType, decltype(deleter)>(sycl::malloc_device<EngineType>(n_states, my_queue), deleter);
         auto* rng_states = rng_states_uptr.get();
 
-        my_queue.parallel_for<class k_initialize_state>(
+        my_queue.parallel_for<k_initialize_state<DataType>>(
             sycl::range<1>(n_states),
             std::vector<sycl::event>{rng_event_1, rng_event_2, rng_event_3},
             [=](sycl::item<1> idx) {
@@ -179,5 +182,18 @@ int main(int argc, char** argv)
         std::cout << e.what();
         exit(1);
     }
-    return 0;
+}
+
+int main(int argc, char** argv){
+    bool is_fp64 = true;
+    {
+        sycl::queue test_queue;
+        is_fp64 = test_queue.get_device().has(sycl::aspect::fp64);
+    }
+    if (is_fp64) {
+        run<double>();
+    } else {
+        std::cout<<"Warning: could not find a device with double precision support. Single precision is used."<<std::endl;
+        run<float>();
+    }
 }

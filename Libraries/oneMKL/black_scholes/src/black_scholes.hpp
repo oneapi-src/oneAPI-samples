@@ -15,9 +15,9 @@
 #define MINOR 6
 /******* VERSION *******/
 
-#ifndef DATA_TYPE
-#define DATA_TYPE double
-#endif
+// #ifndef DATA_TYPE
+// #define DATA_TYPE double
+// #endif
 
 #ifndef VERBOSE
 #define VERBOSE 1
@@ -47,6 +47,7 @@ constexpr size_t opt_n =
 #define __VERSION__ __clang_major__
 #endif
 
+template<typename DATA_TYPE>
 class BlackScholes {
 public:
     BlackScholes();
@@ -80,7 +81,8 @@ void BlackScholesRefImpl(
     call_result = (S * N_d1 - L * std::exp(-r * t) * N_d2);
 }
 
-void BlackScholes::check()
+template<typename DATA_TYPE>
+void BlackScholes<DATA_TYPE>::check()
 {
     if (VERBOSE) {
         std::printf("Creating the reference result...\n");

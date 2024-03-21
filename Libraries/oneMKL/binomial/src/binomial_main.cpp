@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdio>
 #include <vector>
+#include <iostream>
 
 #include "binomial.hpp"
 
@@ -34,7 +35,8 @@ void BlackScholesRefImpl(double& callResult,
   callResult = (S * N_d1 - L * std::exp(-r * t) * N_d2);
 }
 
-void Binomial::check() {
+template<typename DATA_TYPE>
+void Binomial<DATA_TYPE>::check() {
   if (VERBOSE) {
     std::printf("Creating the reference result...\n");
     std::vector<double> h_call_result_host(opt_n);
@@ -64,8 +66,16 @@ void Binomial::check() {
 }
 
 int main(int argc, char** argv) {
-  Binomial test;
-  test.run();
-  test.check();
+  if(is_fp64()){
+    Binomial<double> test;
+    test.run();
+    test.check();
+  }
+  else{
+    std::cout<<"Warning: could not find a device with double precision support. Single precision is used."<<std::endl;
+    Binomial<float> test;
+    test.run();
+    test.check();
+  }
   return 0;
 }
