@@ -21,7 +21,7 @@
 			],
 			"id": "tensorflow_AMP_transfer_learning",
 			"steps": [
-				"jupyter nbconvert --to notebook --execute enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb"
+				""
 			]
 		}]
 	},
