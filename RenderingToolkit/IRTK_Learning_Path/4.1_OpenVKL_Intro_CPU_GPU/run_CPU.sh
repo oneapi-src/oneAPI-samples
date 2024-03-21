@@ -1,5 +1,5 @@
 #!/bin/sh
-source /opt/intel/oneapi/setvars.sh > /dev/null 2>&1
+source /opt/intel/oneapi/setvars.sh --force > /dev/null 2>&1
 /bin/echo "##" $(whoami) "is running vklMinimal_CPU_01 through 06"
 i=1
 while [ $i -le 6 ]; do

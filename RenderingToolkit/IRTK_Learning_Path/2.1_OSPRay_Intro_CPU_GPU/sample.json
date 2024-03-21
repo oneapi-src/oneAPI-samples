@@ -1,5 +1,5 @@
 {
-  "guid": "aa3d4df0-0e61-4290-8292-c9d77bb209ab",
+  "guid": "d199b348-94f4-4660-9631-3978ad1b7647",
   "name": "OSPRAY Intro Jupyter Learning Path",
   "categories": ["Toolkit/oneAPI Libraries/OSPRay"],
   "description": "OSPRAY ospTutorial tutorial Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
