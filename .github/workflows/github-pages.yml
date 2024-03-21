@@ -8,12 +8,18 @@ on:
  workflow_dispatch: 
 
 #  schedule:
-#    - cron: '55 13 * * *' 
+#    - cron: '55 13 * * *'
+
+# Top-level default; empty/no permissions 
+permissions: {}  
 
 jobs:
   pages:
     name: Build GitHub Pages
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # Above required for publishing to gh-pages; see auth on Ln 67-68
 
     steps:
     - name: Set up Python
