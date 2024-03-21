@@ -1,5 +1,5 @@
 {
-  "guid": "8edb16f3-db2e-42cb-9d96-ac999a793b39",
+  "guid": "12b6eb25-0c7e-4150-a4dd-e9efd7304f25",
   "name": "Embree Intro Jupyter Learning Path",
   "categories": ["Toolkit/oneAPI Libraries/Embree"],
   "description": "Embree minimal Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",

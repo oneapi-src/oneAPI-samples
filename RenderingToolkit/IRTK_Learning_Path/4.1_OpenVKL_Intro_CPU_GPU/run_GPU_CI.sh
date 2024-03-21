@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source /opt/intel/oneapi/setvars.sh --force > /dev/null 2>&1
 /bin/echo "##" $(whoami) "is running vklMinimal_GPU_01 through 06"
 i=1

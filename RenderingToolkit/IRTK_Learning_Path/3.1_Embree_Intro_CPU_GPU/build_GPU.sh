@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /opt/intel/oneapi/setvars.sh
+source /opt/intel/oneapi/setvars.sh --force
 
 export rkcommon_DIR=/opt/intel/oneapi/rkcommon/latest/lib/cmake/rkcommon
 

@@ -1,5 +1,5 @@
 {
-  "guid": "ef588b06-413a-492c-a2fb-1f00527ce254",
+  "guid": "61220483-bf14-41f9-a612-25aa0ee815b2",
   "name": "Embree Shadow Jupyter Learning Path",
   "categories": ["Toolkit/oneAPI Libraries/Embree"],
   "description": "Embree minimal-shadow Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU",

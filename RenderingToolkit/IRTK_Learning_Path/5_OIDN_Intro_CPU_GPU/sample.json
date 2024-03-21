@@ -1,5 +1,5 @@
 {
-  "guid": "aa0383a1-f4d1-4ccf-bc60-2e7f0979f0f3",
+  "guid": "895233da-3692-4506-b8cc-100bf3216a1c",
   "name": "OIDN Intro Jupyter Learning Path",
   "categories": ["Toolkit/oneAPI Libraries/Open Image Denoise"],
   "description": "Open Image Denoise minimal Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
