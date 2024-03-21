@@ -1,0 +1,22 @@
+{
+  "guid": "61220483-bf14-41f9-a612-25aa0ee815b2",
+  "name": "Embree Shadow Jupyter Learning Path",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "Embree minimal-shadow Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Embree_Shadow_Jupyter_Learning_Path_Linux",
+                "steps": [
+                    "sh ./build.sh",
+                    "sh ./run.sh"
+                 ]
+                 }
+        ]
+  }
+}
