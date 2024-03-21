@@ -1,12 +1,12 @@
-# `Intel® Python XGBoost* Getting Started` Sample
+# Intel® Python XGBoost* Getting Started Sample
 
 The `Intel® Python XGBoost* Getting Started` sample demonstrates how to set up and train an XGBoost model on datasets for prediction.
 
 | Area                     | Description
 | :---                     | :---
+| Category                 | Getting Started
 | What you will learn      | The basics of XGBoost programming model for Intel CPUs
 | Time to complete         | 5 minutes
-| Category                 | Getting Started
 
 ## Purpose
 
@@ -24,11 +24,11 @@ In this code sample, you will learn how to use Intel optimizations for XGBoost p
 
 ## Key Implementation Details
 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
+- This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
 
-XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
+- XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
-## Configure Environment (Only applicable to Intel AI Tools Offline Installer)
+## Environment Setup (Only applicable to Intel AI Tools Offline Installer)
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -102,6 +102,11 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 RMSE: 11.113036205909719
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
+## Related Samples
+
+* [Intel® Python XGBoost Daal4py Prediction](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_XGBoost_daal4pyPrediction)
+* [Intel® Python Scikit-learn Extension Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted)
+
 
 ## License
 
@@ -109,3 +114,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
