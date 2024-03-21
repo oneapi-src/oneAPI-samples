@@ -14,7 +14,7 @@ constexpr int kVectSize = 128;
 class IDNaive;
 
 // Minimum capacity of a pipe.
-Set to 0 to allow the compiler to save area if possible.
+// Set to 0 to allow the compiler to save area if possible.
 constexpr size_t kPipeMinCapacity = 0;
 
 // Pipes
@@ -137,7 +137,7 @@ int main() {
         passed = false;
       }
     }
-    
+
     // Wait for kernel to exit
     e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
