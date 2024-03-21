@@ -62,7 +62,8 @@ static inline T CNDF_C(T input)
 }
 #endif // USE_CNDF_C
 
-void BlackScholes::body() {
+template<typename DATA_TYPE>
+void BlackScholes<DATA_TYPE>::body() {
     // this can not be captured to the kernel. So, we need to copy internals of the class to local variables
     DATA_TYPE* h_stock_price_local = this->h_stock_price;
     DATA_TYPE* h_option_years_local = this->h_option_years;
@@ -100,7 +101,8 @@ void BlackScholes::body() {
                 });
 }
 
-BlackScholes::BlackScholes()
+template<typename DATA_TYPE>
+BlackScholes<DATA_TYPE>::BlackScholes()
 {
     black_scholes_queue = new sycl::queue;
 
@@ -109,9 +111,6 @@ BlackScholes::BlackScholes()
     h_stock_price = sycl::malloc_shared<DATA_TYPE>(opt_n, *black_scholes_queue);
     h_option_strike = sycl::malloc_shared<DATA_TYPE>(opt_n, *black_scholes_queue);
     h_option_years = sycl::malloc_shared<DATA_TYPE>(opt_n, *black_scholes_queue);
-
-    black_scholes_queue->fill(h_call_result, 0.0, opt_n);
-    black_scholes_queue->fill(h_put_result, 0.0, opt_n);
 
     constexpr int rand_seed = 777;
     namespace mkl_rng = oneapi::mkl::rng;
@@ -130,7 +129,8 @@ BlackScholes::BlackScholes()
     sycl::event::wait({event_1, event_2, event_3});
 }
 
-BlackScholes::~BlackScholes()
+template<typename DATA_TYPE>
+BlackScholes<DATA_TYPE>::~BlackScholes()
 {
     sycl::free(h_call_result, *black_scholes_queue);
     sycl::free(h_put_result, *black_scholes_queue);
@@ -140,7 +140,8 @@ BlackScholes::~BlackScholes()
     delete black_scholes_queue;
 }
 
-void BlackScholes::run()
+template<typename DATA_TYPE>
+void BlackScholes<DATA_TYPE>::run()
 {
     std::printf("%s Precision Black&Scholes Option Pricing version %d.%d running on %s using DPC++, workgroup size %d, sub-group size %d.\n",
         sizeof(DATA_TYPE) > 4 ? "Double" : "Single", MAJOR, MINOR, black_scholes_queue->get_device().get_info<sycl::info::device::name>().c_str(), wg_size, sg_size);
@@ -171,9 +172,21 @@ void BlackScholes::run()
 
 int main(int const argc, char const* argv[])
 {
-    BlackScholes test{};
-    test.run();
-    test.check();
+    bool is_fp64 = true;
+    {
+        sycl::queue test_queue;
+        is_fp64 = test_queue.get_device().has(sycl::aspect::fp64);
+    }
+    if (is_fp64) {
+        BlackScholes<double> test{};
+        test.run();
+        test.check();
+    } else {
+        std::cout<<"Warning: could not find a device with double precision support. Single precision is used."<<std::endl;
+        BlackScholes<float> test{};
+        test.run();
+        test.check();
+    }
 
     return 0;
 }

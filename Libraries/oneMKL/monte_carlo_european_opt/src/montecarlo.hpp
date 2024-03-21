@@ -13,10 +13,6 @@
 #include <vector>
 #include <sycl/sycl.hpp>
 
-#ifndef DATA_TYPE
-#define DATA_TYPE double
-#endif
-
 #ifndef ITEMS_PER_WORK_ITEM
 #define ITEMS_PER_WORK_ITEM 4
 #endif
@@ -25,8 +21,6 @@
 #define VEC_SIZE 8
 #endif
 
-using DataType = DATA_TYPE;
-
 //Should be > 1
 constexpr int num_options = 384000;
 //Should be > 16
@@ -34,17 +28,18 @@ constexpr int path_length = 262144;
 //Test iterations
 constexpr int num_iterations = 5;
 
-constexpr DataType risk_free  = 0.06f;
-constexpr DataType volatility = 0.10f;
+constexpr float risk_free  = 0.06f;
+constexpr float volatility = 0.10f;
 
-constexpr DataType RLog2E = -risk_free * M_LOG2E;
-constexpr DataType MuLog2E = M_LOG2E * (risk_free - 0.5 * volatility * volatility);
-constexpr DataType VLog2E = M_LOG2E * volatility;
+constexpr float RLog2E = -risk_free * M_LOG2E;
+constexpr float MuLog2E = M_LOG2E * (risk_free - 0.5 * volatility * volatility);
+constexpr float VLog2E = M_LOG2E * volatility;
 
 template<typename MonteCarlo_vector>
 void check(const MonteCarlo_vector& h_CallResult, const MonteCarlo_vector& h_CallConfidence,
 const MonteCarlo_vector& h_StockPrice, const MonteCarlo_vector& h_OptionStrike, const MonteCarlo_vector& h_OptionYears)
 {
+    using DataType = typename MonteCarlo_vector::value_type;
     std::vector<DataType> h_CallResultRef(num_options);
 
     auto BlackScholesRefImpl = [](

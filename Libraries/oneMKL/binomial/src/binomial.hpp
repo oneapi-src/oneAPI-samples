@@ -9,10 +9,6 @@
 
 #include <chrono>
 
-#ifndef DATA_TYPE
-#define DATA_TYPE double
-#endif
-
 #ifndef VERBOSE
 #define VERBOSE 0
 #endif
@@ -45,6 +41,7 @@ constexpr int opt_n =
 #define __VERSION__ __clang_major__
 #endif
 
+template<typename DATA_TYPE>
 class Binomial {
  public:
   Binomial();
@@ -72,5 +69,7 @@ class timer {
  private:
   std::chrono::steady_clock::time_point t1_, t2_;
 };
+
+bool is_fp64();
 
 #endif  // __Binomial_HPP__
