@@ -39,7 +39,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 - The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
-## Environment Setup (Only applicable to AI Tools Offline Installer)
+## Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
