@@ -168,7 +168,6 @@ int main() {
 
     // Call the kernel
     auto e = q.single_task<IDOptimized>(OptimizedKernel{kVectSize});
-    e.wait();
 
     // verify that output is correct
     passed = true;
@@ -182,6 +181,8 @@ int main() {
       }
     }
 
+    // Wait for kernel to exit
+    e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
     delete[] a;

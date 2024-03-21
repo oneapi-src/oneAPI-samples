@@ -137,8 +137,9 @@ int main() {
         passed = false;
       }
     }
-// Wait for kernel to exit
-e.wait();
+    
+    // Wait for kernel to exit
+    e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
     delete[] a;
