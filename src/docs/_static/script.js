@@ -157,7 +157,7 @@ function resetSearcher() {
 
 function showTotalRecords() {
     const records = document.getElementById("total-records");
-    records.innerHTML = `Total Records: ${[...state.data].length}`;
+    records.innerHTML = `${[...state.data].length} Toolkits`;
 }
 
 function renderUi(data) {

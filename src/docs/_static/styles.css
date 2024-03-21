@@ -416,11 +416,13 @@ input[type=button] > #nobutton {
 
 #total-records{  
   font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
-  /* font-size: 18px; */
+  font-size: 18px;
+  color: rgb(0,84,174);
   font-weight: normal; 
   font-weight: 400;
-  color: rgb(255,255,255);
-  margin-top: 35px;
+  margin-top: 25px;
+  padding-left: 10px;
+  /* margin-left: 20px; */
 }
 
 .logo {
@@ -429,7 +431,8 @@ input[type=button] > #nobutton {
 
 .grid-row {
   display: flex;
-  grid-template-columns: minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px);
+  grid-template-columns:  25fr 16fr 18fr 16fr 25fr;
+  /* grid-template-columns: minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px); */
   /* See col-nav-grp padding*/
   background-color: rgb(0,84,174);
   width: 100%;
@@ -503,13 +506,14 @@ input[type=button] > #nobutton {
   position: relative;
   background-color: #E9E9E9;
   outline: none;
+  border-radius: 0 7px 0 0; /* */
 }
 
 
 .search-widget .fa-search { 
   position: relative;
-  top: 1.5em; /* Set vert pos from top of search icon */
-  left: 0.5em; /* Set horiz pos from left of search icon*/
+  top: 1.5em; /* Set icon vert pos from top */
+  left: 0.75em; /* Set icon horiz pos from left */
   z-index: 20;
 }
 
@@ -632,6 +636,7 @@ input::placeholder {
   outline: none;
   border: none;
   padding-left: 1.5em; /* left-indent input text for search */
+  margin-left: 0.25em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   z-index: 10;
@@ -658,9 +663,12 @@ input::placeholder {
   z-index: 5;
 }
 
-input:hover {
+
+input:focus {
   /* offset: offset-x | offset-y | blur-radius; */
-  box-shadow:  0px 1px 3px rgba(174,174,174,68);
+  -webkit-transition: box-shadow linear 1s;
+  transition: box-shadow linear 1s;
+  box-shadow:  0px 0px 10px rgba(118,206,255,0.8);
 }
 
 .all-wrapper{
@@ -678,6 +686,7 @@ input:hover {
   grid-gap: .5rem;
   /* margin-top: .5rem; */
   margin-bottom: 2rem;
+  padding-bottom: 100px;
 }
 
 .card {
@@ -767,12 +776,24 @@ input:hover {
   color: rgb(0,84,174);
 }
 
+.nav-page-row {
+  display: flex;
+  padding-top: 0.5em;
+  grid-template-columns:  25fr 16fr 18fr 16fr 25fr;
+  /* flex-direction: row; */
+  justify-content: space-between;
+  text-align: center;
+  align-items: stretch;
+  width: 100%;
+}
+
 .nav-ctrls {
   font-family: var(--bs-header-font-family);
   font-weight: normal;
   font-weight: 400;
-  padding-top: 0.25em;
+  padding-top: 0.5em;
   padding-bottom: 0.25em;
+  margin-left: 20px;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -1177,11 +1198,12 @@ a:hover {
   /* background-color: red; */
 }
 
-.row {
+.template-wrapper .row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  margin-left: -25px;
 }
 
 .column {
@@ -1192,23 +1214,29 @@ a:hover {
 }
 
 .left-column {
-  background-color: #E9E9E9;
-  border-radius: 7px;
   height: 100vh;
-  flex: 20%;
+  flex: 18%;
   margin-top: 1.5rem;
+  padding-left: 1.5em;
+  margin-right:-0.5em;
 }
 
 .right-column {
   background-color: transparent;
   height: 100vh;
-  flex: 80%;
+  flex: 82%;
   margin-top: -10px;
+  padding-bottom: 50px;
   /* outline: dashed; */
   /* outline-color: deeppink; */
 }
 
 /* Add bootstrap 5.1 classes for collapse */
+
+/* #stayOpen-collapseOne {
+
+} */
+
 
 .accordion-item { /* DROPDOWN */
   background-color: #E9E9E9;
@@ -1249,7 +1277,10 @@ a:hover {
   outline-color: #E9E9E9;
 }
 
-
+.blu-outline{
+  outline: dotted;
+  outline-color: deepskyblue;
+}
 
 /* .accordion {
   color: transparent;
