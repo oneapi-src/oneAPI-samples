@@ -10,7 +10,7 @@ This sample is an FPGA tutorial that demonstrates how to use task sequences to d
 
 ## Purpose
 
-Task sequences enable operations that we call 'task functions' to run asynchronously from the main flow of kernel. A `task_sequence` object allows repeated calls to a function to be enqueued in a sequence, rather than repeatedly in-lining the function body. A task sequence expresses coarse-grained thread-level parallelism, such as executing loops in parallel.
+Task sequences enable operations that we call 'task functions' to run asynchronously from the main flow of a kernel. This means that repeated calls to a function can be enqueued in a sequence, rather than repeatedly in-lining the function body. Including multiple task sequences in the same kernel expresses coarse-grained thread-level parallelism, such as executing loops in parallel. Illustrating this thread-level parallelism is the focus of this tutorial.
 
 ## Prerequisites
 
@@ -80,8 +80,9 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 | Task function      | callable | N/A           | A callable object `f` that defines the asynchronous task to be associated with the `task_sequence`. The callable object `f` must meet the following requirements: <br> • The object `f` must be statically resolvable at compile time, which means it is not a function pointer. <br> • The object `f` must not be an overloaded function. <br> • The return type (`ReturnT`) and argument types (`ArgsT…`) of object f must be resolvable and fixed.
 | Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls. This parameter value corresponds to the minimum number of outstanding `async()` function calls to be supported. When the outstanding number of `async()` function calls reaches this value, further calls may block until the number of outstanding calls is reduced to the `invocation_capacity`. The default value of this parameter is 1.
 | Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results. This parameter value corresponds to the maximum number of outstanding `async()` calls such that all outstanding tasks are guaranteed to make forward progress. Further `async()` calls may block until the number of outstanding calls reduces to the `response_capacity`. The default value of this parameter is 1.
-*Invocation capacity and response capacity are optional
-The following example shows how to use task Sequence.  
+*Invocation capacity and response capacity are optional 
+
+The following example shows how to use task sequence.  
 
 ```c++
 [[intel::use_stall_enable_clusters]] 
@@ -157,13 +158,6 @@ The 2 different example designs in this sample perform similar operations. You m
 2. [Task sequence](task_sequence/main.cpp) This implementation uses task sequences to schedule loops to run concurrently. Pipes are used to pass data between the loops.
 
 ## Build a Design
-
-Use the appropriate `TYPE` parameter when running CMake to choose which design to compile:
-| Example                                      | Directory             | Type (-DTYPE=) |
-|----------------------------------------------|-----------------------|----------------|
-| Naive                                        | naive/                | `NAIVE`        |
-| Task sequence                                | task-sequence/        | `TASK_SEQUENCE`|
-
 >**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 >
 > Linux*:
@@ -186,6 +180,12 @@ Use the appropriate `TYPE` parameter when running CMake to choose which design t
    cd build
    cmake .. -DTYPE=<NAIVE/TASK_SEQUENCE>
    ```
+   >Use the appropriate `TYPE` parameter when running CMake to choose which design to compile:
+   >| Example                                      | Directory             | Type (-DTYPE=) |
+   >|----------------------------------------------|-----------------------|----------------|
+   >| Naive                                        | naive/                | `NAIVE`        |
+   >| Task sequence                                | task-sequence/        | `TASK_SEQUENCE`|
+   
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<NAIVE/TASK_SEQUENCE>
@@ -220,6 +220,12 @@ Use the appropriate `TYPE` parameter when running CMake to choose which design t
    cd build
    cmake -G "NMake Makefiles" .. -DTYPE=<NAIVE/TASK_SEQUENCE>
    ```
+   >Use the appropriate `TYPE` parameter when running CMake to choose which design to compile:
+   >| Example                                      | Directory             | Type (-DTYPE=) |
+   >|----------------------------------------------|-----------------------|----------------|
+   >| Naive                                        | naive/                | `NAIVE`        |
+   >| Task sequence                                | task-sequence/        | `TASK_SEQUENCE`|
+   
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<NAIVE/TASK_SEQUENCE>
