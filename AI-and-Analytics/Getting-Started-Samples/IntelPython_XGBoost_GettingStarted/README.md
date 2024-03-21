@@ -28,71 +28,89 @@ In this code sample, you will learn how to use Intel optimizations for XGBoost p
 
 - XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
 
-## Environment Setup (Only applicable to Intel AI Tools Offline Installer)
-If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+## Environment Setup
 
+You will need to download and install the following toolkits, tools, and components to use the sample.
 
-### Activate Conda with Root Access
+**1. Get Intel® AI Tools**
 
-If you activated another environment, you can return with the following command:
+Required AI Tools: Intel® Optimization for XGBoost*
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+**2. Install dependencies**
 ```
-source activate base
+pip install -r requirements.txt
 ```
-### Activate Conda without Root Access (Optional)
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
-By default, the Intel® AI Tools are installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone and active your desired conda environment using the following commands:
+## Run the Sample
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted#environment-setup) is completed.
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
+
+### AI Tools Offline Installer (Validated)  
+1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
 ```
-conda create --name user_base --clone base
-source activate user_base
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
+2. Activate the Conda environment:
+```
+conda activate xgboost
+``` 
+3. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
 ```
 
-## Run the `Intel® Python XGBoost* Getting Started` Sample
+4. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+5. Follow the instructions to open the URL with the token in your browser.
+6. Select the Notebook:
+```
+IntelPython_XGBoost_GettingStarted.ipynb
+```
 
-### Install Jupyter Notebook
+7. Change the kernel to xgboost
+  
+8. Run every cell in the Notebook in sequence.
 
-1. Change to the sample directory.
-2. Install Jupyter Notebook with an appropriate kernel.
-   ```
-   conda install jupyter nb_conda_kernels
-   ```
-### Run Jupyter Notebook
+### Conda/PIP
+> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
+1. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
+```
+2. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+4. Follow the instructions to open the URL with the token in your browser.
+5. Select the Notebook:
+```
+IntelPython_XGBoost_GettingStarted.ipynb
+```
+6. Run every cell in the Notebook in sequence.
 
->**Note**: You cannot execute the sample in Jupyter Notebook, but you can still view inside the notebook to follow the included write-up and description.
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
-1. Change to the sample directory.
-2. Launch Jupyter Notebook.
-   ```
-   jupyter notebook
-   ```
-3. Locate and select the Notebook.
-   ```
-   IntelPython_XGBoost_GettingStarted.ipynb
-   ```
-4. Click the **Run** button to move through the cells in sequence.
 
-### Run the Python Script
-
-1. Still in Jupyter Notebook.
-
-2. Select **File** > **Download as** > **Python (py)**.
-3. Run the script.
-   ```
-   python IntelPython_XGBoost_GettingStarted.py
-   ```
-   The output files of the script will be saved in **models** and **result** directories.
-
-#### Troubleshooting
-
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 ## Example Output
 
