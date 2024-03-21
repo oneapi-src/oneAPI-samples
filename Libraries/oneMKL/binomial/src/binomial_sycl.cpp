@@ -14,7 +14,8 @@ constexpr int wg_size = 128;
 
 sycl::queue* binomial_queue;
 
-Binomial::Binomial() {
+template<typename DATA_TYPE>
+Binomial<DATA_TYPE>::Binomial() {
   binomial_queue = new sycl::queue;
 
   h_call_result = sycl::malloc_shared<DATA_TYPE>(opt_n, *binomial_queue);
@@ -45,7 +46,8 @@ Binomial::Binomial() {
   sycl::event::wait({event_1, event_2, event_3});
 }
 
-Binomial::~Binomial() {
+template<typename DATA_TYPE>
+Binomial<DATA_TYPE>::~Binomial() {
   sycl::free(h_call_result, *binomial_queue);
   sycl::free(h_stock_price, *binomial_queue);
   sycl::free(h_option_strike, *binomial_queue);
@@ -54,7 +56,8 @@ Binomial::~Binomial() {
   delete binomial_queue;
 }
 
-void Binomial::body() {
+template<typename DATA_TYPE>
+void Binomial<DATA_TYPE>::body() {
   constexpr int block_size = num_steps / wg_size;
   static_assert(block_size * wg_size == num_steps);
 
@@ -139,7 +142,8 @@ void Binomial::body() {
   binomial_queue->wait();
 }
 
-void Binomial::run() {
+template<typename DATA_TYPE>
+void Binomial<DATA_TYPE>::run() {
   std::printf(
       "%s Precision Binomial Option Pricing version %d.%d running on %s using "
       "DPC++, workgroup size %d, sub-group size %d.\n",
@@ -179,3 +183,17 @@ void Binomial::run() {
   std::printf("Time Elapsed =  %10.5f seconds\n", t.duration());
   fflush(stdout);
 }
+
+bool is_fp64() {
+    sycl::queue test_queue;
+    return test_queue.get_device().has(sycl::aspect::fp64);
+}
+
+template DLL_EXPORT Binomial<double>::Binomial();
+template DLL_EXPORT Binomial<float>::Binomial();
+
+template DLL_EXPORT Binomial<double>::~Binomial();
+template DLL_EXPORT Binomial<float>::~Binomial();
+
+template DLL_EXPORT void Binomial<double>::run();
+template DLL_EXPORT void Binomial<float>::run();
