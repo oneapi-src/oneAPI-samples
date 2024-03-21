@@ -43,7 +43,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 - **Other dependencies**
 
-  Install using PIP and the `requirements.txt` file supplied with the sample: `$pip install -r requirements.txt`. <br> The `requirements.txt` file contains the necessary dependencies to run the Notebook.
+  Install using PIP and the `requirements.txt` file supplied with the sample: `$pip install -r requirements.txt --no-deps`. <br> The `requirements.txt` file contains the necessary dependencies to run the Notebook.
 
 ### For Intel® DevCloud
 
