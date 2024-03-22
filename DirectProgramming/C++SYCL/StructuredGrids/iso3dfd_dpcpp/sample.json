@@ -8,7 +8,6 @@
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
-  "targetDevice": [ "CPU" ],
   "ciTests": {
 	"linux": [{
             "steps": [
