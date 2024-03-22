@@ -14,8 +14,7 @@
             "env": [
                 "source /intel/oneapi/intelpython/bin/activate", 
                 "conda activate tensorflow-gpu",
-                "pip install intel-optimization-for-horovod",
-                "pip install jupyter ipykernel",
+                "pip install jupyter",
                 "python -m ipykernel install --user --name=tensorflow-gpu"
             ],
             "id": "distributed_learning_tensorflow_horovod_py",
