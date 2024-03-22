@@ -59,8 +59,52 @@ The sample illustrates some important concepts.
 - The problem of *pointer aliasing* and its impact on compiler optimizations.
 - The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel.
 - The effect this attribute can have on your kernel's performance on FPGA.
+- How to use the `kernel_args_restrict` attribute on your kernel (both lambda and functor coding styles).
+- The effect this attribute can have on your kernel's performance on FPGA.
 
-Additionally, this code sample demonstrates how to apply the `kernel_args_restrict` attribute to kernels defined in both the lambda coding style and the functor coding style.
+### Syntax
+
+Below, we illustrate two distinct coding styles to utilize the kernel_args_restrict attribute in your SYCL kernels:
+
+- Lambda Style
+
+   In the lambda coding style, the attribute is applied directly within the lambda expression that defines the kernel:
+
+   ```c++
+   q.sumbit([&](handler &h) {
+      // -------------------------------------------
+      //          Kernel interface definition.
+      // -------------------------------------------
+
+      h.single_task<class IDLambdaKernel>([=
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
+         // ----------------------------------------
+         //       Kernel code implementation.
+         // ----------------------------------------
+      });
+   });
+   ```
+   Here, `IDLambdaKernel` is a unique kernel ID and `q` represents a SYCL queue. Replace the comment with the actual code for your kernel.
+
+- Functor Style
+   
+   Alternatively, when using the functor coding style, the attribute is applied to the call operator of a functor class that defines the kernel:
+
+   ```c++
+   struct FunctorKernel {
+      // -------------------------------------------
+      //         Kernel interface definition.
+      // -------------------------------------------
+      
+      [[intel::kernel_args_restrict]]     // NO-FORMAT: Attribute
+      void operator()() const {
+         // ----------------------------------------
+         //       Kernel code implementation.
+         // ----------------------------------------
+      }
+   };
+   ```
+   In this case, an instance of `FunctorKernel` will be invoked as a kernel by passing it to `single_task`. Replace the comments with your kernel's actual implementation code.
 
 ### Pointer Aliasing Explained
 
@@ -222,22 +266,19 @@ Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory
 
 Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see four kernels as described in the [Tutorial Code Description](#tutorial-code-description) section of this README. Each kernel has a single for-loop, which appears in the *Loop List* pane. Click the loop under each kernel to see how the compiler optimized it.
 
-Compare the loop initiation interval (II) between the kernels with or without `[[intel::kernel_args_restrict]]` attribute. Notice that the loop in the *KernelArgsNoRestrict_Lambda* and *KernelArgsNoRestrict_Functor* kernels has a large estimated II, while the loop in the *KernelArgsRestrict_Lambda* and *KernelArgsRestrict_Functor* kernels has an estimated II of ~1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
+![Kernel II Overview](./assets/Kernel%20II%20Overview.png)
 
-For the *KernelArgsNoRestrict_Lambda* and *KernelArgsNoRestrict_Functor* kernel, the compiler assumed that the kernel arguments can alias each other. Since`out[i]` and `in[i+1]` could be the same memory location, the compiler cannot overlap the iteration of the loop performing `out[i] = in[i]` with the next iteration of the loop performing `out[i+1] = in[i+1]` (and likewise for iterations `in[i+2]`, `in[i+3]`, ...). This results in an II equal to the latency of the global memory read of `in[i]` plus the latency of the global memory write to `out[i]`.
+Compare the loop initiation interval (II) between the kernels with or without `[[intel::kernel_args_restrict]]` attribute. Notice that the loops in the *IDConservative_Lambda* and *IDConservative_Functor* kernels have large estimated IIs, while the loops in the *IDKernelArgsRestrict_Lambda* and *IDKernelArgsRestrict_Functor* kernels have an estimated II of 1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
 
-We can confirm this by looking at the details of the loop. Click the *KernelArgsNoRestrict_Lambda* kernel (similarly for the *KernelArgsNoRestrict_Functor* kernel) in the *Loop List* pane and then click the loop in the *Loop Analysis* pane. Now consider the *Details* pane below. You should see something like:
+For the *IDConservative_Lambda* and *IDConservative_Functor* kernels, the compiler assumed that the kernel arguments could alias with each other. Since`out[i]` and `in[i+1]` could be the same memory location, the compiler cannot overlap the iteration of the loop performing `out[i] = in[i]` with the next iteration of the loop performing `out[i+1] = in[i+1]` (and likewise for iterations `in[i+2]`, `in[i+3]`, ...). This results in an II equal to the latency of the global memory read of `in[i]` plus the latency of the global memory write to `out[i]`.
 
-- *Compiler failed to schedule this loop with smaller II due to memory dependency:*
-  - *From: Load Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
-  - *To: Store Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
-- *Most critical loop feedback path during scheduling:*
-  - *32.00 clock cycles Load Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
-  - *31.00 clock cycles Store Operation (handler.hpp: 1502 > kernel_args_restrict.cpp: 94)*
+We can confirm this by looking at the details of the loop. Click the *IDConservative_Lambda* kernel (similarly for the *IDConservative_Functor* kernel) in the *Loop List* pane and then click the loop in the *Loop Analysis* pane. Now consider the *Details* pane below. You should see something like:
 
-The first bullet (and its sub-bullets) tells you that a memory dependency exists between the load and store operations in the loop. This is the conservative pointer aliasing memory dependency described earlier. The second bullet shows you the estimated latencies for the load and store operations (note that these are board-dependent). The sum of these two latencies (plus 1) is the II of the loop.
+![Memory Dependency Details](./assets/Memory%20Dependency%20Details.png)
 
-Next, look at the loop details of the *KernelArgsRestrict_Lambda* kernel (similarly for the *KernelArgsRestrict_Functor* kernel). You will notice that the *Details* pane doesn't show a memory dependency. The usage of the `[[intel::kernel_args_restrict]]` attribute allowed the compiler to schedule a new iteration of the for-loop every cycle since it knows that accesses to `in` and `out` will never alias.
+The third bullet (and its sub-bullets) tells you that a memory dependency exists between the load and store operations in the loop. This is the conservative pointer aliasing memory dependency described earlier. The second bullet shows you the estimated latencies for the load and store operations (note that these are board-dependent). The sum of these two latencies (plus 1) is the II of the loop.
+
+Next, look at the loop details of the *IDKernelArgsRestrict_Lambda* kernel (similarly for the *IDKernelArgsRestrict_Functor* kernel). You will notice that the *Details* pane doesn't show a memory dependency. The usage of the `[[intel::kernel_args_restrict]]` attribute allowed the compiler to schedule a new iteration of the for-loop every cycle since it knows that accesses to `in` and `out` will never alias.
 
 ## Run the `Kernel Args Restrict` Sample
 
@@ -280,23 +321,23 @@ Next, look at the loop details of the *KernelArgsRestrict_Lambda* kernel (simila
 ## Example Output
 
 ```
-Running on device: pac_s10 : Intel PAC Platform (pac_f200000)
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Size of vector: 5000000 elements
-Lambda kernel throughput without attribute: 7.78809 MB/s
-Lambda kernel throughput with attribute: 1112.05 MB/s
-Functor kernel throughput without attribute: 7.78876 MB/s
-Functor kernel throughput with attribute: 1112.11 MB/s
+Lambda kernel throughput without attribute: 12.6131 MB/s
+Lambda kernel throughput with attribute: 2272.19 MB/s
+Functor kernel throughput without attribute: 12.6173 MB/s
+Functor kernel throughput with attribute: 2274.7 MB/s
 PASSED
 ```
 
 ### Results Explained
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on Intel PAC with Intel Stratix 10 SX Board) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on Terasic's DE10-Agilex Development Board) is shown.
 
 |Attribute used?  | II    | Kernel Throughput (MB/s)
 |:---             |:---   |:---
-|No               | ~854  | 7.8
-|Yes              | ~1    | 1112.1
+|No               | ~64   | 12.6
+|Yes              | ~1    | 2272.2
 
 > **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance of the memory system.
 
