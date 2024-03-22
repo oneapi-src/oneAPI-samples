@@ -14,12 +14,7 @@
 		"linux": [{
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
-				"conda create --name user_base --clone base",
-				"conda activate user_base",
-				"pip install numba==0.57.1",
-				"pip install numba-dpex==0.21.4",
-				"conda deactivate",
-				"conda remove --name user_base --all --y"
+				"conda activate base"
 			],
 			"steps": [
 				"make all"
