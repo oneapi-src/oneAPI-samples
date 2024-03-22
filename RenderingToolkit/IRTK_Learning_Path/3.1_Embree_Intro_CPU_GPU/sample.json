@@ -14,6 +14,7 @@
                 {
                 "id": "Embree_Intro_Jupyter_Learning_Path_Linux",
                 "steps": [
+                    "export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE",
                     "sh ./build_CPU.sh",
                     "sh ./run_CPU.sh",
                     "sh ./build_GPU.sh",
