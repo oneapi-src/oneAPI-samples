@@ -22,6 +22,7 @@
                 <div class="app-title">
                     Samples Catalog
                 </div>
+
                 <div>
                     <a class="btn home-button" onclick="resetFiltersGoHome()" role="button">
                         <i class="fa fa-home fa-lg"></i></a>
@@ -62,7 +63,7 @@
             </div>
         </div>
 
-    </div>
+    </div> <!--END GRID ROW-->
 
     <div class="nav-page-row">
 
@@ -87,18 +88,18 @@
         <div class="">4</div>
         <div class="">5</div>
     
-    </div>
+    </div> <!--END NAV-PAGE-ROW-->
 
-    <div class='template-wrapper'>
+    <!-- <div class='template-wrapper'> -->
     
-    <div class='row'>
+    <div class='content-row'>
 
         <div class='left-column'>
 
-            <div class="accordion accordion-flush" id="accordionExample">
+            <div class="accordion"> <!-- accordion-flush id="accordionExample"-->
 
                 <div class="accordion-item">
-
+                
                     <div class="search-container">            
                         <div class="search-widget">   
                             <i class="fa fa-search fa-1x"></i>
@@ -110,26 +111,31 @@
                                     onkeypress=onlyAlphaNumInput(event) 
                                     data-search
                             >
-                        <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
-                            <i class="fa fa-remove fa-xl"></i> <!--fa fa-refresh-->
-                        </button>
+                                <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
+                                    <i class="fa fa-remove fa-xl"></i>
+                                    <!-- fa fa-refresh -->
+                                </button>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="accordion-header" id="headingOne">
+                            <button 
+                                class="accordion-button collapsed" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#stayOpen-collapseOne" 
+                                aria-expanded="true" 
+                                aria-controls="stayOpen-collapseOne"
+                            >
+                            Filters
+                            </button>
                     </div>
                 </div>
 
-
-                  <div class="accordion-header" id="headingOne">
-                    <button 
-                        class="accordion-button collapsed" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#stayOpen-collapseOne" 
-                        aria-expanded="true" 
-                        aria-controls="stayOpen-collapseOne"
-                    >
-                      Filters
-                    </button>
-                </div>
-                  <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <!--TEST-->
                         <!-- </h3> Expertise </h3> -->
@@ -179,7 +185,6 @@
                         
 
                             <div class="filter-children language-checkboxes"> 
-                                <!-- </h3> Language </h3> -->
                                 <span class="badge-col-head">
                                     <!-- <div class="circle badge1-circle"></div>  -->
                                     Language
@@ -242,39 +247,41 @@
                 </div>
 
 
-            </div>
+            </div> <!-- end left-column -->
             
-        </div> <!--end left-column-->
+            <div class='right-column'>
 
-        <div class='right-column'>
+                <div class="toolkit-cards" data-toolkit-cards-container> </div>
 
-            <div class="toolkit-cards" data-toolkit-cards-container> </div>
-            <template data-toolkit-template >
-                <li class="card grid">
-                    <div class="card-title" data-header></div>
-                        <div class="card-desc" data-body></div>
-                            <div class="badges-container"> 
-                                <p class="badges badge1" data-expertise></p>
-                                <p class="badges badge2" data-languages></p>
-                                <p class="badges-devices" data-targetDevice></p>
-                                <div url></div>
-                            </div>
-                        </div>
-                    </div> 
-                </li>
-            </template>
-        </div>
-
+                    <template data-toolkit-template >
+                        <li class="card grid">
+                            <div class="card-title" data-header></div>
+                                <div class="card-desc" data-body></div>
+                                    <div class="badges-container"> 
+                                        <p class="badges badge1" data-expertise></p>
+                                        <p class="badges badge2" data-languages></p>
+                                        <p class="badges-devices" data-targetDevice></p>
+                                        <div url></div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </li>
+                </template>
+            </div>
 
 
 
 
 
 
-        </div>
 
-        </div>
-      </div>
+
+    </div>
+
+            <!-- </div> -->
+
+
+        <!-- </div> -->
 
 
 
