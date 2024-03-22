@@ -40,14 +40,10 @@
         </div>
         
         <div class="col "> <!--#4-->
-            <div id="results-container">
-                <div id="qty-show-results" class="transparent"></div>
-            </div>
             <!-- #4 -->
         </div>
 
-
-        <div class="col "><!--#5-->
+        <div class="col">
 
             <div class="col-nav-grp"> 
                 <!-- <div>5A</div>  -->
@@ -61,36 +57,48 @@
                     </figure>
                 </div>
             </div>
+
         </div>
+
 
     </div> <!--END GRID ROW-->
 
     <div class="nav-page-row">
 
-        <div class="">
+        <div class="col">1
+        </div>
+
+        <div class="col">2
             <div id="total-records"></div> 
         </div>
-
-        <div class="">
-            <!-- <div id="total-records"></div>  -->
+        
+        <div class="col">
+            <div class="nav-ctrls ">
+                <button class='arrow left' onclick="previousPage()"></button>
+                    <button class='pg-first-last' onclick="firstPage()">First</button>
+                        <div class="pg-rng-box">
+                            <div>
+                                <snall class="pg-rng" id="paginator-state"></snall>
+                            </div>
+                        </div>
+                    <button class='pg-first-last' onclick="lastPage()">Last</button>
+                <button class='arrow right' onclick="nextPage()"></button>
+            </div>
         </div>
 
-        <div class="nav-ctrls ">
-            <button class='arrow left' onclick="previousPage()"></button>
-                <button class='pg-first-last' onclick="firstPage()">First</button>
-                    <div>
-                        <snall class="pg-rng" id="paginator-state"></snall>
-                    </div>
-                <button class='pg-first-last' onclick="lastPage()">Last</button>
-            <button class='arrow right' onclick="nextPage()"></button>
+        <div>
+            <div id="results-container">
+                <div id="qty-show-results" class="transparent"></div>
+            </div>
         </div>
 
-        <div class="">4</div>
-        <div class="">5</div>
+        <div class="col">
+    
+        </div>
     
     </div> <!--END NAV-PAGE-ROW-->
 
-    <!-- <div class='template-wrapper'> -->
+
     
     <div class='content-row'>
 
@@ -253,6 +261,8 @@
 
                 <div class="toolkit-cards" data-toolkit-cards-container> </div>
 
+                <div class='template-wrapper'>
+
                     <template data-toolkit-template >
                         <li class="card grid">
                             <div class="card-title" data-header></div>
@@ -263,10 +273,11 @@
                                         <p class="badges-devices" data-targetDevice></p>
                                         <div url></div>
                                     </div>
-                                </div>
-                            </div> 
                         </li>
-                </template>
+                    </template>
+
+                </div>
+
             </div>
 
 
