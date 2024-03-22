@@ -134,6 +134,17 @@ P = m_size / 2;
 ```
 > **Note**: The size value must be in multiples of **8**.
 
+## Example Output
+```
+./matrix_mul_dpc
+
+Device: Intel(R) Iris(R) Xe Graphics
+
+Problem size: c(150,600) = a(150,300) * b(300,600)
+
+Result of matrix multiplication using SYCL: Success - The results are correct!
+```
+
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
