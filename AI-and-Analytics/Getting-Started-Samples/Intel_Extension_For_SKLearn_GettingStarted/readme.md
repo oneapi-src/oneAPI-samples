@@ -33,19 +33,16 @@ This Getting Started sample code is implemented for CPU using the Python languag
 
 ## Environment Setup
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
 
-### On Linux*
-
-#### Activate Conda with Root Access
+2. Activate Conda with Root Access
 
 Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command.
 ```
@@ -53,12 +50,17 @@ source activate base
 pip install -r requirements.txt
 ```
 
-#### Activate Conda without Root Access (Optional)
+2a. Activate Conda without Root Access (Optional)
 
 By default, the Intel® AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone and activate your desired conda environment using the following commands.
 ```
 conda create --name usr_intelpython --clone base
 source activate usr_intelpython
+```
+3. Clone the GitHub repository
+```
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 
 ### Install Jupyter Notebook
