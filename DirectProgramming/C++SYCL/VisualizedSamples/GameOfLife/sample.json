@@ -11,11 +11,11 @@
   "ciTests": {
 	"linux": [{
 		"steps": [
+			"apt-get install libsdl2-dev",
 			"mkdir build",
-      		"cd build",
-			"../get_sdl2.sh",
-           	"SDL2_DIR=SDL/install/ cmake ..",
-           	"make"
+      			"cd build",
+			"cmake ..",
+           		"make"
 		 ]
 	}],
 	"windows": [{
