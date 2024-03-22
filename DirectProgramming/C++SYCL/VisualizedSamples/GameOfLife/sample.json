@@ -11,7 +11,7 @@
   "ciTests": {
 	"linux": [{
 		"steps": [
-			"apt-get install libsdl2-dev",
+			"apt-get install libsdl2-dev -y",
 			"mkdir build",
       			"cd build",
 			"cmake ..",
