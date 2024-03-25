@@ -70,6 +70,7 @@ Task sequences allow you to schedule loops to run in parallel, so data quickly f
 
 ![](assets/simulation_task_sequence.png)
 
+>**Note**: This is only possible when the loops process data in the same order. That is, the first piece of data the second loop consumes should be the first piece of data produced by the first loop. Converting loops to task sequences and executing them in parallel will not help performance if the first piece of data consumed by the second loop is the last piece of data produced by the first loop, because then the second loop requires the first loop to completely finish.
 
 ### Code Example 
 
