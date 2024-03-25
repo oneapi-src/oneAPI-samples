@@ -80,6 +80,7 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 | Task function      | callable | N/A           | A callable object `f` that defines the asynchronous task to be associated with the `task_sequence`. The callable object `f` must meet the following requirements: <br> • The object `f` must be statically resolvable at compile time, which means it is not a function pointer. <br> • The object `f` must not be an overloaded function. <br> • The return type (`ReturnT`) and argument types (`ArgsT…`) of object f must be resolvable and fixed.
 | Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls. This parameter value corresponds to the minimum number of outstanding `async()` function calls to be supported. When the outstanding number of `async()` function calls reaches this value, further calls may block until the number of outstanding calls is reduced to the `invocation_capacity`. The default value of this parameter is 1.
 | Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results. This parameter value corresponds to the maximum number of outstanding `async()` calls such that all outstanding tasks are guaranteed to make forward progress. Further `async()` calls may block until the number of outstanding calls reduces to the `response_capacity`. The default value of this parameter is 1.
+
 *Invocation capacity and response capacity are optional 
 
 The following example shows how to use task sequence.  
