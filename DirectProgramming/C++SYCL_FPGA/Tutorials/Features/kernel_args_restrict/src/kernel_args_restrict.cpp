@@ -100,9 +100,8 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &conservativ
       accessor in_acc(in_buf, h, read_only);
       accessor out_acc(restrict_lambda_out_buf, h, write_only, no_init);
 
-      h.single_task<IDKernelArgsRestrict_Lambda>([=]() 
-      [[intel::kernel_args_restrict]] { // NO-FORMAT: Attribute
-      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
+      h.single_task<IDKernelArgsRestrict_Lambda>([=  // NO-FORMAT: Attribute
+      ]() [[intel::kernel_args_restrict]] {          // NO-FORMAT: Attribute
         for (size_t i = 0; i < size; i++) {
           out_acc[i] = in_acc[i];
         }
