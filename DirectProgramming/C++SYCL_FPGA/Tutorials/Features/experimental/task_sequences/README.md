@@ -227,7 +227,7 @@ The 2 different example designs in this sample perform similar operations. You m
    >| Naive                                        | naive/                | `NAIVE`        |
    >| Task sequence                                | task-sequence/        | `TASK_SEQUENCE`|
    
-   > **Note**: You can change the default target by using the command:
+   > **Note**: You can override the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<NAIVE/TASK_SEQUENCE>
    >  ```
