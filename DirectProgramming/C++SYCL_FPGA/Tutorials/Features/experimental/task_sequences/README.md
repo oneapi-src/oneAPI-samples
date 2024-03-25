@@ -81,7 +81,7 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 | Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls. This parameter value corresponds to the minimum number of outstanding `async()` function calls to be supported. When the outstanding number of `async()` function calls reaches this value, further calls may block until the number of outstanding calls is reduced to the `invocation_capacity`. The default value of this parameter is 1.
 | Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results. This parameter value corresponds to the maximum number of outstanding `async()` calls such that all outstanding tasks are guaranteed to make forward progress. Further `async()` calls may block until the number of outstanding calls reduces to the `response_capacity`. The default value of this parameter is 1.
 
-*Invocation capacity and response capacity are optional 
+> *Invocation capacity and response capacity are optional 
 
 The following example shows how to use task sequence.  
 
