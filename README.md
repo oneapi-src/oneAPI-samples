@@ -122,7 +122,7 @@ Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28597
 oneAPI package version: \
 &dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.595 \
 &dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.561 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 22024.1.0.745
+&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.745
 
 11th Gen Intel(R) Core(TM) i7-11700
 Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake) \
