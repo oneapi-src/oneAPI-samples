@@ -18,8 +18,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |--------------------------| --------- | ------------------------------------------------ | -
 |Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     | Performs INT8 quantization on a Hugging Face BERT model.
 |Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     | Quantizes a FP32 model into INT8 by Intel® Neural Compressor (INC) and compares the performance between FP32 and INT8.
-|Data Analytics <br/> Classical Machine Learning  | Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain.
-|Data Analytics <br/> Classical Machine Learning | Modin |[IntelModin_Vs_Pandas](IntelModin_Vs_Pandas)| Compares the performance of Intel® Distribution of Modin* and the performance of Pandas.
+|Data Analytics <br/> Classical Machine Learning  | Modin | [Modin_GettingStarted](Modin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain.
+|Data Analytics <br/> Classical Machine Learning | Modin |[Modin_Vs_Pandas](Modin_Vs_Pandas)| Compares the performance of Intel® Distribution of Modin* and the performance of Pandas.
 |Classical Machine Learning| Intel® Optimization for XGBoost* | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and trains an XGBoost* model on datasets for prediction.
 |Classical Machine Learning| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the Python API package daal4py from oneAPI Data Analytics Library (oneDAL).
 |Deep Learning <br/> Inference Optimization| Intel® Optimization for TensorFlow* | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
