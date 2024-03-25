@@ -19,6 +19,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
+
+# This logic selects which version of the design to compile.
 if(${TYPE} MATCHES NAIVE)
     set(SOURCE_FILES naive/src/main.cpp)
     set(TARGET_NAME naive)
