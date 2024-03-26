@@ -1,12 +1,11 @@
-## Title
-Intel&reg; Rendering Toolkit Learning Path
+# Intel&reg; Rendering Toolkit Learning Path
   
 ## Requirements
 | Optimized for                     | Description
 | OS                                | Linux* Ubuntu 22.04
 | Software                          | Intel&reg; Rendering Toolkit (Render Kit), Jupyter Notebooks, Intel&reg; Developer Cloud (IDC)
 
-# Intel&reg; Rendering Toolkit Jupyter Notebook Learning Path
+## Description
 This repo contains Jupyter Notebook Trainings for Render Kit that **has been designed to be used on the Intel Developer Cloud** for hands-on workshops.
 
 At the end of this course, you will be able to:
@@ -24,10 +23,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Content Details
 
-#### Pre-requisites
+### Pre-requisites
 - C++ Programming
 
-#### Training Modules
+### Training Modules
 
 | Modules | Description
 |---|---|
@@ -44,16 +43,24 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |[Intel® OSPRay Studio tutorial](6_OSPRay_Studio/OSPRay_Studio.ipynb)| + Basic demonstration on how to use Intel® OSPRay Studio with its interactive interface.
 
 
-#### Content Structure
+### Content Structure
 
 Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened in Jupyter Lab to view the training contant, edit code and compile/run. Along with the Notebook file, there is a `lab` and a `src` folder with SYCL source code for samples used in the Notebook. The module folder also has `build_*.sh` and `run_*.sh` files which can be used in shell terminal to compile and run each sample code.
 
-#### Access using Intel Developer Cloud
+### Access using Intel Developer Cloud
 
 The Jupyter notebooks are tested and can be run on Intel Developer Cloud without any installation necessary, below are the steps to access these Jupyter notebooks on Intel Developer Cloud:
 1. Register on [Intel Developer Cloud (IDC).](https://console.cloud.intel.com/)
-2. Create and account and/or log in.
+2. Create an account and/or log in.
 3. Once in IDC dashboard, go to Training in the left panel and then click the Launch JupyterLab botton in the upper right.
-3. Open Terminal in Jupyter Lab and git clone the repo and access the Notebooks.
+4. Open Terminal in Jupyter Lab and git clone the repo and access the Notebooks.
 
 Note that the oneAPI Base Toolkit and the Intel Rendering Toolkit are already pre-installed in IDC.
+
+### Workaround for 2-Tile Intel&reg; Data Center GPU Max Series (PVC)
+
+Intel OSPRay, Intel Embree, and Intel OpenVKL based programs need to use the environment variable ZE_FLAT_DEVICE_HIERARCHY and set it to COMPOSITE.
+
+Use the following command in your shell or Jupyter Notebook cell before running programs:
+
+`export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE`
