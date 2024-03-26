@@ -2,6 +2,7 @@
   
 ## Requirements
 | Optimized for                     | Description
+|:---                               |:---
 | OS                                | Linux* Ubuntu 22.04
 | Software                          | Intel&reg; Rendering Toolkit (Render Kit), Jupyter Notebooks, Intel&reg; Developer Cloud (IDC)
 
