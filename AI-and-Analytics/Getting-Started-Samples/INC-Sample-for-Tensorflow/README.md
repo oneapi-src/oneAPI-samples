@@ -74,8 +74,6 @@ The sample demonstrates how to:
 ## Environment Setup
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
-### On Linux* 
-
 #### Setup Conda Environment
 
 You can list the available conda environments using a command similar to the following.
@@ -146,23 +144,6 @@ Configure Conda for **user_tensorflow** by entering commands similar to the foll
    ```
    This step is optional if you plan to open the notebook on your local server.
 
-### On Windows*
-
-#### Configure Conda
-
-Configure Conda for **user_tensorflow** by entering commands similar to the following:
-   ```
-   conda deactivate
-   conda env remove -n user_tensorflow
-   conda create -n user_tensorflow python=3.9 -y
-   conda activate user_tensorflow
-   conda install -n user_tensorflow pycocotools -c esri -y
-   conda install -n user_tensorflow neural-compressor tensorflow -c conda-forge -c intel -y
-   conda install -n user_tensorflow jupyter runipy notebook -y
-   conda install -c anaconda ipykernel
-   python -m ipykernel install --user --nam=user_tensorflow
-   ```
-
 ## Run the `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
 
 > **Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Sample-for-TensorFlow#environment-setup) is completed.
@@ -183,12 +164,6 @@ If you used a separate location, open a terminal and type the following
 ```
 source <custom_path>/bin/activate
 ```
-> Windows*:
-> - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)* or *[Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html)*.
-
 ### Active Conda Environment
 
 1. Ensure you activate the conda environment.
