@@ -1,6 +1,6 @@
 # `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
 
-The  `Intel® Neural Compressor TensorFlow* Getting Started*` Sample demonstrates using the Intel® Neural Compressor, which is part of the Intel® AI Tools with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
+This sample demonstrates using the Intel® Neural Compressor, which is part of the Intel® AI Tools with the with Intel® Optimizations for TensorFlow* to speed up inference by simplifying the process of converting the FP32 model to INT8/BF16.
 
 | Property                 | Description
 |:---                      |:---
@@ -74,11 +74,7 @@ The sample demonstrates how to:
 ## Environment Setup
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
-### On Linux* (Only applicable to AI Tools Offline Installer)
-
-#### Set Environment Variables
-
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+### On Linux* 
 
 #### Setup Conda Environment
 
@@ -169,14 +165,24 @@ Configure Conda for **user_tensorflow** by entering commands similar to the foll
 
 ## Run the `Intel® Neural Compressor TensorFlow* Getting Started*` Sample
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+> **Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Sample-for-TensorFlow#environment-setup) is completed.
 >
 > Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
+
+### AI Tools Offline Installer (Validated)  
+1. If you have not already done so, activate the AI Tools bundle base environment. 
+If you used the default location to install AI Tools, open a terminal and type the following
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
 > Windows*:
 > - `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
