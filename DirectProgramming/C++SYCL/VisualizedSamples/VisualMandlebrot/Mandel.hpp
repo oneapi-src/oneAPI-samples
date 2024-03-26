@@ -137,7 +137,7 @@ void Mandelbrot::Calculate(uint32_t* pixels) {
 	if (singlePrecision)
 		CalculateSP(pixels);
 	else
-		Calculate(pixels);
+		CalculateDP(pixels);
 }
 
 void Mandelbrot::CalculateSP(uint32_t* pixels) {
