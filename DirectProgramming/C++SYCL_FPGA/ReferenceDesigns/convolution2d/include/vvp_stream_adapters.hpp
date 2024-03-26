@@ -77,7 +77,7 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   // Package the pixels in in_img into PixelPipe
   ///////////////////////////////////////////////
 
-  std::cout << "INFO: Storing data to pipe with " << kPixelsInParallel
+  std::cout << "INFO: Writing data to pipe with " << kPixelsInParallel
             << " pixels in parallel. " << std::endl;
 
   for (int i_base = 0; i_base < end_pixel; i_base += kPixelsInParallel) {
