@@ -694,6 +694,108 @@ var pci_targets=[
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
+//RPL-P
+{
+	"pci_id": ["A7A1", "A7A0", "A721", "A720"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® Iris® Xe Max Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 96,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["A7A9", "A7A8"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® Iris® Xe Max Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 64,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+//RPL-S
+{
+	"pci_id": ["A780", "A781", "A788", "A789"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 32,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["A782", "A78A"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 12,
+		"Threads_Per_EU": 7,
+		"EU_Count": 24,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
+{
+	"pci_id": ["A783", "A78B"],
+	"name": "Integrated GPU (Xe LP)",
+	"product_name": "Intel® UHD Graphics",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 16,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 32
+	}
+},
 //ARC
 {
 	"pci_id": ["56A5", "5694"],
@@ -1256,23 +1358,21 @@ function compute_ss_occupancy(wg, sg, slm, large_grf, num_barrier_reg, wg_count)
 }
 
 // Calculate GPU Occupancy
+
 function compute_gpu_occupancy(wg, num_wg, ss_occ, num_ss, global_range){
 	var gpu_occ;
 	// Calculate max num of work-items in all ss of gpu
 	var num_wi = num_ss * num_wg * wg;
 	// Calculate occupancy for all ss in gpu
-	if (global_range > num_wi) {
-		var num_pass = parseInt(global_range / num_wi);
-		gpu_occ = ss_occ * num_pass;
-		if (global_range % num_wi !== 0) {
-			num_pass += 1;
-		}
-		gpu_occ = gpu_occ / num_pass;
-		return {gpu_occ, ss_occ}
-	} else {
-		gpu_occ = (global_range / num_wi) * ss_occ;
-		return {gpu_occ, ss_occ}
-	}
+    var num_pass = parseInt(global_range / num_wi);
+    var gpu_pass = ss_occ * num_pass;
+    var num_wi_left = global_range % num_wi;
+    if (num_wi_left !== 0) {
+        gpu_pass += (num_wi_left / num_wi) * ss_occ;
+        num_pass += 1;
+    }
+    gpu_occ = gpu_pass / num_pass;
+    return {gpu_occ, ss_occ}
 }
 
 // Generate Graphs and Optimal Occupancy Config table
