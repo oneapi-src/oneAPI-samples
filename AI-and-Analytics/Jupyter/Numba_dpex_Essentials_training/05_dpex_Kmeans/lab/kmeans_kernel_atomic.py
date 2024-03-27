@@ -60,20 +60,20 @@ def kmeans_kernel(
     num_points,
     num_centroids,
 ):
-    copy_arrayC[num_centroids,](arrayC, arrayP)
+    copy_arrayC[nbdx.Range(num_centroids)](arrayC, arrayP)
 
     for i in range(niters):
-        groupByCluster[num_points,](
+        groupByCluster[nbdx.Range(num_points)](
             arrayP, arrayPcluster, arrayC, num_points, num_centroids
         )
 
-        calCentroidsSum1[num_centroids,](arrayCsum, arrayCnumpoint)
+        calCentroidsSum1[nbdx.Range(num_centroids)](arrayCsum, arrayCnumpoint)
 
-        calCentroidsSum2[num_points,](
+        calCentroidsSum2[nbdx.Range(num_points)](
             arrayP, arrayPcluster, arrayCsum, arrayCnumpoint
         )
 
-        updateCentroids[num_centroids,](
+        updateCentroids[nbdx.Range(num_centroids)](
             arrayC, arrayCsum, arrayCnumpoint, num_centroids
         )
 

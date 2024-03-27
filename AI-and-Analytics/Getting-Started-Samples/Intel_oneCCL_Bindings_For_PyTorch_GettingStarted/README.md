@@ -19,7 +19,7 @@ From this sample code, you will learn how to perform distributed training with o
 | Hardware                          | Intel® Xeon® scalable processor family <br> Intel® Data Center GPU
 | Software                          | Intel® Extension for PyTorch (IPEX)
 
-> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Key Implementation Details
 

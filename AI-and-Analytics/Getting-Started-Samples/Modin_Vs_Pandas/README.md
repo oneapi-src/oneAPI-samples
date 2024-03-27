@@ -1,16 +1,16 @@
-# `Intel® Modin* Vs. Pandas Performance` Sample
+# Modin Vs. Pandas Performance Sample
 
-The `Intel® Modin* Vs. Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Intel® Distribution of Modin* and the performance of Pandas for specific dataframe operations.
+The `Modin Vs. Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Modin and the performance of Pandas for specific dataframe operations.
 
 | Area                       | Description
 |:---                        |:---
-| What you will learn        | How to accelerate the Pandas API using Intel® Distribution of Modin*.
-| Time to complete           | Less than 10 minutes
 | Category                   | Concepts and Functionality
+| What you will learn        | How to accelerate the Pandas API using Modin.
+| Time to complete           | Less than 10 minutes
 
 ## Purpose
 
-Intel® Distribution of Modin* accelerates Pandas operations using Ray or Dask execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Intel® Distribution of Modin*. You will be able to compare the performance difference between the two methods.
+Modin accelerates Pandas operations using Ray or Dask execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Modin. You will be able to compare the performance difference between the two methods.
 You can run the sample locally or in Google Colaboratory (Colab).
 
 ## Prerequisites
@@ -25,25 +25,25 @@ You can run the sample locally or in Google Colaboratory (Colab).
 
 This code sample is implemented for CPU using Python programming language. The sample requires NumPy, Pandas, Modin libraries, and the time module in Python.
 
-## Run the `Intel® Modin Vs Pandas Performance` Sample Locally
+## Environment Setup
 
-If you want to run the sample on a local system using a command-line interface (CLI), you must install the Intel® Distribution of Modin* in a new Conda* environment first.
+If you want to run the sample on a local system using a command-line interface (CLI), you must install the Modin in a new Conda* environment first.
 
-### Install the Intel® Distribution of Modin*
+### Install Modin
 
 1. Create a Conda environment.
    ```
-   conda create --name aikit-modin
+   conda create --name modin
    ```
 2. Activate the Conda environment.
    ```
-   source activate aikit-modin
+   source activate modin
    ```
 3. Remove existing versions of Modin* (if any exist).
    ```
    conda remove modin --y
    ```
-4. Install Intel® Distribution of Modin* (v0.12.1 or newer).
+4. Install Modin (v0.12.1 or newer).
    ```
    pip install modin[all]==0.12.1
    ```
@@ -58,16 +58,16 @@ If you want to run the sample on a local system using a command-line interface (
    ```
 ### Run the Sample
 
-1. Change to the directory containing the `IntelModin_Vs_Pandas.ipynb` notebook file on your local system.
+1. Change to the directory containing the `Modin_Vs_Pandas.ipynb` notebook file on your local system.
 
 2. Run the sample notebook.
    ```
-   ipython IntelModin_Vs_Pandas.ipynb
+   ipython Modin_Vs_Pandas.ipynb
    ```
 
-## Run the `Intel® Modin Vs Pandas Performance` Sample in Google Colaboratory
+## Run the `Modin Vs Pandas Performance` Sample in Google Colaboratory
 
-1. Change to the directory containing the `IntelModin_Vs_Pandas.ipynb` notebook file on your local system.
+1. Change to the directory containing the `Modin_Vs_Pandas.ipynb` notebook file on your local system.
 
 2. Open the notebook file, and remove the prepended number sign (#) symbol from the following lines:
    ```
@@ -75,7 +75,7 @@ If you want to run the sample on a local system using a command-line interface (
    #!pip install numpy
    #!pip install pandas
    ```
-   These changes will install the Intel® Distribution of Modin* and the NumPy and Pandas libraries when run in the Colab notebook.
+   These changes will install the Modin and the NumPy and Pandas libraries when run in the Colab notebook.
 
 3. Save your changes.
 
@@ -100,7 +100,11 @@ CPU times: user 8.47 s, sys: 132 ms, total: 8.6 s
 Wall time: 8.57 s
 ```
 
-Example expected cell output is included in `IntelModin_Vs_Pandas.ipynb`.
+Example expected cell output is included in `Modin_Vs_Pandas.ipynb`.
+
+## Related Samples
+
+* [Modin Get Started Sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Modin_GettingStarted)
 
 ## License
 
@@ -108,3 +112,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)

@@ -1,18 +1,18 @@
-# `Intel® Modin* Get Started` Sample
+# Modin Get Started Sample
 
-The `Intel® Modin Getting Started` sample demonstrates how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The `Modin Getting Started` sample demonstrates how to use distributed Pandas using the Modin package. 
 
 | Area                  | Description
 | :---                  | :---
-| What you will learn   | Basic Intel® Distribution of Modin* programming model for Intel processors
-| Time to complete      | 5 to 8 minutes
 | Category              | Getting Started
+| What you will learn   | Basic Modin programming model for Intel processors
+| Time to complete      | 5 to 8 minutes
 
 ## Purpose
 
-Intel® Distribution of Modin* uses Ray or Dask to provide a method to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel® Distribution of Modin* provides integration and compatibility with existing Pandas code.
+Modin uses Ray or Dask to provide a method to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Modin provides integration and compatibility with existing Pandas code.
 
-In this sample, you will run Intel® Distribution of Modin*-accelerated Pandas functions and note the performance gain when compared to "stock" (or standard) Pandas functions.
+In this sample, you will run Modin-accelerated Pandas functions and note the performance gain when compared to "stock" (or standard) Pandas functions.
 
 ## Prerequisites
 
@@ -20,26 +20,26 @@ In this sample, you will run Intel® Distribution of Modin*-accelerated Pandas f
 | :---                              | :---
 | OS                                | Ubuntu* 18.04 (or newer)
 | Hardware                          | Intel® Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable Performance processor family
-| Software                          | Intel® Distribution of Modin* 
+| Software                          | Modin 
 
 ## Key Implementation Details
 
 This get started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment.
 
-## Configure Environment
+## Environment Setup
 
-1. Install Intel® Distribution of Modin* in a new conda environment.
+1. Install Modin in a new conda environment.
 
    >**Note:** replace python=3.x with your own Python version
    ```
-   conda create -n aikit-modin python=3.x -y
-   conda activate aikit-modin
-   conda install modin-all -c intel -y
+   conda create -n modin python=3.x -y
+   conda activate modin
+   conda install modin-all -c conda-forge -y
    ```
 
 2. Install Matplotlib.
    ```
-   conda install -c intel matplotlib -y
+   conda install -c conda-forge matplotlib -y
    ```
 
 3. Install Jupyter Notebook. 
@@ -52,9 +52,9 @@ This get started sample code is implemented for CPU using the Python language. T
    conda install ipykernel
    python -m ipykernel install --user --name usr_modin
    ```
-## Run the `Intel® Modin* Get Started` Sample
+## Run the `Modin Get Started` Sample
 
-You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally. Visit [Intel® Distribution of Modin Getting Started Guide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-distribution-of-modin-getting-started-guide.html) for more information.
+You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally. 
 
 ### Run the Sample in Visual Studio Code* (Optional)
 
@@ -87,29 +87,33 @@ To learn more about the extensions, see
 
 3. Locate and open the Notebook.
    ```
-   IntelModin_GettingStarted.ipynb
+   Modin_GettingStarted.ipynb
    ```
 
 4. Click the **Run** button to move through the cells in sequence.
 
 ### Run the Python Script Locally
 
-1. Convert ``IntelModin_GettingStarted.ipynb`` to a Python file. There are two options.
+1. Convert ``Modin_GettingStarted.ipynb`` to a Python file. There are two options.
 
    1. Open the notebook and download the script as Python file: **File > Download as > Python (py)**.
 
    2. Convert the notebook file to a Python script using commands similar to the following.
       ```
-      jupyter nbconvert --to python IntelModin_GettingStarted.ipynb
+      jupyter nbconvert --to python Modin_GettingStarted.ipynb
       ```
 2. Run the Python script.
    ```
-   ipython IntelModin_GettingStarted.py
+   ipython Modin_GettingStarted.py
    ```
 
 ### Expected Output
 
-The expected cell output is shown in the `IntelModin_GettingStarted.ipynb` Notebook.
+The expected cell output is shown in the `Modin_GettingStarted.ipynb` Notebook.
+
+## Related Samples
+
+* [Modin Vs. Pandas Performance](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Modin_Vs_Pandas)
 
 ## License
 
@@ -117,3 +121,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)

@@ -74,6 +74,8 @@ The sample demonstrates how to:
 ## Environment Setup
 If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
 
+### On Linux* 
+
 #### Setup Conda Environment
 
 You can list the available conda environments using a command similar to the following.
@@ -137,7 +139,7 @@ Configure Conda for **user_tensorflow** by entering commands similar to the foll
 
 #### Configure Jupyter Notebook
 
-1. Create a new kernel for the Jupyter notebook based on your activated conda environment.
+Create a new kernel for the Jupyter notebook based on your activated conda environment.
    ```
    conda install ipykernel
    python -m ipykernel install --user --name usr_tensorflow
@@ -164,6 +166,7 @@ If you used a separate location, open a terminal and type the following
 ```
 source <custom_path>/bin/activate
 ```
+
 ### Active Conda Environment
 
 1. Ensure you activate the conda environment.

@@ -18,8 +18,7 @@
             "pip install -r requirements.txt",
             "pip install jupyter ipykernel",  
             "python -m ipykernel install --user --name=pytorch-gpu",
-            "python IntelPyTorch_GPU_InferenceOptimization_with_AMP.py",
-            "jupyter nbconvert --to notebook --execute IntelPyTorch_GPU_InferenceOptimization_with_AMP.ipynb"
+            "python IntelPyTorch_GPU_InferenceOptimization_with_AMP.py"
          ]
     }
      ]
