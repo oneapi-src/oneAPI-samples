@@ -1,0 +1,25 @@
+{
+    "guid": "4A2F726E-12C0-45BB-B41B-85A56DA1B1C6",
+    "name": "guided_shfl_scal_migrated",
+    "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL"],
+    "description": "This sample demonstrates hot to perform a scan operation across a thread block in SYCL",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"                   
+                   ]
+          }]
+  
+    },
+    "expertise": "Concepts and Functionality"
+  }
+  
