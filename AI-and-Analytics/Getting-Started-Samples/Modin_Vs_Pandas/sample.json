@@ -21,7 +21,7 @@
 				"pip install numpy",
 				"pip install pandas",
 				"pip install ipython # To run colab notebook",
-				"ipython IntelModin_Vs_Pandas.ipynb # Execute the notebook"
+				"ipython Modin_Vs_Pandas.ipynb # Execute the notebook"
 			]
 		}]
 	},
