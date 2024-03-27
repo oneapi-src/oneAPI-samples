@@ -67,6 +67,8 @@ using PipeOut = sycl::ext::intel::experimental::pipe<
     kPipeMinCapacity  // The capacity of the pipe
     >;
 
+// [[intel::use_stall_enable_clusters]] is required to 
+// work around a compiler bug that hurts performance
 [[intel::use_stall_enable_clusters]] 
 void LoopA(int len) {
   [[intel::initiation_interval(1)]]  
@@ -79,6 +81,8 @@ void LoopA(int len) {
   }
 }
 
+// [[intel::use_stall_enable_clusters]] is required to 
+// work around a compiler bug that hurts performance
 [[intel::use_stall_enable_clusters]] 
 void LoopB(int len) {
   [[intel::initiation_interval(1)]]  
@@ -89,6 +93,8 @@ void LoopB(int len) {
   }
 }
 
+// [[intel::use_stall_enable_clusters]] is required to 
+// work around a compiler bug that hurts performance
 [[intel::use_stall_enable_clusters]] 
 void LoopC(int len) {
   [[intel::initiation_interval(1)]]  
@@ -99,6 +105,8 @@ void LoopC(int len) {
   }
 }
 
+// [[intel::use_stall_enable_clusters]] is required to 
+// work around a compiler bug that hurts performance
 [[intel::use_stall_enable_clusters]] 
 void LoopD(int len) {
   [[intel::initiation_interval(1)]]  
