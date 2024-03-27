@@ -13,6 +13,6 @@ tensorboard-data-server
 tensorboard-plugin-wit
 tf-estimator-nightly
 tokenizers
-transformers==4.36.0
+transformers
 evaluate
 requests
