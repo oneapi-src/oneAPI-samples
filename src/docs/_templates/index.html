@@ -65,13 +65,19 @@
 
     <div class="nav-page-row">
 
-        <div class="col">1
+        <div class="col">
+            <div class="col-nav-left">
+                for<a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">
+                    &nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
+                </a>
+            </div>
         </div>
 
-        <div class="col">2
+        <div class="col">
             <div id="total-records"></div> 
         </div>
         
+
         <div class="col">
             <div class="nav-ctrls ">
                 <button class='arrow left' onclick="previousPage()"></button>
@@ -86,16 +92,14 @@
             </div>
         </div>
 
-        <div>
-            <div id="results-container">
-                <div id="qty-show-results" class="transparent"></div>
-            </div>
-        </div>
-
         <div class="col">
-    
+
         </div>
     
+        <div id="results-container">
+            <div id="qty-show-results" class="transparent"></div>
+        </div>
+        
     </div> <!--END NAV-PAGE-ROW-->
 
 
@@ -104,7 +108,7 @@
 
         <div class='left-column'>
 
-            <div class="accordion"> <!-- accordion-flush id="accordionExample"-->
+            <div class="accordion">
 
                 <div class="accordion-item">
                 
@@ -115,7 +119,7 @@
                                     id="textInput" 
                                     class="searchBox" 
                                     name="searchInput" 
-                                    placeholder="Search toolkits..."
+                                    placeholder="Search samples..."
                                     onkeypress=onlyAlphaNumInput(event) 
                                     data-search
                             >
@@ -127,14 +131,19 @@
 
 
                     </div>
+                    <div class="clear-filters">
+                        <a class="btn" onclick="resetFiltersGoHome()"> 
+                            Clear
+                        </a> 
+                    </div>
 
-
-                    <div class="accordion-header" id="headingOne">
-                            <button 
-                                class="accordion-button collapsed" 
+                    <div class="accordion-header" id="headingOne"> <!-- collapseOne -->
+                            <!-- class="accordion-button collapsed"  -->
+                            <button
+                                class="accordion-button-custom" 
                                 type="button" 
                                 data-bs-toggle="collapse" 
-                                data-bs-target="#stayOpen-collapseOne" 
+                                data-bs-target="#panelsstayOpen-collapseOne" 
                                 aria-expanded="true" 
                                 aria-controls="stayOpen-collapseOne"
                             >
@@ -144,9 +153,10 @@
                 </div>
 
                 <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <!--TEST-->
-                        <!-- </h3> Expertise </h3> -->
+                   
+                    <div class="accordion-body"><!--START-->
+
+
                         <form id="filter-menu">
                             <div class="filter-children expertise-checkboxes"> 
     
@@ -201,19 +211,19 @@
                                     <span class="checkmark"> 
                                         <input type="checkbox" value="cpp" name="data-filter"/> 
                                         <label class="container-filter">
-                                            CPP
-                                        </label>
-                                    </span>
-                                    <span class="checkmark"> 
-                                        <input type="checkbox" value="fortran" name="data-filter"/>
-                                        <label class="container-filter">
-                                            Fortran
+                                            C++
                                         </label>
                                     </span>
                                     <span class="checkmark"> 
                                         <input type="checkbox" value="python" name="data-filter"/>
                                         <label class="container-filter">
                                             Python
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="fortran" name="data-filter"/>
+                                        <label class="container-filter">
+                                            Fortran
                                         </label>
                                     </span>
                                 </div>
@@ -250,7 +260,8 @@
                         </form>
 
 
-                    </div>
+                    </div> <!--END ACCORDION-BODY-->
+
                   </div>
                 </div>
 
@@ -264,16 +275,19 @@
                 <div class='template-wrapper'>
 
                     <template data-toolkit-template >
-                        <li class="card grid">
-                            <div class="card-title" data-header></div>
-                                <div class="card-desc" data-body></div>
-                                    <div class="badges-container"> 
-                                        <p class="badges badge1" data-expertise></p>
-                                        <p class="badges badge2" data-languages></p>
-                                        <p class="badges-devices" data-targetDevice></p>
-                                        <div url></div>
-                                    </div>
-                        </li>
+                            
+                            <div class="card">
+                                <div class="card-title" data-header></div>
+                                    <section class="card-desc" data-body></section>
+                                <span class="badges-container"> 
+                                    <p class="badges badge1" data-expertise></p>
+                                    <p class="badges badge2" data-languages></p>
+                                    <p class="badges-devices" data-targetDevice></p>
+                                    <div url></div>
+                                </span>  
+                            </div>
+  
+                 
                     </template>
 
                 </div>
