@@ -122,8 +122,8 @@ function lastPage() {
 }
 
 function resetFiltersGoHome(){
-    destroyView();
     resetFilters();
+    destroyView();
     reloadData();
 }
 
@@ -157,7 +157,7 @@ function resetSearcher() {
 
 function showTotalRecords() {
     const records = document.getElementById("total-records");
-    records.innerHTML = `${[...state.data].length} Toolkits`;
+    records.innerHTML = `${[...state.data].length} samples`;
 }
 
 function renderUi(data) {

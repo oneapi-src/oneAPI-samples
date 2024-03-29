@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 import pathlib
 import sys
+import textwrap
 # import pprint
 # pp = pprint.PrettyPrinter(indent=4)
 
@@ -59,11 +60,25 @@ def make_url_dict(branch:str,file_paths:list):
     else:
         print("An error occurred. Ensure file_paths are generated.")
 
+def truncate_text(text):
+    wrapper = textwrap.fill(text,
+                                initial_indent='',
+                                width=50, 
+                                max_lines=3, 
+                                placeholder="...", 
+                                break_long_words=True, 
+                                drop_whitespace=True, 
+                                break_on_hyphens=True,
+                                replace_whitespace=True)
+    return wrapper
+
+
 def df_sort_filter():
     '''Import JSON to DF; sort by name col; filter only records w/ expertise; drop unused columns; add url col.'''
     raw_data = pd.read_json("sample_db_pre.json")
     df = pd.DataFrame(raw_data)
     df = df.sort_values(by=['name'], ignore_index=True,key=lambda x: x.str.lower())
+    df['description'] = df['description'].apply(truncate_text) # truncate sample description to achieve uniform card height
     df = df.dropna(subset=['expertise']) # DROP row if 'expertise' shows "NaN"
     df = df.drop(["guid","toolchain", "os", "builder", "ciTests","commonFolder", "dependencies", "categories"], axis=1)
     df['url'] = df.insert(2, 'url', 'np.Nan')
@@ -79,7 +94,8 @@ def df_add_urls(file_paths:list):
 def df_to_db(file_paths:list):
     '''Create prod database, combining df_add_urls(); output for frontend display'''
     df = df_add_urls(file_paths)
-    # filepath below must match steps in assoc CI Job, 'with: path: app/dev'
+    # filepath below must match steps in assoc CI Job, 'with path: app/dev'
+    # for testing use: ("./sample_db_prd.json")
     rev_json = Path('src/docs/_static/sample_db_prd.json')
     db = df.to_json(rev_json, orient='records')    
     return db
@@ -95,9 +111,10 @@ def count_json_recs(filename:str):
 def main():
     '''Orchestrate sequence of steps to output sample_db_prd.json'''
     rootdir = sys.argv[-1]
-    file_paths = make_json_list(rootdir)
+    file_paths = make_json_list("./oneAPI-samples")
     merge_json_files(file_paths)
     json_db = df_to_db(file_paths)
+    # for testing use: ("./sample_db_prd.json")
     count_json_recs("src/docs/_static/sample_db_prd.json")
     return json_db
 
