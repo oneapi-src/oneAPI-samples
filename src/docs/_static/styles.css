@@ -303,16 +303,25 @@ input[type=checkbox] label{
   align-self: flex-start;
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
   flex-wrap: nowrap;
   vertical-align: bottom;
+  align-items: flex-end;
   gap: 0.15rem;
+  /* padding-top: 1.0em; */
 }
 
-.badges-devices{
+ .badges-devices{
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
-  gap: 0.5rem;
+  align-self: flex-end;
+  flex-wrap: nowrap;
+  vertical-align: bottom;
+  align-items: flex-end;
+  gap: 0.15rem; 
+  margin-top: auto;   /* force devices to bottom */
+  margin-bottom: 0px; /* force devices to bottom */
+
 }
 
 .secondrow{
@@ -340,48 +349,57 @@ input[type=checkbox] label{
 .badge1 {
   background-color: rgba( 250,250,250,98); 
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
-  color: rgb(0, 0, 0) !important;
+  /* color: rgb(0, 0, 0) !important; */
+  color: rgb(0,40,90); 
   inline-size: 100px; 
   overflow-wrap: anywhere; /* word-break: break-all;  */
   text-align: center;
   font-size: 14px !important; 
   font-family: var(--bs-header-font-family);
-  font-weight: bold;
-  font-weight: 800;
-  border-radius: 10px;
+  font-weight: bolder;
   width: auto;
-  max-width:150px;
-  height: 50px;
+  max-width:10.0em;
+  min-width:5.0em;
+  max-height: 5.0em;
+  min-height: 4.0em;
+  border-radius: 4.0em;
+  padding: 0.5em;
   cursor: pointer; 
+  /* font-weight: 600; */
   }
 
 .badge2 {
   background-color: rgba(233,233,233,91); 
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
-  color: rgb(0, 0, 0) !important;
+  /* color: rgb(0, 0, 0) !important; */
+  color: rgb(0,40,90); 
   font-size: 14px !important; 
   font-family: var(--bs-header-font-family);
-  font-weight: bold;
-  font-weight: 800;
+  font-weight: bolder;
   border-radius: 10px;
-  width: auto;
-  min-width:60px;
-  height: 50px;
+  /* width: auto; */
+  min-width:5.0em;
+  max-height: 5.0em;
+  min-height: 4.0em;
+  border-radius: 4.0em;
+  padding: 0.5em;
   cursor: pointer; 
  }
 
 .badge3 {
   background-color: rgba(207,207,207,81); 
-  color: rgb(0, 0, 0) !important;
+  /* color: rgb(0, 0, 0) !important; */
+  color: rgb(0,40,90); 
   box-shadow: inset 0px 0px 3px rgba(174,174,174,0.5);
   font-size: 14px !important; 
   font-family: var(--bs-header-font-family);
-  font-weight: bold;
-  font-weight: 800;
+  font-weight: bolder;
   border-radius: 10px;
-  width: auto;
-  min-width:60px;
-  height: 50px;
+  min-width:5.0em;
+  max-height: 5.0em;
+  min-height: 4.0em;
+  border-radius: 4.0em;
+  padding: 0.5em;
   cursor: pointer; 
 }
 
@@ -718,7 +736,7 @@ input:focus {
   box-shadow: 2px 2px 2px rgba(174,174,174,0.2);
   min-height: 22vh;
   text-align: left;
-  padding: 15px 25px 15px 25px;
+  padding: 15px 25px 5px 25px;
 }
 
 /* Method for using <li class="card ..."> as HYPERLINK */
@@ -762,7 +780,7 @@ input:focus {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2px -2px 2px -2px;
+  /* padding: 8px -2px 2px -2px; */
   line-height: 1.25em; /* adjust leading*/
 }
 
@@ -853,8 +871,9 @@ input:focus {
 }
 
 .pg-rng-box {
-  /* display: flex;
-  flex-grow: 1; */
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
   /* flex: 0 1 auto; */
   /* background-color: rgba(180,240,255,0.25); */
   /* opacity: 0.25; */
@@ -863,16 +882,18 @@ input:focus {
 
 .pg-rng {
   display : flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   vertical-align: middle;
   flex-grow: 1;
   padding: .5rem;
   line-height: 0.5em; /* adjust leading */
   border: none;
-  min-width: 120px;
-  max-width: 150px;
+  min-width: 8.0em;
+  max-width: 10.0em;
   height: 40px;
-  border-radius: 7px ;
+  border-radius: 7px;
   color: rgb(0,84,174);
   background-color: rgba(180,240,255,0.3);
   /* z-index: 100; */
@@ -1248,7 +1269,7 @@ a:hover {
   align-items: stretch;
   height: auto;
   overflow:auto;
-  margin: 15px;
+  /* margin: 15px; */
   /* background-color: red; */
 }
 

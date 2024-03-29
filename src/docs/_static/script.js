@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         showTotalRecords();
         attachSearch();
         filterPaginatedData();
-        externalLinksOpenNewTab();
+        // externalLinksOpenNewTab();
         lastUpdated();
     })
 });
@@ -58,6 +58,7 @@ function reloadData() {
     const reload = new Event('DOMContentLoaded');
     document.dispatchEvent(reload)
     console.log(reload)
+    externalLinksOpenNewTab();
 }
 
 function lastUpdated() {
@@ -157,7 +158,7 @@ function resetSearcher() {
 
 function showTotalRecords() {
     const records = document.getElementById("total-records");
-    records.innerHTML = `${[...state.data].length} samples`;
+    records.innerHTML = `${[...state.data].length} total samples`;
 }
 
 function renderUi(data) {
@@ -186,6 +187,7 @@ function renderUi(data) {
     qtyFilteredResults(filtered)
     renderCards(filtered)
     printPaginatorState()
+    externalLinksOpenNewTab()
 }
 
 function qtyFilteredResults(filtered) {
@@ -321,7 +323,8 @@ function filterPaginatedData() {
             checkboxFilterHandler(checked, e.target.value)
         }
         checkbox.removeListeners()       
-        checkbox.onEvent('change', handler) 
+        checkbox.onEvent('change', handler)
+
     }
 }
 
@@ -381,4 +384,3 @@ function externalLinksOpenNewTab() {
     })
 
 };
-
