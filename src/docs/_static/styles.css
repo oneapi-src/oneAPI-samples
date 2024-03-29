@@ -419,6 +419,9 @@ input[type=button] > #nobutton {
   padding-left: 10px;
   /* margin-left: 20px; */
   white-space: nowrap;
+  margin-top: 25px;
+  padding-left: 10px;
+  /* margin-left: 20px; */
 }
 
 .logo {
@@ -426,10 +429,11 @@ input[type=button] > #nobutton {
 }
 
 .grid-row {
+
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   /* grid-template-columns:  25fr 15fr 20fr 15fr 25fr; */
-  
+  /* grid-template-columns:  25fr 16fr 18fr 16fr 25fr; */
   /* grid-template-columns: minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px); */
   /* See col-nav-grp padding*/
   background-color: rgb(0,84,174);
@@ -632,7 +636,6 @@ input::placeholder {
 }
 
 .search-widget .searchBox {
-  /* font-family:var(--bs-header-font-family); */
   font-family: var(--bs-body-font-family);
   font-size: large;
   display: flex; /* inline-flex */
@@ -695,7 +698,7 @@ input:focus {
    /* center card-grid in viewport */
   display: grid;
   grid-template-columns: repeat(3, minmax(360px, 480px));
-  grid-auto-rows: 1fr; /* Assure all rows are same height */
+  grid-auto-rows: 1fr; /* Make all rows the same height */
   align-items: self-start;
   grid-gap: 0.5rem;
   /* margin-top: 1.25rem; */
@@ -860,6 +863,7 @@ input:focus {
   /* opacity: 0.25; */
   /* z-index: 20; */
  } 
+
 
 .pg-rng {
   display : flex;
@@ -1252,22 +1256,6 @@ a:hover {
   /* background-color: red; */
 }
 
-/* .template-wrapper .row{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: left;
-  width: 100%;
-  margin-left: -25px;
-} */
-
-/* .column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-} */
-
 .content-row{
   display: flex;
   flex-direction: row;
@@ -1282,7 +1270,7 @@ a:hover {
   /* width:fit-content !important;  */
   /* flex: 0 1 auto; */
   margin-top: 0.20rem; 
-  /* /* padding-left: 1.5em; */
+  /* padding-left: 1.5em; */
   padding-right: 0.5em;
   /* margin-right:-0.5em; */
 }
