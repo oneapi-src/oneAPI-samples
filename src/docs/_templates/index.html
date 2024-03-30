@@ -106,27 +106,28 @@
     
     <div class='content-row'>
 
-        <div class='left-column'>
+            <div class='left-column'>
 
-            <div class="accordion">
+                <div class="accordion">
 
-                <div class="accordion-item">
+                    <div class="accordion-item">
                 
-                    <div class="search-container">            
-                        <div class="search-widget">   
-                            <i class="fa fa-search fa-1x"></i>
-                            <input type="text" 
-                                    id="textInput" 
-                                    class="searchBox" 
-                                    name="searchInput" 
-                                    placeholder="Search samples..."
-                                    onkeypress=onlyAlphaNumInput(event) 
-                                    data-search
-                            >
-                                <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
-                                    <i class="fa fa-remove fa-xl"></i>
-                                    <!-- fa fa-refresh -->
-                                </button>
+                        <div class="search-container">            
+                            <div class="search-widget">   
+                                <i class="fa fa-search fa-1x"></i>
+                                <input type="text" 
+                                        id="textInput" 
+                                        class="searchBox" 
+                                        name="searchInput" 
+                                        placeholder="Search samples..."
+                                        onkeypress=onlyAlphaNumInput(event) 
+                                        data-search
+                                >
+                                    <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
+                                        <i class="fa fa-remove fa-xl"></i>
+                                        <!-- fa fa-refresh -->
+                                    </button>
+                            </div>
                         </div>
                     </div>
 
@@ -149,9 +150,9 @@
                             Filters
                             </button>
                     </div>
-                </div>
 
-                <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                
+                    <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                    
                     <div class="accordion-body"><!--START-->
 
@@ -262,12 +263,11 @@
                     </div> <!--END ACCORDION-BODY-->
 
                   </div>
-                </div>
-
+                </div> <!--end acordion-->
 
             </div> <!-- end left-column -->
             
-            <div class='right-column'>
+        <div class='right-column'>
 
                 <div class="toolkit-cards" data-toolkit-cards-container> </div>
 
@@ -291,43 +291,29 @@
 
                 </div>
 
-            </div>
-
-
-
-
-
-
-
-
-    </div>
-
-            <!-- </div> -->
-
-
-        <!-- </div> -->
-
-
-
-
-
-    <div id="hide"> 
-        <div class="no-results">  
-            <div class="lft-col"></div>
-                <div class="mid-col help-msg">
-                    <div>
-                        <div> <span class="emph1">No results found. </span></div>
-
-                        <ul class="help">
-                            <li> <span class="emph1">Search</span>:  Simplify search term.</span></li>
-                            <li> <span class="emph1">Filter</span>:  Select one filter per column. </li>
-                            <li> <span class="emph1"> Search</span><span class="emph2"> and </span><span class="emph1">Filter</span>: Avoid combining.</li>
-                        </ul>
+                <div id="hide"> 
+                    <div class="no-results">  
+                        <div class="lft-col"></div>
+                            <div class="mid-col help-msg">
+                                <div>
+                                    <div> <span class="emph1">No results found. </span></div>
+            
+                                    <ul class="help">
+                                        <li> <span class="emph1">Search</span>:  Simplify search term.</span></li>
+                                        <li> <span class="emph1">Filter</span>:  Select one filter per category. </li>
+                                        <li> <span class="emph1">Avoid combining:</span><span class="emph1"> Search</span><span class="emph2"> and </span><span class="emph1">Filter</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        <div class="rgt-col"></div>
                     </div>
                 </div>
-            <div class="rgt-col"></div>
-        </div>
-    </div>
+
+        </div> <!--END right column-->
+
+
+    </div> <!--END content row-->
+
 </div>
 {% endblock %}
 
