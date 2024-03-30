@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="app-title">
-                    Samples Catalog
+                    Samples&nbsp;Catalog
                 </div>
 
                 <div>
@@ -31,35 +31,22 @@
             </div>
         </div>
 
-        <div class="col "><!--#2-->
-            <!-- #2 -->
-        </div>    
+        <div class="col ">  <!--#2--></div>    
 
-        <div class="col "> <!--#3-->
-            <!-- #3 -->
-        </div>
+        <div class="col ">  <!--#3--></div>
         
-        <div class="col "> <!--#4-->
-            <!-- #4 -->
+        <div class="col ">  <!--#4--> </div>
+
+        <div class="col">   <!--#5--> </div>
+
+        <div class="col">  
+            <figure>
+                <a href="https://github.com/oneapi-src/oneAPI-samples">
+                <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
+                </a>
+                <figcaption>View on GitHub*</figcaption>
+            </figure>
         </div>
-
-        <div class="col">
-
-            <div class="col-nav-grp"> 
-                <!-- <div>5A</div>  -->
-
-                <div>
-                    <figure>
-                        <a href="https://github.com/oneapi-src/oneAPI-samples">
-                        <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
-                        </a>
-                        <figcaption>View on GitHub*</figcaption>
-                    </figure>
-                </div>
-            </div>
-
-        </div>
-
 
     </div> <!--END GRID ROW-->
 
@@ -72,11 +59,12 @@
                 </a>
             </div>
         </div>
-
+ 
         <div class="col">
             <div id="total-records"></div> 
         </div>
         
+        <div class="col"></div>
 
         <div class="col">
             <div class="nav-ctrls ">
@@ -92,14 +80,12 @@
             </div>
         </div>
 
-        <div class="col">
-
-        </div>
-    
         <div id="results-container">
             <div id="qty-show-results" class="transparent"></div>
         </div>
-        
+
+        <div class="col"></div>
+
     </div> <!--END NAV-PAGE-ROW-->
 
 
@@ -125,7 +111,6 @@
                                 >
                                     <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
                                         <i class="fa fa-remove fa-xl"></i>
-                                        <!-- fa fa-refresh -->
                                     </button>
                             </div>
                         </div>
@@ -154,8 +139,7 @@
                 
                     <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                    
-                    <div class="accordion-body"><!--START-->
-
+                    <div class="accordion-body">
 
                         <form id="filter-menu">
                             <div class="filter-children expertise-checkboxes"> 
@@ -204,7 +188,6 @@
 
                             <div class="filter-children language-checkboxes"> 
                                 <span class="badge-col-head">
-                                    <!-- <div class="circle badge1-circle"></div>  -->
                                     Language
                                 </span>
                                 <div id="">
@@ -228,15 +211,13 @@
                                     </span>
                                 </div>
                             </div> 
-                            <!-- </h3> Target Device </h3> -->
 
                             <div class="filter-children device-checkboxes">         
                                 <span class="badge-col-head"> 
-                                    <!-- <div class="circle badge3-circle"></div> -->
                                     Target Device
                                 </span>
                                                 
-                                <div> <!--onclick="checkBoxClick(event)"-->
+                                <div>
                                     <span class="checkmark"> 
                                         <input type="checkbox" value="cpu" name="data-filter"/> 
                                         <label class="container-filter">
@@ -258,9 +239,7 @@
                                 </div>      
                             </div>
                         </form>
-
-
-                    </div> <!--END ACCORDION-BODY-->
+                    </div>
 
                   </div>
                 </div> <!--end acordion-->
@@ -308,39 +287,7 @@
                         <div class="rgt-col"></div>
                     </div>
                 </div>
-
         </div> <!--END right column-->
-
-
     </div> <!--END content row-->
-
 </div>
 {% endblock %}
-
-<!-- <div class="col">  -->
-    <!--#1 ORIGINAL 2ND ROW BELOW STICKY NAV   -->
-    <!-- <div class="col-nav-left"> for 
-        <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">&nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
-        </a>
-    </div>
-</div>
-
-<div class="col"></div> -->
-    <!--#2-->
-
-<!-- <div class="col"> -->
-    <!--#3-->
-    <!-- Get started on oneAPI development with code samples
-</div>
-
-<div class="col"></div> -->
-    <!--#4-->
-
-<!-- <div class="col"> -->
-    <!--#5-->
-    <!-- <div id="total-records"></div> 
-</div> -->
-
-<!-- FILTER INPUT WRAPPER - PREVIOUS CHECKBOXES -->
-<!-- <div class="filter-input-wrapper">
-</div> -->

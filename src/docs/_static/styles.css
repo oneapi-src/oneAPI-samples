@@ -430,7 +430,10 @@ input[type=checkbox] label{
   font-weight: normal; 
   font-weight: 400;
   color: rgba(255,255,255,100);
-  padding:  12px 0px 15px 20px;
+  padding: 0.25em 0.5em 0.25em 0.5em;
+  min-width: 2.5em;
+  display: block;
+  padding: 0.65em 1.5em 0.5em 1.5em;
 }
 
 input[type=button] > #nobutton {
@@ -461,16 +464,15 @@ input[type=button] > #nobutton {
 .grid-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  /* grid-template-columns:  25fr 15fr 20fr 15fr 25fr; */
-  
-  /* grid-template-columns: minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px) minmax(20px, 25px); */
   /* See col-nav-grp padding*/
   background-color: rgb(0,84,174);
   width: 100%;
   min-height: fit-content;
   text-align: center;
   align-items: center;
-  padding-left: 1.25em;
+  padding-top: 0.5em;
+  padding-left: 0.5em;
+  padding-right: 0.75em;
 } 
 
 .col {
@@ -483,8 +485,6 @@ input[type=button] > #nobutton {
   vertical-align: middle;
 }
 
-/* dev only
-/* outline: dotted; outline-color: orangered;*/
 
 .col:nth-child(1) {
   align-items: flex-start;
@@ -518,7 +518,8 @@ input[type=button] > #nobutton {
   font-weight: 400;
   display: flex;
   direction: row;
-  overflow: hidden;
+  flex: 1;
+  /* overflow: hidden; */
   /* padding:  12px 0px 15px 20px; */
 } 
 
@@ -559,6 +560,9 @@ input[type=button] > #nobutton {
 }
 
 .clear-filters {
+  font-style: normal;
+  font-weight: 400;
+  font-size:  16px;
   display: flex;
   flex-direction: row;
   padding-left: 0.25em; /* offset to right; treat searchbar + X as one*/
@@ -730,7 +734,7 @@ input:focus {
   grid-template-columns: repeat(3, minmax(360px, 480px));
   grid-auto-rows: 1fr; /* Assure all rows are same height */
   align-items: self-start;
-  grid-gap: 0.25rem;
+  grid-gap: 0.5em;
   /* margin-top: 1.25rem; */
   margin-bottom: 2rem;
   padding-bottom: 100px;
@@ -740,7 +744,6 @@ input:focus {
 .card {
   display: flex;
   flex-direction: column;
-  height:100%;
   font-family: var(--bs-body-font-family);
   font-style: normal;
   font-weight: 400;
@@ -749,6 +752,8 @@ input:focus {
   background-color: rgba(255,255,255,100);
   border-radius: 7px;
   box-shadow: 2px 2px 2px rgba(174,174,174,0.2);
+  height:100%;
+  width: auto;
   min-height: 22vh;
   text-align: left;
   padding: 1.0em;
@@ -841,8 +846,7 @@ input:focus {
 
 .nav-page-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-template-rows: 1fr;
+  grid-template-columns: 16% 12% 14% 32% 14% 12%; 
   grid-gap: 0.5rem;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
@@ -852,15 +856,16 @@ input:focus {
   vertical-align: middle;
   min-height: 92px;
   width: 100%;
-  padding-left: 1.25em;
+  padding-left: 1.5em;
+  /* margin-left: 0.25em; */
   /* margin-right: 2.0em; */
 }
 
-@media (max-width: 500px) {
+/* @media (max-width: 500px) {
   div {
-    grid-template-columns: repeat(5, minmax(100px, 1fr));
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
   }
-}
+} */
 
 .nav-ctrls {
   font-family: var(--bs-header-font-family);
@@ -870,10 +875,10 @@ input:focus {
   display: flex;
   flex-direction: row;
   /* vertical-align: middle; */
-  justify-content: center;
-  align-self: center;
+  /* justify-content: center;
+  align-self: center; */
   text-align: center;
-  align-items: stretch;
+  /* align-items: stretch; */
   /* column-gap: 0.875rem; */
   font-size: 20px;
   /* margin-left: 8.0em; */
@@ -1294,7 +1299,10 @@ a:hover {
 
 #footer-container{
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  /* flex-shrink: 1; */
+  max-height: 1.5em;
 }
 
 #footer-blk-2{
@@ -1338,14 +1346,14 @@ a:hover {
   flex-direction: column;
   height: 100%;
   flex-basis: 12%;
-  flex-shrink: 3;
+  flex-shrink: 2;
   max-width: auto;
   /* width:fit-content !important;  */
   /* flex: 0 1 auto; */
   margin-top: 0.20rem; 
-  padding-left: 0.5em;
+  /* padding-left: 0.5em; */
   padding-right: 0.25em;
-  /* margin-right:-0.5em; */
+  margin-right: 0.15em;
 }
 
 .right-column {
@@ -1450,27 +1458,7 @@ a:hover {
   flex-direction: column;
   justify-content: flex-start;
   flex-grow: 1;
-  padding-left: 0.5em;
+  /* padding-left: 0.5em; */
   /* flex-shrink: 0; */
   /* width:fit-content; */
 }
-
-
-/* .collapse {
-  &:not(.show) {
-    display: none;
-  }
-}
-.collapsing {
-  height: 0;
-  overflow: hidden;
-  @include transition($transition-collapse);
-
-  &.collapse-horizontal {
-    width: 0;
-    height: auto;
-    @include transition($transition-collapse-width);
-  }
-} */
-
-
