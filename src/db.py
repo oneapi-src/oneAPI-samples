@@ -96,7 +96,7 @@ def df_to_db(file_paths:list):
     df = df_add_urls(file_paths)
     # filepath below must match steps in assoc CI Job, 'with path: app/dev'
     # for testing use: ("./sample_db_prd.json")
-    rev_json = Path('app/dev/src/docs/_static/sample_db_prd.json')
+    rev_json = Path('src/docs/_static/sample_db_prd.json')
     db = df.to_json(rev_json, orient='records')    
     return db
 
@@ -114,8 +114,7 @@ def main():
     file_paths = make_json_list(rootdir)
     merge_json_files(file_paths)
     json_db = df_to_db(file_paths)
-    # for testing use: ("./sample_db_prd.json")
-    # count_json_recs("./sample_db_prd.json")
+    count_json_recs("src/docs/_static/sample_db_prd.json")
     return json_db
 
 if __name__ == "__main__":
