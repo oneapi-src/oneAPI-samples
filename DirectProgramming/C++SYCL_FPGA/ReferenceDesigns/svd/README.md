@@ -204,7 +204,7 @@ Since the singular vectors are non-unique, their correctness are checked by chec
       ```
       make report
       ```
-      The report resides at `pca_report/reports/report.html`.
+      The report resides at `svd_report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -256,7 +256,7 @@ Since the singular vectors are non-unique, their correctness are checked by chec
       ```
       nmake report
       ```
-      The report resides at `pca_report.a.prj/reports/report.html`.
+      The report resides at `svd_report.a.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
