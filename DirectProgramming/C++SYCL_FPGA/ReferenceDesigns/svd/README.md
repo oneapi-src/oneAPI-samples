@@ -126,24 +126,9 @@ AV = US
 And since S is a diagonal matrix, inverse(S) is the same as doing diagonal-element-wise reciprocals.
 
 So to sum up, Matrix U can be obtained through:
-```math
-U = AVS^{-1} =
-\begin{bmatrix}
-(\sum_{k=1}^{n} a_{0,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{0,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{0,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{0,k}v_{k,n})/s_{n,n} & ... \\
-(\sum_{k=1}^{n} a_{1,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{1,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{1,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{1,k}v_{k,n})/s_{n,n} & ... \\
-(\sum_{k=1}^{n} a_{2,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{2,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{2,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{2,k}v_{k,n})/s_{n,n} & ... \\
-...                                     & ...                                     & ...                                     & ... & ...                                     & ... \\
-(\sum_{k=1}^{n} a_{m,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{m,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{n,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{m,k}v_{k,n})/s_{n,n} & ... 
-\end{bmatrix} 
-```
-However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
+![](assets/U_matrix.jpg)
 
-```math 
-U = AVS^{-1} =
-\begin{bmatrix}
-{\sum_{k=1}^{n}} (a_{0,k}v_{k,0})
-\end{bmatrix} 
-```
+However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
 
 In this kernel, filler data is inserted to complete the matrix if needed. 
 
@@ -155,10 +140,7 @@ An efficient algorithm to do this is already implemented in our [QR Decompositio
 ### Demo testbench
 In this sample, a testbench is used to demo the SVD design. The test bench use an input matrix of size 16 x 8, and its know singular values to compare for correctness.
 
-Since the singular vectors are non-unique, their correctness are checked by checking its orthogonality and the relationship: 
-```math
-A = USV^-1
-```
+Since the singular vectors are non-unique, their correctness are checked by checking its orthogonality and the relationship $A = USV^-1$
 
 ## Build the `SVD` design
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
