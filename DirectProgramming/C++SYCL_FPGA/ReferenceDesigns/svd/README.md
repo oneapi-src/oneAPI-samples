@@ -141,7 +141,7 @@ However, not all columns of the U matrix can be constructed this way. When the i
 ```math 
 U = AVS^{-1} =
 \begin{bmatrix}
-\sum_{k=1}^{n} (a_{0,k}v_{k,0})
+{\sum_{k=1}^{n}} (a_{0,k}v_{k,0})
 \end{bmatrix} 
 ```
 
