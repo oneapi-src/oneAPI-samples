@@ -126,7 +126,7 @@ AV = US
 And since S is a diagonal matrix, inverse(S) is the same as doing diagonal-element-wise reciprocals.
 
 So to sum up, Matrix U can be obtained through:
-![](assets/U_matrix.jpg)
+![](assets/U_matrix.png)
 
 However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
 
