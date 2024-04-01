@@ -8,10 +8,10 @@
 #include "svd_testcase.hpp"
 
 int main(int argc, char *argv[]) {
-#if FPGA_SIMULATOR
-  int repetitions = 1;
-#else
+#if FPGA_HARDWARE
   int repetitions = 16384;
+#else
+  int repetitions = 1;
 #endif
   if (argc == 2) {
     repetitions = std::stoi(argv[1]);
