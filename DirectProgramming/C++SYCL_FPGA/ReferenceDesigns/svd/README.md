@@ -129,7 +129,7 @@ So to sum up, Matrix U can be obtained through:
 ```math
 U = AVS^{-1} =
 \begin{bmatrix}
-(\sum_{k=1}^{n} a_{0,k}v_{k,0}) & (\sum_{k=1}^{n} a_{0,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{0,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{0,k}v_{k,n})/s_{n,n} & ... \\
+(\sum_{k=1}^{n} a_{0,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{0,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{0,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{0,k}v_{k,n})/s_{n,n} & ... \\
 (\sum_{k=1}^{n} a_{1,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{1,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{1,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{1,k}v_{k,n})/s_{n,n} & ... \\
 (\sum_{k=1}^{n} a_{2,k}v_{k,0})/s_{0,0} & (\sum_{k=1}^{n} a_{2,k}v_{k,1})/s_{1,1} & (\sum_{k=1}^{n} a_{2,k}v_{k,2})/s_{2,2} & ... & (\sum_{k=1}^{n} a_{2,k}v_{k,n})/s_{n,n} & ... \\
 ...                                     & ...                                     & ...                                     & ... & ...                                     & ... \\
@@ -137,6 +137,13 @@ U = AVS^{-1} =
 \end{bmatrix} 
 ```
 However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
+
+```math 
+U = AVS^{-1} =
+\begin{bmatrix}
+\sum_{k=1}^{n} a_{0,k}v_{k,0}
+\end{bmatrix} 
+```
 
 In this kernel, filler data is inserted to complete the matrix if needed. 
 
