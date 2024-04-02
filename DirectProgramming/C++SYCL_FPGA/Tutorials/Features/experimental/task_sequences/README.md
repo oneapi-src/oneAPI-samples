@@ -58,7 +58,7 @@ This sample demonstrates some key concepts:
 - How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow within the sequence of dependent loops. Loop B will consume the output data from Loop A, Loop C will consume the output data from Loop B while Loop D will consume the output data from both Loop A and Loop C. The behaviour of different implementation can be observed below.
+The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow within the sequence of dependent loops. Loop A receives input data from input pipes and output the data, Loop B consume the output data from Loop A, Loop C consume the output data from Loop B while Loop D consume the output data from both Loop A and Loop C and ouput the processed data to output pipe. The behaviour of different implementation can be observed below.
 
 ![](assets/LoopStructure.svg)
 
