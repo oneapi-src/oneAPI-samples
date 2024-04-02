@@ -5,12 +5,7 @@ namespace fpga_linalg {
 // This functor computes the columns x columns covariance matrix of a rows x
 // columns input matrix A
 
-// It uses the following formula:
-// COV[i][j] = (T[i][j] - rows*mean[i]*mean[j]) /
-//                                (sqrt(T[i][i] - rows*mean[i]*mean[i]) *
-//                                   sqrt(T[j][j] - rows*mean[j]*mean[j]))
-// Where T is transpose(A)*A and mean[k] is the mean of the column k of the A
-// matrix
+// The deign compute T tah is is transpose(A)*A 
 
 template <typename T,          // The datatype for the computation
           unsigned rows,       // Number of rows in the A matrices

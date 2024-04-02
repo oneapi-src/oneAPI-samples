@@ -9,7 +9,7 @@ The `SVD` reference design demonstrates a singular value decomposition implement
 | Category              | Reference Designs and End to End
 
 ## Purpose
-This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for application such as matrix pseudoinverse and solving homogeneous linear equations.
+This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for application such as matrix pseudo-inverse and solving homogeneous linear equations.
 
 SVD usually described for factorization of a 2D input matrix A such that $A = USV^T$
 
@@ -72,9 +72,9 @@ This SVD design consist of 4 computation kernels (dark blue squares below), as w
 ### Input covariance matrix computation
 The covariance computation in this design is the same as used in the [PCA](../pca/README.md) reference design except without standardization.
 
-The covariance of input A is equal to A multiplies transpose of A:
+The covariance of input A is equal to transpose of A multiplies A:
 ```math
-Cov(A) = AA^T
+Cov(A) = A^{T}A
 ```
 Therefore this kernel only performs a matrix multiplication by blocks.
 
