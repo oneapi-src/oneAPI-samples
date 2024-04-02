@@ -145,6 +145,8 @@ struct SVDTestcase {
       svd_testbench_tool::print_matrix<T>(flat_V, cols_A, cols_A, true);
       std::cout << "U:\n";
       svd_testbench_tool::print_matrix<T>(flat_U, rows_A, rows_A, true);
+      std::cout << "Rank deficient input: " 
+        << (rank_deficient[0] ? "True" : "False") << std::endl;
     }
     return std::max({S_error, A_error, U_orthogonal_error, V_orthogonal_error});
   }
