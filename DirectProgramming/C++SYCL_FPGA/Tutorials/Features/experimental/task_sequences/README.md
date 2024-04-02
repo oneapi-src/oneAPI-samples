@@ -58,7 +58,7 @@ This sample demonstrates some key concepts:
 - How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow in the system. The behaviour of naive implementation of the sequence of loops or using task sequences to schedule the loops to run in parallel can be observed in the waveform below.
+The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow in the system and a consumer loop will process the output from the producer loop and finally writes the output into a output pipe. The behaviour of the naive implementation of the sequence of loops and using task sequences to schedule the loops to run in parallel can be observed in the waveform below.
 
 ![](assets/LoopStructure.svg)
 
@@ -66,7 +66,7 @@ When you write code containing a sequence of loops, each loop in the sequence mu
 
 ![](assets/simulation_naive.png)
 
-Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe `IDPipeOut` produces results almost immediately:
+Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe `IDPipeOut` produces results almost immediately in approximately 3ns:
 
 ![](assets/simulation_task_sequence.png)
 
