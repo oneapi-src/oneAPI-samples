@@ -58,11 +58,11 @@ This sample demonstrates some key concepts:
 - How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow within the sequence of dependent loops. Loop A receives input data from input pipes and output the data, Loop B consume the output data from Loop A, Loop C consume the output data from Loop B while Loop D consume the output data from both Loop A and Loop C and ouput the processed data to output pipe. The behaviour of different implementation can be observed below.
+The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow in the system. The behaviour of naive implementation of the sequence of loops or using task sequences to schedule the loops to run in parallel can be observed in the waveform below.
 
 ![](assets/LoopStructure.svg)
 
-When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles before the output pipe `IDPipeOut` produces any output:
+When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles or approximately 344ns before the output pipe `IDPipeOut` produces any output:
 
 ![](assets/simulation_naive.png)
 
@@ -79,8 +79,8 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 | Template Parameter | Type     | Default Value | Description
 |--------------------|----------|---------------|---
 | Task function      | callable | N/A           | A callable object `f` that defines the asynchronous task to be associated with the `task_sequence`. The callable object `f` must meet the following requirements: <br> • The object `f` must be statically resolvable at compile time, which means it is not a function pointer. <br> • The object `f` must not be an overloaded function. <br> • The return type (`ReturnT`) and argument types (`ArgsT…`) of object f must be resolvable and fixed.
-| Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls. This parameter value corresponds to the minimum number of outstanding `async()` function calls to be supported. When the outstanding number of `async()` function calls reaches this value, further calls may block until the number of outstanding calls is reduced to the `invocation_capacity`. The default value of this parameter is 1.
-| Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results. This parameter value corresponds to the maximum number of outstanding `async()` calls such that all outstanding tasks are guaranteed to make forward progress. Further `async()` calls may block until the number of outstanding calls reduces to the `response_capacity`. The default value of this parameter is 1.
+| Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls.
+| Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results.
 
 > *Invocation capacity and response capacity are optional 
 
