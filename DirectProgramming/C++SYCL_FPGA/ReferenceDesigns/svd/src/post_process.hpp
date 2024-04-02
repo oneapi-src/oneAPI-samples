@@ -136,9 +136,7 @@ struct PostProcess {
       }
 
       // load V
-#ifndef LARGE_MATRIX
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-#endif
       for (ac_int<vLoopIterBitSize, false> li = 0; li < vLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read_v = VIn::read();
 
@@ -178,8 +176,8 @@ struct PostProcess {
             U_result[row][column] = dot_prod / s_val;
           } else
             U_result[row][column] = (TT)(row / column);  // filler data
-        }
-      }
+        } // col
+      }  // row
 
       // output S_result
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute

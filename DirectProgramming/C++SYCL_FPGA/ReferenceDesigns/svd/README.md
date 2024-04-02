@@ -328,15 +328,15 @@ Since the singular vectors are non-unique, their correctness are checked by chec
 Example Output when running on the **Terasic DE10-Agilex Development Board**.
 
 ```
-Running on device: Intel(R) FPGA Emulation Device
+Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 Running SVD test with input size 16 x 8, repeating 16384 time(s)
 Using device allocations
 Singular value error: 5.96046e-07(9.04024e-05%)
 Decomposition error (A = USVt): 9.83477e-07(0.00153999%)
 U orthogonal error: 3.05474e-07
 V orthogonal error: 9.53674e-07
-Total duration: 6.43593s
-Throughput: 2.54571k matrices/s
+Total duration: 0.989917s
+Throughput: 16.5509k matrices/s
 PASSED
 ```
 
