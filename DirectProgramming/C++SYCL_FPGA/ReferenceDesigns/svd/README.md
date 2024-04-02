@@ -11,10 +11,8 @@ The `SVD` reference design demonstrates a singular value decomposition implement
 ## Purpose
 This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for application such as matrix pseudoinverse and solving homogeneous linear equations.
 
-SVD computes factorization:
-```math
-A = USV^T
-```
+SVD usually described for factorization of a 2D input matrix A such that $A = USV^T$
+
 Where U and V are made of (left and right) singular vectors and are both orthogonal. And S is a diagonal matrix consisted of singular values corresponding to singular vectors in U and V.
 
 ## Prerequisites

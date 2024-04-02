@@ -119,7 +119,6 @@ void soft_matmult(std::vector<std::vector<TT>> &mat_A,
     {
         for(unsigned col = 0; col < cols_B; col++)
         {
-            // std::cout << "Paddind AB: " << row << ", " << col << std::endl;
             mat_AB[row][col] = 0.0;
         }
     }
@@ -130,7 +129,6 @@ void soft_matmult(std::vector<std::vector<TT>> &mat_A,
         {
             for(unsigned item = 0; item < cols_A; item ++)
             {
-                // std::cout << "About to mult: " << row << ", " << col << ", " << item << std::endl;
                 mat_AB[row][col] += mat_A[row][item] * mat_B[item][col];
             }
         }
