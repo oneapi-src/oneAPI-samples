@@ -58,15 +58,15 @@ This sample demonstrates some key concepts:
 - How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial is structured like this:
+The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow within the sequence of dependent loops. Loop B will consume the output data from Loop A, Loop C will consume the output data from Loop B while Loop D will consume the output data from both Loop A and Loop C. The behaviour of different implementation can be observed below.
 
 ![](assets/LoopStructure.svg)
 
-When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles before the output pipe produces any output:
+When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles before the output pipe `IDPipeOut` produces any output:
 
 ![](assets/simulation_naive.png)
 
-Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe produces results almost immediately:
+Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe `IDPipeOut` produces results almost immediately:
 
 ![](assets/simulation_task_sequence.png)
 
