@@ -65,7 +65,7 @@ Performance results are based on testing as of March 20st, 2024.
 | Terasic DE10-Agilex Development Board             | 17.4k matrices/s for matrices of size 8 x 16
 
 ## Key Implementation Details
-This SVD design consisted of 4 computation kernels in dark blue below, as well as several memory access kernels to handle input and output (in light blue). These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
+This SVD design consist of 4 computation kernels (dark blue squares below), as well as several memory access kernels to handle input and output (light blue squares). These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
 
 ![](assets/SVD.svg)
 
@@ -81,7 +81,7 @@ Therefore this kernel only performs a matrix multiplication by blocks.
 The implementation details of this computation is explained [here](../pca/README.md#input-matrix-standardization-and-covariance-matrix-computation) in the PCA sample.
 
 ### Eigen values and Eigen vectors computation
-We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigen values and eigen vectors of the input covariance matrix. Theses eigen values and eigen vectors are going to be used to construct the final outputs of SVD.
+We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigen values and eigen vectors of the input covariance matrix. These eigen values and eigen vectors are going to be used to construct the final outputs of SVD.
 
 This kernel also produce an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag sets to 1, the result might be incorrect.
 
@@ -99,7 +99,7 @@ V = [v_0, v_1, v_2, ...,v_n]
 ```
 
 #### S Matrix
-The singular value matrix (the S matrix) can be constructed as an m x n diagonal matrix (all but the diagonal are zeros) where the diagonal are square root of each eigen values:
+The singular value matrix (the S matrix) can be constructed as an m x n diagonal matrix (all but the diagonals are zeros) where the diagonals are square root of each eigen values:
 ```math
 S =
 \begin{bmatrix}
@@ -113,7 +113,7 @@ S =
 ```
 
 #### U Matrix
-The left singular vector (the U matrix) cannot be directly constructed with eigen values and eigen vectors of the input covariance. However, since we have now computed the U and S matrix, and know the original input A matrix, we can calculate U matrix using the original SVD relationship:
+The left singular vector (the U matrix) cannot be directly constructed with eigen values and eigen vectors of the input covariance. However, since we have now computed the U and S matrix, and knowing the original input A matrix, we can calculate U matrix using the original SVD relationship:
 ```math
 A = USV^T
 ```
@@ -128,17 +128,17 @@ So to sum up, Matrix U can be obtained through:
 
 However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
 
-In this kernel, filler data is inserted to complete the matrix if needed. 
+An orthogonalization kernel is needed to generate extra orthogonal vectors.
 
 ### U Matrix orthogonalization
-As mentioned above, when filler data is inserted to complete the U matrix, it breaks the orthogonality requirement. To fix this, we need to generate column vectors that are orthogonal with the rest of the matrix. 
+As mentioned above, when extra filler vectors are needed to complete the U matrix, we need to orthogonalize the matrix.
 
-An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instant of the streamingQRD design. The Q output of this kernel is orthogonalized U matrix.
+An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instant of the `streamingQRD` design. The Q output of this kernel is orthogonalized U matrix.
 
 ### Demo testbench
 In this sample, a testbench is used to demo the SVD design. The test bench use an input matrix of size 16 x 8, and its know singular values to compare for correctness.
 
-Since the singular vectors are non-unique, their correctness are checked by checking its orthogonality and the relationship $A = USV^-1$
+Since the singular vectors are non-unique, their correctness are checked by checking its orthogonality and the relationship $A = USV^T$
 
 ## Build the `SVD` design
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.

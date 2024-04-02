@@ -48,7 +48,7 @@ struct SVDTestcase {
   T compare_S(std::vector<T> input_vec) {
     T max_diff = 0.0;
     float max_ratio = 0.0;
-    // in case singuler values are not sorted
+    // in case singular values are not sorted
     std::sort(std::begin(input_vec), std::end(input_vec), std::greater<>());
     for (int i = 0; i < output_S.size(); i++) {
       T cur_diff = abs(input_vec[i] - output_S[i]);
