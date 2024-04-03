@@ -60,7 +60,7 @@ source activate usr_intelpython
 3. Clone the GitHub repository
 ```
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 
 ### Install Jupyter Notebook
