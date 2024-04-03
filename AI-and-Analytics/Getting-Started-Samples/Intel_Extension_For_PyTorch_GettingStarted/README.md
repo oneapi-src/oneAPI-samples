@@ -73,7 +73,7 @@ source <custom_path>/bin/activate
 2. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/
 ```
 3. Run the Python script.
 ```
