@@ -101,7 +101,7 @@ optimize_pytorch_models_with_ipex.ipynb
 1. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 2. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
