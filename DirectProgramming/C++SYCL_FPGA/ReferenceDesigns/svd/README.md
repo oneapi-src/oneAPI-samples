@@ -133,7 +133,7 @@ An orthogonalization kernel is needed to generate extra orthogonal vectors.
 ### U Matrix orthogonalization
 As mentioned above, when extra filler vectors are needed to complete the U matrix, we need to orthogonalize the matrix.
 
-An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instant of the `streamingQRD` design. The Q output of this kernel is orthogonalized U matrix.
+An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instant of the `fpga_linalg::streamingQRD` design. The Q output of this kernel is orthogonalized U matrix.
 
 ### Demo testbench
 In this sample, a testbench is used to demo the SVD design. The test bench use an input matrix of size 16 x 8, and its know singular values to compare for correctness.
