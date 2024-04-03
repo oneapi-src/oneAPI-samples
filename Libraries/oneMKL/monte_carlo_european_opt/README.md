@@ -24,6 +24,10 @@ their values in each realization.
 This sample performs its computations on the default SYCL* device. You can set
 the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL random number generators can be used
+for parallel computation of European options pricing, based on Monte-Carlo method:
+https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/2024-0/monte-carlo-simulating-european-options-pricing.html.
+
 ## Key Implementation Details
 
 This sample illustrates how to create an RNG engine object (the source of pseudo-randomness),

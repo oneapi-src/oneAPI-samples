@@ -18,6 +18,8 @@ Both factoring and solving require several oneMKL routines. Some steps can be pa
 
 This sample will use the default SYCL device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL LAPACK routines can be used to solve a system of linear equations with an LU-factored block tridiagonal coefficient matrix: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/2024-0/slv-sys-lin-eq-lu-factor-blk-tridiag-coeff-mat.html.
+
 ## Key Implementation Details
 This sample illustrates several important oneMKL routines: matrix multiplication, triangular solves from BLAS (`gemm`, `trsm`), and LU factorization (`getrf`) from LAPACK, as well as several other utility routines.
 
