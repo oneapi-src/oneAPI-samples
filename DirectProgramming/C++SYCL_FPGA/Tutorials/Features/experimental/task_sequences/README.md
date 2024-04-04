@@ -121,6 +121,7 @@ When you write code containing a sequence of loops, each loop in the sequence mu
 Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe `IDPipeOut` produces results almost immediately in approximately 3ns:
 
 ![](assets/simulation_task_sequence.png)
+*modelsim is configured with 1 clock cycle = 1ns
 
 >**Note**: This is only possible when the loops process data in the same order. That is, the first piece of data the second loop consumes should be the first piece of data produced by the first loop. Converting loops to task sequences and executing them in parallel will not help performance if the first piece of data consumed by the second loop is the last piece of data produced by the first loop, because then the second loop requires the first loop to completely finish.
 
