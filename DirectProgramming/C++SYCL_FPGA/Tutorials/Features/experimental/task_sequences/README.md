@@ -139,7 +139,7 @@ To use a task sequence in your design, include the `<sycl/ext/intel/experimental
 
 > *Invocation capacity and response capacity are optional 
 
-The following example shows how to use task sequence.  
+The following example shows how to use task sequences to schedule loops to run in parallel.  
 
 ```c++
 [[intel::use_stall_enable_clusters]] 
