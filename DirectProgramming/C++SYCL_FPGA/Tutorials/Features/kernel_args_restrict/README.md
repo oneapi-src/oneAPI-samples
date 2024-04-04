@@ -57,8 +57,6 @@ You can also find more information about [troubleshooting build errors](/DirectP
 The sample illustrates some important concepts.
 
 - The problem of *pointer aliasing* and its impact on compiler optimizations.
-- The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel.
-- The effect this attribute can have on your kernel's performance on FPGA.
 - How to use the `kernel_args_restrict` attribute on your kernel (both lambda and functor coding styles).
 - The effect this attribute can have on your kernel's performance on FPGA.
 
