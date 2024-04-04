@@ -58,7 +58,7 @@ This sample demonstrates some key concepts:
 - How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial can be observed in the following diagram. The arrows in the diagram represents the data flow in the system and a consumer loop will process the output from the producer loop and finally writes the output into a output pipe. The behaviour of the naive implementation of the sequence of loops and using task sequences to schedule the loops to run in parallel can be observed in the waveform below.
+The demonstration system in this tutorial is explained in the following diagram. The code contains a sequence of loops that communicate through arrays (e.g. Loop A communicates to loop B through `array_a_b`). The compiler will schedule these loops such that a producer loop must completely finish executing before its corresponding consumer loop can begin, as shown in the following simulation waveforms. We can improve performance by placing each loop in a `task_sequence` and joining the task sequences with pipes instead of arrays. This allows the compiler to schedule the loops to run in parallel.
 
 ![](assets/LoopStructure.svg)
 
