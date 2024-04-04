@@ -268,7 +268,7 @@ Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*)
 
 ![Kernel II Overview](./assets/Kernel%20II%20Overview.png)
 
-Compare the loop initiation interval (II) between the kernels with or without `[[intel::kernel_args_restrict]]` attribute. Notice that the loops in the *IDConservative_Lambda* and *IDConservative_Functor* kernels have large estimated IIs, while the loops in the *IDKernelArgsRestrict_Lambda* and *IDKernelArgsRestrict_Functor* kernels have an estimated II of 1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
+Compare the loop initiation interval (II) between the kernels with or without `[[intel::kernel_args_restrict]]` attribute. Notice that the loops in the *IDConservative_Lambda* and *IDConservative_Functor* kernels have large scheduled IIs, while the loops in the *IDKernelArgsRestrict_Lambda* and *IDKernelArgsRestrict_Functor* kernels have a scheduled II of 1. These IIs are estimates because the latency of global memory accesses varies with runtime conditions.
 
 For the *IDConservative_Lambda* and *IDConservative_Functor* kernels, the compiler assumed that the kernel arguments could alias with each other. Since`out[i]` and `in[i+1]` could be the same memory location, the compiler cannot overlap the iteration of the loop performing `out[i] = in[i]` with the next iteration of the loop performing `out[i+1] = in[i+1]` (and likewise for iterations `in[i+2]`, `in[i+3]`, ...). This results in an II equal to the latency of the global memory read of `in[i]` plus the latency of the global memory write to `out[i]`.
 
