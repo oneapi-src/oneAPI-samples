@@ -77,7 +77,7 @@ Below, we illustrate two distinct coding styles to utilize the kernel_args_restr
       // -------------------------------------------
 
       h.single_task<class IDLambdaKernel>([=
-      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
+      ]() [[intel::kernel_args_restrict]] {
          // ----------------------------------------
          //       Kernel code implementation.
          // ----------------------------------------
