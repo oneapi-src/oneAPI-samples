@@ -9,11 +9,17 @@ The `SVD` reference design demonstrates a singular value decomposition implement
 | Category              | Reference Designs and End to End
 
 ## Purpose
-This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for application such as matrix pseudo-inverse and solving homogeneous linear equations.
+This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for applications such as matrix pseudo-inverse and solving homogeneous linear equations. The SVD of a real, 2D input matrix $A is defined as
 
-SVD usually described for factorization of a 2D input matrix A such that $A = USV^T$
+```math
+A = USV^T
+```
 
-Where U and V are made of (left and right) singular vectors and are both orthogonal. And S is a diagonal matrix consisted of singular values corresponding to singular vectors in U and V.
+where $U$ and $V$ are orthonormal bases of A, called (left and right) singular vectors. (Orthonormal bases are vectors that are orthogonal to each others and of length 1)
+
+$S$ is a diagonal matrix (matrix where all elements but the diagonals are zeros). The diagonals are called singular values corresponding to each singular vectors.
+
+SVD operation can be applied to complex matrices, however this design currently don't support complex matrices for simplicity.
 
 ## Prerequisites
 
@@ -57,7 +63,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of March 20st, 2024.
+Performance results are based on testing as of March 20, 2024 with fixed 55 iterations.
+
+Using BSP: Agilex_ref 23.3
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
@@ -65,41 +73,39 @@ Performance results are based on testing as of March 20st, 2024.
 | Terasic DE10-Agilex Development Board             | 17.4k matrices/s for matrices of size 8 x 16
 
 ## Key Implementation Details
-This SVD design consist of 4 computation kernels (dark blue squares below), as well as several memory access kernels to handle input and output (light blue squares). These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
+This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
 
 ![](assets/SVD.svg)
 
 ### Input covariance matrix computation
 The covariance computation in this design is the same as used in the [PCA](../pca/README.md) reference design except without standardization.
 
-The covariance of input A is equal to transpose of A multiplies A:
+The covariance of input A is equal to the transpose of A multiplied by A:
 ```math
 Cov(A) = A^{T}A
 ```
 Therefore this kernel only performs a matrix multiplication by blocks.
 
-The implementation details of this computation is explained [here](../pca/README.md#input-matrix-standardization-and-covariance-matrix-computation) in the PCA sample.
+### Eigenvalues and Eigenvectors computation
+We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigenvalues and eigenvectors of the input covariance matrix. These eigenvalues and eigenvectors are going to be used to construct the final outputs of SVD.
 
-### Eigen values and Eigen vectors computation
-We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigen values and eigen vectors of the input covariance matrix. These eigen values and eigen vectors are going to be used to construct the final outputs of SVD.
+This kernel only work with input of rank sufficient matrix (all columns are linearly independent). It produces an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag is set to 1, the result is incorrect.
 
-This kernel also produce an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag sets to 1, the result might be incorrect.
+The source code for the the Eigenvalues and Eigenvectors Computation kernel can be found in `streaming_eigen.hpp` in the shared [include](../../include) directory. An detailed explanation of the algorithm of computing eigen values can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
 
-The [sources code](../../include/streaming_eigen.hpp) for the design can be found in the include directory. An detailed explanation of the algorithm of computing eigen values can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
+### Construct output from Eigenvalues and Eigenvectors
+The final outputs of SVD can be constructed from the eigenvalues and eigenvectors of the input covariance. 
 
-### Construct output from Eigen values and Eigen vectors
-The final outputs of SVD can be constructed from the eigen values and eigen vectors of the input covariance. 
-
-Consider an SVD input A of size m x n.
+Consider an input matrix A of size m x n.
 
 #### V Matrix
-The right singular vectors (the V matrix) can be produced by simply copy the eigen vectors , and should be of size n x n:
+The right singular vectors (the V matrix) can be produced by simply copying the eigenvectors , and should be of size n x n:
 ```math
 V = [v_0, v_1, v_2, ...,v_n] 
 ```
 
 #### S Matrix
-The singular value matrix (the S matrix) can be constructed as an m x n diagonal matrix (all but the diagonals are zeros) where the diagonals are square root of each eigen values:
+The singular value matrix (the S matrix) can be constructed as an m x n diagonal matrix (all but the values on the main diagonal are zeros) where the non-zero values are the square root of each eigenvalue:
 ```math
 S =
 \begin{bmatrix}
@@ -113,32 +119,32 @@ S =
 ```
 
 #### U Matrix
-The left singular vector (the U matrix) cannot be directly constructed with eigen values and eigen vectors of the input covariance. However, since we have now computed the U and S matrix, and knowing the original input A matrix, we can calculate U matrix using the original SVD relationship:
+The left singular vectors (the U matrix) cannot be directly constructed with eigenvalues and eigenvectors of the input covariance. However, since we have now computed the U and S matrix, and knowing the original input A matrix, we can calculate U matrix using the original SVD relationship:
 ```math
 A = USV^T
 ```
-Since V matrix is orthogonal, inverse(V) is the same as transpose(V), therefore:
+Since the V matrix is orthogonal by construction, $V^{-1}$ is the same as $V^T$, therefore:
 ```math
 AV = US
 ```
-And since S is a diagonal matrix, inverse(S) is the same as doing diagonal-element-wise reciprocals.
+And since S is a diagonal matrix, $S^{-1}$ is the same as multiplying by the reciprocals of each element on the main diagonal of $S$.
 
-So to sum up, Matrix U can be obtained through:
+So to sum up, the m x n portion of Matrix U (U[0:m][0:n]) can be obtained through:
 ![](assets/U_matrix.png)
 
-However, not all columns of the U matrix can be constructed this way. When the input matrix is not square, the number of eigen vectors calculated is less than the number of columns in U matrix.
-
-An orthogonalization kernel is needed to generate extra orthogonal vectors.
+When the input matrix A is not square, the number of eigenvectors calculated is less than the number of columns in the U matrix. An orthogonalization kernel is needed to generate extra orthogonal vectors.
 
 ### U Matrix orthogonalization
 As mentioned above, when extra filler vectors are needed to complete the U matrix, we need to orthogonalize the matrix.
 
-An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instant of the `fpga_linalg::streamingQRD` design. The Q output of this kernel is orthogonalized U matrix.
+An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md). So here we will just insert an instance of the `fpga_linalg::streamingQRD` design. The Q output of this kernel is orthogonalized U matrix. And the Q output is not used in the SVD design.
 
 ### Demo testbench
-In this sample, a testbench is used to demo the SVD design. The test bench use an input matrix of size 16 x 8, and its know singular values to compare for correctness.
+In this sample, a testbench is used to demonstrate the SVD design. The test bench uses an input matrix of size 16 x 8.
 
-Since the singular vectors are non-unique, their correctness are checked by checking its orthogonality and the relationship $A = USV^T$
+The resulting singular values are compared against results obtained ahead of time using NumPy package in python.
+
+Since the singular vectors in $V$ are non-unique, their correctness are checked by (1) checking for orthogonality, and (2) that they satisfy the relationship $A = USV^T$.
 
 ## Build the `SVD` design
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
@@ -177,14 +183,14 @@ Since the singular vectors are non-unique, their correctness are checked by chec
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ```
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
-  > ```
-  > $> aoc -list-boards
-  > Board list:
-  >   <board-variant>
-  >      Board Package: <path/to/board/package>/board-support-package
-  >   <board-variant2>
-  >      Board Package: <path/to/board/package>/board-support-package
-  > ```
+   > ```
+   > $> aoc -list-boards
+   > Board list:
+   >   <board-variant>
+   >      Board Package: <path/to/board/package>/board-support-package
+   >   <board-variant2>
+   >      Board Package: <path/to/board/package>/board-support-package
+   > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
