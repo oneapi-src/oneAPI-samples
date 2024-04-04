@@ -96,7 +96,7 @@ Below, we illustrate two distinct coding styles to utilize the kernel_args_restr
       //         Kernel interface definition.
       // -------------------------------------------
       
-      [[intel::kernel_args_restrict]]     // NO-FORMAT: Attribute
+      [[intel::kernel_args_restrict]]
       void operator()() const {
          // ----------------------------------------
          //       Kernel code implementation.
