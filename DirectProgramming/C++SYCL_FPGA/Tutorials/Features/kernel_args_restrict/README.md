@@ -104,7 +104,7 @@ Below, we illustrate two distinct coding styles to utilize the kernel_args_restr
       }
    };
    ```
-   In this case, an instance of `FunctorKernel` will be invoked as a kernel by passing it to `single_task`. Replace the comments with your kernel's actual implementation code.
+   In this case, an instance of `FunctorKernel` will be invoked as a kernel by passing it to the `single_task()` function. Replace the comment with your kernel's actual implementation code.
 
 ### Pointer Aliasing Explained
 
