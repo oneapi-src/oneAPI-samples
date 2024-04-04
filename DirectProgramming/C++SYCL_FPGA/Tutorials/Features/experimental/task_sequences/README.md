@@ -114,7 +114,9 @@ struct NaiveKernel {
 </tr>
 </table>
 
-When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles or approximately 344ns before the output pipe `IDPipeOut` produces any output:
+The behavior of the naive implementation using a sequence of loops is compared with an implementation using task sequences to schedule the loops to run in parallel below. 
+
+When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles or approximately 344 clock cycles* before the output pipe `IDPipeOut` produces any output:
 
 ![](assets/simulation_naive.png)
 
