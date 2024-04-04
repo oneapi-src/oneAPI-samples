@@ -25,7 +25,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DPART=NAIVE",
+          "cmake .. -DTYPE=NAIVE",
           "make fpga_emu",
           "./naive.fpga_emu"
         ]
@@ -36,7 +36,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DPART=NAIVE",
+          "cmake .. -DTYPE=NAIVE",
           "make report"
         ]
       },
@@ -46,7 +46,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DPART=TASK_SEQUENCE",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
           "make fpga_emu",
           "./task_sequences.fpga_emu"
         ]
@@ -57,7 +57,7 @@
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DPART=TASK_SEQUENCE",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
           "make report"
         ]
       }
@@ -70,7 +70,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=NAIVE",
           "nmake fpga_emu",
           "naive.fpga_emu.exe"
         ]
@@ -82,7 +82,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=NAIVE",
           "nmake report"
         ]
       },
@@ -93,7 +93,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=TASK_SEQUENCE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=TASK_SEQUENCE",
           "nmake fpga_emu",
           "task_sequences.fpga_emu.exe"
         ]
@@ -105,7 +105,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DPART=TASK_SEQUENCE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=TASK_SEQUENCE",
           "nmake report"
         ]
       }
