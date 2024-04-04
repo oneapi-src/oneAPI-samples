@@ -60,7 +60,59 @@ This sample demonstrates some key concepts:
 
 The demonstration system in this tutorial is explained in the following diagram. The code contains a sequence of loops that communicate through arrays (e.g. Loop A communicates to loop B through `array_a_b`). The compiler will schedule these loops such that a producer loop must completely finish executing before its corresponding consumer loop can begin, as shown in the following simulation waveforms. We can improve performance by placing each loop in a `task_sequence` and joining the task sequences with pipes instead of arrays. This allows the compiler to schedule the loops to run in parallel.
 
+<table>
+<tr>
+<td>
+struct NaiveKernel {
+  int len;
+
+  void operator()() const {
+    int array_a_b[kVectSize];
+    int array_b_c[kVectSize];
+    int array_c_d[kVectSize];
+    int array_a_d[kVectSize];
+
+    // loopA
+    [[intel::initiation_interval(1)]]  
+    for (size_t i = 0; i < len; i++) {
+      int in0 = PipeIn0::read();
+      int in1 = PipeIn1::read();
+      array_a_b[i] = in0;
+      array_a_d[i] = in1;
+    }
+
+    // loopB
+    [[intel::initiation_interval(1)]]  
+    for (size_t i = 0; i < len; i++) {
+      int tmp = array_a_b[i];
+      tmp += i;
+      array_b_c[i] = tmp;
+    }
+
+    // loopC
+    [[intel::initiation_interval(1)]]  
+    for (size_t i = 0; i < len; i++) {
+      int tmp = array_b_c[i];
+      tmp += i;
+      array_c_d[i] = tmp;
+    }
+
+    // loopD
+    [[intel::initiation_interval(1)]]  
+    for (size_t i = 0; i < len; i++) {
+      int tmp0 = array_c_d[i];
+      int tmp1 = array_a_d[i];
+      int out = tmp0 + tmp1;
+      PipeOut::write(out);  
+    }
+  }
+};
+</td>
+<td>
 ![](assets/LoopStructure.svg)
+</td>
+</tr>
+</table>
 
 When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles or approximately 344ns before the output pipe `IDPipeOut` produces any output:
 
