@@ -102,7 +102,7 @@ IntelPython_daal4py_GettingStarted.ipynb
 1. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted
 ```
 
 2. Launch Jupyter Notebook: 
