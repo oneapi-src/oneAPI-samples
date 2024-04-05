@@ -6,15 +6,21 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
 #include <vector>
+#include "tuple.hpp"
 
+// Headers shared with other oneAPI FPGA samples
 #include "exception_handler.hpp"
+#include "streaming_eigen.hpp"
+#include "streaming_qrd.hpp"
+
+// Headers specific to SVD
 #include "memory_transfers.hpp"
 #include "non_std_convariance.hpp"
 #include "post_process.hpp"
-#include "streaming_eigen.hpp"
-#include "streaming_qrd.hpp"
-#include "svd_helper.hpp"
-#include "tuple.hpp"
+
+
+// Forward declare the kernel and pipe names
+// (This prevents unwanted name mangling in the optimization report.)
 
 // kernels
 class IDInputMatrixFromDDRToLocalMem;
@@ -31,19 +37,17 @@ class IDSMatrixFromLocalMemToDDR;
 class IDVMatrixFromLocalMemToDDR;
 
 // pipes
-class CMP;
-class IMP;
-class IMP2;
-class ITMP;
-class IDP;
-class EValP;
-class EVecP;
-class RDFP;
-class OUTMP;
-class OUMP;
-class ORMP;
-class OSMP;
-class OVMP;
+class IDCovarianceMatrixPipe;
+class IDInputMatrixPipe;
+class IDInputMatrixPipe2;
+class IDEigenValuesPipe;
+class IDEigenVectorsPipe;
+class IDRankDeficientFlagPipe;
+class IDUTempMatrixPipe;
+class IDUMatrixPipe;
+class IDRMatrixPipe;
+class IDSMatrixPipe;
+class IDVMatrixPipe;
 
 template <unsigned rows,            // row size of input matrix
           unsigned cols,            // col size of input matrix
@@ -53,7 +57,7 @@ template <unsigned rows,            // row size of input matrix
           int k_zero_threshold_1e,  // Threshold from which we consider a
           typename T                // The datatype for the computation
           >
-double singularValueDecomposition(
+double SingularValueDecomposition(
     std::vector<T> &a_matrix,  // input matrix A (col maj)
     std::vector<T> &u_matrix,  // left singular vectors, U (col maj)
     std::vector<T> &s_matrix,  // list of singular values, S
@@ -61,7 +65,7 @@ double singularValueDecomposition(
     std::vector<ac_int<1, false>>
         &rank_deficient_flag,  // Output a flag that is 1 if the input matrix
                                // is considered rank deficient
-    sycl::queue &q, int repetitions) {
+    sycl::queue &q, int repetitions=1) {
   constexpr int kNumElementsPerDDRBurst = 8;            // total of 256 bit
   constexpr int kInputMatrixSize = rows * cols;         // row x col
   constexpr int kEigenVectorsMatrixSize = cols * cols;  // col x col
@@ -71,19 +75,19 @@ double singularValueDecomposition(
   // pipes
   using PipeType = fpga_tools::NTuple<T, kNumElementsPerDDRBurst>;
 
-  using InputMatrixPipe = sycl::ext::intel::pipe<IMP, PipeType, 16>;
-  using InputMatrixPipe2 = sycl::ext::intel::pipe<IMP2, PipeType, 16>;
-  using CovarianceMatrixPipe = sycl::ext::intel::pipe<CMP, PipeType, 16>;
-  using EigenValuesPipe = sycl::ext::intel::pipe<EValP, T, 3>;
-  using EigenVectorsPipe = sycl::ext::intel::pipe<EVecP, PipeType, 3>;
+  using InputMatrixPipe = sycl::ext::intel::pipe<IDInputMatrixPipe, PipeType, 16>;
+  using InputMatrixPipe2 = sycl::ext::intel::pipe<IDInputMatrixPipe2, PipeType, 16>;
+  using CovarianceMatrixPipe = sycl::ext::intel::pipe<IDCovarianceMatrixPipe, PipeType, 16>;
+  using EigenValuesPipe = sycl::ext::intel::pipe<IDEigenValuesPipe, T, 3>;
+  using EigenVectorsPipe = sycl::ext::intel::pipe<IDEigenVectorsPipe, PipeType, 3>;
   using RankDeficientFlagPipe =
-      sycl::ext::intel::pipe<RDFP, ac_int<1, false>, 3>;
-  using UTempMatrixPipe = sycl::ext::intel::pipe<OUTMP, PipeType, 3>;
-  using UMatrixPipe = sycl::ext::intel::pipe<OUMP, PipeType, 3>;
+      sycl::ext::intel::pipe<IDRankDeficientFlagPipe, ac_int<1, false>, 3>;
+  using UTempMatrixPipe = sycl::ext::intel::pipe<IDUTempMatrixPipe, PipeType, 3>;
+  using UMatrixPipe = sycl::ext::intel::pipe<IDUMatrixPipe, PipeType, 3>;
   using RMatrixPipe =
-      sycl::ext::intel::pipe<ORMP, T, kNumElementsPerDDRBurst * 4>;
-  using SMatrixPipe = sycl::ext::intel::pipe<OSMP, PipeType, 3>;
-  using VMatrixPipe = sycl::ext::intel::pipe<OVMP, PipeType, 3>;
+      sycl::ext::intel::pipe<IDRMatrixPipe, T, kNumElementsPerDDRBurst * 4>;
+  using SMatrixPipe = sycl::ext::intel::pipe<IDSMatrixPipe, PipeType, 3>;
+  using VMatrixPipe = sycl::ext::intel::pipe<IDVMatrixPipe, PipeType, 3>;
 
   // USM allocations
   T *input_matrix_device;
@@ -104,7 +108,7 @@ double singularValueDecomposition(
     r_device = sycl::malloc_device<T>(kRMatrixSize, q);
   } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
     std::cout << "Using shared allocations" << std::endl;
-    // No device allocations means that we are probably in a SYCL HLS flow
+    // No device allocation support, using shared allocation instead 
     input_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize, q);
     rank_deficient_flag_device = sycl::malloc_shared<ac_int<1, false>>(1, q);
     u_matrix_device = sycl::malloc_shared<T>(kUMatrixSize, q);
@@ -119,32 +123,32 @@ double singularValueDecomposition(
   }
 
   // Check that the malloc succeeded.
-  if (input_matrix_device == nullptr) {
+  if (nullptr == input_matrix_device) {
     std::cerr << "Error when allocating the input matrix." << std::endl;
     std::terminate();
   }
-  if (rank_deficient_flag_device == nullptr) {
+  if (nullptr == rank_deficient_flag_device) {
     std::cerr << "Error when allocating the rank deficient flag." << std::endl;
     std::terminate();
   }
-  if (u_matrix_device == nullptr) {
+  if (nullptr == u_matrix_device) {
     std::cerr << "Error when allocating the U matrix." << std::endl;
     std::terminate();
   }
-  if (s_matrix_device == nullptr) {
+  if (nullptr == s_matrix_device) {
     std::cerr << "Error when allocating the S matrix." << std::endl;
     std::terminate();
   }
-  if (v_matrix_device == nullptr) {
+  if (nullptr == v_matrix_device) {
     std::cerr << "Error when allocating the V matrix." << std::endl;
     std::terminate();
   }
-  if (r_device == nullptr) {
+  if (nullptr == r_device) {
     std::cerr << "Error when allocating the R matrix." << std::endl;
     std::terminate();
   }
 
-  // copy input matrix to device
+  // copy input matrix to memory that the device can access
   q.memcpy(input_matrix_device, a_matrix.data(),
            kInputMatrixSize * sizeof(float))
       .wait();
@@ -184,7 +188,7 @@ double singularValueDecomposition(
 
   // Post process. Using eigen values and eigen vector to produce U, S, V matrix
   q.single_task<IDUSVFromEigens>(
-      fpga_svd::PostProcess<T, false, rows, cols, kNumElementsPerDDRBurst,
+      USVFromEigens <T, false, rows, cols, kNumElementsPerDDRBurst,
                             InputMatrixPipe2, EigenValuesPipe, EigenVectorsPipe,
                             UTempMatrixPipe, SMatrixPipe, VMatrixPipe>{});
 
@@ -202,12 +206,15 @@ double singularValueDecomposition(
                 rank_deficient_flag_device, 1, repetitions);
           });
 
-  // collect R matrix from the orthogonalizing kernel
+  // terminating R matrix pipe from the orthogonalizing kernel
+  // This kernel only read from the pipe 
+  // (and throw away the data since its not useful here)
   q.single_task<IDRMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
+        T r_sum = 0.0;
         for (int rep = 0; rep < repetitions; rep++) {
           for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
-            r_device[r_idx] = RMatrixPipe::read();
+            r_sum += RMatrixPipe::read();
           }  // end of r_idx
         }    // end of rep
       });
@@ -233,7 +240,7 @@ double singularValueDecomposition(
                             VMatrixPipe>(v_matrix_device, 1, repetitions);
       });
 
-  // Wait for all 3 outputs are collected
+  // Wait for output memory access kernels to finish
   u_matrix_event.wait();
   s_matrix_event.wait();
   v_matrix_event.wait();

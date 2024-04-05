@@ -6,16 +6,14 @@
 #include "unrolled_loop.hpp"
 // #include "orthogonalizer.hpp"
 
-namespace fpga_svd {
-
 template <typename T, bool is_complex, int A_rows, int A_cols, int pipe_size,
-          typename AIn,   // Original SVD input A,        size A_rows x A_cols
-          typename RIn,   // R matrix from QR iteration,  size 1D - [A_cols]
-          typename VIn,   // Q accumilated V input,       size A_cols x A_cols
-          typename UOut,  // U output                     size A_rows x A_rows
-          typename SOut,  // S output                     size A_rows x A_cols
-          typename VOut>  // V output                     size A_cols x A_cols
-struct PostProcess {
+          typename AIn,     // InputMatrixPipe2,            size A_rows x A_cols
+          typename EValIn,  // R matrix from QR iteration,  size 1D - [A_cols]
+          typename EVecIn,  // Q accumilated V input,       size A_cols x A_cols
+          typename UOut,    // UTempMatrixPipe              size A_rows x A_rows
+          typename SOut,    // SMatrixPipe                  size A_rows x A_cols
+          typename VOut>    // VMatrixPipe                  size A_cols x A_cols
+struct USVFromEigens {
   void operator()() const {
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
     // findout if orthogonalazation is needed on the output
@@ -58,43 +56,35 @@ struct PostProcess {
     constexpr unsigned short aNumBanks = A_cols / pipe_size;
     constexpr unsigned short vNumBanks = A_rows / pipe_size;
     constexpr unsigned short uNumBanks = A_rows / pipe_size;
-    constexpr short sNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(sNumBanks));
-    constexpr short aNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(aNumBanks));
-    constexpr short vNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(vNumBanks));
-    constexpr short uNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(uNumBanks));
 
     while (1) {
-      [[intel::numbanks(sNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(sNumBanks)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT S_result[A_rows][A_cols];
 
-      [[intel::numbanks(aNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(aNumBanks)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT A_load[A_cols][A_rows];
 
-      [[intel::numbanks(vNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(vNumBanks)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT V_load[A_cols][A_cols];
 
-      [[intel::numbanks(uNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(uNumBanks)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT U_result[A_rows][A_rows];
 
-      // read eigen values one by one
+      // read eigenvalues one by one
       for (int k = 0; k < A_cols; k++) {
-        S_result[k][k] = RIn::read();
+        S_result[k][k] = EValIn::read();
       }  // end of k
 
       // process S (sqrt and zero pading)
@@ -138,7 +128,7 @@ struct PostProcess {
       // load V
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<vLoopIterBitSize, false> li = 0; li < vLoopIter; li++) {
-        fpga_tools::NTuple<TT, pipe_size> pipe_read_v = VIn::read();
+        fpga_tools::NTuple<TT, pipe_size> pipe_read_v = EVecIn::read();
 
         int write_idx_v = li % vLoopIterPerColumn;
         fpga_tools::UnrolledLoop<vLoopIterPerColumn>([&](auto k) {
@@ -252,8 +242,6 @@ struct PostProcess {
       }
     }  // while(1)
   }
-};  // struct PostProcess
-
-}  // namespace fpga_svd
+};  // struct USVFromEigens 
 
 #endif  // _POST_PROCESS_HPP_
