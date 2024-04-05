@@ -30,7 +30,7 @@ the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the de
 
 This article explains in detail how oneMKL functions speed up Black-Scholes
 computation of European options pricing:
-https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/2024-0/black-scholes-formula-european-options-pricing.html.
+https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/black-scholes-formula-european-options-pricing.html.
 
 ## Key Implementation Details
 

@@ -20,7 +20,7 @@ The sample code shows how to inform oneMKL of the dependencies between routines 
 
 This sample will use the default SYCL device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
-This article explains in detail how to solve a system of linear equations with a Cholesky-factored symmetric positive definite block tridiagonal coefficient matrix: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/2024-0/slve-lin-eqs-blck-tridag-symm-pos-def-coeff-mtrx.html.
+This article explains in detail how to solve a system of linear equations with a Cholesky-factored symmetric positive definite block tridiagonal coefficient matrix: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/slve-lin-eqs-blck-tridag-symm-pos-def-coeff-mtrx.html.
 
 ## Key Implementation Details
 

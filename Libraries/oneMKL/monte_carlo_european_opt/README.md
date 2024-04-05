@@ -26,7 +26,7 @@ the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the devi
 
 This article explains in detail how oneMKL random number generators can be used
 for parallel computation of European options pricing, based on Monte-Carlo method:
-https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/2024-0/monte-carlo-simulating-european-options-pricing.html.
+https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/monte-carlo-simulating-european-options-pricing.html.
 
 ## Key Implementation Details
 
