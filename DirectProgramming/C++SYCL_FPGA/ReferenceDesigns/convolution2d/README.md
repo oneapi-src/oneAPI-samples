@@ -81,6 +81,8 @@ The `LineBuffer2d` class describes a line buffer data structure that compiles in
 
 ![](assets/animation_fir_filter.gif)
 
+> **Note**: Observe how the pixels at the end of the image need to be flushed out with dummy data. You should pass a number of dummy pixels equal to the capacity of the row buffers. If you do not remember to flush out the line buffer, the final image that you process will not be able to completely exit the filter. If you want to send a new image to the filter, these dummy pixels will still be in the line buffers.
+
 The `LineBuffer2d` class lets you specify the number of concurrent pixels your design processes each transaction. This number affects the width and depth of the line buffer, and controls number of copies of your window function. Increasing the number of parallel pixels improves throughput, but also consumes more FPGA resources. The line buffer structure compiles into hardware like in the following figure:
 
 ![](assets/FIR2d_pip2.svg)
@@ -430,73 +432,82 @@ Running on device: Intel(R) FPGA Emulation Device
 Check a sequence of good frames...
 **********************************
 
-INFO: Load image ../test_0.bmp
+INFO: Load image ../test_bitmaps/test_0.bmp
 INFO: convert to vvp type.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Load image ../test_1.bmp
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
+INFO: Load image ../test_bitmaps/test_1.bmp
 INFO: convert to vvp type.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Load image ../test_2.bmp
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
+INFO: Load image ../test_bitmaps/test_2.bmp
 INFO: convert to vvp type.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Load image ../test_3.bmp
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
+INFO: Load image ../test_bitmaps/test_3.bmp
 INFO: convert to vvp type.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Load image ../test_4.bmp
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
+INFO: Load image ../test_bitmaps/test_4.bmp
 INFO: convert to vvp type.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Storing dummy pixels to pipe with 2 pixels in parallel. 
-Info: Wrote 96 dummy streaming beats.
-Launch kernels!
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
+INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with 2 pixels in parallel. 
+INFO: WriteDummyPixelsToPipe(): wrote 64 dummy streaming beats.
+
+*********************
+Launch RGB2Grey kernel
+Launch Convolution2d kernel
+Launch Grey2RGB kernel
 
 *********************
 Reading out frame 0
-Expect some unexpected start-of-packets as the kernel flushes its initial state.
-INFO: Reading data from pipe with 2 pixels in parallel.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-
-<More notes about unexpected start-of-packets...>
-
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 33 dummy beats. Counters reset.
+INFO: ReadFrameFromPipe(): wrote 64 lines. 
 INFO: convert to bmp type.
 Wrote convolved image ./output_0.bmp
-Compare with ../expected_sobel_0.bmp.
+Compare with ../test_bitmaps/expected_sobel_0.bmp.
 frame 0 passed
 
 *********************
 Reading out frame 1
-INFO: Reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
+INFO: ReadFrameFromPipe(): wrote 64 lines. 
 INFO: convert to bmp type.
 Wrote convolved image ./output_1.bmp
-Compare with ../expected_sobel_1.bmp.
+Compare with ../test_bitmaps/expected_sobel_1.bmp.
 frame 1 passed
 
 *********************
 Reading out frame 2
-INFO: Reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
+INFO: ReadFrameFromPipe(): wrote 64 lines. 
 INFO: convert to bmp type.
 Wrote convolved image ./output_2.bmp
-Compare with ../expected_sobel_2.bmp.
+Compare with ../test_bitmaps/expected_sobel_2.bmp.
 frame 2 passed
 
 *********************
 Reading out frame 3
-INFO: Reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
+INFO: ReadFrameFromPipe(): wrote 64 lines. 
 INFO: convert to bmp type.
 Wrote convolved image ./output_3.bmp
-Compare with ../expected_sobel_3.bmp.
+Compare with ../test_bitmaps/expected_sobel_3.bmp.
 frame 3 passed
 
 *********************
 Reading out frame 4
-INFO: Reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
+INFO: ReadFrameFromPipe(): wrote 64 lines. 
 INFO: convert to bmp type.
 Wrote convolved image ./output_4.bmp
-Compare with ../expected_sobel_4.bmp.
+Compare with ../test_bitmaps/expected_sobel_4.bmp.
 frame 4 passed
 
 Kernel version = 1 (Expected 1)
@@ -509,35 +520,26 @@ Finished checking a sequence of good frames.
 Check a defective frame followed by a good frame...
 ******************************************************
 
-Reading input image ../test_0.bmp
+Reading input image ../test_bitmaps/test_0.bmp
 INFO: convert to vvp type.
-INFO: WriteFrameToPipe: will end frame early, after 2048 pixels.
-INFO: Writing data to pipe with 2 pixels in parallel.
-INFO: Writing data to pipe with 2 pixels in parallel. 
-INFO: Storing dummy pixels to pipe with 2 pixels in parallel. 
-Info: Wrote 96 dummy streaming beats.
+INFO: WriteFrameToPipe(): writing 2048 pixels to pipe with 2 pixels in parallel.
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
+INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with 2 pixels in parallel.
+INFO: WriteDummyPixelsToPipe(): wrote 96 dummy streaming beats.
+
+*********************
+Launch RGB2Grey kernel
+Launch Convolution2d kernel
+Launch Grey2RGB kernel
 
 ****************************
-Read out good frame (defective frame overwritten)
-Expect some unexpected start-of-packets as the kernel flushes its initial state, and the defective frame.
-INFO: Reading data from pipe with 2 pixels in parallel.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=TRUE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-
-<More notes about unexpected start-of-packets...>
-
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=TRUE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
-INFO: Saw unexpected start of packet; reset counters.
-INFO: ReadFrameFromPipe(): [i = 0] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+Read out defective frame, and overwrite with good frame.
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): saw a block of 64 dummy beats. Counters reset.
+DEFECT: ReadFrameFromPipe(): [i = 2048] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
+INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
+INFO: ReadFrameFromPipe(): wrote 64 lines.
 INFO: convert to bmp type.
 Wrote convolved image ./output_defect.bmp
 frame 'defect' passed

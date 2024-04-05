@@ -372,8 +372,8 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
     // don't need in_img anymore
     free(in_img);
 
-    vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
-        q, rows, cols, in_img_vvp, print_debug_messages);
+    vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
+                                                            in_img_vvp);
 
     // don't need in_img_vvp anymore
     delete[] in_img_vvp;
@@ -383,16 +383,20 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
   int dummy_pixels = cols * (conv2d::kWindowSize - 1);
   constexpr auto kDummyVal = conv2d::PixelRGB{100, 100, 100};
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStream,
-                                              conv2d::PixelRGB>(
-      q, dummy_pixels, kDummyVal, print_debug_messages);
+                                              conv2d::PixelRGB>(q, dummy_pixels,
+                                                                kDummyVal);
 
-  std::cout << "Launch kernels! " << std::endl;
-
+  std::cout << "\n*********************" << std::endl;
+  std::cout << "Launch RGB2Grey kernel" << std::endl;
   q.single_task<ID_RGB2Grey>(
       RGB2Grey<InputImageStream, InputImageStreamGrey>{});
+
+  std::cout << "Launch Convolution2d kernel" << std::endl;
   e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
           (int)rows, (int)cols, sobel_coeffs});
+
+  std::cout << "Launch Grey2RGB kernel" << std::endl;
   q.single_task<ID_Grey2RGB>(
       Grey2RGB<OutputImageStreamGrey, OutputImageStream>{});
 
@@ -533,24 +537,31 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   ConvertToVvpRgb(in_img, in_img_vvp, rows * cols);
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
-      q, rows, cols, in_img_vvp, print_debug_messages, end_pixel);
+      q, rows, cols, in_img_vvp, end_pixel);
 
   // Now enqueue a good frame.
-  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
-      q, rows, cols, in_img_vvp, print_debug_messages);
+  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
+                                                          in_img_vvp);
 
   int dummy_pixels = cols * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStream>(
-      q, dummy_pixels, conv2d::PixelRGB{32, 32, 32}, print_debug_messages);
+      q, dummy_pixels, conv2d::PixelRGB{32, 32, 32});
 
   // Enqueue the kernel. Run it until we have read out the partial frame and
   // good frame, then stop.
   sycl::event e;
+
+  std::cout << "\n*********************" << std::endl;
+  std::cout << "Launch RGB2Grey kernel" << std::endl;
   q.single_task<ID_RGB2Grey>(
       RGB2Grey<InputImageStream, InputImageStreamGrey>{});
+
+  std::cout << "Launch Convolution2d kernel" << std::endl;
   e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
           (int)rows, (int)cols, sobel_coeffs});
+
+  std::cout << "Launch Grey2RGB kernel" << std::endl;
   q.single_task<ID_Grey2RGB>(
       Grey2RGB<OutputImageStreamGrey, OutputImageStream>{});
 
@@ -560,8 +571,8 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   InitializeBuffer(out_img_vvp, rows * cols);
 
   std::cout << "\n****************************\n"  //
-            << "Read out good frame "              //
-            << "(defective frame overwritten)" << std::endl;
+            << "Read out defective frame, and overwrite with good frame."
+            << std::endl;
 
   bool sidebands_ok = false;
   int parsed_frames = 0;
@@ -643,15 +654,15 @@ int main(int argc, char **argv) {
     bool all_passed = true;
 
 #if TEST_CONV2D_ISOLATED
-    all_passed &= TestTinyFrameOnStencil(q, true);
-    all_passed &= TestBypass(q, true);
+    all_passed &= TestTinyFrameOnStencil(q, false);
+    all_passed &= TestBypass(q, false);
 #else
     all_passed &= TestGoodFramesSequence(q, NUM_FRAMES, input_bmp_filename,
                                          output_bmp_filename,
-                                         expected_bmp_filename, true);
+                                         expected_bmp_filename, false);
     all_passed &=
         TestDefectiveFrame(q, input_bmp_filename + "_0", output_bmp_filename,
-                           expected_bmp_filename + "_0", true);
+                           expected_bmp_filename + "_0", false);
 #endif
 
     std::cout << "\nOverall result:\t" << (all_passed ? "PASSED" : "FAILED")

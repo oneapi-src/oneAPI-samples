@@ -272,8 +272,8 @@ class LineBuffer2d {
       start_of_frame = sop_curr;
       end_of_line = eop_curr;
     } else {
-      start_of_frame = true;
-      end_of_line = true;
+      start_of_frame = false;
+      end_of_line = false;
     }
 
     // increment fifo fifoIdx_prev = fifo_idx;
@@ -292,7 +292,7 @@ class LineBuffer2d {
 
     // shannonize col_write variable to improve fMAX. This lets us break up the
     // the accumulate and the comparison operation to occur on separate loop
-    // itertations.
+    // iterations.
     col_write = col_write_next;
     col_write_next += kParallelPixels;
 

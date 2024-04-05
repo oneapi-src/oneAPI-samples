@@ -39,14 +39,12 @@ namespace vvp_stream_adapters {
 /// @param[in] cols Image columns (width)
 /// @param[in] in_img Pointer to a buffer containing a single image to pass to
 /// your oneAPI kernel.
-/// @param[in] print_debug_info If set to true, this function will print
-/// information about the consumed pipe data to help with debugging.
 /// @param[in] end_pixel Optional parameter that lets you simulate a defective
 /// video frame, by ending the stream of pixels prematurely.
 /// @return `true` after successfully writing the input image to a SYCL pipe.
 template <typename PixelPipe, typename PixelType>
 bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
-                      bool print_debug_info = false, int end_pixel = -1) {
+                      int end_pixel = -1) {
   if (end_pixel == -1) end_pixel = rows * cols;
 
   ///////////////////////////////////////
@@ -77,10 +75,10 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   ///////////////////////////////////////////////
   // Package the pixels in in_img into PixelPipe
   ///////////////////////////////////////////////
-  if (print_debug_info)
-    std::cout << "INFO: WriteFrameToPipe(): writing " << end_pixel
-              << " pixels to pipe with " << kPixelsInParallel
-              << " pixels in parallel. " << std::endl;
+
+  std::cout << "INFO: WriteFrameToPipe(): writing " << end_pixel
+            << " pixels to pipe with " << kPixelsInParallel
+            << " pixels in parallel. " << std::endl;
 
   for (int i_base = 0; i_base < end_pixel; i_base += kPixelsInParallel) {
     DataBundleType in_bundle = {};
@@ -183,9 +181,8 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
   ////////////////////////////////////////////////////////////
   // Consume the beats from PixelPipe, and place into out_img
   ////////////////////////////////////////////////////////////
-  if (print_debug_info)
-    std::cout << "INFO: ReadFrameFromPipe(): reading data from pipe with "
-              << kPixelsInParallel << " pixels in parallel. " << std::endl;
+  std::cout << "INFO: ReadFrameFromPipe(): reading data from pipe with "
+            << kPixelsInParallel << " pixels in parallel. " << std::endl;
 
   parsed_frames = 0;
 
@@ -193,6 +190,7 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
   int eop_count = 0;
   bool passed = true;
   bool saw_sop = false;
+  sidebands_ok = true;
 
   bool is_dummy_beat = true;
   bool was_dummy_beat = true;
@@ -233,14 +231,20 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
                 << std::endl;
       return false;
     }
+    if (saw_sop) {
+      sidebands_ok = (sop_calc == sop_expected) && (eop_calc == eop_expected);
+    }
+    if (!sidebands_ok) {
+      passed = false;
+    }
 
-    if (print_debug_info) {
+    if (print_debug_info | !sidebands_ok) {
       char buf[256];
       snprintf(buf, 256,
-               "INFO: ReadFrameFromPipe(): [i = %d] - expect sop=%s eop=%s. "
-               "saw sop=%s "
-               "eop=%s.",
-               i_base, (sop_expected ? "TRUE" : "FALSE"),
+               "%s: ReadFrameFromPipe(): [i = %d] - expect sop=%s eop=%s. "
+               "saw sop=%s eop=%s.",
+               (sidebands_ok ? "INFO" : "DEFECT"), i_base,
+               (sop_expected ? "TRUE" : "FALSE"),
                (eop_expected ? "TRUE" : "FALSE"), (sop_calc ? "TRUE" : "FALSE"),
                (eop_calc ? "TRUE" : "FALSE"));
 
@@ -251,11 +255,9 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
     if (sop_calc) {
       parsed_frames++;
 
-      if (print_debug_info) {
-        std ::cout << "INFO: ReadFrameFromPipe(): saw start of packet; reset "
-                      "counters."
-                   << std::endl;
-      }
+      std ::cout << "INFO: ReadFrameFromPipe(): saw start of packet; reset "
+                    "counters."
+                 << std::endl;
 
       i_base = 0;
       eop_count = 0;
@@ -269,11 +271,10 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
 
     // print info about most recently parsed block of dummy beats
     if (!is_dummy_beat && was_dummy_beat) {
-      if (print_debug_info)
-        std::cout << "INFO: ReadFrameFromPipe(): saw a block of " << dummy_beats
-                  << " dummy beats. "
-                     "Counters reset."
-                  << std::endl;
+      std::cout << "INFO: ReadFrameFromPipe(): saw a block of " << dummy_beats
+                << " dummy beats. "
+                   "Counters reset."
+                << std::endl;
       dummy_beats = 0;
     }
 
@@ -285,17 +286,14 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
       }
     }
 
-    sidebands_ok = (sop_calc == sop_expected) && (eop_calc == eop_expected);
-    if (!sidebands_ok) {
-      passed = false;
-    }
-
     if (saw_sop) {
       if (eop_calc) eop_count++;
 
       i_base += kPixelsInParallel;
     }
   }
+  std::cout << "INFO: ReadFrameFromPipe(): wrote " << eop_count << " lines. "
+            << std::endl;
   return passed;
 }
 
@@ -312,12 +310,9 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
 /// @param q SYCL queue where your oneAPI kernel will run
 /// @param[in] len number of dummy pixels
 /// @param[in] val the dummy value to write
-/// @param[in] print_debug_info If set to true, this function will print
-/// information about the consumed pipe data to help with debugging.
 /// @return `true` after successfully writing the input image to a SYCL pipe.
 template <typename PixelPipe, typename PixelType>
-bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val,
-                            bool print_debug_info = false) {
+bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
   ///////////////////////////////////////
   // Extract parameters from PixelPipe
   ///////////////////////////////////////
@@ -340,10 +335,9 @@ bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val,
   ////////////////////////////
   // Package the dummy values
   ////////////////////////////
-  if (print_debug_info)
-    std::cout
-        << "INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with "
-        << kPixelsInParallel << " pixels in parallel. " << std::endl;
+  std::cout
+      << "INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with "
+      << kPixelsInParallel << " pixels in parallel. " << std::endl;
 
   int written_dummy_beats = 0;
   for (int i_base = 0; i_base < len; i_base += kPixelsInParallel) {
@@ -380,9 +374,8 @@ bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val,
       return false;
     }
   }
-  if (print_debug_info)
-    std::cout << "Info: WriteDummyPixelsToPipe(): wrote " << written_dummy_beats
-              << " dummy streaming beats." << std::endl;
+  std::cout << "INFO: WriteDummyPixelsToPipe(): wrote " << written_dummy_beats
+            << " dummy streaming beats." << std::endl;
   return true;
 }
 }  // namespace vvp_stream_adapters

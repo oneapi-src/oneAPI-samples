@@ -84,6 +84,14 @@ using VersionCSR =
 void SaturateWindowCoordinates(short w_row, short w_col, short row, short col,
                                short rows, short cols, short &r_select,
                                short &c_select) {
+  // saturate in case the input image is sized incorrectly
+  if (row >= rows) {
+    row = (rows - 1);
+  }
+  if (col >= cols) {
+    col = (cols - 1);
+  }
+
   // logic to deal with image borders: border pixel duplication
   r_select = w_row;
   int rDiff = w_row - (conv2d::kWindowSize / 2) + row;
