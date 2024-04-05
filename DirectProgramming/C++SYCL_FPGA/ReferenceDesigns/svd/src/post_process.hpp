@@ -51,32 +51,41 @@ struct USVFromEigens {
     constexpr int uLoopIterBitSize =
         fpga_tools::BitsForMaxValue<uLoopIter + 1>();
 
-    constexpr short kBankwidth = pipe_size * sizeof(TT);
+    constexpr unsigned short kBankwidth = pipe_size * sizeof(TT);
     constexpr unsigned short sNumBanks = A_rows / pipe_size;
     constexpr unsigned short aNumBanks = A_cols / pipe_size;
     constexpr unsigned short vNumBanks = A_rows / pipe_size;
     constexpr unsigned short uNumBanks = A_rows / pipe_size;
 
+    constexpr short sNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(sNumBanks));
+    constexpr short aNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(aNumBanks));
+    constexpr short vNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(vNumBanks));
+    constexpr short uNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(uNumBanks));
+
     while (1) {
-      [[intel::numbanks(sNumBanks)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(sNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT S_result[A_rows][A_cols];
 
-      [[intel::numbanks(aNumBanks)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(aNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT A_load[A_cols][A_rows];
 
-      [[intel::numbanks(vNumBanks)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(vNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT V_load[A_cols][A_cols];
 
-      [[intel::numbanks(uNumBanks)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(uNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute

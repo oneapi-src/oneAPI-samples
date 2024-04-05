@@ -15,9 +15,10 @@ template <typename TT,            // Datatype of the elements of the matrix
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
           int num_elem_per_bank,  // Number of TT elements per DDR burst access
-          typename MatrixPipe     // Output matrix pipe
+          typename MatrixPipe1,   // Output matrix pipe 1
+          typename MatrixPipe2    // Output matrix pipe 2
           >
-void MatrixReadFromDDRToPipeByBlocks(
+void MatrixReadFromDDRTo2PipesByBlocks(
     TT* matrix_ptr,    // Input matrix pointer
     int matrix_count,  // Number of matrix to read from DDR
     int repetitions    // Number of time to write the same matrix to the pipe
@@ -45,7 +46,8 @@ void MatrixReadFromDDRToPipeByBlocks(
               }
             });
 
-            MatrixPipe::write(ddr_read);
+            MatrixPipe1::write(ddr_read);
+            MatrixPipe2::write(ddr_read);
           }  // end of column
         }    // end of row
       }      // end of block_index
