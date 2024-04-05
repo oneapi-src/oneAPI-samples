@@ -36,6 +36,10 @@
 #define DEFAULT_EXPECTED "../test_bitmaps/expected_sobel"
 #endif
 
+#ifndef TEST_CONV2D_ISOLATED
+#define TEST_CONV2D_ISOLATED 0
+#endif
+
 #define M_DEFAULT_INPUT DEFAULT_INPUT
 #define M_DEFAULT_OUTPUT DEFAULT_OUTPUT
 #define M_DEFAULT_EXPECTED DEFAULT_EXPECTED
@@ -205,10 +209,9 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
 
   conv2d::PixelType grey_pixels_out[pixels_count];
   bool sidebands_ok;
-  int defective_frames;
+  int parsed_frames;
   vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_out, sidebands_ok,
-      defective_frames);
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
@@ -230,8 +233,10 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
 
 /// @brief Test that the 'bypass' control works correctly.
 /// @param q The SYCL queue to assign work to
+/// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
+/// functions to print debug information.
 /// @return `true` if input image matches output image
-bool TestBypass(sycl::queue q) {
+bool TestBypass(sycl::queue q, bool print_debug_messages) {
   std::cout << "\n**********************************\n"
             << "Check bypass... "
             << "\n**********************************\n"
@@ -248,13 +253,13 @@ bool TestBypass(sycl::queue q) {
       103, 203, 303, 403, 503, 603, 703, 803};
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_in);
+      q, rows_small, cols_small, grey_pixels_in, print_debug_messages);
 
   // add extra pixels to flush out the FIFO after all image frames
   // have been added
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummy_pixels, (uint16_t)15);
+      q, dummy_pixels, (uint16_t)15, print_debug_messages);
 
   // enable bypass
   BypassCSR::write(q, true);
@@ -269,10 +274,10 @@ bool TestBypass(sycl::queue q) {
 
   conv2d::PixelType grey_pixels_out[pixels_count];
   bool sidebands_ok;
-  int defective_frames;
+  int parsed_frames;
   vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_out, sidebands_ok,
-      defective_frames);
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames,
+      print_debug_messages);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
@@ -298,19 +303,23 @@ constexpr std::array<float, 9> sobel_coeffs = {
 
 /// @brief 'Happy Path' test that repeatedly passes a known good frame through
 /// the IP.
-/// @param q SYCL queue
-/// @param num_frames Number of times to pass the image frame through the IP
-/// @param input_bmp_filename_base base filename to use for reading input frames
-/// @param output_bmp_filename_base base filename to use for writing output
+/// @param[in] q SYCL queue
+/// @param[in] num_frames Number of times to pass the image frame through the IP
+/// @param[in] input_bmp_filename_base base filename to use for reading input
+/// frames
+/// @param[in] output_bmp_filename_base base filename to use for writing output
 /// files
-/// @param expected_bmp_filename_base 'known good' file to compare IP output
+/// @param[in] expected_bmp_filename_base 'known good' file to compare IP output
 /// against
+/// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
+/// functions to print debug information.
 /// @return `true` if all frames emitted by the IP match the `known good` file,
 /// `false` otherwise.
 bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
                             std::string input_bmp_filename_base,
                             std::string output_bmp_filename_base,
-                            std::string expected_bmp_filename_base) {
+                            std::string expected_bmp_filename_base,
+                            bool print_debug_messages) {
   std::cout << "\n**********************************\n"
             << "Check a sequence of good frames... "
             << "\n**********************************\n"
@@ -363,19 +372,19 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
     // don't need in_img anymore
     free(in_img);
 
-    vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
-                                                            in_img_vvp);
+    vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
+        q, rows, cols, in_img_vvp, print_debug_messages);
 
     // don't need in_img_vvp anymore
     delete[] in_img_vvp;
   }
 
   // extra pixels to flush out the FIFO
-  int dummy_pixels = cols * conv2d::kWindowSize;
+  int dummy_pixels = cols * (conv2d::kWindowSize - 1);
   constexpr auto kDummyVal = conv2d::PixelRGB{100, 100, 100};
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStream,
-                                              conv2d::PixelRGB>(q, dummy_pixels,
-                                                                kDummyVal);
+                                              conv2d::PixelRGB>(
+      q, dummy_pixels, kDummyVal, print_debug_messages);
 
   std::cout << "Launch kernels! " << std::endl;
 
@@ -392,11 +401,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
               << "Reading out frame " << itr  //
               << std::endl;
 
-    if (itr == 0) {
-      std::cout << "Expect some unexpected start-of-packets as the kernel "
-                   "flushes its initial state."
-                << std::endl;
-    }
     std::string absolute_output_bmp_path = output_bmp_filename_base + "_" +
                                            std::to_string(itr) +
                                            DEFAULT_EXTENSION;
@@ -405,11 +409,17 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
     unsigned int *out_img = new unsigned int[rows * cols];
     InitializeBuffer(out_img_vvp, rows * cols);
 
-    int defective_frames = 0;
+    int parsed_frames = 0;
     bool sidebands_ok = false;
     if (out_img_vvp) {
       vvp_stream_adapters::ReadFrameFromPipe<OutputImageStream>(
-          q, rows, cols, out_img_vvp, sidebands_ok, defective_frames);
+          q, rows, cols, out_img_vvp, sidebands_ok, parsed_frames,
+          print_debug_messages);
+    }
+
+    if (1 != parsed_frames) {
+      std::cerr << "ERROR: saw " << parsed_frames
+                << " parsed frames (expected 1)." << std::endl;
     }
 
     if (out_img) {
@@ -434,7 +444,7 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
                                            absolute_expected_bmp_path);
 
     delete[] out_img;
-    all_passed &= passed & sidebands_ok;
+    all_passed &= passed & sidebands_ok & (1 == parsed_frames);
     printf("frame %zu %s\n", itr,
            (passed && sidebands_ok) ? "passed" : "failed");
   }
@@ -462,18 +472,19 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 /// @brief Test how the IP handles a defective frame by passing a defective
 /// frame (which should emit a partial image) followed by a complete frame
 /// which should match the 'known good' file.
-/// @param q SYCL queue
-/// @param rows Number of rows in the image frame
-/// @param cols Number of columns in the image frame
-/// @param in_img Buffer containing the image frame to process
-/// @param output_bmp_filename_base File to output the processed frame to
-/// @param expected_bmp_filename 'known good' file to compare IP output
+/// @param[in] q SYCL queue
+/// @param[in] input_bmp_filename Buffer containing the image frame to process
+/// @param[in] output_bmp_filename_base File to output the processed frame to
+/// @param[in] expected_bmp_filename 'known good' file to compare IP output
 /// against
+/// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
+/// functions to print debug information.
 /// @return `true` if the second frame emitted by the IP matches the `known
 /// good` file, `false` otherwise.
 bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
                         std::string output_bmp_filename_base,
-                        std::string expected_bmp_filename) {
+                        std::string expected_bmp_filename,
+                        bool print_debug_messages = false) {
   std::cout << "\n******************************************************\n"
             << "Check a defective frame followed by a good frame... "
             << "\n******************************************************\n"
@@ -522,15 +533,15 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   ConvertToVvpRgb(in_img, in_img_vvp, rows * cols);
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
-      q, rows, cols, in_img_vvp, end_pixel);
+      q, rows, cols, in_img_vvp, print_debug_messages, end_pixel);
 
   // Now enqueue a good frame.
-  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
-                                                          in_img_vvp);
+  vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
+      q, rows, cols, in_img_vvp, print_debug_messages);
 
   int dummy_pixels = cols * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStream>(
-      q, dummy_pixels, conv2d::PixelRGB{32, 32, 32});
+      q, dummy_pixels, conv2d::PixelRGB{32, 32, 32}, print_debug_messages);
 
   // Enqueue the kernel. Run it until we have read out the partial frame and
   // good frame, then stop.
@@ -552,16 +563,22 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
             << "Read out good frame "              //
             << "(defective frame overwritten)" << std::endl;
 
-  std::cout << "Expect some unexpected start-of-packets as the kernel "
-               "flushes its initial state, and the defective frame."
-            << std::endl;
-
   bool sidebands_ok = false;
-  int bad_frames = 0;
+  int parsed_frames = 0;
   if (out_img_vvp) {
     vvp_stream_adapters::ReadFrameFromPipe<OutputImageStream>(
-        q, rows, cols, out_img_vvp, sidebands_ok, bad_frames);
+        q, rows, cols, out_img_vvp, sidebands_ok, parsed_frames,
+        print_debug_messages);
   }
+  bool passed = true;
+
+  // expect the defective frame + the good frame
+  if (2 != parsed_frames) {
+    std::cerr << "ERROR: saw " << parsed_frames
+              << " parsed frames (expected 2)." << std::endl;
+    passed = false;
+  }
+
   if (out_img) {
     ConvertToBmpRgb(out_img_vvp, out_img, rows * cols);
     bmp_tools::WriteBmp(defect_output_bmp_path, out_img, rows, cols);
@@ -574,8 +591,8 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
 
   // This should succeed since the defective pixels were overwritten by the
   // subsequent good frame.
-  bool passed = bmp_tools::CompareFrames(out_img, rows, cols,
-                                         canonical_expected_bmp_path);
+  passed &= bmp_tools::CompareFrames(out_img, rows, cols,
+                                     canonical_expected_bmp_path);
 
   bool all_passed = passed & sidebands_ok;
   printf("frame 'defect' %s\n", (passed && sidebands_ok) ? "passed" : "failed");
@@ -626,15 +643,15 @@ int main(int argc, char **argv) {
     bool all_passed = true;
 
 #if TEST_CONV2D_ISOLATED
-    all_passed &= TestTinyFrameOnStencil(q);
-    all_passed &= TestBypass(q);
+    all_passed &= TestTinyFrameOnStencil(q, true);
+    all_passed &= TestBypass(q, true);
 #else
-    all_passed &=
-        TestGoodFramesSequence(q, NUM_FRAMES, input_bmp_filename,
-                               output_bmp_filename, expected_bmp_filename);
+    all_passed &= TestGoodFramesSequence(q, NUM_FRAMES, input_bmp_filename,
+                                         output_bmp_filename,
+                                         expected_bmp_filename, true);
     all_passed &=
         TestDefectiveFrame(q, input_bmp_filename + "_0", output_bmp_filename,
-                           expected_bmp_filename + "_0");
+                           expected_bmp_filename + "_0", true);
 #endif
 
     std::cout << "\nOverall result:\t" << (all_passed ? "PASSED" : "FAILED")

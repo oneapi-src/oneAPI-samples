@@ -3,6 +3,9 @@
 
 // line_buffer_2d.hpp
 
+// TODO: Somewhere in here SOP and EOP are getting set to true and i need to
+// stop that.
+
 #pragma once
 
 #include "comparisons.hpp"

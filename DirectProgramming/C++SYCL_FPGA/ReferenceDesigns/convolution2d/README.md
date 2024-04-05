@@ -85,7 +85,7 @@ The `LineBuffer2d` class lets you specify the number of concurrent pixels your d
 
 ![](assets/FIR2d_pip2.svg)
 
-You can instantiate the `LineBuffer2d` in a oneAPI kernel like this:
+You can instantiate the `LineBuffer2d` in a oneAPI kernel. The example below demonstrates a kernel that parses data indefinitely, but uses 'start-of-packet' and 'end-of-packet' sideband signals to indicate where new frames start. These signals are communicated to the `LineBuffer2d` instance in the call to the `Filter()`.
 
 ```c++
 #include "linebuffer2d.hpp"
@@ -245,7 +245,7 @@ For convenience, you may use the header file included in `quartus_project_files/
 
 In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `WriteFrameToPipe()` and `ReadFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
 
-`WriteFrameToPipe()` writes the contents of an array of pixels into a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a VVP FPGA IP would, so you can test that your IP can interface with other IPs that use the VVP standard. 
+`WriteFrameToPipe()` writes the contents of an array of pixels *into* a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a VVP FPGA IP would, so you can test that your IP can interface with other IPs that use the VVP standard. 
 
 `ReadFrameFromPipe()` consumes groups of pixels from a SYCL pipe and writes the pixels sequentially to a block of memory. Like `WriteFrameToPipe()`, this function also detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It parses start-of-packet and end-of-packet sideband signals like a VVP FPGA IP would, and informs you of any errors via its output arguments. If this function detects an unexpected start-of-packet signal, it will print a note and write the new frame over the previous partial frame. It will return once it has read a complete frame, so if your design does not completely output a frame, the `ReadFrameFromPipe()` function will hang. 
 

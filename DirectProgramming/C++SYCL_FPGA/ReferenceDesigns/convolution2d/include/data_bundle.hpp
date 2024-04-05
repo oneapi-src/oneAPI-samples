@@ -25,7 +25,6 @@ struct ExtractDataBundleType {
 /// @brief Extract template parameters from a DataBundle. Usage:
 /// `constexpr int kPixelsInParallel =
 /// fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;`
-/// @tparam T The DataBundle whose parameters you wish to extract
 template <template <typename, int> typename DataBundle, typename BundlePayload,
           int kBundleCount>
 struct ExtractDataBundleType<
@@ -120,9 +119,7 @@ struct DataBundle {
   ///        └───┴───┴───┘        \n
   /// ```
   ///
-  /// @param in The value to insert
-  ///
-  /// @return The value that was removed
+  /// @param[in] in The value to insert
   void Shift(T &in) {
     T return_val = data_[0];
 #pragma unroll
@@ -139,7 +136,7 @@ struct DataBundle {
   /// members of the `DataBundle` to the left. The elements at location `0`,
   /// `1`, etc. are removed.
   /// @tparam kShiftAmt The number of copies of the new element to insert
-  /// @param in The new element to insert
+  /// @param[in] in The new element to insert
   template <int kShiftAmt>
   void ShiftSingleVal(T &in) {
 #pragma unroll
@@ -157,14 +154,11 @@ struct DataBundle {
   /// `[kBundleSize - 1]`, `[kBundleSize - 2]`, etc. and shift all members of
   /// the `DataBundle` to the left. The elements at location `0`, `1`, etc.
   /// are removed.
-  ///
   /// @tparam kShiftAmt The number of new elements to insert
-  ///
   /// @tparam kBundleSize2 (Optional) The number of new elements in the
   /// `DataBundle` containing the new elements. This number should be greater
   /// than or equal to `kShiftAmt`.
-  ///
-  /// @param in A `DataBundle` holding new elements to shift in. If the size
+  /// @param[in] in A `DataBundle` holding new elements to shift in. If the size
   /// of this type is not `kShiftAmt`, you must set the `kBundleSize2` template
   /// parameter.
   template <int kShiftAmt, int kBundleSize2 = kShiftAmt>
