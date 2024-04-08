@@ -269,14 +269,13 @@ class LineBuffer2d {
       start_of_frame = sop_curr;
       end_of_line = eop_curr;
     } else {
-      start_of_frame = true;
-      end_of_line = true;
+      start_of_frame = false;
+      end_of_line = false;
     }
 
-    // increment fifo fifoIdx_prev = fifo_idx;
     fifo_idx++;
     if (fifo_idx == (fifo_wrap)) {
-      // TODO: make the index reset depend on previous EOP read from input to
+      // Possible optimization: make the reset of fifo_idx depend on previous EOP read from input to
       // remove need to compare with fifo_wrap.
       fifo_idx = (short)0;  // Reset Index
     }
@@ -289,7 +288,7 @@ class LineBuffer2d {
 
     // shannonize col_write variable to improve fMAX. This lets us break up the
     // the accumulate and the comparison operation to occur on separate loop
-    // itertations.
+    // iterations.
     col_write = col_write_next;
     col_write_next += kParallelPixels;
 
