@@ -16,18 +16,21 @@
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
 				"pip install -r requirements.txt --no-deps",
+				"pip install tensorflow==2.15.0.post1",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow",
 				"conda deactivate",
 				"conda activate tensorflow-gpu",
 				"pip install -r requirements.txt --no-deps",
+				"pip install tensorflow==2.15.0.post1",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow-gpu",
 				"conda deactivate"
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate tensorflow"
+				"conda activate tensorflow",
+				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
 			]
 		}]
 	},

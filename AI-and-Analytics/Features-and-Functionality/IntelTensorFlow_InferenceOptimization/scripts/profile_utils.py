@@ -6,7 +6,6 @@ from tensorflow.python.client import timeline
 import os, fnmatch
 import psutil
 import ast
-import tensorflow.estimator
 from tensorflow.python.training import training_util
 try:
     from git import Repo
@@ -62,49 +61,6 @@ class tfSession(tf.compat.v1.Session):
 
     def save_timeline(self, fname):
         self.many_runs_timeline.save(fname)
-
-
-class tfProfileHook(tf.estimator.ProfilerHook):
-    def __init__(self, save_steps=None, save_secs=None, output_dir="", json_fname="", timeline_count=10):
-        self._output_tag = "blah-{}"
-        self._output_dir = output_dir
-        self._timer = tf.estimator.SecondOrStepTimer(every_secs=save_secs,
-                                                     every_steps=save_steps)
-        self._atomic_counter = 0
-        self.many_runs_timeline = TimeLiner()
-        self.timeline_count = timeline_count
-        import os
-        ProfileUtilsRoot = os.environ['ProfileUtilsRoot']
-        self.json_fname = ProfileUtilsRoot + "/../" + json_fname
-        if output_dir == "":
-            output_dir = ProfileUtilsRoot + "/../"
-
-    def begin(self):
-        self._next_step = None
-        self._global_step_tensor = training_util.get_global_step()
-
-        if self._global_step_tensor is None:
-            raise RuntimeError("Global step should be created to use ProfilerHook.")
-
-    def before_run(self, run_context):
-        self._request_summary = (self._next_step is None or self._timer.should_trigger_for_step(self._next_step))
-        requests = {}
-        opts = tf.compat.v1.RunOptions(trace_level=tf.compat.v1.RunOptions.FULL_TRACE)
-        return tf.estimator.SessionRunArgs(requests, options=opts)
-
-    def after_run(self, run_context, run_values):
-
-        global_step = self._atomic_counter + 1
-        self._atomic_counter = self._atomic_counter + 1
-        self._next_step = global_step + 1
-
-        self.many_runs_timeline.update_timeline_from_runmeta(run_values.run_metadata)
-        if self._atomic_counter == self.timeline_count:
-            self.many_runs_timeline.save(self.json_fname)
-
-    def end(self, session):
-        if self._atomic_counter < self.timeline_count:
-            self.many_runs_timeline.save(self.json_fname)
 
 
 class TensorflowUtils:

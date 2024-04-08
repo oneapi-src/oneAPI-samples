@@ -85,7 +85,7 @@ conda activate tensorflow
 3. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
 ```
 ### Run the Script
 

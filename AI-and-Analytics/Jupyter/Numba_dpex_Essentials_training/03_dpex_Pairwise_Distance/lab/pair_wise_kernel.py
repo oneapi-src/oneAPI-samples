@@ -22,7 +22,7 @@ def pairwise_python(X1, X2, D):
 
 
 def pw_distance(X1, X2, D):
-    pairwise_python[X1.shape[0],](X1, X2, D)
+    pairwise_python[nbdx.Range(X1.shape[0])](X1, X2, D) 
 
 
 base_pair_wise_gpu.run("Pairwise Distance Kernel", pw_distance)
