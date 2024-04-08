@@ -16,7 +16,6 @@
 
 #include "bmp_tools.hpp"
 #include "convolution_kernel.hpp"
-#include "data_bundle.hpp"
 #include "exception_handler.hpp"
 #include "vvp_stream_adapters.hpp"
 

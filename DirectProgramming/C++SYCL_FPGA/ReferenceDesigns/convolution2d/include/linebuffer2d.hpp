@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include <array>
+
 #include "comparisons.hpp"
-#include "data_bundle.hpp"
 #include "shift_reg.hpp"
 
 namespace line_buffer_2d {
@@ -32,10 +33,8 @@ template <typename PixelTypeIn, typename PixelTypeOut, short kStencilSize,
 class LineBuffer2d {
  public:
   // types used by LineBuffer2d
-  using LineBufferDataBundleIn =
-      fpga_tools::DataBundle<PixelTypeIn, kParallelPixels>;
-  using LineBufferDataBundleOut =
-      fpga_tools::DataBundle<PixelTypeOut, kParallelPixels>;
+  using LineBufferDataBundleIn = std::array<PixelTypeIn, kParallelPixels>;
+  using LineBufferDataBundleOut = std::array<PixelTypeOut, kParallelPixels>;
 
   // public members
   [[intel::fpga_register]]  // NO-FORMAT: Attribute
@@ -47,8 +46,7 @@ class LineBuffer2d {
  private:
   // types used internally
   using PixelWithSignals = PixelWithSignals_<PixelTypeIn>;
-  using BundledPixels =
-      fpga_tools::DataBundle<PixelWithSignals, kParallelPixels>;
+  using BundledPixels = std::array<PixelWithSignals, kParallelPixels>;
   constexpr static short kRowWriteInit = (short)(0 - kStencilSize);
   constexpr static short kColWriteInit = (short)(0 - kStencilSize);
 
@@ -83,7 +81,7 @@ class LineBuffer2d {
   constexpr static short kPreBufferSize = kParallelPixels + kBufferOffset;
 
   [[intel::fpga_register]]  // NO-FORMAT: Attribute
-  fpga_tools::DataBundle<PixelWithSignals, kPreBufferSize>
+  fpga_tools::ShiftReg<PixelWithSignals, kPreBufferSize>
       pre_buffer;
 
   // separate the loop bound calculation so loop iterations are easier to
@@ -174,8 +172,10 @@ class LineBuffer2d {
     // grab the first `kParallelPixels` samples to push into the stencil
     [[intel::fpga_register]]  // NO-FORMAT: Attribute
     BundledPixels input_val;
-    input_val.template ShiftMultiVals<kParallelPixels, kPreBufferSize>(
-        pre_buffer);
+#pragma unroll
+    for (int i = 0; i < kParallelPixels; i++) {
+      input_val[i] = pre_buffer[i];
+    }
 
     [[intel::fpga_register]]  // NO-FORMAT: Attribute
     BundledPixels pixel_column[kStencilSize];

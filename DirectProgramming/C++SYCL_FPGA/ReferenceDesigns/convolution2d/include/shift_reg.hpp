@@ -6,7 +6,8 @@
 #ifndef __SHIFT_REG_HPP__
 #define __SHIFT_REG_HPP__
 
-#include "data_bundle.hpp"
+#include <array>
+
 #include "unrolled_loop.hpp"
 
 namespace fpga_tools {
@@ -57,7 +58,7 @@ class ShiftReg {
   }
 
   template <size_t kShiftAmt>
-  void ShiftMultiVals(DataBundle<T, kShiftAmt> in) {
+  void ShiftMultiVals(std::array<T, kShiftAmt> in) {
     fpga_tools::UnrolledLoop<0, (kRegDepth - kShiftAmt)>(
         [&](int i) { registers[i] = registers[i + kShiftAmt]; });
 
@@ -129,7 +130,7 @@ class ShiftReg2d {
   }
 
   template <size_t kShiftAmt>
-  void ShiftCols(DataBundle<T, kShiftAmt> in[kRegRows]) {
+  void ShiftCols(std::array<T, kShiftAmt> in[kRegRows]) {
     fpga_tools::UnrolledLoop<0, kRegRows>(
         [&](int i) { registers[i].template ShiftMultiVals<kShiftAmt>(in[i]); });
   }

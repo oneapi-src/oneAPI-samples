@@ -245,7 +245,7 @@ For convenience, you may use the header file included in `quartus_project_files/
 
 ### Test bench utilities
 
-In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`fpga_tools::DataBundle`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `WriteFrameToPipe()` and `ReadFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
+In this design, pipes are used to transfer data between kernels, and between the design and the testbench (host code). An aggregate type (`std::array`) is used to allow multiple pixels to transfer in one clock cycle. To help with this, this reference design uses the `WriteFrameToPipe()` and `ReadFrameFromPipe()` functions, which are defined in `include/vvp_stream_adapters.hpp`. 
 
 `WriteFrameToPipe()` writes the contents of an array of pixels *into* a SYCL pipe that can be consumed by a oneAPI kernel. It detects the parameterization of the aggregate type used by the pipe, and groups pixels together accordingly. It also generates start-of-packet and end-of-packet sideband signals like a VVP FPGA IP would, so you can test that your IP can interface with other IPs that use the VVP standard. 
 

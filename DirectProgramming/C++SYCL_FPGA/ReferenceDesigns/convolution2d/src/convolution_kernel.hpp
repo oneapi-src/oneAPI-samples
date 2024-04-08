@@ -10,7 +10,6 @@
 #include <sycl/sycl.hpp>
 
 #include "convolution_types.hpp"
-#include "data_bundle.hpp"
 #include "linebuffer2d.hpp"
 #include "unrolled_loop.hpp"
 
