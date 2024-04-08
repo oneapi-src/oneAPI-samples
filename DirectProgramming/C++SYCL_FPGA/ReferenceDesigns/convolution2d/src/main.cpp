@@ -171,8 +171,10 @@ constexpr std::array<float, 9> identity_coeffs = {
 /// extremely simple image. This is useful for debugging that data is flowing
 /// through the line buffer properly.
 /// @param q The SYCL queue to assign work to
+/// @param print_debug_info Print additional debug information when reading from
+/// pipe
 /// @return `true` if successful, `false` otherwise
-bool TestTinyFrameOnStencil(sycl::queue q) {
+bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
   std::cout << "\n**********************************\n"
             << "Check Tiny frame... "
             << "\n**********************************\n"
@@ -211,7 +213,8 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
   bool sidebands_ok;
   int parsed_frames;
   vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames);
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames,
+      print_debug_info);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
@@ -233,10 +236,11 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
 
 /// @brief Test that the 'bypass' control works correctly.
 /// @param q The SYCL queue to assign work to
-/// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
-/// functions to print debug information.
+/// @param[in] print_debug_info Print additional debug information when reading
+/// from pipe
 /// @return `true` if input image matches output image
-bool TestBypass(sycl::queue q, bool print_debug_messages) {
+bool TestBypass(sycl::queue q, bool print_debug_info) {
+
   std::cout << "\n**********************************\n"
             << "Check bypass... "
             << "\n**********************************\n"
@@ -277,7 +281,7 @@ bool TestBypass(sycl::queue q, bool print_debug_messages) {
   int parsed_frames;
   vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
       q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames,
-      print_debug_messages);
+      print_debug_info);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
