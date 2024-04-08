@@ -238,8 +238,6 @@ struct Convolution2d {
     bool bypass = true;
 
     [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-    // workaround for https://hsdes.intel.com/appstore/article/#/14021844803
-    [[intel::speculated_iterations(2)]]  // NO-FORMAT: Attribute
     while (keep_going) {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.

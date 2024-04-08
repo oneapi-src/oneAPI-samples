@@ -3,9 +3,6 @@
 
 // line_buffer_2d.hpp
 
-// TODO: Somewhere in here SOP and EOP are getting set to true and i need to
-// stop that.
-
 #pragma once
 
 #include <array>
@@ -276,10 +273,9 @@ class LineBuffer2d {
       end_of_line = false;
     }
 
-    // increment fifo fifoIdx_prev = fifo_idx;
     fifo_idx++;
     if (fifo_idx == (fifo_wrap)) {
-      // TODO: make the index reset depend on previous EOP read from input to
+      // Possible optimization: make the reset of fifo_idx depend on previous EOP read from input to
       // remove need to compare with fifo_wrap.
       fifo_idx = (short)0;  // Reset Index
     }
