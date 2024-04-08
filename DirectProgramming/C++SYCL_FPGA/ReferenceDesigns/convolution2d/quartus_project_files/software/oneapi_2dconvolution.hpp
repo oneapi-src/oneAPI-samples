@@ -3,7 +3,7 @@
 // macros for BSP
 #include <system.h>
 // macros for oneAPI kernel
-#include "../../whitepau.convolution2d/build_2024.1/conv.report.prj/include/register_map_offsets.h"
+#include "<path to convolution2d sample>/build/conv.report.prj/include/register_map_offsets.h"
 // IORD and IOWR
 #include <io.h>
 
