@@ -118,8 +118,15 @@ tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.
       ```
 2. Install Intel® Neural Compressor from the local channel.
    ```
-   conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline
+   conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline  
    ```
+
+3. Install dependencies**
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+
 
 ##### Option 2: Create Conda Environment
 
