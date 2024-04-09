@@ -320,13 +320,6 @@ Since the singular vectors in $V$ are non-unique, their correctness are checked 
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   svd.fpga.exe
-   ```
-
 ## Example Output
 
 Example Output when running on the **Terasic DE10-Agilex Development Board**.

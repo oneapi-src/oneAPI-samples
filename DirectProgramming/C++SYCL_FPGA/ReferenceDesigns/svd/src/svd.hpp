@@ -32,7 +32,7 @@ class IDUSVFromEigens;
 class IDOrthogonalizingU;
 class IDRankDeficientFlagFromLocalMemToDDR;
 class IDUMatrixFromLocalMemToDDR;
-class IDRMatrixFromLocalMemToDDR;
+class IDRMatrixPipeTerminate;
 class IDSMatrixFromLocalMemToDDR;
 class IDVMatrixFromLocalMemToDDR;
 
@@ -95,7 +95,6 @@ double SingularValueDecomposition(
   T *u_matrix_device;
   T *s_matrix_device;
   T *v_matrix_device;
-  T *r_device;
 
   if (q.get_device().has(sycl::aspect::usm_device_allocations)) {
     std::cout << "Using device allocations" << std::endl;
@@ -105,7 +104,6 @@ double SingularValueDecomposition(
     u_matrix_device = sycl::malloc_device<T>(kUMatrixSize, q);
     s_matrix_device = sycl::malloc_device<T>(kInputMatrixSize, q);
     v_matrix_device = sycl::malloc_device<T>(kEigenVectorsMatrixSize, q);
-    r_device = sycl::malloc_device<T>(kRMatrixSize, q);
   } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
     std::cout << "Using shared allocations" << std::endl;
     // No device allocation support, using shared allocation instead 
@@ -114,7 +112,6 @@ double SingularValueDecomposition(
     u_matrix_device = sycl::malloc_shared<T>(kUMatrixSize, q);
     s_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize, q);
     v_matrix_device = sycl::malloc_shared<T>(kEigenVectorsMatrixSize, q);
-    r_device = sycl::malloc_shared<T>(kRMatrixSize, q);
   } else {
     std::cerr << "USM device allocations or USM shared allocations must be "
                  "supported to run this sample."
@@ -141,10 +138,6 @@ double SingularValueDecomposition(
   }
   if (nullptr == v_matrix_device) {
     std::cerr << "Error when allocating the V matrix." << std::endl;
-    std::terminate();
-  }
-  if (nullptr == r_device) {
-    std::cerr << "Error when allocating the R matrix." << std::endl;
     std::terminate();
   }
 
@@ -199,7 +192,7 @@ double SingularValueDecomposition(
   // terminating R matrix pipe from the orthogonalizing kernel
   // This kernel only read from the pipe 
   // (and throw away the data since its not useful here)
-  q.single_task<IDRMatrixFromLocalMemToDDR>(
+  q.single_task<IDRMatrixPipeTerminate>(
       [=]() [[intel::kernel_args_restrict]] {
         T r_sum = 0.0;
         for (int rep = 0; rep < repetitions; rep++) {
@@ -262,7 +255,6 @@ double SingularValueDecomposition(
   sycl::free(u_matrix_device, q);
   sycl::free(s_matrix_device, q);
   sycl::free(v_matrix_device, q);
-  sycl::free(r_device, q);
 
   return diff;
 }
