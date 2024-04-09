@@ -63,6 +63,8 @@ The demonstration system in this tutorial is explained in the following diagram.
 <table>
 <tr>
 <td>
+
+```
 struct NaiveKernel {
   int len;
 
@@ -107,10 +109,14 @@ struct NaiveKernel {
     }
   }
 };
+```
+
 </td>
+
 <td>
-![](assets/LoopStructure.svg)
+   <img src="assets/LoopStructure.svg" />
 </td>
+
 </tr>
 </table>
 
