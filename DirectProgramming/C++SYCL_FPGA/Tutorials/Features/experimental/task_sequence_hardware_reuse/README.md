@@ -236,7 +236,6 @@ Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/
 Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. The table below summary shows that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
 | Compile Estimated: Kernel System
-|-------------------------------------------------------------------
 |                | naive          | naive_loop     | task sequence
 |----------------|----------------|----------------|----------------         
 | ALM            | 2690           | 1829           | 1666
