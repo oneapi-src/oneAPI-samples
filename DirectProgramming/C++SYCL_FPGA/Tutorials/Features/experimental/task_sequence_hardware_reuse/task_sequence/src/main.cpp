@@ -32,7 +32,10 @@ struct VectorOp {
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    sycl::ext::intel::experimental::task_sequence<OpSqrt,4,4> task_a;
+    
+    // Object declarations of a parameterized task_sequence class must be local, which means global declarations and dynamic allocations are not allowed.
+    // Declare the task sequence object outside the for loop so that the hardware can be shared at the return point.
+    sycl::ext::intel::experimental::task_sequence<OpSqrt> task_a;
     
     for (int i =0; i < len; i++) {
       task_a.async(a_in[i], coef1);
@@ -41,13 +44,6 @@ struct VectorOp {
     for (int i =0; i < len; i++) {
       new_item.d[i] = task_a.get();
     }
-
-    /*task_a.async(a_in[0], coef1);
-    task_a.async(a_in[1], coef1);
-    task_a.async(a_in[2], coef1);
-    new_item.d[0] = task_a.get();
-    new_item.d[1] = task_a.get();
-    new_item.d[2] = task_a.get();*/
 
     task_a.async(new_item, coef2);
     z_out[0] = task_a.get();

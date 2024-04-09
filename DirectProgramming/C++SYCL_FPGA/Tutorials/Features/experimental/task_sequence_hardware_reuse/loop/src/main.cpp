@@ -32,11 +32,13 @@ struct VectorOp {
 
     D3Vector new_item;
     
-    for (int i =0; i < len; i++) {
+    // Invoking task block in loop will utilise the same hardware generated
+    for (int i = 0; i < len; i++) {
       D3Vector item = a_in[i];
       new_item.d[i] = OpSqrt(item, coef1);    
     }
-	
+
+    // Another square root block will be generated for this task invoked
     z_out[0] = OpSqrt(new_item, coef2);
   }
 };

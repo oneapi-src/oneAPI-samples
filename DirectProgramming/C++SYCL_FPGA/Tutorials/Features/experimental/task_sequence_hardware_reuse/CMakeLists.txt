@@ -20,14 +20,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ### Customize these build variables
 ###############################################################################
 if(${TYPE} MATCHES NAIVE)
-    set(SOURCE_FILES naive/src/main_usm.cpp)
+    set(SOURCE_FILES naive/src/main.cpp)
     set(TARGET_NAME naive_usm)
+elseif(${TYPE} MATCHES LOOP)
+    set(SOURCE_FILES loop/src/main.cpp)
+    set(TARGET_NAME naive_loop)
 elseif(${TYPE} MATCHES TASK_SEQUENCE)
-    set(SOURCE_FILES task_sequence/src/main_usm.cpp)
+    set(SOURCE_FILES task_sequence/src/main.cpp)
     set(TARGET_NAME task_sequences)
 else()
     message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
-Valid types -DTYPE=[ NAIVE / TASK_SEQUENCE ]")
+Valid types -DTYPE=[ NAIVE / LOOP / TASK_SEQUENCE ]")
 endif()
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
