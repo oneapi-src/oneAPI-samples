@@ -62,7 +62,7 @@ This tutorial demonstrates a design that computes the 'square root of a dot prod
 
 ### Resource sharing with loop
 Instead of invoking the square root task one by one, you may invoke the task in loop for hardware reuse. 
-```
+```c++
 struct VectorOp {
   D3Vector *a_in;
   float *z_out;
@@ -91,7 +91,7 @@ Each task sequence class object represents a specific instantiation of FPGA hard
 Launching tasks via the async() function calls on the same object results in the reuse of that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of task_sequence objects you declare. Since object lifetime is confined to the scope in which the task_sequence object is created, carefully declare your object in the scope in which you intend to perform its reuse.
 
 In the 'task_sequence' folder, the device code declares the task sequence object is declared once and invoked inside the loop and the return point.
-```
+```c++
 struct VectorOp {
   D3Vector *a_in;
   float *z_out;
@@ -236,9 +236,9 @@ Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/
 Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. The table below summary shows that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
 | Compile Estimated: Kernel System
-|:--- 
+|-------------------------------------------------------------------
 |                | naive          | naive_loop     | task sequence
-|:---            |:---            |:---            |:---          
+|----------------|----------------|----------------|----------------         
 | ALM            | 2690           | 1829           | 1666
 | RAMs           | 13             | 8              | 4
 | DSPs           | 22             | 11             | 5.5
