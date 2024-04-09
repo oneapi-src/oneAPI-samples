@@ -31,12 +31,11 @@ struct VectorOp {
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    D3Vector item = a_in[0];
-    new_item.d[0] = OpSqrt(item, coef1);
-    item = a_in[1];
-    new_item.d[1] = OpSqrt(item, coef1);
-    item = a_in[2];
-    new_item.d[2] = OpSqrt(item, coef1);
+    
+    for (int i =0; i < len; i++) {
+      D3Vector item = a_in[i];
+      new_item.d[i] = OpSqrt(item, coef1);    
+    }
 	
     z_out[0] = OpSqrt(new_item, coef2);
   }

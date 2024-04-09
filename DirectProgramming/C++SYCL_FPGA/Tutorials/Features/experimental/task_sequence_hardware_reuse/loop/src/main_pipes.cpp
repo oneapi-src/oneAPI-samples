@@ -16,14 +16,31 @@ struct D3Vector {
   float d[3];
 };
 
+// Minimum capacity of a pipe.
+// Set to 0 to allow the compiler to save area if possible.
+constexpr size_t kPipeMinCapacity = 0;
+
+// Pipes
+class IDInputPipeA;
+class IDInputPipeB;
+class IDInputPipeC;
+class IDOutputPipeZ;
+
+using InputPipeA = 
+  sycl::ext::intel::experimental::pipe<IDInputPipeA, float, kPipeMinCapacity>;
+using InputPipeB = 
+  sycl::ext::intel::experimental::pipe<IDInputPipeB, float, kPipeMinCapacity>;
+using InputPipeC = 
+  sycl::ext::intel::experimental::pipe<IDInputPipeC, float, kPipeMinCapacity>;
+using OutputPipeZ = 
+  sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float, kPipeMinCapacity>;
+
 float OpSqrt(D3Vector val, const D3Vector coef) {
   float res = sqrt(val.d[0] * coef.d[0] + val.d[1] * coef.d[1] + val.d[2] * coef.d[2]);
   return res;
 }
 
 struct VectorOp {
-  D3Vector *a_in;
-  float *z_out;
   int len;
 
   void operator()() const {
@@ -31,14 +48,16 @@ struct VectorOp {
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    D3Vector item = a_in[0];
-    new_item.d[0] = OpSqrt(item, coef1);
-    item = a_in[1];
-    new_item.d[1] = OpSqrt(item, coef1);
-    item = a_in[2];
-    new_item.d[2] = OpSqrt(item, coef1);
+    
+    for (int i = 0; i < len; i++) {
+      D3Vector item;
+	    item.d[0] = InputPipeA::read();
+	    item.d[1] = InputPipeB::read();
+	    item.d[2] = InputPipeC::read();
+      new_item.d[i] = OpSqrt(item, coef1);
+    }
 	
-    z_out[0] = OpSqrt(new_item, coef2);
+	OutputPipeZ::write(OpSqrt(new_item, coef2));
   }
 };
 
@@ -75,37 +94,38 @@ int main() {
       {.17, .72, .34}
     };
 
-    // Create USM shared allocations in the specified buffer_location. 
-    // You can also use host allocations with malloc_host(...) API
-    D3Vector *a = sycl::malloc_shared<D3Vector>(kVectSize, q);
-    float *z = sycl::malloc_shared<float>(1, q);
+    // input data
     for (int i = 0; i < kVectSize; i++) {
-      a[i].d[0] = test_vecs[i][0];
-      a[i].d[1] = test_vecs[i][1];
-      a[i].d[2] = test_vecs[i][2];
+      InputPipeA::write(q, test_vecs[i][0]);
+      InputPipeB::write(q, test_vecs[i][1]);
+      InputPipeC::write(q, test_vecs[i][2]);
     }
 
     std::cout << "Processing vector of size " << kVectSize << std::endl;
 
     float result[N];
+	  sycl::event e;
     for (int i = 0; i < N; i++) {
-      q.single_task<VectorOpID>(VectorOp{a, z, kVectSize}).wait();
-	    result[i] = z[0];
+      std::cout << "Calling kernel " << i << std::endl;
+      e = q.single_task<VectorOpID>(VectorOp{kVectSize});
     }
 
     // verify that result is correct
     passed = true;
+    for (int i = 0; i < N; i++) {
+      std::cout << "Reading result " << i << std::endl;
+      result[i] = OutputPipeZ::read(q);
+	  }
     for (int i = 1; i < N; i++) {
       if (result[i] != result[i-1]) {
         std::cout << "idx=" << i << ", naive result " << result[i] << ", previously " << result[i-1] << std::endl;
         passed = false;
 	    }
     }
-
+    // Wait for kernel to exit
+    e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
 
-    sycl::free(a, q);
-    sycl::free(z, q);
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code.
