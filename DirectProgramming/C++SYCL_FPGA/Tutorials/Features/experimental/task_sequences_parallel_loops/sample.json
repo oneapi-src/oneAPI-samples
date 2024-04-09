@@ -1,6 +1,6 @@
 {
   "guid": "AE05DF3B-27CD-4B2E-9698-1BD204AC42D4",
-  "name": "Task Sequences",
+  "name": "Task Sequences Parallel Loops",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to describe multiple parallel loops in a single kernel",
   "toolchain": ["icpx"],
@@ -12,7 +12,7 @@
     "base": "../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/task_sequences",
+      "Tutorials/Features/experimental/task_sequences_parallel_loops",
       "include"
     ],
     "exclude": []
@@ -70,7 +70,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/task_sequences_parallel_loops -DTYPE=NAIVE",
           "nmake fpga_emu",
           "naive.fpga_emu.exe"
         ]
@@ -82,7 +82,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/task_sequences_parallel_loops -DTYPE=NAIVE",
           "nmake report"
         ]
       },
@@ -93,7 +93,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=TASK_SEQUENCE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/task_sequences_parallel_loops -DTYPE=TASK_SEQUENCE",
           "nmake fpga_emu",
           "task_sequences.fpga_emu.exe"
         ]
@@ -105,7 +105,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequences -DTYPE=TASK_SEQUENCE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/task_sequences_parallel_loops -DTYPE=TASK_SEQUENCE",
           "nmake report"
         ]
       }
