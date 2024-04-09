@@ -1,7 +1,7 @@
 {
   "guid": "AE05DF3B-27CD-4B2E-9698-1BD204AC42D4",
   "name": "Task Sequences Parallel Loops",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimenta"],
   "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to describe multiple parallel loops in a single kernel",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
