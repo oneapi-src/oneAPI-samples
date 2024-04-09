@@ -1,8 +1,8 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/ext/intel/experimental/task_sequence.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/experimental/task_sequence.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
