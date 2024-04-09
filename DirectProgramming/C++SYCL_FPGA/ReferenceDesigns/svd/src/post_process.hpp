@@ -91,22 +91,7 @@ struct USVFromEigens {
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT U_result[A_rows][A_rows];
 
-      // read eigenvalues one by one
-      for (int k = 0; k < A_cols; k++) {
-        S_result[k][k] = EValIn::read();
-      }  // end of k
-
-      // process S (sqrt and zero pading)
-      fpga_tools::UnrolledLoop<A_rows>([&](auto r) {
-        fpga_tools::UnrolledLoop<A_cols>([&](auto c) {
-          if (r == c)
-            S_result[r][c] = sycl::sqrt(S_result[r][c]);
-          else
-            S_result[r][c] = (TT)0.0;
-        });
-      });
-
-      // load A
+      // load A 
       for (int block = 0; block < a_block_count; block++) {
         [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
         for (ac_int<aLoopIterBitSize, false> li = 0; li < aLoopIter; li++) {
@@ -131,6 +116,23 @@ struct USVFromEigens {
 
             write_idx_a = sycl::ext::intel::fpga_reg(write_idx_a);
           });
+        }
+      }
+
+      // read eigenvalues one by one
+      for (int k = 0; k < A_cols; k++) {
+        S_result[k][k] = EValIn::read();
+      }  // end of k
+
+      // process S (sqrt and zero pading)
+      #pragma unroll
+      for (int r = 0; r < A_rows; r ++){
+          #pragma unroll
+          for (int c = 0; c < A_cols; c ++) {
+          if (r == c)
+            S_result[r][c] = sycl::sqrt(S_result[r][c]);
+          else
+            S_result[r][c] = (TT)0.0;
         }
       }
 

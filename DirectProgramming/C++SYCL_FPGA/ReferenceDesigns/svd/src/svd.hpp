@@ -176,16 +176,6 @@ double SingularValueDecomposition(
                                   CovarianceMatrixPipe, EigenValuesPipe,
                                   EigenVectorsPipe, RankDeficientFlagPipe>());
 
-  // // read input matrix from DDR (again)
-  // auto ddr_write_event_post = q.submit([&](sycl::handler &h) {
-  //   h.single_task<IDInputMatrixFromDDRToLocalMemPostProcess>(
-  //       [=]() [[intel::kernel_args_restrict]] {
-  //         MatrixReadFromDDRToPipeByBlocks<
-  //             T, cols, rows, kNumElementsPerDDRBurst, InputMatrixPipe2>(
-  //             input_matrix_device, 1, repetitions);
-  //       });
-  // });
-
   // Post process. Using eigen values and eigen vector to produce U, S, V matrix
   q.single_task<IDUSVFromEigens>(
       USVFromEigens <T, false, rows, cols, kNumElementsPerDDRBurst,
