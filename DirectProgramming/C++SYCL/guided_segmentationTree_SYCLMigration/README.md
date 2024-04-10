@@ -1,16 +1,16 @@
-﻿# `ThreadFenceReduction` Sample
+﻿# `segmentationTreeThrust` Sample
 
-Reductions are a very common computation in parallel algorithms.  Any time an array of values needs to be reduced to a single value using a binary associative operator, a reduction can be used. This `ThreadFenceReduction` sample implements a reduction kernel that reduces an arbitrary size array. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
+Reductions are a very common computation in parallel algorithms.  Any time an array of values needs to be reduced to a single value using a binary associative operator, a reduction can be used. This `segmentationTreeThrust` sample implements a reduction kernel that reduces an arbitrary size array. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
  
 | Property                  | Description
 |:---                       |:---
-| What you will learn       | Migrating and optimizing ThreadFenceReduction from CUDA to SYCL
+| What you will learn       | Migrating and optimizing segmentationTreeThrust from CUDA to SYCL
 | Time to complete          | 15 minutes
 | Category                      | Concepts and Functionality
 
 ## Purpose
 
-The threadFenceReduction sample shows how to perform a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel
+The segmentationTreeThrust sample shows how to perform a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel
 
 > **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
 
@@ -44,7 +44,7 @@ This sample demonstrates the migration of the following prominent CUDA features:
 
 This code performs sum reductions, but any associative operator such as min() or max() could also be used. It shows how to perform a reduction operation on an array of values to produce a single value in a Single-pass reduction kernel which requires global atomic instructions and the __threadfence() intrinsic. The benchmarkReduce function performs a reduction of the input data multiple times and measures the average reduction time. There are various arguments you can experiment it while running the executable.
 
-This sample is migrated from NVIDIA CUDA sample. See the [threadFenceReduction](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/threadFenceReduction) sample in the NVIDIA/cuda-samples GitHub.
+This sample is migrated from NVIDIA CUDA sample. See the [segmentationTreeThrust](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/segmentationTreeThrust) sample in the NVIDIA/cuda-samples GitHub.
 
 ## Set Environment Variables
 
@@ -57,7 +57,7 @@ When working with the command-line interface (CLI), you should configure the one
 For this sample, the SYCLomatic Tool automatically migrates 100% of the CUDA code to SYCL. Follow these steps to generate the SYCL code using the compatibility tool:
 
 1. git clone https://github.com/NVIDIA/cuda-samples.git
-2. cd cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/
+2. cd cuda-samples/Samples/2_Concepts_and_Techniques/segmentationTreeThrust/
 3. Generate a compilation database with intercept-build
    ```
    intercept-build make
@@ -74,7 +74,7 @@ CUDA code includes a custom API findCUDADevice in helper_cuda file to find the b
 ```
 Since its a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the sycl get_device() API.
 
-## Build the `ThreadFenceReduction` Sample for CPU and GPU
+## Build the `segmentationTreeThrust` Sample for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
