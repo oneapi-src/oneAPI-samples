@@ -1,8 +1,8 @@
 {
-  "guid": "242B2FEF-E50E-4420-8FEE-64DAE3030F77",
-  "name": "threadFenceReduction",
+  "guid": "56E0F503-2576-459F-A47C-D153DEC40BB9",
+  "name": "segmentationTreeThrust",
   "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL"],
-  "description": "Implements a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel.",
+  "description": "Demonstrates an approach to the image segmentation trees construction.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
