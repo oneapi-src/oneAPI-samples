@@ -46,11 +46,6 @@
 
 // Functors used with thrust library.
 template <typename Input>
-/*
-DPCT1044:9: thrust::unary_function was removed because std::unary_function has
-been deprecated in C++11. You may need to remove references to typedefs from
-thrust::unary_function in the class definition.
-*/
 struct IsGreaterEqualThan {
     IsGreaterEqualThan(uint upperBound) :
         upperBound_(upperBound) {}
