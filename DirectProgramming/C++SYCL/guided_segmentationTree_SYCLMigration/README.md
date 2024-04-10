@@ -1,6 +1,6 @@
 ﻿# `segmentationTreeThrust` Sample
 
-Reductions are a very common computation in parallel algorithms.  Any time an array of values needs to be reduced to a single value using a binary associative operator, a reduction can be used. This `segmentationTreeThrust` sample implements a reduction kernel that reduces an arbitrary size array. The original CUDA* source code is migrated to SYCL for portability across GPUs from multiple vendors.
+This `segmentationTreeThrust` sample shows an approach to image segmentation trees construction. It is based on Boruvka's MST algorithm.
  
 | Property                  | Description
 |:---                       |:---
@@ -10,7 +10,7 @@ Reductions are a very common computation in parallel algorithms.  Any time an ar
 
 ## Purpose
 
-The segmentationTreeThrust sample shows how to perform a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel
+The segmentationTreeThrust sample shows how to perform image segmentation using trees construction
 
 > **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
 

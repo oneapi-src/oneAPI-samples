@@ -250,18 +250,18 @@ class Pyramid
                     dpct::device_pointer<uint> superVerticesOffsets,
                     dpct::device_pointer<uint> verticesIDs)
                 {
-                    checkCudaErrors(DPCT_CHECK_ERROR(
+                    DPCT_CHECK_ERROR(
                         dpct::get_default_queue()
                             .memcpy(&(superNodesOffsets_[0]),
                                     superVerticesOffsets.get(),
                                     sizeof(uint) * superNodesOffsets_.size())
-                            .wait()));
+                            .wait());
 
-                    checkCudaErrors(DPCT_CHECK_ERROR(
+                    DPCT_CHECK_ERROR(
                         dpct::get_default_queue()
                             .memcpy(&(nodes_[0]), verticesIDs.get(),
                                     sizeof(uint) * nodes_.size())
-                            .wait()));
+                            .wait());
                 }
 
             private:
@@ -408,11 +408,6 @@ class SegmentationTreeBuilder
             start = new sycl::event();
             stop = new sycl::event();
 
-            /*
-            DPCT1012:24: Detected kernel execution time measurement pattern and
-            generated an initial code for time measurements in SYCL. You can
-            change the way time is measured depending on your goals.
-            */
             start_ct1 = std::chrono::steady_clock::now();
 
             // Allocate required memory pools. We need just 4 types of arrays.
@@ -459,11 +454,6 @@ class SegmentationTreeBuilder
                 exit(EXIT_FAILURE);
             }
 
-            /*
-            DPCT1012:25: Detected kernel execution time measurement pattern and
-            generated an initial code for time measurements in SYCL. You can
-            change the way time is measured depending on your goals.
-            */
             stop_ct1 = std::chrono::steady_clock::now();
 
             float elapsedTime;
@@ -479,11 +469,6 @@ class SegmentationTreeBuilder
         {
             size_t availableMemory, totalMemory, usedMemory;
 
-            /*
-            DPCT1106:26: 'cudaMemGetInfo' was migrated with the Intel extensions
-            for device information which may not be supported by all compilers
-            or runtimes. You may need to adjust the code.
-            */
             dpct::get_current_device().get_memory_info(availableMemory,
                                                        totalMemory);
             usedMemory = totalMemory - availableMemory;
@@ -519,21 +504,20 @@ class SegmentationTreeBuilder
             dOutputEdgesFlags_ = pools.uintEdges.get();
 
             // Copy graph to the device memory
-            checkCudaErrors(DPCT_CHECK_ERROR(
+            DPCT_CHECK_ERROR(
                 dpct::get_default_queue()
                     .memcpy(dVertices_.get(), &(graph.vertices[0]),
                             sizeof(uint) * verticesCount_)
-                    .wait()));
-            checkCudaErrors(
-                DPCT_CHECK_ERROR(dpct::get_default_queue()
+                    .wait());
+            DPCT_CHECK_ERROR(dpct::get_default_queue()
                                      .memcpy(dEdges_.get(), &(graph.edges[0]),
                                              sizeof(uint) * edgesCount_)
-                                     .wait()));
-            checkCudaErrors(DPCT_CHECK_ERROR(
+                                     .wait());
+            DPCT_CHECK_ERROR(
                 dpct::get_default_queue()
                     .memcpy(dWeights_.get(), &(graph.weights[0]),
                             sizeof(float) * edgesCount_)
-                    .wait()));
+                    .wait());
 
             std::fill(oneapi::dpl::execution::make_device_policy(
                           dpct::get_default_queue()),
@@ -589,12 +573,6 @@ class SegmentationTreeBuilder
                       dEdgesFlags, dEdgesFlags + edgesCount_, 0);
 
             // Mark the first edge for each vertex in "dEdgesFlags"
-            /*
-            DPCT1049:0: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit(
                             [&](sycl::handler &cgh) {
                                         auto dVertices__get_ct0 =
@@ -644,12 +622,6 @@ class SegmentationTreeBuilder
             // by the minimal edge.
             dpct::device_pointer<uint> dSuccessors = pools.uintVertices.get();
 
-            /*
-            DPCT1049:1: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dVertices__get_ct0 = dVertices_.get();
@@ -682,12 +654,6 @@ class SegmentationTreeBuilder
 
             // Remove cyclic successor dependencies. Note that there can be only
             // two vertices in a cycle. See [1] for details.
-            /*
-            DPCT1049:2: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit(
                             [&](sycl::handler &cgh) {
                                         auto dSuccessors_get_ct0 =
@@ -719,12 +685,6 @@ class SegmentationTreeBuilder
                     dpct::get_default_queue()),
                 dEdgesFlags, dEdgesFlags + edgesCount_, dStartpoints);
 
-            /*
-            DPCT1049:3: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dStartpoints_get_ct0 =
@@ -748,12 +708,6 @@ class SegmentationTreeBuilder
             // represent superpixels of the new level.
             dpct::device_pointer<uint> dRepresentatives = pools.uintVertices.get();
 
-            /*
-            DPCT1049:4: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dSuccessors_get_ct0 =
@@ -876,12 +830,6 @@ class SegmentationTreeBuilder
             // Calculate how old vertices IDs map to new vertices IDs.
             dpct::device_pointer<uint> dVerticesMapping = pools.uintVertices.get();
 
-            /*
-            DPCT1049:5: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dClusteredVerticesIDs_get_ct0 =
@@ -915,12 +863,6 @@ class SegmentationTreeBuilder
             // Invalidate self-loops in the reduced graph (the graph
             // produced by merging all old vertices that have
             // the same successor).
-            /*
-            DPCT1049:6: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dStartpoints_get_ct0 =
@@ -951,12 +893,6 @@ class SegmentationTreeBuilder
             dpct::device_pointer<uint> dNewStartpoints = pools.uintEdges.get();
             dpct::device_pointer<uint> dSurvivedEdgesIDs = pools.uintEdges.get();
 
-            /*
-            DPCT1049:7: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dStartpoints_get_ct0 =
@@ -1058,12 +994,6 @@ class SegmentationTreeBuilder
             dpct::device_pointer<uint> dNewEdges = pools.uintEdges.get();
             dpct::device_pointer<float> dNewWeights = pools.floatEdges.get();
 
-            /*
-            DPCT1049:8: The work-group size passed to the SYCL kernel may exceed
-            the limit. To get the device limit, query
-            info::device::max_work_group_size. Adjust the work-group size if
-            needed.
-            */
                         dpct::get_default_queue().submit([&](sycl::handler
                                                                  &cgh) {
                                     auto dSurvivedEdgesIDs_get_ct0 =
@@ -1174,9 +1104,6 @@ int loadImage(const char *filename, const char *executablePath,
         return -1;
     }
     
-    std::cout << sizeof(data) << std::endl;
-    std::cout << sizeof(dataHandle) << std::endl;
-    std::cout << width * height << std::endl;
     data.assign(reinterpret_cast<sycl::uchar3 *>(&dataHandle),
                 reinterpret_cast<sycl::uchar3 *>(&dataHandle) + width * height);
 
