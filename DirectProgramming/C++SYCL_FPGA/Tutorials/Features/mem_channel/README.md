@@ -102,8 +102,7 @@ buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
 Channel IDs are in the range `1,2,...,N` where `N` is the number of available
 channels.
 
-The `mem_channel` property has no effect if used without the
-`-Xsno-interleaving` flag. In contrast, when `-Xsno-interleaving` is used,
+When `-Xsno-interleaving` is used,
 buffers that don't have the `mem_channel` property will all be allocated in
 channel `1`.
 
