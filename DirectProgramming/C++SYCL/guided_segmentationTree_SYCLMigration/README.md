@@ -10,7 +10,7 @@ This `segmentationTreeThrust` sample shows an approach to image segmentation tre
 
 ## Purpose
 
-The segmentationTreeThrust sample shows how to perform image segmentation using trees construction
+The segmentationTreeThrust sample shows how to perform image segmentation using trees construction. It is a migrated version of a Nvidia CUDA sample. This README shows the process of migrating the sample
 
 > **Note**: We use Intel® open-sources SYCLomatic tool which assists developers in porting CUDA code automatically to SYCL code. To finish the process, developers complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. User's can also use SYCLomatic Tool which comes along with the Intel® oneAPI Base Toolkit.
 
@@ -42,15 +42,13 @@ This sample demonstrates the migration of the following prominent CUDA features:
 
 ### CUDA source code evaluation
 
-This code performs sum reductions, but any associative operator such as min() or max() could also be used. It shows how to perform a reduction operation on an array of values to produce a single value in a Single-pass reduction kernel which requires global atomic instructions and the __threadfence() intrinsic. The benchmarkReduce function performs a reduction of the input data multiple times and measures the average reduction time. There are various arguments you can experiment it while running the executable.
-
 This sample is migrated from NVIDIA CUDA sample. See the [segmentationTreeThrust](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/2_Concepts_and_Techniques/segmentationTreeThrust) sample in the NVIDIA/cuda-samples GitHub.
 
 ## Set Environment Variables
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Migrate the `threadFence Reduction` Sample
+## Migrate the `threadFence segmentationTreeThrust` Sample
 
 ### Migrate the Code using SYCLomatic
 
