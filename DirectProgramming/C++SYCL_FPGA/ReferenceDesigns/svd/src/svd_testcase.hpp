@@ -15,9 +15,7 @@ struct SVDTestcase {
   std::vector<std::vector<T>> input_A;
   std::vector<T> output_S;
   T S_error;
-  float S_error_r;
   T A_error;
-  float A_error_r;
   T U_orthogonal_error;
   T V_orthogonal_error;
   double delta_time;
@@ -48,17 +46,13 @@ struct SVDTestcase {
 
   T CompareS(std::vector<T> input_vec) {
     T max_diff = 0.0;
-    float max_ratio = 0.0;
     // in case singular values are not sorted
     std::sort(std::begin(input_vec), std::end(input_vec), std::greater<>());
     for (int i = 0; i < output_S.size(); i++) {
       T cur_diff = abs(input_vec[i] - output_S[i]);
       if (cur_diff > max_diff) max_diff = cur_diff;
-      if ((cur_diff / abs(output_S[i])) > max_ratio)
-        max_ratio = cur_diff / abs(output_S[i]);
     }
     S_error = max_diff;
-    S_error_r = max_ratio;
     return max_diff;
   }
 
@@ -77,15 +71,11 @@ struct SVDTestcase {
                                         USV);
     // svd_testbench_tool::print_matrix<T>(USV, rows_A, cols_A);
     T max_diff = 0.0;
-    float max_ratio = 0.0;
     for (int i = 0; i < (rows_A * cols_A); i++) {
       T cur_diff = abs(USV[i] - flat_A[i]);
       if (cur_diff > max_diff) max_diff = cur_diff;
-      if ((cur_diff / abs(flat_A[i])) > max_ratio)
-        max_ratio = cur_diff / abs(flat_A[i]);
     }
     A_error = max_diff;
-    A_error_r = max_ratio;
     return max_diff;
   }
 
@@ -128,7 +118,7 @@ struct SVDTestcase {
     delta_time =
         SingularValueDecomposition<rows_A, cols_A, k_fixed_iteration,
                                    k_raw_latency, k_zero_threshold_1e, T>(
-            flat_A, flat_U, flat_S, flat_V, rank_deficient, q, benchmark_rep);
+            flat_A, flat_U, flat_S, flat_V, rank_deficient, q, 1, benchmark_rep);
 
     throughput = (benchmark_rep / delta_time);
 
@@ -153,12 +143,10 @@ struct SVDTestcase {
   }
 
   void PrintResult() {
-    std::cout << "Singular value error: " << S_error << "(" << S_error_r * 100
-              << "%)" << std::endl;
-    std::cout << "Decomposition error (A = USVt): " << A_error << "("
-              << A_error_r * 100 << "%)" << std::endl;
-    std::cout << "U orthogonal error: " << U_orthogonal_error << std::endl;
-    std::cout << "V orthogonal error: " << V_orthogonal_error << std::endl;
+    std::cout << "Singular value differences: " << S_error << std::endl;
+    std::cout << "Decomposition differences (A = USVt): " << A_error << std::endl;
+    std::cout << "U orthogonal differences: " << U_orthogonal_error << std::endl;
+    std::cout << "V orthogonal differences: " << V_orthogonal_error << std::endl;
     std::cout << "Total duration: " << delta_time << "s" << std::endl;
     std::cout << "Throughput: " << throughput * 1e-3 << "k matrices/s"
               << std::endl;

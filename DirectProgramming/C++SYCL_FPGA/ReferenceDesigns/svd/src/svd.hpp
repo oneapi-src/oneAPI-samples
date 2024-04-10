@@ -65,7 +65,7 @@ double SingularValueDecomposition(
     std::vector<ac_int<1, false>>
         &rank_deficient_flag,  // Output a flag that is 1 if the input matrix
                                // is considered rank deficient
-    sycl::queue &q, int repetitions=1) {
+    sycl::queue &q, int matrix_count=1, int repetitions=1) {
   constexpr int kNumElementsPerDDRBurst = 8;            // total of 256 bit
   constexpr int kInputMatrixSize = rows * cols;         // row x col
   constexpr int kEigenVectorsMatrixSize = cols * cols;  // col x col
@@ -152,7 +152,7 @@ double SingularValueDecomposition(
         [=]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRTo2PipesByBlocks<
               T, cols, rows, kNumElementsPerDDRBurst, InputMatrixPipe, InputMatrixPipe2>(
-              input_matrix_device, 1, repetitions);
+              input_matrix_device, matrix_count, repetitions);
         });
   });
 
@@ -206,21 +206,21 @@ double SingularValueDecomposition(
   auto u_matrix_event = q.single_task<IDUMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, rows, kNumElementsPerDDRBurst,
-                            UMatrixPipe>(u_matrix_device, 1, repetitions);
+                            UMatrixPipe>(u_matrix_device, matrix_count, repetitions);
       });
 
   // collecting s matrix from pipe into DDR
   auto s_matrix_event = q.single_task<IDSMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, cols, kNumElementsPerDDRBurst,
-                            SMatrixPipe>(s_matrix_device, 1, repetitions);
+                            SMatrixPipe>(s_matrix_device, matrix_count, repetitions);
       });
 
   // collecting V matrix from pipe into DDR
   auto v_matrix_event = q.single_task<IDVMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, cols, cols, kNumElementsPerDDRBurst,
-                            VMatrixPipe>(v_matrix_device, 1, repetitions);
+                            VMatrixPipe>(v_matrix_device, matrix_count, repetitions);
       });
 
   // Wait for output memory access kernels to finish
