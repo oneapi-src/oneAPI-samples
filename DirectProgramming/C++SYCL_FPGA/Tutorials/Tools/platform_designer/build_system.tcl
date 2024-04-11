@@ -57,7 +57,7 @@ if { $OS == "windows" } {
 
 post_message -type info  "4. Compile Quartus Prime project"
 echoAndEval "cd add_quartus"
-echoAndExec "quartus_sh --flow compile add.qpf"
+echoAndExec "quartus_sh --flow compile add.qpf 2>&1 > run_quartus.log"
 echoAndEval "cd $BUILD_DIR"
 
 post_message -type info  "4. Copy the generated add.sof file to the system_console directory."
