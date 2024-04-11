@@ -126,8 +126,7 @@ Follow these steps to compile and test the design:
    
    ```bash
    $> mkdir add_quartus
-   $> cp starting_files/add.sv add_quartus
-   $> cp starting_files/jtag.sdc add_quartus
+   $> cp -r starting_files/* add_quartus/
    $> cd add_quartus
    $> quartus
    ```
@@ -136,8 +135,7 @@ Follow these steps to compile and test the design:
    
    ```bash
    > mkdir add_quartus
-   > xcopy starting_files\add.sv add_quartus
-   > xcopy starting_files\jtag.sdc add_quartus
+   > ROBOCOPY starting_files/ add_quartus/ /S /NFL /NDL
    > cd add_quartus
    > quartus.exe
    ```
@@ -165,15 +163,15 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```bash
-   $> cd .. # navigate to project root if not there already
+   $> cd .. # navigate to build root if not there already
    $> cp -r build/add.report.prj/ add_quartus/
    ```
 
    Windows:
 
    ```bash
-   > cd .. # navigate to project root if not there already
-   > ROBOCOPY build\add.report.prj\ add_quartus\add.report.prj\ /S
+   > cd .. # navigate to build root if not there already
+   > ROBOCOPY build\add.report.prj\ add_quartus\add.report.prj\ /S /NFL /NDL
    ```
 
 4. Create the Platform Designer system.
@@ -278,7 +276,7 @@ Follow these steps to compile and test the design:
    Windows:
 
    ```bash
-   > xcopy add_quartus\output_files\add.sof system_console
+   > xcopy add_quartus\output_files\add.sof system_console /Y
    ```
 
 You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script.
