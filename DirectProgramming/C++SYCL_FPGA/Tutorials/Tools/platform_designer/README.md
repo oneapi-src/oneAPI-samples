@@ -101,21 +101,21 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```bash
-   $> cd add_oneapi
    $> mkdir build
    $> cd build
-   $> cmake ..
+   $> cmake ../add_oneapi
    $> make report
+   $> cd ..
    ```
 
    Windows:
 
    ```bash
-   > cd add_oneapi
    > mkdir build
    > cd build
-   > cmake -G "NMake Makefiles" ..
+   > cmake -G "NMake Makefiles" ../add_oneapi
    > nmake report
+   > cd ..
    ```
 
 2. **From the same terminal**, prepare a project directory called `add_quartus` for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `starting_files` directory into it. Then launch the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
@@ -125,7 +125,6 @@ Follow these steps to compile and test the design:
    Linux:
    
    ```bash
-   $> cd ../../
    $> mkdir add_quartus
    $> cp starting_files/add.sv add_quartus
    $> cp starting_files/jtag.sdc add_quartus
@@ -136,7 +135,6 @@ Follow these steps to compile and test the design:
    Windows:
    
    ```bash
-   > cd ..\..\
    > mkdir add_quartus
    > xcopy starting_files\add.sv add_quartus
    > xcopy starting_files\jtag.sdc add_quartus
@@ -168,14 +166,14 @@ Follow these steps to compile and test the design:
 
    ```bash
    $> cd .. # navigate to project root if not there already
-   $> cp -r add_oneapi/build/add.report.prj/ add_quartus/
+   $> cp -r build/add.report.prj/ add_quartus/
    ```
 
    Windows:
 
    ```bash
    > cd .. # navigate to project root if not there already
-   > ROBOCOPY add_oneapi\build\add.report.prj\ add_quartus\add.report.prj\ /S
+   > ROBOCOPY build\add.report.prj\ add_quartus\add.report.prj\ /S
    ```
 
 4. Create the Platform Designer system.
@@ -283,13 +281,23 @@ Follow these steps to compile and test the design:
    > xcopy add_quartus\output_files\add.sof system_console
    ```
 
-You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script:
+You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script.
 
-Linux and Windows:
+   Linux:
 
-```bash
-quartus_sh -t build_system.tcl
-```
+   ```bash
+   mkdir build_pd_system
+   cd build_pd_system
+   quartus_sh -t ../build_system.tcl
+   ```
+
+   Windows:
+
+   ```bash
+   mkdir build_pd_system
+   cd build_pd_system
+   quartus_sh -t ..\build_system.tcl
+   ```
 
 ### Additional Documentation
 - [Intel® Arria® 10 SoC Golden System Reference Design](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD) describes a reference design you can use with your Intel® Arria® 10 SX SoC Developer kit.
@@ -301,9 +309,9 @@ quartus_sh -t build_system.tcl
 
 ## Running the Sample
 
-Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
+Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA. 
 
-To move the design to a different computer, copy the `system_console` and directories from the `add_quartus` directory.
+To move the design to a different computer for testing, copy the entire `system_console` directory, along with `add.sof`.
 
 See output:
 

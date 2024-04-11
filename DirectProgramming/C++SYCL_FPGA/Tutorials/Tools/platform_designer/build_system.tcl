@@ -2,7 +2,8 @@
 # Prime, Platform Designer
 
 # get the base directory of the design
-set EXAMPLE_ROOT_DIR [pwd]
+set EXAMPLE_ROOT_DIR [ file dirname [ file normalize [ info script ] ] ]
+set BUILD_DIR [pwd]
 
 proc echoAndExec { exec_cmd } {
     post_message -type info  "   $exec_cmd"
@@ -18,52 +19,54 @@ proc echoAndEval { tcl_cmd } {
 set OS [lindex $tcl_platform(platform) 0]
 
 post_message -type info  "1. Compile oneAPI kernel into an IP component"
-echoAndEval "cd add_oneapi"
 echoAndEval "file mkdir build"
 echoAndEval "cd build"
 post_message -type info "Detected OS = $OS"
 if { $OS == "windows" } {
-    echoAndExec "cmake .. -G \"NMake Makefiles\""
+    echoAndExec "cmake .. -G \"NMake Makefiles\" $EXAMPLE_ROOT_DIR/add_oneapi"
 } else {
-    echoAndExec "cmake .."
+    echoAndExec "cmake .. $EXAMPLE_ROOT_DIR/add_oneapi"
 }
 echoAndExec "cmake --build . --target report"
-echoAndEval "cd $EXAMPLE_ROOT_DIR"
+echoAndEval "cd $BUILD_DIR"
 
 post_message -type info  "2. Prepare Project directory with files from starting_files"
 
 echoAndEval "file mkdir add_quartus"
 if { $OS == "windows" } {
-    echoAndExec "xcopy starting_files\\\\add.sv add_quartus"
-    echoAndExec "xcopy starting_files\\\\jtag.sdc add_quartus"
+    echoAndExec "xcopy $EXAMPLE_ROOT_DIR\\\\starting_files\\\\add.sv add_quartus"
+    echoAndExec "xcopy $EXAMPLE_ROOT_DIR\\\\starting_files\\\\jtag.sdc add_quartus"
 } else {
-    echoAndExec "cp starting_files/add.sv add_quartus"
-    echoAndExec "cp starting_files/jtag.sdc add_quartus"
+    echoAndExec "cp $EXAMPLE_ROOT_DIR/starting_files/add.sv add_quartus"
+    echoAndExec "cp $EXAMPLE_ROOT_DIR/starting_files/jtag.sdc add_quartus"
 }
 
-post_message -type info  "2.1 Create a Intel Quartus Prime project by copying the files from add_quartus_sln."
+post_message -type info  "2.1 Create an Intel Quartus Prime project by copying the files from add_quartus_sln."
 if { $OS == "windows" } {
-    echoAndExec "ROBOCOPY add_quartus_sln\\\\ add_quartus\\\\ /S /NFL /NDL"
+    echoAndExec "ROBOCOPY $EXAMPLE_ROOT_DIR\\\\add_quartus_sln\\\\ add_quartus\\\\ /S /NFL /NDL"
 } else {
-    echoAndExec "cp -r add_quartus_sln/* add_quartus/"
+    set SLN_FILES [glob -dir $EXAMPLE_ROOT_DIR/add_quartus_sln *]
+    echoAndExec "cp -r $SLN_FILES add_quartus/"
 }
 
 post_message -type info  "3. Copy the IP generated in Step 1 to the Quartus Prime project."
 if { $OS == "windows" } {
-    echoAndExec "ROBOCOPY add_oneapi\\\\build\\\\add.report.prj\\\\ add_quartus\\\\add.report.prj\\\\ /S /NFL /NDL"
+    echoAndExec "ROBOCOPY $EXAMPLE_ROOT_DIR\\\\add_oneapi\\\\build\\\\add.report.prj\\\\ add_quartus\\\\add.report.prj\\\\ /S /NFL /NDL"
 } else {
-    echoAndExec "cp -r add_oneapi/build/add.report.prj/ add_quartus"
+    echoAndExec "cp -r build/add.report.prj/ add_quartus"
 }
 
 post_message -type info  "4. Compile Quartus Prime project"
 echoAndEval "cd add_quartus"
 echoAndExec "quartus_sh --flow compile add.qpf"
-echoAndEval "cd $EXAMPLE_ROOT_DIR"
+echoAndEval "cd $BUILD_DIR"
 
 post_message -type info  "4. Copy the generated add.sof file to the system_console directory."
 if { $OS == "windows" } {
+    echoAndExec "ROBOCOPY $EXAMPLE_ROOT_DIR\\\\system_console $BUILD_DIR\\\\ /S /NFL /NDL"
     echoAndExec "xcopy add_quartus\\\\output_files\\\\add.sof system_console"
 } else {
+    echoAndExec "cp -r $EXAMPLE_ROOT_DIR/system_console $BUILD_DIR"
     echoAndExec "cp add_quartus/output_files/add.sof system_console"
 }
 
