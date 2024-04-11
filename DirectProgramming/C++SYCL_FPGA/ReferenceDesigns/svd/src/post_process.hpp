@@ -53,8 +53,8 @@ struct USVFromEigens {
 
     constexpr unsigned short kBankwidth = pipe_size * sizeof(TT);
     constexpr unsigned short sNumBanks = A_rows / pipe_size;
-    constexpr unsigned short aNumBanks = A_cols / pipe_size;
-    constexpr unsigned short vNumBanks = A_rows / pipe_size;
+    constexpr unsigned short aNumBanks = A_rows / pipe_size;
+    constexpr unsigned short vNumBanks = A_cols / pipe_size;
     constexpr unsigned short uNumBanks = A_rows / pipe_size;
 
     constexpr short sNumBanksNextPow2 =
@@ -103,8 +103,8 @@ struct USVFromEigens {
               if constexpr (k * pipe_size + t < A_cols) {
                 if (write_idx_a == k) {
                   A_load[li / aLoopIterPerColumn]
-                        [k * pipe_size + t + block * A_cols] =
-                            pipe_read_a.template get<t>();
+                        [k * pipe_size + t + block * A_cols]
+                         = pipe_read_a.template get<t>();
                 }
               }
 
@@ -121,7 +121,7 @@ struct USVFromEigens {
 
       // read eigenvalues one by one
       for (int k = 0; k < A_cols; k++) {
-        S_result[k][k] = EValIn::read();
+        S_result[k][k] = sycl::sqrt(EValIn::read());
       }  // end of k
 
       // process S (sqrt and zero pading)
@@ -129,10 +129,8 @@ struct USVFromEigens {
       for (int r = 0; r < A_rows; r ++){
           #pragma unroll
           for (int c = 0; c < A_cols; c ++) {
-          if (r == c)
-            S_result[r][c] = sycl::sqrt(S_result[r][c]);
-          else
-            S_result[r][c] = (TT)0.0;
+            if (r != c)
+              S_result[r][c] = (TT)0.0;
         }
       }
 
@@ -140,6 +138,8 @@ struct USVFromEigens {
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<vLoopIterBitSize, false> li = 0; li < vLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read_v = EVecIn::read();
+        // pass down V as is
+        VOut::write(pipe_read_v);
 
         int write_idx_v = li % vLoopIterPerColumn;
         fpga_tools::UnrolledLoop<vLoopIterPerColumn>([&](auto k) {
@@ -202,30 +202,6 @@ struct USVFromEigens {
           });
         });
         SOut::write(pipe_write);
-      }
-
-      // output V_load as is
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<vLoopIterBitSize, false> li = 0; li < vLoopIter; li++) {
-        int column_iter = li % vLoopIterPerColumn;
-        bool get[vLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<vLoopIterPerColumn>([&](auto k) {
-          get[k] = column_iter == k;
-          column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
-
-        fpga_tools::NTuple<TT, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<vLoopIterPerColumn>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-            if constexpr (t * pipe_size + k < A_cols) {
-              pipe_write.template get<k>() =
-                  get[t] ? V_load[t * pipe_size + k][li / vLoopIterPerColumn]
-                         : sycl::ext::intel::fpga_reg(
-                               pipe_write.template get<k>());
-            }
-          });
-        });
-        VOut::write(pipe_write);
       }
 
       // output U_result
