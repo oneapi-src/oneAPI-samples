@@ -63,7 +63,7 @@ echoAndEval "cd $BUILD_DIR"
 post_message -type info  "5. Copy the generated add.sof file to the system_console directory."
 if { $OS == "windows" } {
     echoAndExec "ROBOCOPY $EXAMPLE_ROOT_DIR/system_console/ $BUILD_DIR/system_console/ /S /NFL /NDL"
-    echoAndExec "xcopy $EXAMPLE_ROOT_DIR\\\\add_quartus\\\\output_files\\\\add.sof $BUILD_DIR\\\\system_console /Y"
+    echoAndExec "xcopy add_quartus\\\\output_files\\\\add.sof $BUILD_DIR\\\\system_console /Y"
 } else {
     echoAndExec "cp -r $EXAMPLE_ROOT_DIR/system_console $BUILD_DIR"
     echoAndExec "cp $BUILD_DIR/add_quartus/output_files/add.sof $BUILD_DIR/system_console"
