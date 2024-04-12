@@ -60,8 +60,6 @@ set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 ### no changes after here
 ###############################################################################
 
-# Print the sources being used for the compiles
-message(STATUS "Sources file ${SOURCE_FILES}")
 # Print the device being used for the compiles
 message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 
