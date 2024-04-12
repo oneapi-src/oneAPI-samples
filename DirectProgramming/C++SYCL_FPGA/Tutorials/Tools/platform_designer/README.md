@@ -331,6 +331,12 @@ Press any key to continue . . .
 
 <etc.>
 ---------------------------------------
+% 
+```
+
+At the `%` prompt, enter `source test_add.tcl` to exercise the hardware design.
+
+```
 % source test_add.tcl
 Resetting IP...
 TEST 1: READ OUTPUT AFTER RESET
