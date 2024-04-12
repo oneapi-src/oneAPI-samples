@@ -201,10 +201,6 @@ bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
   // disable bypass, since it's on by default
   BypassCSR::write(q, false);
 
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
-
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
           (int)rows_small, (int)cols_small, identity_coeffs});
@@ -267,10 +263,6 @@ bool TestBypass(sycl::queue q, bool print_debug_info) {
 
   // enable bypass
   BypassCSR::write(q, true);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
@@ -336,10 +328,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 
   // disable bypass since it's on by default
   BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
@@ -517,10 +505,6 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
 
   // Disable bypass since it's on by default
   BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   size_t rows = 0;
   size_t cols = 0;
