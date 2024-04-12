@@ -13,48 +13,65 @@ class VectorOpID;
 
 constexpr int kVectSize = 3;
 constexpr int N = 5;
-struct D3Vector {
-  float d[3];
-};
+using D3Vector = std::array<float, 3>;
+
+// Minimum capacity of a pipe.
+// Set to 0 to allow the compiler to save area if possible.
+constexpr size_t kPipeMinCapacity = 0;
+
+// Pipes
+class IDInputPipeA;
+class IDOutputPipeZ;
+
+using InputPipeA =
+    sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector, kPipeMinCapacity>;
+using OutputPipeZ =
+    sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float, 5>;
 
 // The square-root of a dot-product is an expensive operation.
-float OpSqrt(D3Vector val, const D3Vector coef) {
-  float res = sqrt(val.d[0] * coef.d[0] + val.d[1] * coef.d[1] + val.d[2] * coef.d[2]);
+float OpSqrt(D3Vector val, const D3Vector coef)
+{
+  float res = sqrt(val[0] * coef[0] + val[1] * coef[1] + val[2] * coef[2]);
   return res;
 }
 
-struct VectorOp {
-  D3Vector *a_in;
-  float *z_out;
+struct VectorOp
+{
   int len;
 
-  void operator()() const {
+  void operator()() const
+  {
     constexpr D3Vector coef1 = {0.2, 0.3, 0.4};
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    
+
     // Object declarations of a parameterized task_sequence class must be local, which means global declarations and dynamic allocations are not allowed.
     // Declare the task sequence object outside the for loop so that the hardware can be shared at the return point.
     sycl::ext::intel::experimental::task_sequence<OpSqrt> task_a;
-    
-    for (int i =0; i < len; i++) {
-      task_a.async(a_in[i], coef1);
+
+    for (int i = 0; i < len; i++)
+    {
+      D3Vector item = InputPipeA::read();
+      task_a.async(item, coef1);
     }
 
-    for (int i =0; i < len; i++) {
-      new_item.d[i] = task_a.get();
+    for (int i = 0; i < len; i++)
+    {
+      new_item[i] = task_a.get();
     }
 
     task_a.async(new_item, coef2);
-    z_out[0] = task_a.get();
+    OutputPipeZ::write(task_a.get());
   }
 };
 
-int main() {
+int main()
+{
   bool passed = false;
 
-  try {
+  try
+  {
 
     // Use compile-time macros to select either:
     //  - the FPGA emulator device (CPU emulation of the FPGA)
@@ -64,7 +81,7 @@ int main() {
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else  // #if FPGA_EMULATOR
+#else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
@@ -78,50 +95,61 @@ int main() {
               << std::endl;
 
     // initialize input D3Vector
-    constexpr float test_vecs[kVectSize][3] = {
-      {.49, .26, .82},
-      {.78, .43, .92},
-      {.17, .72, .34}
-    };
+    constexpr float test_vecs[kVectSize][D3Vector{}.size()] = {
+        {.49, .26, .82},
+        {.78, .43, .92},
+        {.17, .72, .34}};
 
-    // Create USM shared allocations in the specified buffer_location. 
-    // You can also use host allocations with malloc_host(...) API
-    D3Vector *a = sycl::malloc_shared<D3Vector>(kVectSize, q);
-    float *z = sycl::malloc_shared<float>(1, q);
-    for (int i = 0; i < kVectSize; i++) {
-      a[i].d[0] = test_vecs[i][0];
-      a[i].d[1] = test_vecs[i][1];
-      a[i].d[2] = test_vecs[i][2];
+    // input data
+    for (int j = 0; j < N; j++)
+    {
+      for (int i = 0; i < kVectSize; i++)
+      {
+        D3Vector data;
+        for (int k = 0; k < D3Vector{}.size(); k++)
+        {
+          data[k] = test_vecs[i][k];
+        }
+        InputPipeA::write(q, data);
+      }
     }
 
     std::cout << "Processing vector of size " << kVectSize << std::endl;
 
     float result[N];
-    for (int i = 0; i < N; i++) {
-      q.single_task<VectorOpID>(VectorOp{a, z, kVectSize}).wait();
-	    result[i] = z[0];
+    sycl::event e;
+    for (int i = 0; i < N; i++)
+    {
+      e = q.single_task<VectorOpID>(VectorOp{kVectSize});
     }
 
     // verify that result is correct
     passed = true;
-    for (int i = 1; i < N; i++) {
-      if (result[i] != result[i-1]) {
-        std::cout << "idx=" << i << ", async result " << result[i] << ", previously " << result[i-1] << std::endl;
-        passed = false;
-	    }
+    for (int i = 0; i < N; i++)
+    {
+      result[i] = OutputPipeZ::read(q);
     }
-
+    for (int i = 1; i < N; i++)
+    {
+      if (result[i] != result[i - 1])
+      {
+        std::cout << "idx=" << i << ", async result " << result[i] << ", previously " << result[i - 1] << std::endl;
+        passed = false;
+      }
+    }
+    // Wait for kernel to exit
+    e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
-
-    sycl::free(a, q);
-    sycl::free(z, q);
-
-  } catch (sycl::exception const &e) {
+  }
+  catch (sycl::exception const &e)
+  {
     // Catches exceptions in the host code.
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n"
+              << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND)
+    {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

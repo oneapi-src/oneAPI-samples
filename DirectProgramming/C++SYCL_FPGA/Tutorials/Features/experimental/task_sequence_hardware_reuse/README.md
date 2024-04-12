@@ -63,78 +63,123 @@ This sample illustrates some key concepts:
 
 This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. 
 
-D3Vector new_item;
-D3Vector item = a_in[0];
-new_item.d[0] = OpSqrt(item, coef1);
-item = a_in[1];
-new_item.d[1] = OpSqrt(item, coef1);
-item = a_in[2];
-new_item.d[2] = OpSqrt(item, coef1);
+<table>
+<tr>
+<td>
 
-z_out[0] = OpSqrt(new_item, coef2);
+```c++
+D3Vector new_item, item;
+
+item = InputPipeA::read();
+new_item[0] = OpSqrt(item, coef1);
+item = InputPipeA::read();
+new_item[1] = OpSqrt(item, coef1);
+item = InputPipeA::read();
+new_item[2] = OpSqrt(item, coef1);
+
+OutputPipeZ::write(OpSqrt(new_item, coef2));
+```
+
+</td>
+
+<td>
+<img src="assets/hardware_reuse_naive.svg" />
+</td>
+
+</tr>
+</table>
 
 Without resource sharing, multiple identical compute blocks for square root of dot product are generated on the FPGA. However by sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same task block each other, so the II of the top level component will increase.
 
 ### Resource sharing with a loop
 Instead of invoking the square root function one by one, you may re-use the function by calling it in a loop. 
+
+<table>
+<tr>
+<td>
+
 ```c++
-struct VectorOp {
-  D3Vector *a_in;
-  float *z_out;
+struct VectorOp{
   int len;
 
-  void operator()() const {
+  void operator()() const{
     constexpr D3Vector coef1 = {0.2, 0.3, 0.4};
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    
+
     // Calling OpSqrt() in a loop will re-use it
-    for (int i = 0; i < len; i++) {
-      D3Vector item = a_in[i];
-      new_item.d[i] = OpSqrt(item, coef1);    
+    for (int i = 0; i < len; i++){
+      D3Vector item = InputPipeA::read();
+      new_item[i] = OpSqrt(item, coef1);
     }
 
-    // Another square root block will be generated for this function call
-    z_out[0] = OpSqrt(new_item, coef2);
+    // Another square root block 
+    // will be generated for this function call
+    OutputPipeZ::write(OpSqrt(new_item, coef2));
   }
 };
 ```
+
+</td>
+
+<td>
+<img src="assets/hardware_reuse_loop.svg" />
+</td>
+
+</tr>
+</table>
 
 ### Resource sharing with a task sequence object
 Each task sequence class object represents a specific instantiation of FPGA hardware to perform the task function operation.
 Launching tasks via the `async()` function calls on the same object results in the reuse of that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to perform its reuse.
 
-In the 'task_sequence' directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point.
+In the `task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point.
+
+<table>
+<tr>
+<td>
+
 ```c++
-struct VectorOp {
-  D3Vector *a_in;
-  float *z_out;
+struct VectorOp{
   int len;
 
-  void operator()() const {
+  void operator()() const{
     constexpr D3Vector coef1 = {0.2, 0.3, 0.4};
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
-    
-    // Object declarations of a parameterized task_sequence class must be local, which means global declarations and dynamic allocations are not allowed.
-    // Declare the task sequence object outside the for loop so that the hardware can be shared at the return point.
+
+    // Object declarations of a parameterized task_sequence 
+    // class must be local, which means global declarations
+    // and dynamic allocations are not allowed.
+    // Declare the task sequence object outside the for loop 
+    // so that the hardware can be shared at the return point.
     sycl::ext::intel::experimental::task_sequence<OpSqrt> task_a;
-    
-    for (int i =0; i < len; i++) {
-      task_a.async(a_in[i], coef1);
+
+    for (int i = 0; i < len; i++){
+      D3Vector item = InputPipeA::read();
+      task_a.async(item, coef1);
     }
 
-    for (int i =0; i < len; i++) {
-      new_item.d[i] = task_a.get();
+    for (int i = 0; i < len; i++){
+      new_item[i] = task_a.get();
     }
 
     task_a.async(new_item, coef2);
-    z_out[0] = task_a.get();
+    OutputPipeZ::write(task_a.get());
   }
 };
 ```
+
+</td>
+
+<td>
+<img src="assets/hardware_reuse_taskseq.svg" />
+</td>
+
+</tr>
+</table>
 
 ## Sample Structure
 The 3 different example designs in this sample perform similar operations. You may compare the C++ source files to see the code changes that are necessary to apply hardware reuse.
@@ -248,25 +293,39 @@ Use these commands to run the design, depending on your OS.
 ### Read the Reports
 Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/reports/` and `task_sequences.report.prj/reports/` directory.
 
-Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. The table below shows that area usage has been estimated to decrease as we moved towards task sequence implementation.
+Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. You may found that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
-Compile Estimated: Kernel System
-|                | naive          | loop     | task sequence
-|----------------|----------------|----------------|----------------         
-| ALM            | 2690           | 1829           | 1666
-| RAMs           | 13             | 8              | 4
-| DSPs           | 22             | 11             | 5.5
-
-Locate `report.html` in the `naive.report.prj/reports/` directory.
-Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B0 > Cluster 0* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
+Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
+<table>
+<tr>
+<td>
+<img src="assets/naive_cluster1.svg" />
+</td>
+<td>
+<img src="assets/naive_cluster2.svg" />
+</td>
+</tr>
+</table>
 
 Locate `report.html` in the `naive_loop.report.prj/reports/` directory.
 Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B1 > Cluster 2* to see each loop invoke the same ONE `Floating-point sqrt`. 
 Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B2 > Cluster 3* to find another `Floating-point sqrt`.
-Total TWO replicate of hardware used in this design
+Total TWO replicate of hardware used in this design.
+<table>
+<tr>
+<td>
+<img src="assets/loop_cluster2.svg" />
+</td>
+<td>
+<img src="assets/loop_cluster3.svg" />
+</td>
+</tr>
+</table>
 
 Locate `report.html` in the `task_sequences.report.prj/reports/` directory.
-Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > D3Vector) > D3Vector).B1 > Cluster 6*
+Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 6*
+<img src="assets/taskseq_cluster6.svg" />
+
 
 ## Run the Design
 
