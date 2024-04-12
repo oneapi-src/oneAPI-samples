@@ -21,7 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 if(${TYPE} MATCHES NAIVE)
     set(SOURCE_FILES naive/src/main.cpp)
-    set(TARGET_NAME naive_usm)
+    set(TARGET_NAME naive)
 elseif(${TYPE} MATCHES LOOP)
     set(SOURCE_FILES loop/src/main.cpp)
     set(TARGET_NAME naive_loop)
@@ -47,7 +47,7 @@ endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
+set(USER_FPGA_FLAGS -Xsoptimize=latency;${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS ${USER_FLAGS})
@@ -110,7 +110,7 @@ else()
 endif()
 
 set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
-set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS} -Xsoptimize=latency)
+set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate
