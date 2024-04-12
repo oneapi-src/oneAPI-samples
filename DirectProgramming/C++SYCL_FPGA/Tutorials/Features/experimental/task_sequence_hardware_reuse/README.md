@@ -1,6 +1,6 @@
-# `Task Sequence Hardware Reuse` Sample
+# `Hardware Reuse` Sample
 
-This sample is a tutorial that demonstrates how to use looping and task sequence to achieve FPGA hardware reuse.
+This sample is a tutorial that demonstrates how to reuse hardware in your FPGA designs by using loops and task sequences.
 
 | Area                 | Description
 |:--                   |:--
@@ -10,7 +10,10 @@ This sample is a tutorial that demonstrates how to use looping and task sequence
 
 ## Purpose
 
-Task sequences allow user to control the replication of FPGA hardware and thus saving resource usage in a user's design.
+In normal operation, the oneAPI FPGA compiler automatically in-lines repeated function calls, creating multiple instances of hardware that can run in parallel. This in-lining strategy is necessary to achieve high throughput, but in cases where you want to minimize area utilization, you may wish to sacrifice throughput and allow certain functions to be re-used. This sample demonstrates two strategies to re-use hardware in your designs:
+
+1. Calling a function in a loop will cause it to only be instantiated once
+2. Calling a function in a task sequence lets you re-use a function in cases where it is not practical to re-use it in a loop.
 
 ## Prerequisites
 
@@ -56,12 +59,24 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 This sample illustrates some key concepts:
 - Simple hardware reuse by invoking the function task in a 'for' loop.
-- Enable hardware reuse by calling the same task sequence object within scope.
+- More flexible hardware reuse by invoking the function task using a task sequence wrapper object.
 
-This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. Without resource sharing, multiple identical compute blocks for square root of dot product are generated on the FPGA. However by sharing the compute block in a task, the task is invoked whenever the square  root of the dot product is calculated. This sharing means that you avoid duplicating the hardware for this operation on the FPGA. One trade-off made by  resource sharing is that, multiple invocations of the same task block each other, so the latency and II of the top level component could be increased.
+This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. 
 
-### Resource sharing with loop
-Instead of invoking the square root task one by one, you may invoke the task in loop for hardware reuse. 
+D3Vector new_item;
+D3Vector item = a_in[0];
+new_item.d[0] = OpSqrt(item, coef1);
+item = a_in[1];
+new_item.d[1] = OpSqrt(item, coef1);
+item = a_in[2];
+new_item.d[2] = OpSqrt(item, coef1);
+
+z_out[0] = OpSqrt(new_item, coef2);
+
+Without resource sharing, multiple identical compute blocks for square root of dot product are generated on the FPGA. However by sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same task block each other, so the II of the top level component will increase.
+
+### Resource sharing with a loop
+Instead of invoking the square root function one by one, you may re-use the function by calling it in a loop. 
 ```c++
 struct VectorOp {
   D3Vector *a_in;
@@ -74,23 +89,23 @@ struct VectorOp {
 
     D3Vector new_item;
     
-    // Invoking task block in loop will utilise the same hardware generated
+    // Calling OpSqrt() in a loop will re-use it
     for (int i = 0; i < len; i++) {
       D3Vector item = a_in[i];
       new_item.d[i] = OpSqrt(item, coef1);    
     }
 
-    // Another square root block will be generated for this task invoked
+    // Another square root block will be generated for this function call
     z_out[0] = OpSqrt(new_item, coef2);
   }
 };
 ```
 
-### Resource sharing with task sequence object
+### Resource sharing with a task sequence object
 Each task sequence class object represents a specific instantiation of FPGA hardware to perform the task function operation.
-Launching tasks via the async() function calls on the same object results in the reuse of that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of task_sequence objects you declare. Since object lifetime is confined to the scope in which the task_sequence object is created, carefully declare your object in the scope in which you intend to perform its reuse.
+Launching tasks via the `async()` function calls on the same object results in the reuse of that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to perform its reuse.
 
-In the 'task_sequence' folder, the device code declares the task sequence object is declared once and invoked inside the loop and the return point.
+In the 'task_sequence' directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point.
 ```c++
 struct VectorOp {
   D3Vector *a_in;
@@ -128,7 +143,7 @@ The 3 different example designs in this sample perform similar operations. You m
 2. [Looping](loop/main.cpp) Square root of dot product with same level of of data path are group together, and invoked in the 'for' loop. The hardware are shared by each invocation in the loop. Another square root of dot product, which is involed at the return point, generates its own hardware.
 3. [Task sequence](task_sequence/main.cpp) Square root of dot product is invoked with a same task sequence object, both in the loop and at the return point. The hardware of it is shared by each invocation of the task.
 
-## Build a Design
+## Build the `task_sequence_hardware_reuse` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.
@@ -233,10 +248,10 @@ Use these commands to run the design, depending on your OS.
 ### Read the Reports
 Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/reports/` and `task_sequences.report.prj/reports/` directory.
 
-Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. The table below summary shows that area usage has been estimated to decrease as we moved towards task sequence implementation.
+Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. The table below shows that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
-| Compile Estimated: Kernel System
-|                | naive          | naive_loop     | task sequence
+Compile Estimated: Kernel System
+|                | naive          | loop     | task sequence
 |----------------|----------------|----------------|----------------         
 | ALM            | 2690           | 1829           | 1666
 | RAMs           | 13             | 8              | 4
@@ -251,7 +266,7 @@ Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B2 > Cluster
 Total TWO replicate of hardware used in this design
 
 Locate `report.html` in the `task_sequences.report.prj/reports/` directory.
-Navigate thru the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > D3Vector) > D3Vector).B1 > Cluster 6*
+Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > D3Vector) > D3Vector).B1 > Cluster 6*
 
 ## Run the Design
 

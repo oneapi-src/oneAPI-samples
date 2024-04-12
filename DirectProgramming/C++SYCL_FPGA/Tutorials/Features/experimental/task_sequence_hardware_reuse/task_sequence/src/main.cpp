@@ -17,6 +17,7 @@ struct D3Vector {
   float d[3];
 };
 
+// The square-root of a dot-product is an expensive operation.
 float OpSqrt(D3Vector val, const D3Vector coef) {
   float res = sqrt(val.d[0] * coef.d[0] + val.d[1] * coef.d[1] + val.d[2] * coef.d[2]);
   return res;
