@@ -99,7 +99,7 @@ flowchart LR
 | [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns)                                     | How to declare and use `printf` in program
 | [invocation_interfaces](Tutorials/Features/hls_flow_interfaces/invocation_interfaces)                                     | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to specify the kernel invocation interface and kernel argument interfaces
 | [streaming_data_interfaces](Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces)                             | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to use pipes to implement streaming data interfaces on an IP component
-
+| [hardware_reuse (experimental)](Tutorials/Features/experimental/hardware_reuse)                                               | [Tutorials/Features](Tutorials/Features)                                                 | How to reuse hardware in your FPGA designs by using loops and task sequences
 
 #### Tier 3: Explore the Advanced Techniques
 
