@@ -66,7 +66,7 @@ conda activate xgboost
 3. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
 ```
 
 4. Launch Jupyter Notebook: 
@@ -91,7 +91,7 @@ IntelPython_XGBoost_GettingStarted.ipynb
 1. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted
 ```
 2. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
