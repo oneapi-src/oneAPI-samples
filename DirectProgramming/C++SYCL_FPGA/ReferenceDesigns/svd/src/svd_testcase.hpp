@@ -10,6 +10,11 @@
 #include "svd_testbench_tool.hpp"
 #include "print_matrix.hpp"
 
+// test case class to create test cases
+// Instantiate test case like this:
+// SVDTestcase<typeT, rows, cols> new_testcase(
+//     std::vector<std::vector<float>>{ ... } 
+//     std::vector<float>{ ... });
 template <typename T, unsigned rows_A, unsigned cols_A, bool is_complex = false>
 struct SVDTestcase {
   std::vector<std::vector<T>> input_A;
@@ -21,6 +26,7 @@ struct SVDTestcase {
   double delta_time;
   double throughput;
 
+  // constructor takes the input matrix vector and 1D vector of all the singular values (sorted)
   SVDTestcase(std::vector<std::vector<T>> A, std::vector<T> S)
       : input_A(A), output_S(S) {}
 
@@ -102,6 +108,7 @@ struct SVDTestcase {
     return max_diff;
   }
 
+  // Run the test case through the design, and check for correctness
   template <unsigned k_fixed_iteration = FIXED_ITERATIONS,
             unsigned k_raw_latency = 110, int k_zero_threshold_1e = -8>
   T RunTest(sycl::queue q, int benchmark_rep = 1, bool print_matrices = false) {
@@ -142,6 +149,7 @@ struct SVDTestcase {
     return std::max({S_error, A_error, U_orthogonal_error, V_orthogonal_error});
   }
 
+  // Print result of the test run (call after RunTest() )
   void PrintResult() {
     std::cout << "Singular value differences: " << S_error << std::endl;
     std::cout << "Decomposition differences (A = USVt): " << A_error << std::endl;
