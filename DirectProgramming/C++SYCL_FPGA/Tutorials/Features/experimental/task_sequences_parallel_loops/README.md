@@ -64,7 +64,7 @@ The demonstration system in this tutorial is explained in the following diagram.
 <tr>
 <td>
 
-```
+```c++
 struct NaiveKernel {
   int len;
 
