@@ -61,7 +61,8 @@ This sample illustrates some key concepts:
 - Simple hardware reuse by invoking the function task in a 'for' loop.
 - More flexible hardware reuse by invoking the function task using a task sequence wrapper object.
 
-This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. 
+### No resource sharing
+This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. This function is contained within `OpSqrt()`. Without resource sharing, multiple identical compute blocks for `OpSqrt()` are generated on the FPGA. 
 
 <table>
 <tr>
@@ -89,10 +90,10 @@ OutputPipeZ::write(OpSqrt(new_item, coef2));
 </tr>
 </table>
 
-Without resource sharing, multiple identical compute blocks for square root of dot product are generated on the FPGA. However by sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same task block each other, so the II of the top level component will increase.
+By sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same compute block will block each other, so the II of the loop in which the shared compute block is called will increase.
 
 ### Resource sharing with a loop
-Instead of invoking the square root function one by one, you may re-use the function by calling it in a loop. 
+Instead of invoking the `OpSqrt()` function one by one, you may re-use the function by calling it in a loop. In the `loop` directory, the device code calls the `OpSqrt()` function in a loop.
 
 <table>
 <tr>
@@ -109,7 +110,7 @@ struct VectorOp{
     D3Vector new_item;
 
     // Calling OpSqrt() in a loop will re-use it
-    for (int i = 0; i < len; i++){
+    for (int i = 0; i < 3; i++){
       D3Vector item = InputPipeA::read();
       new_item[i] = OpSqrt(item, coef1);
     }
@@ -130,11 +131,24 @@ struct VectorOp{
 </tr>
 </table>
 
-### Resource sharing with a task sequence object
-Each task sequence class object represents a specific instantiation of FPGA hardware to perform the task function operation.
-Launching tasks via the `async()` function calls on the same object results in the reuse of that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to perform its reuse.
 
-In the `task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point.
+This is a simple, but effective way to share a resource, but it is not always convenient to put _all_ instances of a function call into the same loop. consider the fourth call to `OpSqrt()`, which depends on the outputs of the first three calls. We could write the complex multiplexer logic to select whether the `OpSqrt()` function should be processing the outputs from the reads from `InputPipeA` or combining the outputs of the first three calls, but this code would be hard to read and debug. A better solution is to use task sequences to let the compiler generate this logic for us.
+### Resource sharing with a task sequence object
+To use a task sequence in your design, include the `<sycl/ext/intel/experimental/task_sequence.hpp>` header file in your source code. The `task_sequence` class is a templated class with 3 parameters:
+
+| Template Parameter | Type     | Default Value | Description
+|--------------------|----------|---------------|---
+| Task function      | callable | N/A           | A callable object `f` that defines the asynchronous task to be associated with the `task_sequence`. The callable object `f` must meet the following requirements: <br> • The object `f` must be statically resolvable at compile time, which means it is not a function pointer. <br> • The object `f` must not be an overloaded function. <br> • The return type (`ReturnT`) and argument types (`ArgsT…`) of object f must be resolvable and fixed.
+| Invocation Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated for `async()` function calls.
+| Response Capacity* | `uint32_t` | 1 | The size of the hardware queue instantiated to hold task function results.
+
+> *Invocation capacity and response capacity are optional 
+The following example shows how to use task sequences to
+
+Each task sequence class object represents a specific instantiation of FPGA hardware to perform the operation defined by the 'Task function' parameter.
+Launching tasks via repeated `async()` function calls on the same object tells the compiler to reuse that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to reuse it.
+
+In the `task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point. Notice how the `async()` and `get()` calls appear in separate loops, so that the `OpSqrt()` can be pipelined.
 
 <table>
 <tr>
