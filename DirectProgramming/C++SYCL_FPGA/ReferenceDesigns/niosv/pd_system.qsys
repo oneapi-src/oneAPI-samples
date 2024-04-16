@@ -279,11 +279,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -549,6 +544,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -578,11 +578,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -1416,6 +1411,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -1538,11 +1538,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -2360,6 +2355,10 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;assignments&gt;
                     &lt;assignmentValueMap&gt;
                         &lt;entry&gt;
+                            &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                            &lt;value&gt;1&lt;/value&gt;
+                        &lt;/entry&gt;
+                        &lt;entry&gt;
                             &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
@@ -2656,6 +2655,10 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;assignments&gt;
                     &lt;assignmentValueMap&gt;
                         &lt;entry&gt;
+                            &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                            &lt;value&gt;1&lt;/value&gt;
+                        &lt;/entry&gt;
+                        &lt;entry&gt;
                             &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
@@ -2884,11 +2887,17 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
         &lt;className&gt;intel_niosv_g&lt;/className&gt;
-        &lt;version&gt;2.0.0&lt;/version&gt;
+        &lt;version&gt;2.1.0&lt;/version&gt;
         &lt;displayName&gt;Nios V/g General Purpose Processor Intel FPGA IP&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
         &lt;descriptors&gt;
+            &lt;descriptor&gt;
+                &lt;parameterDefaultValue&gt;&lt;/parameterDefaultValue&gt;
+                &lt;parameterName&gt;AUTO_BOARD&lt;/parameterName&gt;
+                &lt;parameterType&gt;java.lang.String&lt;/parameterType&gt;
+                &lt;systemInfotype&gt;BOARD&lt;/systemInfotype&gt;
+            &lt;/descriptor&gt;
             &lt;descriptor&gt;
                 &lt;parameterDefaultValue&gt;-1&lt;/parameterDefaultValue&gt;
                 &lt;parameterName&gt;AUTO_CLK_CLOCK_DOMAIN&lt;/parameterName&gt;
@@ -3895,6 +3904,10 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;assignments&gt;
                 &lt;assignmentValueMap&gt;
                     &lt;entry&gt;
+                        &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                        &lt;value&gt;1&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
@@ -4191,6 +4204,10 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;assignments&gt;
                 &lt;assignmentValueMap&gt;
                     &lt;entry&gt;
+                        &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                        &lt;value&gt;1&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
@@ -4467,6 +4484,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value>nios</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -4583,7 +4605,7 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/entry&gt;
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.NiosVTCMVersion&lt;/key&gt;
-            &lt;value&gt;2.0.0&lt;/value&gt;
+            &lt;value&gt;2.1.0&lt;/value&gt;
         &lt;/entry&gt;
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.cpuArchitecture&lt;/key&gt;
@@ -4592,10 +4614,6 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.fpuEnabled&lt;/key&gt;
             &lt;value&gt;0&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-            &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
-            &lt;value&gt;1&lt;/value&gt;
         &lt;/entry&gt;
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.isTimerDevice&lt;/key&gt;
@@ -4657,11 +4675,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -4970,6 +4983,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -4999,11 +5017,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -5156,12 +5169,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw&lt;/name&gt;
+                &lt;name&gt;avm_mem_gmem0_1_port_0_0_r&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;true&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_address&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;32&lt;/width&gt;
@@ -5170,7 +5183,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_byteenable&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;4&lt;/width&gt;
@@ -5179,7 +5192,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdatavalid&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_readdatavalid&lt;/name&gt;
                         &lt;role&gt;readdatavalid&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -5188,7 +5201,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_read&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_read&lt;/name&gt;
                         &lt;role&gt;read&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -5197,7 +5210,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdata&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_readdata&lt;/name&gt;
                         &lt;role&gt;readdata&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;32&lt;/width&gt;
@@ -5206,7 +5219,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_waitrequest&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -5215,7 +5228,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_burstcount&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;4&lt;/width&gt;
@@ -5368,12 +5381,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw&lt;/name&gt;
+                &lt;name&gt;avm_mem_gmem1_2_port_0_0_w&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;true&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_address&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;32&lt;/width&gt;
@@ -5382,7 +5395,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_byteenable&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;4&lt;/width&gt;
@@ -5391,7 +5404,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_write&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_write&lt;/name&gt;
                         &lt;role&gt;write&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -5400,7 +5413,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_writedata&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_writedata&lt;/name&gt;
                         &lt;role&gt;writedata&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;32&lt;/width&gt;
@@ -5409,7 +5422,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_waitrequest&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -5418,7 +5431,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_burstcount&lt;/name&gt;
+                        &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;4&lt;/width&gt;
@@ -6063,12 +6076,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw&lt;/name&gt;
+            &lt;name&gt;avm_mem_gmem0_1_port_0_0_r&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_address&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -6077,7 +6090,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_byteenable&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -6086,7 +6099,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -6095,7 +6108,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_read&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -6104,7 +6117,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_readdata&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -6113,7 +6126,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_waitrequest&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -6122,7 +6135,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_rw_burstcount&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem0_1_port_0_0_r_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -6271,20 +6284,16 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
-                    &lt;entry&gt;
-                        &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
-                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw&lt;/name&gt;
+            &lt;name&gt;avm_mem_gmem1_2_port_0_0_w&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_address&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -6293,7 +6302,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_byteenable&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -6302,7 +6311,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_write&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -6311,7 +6320,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_writedata&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;32&lt;/width&gt;
@@ -6320,7 +6329,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_waitrequest&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -6329,7 +6338,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_rw_burstcount&lt;/name&gt;
+                    &lt;name&gt;avm_mem_gmem1_2_port_0_0_w_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;4&lt;/width&gt;
@@ -6476,10 +6485,6 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
-                        &lt;value&gt;0&lt;/value&gt;
-                    &lt;/entry&gt;
-                    &lt;entry&gt;
-                        &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
@@ -6752,6 +6757,41 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;writeWaitTime&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureGuid&lt;/key&gt;
+                        &lt;value&gt;0&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhGroupId&lt;/key&gt;
+                        &lt;value&gt;0&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhParameterId&lt;/key&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhParameterName&lt;/key&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhParameterVersion&lt;/key&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhParameterData&lt;/key&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhParameterDataLength&lt;/key&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureMajorVersion&lt;/key&gt;
+                        &lt;value&gt;0&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureMinorVersion&lt;/key&gt;
+                        &lt;value&gt;0&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureId&lt;/key&gt;
+                        &lt;value&gt;35&lt;/value&gt;
+                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
@@ -6807,6 +6847,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value>simple_dma_accelerator</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -6836,11 +6881,6 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
-            <ipxact:parameter parameterId="bspCpu" type="bit">
-              <ipxact:name>bspCpu</ipxact:name>
-              <ipxact:displayName>BSP CPU</ipxact:displayName>
-              <ipxact:value></ipxact:value>
-            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -7351,7 +7391,7 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
         &lt;className&gt;altera_avalon_jtag_uart&lt;/className&gt;
-        &lt;version&gt;19.2.3&lt;/version&gt;
+        &lt;version&gt;19.2.4&lt;/version&gt;
         &lt;displayName&gt;JTAG UART Intel FPGA IP&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
@@ -7968,6 +8008,11 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:displayName>HLS file</ipxact:displayName>
               <ipxact:value></ipxact:value>
             </ipxact:parameter>
+            <ipxact:parameter parameterId="liveModuleName" type="string">
+              <ipxact:name>liveModuleName</ipxact:name>
+              <ipxact:displayName>Live Module Name</ipxact:displayName>
+              <ipxact:value>uart</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
@@ -8023,7 +8068,7 @@ https://fpgasoftware.intel.com/eula.-->
       </altera:module>
     </altera:modules>
     <altera:connections>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8044,7 +8089,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8065,7 +8110,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.data_manager" altera:end="uart.avalon_jtag_slave">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="uart.avalon_jtag_slave">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110040"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8086,7 +8131,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.data_manager" altera:end="simple_dma_accelerator.csr_ring_root_avs">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="simple_dma_accelerator.csr_ring_root_avs">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110100"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8107,7 +8152,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.data_manager" altera:end="nios.dm_agent">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="nios.dm_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00100000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8128,7 +8173,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.data_manager" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8149,7 +8194,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.data_manager" altera:end="nios.timer_sw_agent">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="nios.timer_sw_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8170,7 +8215,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.instruction_manager" altera:end="nios.dm_agent">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.instruction_manager" altera:end="nios.dm_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00100000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8191,7 +8236,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.3" altera:start="nios.instruction_manager" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.instruction_manager" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8212,21 +8257,21 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.3" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.3" altera:start="clock_in.out_clk" altera:end="nios.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.3" altera:start="clock_in.out_clk" altera:end="uart.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.3" altera:start="clock_in.out_clk" altera:end="code_data_ram.clk1"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.3" altera:start="clock_in.out_clk" altera:end="simple_dma_accelerator.clock"></altera:connection>
-      <altera:connection altera:kind="interrupt" altera:version="23.3" altera:start="nios.platform_irq_rx" altera:end="uart.irq">
+      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="nios.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="uart.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="code_data_ram.clk1"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="simple_dma_accelerator.clock"></altera:connection>
+      <altera:connection altera:kind="interrupt" altera:version="23.4" altera:start="nios.platform_irq_rx" altera:end="uart.irq">
         <altera:connection_parameter altera:parameter_name="irqNumber" altera:parameter_value="0"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="interrupt" altera:version="23.3" altera:start="nios.platform_irq_rx" altera:end="simple_dma_accelerator.kernel_irqs">
+      <altera:connection altera:kind="interrupt" altera:version="23.4" altera:start="nios.platform_irq_rx" altera:end="simple_dma_accelerator.kernel_irqs">
         <altera:connection_parameter altera:parameter_name="irqNumber" altera:parameter_value="1"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.3" altera:start="reset_in.out_reset" altera:end="nios.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.3" altera:start="reset_in.out_reset" altera:end="uart.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.3" altera:start="reset_in.out_reset" altera:end="code_data_ram.reset1"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.3" altera:start="reset_in.out_reset" altera:end="simple_dma_accelerator.resetn"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="nios.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="uart.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="code_data_ram.reset1"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="simple_dma_accelerator.resetn"></altera:connection>
     </altera:connections>
     <altera:interconnect_requirements></altera:interconnect_requirements>
     <altera:wire_level_connections></altera:wire_level_connections>
@@ -8247,15 +8292,15 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:busInterfaces>
           <ipxact:busInterface>
             <ipxact:name>nios.dm_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.instruction_manager</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="nios.instruction_manager">
                 <ipxact:baseAddress>0x0010_0000</ipxact:baseAddress>
@@ -8264,27 +8309,27 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>uart.avalon_jtag_slave</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>simple_dma_accelerator.csr_ring_root_avs</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.dm_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.timer_sw_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.data_manager</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="nios.data_manager">
                 <ipxact:baseAddress>0x0011_0040</ipxact:baseAddress>
@@ -8293,26 +8338,26 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:name>simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
             <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw">
+              <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+            <ipxact:name>simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
             <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw">
+              <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
@@ -8365,7 +8410,7 @@ https://fpgasoftware.intel.com/eula.-->
             </ipxact:segments>
           </ipxact:addressSpace>
           <ipxact:addressSpace>
-            <ipxact:name>simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_rw</ipxact:name>
+            <ipxact:name>simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
                 <ipxact:name>code_data_ram.s1</ipxact:name>
@@ -8375,7 +8420,7 @@ https://fpgasoftware.intel.com/eula.-->
             </ipxact:segments>
           </ipxact:addressSpace>
           <ipxact:addressSpace>
-            <ipxact:name>simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_rw</ipxact:name>
+            <ipxact:name>simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
                 <ipxact:name>code_data_ram.s1</ipxact:name>
