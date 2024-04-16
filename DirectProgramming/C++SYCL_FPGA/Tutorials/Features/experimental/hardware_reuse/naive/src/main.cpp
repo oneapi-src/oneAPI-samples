@@ -10,8 +10,6 @@
 // practice that reduces name mangling in the optimization reports.
 class VectorOpID;
 
-constexpr int kVectSize = 3;
-constexpr int N = 5;
 using D3Vector = std::array<float, 3>;
 
 // Minimum capacity of a pipe.
@@ -36,7 +34,6 @@ float OpSqrt(D3Vector val, const D3Vector coef)
 
 struct VectorOp
 {
-  int len;
 
   void operator()() const
   {
@@ -57,6 +54,7 @@ struct VectorOp
 
 int main()
 {
+constexpr int N = 5;
   bool passed = false;
 
   try
@@ -84,7 +82,7 @@ int main()
               << std::endl;
 
     // initialize input D3Vector
-    constexpr float test_vecs[kVectSize][D3Vector{}.size()] = {
+    constexpr float test_vecs[D3Vector{}.size()][D3Vector{}.size()] = {
         {.49, .26, .82},
         {.78, .43, .92},
         {.17, .72, .34}};
@@ -92,7 +90,7 @@ int main()
     // input data
     for (int j = 0; j < N; j++)
     {
-      for (int i = 0; i < kVectSize; i++)
+      for (int i = 0; i < D3Vector{}.size(); i++)
       {
         D3Vector data;
         for (int k = 0; k < D3Vector{}.size(); k++)

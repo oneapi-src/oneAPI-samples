@@ -11,7 +11,6 @@
 class VectorOpID;
 
 constexpr int kVectSize = 3;
-constexpr int N = 5;
 using D3Vector = std::array<float, 3>;
 
 // Minimum capacity of a pipe.
@@ -36,7 +35,6 @@ float OpSqrt(D3Vector val, const D3Vector coef)
 
 struct VectorOp
 {
-  int len;
 
   void operator()() const
   {
@@ -46,8 +44,7 @@ struct VectorOp
     D3Vector new_item;
 
     // Calling OpSqrt() in a loop will re-use it
-    for (int i = 0; i < len; i++)
-    {
+    for (int i = 0; i < new_item.size(); i++) {
       D3Vector item = InputPipeA::read();
       new_item[i] = OpSqrt(item, coef1);
     }

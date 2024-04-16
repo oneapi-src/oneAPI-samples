@@ -295,7 +295,8 @@ Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/
 
 Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. You may found that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
-Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
+#### Naive
+The four instances of `OpSqrt()` are split across two clusters in the report. Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
 <table>
 <tr>
 <td>
@@ -307,10 +308,11 @@ Locate `report.html` in the `naive.report.prj/reports/` directory and navigate t
 </tr>
 </table>
 
+#### Loop
 Locate `report.html` in the `naive_loop.report.prj/reports/` directory.
 Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B1 > Cluster 2* to see each loop invoke the same ONE `Floating-point sqrt`. 
 Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B2 > Cluster 3* to find another `Floating-point sqrt`.
-Total TWO replicate of hardware used in this design.
+There are a total TWO replicates of the `OpSqrt()` hardware used in this design.
 <table>
 <tr>
 <td>
@@ -322,6 +324,7 @@ Total TWO replicate of hardware used in this design.
 </tr>
 </table>
 
+#### Task sequence
 Locate `report.html` in the `task_sequences.report.prj/reports/` directory.
 Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 6*
 <img src="assets/taskseq_cluster6.svg" />

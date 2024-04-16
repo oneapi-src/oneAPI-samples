@@ -50,6 +50,7 @@ struct VectorOp
     // Declare the task sequence object outside the for loop so that the hardware can be shared at the return point.
     sycl::ext::intel::experimental::task_sequence<OpSqrt> task_a;
 
+    // put `async()` and `get()` calls in separate loops so that the `OpSqrt()` can be pipelined.
     for (int i = 0; i < len; i++)
     {
       D3Vector item = InputPipeA::read();
