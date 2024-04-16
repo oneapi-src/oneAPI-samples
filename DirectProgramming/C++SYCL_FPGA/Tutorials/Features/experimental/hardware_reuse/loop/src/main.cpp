@@ -10,7 +10,6 @@
 // practice that reduces name mangling in the optimization reports.
 class VectorOpID;
 
-constexpr int kVectSize = 3;
 using D3Vector = std::array<float, 3>;
 
 // Minimum capacity of a pipe.
@@ -21,23 +20,19 @@ constexpr size_t kPipeMinCapacity = 0;
 class IDInputPipeA;
 class IDOutputPipeZ;
 
-using InputPipeA =
-    sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector, kPipeMinCapacity>;
+using InputPipeA = sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector,
+                                                        kPipeMinCapacity>;
 using OutputPipeZ =
     sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float, 5>;
 
 // The square-root of a dot-product is an expensive operation.
-float OpSqrt(D3Vector val, const D3Vector coef)
-{
+float OpSqrt(D3Vector val, const D3Vector coef) {
   float res = sqrt(val[0] * coef[0] + val[1] * coef[1] + val[2] * coef[2]);
   return res;
 }
 
-struct VectorOp
-{
-
-  void operator()() const
-  {
+struct VectorOp {
+  void operator()() const {
     constexpr D3Vector coef1 = {0.2, 0.3, 0.4};
     constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
 
@@ -54,13 +49,11 @@ struct VectorOp
   }
 };
 
-int main()
-{
+int main() {
+  constexpr int N = 5;
   bool passed = false;
 
-  try
-  {
-
+  try {
     // Use compile-time macros to select either:
     //  - the FPGA emulator device (CPU emulation of the FPGA)
     //  - the FPGA device (a real FPGA)
@@ -69,7 +62,7 @@ int main()
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else // #if FPGA_EMULATOR
+#else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 
@@ -83,61 +76,49 @@ int main()
               << std::endl;
 
     // initialize input D3Vector
-    constexpr float test_vecs[kVectSize][D3Vector{}.size()] = {
-        {.49, .26, .82},
-        {.78, .43, .92},
-        {.17, .72, .34}};
+    constexpr float test_vecs[D3Vector{}.size()][D3Vector{}.size()] = {
+        {.49, .26, .82}, {.78, .43, .92}, {.17, .72, .34}};
 
     // input data
-    for (int j = 0; j < N; j++)
-    {
-      for (int i = 0; i < kVectSize; i++)
-      {
+    for (int j = 0; j < N; j++) {
+      for (int i = 0; i < D3Vector{}.size(); i++) {
         D3Vector data;
-        for (int k = 0; k < D3Vector{}.size(); k++)
-        {
+        for (int k = 0; k < D3Vector{}.size(); k++) {
           data[k] = test_vecs[i][k];
         }
         InputPipeA::write(q, data);
       }
     }
 
-    std::cout << "Processing vector of size " << kVectSize << std::endl;
+    std::cout << "Processing vector of size " << D3Vector{}.size() << std::endl;
 
     float result[N];
     sycl::event e;
-    for (int i = 0; i < N; i++)
-    {
-      e = q.single_task<VectorOpID>(VectorOp{kVectSize});
+    for (int i = 0; i < N; i++) {
+      e = q.single_task<VectorOpID>(VectorOp{});
     }
 
     // verify that result is correct
     passed = true;
-    for (int i = 0; i < N; i++)
-    {
+    for (int i = 0; i < N; i++) {
       result[i] = OutputPipeZ::read(q);
     }
-    for (int i = 1; i < N; i++)
-    {
-      if (result[i] != result[i - 1])
-      {
-        std::cout << "idx=" << i << ", loop result " << result[i] << ", previously " << result[i - 1] << std::endl;
+    for (int i = 1; i < N; i++) {
+      if (result[i] != result[i - 1]) {
+        std::cout << "idx=" << i << ", loop result " << result[i]
+                  << ", previously " << result[i - 1] << std::endl;
         passed = false;
       }
     }
     // Wait for kernel to exit
     e.wait();
     std::cout << (passed ? "PASSED" : "FAILED") << std::endl;
-  }
-  catch (sycl::exception const &e)
-  {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code.
-    std::cerr << "Caught a SYCL host exception:\n"
-              << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND)
-    {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
