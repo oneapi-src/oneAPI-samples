@@ -8,7 +8,7 @@
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
-class VectorOpID;
+class IDVectorOp;
 
 using D3Vector = std::array<float, 3>;
 
@@ -22,8 +22,8 @@ class IDOutputPipeZ;
 
 using InputPipeA = sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector,
                                                         kPipeMinCapacity>;
-using OutputPipeZ =
-    sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float, 5>;
+using OutputPipeZ = sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float,
+                                                         kPipeMinCapacity>;
 
 // The square-root of a dot-product is an expensive operation.
 float OpSqrt(D3Vector val, const D3Vector coef) {
@@ -94,7 +94,7 @@ int main() {
     float result[N];
     sycl::event e;
     for (int i = 0; i < N; i++) {
-      e = q.single_task<VectorOpID>(VectorOp{});
+      e = q.single_task<IDVectorOp>(VectorOp{});
     }
 
     // verify that result is correct

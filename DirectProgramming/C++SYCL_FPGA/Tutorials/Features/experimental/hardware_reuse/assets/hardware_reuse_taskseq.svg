@@ -12,20 +12,20 @@
 
 	<style type="text/css">
 	<![CDATA[
-		.st1 {fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
-		.st2 {fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24;visibility:hidden}
+		.st1 {fill:#ffffff;stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
+		.st2 {fill:#ffffff;stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24;visibility:hidden}
 		.st3 {fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.72;visibility:hidden}
 		.st4 {fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.35714285714286}
 		.st5 {fill:#000000;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.72;visibility:hidden}
 		.st6 {fill:#000000;font-family:Calibri;font-size:0.666664em}
 		.st7 {fill:#000000;font-family:Courier New;font-size:0.666664em}
-		.st8 {marker-end:url(#mrkr4-54);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
-		.st9 {fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.11764705882353}
-		.st10 {marker-end:url(#mrkr13-63);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
-		.st11 {fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.22935779816514}
+		.st8 {marker-end:url(#mrkr4-54);stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st9 {fill:#4bacc6;fill-opacity:1;stroke:#4bacc6;stroke-opacity:1;stroke-width:0.29411764705882}
+		.st10 {marker-end:url(#mrkr13-63);stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st11 {fill:#4bacc6;fill-opacity:1;stroke:#4bacc6;stroke-opacity:1;stroke-width:0.22935779816514}
 		.st12 {fill:#ffffff;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
-		.st13 {fill:#dbeef3;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
-		.st14 {marker-start:url(#mrkr1-110);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st13 {fill:#dbeef3;stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
+		.st14 {marker-start:url(#mrkr1-110);stroke:#4bacc6;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
 		.st15 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
 	]]>
 	</style>
@@ -41,9 +41,9 @@
 		<g id="lend4">
 			<path d="M 2 1 L 0 0 L 2 -1 L 2 1 " style="stroke:none"/>
 		</g>
-		<marker id="mrkr4-54" class="st9" v:arrowType="4" v:arrowSize="1" v:setback="15.5" refX="-15.5" orient="auto"
+		<marker id="mrkr4-54" class="st9" v:arrowType="4" v:arrowSize="1" v:setback="6.32" refX="-6.32" orient="auto"
 				markerUnits="strokeWidth" overflow="visible">
-			<use xlink:href="#lend4" transform="scale(-8.5,-8.5) "/>
+			<use xlink:href="#lend4" transform="scale(-3.4,-3.4) "/>
 		</marker>
 		<g id="lend13">
 			<path d="M 3 1 L 0 0 L 3 -1 L 3 1 " style="stroke:none"/>
@@ -264,7 +264,7 @@
 				<v:ud v:nameU="ScaleFactor" v:val="VT0(1):26"/>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
-			<path d="M13.27 307.64 A19.8054 19.8054 0 1 1 16.97 343.43 L16.64 343.28" class="st8"/>
+			<path d="M13.27 307.64 A19.8054 19.8054 0 1 1 17.95 343.74 L17.62 343.6" class="st8"/>
 		</g>
 		<g id="shape1025-55" v:mID="1025" v:groupContext="shape" v:layerMember="0" transform="translate(25.2066,-97.4901)">
 			<title>Process.87</title>
@@ -490,7 +490,7 @@
 			<text x="9.26" y="314.33" class="st7" v:langID="4105"><v:paragraph v:horizAlign="1"/><v:tabList/>get()</text>		</g>
 		<g id="shape1040-114" v:mID="1040" v:groupContext="shape" v:layerMember="1" transform="translate(67.7263,-198.009)">
 			<title>Dynamic connector.112</title>
-			<path d="M0 324.69 L33.07 324.69 A2.3622 2.3622 0 1 1 37.8 324.69 L50.52 324.69 L50.52 423.64 L76.41 423.64 L76.41 411.87"
+			<path d="M0 324.69 L33.07 324.69 A2.3622 2.3622 0 0 1 37.8 324.69 L50.52 324.69 L50.52 423.64 L76.41 423.64 L76.41 411.87"
 					class="st14"/>
 		</g>
 		<g id="shape1041-119" v:mID="1041" v:groupContext="shape" v:layerMember="1" transform="translate(153.161,-204.097)">

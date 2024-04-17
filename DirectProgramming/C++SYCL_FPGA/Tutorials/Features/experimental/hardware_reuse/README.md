@@ -58,7 +58,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 ## Key Implementation Details
 
 This sample illustrates some key concepts:
-- Simple hardware reuse by invoking the function task in a 'for' loop.
+- Simple hardware reuse by invoking the task function in a 'for' loop.
 - More flexible hardware reuse by invoking the function task using a task sequence wrapper object.
 
 ### No resource sharing
@@ -310,7 +310,7 @@ Locate `report.html` in the `naive.report.prj/reports/`, `naive_loop.report.prj/
 Navigate to **System Resource Utilization Summary** (Summary > System Resource Utilization Summary) and compare the estimated area numbers in these report. You may found that area usage has been estimated to decrease as we moved towards task sequence implementation.
 
 #### Naive
-The four instances of `OpSqrt()` are split across two clusters in the report. Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
+The four instances of `OpSqrt()` are split across two clusters in the report. Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
 <table>
 <tr>
 <td>
@@ -324,24 +324,25 @@ The four instances of `OpSqrt()` are split across two clusters in the report. Lo
 
 #### Loop
 Locate `report.html` in the `naive_loop.report.prj/reports/` directory.
-Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B1 > Cluster 2* to see each loop invoke the same ONE `Floating-point sqrt`. 
-Navigate to *System Viewer: Kernel system > VectorOpID > VectorOpID.B2 > Cluster 3* to find another `Floating-point sqrt`.
+Navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B1 > Cluster 1* to see each loop invoke the same ONE `Floating-point sqrt`. 
+Navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B2 > Cluster 2* to find another `Floating-point sqrt`.
 There are a total TWO replicates of the `OpSqrt()` hardware used in this design.
 <table>
 <tr>
 <td>
-<img src="assets/loop_cluster2.svg" />
+<img src="assets/loop_cluster1.svg" />
 </td>
 <td>
-<img src="assets/loop_cluster3.svg" />
+<img src="assets/loop_cluster2.svg" />
 </td>
 </tr>
 </table>
 
 #### Task sequence
 Locate `report.html` in the `task_sequences.report.prj/reports/` directory.
-Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 6*
-<img src="assets/taskseq_cluster6.svg" />
+Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *
+System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 3*
+<img src="assets/taskseq_cluster3.svg" />
 
 
 ## Run the Design

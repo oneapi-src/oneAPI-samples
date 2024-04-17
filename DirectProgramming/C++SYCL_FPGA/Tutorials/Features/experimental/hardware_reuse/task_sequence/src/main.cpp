@@ -1,8 +1,8 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/ext/intel/experimental/task_sequence.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/experimental/task_sequence.hpp>
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
@@ -23,8 +23,8 @@ class IDOutputPipeZ;
 
 using InputPipeA = sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector,
                                                         kPipeMinCapacity>;
-using OutputPipeZ =
-    sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float, 5>;
+using OutputPipeZ = sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float,
+                                                         kPipeMinCapacity>;
 
 // The square-root of a dot-product is an expensive operation.
 float OpSqrt(D3Vector val, const D3Vector coef) {
@@ -45,14 +45,9 @@ struct VectorOp {
     // hardware can be shared at the return point.
     sycl::ext::intel::experimental::task_sequence<OpSqrt> task_a;
 
-    // put `async()` and `get()` calls in separate loops so that the `OpSqrt()`
-    // can be pipelined.
     for (int i = 0; i < new_item.size(); i++) {
       D3Vector item = InputPipeA::read();
       task_a.async(item, coef1);
-    }
-
-    for (int i = 0; i < new_item.size(); i++) {
       new_item[i] = task_a.get();
     }
 
@@ -107,7 +102,7 @@ int main() {
     float result[N];
     sycl::event e;
     for (int i = 0; i < N; i++) {
-      e = q.single_task<VectorOpID>(VectorOp{});
+      e = q.single_task<IDVectorOp>(VectorOp{});
     }
 
     // verify that result is correct
