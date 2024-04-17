@@ -9,7 +9,7 @@
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
-class VectorOpID;
+class IDVectorOp;
 
 using D3Vector = std::array<float, 3>;
 
