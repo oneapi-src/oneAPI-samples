@@ -29,5 +29,5 @@ void mm_kernel(queue &q, std::vector<float> &matrix_a, std::vector<float> &matri
 
     //# Submit MKL library call to execute on device
     oneapi::mkl::blas::gemm(q, transA, transB, N, N, N, alpha, b, N, a, N, beta, c, N);
-    c.get_access<access::mode::read>();
+    host_accessor hc(c, read_only);
 }
