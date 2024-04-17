@@ -167,8 +167,6 @@ struct USVFromEigens {
           if (column < diagonal_size) {
             TT dot_prod{0};
             fpga_tools::UnrolledLoop<A_cols>([&](auto k) {
-              // Assume dot_prods the B matrix was given transposed, otherwise
-              // it need to be transposed.
               dot_prod = sycl::ext::intel::fpga_reg(dot_prod) +
                          A_load[k][row] * V_load[k][column];
             });
