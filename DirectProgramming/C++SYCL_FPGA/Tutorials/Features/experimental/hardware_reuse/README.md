@@ -134,7 +134,7 @@ struct VectorOp{
 
 This is a simple, but effective way to share a resource, but it is not always convenient to put _all_ instances of a function call into the same loop. consider the fourth call to `OpSqrt()`, which depends on the outputs of the first three calls. We could write the complex multiplexer logic to select whether the `OpSqrt()` function should be processing the outputs from the reads from `InputPipeA` or combining the outputs of the first three calls, but this code would be hard to read and debug. A better solution is to use task sequences to let the compiler generate this logic for us.
 ### Resource sharing with a task sequence object
-To use a task sequence in your design, include the `<sycl/ext/intel/experimental/task_sequence.hpp>` header file in your source code. The `task_sequence` class is a templated class with 3 parameters:
+To use a task sequence in your design, include the `<sycl/ext/intel/experimental/3_task_sequence.hpp>` header file in your source code. The `task_sequence` class is a templated class with 3 parameters:
 
 | Template Parameter | Type     | Default Value | Description
 |--------------------|----------|---------------|---
@@ -148,7 +148,7 @@ The following example shows how to use task sequences to
 Each task sequence class object represents a specific instantiation of FPGA hardware to perform the operation defined by the 'Task function' parameter.
 Launching tasks via repeated `async()` function calls on the same object tells the compiler to reuse that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to reuse it.
 
-In the `task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point. Notice how the `async()` and `get()` calls appear in separate loops, so that the `OpSqrt()` can be pipelined.
+In the `3_task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point. Notice how the `async()` and `get()` calls appear in separate loops, so that the `OpSqrt()` can be pipelined.
 
 <table>
 <tr>
@@ -198,9 +198,9 @@ struct VectorOp{
 ## Sample Structure
 The 3 different example designs in this sample perform similar operations. You may compare the C++ source files to see the code changes that are necessary to apply hardware reuse.
 
-1. [Naive](naive/main.cpp) The component directly implements square root of dot product four times and each of them generates the hardware for its own use. 
-2. [Looping](loop/main.cpp) Square root of dot product with same level of of data path are group together, and invoked in the 'for' loop. The hardware are shared by each invocation in the loop. Another square root of dot product, which is involed at the return point, generates its own hardware.
-3. [Task sequence](task_sequence/main.cpp) Square root of dot product is invoked with a same task sequence object, both in the loop and at the return point. The hardware of it is shared by each invocation of the task.
+1. [Naive](1_naive/src/main.cpp) The component directly implements square root of dot product four times and each of them generates the hardware for its own use. 
+2. [Looping](2_loop/src/main.cpp) Square root of dot product with same level of of data path are group together, and invoked in the 'for' loop. The hardware are shared by each invocation in the loop. Another square root of dot product, which is involed at the return point, generates its own hardware.
+3. [Task sequence](3_task_sequence/src/main.cpp) Square root of dot product is invoked with a same task sequence object, both in the loop and at the return point. The hardware of it is shared by each invocation of the task.
 
 ## Build the `hardware_reuse` Tutorial
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
