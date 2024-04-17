@@ -20,13 +20,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ### Customize these build variables
 ###############################################################################
 if(${TYPE} MATCHES NAIVE)
-    set(SOURCE_FILES naive/src/main.cpp)
+    set(SOURCE_FILES 1_naive/src/main.cpp)
     set(TARGET_NAME naive)
 elseif(${TYPE} MATCHES LOOP)
-    set(SOURCE_FILES loop/src/main.cpp)
+    set(SOURCE_FILES 2_loop/src/main.cpp)
     set(TARGET_NAME naive_loop)
 elseif(${TYPE} MATCHES TASK_SEQUENCE)
-    set(SOURCE_FILES task_sequence/src/main.cpp)
+    set(SOURCE_FILES 3_task_sequence/src/main.cpp)
     set(TARGET_NAME task_sequences)
 else()
     message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
