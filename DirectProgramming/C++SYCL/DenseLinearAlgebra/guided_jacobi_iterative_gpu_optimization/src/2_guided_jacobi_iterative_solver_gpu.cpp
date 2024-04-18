@@ -55,8 +55,8 @@ void GenerateMatrix(std::vector<float> &input_matrix,
 
       for (int j = i * kSize; j < kSize * (i + 1); ++j) {
         in_mat_acc[j] = distr(engine);
-        in_mat_acc[j] = round(100. * in_mat_acc[j]) / 100.;
-        sum += fabs(in_mat_acc[j]);
+        in_mat_acc[j] = sycl::round(100. * in_mat_acc[j]) / 100.;
+        sum += sycl::fabs(in_mat_acc[j]);
       }
 
       oneapi::dpl::uniform_int_distribution<int> distr2(0, 100);
@@ -68,7 +68,7 @@ void GenerateMatrix(std::vector<float> &input_matrix,
         in_mat_acc[i * kSize + i] = -1 * (sum + 1);
 
       in_res_acc[i] = distr(engine);
-      in_res_acc[i] = round(100. * in_res_acc[i]) / 100.;
+      in_res_acc[i] = sycl::round(100. * in_res_acc[i]) / 100.;
     });
   });
 }
@@ -108,7 +108,7 @@ bool CheckIfEqual(Real *output_data, Real *old_output_data) {
   int correct_result = 0;
 
   for (int i = 0; i < kSize; ++i) {
-    if (fabs(output_data[i] - old_output_data[i]) < kCheckError)
+    if (std::fabs(output_data[i] - old_output_data[i]) < kCheckError)
       correct_result++;
   }
 
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
       accessor R{bufin_res, h, read_only};
       accessor NR{bufout_res, h, read_only};
       h.parallel_for(range<1>(kSize), [=](id<1> id) {
-        Real diff = fabs(NR[id] - R[id]);
+        Real diff = sycl::fabs(NR[id] - R[id]);
         if (diff > kCalculationError) all_eq[0] = false;
       });
     });
