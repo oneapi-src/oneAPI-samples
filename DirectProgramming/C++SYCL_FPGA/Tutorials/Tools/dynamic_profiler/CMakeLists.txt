@@ -111,9 +111,9 @@ set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
-set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
+set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsprofile -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
+set(FPGA_LINK_FLAGS -Xshardware -Xsprofile -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
 
 ###############################################################################
 ### FPGA Emulator
@@ -162,11 +162,11 @@ set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
 
 # Run
 add_custom_target(run
-                  COMMAND aocl profile -output-dir .. ../${TARGET_NAME}.fpga
-                  DEPENDS ${TARGET_NAME}.fpga)
+                  COMMAND aocl profile -output-dir .. ${FPGA_OUTPUT_NAME}
+                  DEPENDS ${FPGA_TARGET})
 add_custom_target(run_sim
-                  COMMAND aocl profile -output-dir .. ../${TARGET_NAME}.fpga_sim
-                  DEPENDS ${TARGET_NAME}.fpga_sim)
+                  COMMAND aocl profile -output-dir .. ${SIMULATOR_OUTPUT_NAME}
+                  DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### This part only manipulates cmake variables to print the commands to the user
