@@ -50,7 +50,7 @@ struct VectorOp {
 };
 
 int main() {
-  constexpr int N = 5;
+  constexpr int kN = 5;
   bool passed = false;
 
   try {
@@ -105,7 +105,7 @@ int main() {
     }
     for (int i = 1; i < N; i++) {
       if (result[i] != result[i - 1]) {
-        std::cout << "idx=" << i << ", loop result " << result[i]
+        std::cerr << "idx=" << i << ", loop result " << result[i]
                   << ", previously " << result[i - 1] << std::endl;
         passed = false;
       }

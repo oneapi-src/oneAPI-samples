@@ -104,7 +104,7 @@ int main() {
     }
     for (int i = 1; i < N; i++) {
       if (result[i] != result[i - 1]) {
-        std::cout << "idx=" << i << ", naive result " << result[i]
+        std::cerr << "idx=" << i << ", naive result " << result[i]
                   << ", previously " << result[i - 1] << std::endl;
         passed = false;
       }

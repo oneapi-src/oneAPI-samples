@@ -112,7 +112,7 @@ int main() {
     }
     for (int i = 1; i < N; i++) {
       if (result[i] != result[i - 1]) {
-        std::cout << "idx=" << i << ", async result " << result[i]
+        std::cerr << "idx=" << i << ", async result " << result[i]
                   << ", previously " << result[i - 1] << std::endl;
         passed = false;
       }
