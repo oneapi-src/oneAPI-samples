@@ -31,7 +31,7 @@ class C;
 template<typename T, typename InPipe>
 event SubmitProducer(queue &q, T* in_ptr, size_t size) {
   return q.single_task<P>([=]() [[intel::kernel_args_restrict]] {
-    host_ptr<T> in(in_ptr);
+    ext::intel::host_ptr<T> in(in_ptr);
     for (size_t i = 0; i < size; i++) {
       auto data = in[i];
       InPipe::write(data);
@@ -53,7 +53,7 @@ event SubmitProducer(queue &q, T* in_ptr, size_t size) {
 template<typename T, typename OutPipe>
 event SubmitConsumer(queue &q, T* out_ptr, size_t size) {
   return q.single_task<C>([=]() [[intel::kernel_args_restrict]] {
-    host_ptr<T> out(out_ptr);
+    ext::intel::host_ptr<T> out(out_ptr);
     for (size_t i = 0; i < size; i++) {
       auto data = OutPipe::read();
       *(out + i) = data;
