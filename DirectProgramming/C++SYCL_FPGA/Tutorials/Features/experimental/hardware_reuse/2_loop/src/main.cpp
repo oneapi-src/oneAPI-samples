@@ -10,7 +10,8 @@
 // practice that reduces name mangling in the optimization reports.
 class IDVectorOp;
 
-using D3Vector = std::array<float, 3>;
+constexpr int kSize = 3;
+using D3Vector = std::array<float, kSize>;
 
 // Minimum capacity of a pipe.
 // Set to 0 to allow the compiler to save area if possible.
@@ -25,7 +26,8 @@ using InputPipeA = sycl::ext::intel::experimental::pipe<IDInputPipeA, D3Vector,
 using OutputPipeZ = sycl::ext::intel::experimental::pipe<IDOutputPipeZ, float,
                                                          kPipeMinCapacity>;
 
-// The square-root of a dot-product is an expensive operation.
+// The square-root of a dot-product is an expensive operation for it consumes a
+// significant amount of area resources.
 float OpSqrt(D3Vector val, const D3Vector coef) {
   float res = sqrt(val[0] * coef[0] + val[1] * coef[1] + val[2] * coef[2]);
   return res;
@@ -33,19 +35,19 @@ float OpSqrt(D3Vector val, const D3Vector coef) {
 
 struct VectorOp {
   void operator()() const {
-    constexpr D3Vector coef1 = {0.2, 0.3, 0.4};
-    constexpr D3Vector coef2 = {0.6, 0.7, 0.8};
+    constexpr D3Vector kCoef1 = {0.2, 0.3, 0.4};
+    constexpr D3Vector kCoef2 = {0.6, 0.7, 0.8};
 
     D3Vector new_item;
 
     // Calling OpSqrt() in a loop will re-use it
     for (int i = 0; i < new_item.size(); i++) {
       D3Vector item = InputPipeA::read();
-      new_item[i] = OpSqrt(item, coef1);
+      new_item[i] = OpSqrt(item, kCoef1);
     }
 
     // Another square root block will be generated for this function call
-    OutputPipeZ::write(OpSqrt(new_item, coef2));
+    OutputPipeZ::write(OpSqrt(new_item, kCoef2));
   }
 };
 
@@ -76,34 +78,34 @@ int main() {
               << std::endl;
 
     // initialize input D3Vector
-    constexpr float test_vecs[D3Vector{}.size()][D3Vector{}.size()] = {
+    constexpr float test_vecs[kSize][kSize] = {
         {.49, .26, .82}, {.78, .43, .92}, {.17, .72, .34}};
 
     // input data
-    for (int j = 0; j < N; j++) {
-      for (int i = 0; i < D3Vector{}.size(); i++) {
+    for (int j = 0; j < kN; j++) {
+      for (int i = 0; i < kSize; i++) {
         D3Vector data;
-        for (int k = 0; k < D3Vector{}.size(); k++) {
+        for (int k = 0; k < kSize; k++) {
           data[k] = test_vecs[i][k];
         }
         InputPipeA::write(q, data);
       }
     }
 
-    std::cout << "Processing vector of size " << D3Vector{}.size() << std::endl;
+    std::cout << "Processing vector of size " << kSize << std::endl;
 
-    float result[N];
+    float result[kN];
     sycl::event e;
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < kN; i++) {
       e = q.single_task<IDVectorOp>(VectorOp{});
     }
 
     // verify that result is correct
     passed = true;
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < kN; i++) {
       result[i] = OutputPipeZ::read(q);
     }
-    for (int i = 1; i < N; i++) {
+    for (int i = 1; i < kN; i++) {
       if (result[i] != result[i - 1]) {
         std::cerr << "idx=" << i << ", loop result " << result[i]
                   << ", previously " << result[i - 1] << std::endl;

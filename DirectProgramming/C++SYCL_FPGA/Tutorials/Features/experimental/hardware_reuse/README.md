@@ -13,7 +13,7 @@ This sample is a tutorial that demonstrates how to reuse hardware in your FPGA d
 In normal operation, the oneAPI FPGA compiler automatically in-lines repeated function calls, creating multiple instances of hardware that can run in parallel. This in-lining strategy is necessary to achieve high throughput, but in cases where you want to minimize area utilization, you may wish to sacrifice throughput and allow certain functions to be re-used. This sample demonstrates two strategies to re-use hardware in your designs:
 
 1. Calling a function in a loop will cause it to only be instantiated once
-2. Calling a function in a task sequence lets you re-use a function in cases where it is not practical to re-use it in a loop.
+2. Launching a task sequence with a function callback lets you re-use a function in cases where it is not practical to re-use it in a loop.
 
 ## Prerequisites
 
@@ -62,11 +62,7 @@ This sample illustrates some key concepts:
 - More flexible hardware reuse by invoking the function task using a task sequence wrapper object.
 
 ### No resource sharing
-This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. This function is contained within `OpSqrt()`. Without resource sharing, multiple identical compute blocks for `OpSqrt()` are generated on the FPGA. 
-
-<table>
-<tr>
-<td>
+This tutorial demonstrates a design that computes the 'square root of a dot product' multiple times. This operation is contained within a function named `OpSqrt()`. Without resource sharing, multiple identical compute blocks for `OpSqrt()` are generated on the FPGA. 
 
 ```c++
 D3Vector new_item, item;
@@ -81,23 +77,12 @@ new_item[2] = OpSqrt(item, coef1);
 OutputPipeZ::write(OpSqrt(new_item, coef2));
 ```
 
-</td>
-
-<td>
 <img src="assets/hardware_reuse_naive.svg" />
-</td>
-
-</tr>
-</table>
 
 By sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same compute block will block each other, so the II of the loop in which the shared compute block is called will increase.
 
 ### Resource sharing with a loop
 Instead of invoking the `OpSqrt()` function one by one, you may re-use the function by calling it in a loop. In the `loop` directory, the device code calls the `OpSqrt()` function in a loop.
-
-<table>
-<tr>
-<td>
 
 ```c++
 struct VectorOp{
@@ -122,17 +107,10 @@ struct VectorOp{
 };
 ```
 
-</td>
-
-<td>
 <img src="assets/hardware_reuse_loop.svg" />
-</td>
-
-</tr>
-</table>
-
 
 This is a simple, but effective way to share a resource, but it is not always convenient to put _all_ instances of a function call into the same loop. consider the fourth call to `OpSqrt()`, which depends on the outputs of the first three calls. We could write the complex multiplexer logic to select whether the `OpSqrt()` function should be processing the outputs from the reads from `InputPipeA` or combining the outputs of the first three calls, but this code would be hard to read and debug. A better solution is to use task sequences to let the compiler generate this logic for us.
+
 ### Resource sharing with a task sequence object
 To use a task sequence in your design, include the `<sycl/ext/intel/experimental/3_task_sequence.hpp>` header file in your source code. The `task_sequence` class is a templated class with 3 parameters:
 
@@ -148,11 +126,7 @@ The following example shows how to use task sequences to
 Each task sequence class object represents a specific instantiation of FPGA hardware to perform the operation defined by the 'Task function' parameter.
 Launching tasks via repeated `async()` function calls on the same object tells the compiler to reuse that object's hardware. Thus, you can control the reuse or replication of FPGA hardware by the number of `task_sequence` objects you declare. Since object lifetime is confined to the scope in which the `task_sequence` object is created, carefully declare your object in the scope in which you intend to reuse it.
 
-In the `3_task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point. Notice how the `async()` and `get()` calls appear in separate loops, so that the `OpSqrt()` can be pipelined.
-
-<table>
-<tr>
-<td>
+In the `3_task_sequence` directory, the device code declares the task sequence object once, and invokes it inside the loop, and at the return point.
 
 ```c++
 struct VectorOp{
@@ -174,9 +148,6 @@ struct VectorOp{
     for (int i = 0; i < len; i++){
       D3Vector item = InputPipeA::read();
       task_a.async(item, coef1);
-    }
-
-    for (int i = 0; i < len; i++){
       new_item[i] = task_a.get();
     }
 
@@ -186,14 +157,7 @@ struct VectorOp{
 };
 ```
 
-</td>
-
-<td>
 <img src="assets/hardware_reuse_taskseq.svg" />
-</td>
-
-</tr>
-</table>
 
 ## Sample Structure
 The 3 different example designs in this sample perform similar operations. You may compare the C++ source files to see the code changes that are necessary to apply hardware reuse.
@@ -311,37 +275,25 @@ Navigate to **System Resource Utilization Summary** (Summary > System Resource U
 
 #### Naive
 The four instances of `OpSqrt()` are split across two clusters in the report. Locate `report.html` in the `naive.report.prj/reports/` directory and navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B0 > Cluster 1* and *Cluster 2* to see FOUR `Floating-point sqrt` illustrated, representing FOUR replicate of hardware to be generated to complete the design.
-<table>
-<tr>
-<td>
-<img src="assets/naive_cluster1.svg" />
-</td>
-<td>
-<img src="assets/naive_cluster2.svg" />
-</td>
-</tr>
-</table>
+| In-lines repeated function calls create multiple instances of hardware |                                       |
+|:-----------------------------------------------------------------------|:--------------------------------------|
+|<img src="assets/naive_cluster1.svg" />                                 |<img src="assets/naive_cluster2.svg" />|
 
 #### Loop
 Locate `report.html` in the `naive_loop.report.prj/reports/` directory.
 Navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B1 > Cluster 1* to see each loop invoke the same ONE `Floating-point sqrt`. 
 Navigate to *System Viewer: Kernel system > IDVectorOp > IDVectorOp.B2 > Cluster 2* to find another `Floating-point sqrt`.
 There are a total TWO replicates of the `OpSqrt()` hardware used in this design.
-<table>
-<tr>
-<td>
-<img src="assets/loop_cluster1.svg" />
-</td>
-<td>
-<img src="assets/loop_cluster2.svg" />
-</td>
-</tr>
-</table>
+| `Floating-point sqrt` reused by each loop iteration | Another `Floating-point sqrt` at return point |
+|:----------------------------------------------------|:----------------------------------------------|
+|<img src="assets/loop_cluster1.svg" />               |<img src="assets/loop_cluster2.svg" />         |
 
 #### Task sequence
 Locate `report.html` in the `task_sequences.report.prj/reports/` directory.
 Navigate through the list in **System Viewer**, only ONE block of `Floating-point sqrt` can be found under *
 System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 3*
+| Repeated call on a single task sequence object reused the same hardware instance |
+|:---------------------------------------------------------------------------------|
 <img src="assets/taskseq_cluster3.svg" />
 
 
