@@ -40,7 +40,9 @@ void AlternatingTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
 void LaunchCollectTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
 
 // offloaded computation
-ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
+ValueT SomethingComplicated(ValueT val) {
+  return (ValueT)(val * sycl::sqrt(float(val)));
+}
 
 /////////////////////////////////////////
 
