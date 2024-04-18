@@ -194,20 +194,10 @@ When looking at the performance data for the two "after optimization" kernels in
   mkdir build
   cd build
   ```
-  To compile for the default target (the Agilex® 7 device family), run `cmake` using the command:
+  To compile for your FPGA board variant and BSP, run `cmake` using the command:
   ```
-  cmake ..
+  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
   ```
-
-  > **Note**: You can change the default target by using the command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-  >  ```
-  >
-  > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-  >  ```
-  >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-  >  ```
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
   > $> aoc -list-boards

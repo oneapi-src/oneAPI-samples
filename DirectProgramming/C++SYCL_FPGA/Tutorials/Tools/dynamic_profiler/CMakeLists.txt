@@ -23,15 +23,14 @@ set(SOURCE_FILES src/dynamic_profiler.cpp)
 set(TARGET_NAME dynamic_profiler)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
-# different device.
+# device.
 # Note that depending on your installation, you may need to specify the full 
 # path to the board support package (BSP), this usually is in your install 
 # folder.
-#
-# You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
-# specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex7")
+    message(FATAL_ERROR "You must set FPGA_DEVICE to point to your BSP in order to build this sample.\ne.g. cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>")
+else()
+    message(STATUS "Assuming the provided FPGA_DEVICE is a BSP. The HLS flow is not supported with this sample.")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
