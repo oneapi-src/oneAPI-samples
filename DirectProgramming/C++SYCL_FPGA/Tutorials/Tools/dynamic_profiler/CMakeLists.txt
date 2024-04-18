@@ -3,9 +3,9 @@
 if(UNIX)
     set(CMAKE_CXX_COMPILER icpx)
 else() # Windows
-    include (CMakeForceCompiler)
-    CMAKE_FORCE_CXX_COMPILER (icx-cl IntelDPCPP)
-    include (Platform/Windows-Clang)
+    # This code sample does not currently support windows
+    message(FATAL_ERROR "Error: This code sample cannot be configured to run on Windows!\
+                    \nPlease look over the README for information on using this feature on windows.")
 endif()
 
 cmake_minimum_required (VERSION 3.7.2)
