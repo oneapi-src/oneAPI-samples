@@ -159,9 +159,9 @@ The second scenario is an example of what the design might look like after being
 
 When looking at the performance data for the two "after optimization" kernels in the Bottom-Up view, you should see that ProducerAfter's pipe write (on line 126) and the ConsumerAfter's pipe read (line 139) both have stall percentages near 0%. This indicates the pipe is being used more effectively - now the read and write side of the pipe are being used at similar rates, so the pipe operations are not creating stalls in the pipeline. This also speeds up the overall design execution - the two "after" kernels take less time to execute than the two before kernels.
 
-![](profiler_pipe_tutorial_bottom_up.png)
+![](assets/profiler_pipe_tutorial_bottom_up.png)
 
-![](profiler_pipe_tutorial_source_window.png)
+![](assets/profiler_pipe_tutorial_source_window.png)
 
 ## Key Concepts
 
@@ -249,7 +249,7 @@ To collect dynamic profiling data, choose one of the following methods:
 
 4. Run the Dynamic Profiler by clicking the run button in the lower right corner (below the "How" pane). The VTune Profiler will open up the profiling results once the execution finishes.
 
-![](profiler_pipe_tutorial_configure_vtune.png)
+![](assets/profiler_pipe_tutorial_configure_vtune.png)
 
 **At the Command Line**
 1. Run the design using the makefile targets generated in "[On a Linux* System](#on-a-linux-system)":
