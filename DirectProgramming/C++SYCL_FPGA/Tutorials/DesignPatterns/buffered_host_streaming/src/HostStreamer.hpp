@@ -667,7 +667,7 @@ public:
   // synthesized into FPGA kernels.
   static event LaunchProducerKernel(ProducerType *usm_ptr, size_t count) {
     return sycl_q_->single_task<ProducerKernelId<Id>>([=] {
-      host_ptr<ProducerType> ptr(usm_ptr);
+      ext::intel::host_ptr<ProducerType> ptr(usm_ptr);
       for (size_t i = 0; i < count; i++) {
         // host->device: read from USM and write to the ProducerPipe
         auto val = *(ptr + i);
@@ -678,7 +678,7 @@ public:
 
   static event LaunchConsumerKernel(ConsumerType *usm_ptr, size_t count) {
     return sycl_q_->single_task<ConsumerKernelId<Id>>([=] {
-      host_ptr<ConsumerType> ptr(usm_ptr);
+      ext::intel::host_ptr<ConsumerType> ptr(usm_ptr);
       for (size_t i = 0; i < count; i++) {
         // device->host: read from the ConsumerPipe and write to USM
         auto val = ConsumerPipe::read();

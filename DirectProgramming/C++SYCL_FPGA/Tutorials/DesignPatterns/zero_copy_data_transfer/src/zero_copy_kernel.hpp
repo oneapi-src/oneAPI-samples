@@ -76,7 +76,7 @@ event SubmitProducer(queue& q, T* in_data, size_t size) {
 #if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
-    host_ptr<T> h_in_data(in_data);
+    ext::intel::host_ptr<T> h_in_data(in_data);
 #endif
 
     for (size_t i = 0; i < size; i++) {
@@ -125,7 +125,7 @@ event SubmitConsumer(queue& q, T* out_data, size_t size) {
 #if defined(IS_BSP)
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
-    host_ptr<T> h_out_data(out_data);
+    ext::intel::host_ptr<T> h_out_data(out_data);
 #endif
 
     for (size_t i = 0; i < size; i++) {

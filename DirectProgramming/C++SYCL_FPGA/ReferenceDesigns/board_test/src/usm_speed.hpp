@@ -19,8 +19,8 @@ enum USMTest { MEMCOPY, READ, WRITE };
 sycl::event memcopy_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out,
                            size_t num_items) {
   return q.single_task<USMMemCopy>([=]() [[intel::kernel_args_restrict]] {
-    sycl::host_ptr<sycl::ulong8> in_h(in);
-    sycl::host_ptr<sycl::ulong8> out_h(out);
+    sycl::ext::intel::host_ptr<sycl::ulong8> in_h(in);
+    sycl::ext::intel::host_ptr<sycl::ulong8> out_h(out);
     for (size_t i = 0; i < num_items; i++) {
       out_h[i] = in_h[i];
     }
@@ -32,8 +32,8 @@ sycl::event memcopy_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out,
 sycl::event read_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out,
                         size_t num_items) {
   return q.single_task<USMMemRead>([=]() {
-    sycl::host_ptr<sycl::ulong8> in_h(in);
-    sycl::host_ptr<sycl::ulong8> out_h(out);
+    sycl::ext::intel::host_ptr<sycl::ulong8> in_h(in);
+    sycl::ext::intel::host_ptr<sycl::ulong8> out_h(out);
     sycl::ulong8 sum{0};
     for (size_t i = 0; i < num_items; i++) {
       sum += in_h[i];
@@ -47,7 +47,7 @@ sycl::event read_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out,
 sycl::event write_kernel(sycl::queue &q, sycl::ulong8 *in, sycl::ulong8 *out,
                          size_t num_items) {
   return q.single_task<USMMemWrite>([=]() {
-    sycl::host_ptr<sycl::ulong8> out_h(out);
+    sycl::ext::intel::host_ptr<sycl::ulong8> out_h(out);
     sycl::ulong8 answer{TEST_VAL};
     for (size_t i = 0; i < num_items; i++) {
       out_h[i] = answer;

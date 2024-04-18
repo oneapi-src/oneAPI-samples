@@ -326,7 +326,7 @@ sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
     // lives on the device.
     // Knowing this, the compiler won't generate hardware to
     // potentially get data from the host.
-    sycl::device_ptr<unsigned char> in(in_ptr);
+    sycl::ext::intel::device_ptr<unsigned char> in(in_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA 
     // family/part
@@ -371,7 +371,7 @@ sycl::event SubmitConsumer(sycl::queue& q, unsigned out_count_padded,
     // lives on the device.
     // Knowing this, the compiler won't generate hardware to
     // potentially get data from the host.
-    sycl::device_ptr<unsigned char> out(out_ptr);
+    sycl::ext::intel::device_ptr<unsigned char> out(out_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA 
     // family/part

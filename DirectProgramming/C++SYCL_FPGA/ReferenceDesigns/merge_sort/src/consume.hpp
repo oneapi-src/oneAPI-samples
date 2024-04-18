@@ -25,7 +25,7 @@ event Consume(queue& q, ValueT* out_ptr, IndexT total_count, IndexT offset,
     // This is only done in the case where we target a BSP as device 
     // pointers are not supported when targeting an FPGA family/part
 #if defined(IS_BSP)
-    device_ptr<ValueT> out(out_ptr);
+    ext::intel::device_ptr<ValueT> out(out_ptr);
 #else
     ValueT* out(out_ptr);
 #endif

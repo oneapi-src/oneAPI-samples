@@ -390,7 +390,7 @@ sycl::event SubmitSnappyReader(sycl::queue& q, unsigned in_count,
     // lives on the device.
     // Knowing this, the compiler won't generate hardware to
     // potentially get data from the host.
-    sycl::device_ptr<unsigned> preamble_count(preamble_count_ptr);
+    sycl::ext::intel::device_ptr<unsigned> preamble_count(preamble_count_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA 
     // family/part
