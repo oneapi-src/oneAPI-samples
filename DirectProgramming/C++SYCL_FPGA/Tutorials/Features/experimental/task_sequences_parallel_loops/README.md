@@ -10,7 +10,7 @@ This sample is an FPGA tutorial that demonstrates how to use task sequences to d
 
 ## Purpose
 
-Task sequences enable operations that we call 'task functions' to run asynchronously from the main flow of a kernel. Including multiple task sequences in the same kernel expresses coarse-grained thread-level parallelism, such as executing loops in parallel. This tutorial shows you how to use task sequences to execute a sequence of loops in parallel, and how it can improve your design's performance.
+Task sequences enable operations that called 'task functions' to run asynchronously from the main flow of a kernel. Including multiple task sequences in the same kernel expresses coarse-grained thread-level parallelism, such as executing loops in parallel. This tutorial shows you how to use task sequences to execute a sequence of loops in parallel, and how it can improve your design's performance.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ Task sequences enable operations that we call 'task functions' to run asynchrono
 >
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 
-> **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+> **Warning** Make sure you add the Quartus® Prime device files associated with your target FPGA device to your Quartus® Prime software installation.
 
 This sample is part of the FPGA code samples.
 It is categorized as a Tier 2 sample that demonstrates a compiler feature.
@@ -55,10 +55,10 @@ You can also find more information about [troubleshooting build errors](/DirectP
 ## Key Implementation Details
 
 This sample demonstrates some key concepts:
-- How to execute multiple dependent loops in parallel using the `task_sequence` class, `pipe`s and the `async()` function call
+- How to execute multiple dependent loops in parallel using the `task_sequence` class, the `pipe` class and the `async()` function call
 - How the compiler automatically adds depth to pipes that bypass one or more loops
 
-The demonstration system in this tutorial is explained in the following diagram. The code contains a sequence of loops that communicate through arrays (e.g. Loop A communicates to loop B through `array_a_b`). The compiler will schedule these loops such that a producer loop must completely finish executing before its corresponding consumer loop can begin, as shown in the following simulation waveforms. We can improve performance by placing each loop in a `task_sequence` and joining the task sequences with pipes instead of arrays. This allows the compiler to schedule the loops to run in parallel.
+The demonstration system in this tutorial is explained in the following diagram. The code contains a sequence of loops that communicate through arrays (for example Loop A communicates to loop B through `array_a_b`). The compiler will schedule these loops such that a producer loop must completely finish executing before its corresponding consumer loop can begin, as shown in the following simulation waveforms. You can improve performance by placing each loop in a `task_sequence` and joining the task sequences with pipes instead of arrays. This allows the compiler to schedule the loops to run in parallel.
 
 <table>
 <tr>
@@ -122,16 +122,16 @@ struct NaiveKernel {
 
 The behavior of the naive implementation using a sequence of loops is compared with an implementation using task sequences to schedule the loops to run in parallel below. 
 
-When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following graphic that it takes many hundreds of clock cycles or approximately 344 clock cycles* before the output pipe `IDPipeOut` produces any output:
+When you write code containing a sequence of loops, each loop in the sequence must wait for the previous loop in the sequence to fully complete. This results in long execution time and poor occupancy of the FPGA datapath. Observe in the following diagram that it takes many hundreds of clock cycles or approximately 344 clock cycles* before the output pipe `IDPipeOut` produces any output:
 
 ![](assets/simulation_naive.png)
 
-Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following graphic that the output pipe `IDPipeOut` produces results almost immediately in approximately 3 clock cycles*:
+Task sequences allow you to schedule loops to run in parallel, so data quickly flows through sequences of loops. A consumer loop can process an output as soon as a producer loop produces it, without waiting for the whole producer loop to finish executing. Observe in the following diagram that the output pipe `IDPipeOut` produces results almost immediately in approximately 3 clock cycles*:
 
 ![](assets/simulation_task_sequence.png)
 *modelsim is configured with 1 clock cycle = 1ns
 
->**Note**: This is only possible when the loops process data in the same order. That is, the first piece of data the second loop consumes should be the first piece of data produced by the first loop. Converting loops to task sequences and executing them in parallel will not help performance if the first piece of data consumed by the second loop is the last piece of data produced by the first loop, because then the second loop requires the first loop to completely finish.
+>**Note**: This is possible only when the loops process data in the same order. That is, the first piece of data the second loop consumes should be the first piece of data produced by the first loop. Converting loops to task sequences and executing them in parallel will not help performance if the first piece of data consumed by the second loop is the last piece of data produced by the first loop, because then the second loop requires the first loop to completely finish.
 
 ### Code Example 
 
@@ -212,7 +212,7 @@ struct OptimizedKernel {
 The C++ functions `LoopA`, `LoopB`, `LoopC` and `LoopD` are the task functions with asynchronous activities defined. Each of the task functions is used to parameterize a specific `task_sequence` class to create four `task_sequence` object instances, `task_a`, `task_b`,`task_c` and `task_d`. The task functions are called in parallel through `async()` method that accepts the same arguments as their respective task functions. The
 `async()` method call is non-blocking, and it returns before the asynchronous task function finishes executing, and potentially before the task function even _begins_ executing, as the return type of the `async()` method provides no implicit information on the execution status of task functions.
 
-You can see a concrete example of a kernel that naively uses four sequential loops in `naive/main.cpp`. This design is modified to use task sequences to run the loops concurrently in `task_sequence/main.cpp`.
+You can see an example of a kernel that naively uses four sequential loops in `naive/main.cpp`. This design is modified to use task sequences to run the loops concurrently in `task_sequence/main.cpp`.
 
 ## Sample Structure
 The 2 different example designs in this sample perform similar operations. You may compare the C++ source files to see the code changes that are necessary to convert a design to use task sequences instead of sequential loops.
@@ -232,7 +232,7 @@ The 2 different example designs in this sample perform similar operations. You m
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 > - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/use-the-setvars-and-oneapi-vars-scripts-with-linux.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/use-the-setvars-and-oneapi-vars-scripts-with.html).
 
 ### On Linux*
 
