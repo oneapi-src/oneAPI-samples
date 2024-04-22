@@ -1,5 +1,5 @@
 {
-  "guid": "",
+  "guid": "D84B84D9-E7B6-4B1B-90D7-BAA030C9737B",
   "name": "Hardware Reuse",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial that demonstrates how to reuse hardware in your FPGA designs by using loops and task sequences.",
@@ -27,7 +27,7 @@
           "cd build",
           "cmake .. -DTYPE=NAIVE",
           "make fpga_emu",
-          "./naive.fpga_emu"
+          "./hardware_reuse_naive.fpga_emu"
         ]
       },
       {
@@ -48,7 +48,7 @@
           "cd build",
           "cmake .. -DTYPE=LOOP",
           "make fpga_emu",
-          "./naive_loop.fpga_emu"
+          "./hardware_reuse_loop.fpga_emu"
         ]
       },
       {
@@ -69,7 +69,7 @@
           "cd build",
           "cmake .. -DTYPE=TASK_SEQUENCE",
           "make fpga_emu",
-          "./task_sequences.fpga_emu"
+          "./hardware_reuse_task_sequence.fpga_emu"
         ]
       },
       {
@@ -93,7 +93,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=NAIVE",
           "nmake fpga_emu",
-          "naive.fpga_emu.exe"
+          "hardware_reuse_naive.fpga_emu.exe"
         ]
       },
       {
@@ -116,7 +116,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=LOOP",
           "nmake fpga_emu",
-          "naive_loop.fpga_emu.exe"
+          "hardware_reuse_loop.fpga_emu.exe"
         ]
       },
       {
@@ -139,7 +139,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=TASK_SEQUENCE",
           "nmake fpga_emu",
-          "task_sequences.fpga_emu.exe"
+          "hardware_reuse_task_sequence.fpga_emu.exe"
         ]
       },
       {
