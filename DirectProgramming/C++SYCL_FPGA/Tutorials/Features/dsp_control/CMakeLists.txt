@@ -39,11 +39,7 @@ endif()
 set(USER_FPGA_FLAGS -Xsdsp-mode=prefer-softlogic;${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-if(WIN32)
-    set(USER_FLAGS ${USER_FLAGS})
-else()
-    set(USER_FLAGS ${USER_FLAGS})
-endif()
+set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

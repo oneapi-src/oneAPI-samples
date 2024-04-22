@@ -40,7 +40,7 @@ set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 if(WIN32)
-    set(USER_FLAGS /fp:precise;${USER_FLAGS})
+    set(USER_FLAGS -fp:precise;${USER_FLAGS})
 else()
     set(USER_FLAGS -fp-model=precise;${USER_FLAGS})
 endif()

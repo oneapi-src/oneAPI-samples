@@ -41,9 +41,9 @@ set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 # add -std=c++20 to enable cleaner declaration of a group of properties
 if(WIN32)
-set(USER_FLAGS ${USER_FLAGS};-Qstd=c++20)
+    set(USER_FLAGS ${USER_FLAGS};-Qstd=c++20)
 else()
-set(USER_FLAGS ${USER_FLAGS};-std=c++20)
+    set(USER_FLAGS ${USER_FLAGS};-std=c++20)
 endif()
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
