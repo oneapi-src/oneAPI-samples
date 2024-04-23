@@ -241,7 +241,7 @@ Since the outer loop is pipelined and has a high trip count, the inner loop's in
 
 Locate the pair of `report.html` files in either:
 
-* **Report-only compile**:  `fpga_reg_report.prj` and `fpga_reg_registered_report.prj`
+* **Report-only compile**:  `fpga_reg.report.prj` and `fpga_reg_registered.report.prj`
 * **FPGA hardware compile**: `fpga_reg.prj` and `fpga_reg_registered.prj`
 
 Observe the structure of the design in the optimization report's System Viewer and notice the changes within `Cluster 2` of the `SimpleMath.B3` block when compiling with Intel Arria® 10 GX FPGA. In the report for Part 1, the viewer shows a much more shallow graph compared to the one in Part 2. This is because the operations are performed much closer to one another in Part 1 compared to Part 2. By transforming the code in Part 2, with more register stages, the compiler achieved a higher f<sub>MAX</sub>.

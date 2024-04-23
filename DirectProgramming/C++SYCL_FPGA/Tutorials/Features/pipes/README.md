@@ -302,7 +302,7 @@ void Consumer(queue &q, buffer<int, 1> &output_buffer) {
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `pipes_report.prj/reports/` directory.
+Locate `report.html` in the `pipes.report.prj/reports/` directory.
 
 Navigate to the "System Viewer" to visualize the structure of the kernel system. Identify the pipe connecting the two kernels.
 

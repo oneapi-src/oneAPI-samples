@@ -260,7 +260,7 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory.
+Locate `report.html` in the `kernel_args_restrict.report.prj/reports/` directory.
 
 Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see four kernels as described in the [Tutorial Code Description](#tutorial-code-description) section of this README. Each kernel has a single for-loop, which appears in the *Loop List* pane. Click the loop under each kernel to see how the compiler optimized it.
 

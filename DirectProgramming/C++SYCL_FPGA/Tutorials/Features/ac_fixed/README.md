@@ -267,7 +267,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 Locate the pair of `report.html` files in either of the following folders.
 
-- **Report-only compile**:  `ac_fixed_report.prj`
+- **Report-only compile**:  `ac_fixed.report.prj`
 - **FPGA hardware compile**: `ac_fixed.prj`
 
 Scroll down on the Summary page of the report and expand the section titled **Compile Estimated Kernel Resource Utilization Summary**. Notice how the kernel `ConstructFromACFixed` consumes fewer resources than the kernel named `ConstructFromFloat`. Similarly, notice how the kernel named `CalculateWithACFixed` consumes fewer FPGA resources than `CalculateWithFloat`.

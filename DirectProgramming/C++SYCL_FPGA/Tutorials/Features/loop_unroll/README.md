@@ -249,7 +249,7 @@ On a Terasic's DE10-Agilex Development Board, one can reasonably predict that th
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ### Read the Reports
-Locate `report.html` in the `loop_unroll_report.prj/reports/` directory.
+Locate `report.html` in the `loop_unroll.report.prj/reports/` directory.
 
 Navigate to the Area Report and compare the kernels' FPGA resource utilization with unroll factors of 1, 2, 4, 8, and 16. In particular, check the number of DSP resources consumed. You should see that the area grows roughly linearly with the unroll factor.
 

@@ -419,7 +419,7 @@ This code sample contains 6 source files that together demonstrate a full spectr
 >  ```
 ### Read the Reports
 
-1. Locate `report.html` in the corresponding `<source_file>_report.prj/reports/` directory.
+1. Locate `report.html` in the corresponding `<source_file>.report.prj/reports/` directory.
 
 2. Open the **Views** menu and select **System Viewer**.
 

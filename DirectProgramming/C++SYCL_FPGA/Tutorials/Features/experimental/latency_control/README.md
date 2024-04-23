@@ -266,7 +266,7 @@ The compiler tries to achieve the latency constraints, and it errors out if some
 >  ```
 ## Read the Reports
 
-1. Locate `report.html` in the `latency_control_report.prj/reports/` directory.
+1. Locate `report.html` in the `latency_control.report.prj/reports/` directory.
 
 2. Navigate to Schedule Viewer (__Views > Schedule Viewer__).
 

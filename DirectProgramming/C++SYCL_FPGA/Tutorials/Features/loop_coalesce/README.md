@@ -218,7 +218,7 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ## Read the Reports
-Locate `report.html` in the `loop_coalesce_report.prj/reports/` directory. 
+Locate `report.html` in the `loop_coalesce.report.prj/reports/` directory. 
 
 On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel; for example, KernelCompute<2> uses a `loop_coalesce` argument of `2`. You can verify that the number of ALMs used decreases when the loops are coalesced. Since KernelCompute<2> has fewer loops than KernelCompute<1>, it requires less hardware for loop overhead. 
 

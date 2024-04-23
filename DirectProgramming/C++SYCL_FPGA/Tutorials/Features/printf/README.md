@@ -219,7 +219,7 @@ There are some known issues with the `experimental::printf()` and that's why the
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `printf_report.prj/reports/` directory.
+Locate `report.html` in the `printf.report.prj/reports/` directory.
 
 From the report, you can find the compilation information of the design and the estimated FPGA resource usage. For example, navigate to the Area Analysis section of the report (**Kernel System > BasicKernel > Computation**), and you can see the estimated resource usage (ALUTs, FFs, RAMs, etc.) for each `printf()` call.
 

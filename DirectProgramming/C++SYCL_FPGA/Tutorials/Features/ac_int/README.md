@@ -248,7 +248,7 @@ Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bi
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `ac_int_report.prj/reports/` directory.
+Locate `report.html` in the `ac_int.report.prj/reports/` directory.
 
 On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage information of the individual addition, multiplication, and division operations, and you can verify that each individual operation consumes fewer resources in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
 
