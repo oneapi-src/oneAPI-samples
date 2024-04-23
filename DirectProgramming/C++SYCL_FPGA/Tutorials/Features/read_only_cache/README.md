@@ -177,7 +177,7 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..-DPART=<X>
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
    where `X` is:
    - `CACHE_ENABLED`
