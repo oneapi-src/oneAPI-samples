@@ -1,8 +1,8 @@
 {
 	"guid": "FE479C5C-C7A0-4612-B8D0-F83D07155411",
-	"name": "Intel® Modin Vs. Pandas Performance",
+	"name": "Modin* Vs. Pandas Performance",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
-	"description": "This sample code illustrates how Intel® Modin accelerates the performance of Pandas for computational operations on a dataframe.",
+	"description": "This sample code illustrates how Modin* accelerates the performance of Pandas for computational operations on a dataframe.",
 	"builder": ["cli"],
 	"languages": [{
 		"python": {}
