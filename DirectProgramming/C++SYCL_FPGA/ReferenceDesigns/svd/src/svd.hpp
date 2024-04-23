@@ -51,10 +51,10 @@ class IDVMatrixPipe;
 
 template <unsigned rows,            // row size of input matrix
           unsigned cols,            // col size of input matrix
-          unsigned k_fixed_iteration, // fixed number of QR iteration
-          unsigned k_raw_latency,   // RAW latency for triangular loop
+          unsigned fixed_iteration, // fixed number of QR iteration
+          unsigned raw_latency,   // RAW latency for triangular loop
                                     // optimization in the QR iteration
-          int k_zero_threshold_1e,  // Threshold from which we consider a
+          int zero_threshold_1e,  // Threshold from which we consider a
           typename T                // The datatype for the computation
           >
 double SingularValueDecomposition(
@@ -75,9 +75,9 @@ double SingularValueDecomposition(
   // pipes
   using PipeType = fpga_tools::NTuple<T, kNumElementsPerDDRBurst>;
 
-  using InputMatrixPipe = sycl::ext::intel::pipe<IDInputMatrixPipe, PipeType, 16>;
-  using InputMatrixPipe2 = sycl::ext::intel::pipe<IDInputMatrixPipe2, PipeType, 16>;
-  using CovarianceMatrixPipe = sycl::ext::intel::pipe<IDCovarianceMatrixPipe, PipeType, 16>;
+  using InputMatrixPipe = sycl::ext::intel::pipe<IDInputMatrixPipe, PipeType, 3>;
+  using InputMatrixPipe2 = sycl::ext::intel::pipe<IDInputMatrixPipe2, PipeType, 3>;
+  using CovarianceMatrixPipe = sycl::ext::intel::pipe<IDCovarianceMatrixPipe, PipeType, 3>;
   using EigenValuesPipe = sycl::ext::intel::pipe<IDEigenValuesPipe, T, 3>;
   using EigenVectorsPipe = sycl::ext::intel::pipe<IDEigenVectorsPipe, PipeType, 3>;
   using RankDeficientFlagPipe =
@@ -164,8 +164,8 @@ double SingularValueDecomposition(
 
   // Compute the Eigen values and Eigen vectors
   q.single_task<IDEigenValuesAndVectorsComputation>(
-      fpga_linalg::StreamingEigen<T, cols, k_fixed_iteration,
-                                  kNumElementsPerDDRBurst, k_zero_threshold_1e,
+      fpga_linalg::StreamingEigen<T, cols, fixed_iteration,
+                                  kNumElementsPerDDRBurst, zero_threshold_1e,
                                   CovarianceMatrixPipe, EigenValuesPipe,
                                   EigenVectorsPipe, RankDeficientFlagPipe>());
 
@@ -177,7 +177,7 @@ double SingularValueDecomposition(
 
   // Orthogonalizing the U matrix by running it through QRD
   q.single_task<IDOrthogonalizingU>(
-      fpga_linalg::StreamingQRD<T, false, rows, rows, k_raw_latency,
+      fpga_linalg::StreamingQRD<T, false, rows, rows, raw_latency,
                                 kNumElementsPerDDRBurst, UTempMatrixPipe,
                                 UMatrixPipe, RMatrixPipe>());
 

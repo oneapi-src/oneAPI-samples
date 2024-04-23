@@ -66,16 +66,15 @@ struct SVDTestcase {
               std::vector<T> flat_S, std::vector<T> flat_V) {
     // U @ S
     std::vector<T> US(rows_A * cols_A, 0);
-    svd_testbench_tool::soft_matmult<T>(flat_U, rows_A, rows_A, flat_S, rows_A,
+    svd_testbench_tool::SoftMatmult<T>(flat_U, rows_A, rows_A, flat_S, rows_A,
                                         cols_A, US);
     // transpose to get Vt
     std::vector<T> Vt(cols_A * cols_A, 0);
-    svd_testbench_tool::soft_transpose<T>(flat_V, cols_A, cols_A, Vt);
+    svd_testbench_tool::SoftTranspose<T>(flat_V, cols_A, cols_A, Vt);
     // US @ Vt
     std::vector<T> USV(rows_A * cols_A, 0);
-    svd_testbench_tool::soft_matmult<T>(US, rows_A, cols_A, Vt, cols_A, cols_A,
+    svd_testbench_tool::SoftMatmult<T>(US, rows_A, cols_A, Vt, cols_A, cols_A,
                                         USV);
-    // svd_testbench_tool::print_matrix<T>(USV, rows_A, cols_A);
     T max_diff = 0.0;
     for (int i = 0; i < (rows_A * cols_A); i++) {
       T cur_diff = abs(USV[i] - flat_A[i]);
@@ -89,8 +88,8 @@ struct SVDTestcase {
     // check mat @ mat transpose == identity
     std::vector<T> mat_t(cols * rows, 0);
     std::vector<T> mat_i(rows * rows, 0);
-    svd_testbench_tool::soft_transpose<T>(flat_mat, rows, cols, mat_t);
-    svd_testbench_tool::soft_matmult<T>(flat_mat, rows, cols, mat_t, cols, rows,
+    svd_testbench_tool::SoftTranspose<T>(flat_mat, rows, cols, mat_t);
+    svd_testbench_tool::SoftMatmult<T>(flat_mat, rows, cols, mat_t, cols, rows,
                                         mat_i);
     T max_diff = 0.0;
     for (int i = 0; i < (rows * rows); i++) {
@@ -137,12 +136,11 @@ struct SVDTestcase {
 
     if (print_matrices) {
       std::cout << "S:\n";
-      // print_matrix(ExtractSingularValue(flat_S), 1, rows_A);
-      svd_testbench_tool::print_matrix<T>(flat_S, rows_A, cols_A, true);
+      svd_testbench_tool::PrintMatrix<T>(flat_S, rows_A, cols_A, true);
       std::cout << "V:\n";
-      svd_testbench_tool::print_matrix<T>(flat_V, cols_A, cols_A, true);
+      svd_testbench_tool::PrintMatrix<T>(flat_V, cols_A, cols_A, true);
       std::cout << "U:\n";
-      svd_testbench_tool::print_matrix<T>(flat_U, rows_A, rows_A, true);
+      svd_testbench_tool::PrintMatrix<T>(flat_U, rows_A, rows_A, true);
       std::cout << "Rank deficient input: " 
         << (rank_deficient[0] ? "True" : "False") << std::endl;
     }

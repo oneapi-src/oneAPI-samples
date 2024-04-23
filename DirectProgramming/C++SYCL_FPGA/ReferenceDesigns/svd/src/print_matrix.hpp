@@ -6,23 +6,36 @@
 
 namespace svd_testbench_tool {  // not for kernel code
 
+// Convert to string, if input is a float convert with a fixed digits
 template <typename TT>
-void print_matrix(std::vector<std::vector<TT>> mat_A)
-{
-    // if its a floating point type number, fixed the print precision
+std::string ToFixedString(TT value, int digits) {
+    std::string stringValue = std::to_string(value);
+
     if (typeid(TT) == typeid(float) || 
-            typeid(TT) == typeid(double))
-    {
-        std::cout << std::fixed;
-        std::cout << std::setprecision(3);
+            typeid(TT) == typeid(double)) {
+        // Find the position of the decimal point
+        size_t decimalPos = stringValue.find('.');
+        if (decimalPos != std::string::npos) {
+            // Extract the substring up to the specified significant digits
+            size_t endIndex = decimalPos + digits + 1; // +1 for the decimal point
+            if (endIndex < stringValue.length()) {
+                stringValue = stringValue.substr(0, endIndex);
+            }
+        }
     }
 
+    return stringValue;
+}
+
+template <typename TT>
+void PrintMatrix(std::vector<std::vector<TT>> mat_A)
+{
     for (unsigned row = 0; row < mat_A.size(); row ++)
     {
         std::cout << "[\t";
         for (unsigned col = 0; col < mat_A[0].size(); col ++)
         {
-            std::cout << mat_A[row][col] << ",\t";
+            std::cout << ToFixedString<TT>(mat_A[row][col], 2) << ",\t";
         }
         std::cout << "]\n";
     }
@@ -30,14 +43,8 @@ void print_matrix(std::vector<std::vector<TT>> mat_A)
 
 // for stream matrix
 template <typename TT>
-void print_matrix(std::vector<TT> mat_A, int rows, int cols, bool col_maj=true)
+void PrintMatrix(std::vector<TT> mat_A, int rows, int cols, bool col_maj=true)
 {
-    if (typeid(TT) == typeid(float) || 
-            typeid(TT) == typeid(double))
-    {
-        std::cout << std::fixed;
-        std::cout << std::setprecision(3);
-    }
 
     if (!col_maj) 
     {
@@ -46,7 +53,7 @@ void print_matrix(std::vector<TT> mat_A, int rows, int cols, bool col_maj=true)
             // if its the start of a row
             if (i % cols == 0) std::cout << "[\t";
 
-            std::cout << mat_A[i] << ",\t";
+            std::cout << ToFixedString<TT>(mat_A[i], 2) << ",\t";
 
             // or if its the end of a row
             if ((i+1) % cols == 0) std::cout << "]\n";
@@ -61,7 +68,7 @@ void print_matrix(std::vector<TT> mat_A, int rows, int cols, bool col_maj=true)
             int cur_row = i % rows;
             temp_mat[cur_row][cur_col] = mat_A[i];
         }
-        print_matrix<TT>(temp_mat);
+        PrintMatrix<TT>(temp_mat);
     }
 }
 

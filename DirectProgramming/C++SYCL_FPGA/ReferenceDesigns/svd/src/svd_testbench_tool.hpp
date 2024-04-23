@@ -2,7 +2,6 @@
 #define __SVD_TESTBENCH_TOOL_HPP__
 
 #include <iostream>
-#include <iomanip>
 #include <vector>
 
 #define EPSILON 2E-6
@@ -11,7 +10,7 @@ namespace svd_testbench_tool {  // not for kernel code
 
 
 template <typename TT>
-void soft_transpose(std::vector<std::vector<TT>> &origin, 
+void SoftTranspose(std::vector<std::vector<TT>> &origin, 
         unsigned rows, unsigned cols, 
         std::vector<std::vector<TT>> &transposed)
 {   
@@ -27,7 +26,7 @@ void soft_transpose(std::vector<std::vector<TT>> &origin,
 
 // for col major matrix
 template <typename TT>
-void soft_transpose(std::vector<TT> &mat_A,
+void SoftTranspose(std::vector<TT> &mat_A,
                     unsigned rows, unsigned cols,
                     std::vector<TT> &mat_At)
 {
@@ -40,7 +39,7 @@ void soft_transpose(std::vector<TT> &mat_A,
 }
 
 template <typename TT>
-void soft_matmult(std::vector<std::vector<TT>> &mat_A,
+void SoftMatmult(std::vector<std::vector<TT>> &mat_A,
             unsigned rows_A, unsigned cols_A,
             std::vector<std::vector<TT>> &mat_B,
             unsigned rows_B, unsigned cols_B,
@@ -70,34 +69,34 @@ void soft_matmult(std::vector<std::vector<TT>> &mat_A,
 
 // for col major matrix
 template <typename TT>
-void soft_matmult(std::vector<TT> &mat_A,
+void SoftMatmult(std::vector<TT> &mat_A,
             unsigned rows_A, unsigned cols_A,
             std::vector<TT> &mat_B,
             unsigned rows_B, unsigned cols_B,
             std::vector<TT> &mat_AB)
 {
-    std::vector<std::vector<TT>> A_2d(rows_A , std::vector<TT> (cols_A, 0));
-    std::vector<std::vector<TT>> B_2d(rows_B , std::vector<TT> (cols_B, 0));
-    std::vector<std::vector<TT>> AB_2d(rows_A , std::vector<TT> (cols_B, 0));
+    std::vector<std::vector<TT>> a_2d(rows_A , std::vector<TT> (cols_A, 0));
+    std::vector<std::vector<TT>> b_2d(rows_B , std::vector<TT> (cols_B, 0));
+    std::vector<std::vector<TT>> ab_2d(rows_A , std::vector<TT> (cols_B, 0));
 
     // turn A vertical
     for (int i = 0; i < (rows_A*cols_A); i ++)
     {   
-        A_2d[i % rows_A][int(i / rows_A)] = mat_A[i];
+        a_2d[i % rows_A][int(i / rows_A)] = mat_A[i];
     }
 
     // turn B vertical
     for (int i = 0; i < (rows_B*cols_B); i ++)
     {   
-        B_2d[i % rows_B][int(i / rows_B)] = mat_B[i];
+        b_2d[i % rows_B][int(i / rows_B)] = mat_B[i];
     }
 
-    soft_matmult<TT>(A_2d, rows_A, cols_A, B_2d, rows_B, cols_B, AB_2d);
+    SoftMatmult<TT>(a_2d, rows_A, cols_A, b_2d, rows_B, cols_B, ab_2d);
 
     for (int c = 0; c < cols_B; c ++)
     {
         for (int r = 0; r < rows_A; r ++){
-            mat_AB[c * rows_A + r] = AB_2d[r][c];
+            mat_AB[c * rows_A + r] = ab_2d[r][c];
         }
     }
 }

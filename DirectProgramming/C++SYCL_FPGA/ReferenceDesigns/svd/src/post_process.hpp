@@ -4,7 +4,6 @@
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
-// #include "orthogonalizer.hpp"
 
 template <typename T, bool is_complex, int A_rows, int A_cols, int pipe_size,
           typename AIn,     // InputMatrixPipe2,            size A_rows x A_cols
@@ -18,7 +17,7 @@ struct USVFromEigens {
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
     // findout if orthogonalazation is needed on the output
 
-    constexpr int diagonal_size =
+    constexpr int kDiagonalSize =
         (A_rows > A_cols) ? A_cols : A_rows;  // min(rows, cols)
     constexpr int a_block_count = A_rows / A_cols;
     // Copy a matrix from the pipe to a local memory
@@ -40,8 +39,6 @@ struct USVFromEigens {
     constexpr int vLoopIter = vLoopIterPerColumn * A_cols;
     constexpr int uLoopIter = uLoopIterPerColumn * A_rows;
     // Size in bits of the loop iterator over kLoopIter iterations
-    // constexpr int rLoopIterBitSize =
-    //     fpga_tools::BitsForMaxValue<rLoopIter + 1>();
     constexpr int sLoopIterBitSize =
         fpga_tools::BitsForMaxValue<sLoopIter + 1>();
     constexpr int aLoopIterBitSize =
@@ -71,25 +68,25 @@ struct USVFromEigens {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT S_result[A_rows][A_cols];
+      TT s_result[A_rows][A_cols];
 
       [[intel::numbanks(aNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT A_load[A_cols][A_rows];
+      TT a_load[A_cols][A_rows];
 
       [[intel::numbanks(vNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT V_load[A_cols][A_cols];
+      TT v_load[A_cols][A_cols];
 
       [[intel::numbanks(uNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT U_result[A_rows][A_rows];
+      TT u_result[A_rows][A_rows];
 
       // load A 
       for (int block = 0; block < a_block_count; block++) {
@@ -102,7 +99,7 @@ struct USVFromEigens {
             fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
               if constexpr (k * pipe_size + t < A_cols) {
                 if (write_idx_a == k) {
-                  A_load[li / aLoopIterPerColumn]
+                  a_load[li / aLoopIterPerColumn]
                         [k * pipe_size + t + block * A_cols]
                          = pipe_read_a.template get<t>();
                 }
@@ -121,7 +118,7 @@ struct USVFromEigens {
 
       // read eigenvalues one by one
       for (int k = 0; k < A_cols; k++) {
-        S_result[k][k] = sycl::sqrt(EValIn::read());
+        s_result[k][k] = sycl::sqrt(EValIn::read());
       }  // end of k
 
       // process S (sqrt and zero pading)
@@ -130,7 +127,7 @@ struct USVFromEigens {
           #pragma unroll
           for (int c = 0; c < A_cols; c ++) {
             if (r != c)
-              S_result[r][c] = (TT)0.0;
+              s_result[r][c] = (TT)0.0;
         }
       }
 
@@ -146,7 +143,7 @@ struct USVFromEigens {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if constexpr (k * pipe_size + t < A_cols) {
               if (write_idx_v == k) {
-                V_load[k * pipe_size + t][li / vLoopIterPerColumn] =
+                v_load[k * pipe_size + t][li / vLoopIterPerColumn] =
                     pipe_read_v.template get<t>();
               }
             }
@@ -164,21 +161,21 @@ struct USVFromEigens {
       // Compute the matrix product A @ V / S[c][c]
       for (int row = 0; row < A_rows; row++) {
         for (int column = 0; column < A_rows; column++) {
-          if (column < diagonal_size) {
+          if (column < kDiagonalSize) {
             TT dot_prod{0};
             fpga_tools::UnrolledLoop<A_cols>([&](auto k) {
               dot_prod = sycl::ext::intel::fpga_reg(dot_prod) +
-                         A_load[k][row] * V_load[k][column];
+                         a_load[k][row] * v_load[k][column];
             });
 
-            TT s_val = S_result[column][column];
-            U_result[row][column] = dot_prod / s_val;
+            TT s_val = s_result[column][column];
+            u_result[row][column] = dot_prod / s_val;
           } else
-            U_result[row][column] = (TT)(row / column);  // filler data
+            u_result[row][column] = (TT)(row / column);  // filler data
         } // col
       }  // row
 
-      // output S_result
+      // output s_result
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<sLoopIterBitSize, false> li = 0; li < sLoopIter; li++) {
         int column_iter = li % sLoopIterPerColumn;
@@ -193,7 +190,7 @@ struct USVFromEigens {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < A_rows) {
               pipe_write.template get<k>() =
-                  get[t] ? S_result[t * pipe_size + k][li / sLoopIterPerColumn]
+                  get[t] ? s_result[t * pipe_size + k][li / sLoopIterPerColumn]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }
@@ -202,7 +199,7 @@ struct USVFromEigens {
         SOut::write(pipe_write);
       }
 
-      // output U_result
+      // output u_result
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<uLoopIterBitSize, false> li = 0; li < uLoopIter; li++) {
         int column_iter = li % uLoopIterPerColumn;
@@ -217,7 +214,7 @@ struct USVFromEigens {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < A_rows) {
               pipe_write.template get<k>() =
-                  get[t] ? U_result[t * pipe_size + k][li / uLoopIterPerColumn]
+                  get[t] ? u_result[t * pipe_size + k][li / uLoopIterPerColumn]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }
