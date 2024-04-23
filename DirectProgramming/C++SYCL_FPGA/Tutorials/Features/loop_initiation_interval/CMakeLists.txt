@@ -59,7 +59,6 @@ endif()
 
 if (NOT DEFINED PART)
     set (PART " ")
-    message(STATUS "here")
 endif()
 
 set(EXTRA_FLAG )

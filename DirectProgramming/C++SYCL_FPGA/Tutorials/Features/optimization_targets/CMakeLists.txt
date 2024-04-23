@@ -93,7 +93,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${EXTRA_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAGS})
+set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
