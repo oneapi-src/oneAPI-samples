@@ -10,10 +10,10 @@ This sample is a tutorial that demonstrates how to reuse hardware in your FPGA d
 
 ## Purpose
 
-In normal operation, the oneAPI FPGA compiler automatically in-lines repeated function calls, creating multiple instances of hardware that can run in parallel. This in-lining strategy is necessary to achieve high throughput, but in cases where you want to minimize area utilization, you may wish to sacrifice throughput and allow certain functions to be re-used. This sample demonstrates two strategies to re-use hardware in your designs:
+In normal operation, the oneAPI FPGA compiler automatically in-lines repeated function calls, creating multiple instances of hardware that can run in parallel. This in-lining strategy is necessary to achieve high throughput, but in cases where you want to minimize area utilization, you may wish to sacrifice throughput and allow certain functions to be reused. This sample demonstrates two strategies to reuse hardware in your designs:
 
-1. Calling a function in a loop will cause it to only be instantiated once
-2. Launching a task sequence with a function callback lets you re-use a function in cases where it is not practical to re-use it in a loop.
+1. Calling a function in a loop will causes it to only be instantiated once
+2. Launching a task sequence with a function callback lets you reuse a function in cases where it is not practical to reuse it in a loop.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ In normal operation, the oneAPI FPGA compiler automatically in-lines repeated fu
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> To use the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
+> To use the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH environment variable setting:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - ModelSim® SE
@@ -79,10 +79,10 @@ OutputPipeZ::write(OpSqrt(new_item, coef2));
 
 <img src="assets/hardware_reuse_naive.svg" />
 
-By sharing the compute block using a loop or task sequence, we can tell the compiler to re-use the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same compute block will block each other, so the II of the loop in which the shared compute block is called will increase.
+By sharing the compute block using a loop or task sequence, we can tell the compiler to reuse the compute block, and avoid replicating the compute block hardware on the FPGA. The important trade-off made by resource sharing is that multiple invocations of the same compute block will block each other, so the II of the loop in which the shared compute block is called will increase.
 
 ### Resource sharing with a loop
-Instead of invoking the `OpSqrt()` function one by one, you may re-use the function by calling it in a loop. In the `loop` directory, the device code calls the `OpSqrt()` function in a loop.
+Instead of invoking the `OpSqrt()` function one by one, you may reuse the function by calling it in a loop. In the `loop` directory, the device code calls the `OpSqrt()` function in a loop.
 
 ```c++
 struct VectorOp{
@@ -94,7 +94,7 @@ struct VectorOp{
 
     D3Vector new_item;
 
-    // Calling OpSqrt() in a loop will re-use it
+    // Calling OpSqrt() in a loop will reuse it
     for (int i = 0; i < 3; i++){
       D3Vector item = InputPipeA::read();
       new_item[i] = OpSqrt(item, coef1);
@@ -109,7 +109,7 @@ struct VectorOp{
 
 <img src="assets/hardware_reuse_loop.svg" />
 
-This is a simple, but effective way to share a resource, but it is not always convenient to put _all_ instances of a function call into the same loop. consider the fourth call to `OpSqrt()`, which depends on the outputs of the first three calls. We could write the complex multiplexer logic to select whether the `OpSqrt()` function should be processing the outputs from the reads from `InputPipeA` or combining the outputs of the first three calls, but this code would be hard to read and debug. A better solution is to use task sequences to let the compiler generate this logic for us.
+Looping is a simple, but effective way to share a resource, but it is not always convenient to put _all_ instances of a function call into the same loop. consider the fourth call to `OpSqrt()`, which depends on the outputs of the first three calls. We could write the complex multiplexer logic to select whether the `OpSqrt()` function should be processing the outputs from the reads from `InputPipeA` or combining the outputs of the first three calls, but this code would be hard to read and debug. A better solution is to use task sequences to let the compiler generate this logic for us.
 
 ### Resource sharing with a task sequence object
 To use a task sequence in your design, include the `<sycl/ext/intel/experimental/3_task_sequence.hpp>` header file in your source code. The `task_sequence` class is a templated class with 3 parameters:
@@ -184,7 +184,7 @@ The 3 different example designs in this sample perform similar operations. You m
 
 Use these commands to run the design, depending on your OS.
 
-### On Linux* System
+### On Linux* Systems
 
 1. Change to the sample directory.
 
@@ -226,7 +226,7 @@ Use these commands to run the design, depending on your OS.
       make fpga
       ```
 
-### On Windows* System
+### On Windows* Systems
 
 1. Change to the sample directory.
 2. Configure the build system for the Intel® Agilex® 7 device family, which is the default.
