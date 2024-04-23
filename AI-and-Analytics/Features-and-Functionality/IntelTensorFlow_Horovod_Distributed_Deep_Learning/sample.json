@@ -1,0 +1,28 @@
+{
+    "guid": "1C4791A0-4189-43D0-8B42-A4318E771DEA",
+    "name": "Run distributed deep learning workloads with Intel® Optimization for Horovod",
+    "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+    "description": "This sample demonstrates how to run multi-card inference and training on Intel GPUs using Intel Optimization for Horovod and TensorFlow",
+    "builder": ["cli"],
+	"toolchain": ["jupyter"],
+    "languages": [{"python":{}}],
+    "os":["linux"],
+    "targetDevice": ["GPU"],
+    "ciTests": {
+        "linux": [
+      {
+            "env": [
+                "source /intel/oneapi/intelpython/bin/activate", 
+                "conda activate tensorflow-gpu",
+                "pip install jupyter",
+                "python -m ipykernel install --user --name=tensorflow-gpu"
+            ],
+            "id": "distributed_learning_tensorflow_horovod_py",
+            "steps": [
+              "jupyter nbconvert --to notebook --execute tensorflow_with_horovod.ipynb"
+             ]
+        }
+      ]
+  },
+  "expertise": "Getting Started"
+  }

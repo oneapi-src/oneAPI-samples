@@ -1,0 +1,14 @@
+add_executable(sobol32_lognormal sobol32_lognormal.cpp)
+add_executable(sobol32_normal sobol32_normal.cpp)
+add_executable(sobol32_poisson sobol32_poisson.cpp)
+add_executable(sobol32_uniform sobol32_uniform.cpp)
+
+target_link_libraries(sobol32_lognormal OpenCL sycl)
+target_link_libraries(sobol32_normal OpenCL sycl)
+target_link_libraries(sobol32_poisson OpenCL sycl)
+target_link_libraries(sobol32_uniform OpenCL sycl)
+
+add_custom_target(run_sobol32_lognormal sobol32_lognormal)
+add_custom_target(run_sobol32_normal sobol32_normal)
+add_custom_target(run_sobol32_poisson sobol32_poisson)
+add_custom_target(run_sobol32_uniform sobol32_uniform)

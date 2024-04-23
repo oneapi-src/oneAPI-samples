@@ -1,24 +1,32 @@
-default: run
+all: montecarlo
 
-all: run
+# setting non-default generator
+generator ?= mcg59
 
-run: mc_european mc_european_usm
-	./mc_european
-	@echo
-	./mc_european_usm
+ifeq ($(generator), mrg)
+	GENERATOR = -DUSE_MRG
+endif
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
-MKL_LIBS = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl
+ifeq ($(generator), philox)
+	GENERATOR = -DUSE_PHILOX
+endif
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
+ifneq ($(generator), $(filter $(generator),mrg philox mcg59))
+ 	$(error "You use unknown generator. Please, use mrg philox or mcg59 (default)")
+endif
 
-mc_european: mc_european.cpp
-	dpcpp $< -o $@ $(DPCPP_OPTS)
+# setting initial random number generation on host
+init_on_host ?= 0
 
-mc_european_usm: mc_european_usm.cpp
-	dpcpp $< -o $@ $(DPCPP_OPTS)
+MKL_COPTS = -DMKL_ILP64 $(GENERATOR) -qmkl=sequential -Wall -Wformat-security -Werror=format-security
+MKL_LIBS  = -lpthread -lm -ldl
+
+DPCPP_OPTS = $(MKL_COPTS) -fsycl -DINIT_ON_HOST=$(init_on_host) $(MKL_LIBS)
+
+montecarlo: src/montecarlo_main.cpp
+	icpx $< -o $@ $(DPCPP_OPTS)
 
 clean:
-	-rm -f mc_european mc_european_usm
+	-rm -f montecarlo
 
-.PHONY: clean run all
+.PHONY: clean all

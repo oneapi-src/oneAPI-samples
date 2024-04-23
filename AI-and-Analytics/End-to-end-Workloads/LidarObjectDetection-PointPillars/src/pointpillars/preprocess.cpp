@@ -16,7 +16,7 @@
  */
 
 #include "pointpillars/preprocess.hpp"
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <iostream>
 #include "devicemanager/devicemanager.hpp"
@@ -195,6 +195,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                               int *dev_sparse_pillar_map, int *host_pillar_count) {
   // Set Pillar input features to 0
   sycl::queue queue = devicemanager::GetCurrentQueue();
+    // TODO: test queue.fill vs queue.memset
   queue.memset(dev_pillar_x_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
   queue.memset(dev_pillar_y_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
   queue.memset(dev_pillar_z_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
@@ -307,3 +308,4 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
   queue.wait();
 }
 }  // namespace pointpillars
+

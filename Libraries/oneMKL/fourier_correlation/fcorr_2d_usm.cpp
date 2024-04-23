@@ -15,7 +15,7 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/vm.hpp>
 #include <mkl.h>
@@ -25,7 +25,7 @@
 int main(int argc, char **argv)
 {
     // Initialize SYCL queue
-    sycl::queue Q(sycl::default_selector{});
+    sycl::queue Q(sycl::default_selector_v);
     std::cout << "Running on: "
               << Q.get_device().get_info<sycl::info::device::name>()
               << std::endl;

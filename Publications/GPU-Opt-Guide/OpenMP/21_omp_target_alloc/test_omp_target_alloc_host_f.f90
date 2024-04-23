@@ -22,13 +22,13 @@
     !
     ! Allocate arrays in host memory
 
-    !$omp allocate allocator(omp_target_host_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_host_mem_alloc): A)
     allocate(A(length))
 
-    !$omp allocate allocator(omp_target_host_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_host_mem_alloc): B)
     allocate(B(length))
 
-    !$omp allocate allocator(omp_target_host_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_host_mem_alloc): C)
     allocate(C(length))
 
     !

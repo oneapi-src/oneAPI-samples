@@ -1,0 +1,81 @@
+{
+  "guid": "5B587FFC-FC3F-4A07-9B66-16211A94A073",
+  "name": "Introduction to Ray Tracing with Embree ",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "This sample serves as a walkthrough to understand ray tracing an image with Intel Embree. CPU and GPU versions are available on both Windows* OS and Linux* OS",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU","GPU"],
+  "gpuRequired": ["dg2","ats-m","pvc"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_Embree_RayTracer_lin",
+                "steps": [
+                    "unset ZE_FLAT_DEVICE_HIERARCHY",
+		    "cd cpu",
+		    "mkdir build",
+		    "cd build",
+		    "cmake -DCMAKE_BUILD_TYPE=Release ..",
+		    "cmake --build .",
+		    "./rkRayTracer",
+		    "cd ../..",
+		    "export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE",
+		    "cd gpu",
+                    "mkdir build",
+                    "cd build",
+		    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=icpx ..",
+                    "cmake --build .",
+		    "cmake --install .",
+                    "cd ../bin",
+		    "./rkRayTracerGPU"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
+                "id": "Intel_Embree_RayTracer_win",
+                "steps":[
+                    "set \"ZE_FLAT_DEVICE_HIERARCHY=\"",
+	            "cd cpu",
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 17 2022\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\rkRayTracer.exe",
+		    "cd ..\\..",
+		    "set ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE",
+		    "cd gpu",
+		    "mkdir build",
+		    "cd build",
+		    "cmake -G\"Visual Studio 17 2022\" -A x64 -T\"Intel(R) oneAPI DPC++ Compiler 2024\" -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+		    "cmake --build . --config Release",
+		    "cmake --install . --config Release",
+		    "cd ..\\bin",
+		    ".\\rkRayTracerGPU.exe"
+
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_Embree_RayTracer_mac",
+                "steps": [
+			"cd cpu",
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/rkcommon/latest/lib/cmake/rkcommon ..",
+                    "cmake --build .",
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/etc/rkcommon/tbb/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/ospray/latest/lib && ./rkRayTracer"
+                 ]
+                 }
+        ]
+
+
+  }
+}

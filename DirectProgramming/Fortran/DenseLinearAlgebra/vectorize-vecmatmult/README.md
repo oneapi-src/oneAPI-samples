@@ -1,4 +1,4 @@
-﻿ # `Vectorize VecMatMult` Sample
+ # `Vectorize VecMatMult` Sample
 
 The `Vectorize VecMatMult` demonstrates how to use the auto-vectorizer to improve the performance
 of the sample application. You will compare the performance of a serial version and a version compiled with the auto-vectorizer.
@@ -30,11 +30,12 @@ Intel® Advisor can assist with vectorization and show optimization report messa
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* <br> Xcode*
-| Hardware							      | Mac* with an Intel® processor
+| OS                                | Linux*<br>Windows*
 | Software                          | Intel® Fortran Compiler
 
->**Note**: The Intel® Fortran Compiler is part of the Intel® oneAPI HPC Toolkit (HPC Kit).
+>**Note**: The Intel® Fortran Compiler is included in the [Intel® oneAPI HPC
+>Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html) or available as a
+[stand-alone download](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#fortran).
 
 ## Key Implementation Details
 You will use the following Fortran source files in the sample.
@@ -59,7 +60,17 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> Windows:
+> - Under normal circumstances, you do not need to run the setvars.bat batch file. The terminal shortcuts 
+> in the Windows Start menu, Intel oneAPI command prompt for <target architecture> for Visual Studio <year>, 
+> set these variables automatically.
+>
+> For additional information, see [Use the Command Line on Windows](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/use-the-command-line-on-windows.html).
+>
+> For more information on configuring environment variables, see [Use the
+> setvars Script with Linux and Windows](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/specifying-the-location-of-compiler-components.html).
+
+
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -75,14 +86,14 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the 
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On macOS*
+### On Linux*
 
 #### Step 1. Establish a Performance Baseline
 
 Create a performance baseline for the improvements that follow in this sample by compiling your sources from the `src` directory.
 1. Compile the sources with the following commands.
    ```
-   ifort -real-size 64 -O1 src/matvec.f90 src/driver.f90 -o MatVector
+   ifx -real-size 64 -O1 src/matvec.f90 src/driver.f90 -o MatVector
    ```
 2. Run `MatVector`.
    ```
@@ -92,15 +103,14 @@ Create a performance baseline for the improvements that follow in this sample by
 
 #### Step 2. Generate a Vectorization Report
 
-A vectorization report shows what loops in your code were vectorized and explains why other loops were not vectorized. To generate a vectorization report, use the **qopt-report-phase=vec** compiler options together with **qopt-report=1** or **qopt-report=2**.
+A vectorization report shows what loops in your code were vectorized and explains why other loops were not vectorized. To generate a vectorization report, use **qopt-report=1** or **qopt-report=2**.
 
-Together with **qopt-report-phase=vec**, **qopt-report=1** generates a report with the loops in your code that were vectorized while **qopt-report-phase=vec** with **qopt-report=2** generates a report with both the loops in your code that were vectorized and the reason that other loops were not vectorized.
+**qopt-report=1** generates a report with minimum details while **qopt-report=2** generates a report with medium details. This is the default if you do not specify arg.
 
-Because vectorization is turned off with the **O1** option, the compiler does not generate a vectorization report. Generate a vectorization report by compiling the project with the **O2**, **qopt-report-phase=vec**, **qopt-report=1** options.
 
 1. Compile the sources with the following commands.
    ```
-   ifort -real-size 64 -O2 -qopt-report=1 -qopt-report-phase=vec src/matvec.f90 src/driver.f90 -o MatVector
+   ifx -real-size 64 -O2 -qopt-report=1 src/matvec.f90 src/driver.f90 -o MatVector
    ```
 2. Run `MatVector` again.
    ```
@@ -110,7 +120,7 @@ Because vectorization is turned off with the **O1** option, the compiler does no
 
    The reduction in time is mostly due to auto-vectorization of the inner loop at line 32 noted in the vectorization report **matvec.optrpt**.
 
-   > **Note**: Your line and column numbers may be different.
+   > **Note**: Your line and column numbers may be different. For information on IFX generated opt-report see https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/2024-0/qopt-report-qopt-report-ifx-only.html
 
    ```
     Begin optimization report for matvec_
@@ -151,16 +161,16 @@ Because vectorization is turned off with the **O1** option, the compiler does no
     LOOP END
    ```
 
-   The combination of **qopt-report=2** with **qopt-report-phase=vec, loop** returns a list that includes loops that were not vectorized or multi-versioned, along with the reason that the compiler did not vectorize them or multi-version the loop.
 
-4. Recompile your project with the **qopt-report=2** and **qopt-report-phase=vec,loop** options.
+4. Recompile your project with the **qopt-report=2** option.
    ```
-   ifort -real-size 64 -O2 -qopt-report-phase=vec -qopt-report=2 src/matvec.f90 src/driver.f90 -o MatVector
+   ifx -real-size 64 -O2 -qopt-report=2 src/matvec.f90 src/driver.f90 -o MatVector
    ```
 
    The vectorization report **matvec.optrpt** indicates that the loop at line 33 in matvec.f90 did not vectorize because it is not the loop nest's innermost loop.
 
-   > **Note**: Your line and column numbers may be different.
+   > **Note**: Your line and column numbers may be different. For information on IFX generated opt-report see https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/2024-0/qopt-report-qopt-report-ifx-only.html
+
 
    ```
     LOOP BEGIN at matvec.f90(27,3)
@@ -184,7 +194,8 @@ Because vectorization is turned off with the **O1** option, the compiler does no
       LOOP END
     LOOP END
    ```
-   For more information on the **qopt-report** and **qopt-report-phase** compiler options, read the *Compiler Options* section of the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html).
+   For more information on the **qopt-report** see https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/2024-0/qopt-report-qopt-report-ifx-only.html
+
 
 #### Step 3. Improve Performance by Aligning Data
 
@@ -211,7 +222,7 @@ If your compilation targets the Intel® AVX-512 instruction set, you should try 
 
 1. Recompile the program after adding the ALIGNED macro to ensure consistently aligned data.
    ```
-   ifort -real-size 64 -qopt-report=2 -qopt-report-phase=vec -D ALIGNED src/matvec.f90 src/driver.f90 -o MatVector
+   ifx -real-size 64 -qopt-report=2 -D ALIGNED src/matvec.f90 src/driver.f90 -o MatVector
    ```
 
 #### Step 4. Improve Performance with Interprocedural Optimization
@@ -220,7 +231,7 @@ The compiler may be able to perform additional optimizations if it can optimize 
 
 1. Recompile the program using the `-ipo` option to enable interprocedural optimization.
    ```
-   ifort -real-size 64 -qopt-report=2 -qopt-report-phase=vec -D ALIGNED -ipo src/matvec.f90 src/driver.f90 -o MatVector
+   ifx -real-size 64 -qopt-report=2 -D ALIGNED -ipo src/matvec.f90 src/driver.f90 -o MatVector
    ```
    The vectorization messages now appear at the point of inlining in **driver.f90** (line 70) and this is found in the file **ipo_out.optrpt**.
 

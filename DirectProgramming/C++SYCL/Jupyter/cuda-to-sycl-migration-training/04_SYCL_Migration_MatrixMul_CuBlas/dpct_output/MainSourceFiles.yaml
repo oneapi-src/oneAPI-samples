@@ -1,0 +1,1281 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          3426
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          3472
+    Length:          0
+    ReplacementText: "\n#include <oneapi/mkl.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          3545
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          3571
+    Length:          23
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          3678
+    Length:          0
+    ReplacementText: "\n#include <cmath>\n\n#include <chrono>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          5877
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6002
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6335
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6363
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6373
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6397
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6416
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6421
+    Length:          157
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6655
+    Length:          0
+    ReplacementText: "         /*\n         DPCT1005:27: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n         */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6675
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6692
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          6710
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7459
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7757
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7785
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7803
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7827
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          7846
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8704
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8722
+    Length:          37
+    ReplacementText: '(d_A = (float *)sycl::malloc_device(mem_size_A, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8762
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8780
+    Length:          37
+    ReplacementText: '(d_B = (float *)sycl::malloc_device(mem_size_B, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8820
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8838
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8869
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8894
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8897
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8915
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8946
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8971
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8974
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          8992
+    Length:          37
+    ReplacementText: '(d_C = (float *)sycl::malloc_device(mem_size_C, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9067
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9080
+    Length:          22
+    ReplacementText: 1, block_size, block_size
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9107
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9117
+    Length:          58
+    ReplacementText: '1, matrix_size.uiHC / threads[1], matrix_size.uiWC / threads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9388
+    Length:          14
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9415
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9439
+    Length:          0
+    ReplacementText: "\n    std::chrono::time_point<std::chrono::steady_clock> start_ct1;\n    std::chrono::time_point<std::chrono::steady_clock> stop_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9441
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:34: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9461
+    Length:          21
+    ReplacementText: '(handle = &dpct::get_default_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9534
+    Length:          0
+    ReplacementText: "/*\n    DPCT1003:35: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9550
+    Length:          208
+    ReplacementText: '(oneapi::mkl::blas::column_major::gemm(*handle, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, beta, d_C, matrix_size.uiWB)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9758
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9816
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9836
+    Length:          23
+    ReplacementText: '(start = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9862
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:37: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9882
+    Length:          22
+    ReplacementText: '(stop = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9938
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1012:38: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n    */\n    /*\n    DPCT1024:39: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9942
+    Length:          0
+    ReplacementText: "start_ct1 = std::chrono::steady_clock::now(); \n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          9958
+    Length:          28
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10111
+    Length:          0
+    ReplacementText: "/*\n      DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n      "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10127
+    Length:          214
+    ReplacementText: '(oneapi::mkl::blas::column_major::gemm(*handle, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, beta, d_C, matrix_size.uiWB)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10341
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10404
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1012:41: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n    */\n    /*\n    DPCT1024:42: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10408
+    Length:          0
+    ReplacementText: "stop_ct1 = std::chrono::steady_clock::now(); \n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10424
+    Length:          27
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10518
+    Length:          26
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10576
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          10596
+    Length:          45
+    ReplacementText: '(msecTotal = std::chrono::duration<float, std::milli>(stop_ct1 - start_ct1).count(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11181
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11210
+    Length:          10
+    ReplacementText: '(dpct::get_default_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11246
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11271
+    Length:          0
+    ReplacementText: '.wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11301
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          11321
+    Length:          21
+    ReplacementText: '(handle = nullptr, 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12183
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12201
+    Length:          13
+    ReplacementText: '(sycl::free(d_A, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12214
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12217
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12235
+    Length:          13
+    ReplacementText: '(sycl::free(d_B, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12248
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12251
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12269
+    Length:          13
+    ReplacementText: '(sycl::free(d_C, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Offset:          12282
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+    Digest:          4c45dbd8df66a01d6f932d27b00d2314
+DpctVersion:     16.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dev_mgr
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'dev_mgr::check_id'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'dev_mgr::current_device'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::select_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     device_ext
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_ext::create_queue'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_get_default_property_list_for_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     device_ext_get_default_property_list_for_queue
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_ext::get_version'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     device_info
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     device_info
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_integrated'
+          SubFeatureMap:   {}
+        device_info_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::get_major_version'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::get_minor_version'
+          SubFeatureMap:   {}
+        device_info_get_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::get_name'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_global_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_host_unified_memory'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_local_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_major_version'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_nd_range_size'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     device_info_set_max_register_size_per_work_group
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_sub_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_work_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_work_item_sizes'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_max_work_items_per_compute_unit'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_minor_version'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'device_info::set_name'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     device_info_set_memory_bus_width
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     device_info_set_memory_clock_rate
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     exception_handler
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     get_tid
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+    typedef_event_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     typedef_event_ptr
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     queue_ptr
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      FeatureName:     ''
+      SubFeatureMap:   {}
+  memory.hpp:
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_get_copy_range_detail
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_get_offset_detail
+      SubFeatureMap:   {}
+    dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     get_memcpy_direction
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     get_pointer_attribute
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'pitched_data::get_data_ptr'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'pitched_data::get_pitch'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+          FeatureName:     'pitched_data::get_y'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     pointer_access_attribute
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS/matrixMulCUBLAS.cpp'
+      FeatureName:     err_types
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/rkris11/test/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/rkris11/test/cuda-samples/Samples/4_CUDA_Libraries/matrixMulCUBLAS'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

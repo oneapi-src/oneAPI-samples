@@ -1,0 +1,3302 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          1563
+    Length:          32
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          1595
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          1685
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          1873
+    Length:          13
+    ReplacementText: DPCT_COMPATIBILITY_TEMP
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          1891
+    Length:          13
+    ReplacementText: DPCT_COMPATIBILITY_TEMP
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2439
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2638
+    Length:          0
+    ReplacementText: ",\n                                    const sycl::nd_item<3> &item_ct1,\n                                    double *x_shared, double *b_shared"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2678
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2701
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2728
+    Length:          35
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2782
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2844
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2874
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2923
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          2965
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3000
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3180
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3182
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3200
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3235
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3288
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3418
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3448
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3548
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3616
+    Length:          38
+    ReplacementText: 'tile32.shuffle_down(rowThreadSum, offset)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3671
+    Length:          20
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3706
+    Length:          59
+    ReplacementText: 'dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(&b_shared[i % (ROWS_PER_CTA + 1)], -rowThreadSum)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3778
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3780
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3802
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3836
+    Length:          35
+    ReplacementText: 'dpct::experimental::logical_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3888
+    Length:          38
+    ReplacementText: 'dpct::experimental::logical_group(item_ct1, item_ct1.get_group(), ROWS_PER_CTA)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          3968
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4004
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4265
+    Length:          8
+    ReplacementText: 'sycl::fabs(dx)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4304
+    Length:          12
+    ReplacementText: 'tile8.get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4367
+    Length:          33
+    ReplacementText: 'dpct::shift_sub_group_left(item_ct1.get_sub_group(), temp_sum, offset, 8)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4417
+    Length:          19
+    ReplacementText: 'tile8.get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4451
+    Length:          24
+    ReplacementText: 'dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(sum, temp_sum)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4565
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4616
+    Length:          0
+    ReplacementText: ",\n                       const sycl::nd_item<3> &item_ct1, uint8_t *dpct_local"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4656
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4679
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4706
+    Length:          35
+    ReplacementText: 'auto warpSum = (double *)dpct_local;'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4786
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4799
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4812
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4874
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4887
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4938
+    Length:          7
+    ReplacementText: 'sycl::fabs(d)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4954
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          4989
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5040
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5097
+    Length:          29
+    ReplacementText: 'tile32.shuffle_down(sum, offset)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5139
+    Length:          20
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5180
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5194
+    Length:          8
+    ReplacementText: 'item_ct1.get_sub_group().get_local_range().get(0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5216
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5218
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5265
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5280
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5293
+    Length:          8
+    ReplacementText: 'item_ct1.get_sub_group().get_local_range().get(0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5329
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5354
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5396
+    Length:          13
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_range()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5460
+    Length:          34
+    ReplacementText: 'tile32.shuffle_down(blockSum, offset)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5510
+    Length:          20
+    ReplacementText: 'item_ct1.get_sub_group().get_local_linear_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5545
+    Length:          26
+    ReplacementText: 'dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(g_sum, blockSum)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5753
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5792
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5806
+    Length:          9
+    ReplacementText: 1, 1, 256
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5835
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5848
+    Length:          33
+    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5986
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6004
+    Length:          34
+    ReplacementText: '(d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6153
+    Length:          37
+    ReplacementText: "dpct::pitched_data memcpyParams_from_data_ct1, memcpyParams_to_data_ct1;\n  sycl::id<3> memcpyParams_from_pos_ct1(0, 0, 0), memcpyParams_to_pos_ct1(0, 0, 0);\n  sycl::range<3> memcpyParams_size_ct1(1, 1, 1);\n  dpct::memcpy_direction memcpyParams_direction_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6491
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:37: Migration of cudaGraphCreate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6538
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:38: Migration of cudaGraphAddMemsetNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6675
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1082:39: Migration of cudaKernelNodeParams type is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7090
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:40: Migration of cudaGraphAddKernelNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7339
+    Length:          21
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7367
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7371
+    Length:          19
+    ReplacementText: memcpyParams_from_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7393
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7418
+    Length:          19
+    ReplacementText: memcpyParams_from_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7440
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7492
+    Length:          21
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7520
+    Length:          0
+    ReplacementText: '->to_pitched_data()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7524
+    Length:          19
+    ReplacementText: memcpyParams_to_pos_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7546
+    Length:          12
+    ReplacementText: 'sycl::id<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7571
+    Length:          19
+    ReplacementText: memcpyParams_to_data_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7593
+    Length:          19
+    ReplacementText: 'dpct::pitched_data'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7644
+    Length:          19
+    ReplacementText: memcpyParams_size_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7666
+    Length:          15
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7707
+    Length:          17
+    ReplacementText: memcpyParams_direction_ct1
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7727
+    Length:          22
+    ReplacementText: 'dpct::device_to_host'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7752
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:41: Migration of cudaGraphAddMemcpyNode is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          7917
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1007:42: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8407
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:43: Migration of cudaGraphExecKernelNodeSetParams is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8554
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:44: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8611
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8631
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8697
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8719
+    Length:          15
+    ReplacementText: '(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8759
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8768
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8777
+    Length:          9
+    ReplacementText: 'nblocks[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8799
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8816
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1083:4: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8847
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8913
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8921
+    Length:          70
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          8991
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9008
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:5: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9016
+    Length:          66
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9082
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9093
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9115
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9158
+    Length:          62
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9220
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9229
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9232
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9254
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9397
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9415
+    Length:          15
+    ReplacementText: '(sycl::free(d_sum, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9430
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9725
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9764
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9778
+    Length:          9
+    ReplacementText: 1, 1, 256
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9807
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9820
+    Length:          33
+    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9951
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:50: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9969
+    Length:          34
+    ReplacementText: '(d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10055
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1027:51: The call to cudaStreamBeginCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10084
+    Length:          59
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10146
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:52: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10166
+    Length:          15
+    ReplacementText: '(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10206
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10215
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10242
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10248
+    Length:          138
+    ReplacementText: "stream->submit(\n        [&](sycl::handler &cgh) {\n          /*\n          DPCT1101:91: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n          /*\n          DPCT1101:92: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(nblocks * nthreads, nthreads), \n            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n              JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_pointer(), b_shared_acc_ct1.get_pointer());\n            });\n        });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10386
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10401
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1049:7: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10407
+    Length:          138
+    ReplacementText: "stream->submit(\n        [&](sycl::handler &cgh) {\n          /*\n          DPCT1101:93: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n          /*\n          DPCT1101:94: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(nblocks * nthreads, nthreads), \n            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n              JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_pointer(), b_shared_acc_ct1.get_pointer());\n            });\n        });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10545
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10553
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:53: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10573
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10616
+    Length:          60
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10676
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10685
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10688
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1027:54: The call to cudaStreamEndCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10708
+    Length:          36
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10777
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1007:55: Migration of cudaGraphInstantiate is not supported.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10919
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1007:56: Migration of cudaGraphExecUpdate is not supported.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11110
+    Length:          0
+    ReplacementText: "          /*\n          DPCT1007:57: Migration of cudaGraphExecDestroy is not supported.\n          */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11280
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1007:58: Migration of cudaGraphInstantiate is not supported.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11375
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:59: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11432
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:60: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11452
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11518
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:61: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11540
+    Length:          15
+    ReplacementText: '(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11580
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11589
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11598
+    Length:          9
+    ReplacementText: 'nblocks[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11620
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11637
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1083:9: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11668
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11734
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11742
+    Length:          70
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11812
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11829
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11837
+    Length:          66
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11903
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11914
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:62: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11936
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          11979
+    Length:          62
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12041
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12050
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12053
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:63: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12075
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12218
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:64: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12236
+    Length:          15
+    ReplacementText: '(sycl::free(d_sum, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12251
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12447
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12486
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12500
+    Length:          9
+    ReplacementText: 1, 1, 256
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12529
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12542
+    Length:          33
+    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12616
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12634
+    Length:          34
+    ReplacementText: '(d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12720
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12740
+    Length:          15
+    ReplacementText: '(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12780
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12789
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12816
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12822
+    Length:          138
+    ReplacementText: "stream->submit(\n        [&](sycl::handler &cgh) {\n          /*\n          DPCT1101:95: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n          /*\n          DPCT1101:96: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(nblocks * nthreads, nthreads), \n            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n              JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_pointer(), b_shared_acc_ct1.get_pointer());\n            });\n        });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12960
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12975
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1049:12: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          12981
+    Length:          138
+    ReplacementText: "stream->submit(\n        [&](sycl::handler &cgh) {\n          /*\n          DPCT1101:97: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n          /*\n          DPCT1101:98: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n          */\n          sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n          cgh.parallel_for(\n            sycl::nd_range<3>(nblocks * nthreads, nthreads), \n            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n              JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_pointer(), b_shared_acc_ct1.get_pointer());\n            });\n        });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13119
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13127
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:67: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13147
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13190
+    Length:          60
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13250
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13259
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13262
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:68: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13282
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13348
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13370
+    Length:          15
+    ReplacementText: '(stream->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13410
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13419
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13428
+    Length:          9
+    ReplacementText: 'nblocks[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13450
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13467
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1083:14: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13498
+    Length:          10
+    ReplacementText: 'nthreads[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13564
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13572
+    Length:          70
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13642
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13659
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13667
+    Length:          66
+    ReplacementText: "stream->submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_pointer());\n              });\n          });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13733
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13744
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:70: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13766
+    Length:          15
+    ReplacementText: '(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13809
+    Length:          62
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13871
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13880
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13883
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          13905
+    Length:          29
+    ReplacementText: '(stream->wait(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          14048
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          14066
+    Length:          15
+    ReplacementText: '(sycl::free(d_sum, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          14081
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          2097
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          2527
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          2827
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          3111
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          4601
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          4619
+    Length:          43
+    ReplacementText: '(b = sycl::malloc_host<double>(N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          4706
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          4724
+    Length:          51
+    ReplacementText: '(A = sycl::malloc_host<float>(N_ROWS * N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5594
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5616
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:75: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n  /*\n  DPCT1025:76: The SYCL queue is created ignoring the flag and priority options.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5634
+    Length:          58
+    ReplacementText: '(stream1 = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5695
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:77: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5713
+    Length:          41
+    ReplacementText: '(d_b = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5757
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5775
+    Length:          49
+    ReplacementText: '(d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5827
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:79: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5845
+    Length:          41
+    ReplacementText: '(d_x = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5889
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:80: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5907
+    Length:          45
+    ReplacementText: '(d_x_new = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5956
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:81: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          5974
+    Length:          15
+    ReplacementText: '(stream1->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6021
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6031
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6034
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:82: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6059
+    Length:          15
+    ReplacementText: '(stream1->memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6110
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6120
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6123
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:83: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6141
+    Length:          15
+    ReplacementText: '(stream1->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6196
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6254
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6264
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6267
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:84: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6285
+    Length:          15
+    ReplacementText: '(stream1->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6332
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6390
+    Length:          9
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          6400
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7038
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:85: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7056
+    Length:          13
+    ReplacementText: '(sycl::free(d_b, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7069
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7072
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:86: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7090
+    Length:          13
+    ReplacementText: '(sycl::free(d_A, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7103
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7106
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:87: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7124
+    Length:          13
+    ReplacementText: '(sycl::free(d_x, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7137
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7140
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:88: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7158
+    Length:          17
+    ReplacementText: '(sycl::free(d_x_new, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7175
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7179
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:89: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7197
+    Length:          15
+    ReplacementText: '(sycl::free(A, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7212
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7215
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:90: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7233
+    Length:          15
+    ReplacementText: '(sycl::free(b, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Offset:          7248
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Digest:          e02410f3dbea57337d8ccad61adaca40
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+    Digest:          849a3d562aa8434f0ce89b725cf630e0
+DpctVersion:     16.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  atomic.hpp:
+    atomic_fetch_add:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     atomic_fetch_add
+      SubFeatureMap:   {}
+  device.hpp:
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dev_mgr
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     dev_mgr
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'dev_mgr::check_id'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'dev_mgr::current_device'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::select_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     device_ext
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     device_ext
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'device_ext::create_queue'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_get_default_property_list_for_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     device_ext_get_default_property_list_for_queue
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_device_info'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_version'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_integrated'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_global_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_host_unified_memory'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_local_mem_size'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_major_version'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_compute_units'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_nd_range_size'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     device_info_set_max_register_size_per_work_group
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_sub_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_group_size'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_item_sizes'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_max_work_items_per_compute_unit'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_minor_version'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_info::set_name'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info_set_memory_bus_width
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     device_info_set_memory_clock_rate
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     exception_handler
+      SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     get_tid
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     queue_ptr
+      SubFeatureMap:   {}
+  dpct.hpp:
+    dpct_compatibility_temp:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     DPCT_COMPATIBILITY_TEMP
+      SubFeatureMap:   {}
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      FeatureName:     ''
+      SubFeatureMap:   {}
+  image.hpp:
+    image_channel:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     image_channel
+      SubFeatureMap:
+        image_channel_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     image_channel
+          SubFeatureMap:   {}
+        image_channel_get_total_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_channel::get_total_size'
+          SubFeatureMap:   {}
+        image_channel_set_channel_num:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_channel::set_channel_num'
+          SubFeatureMap:   {}
+        image_channel_set_channel_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_channel::set_channel_size'
+          SubFeatureMap:   {}
+        image_channel_set_channel_type:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_channel::set_channel_type'
+          SubFeatureMap:   {}
+    image_channel_data_type:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     image_channel_data_type
+      SubFeatureMap:   {}
+    image_matrix:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     image_matrix
+      SubFeatureMap:
+        image_matrix_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     image_matrix
+          SubFeatureMap:   {}
+        image_matrix_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     image_matrix
+          SubFeatureMap:   {}
+        image_matrix_set_range:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_matrix::set_range'
+          SubFeatureMap:   {}
+        image_matrix_to_pitched_data:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     'image_matrix::to_pitched_data'
+          SubFeatureMap:   {}
+  memory.hpp:
+    async_dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memcpy
+      SubFeatureMap:   {}
+    async_dpct_memset:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    async_dpct_memset_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    async_dpct_memset_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     async_dpct_memset
+      SubFeatureMap:   {}
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_get_copy_range_detail
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_get_offset_detail
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memset_2d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    dpct_memset_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    dpct_memset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     dpct_memset
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     get_memcpy_direction
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     get_pointer_attribute
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'pitched_data::get_data_ptr'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'pitched_data::get_pitch'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+          FeatureName:     'pitched_data::get_y'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     pitched_data
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
+      FeatureName:     pointer_access_attribute
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     err_types
+      SubFeatureMap:   {}
+    logical_group:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     logical_group
+      SubFeatureMap:
+        logical_group_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     logical_group_1
+          SubFeatureMap:   {}
+        logical_group_get_local_linear_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     logical_group_get_local_linear_id
+          SubFeatureMap:   {}
+        logical_group_get_local_linear_range:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+          FeatureName:     logical_group_get_local_linear_range
+          SubFeatureMap:   {}
+    shift_sub_group_left:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+      FeatureName:     shift_sub_group_left
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/rkris11/test/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/rkris11/test/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '8'
+    Specified:       true
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

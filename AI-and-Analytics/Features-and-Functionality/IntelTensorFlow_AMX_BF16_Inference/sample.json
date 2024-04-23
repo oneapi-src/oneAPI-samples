@@ -1,0 +1,29 @@
+{
+    "guid": "0A887217-5621-4C8D-9418-17558088698B",
+    "name": "Intel® Extension for TensorFlow* BF16 Inference",
+    "categories": ["Toolkit/oneAPI AI And Analytics/Features and Functionality"],
+    "description": "This sample illustrates how to inference a TensorFlow model using Advanced Matrix Extensions Bfloat16",
+    "builder": ["cli"],
+    "languages": [{"python":{}}],
+    "os":["linux"],
+    "targetDevice": ["CPU"],
+    "cpuInstructionSets": ["AVX512", "AMX"],
+    "ciTests": {
+      "linux": [
+      {
+          "id": "intel amx bf16 inference",
+          "steps": [
+              "source /root/intel/oneapi/intelpython/bin/activate",
+              "conda activate tensorflow",
+              "pip install -r requirements.txt",
+              "pip install ipykernel jupyter",
+              "python Intel_TensorFlow_AMX_BF16_Inference.py",
+              "python -m ipykernel install --user --name=tensorflow",
+              "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
+           ]
+      }
+       ]
+    },
+    "expertise": "Code Optimization"
+  }
+  

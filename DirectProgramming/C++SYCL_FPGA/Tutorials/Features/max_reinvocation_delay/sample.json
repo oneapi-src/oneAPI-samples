@@ -1,0 +1,71 @@
+{
+  "guid": "dbc7aed9-fe29-405b-ad7e-c2aa755b06ad",
+  "name": "Max Reinvocation Delay",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial demonstrating the usage of the loop max_reinvocation_delay attribute",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/max_reinvocation_delay",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./max_reinvocation_delay.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/max_reinvocation_delay",
+          "nmake fpga_emu",
+          "max_reinvocation_delay.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/max_reinvocation_delay",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

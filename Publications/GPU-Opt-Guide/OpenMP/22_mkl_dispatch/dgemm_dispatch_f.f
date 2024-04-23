@@ -3,6 +3,7 @@
         !
         ! SPDX-License-Identifier: MIT
         !=============================================================
+        ! Snippet begin
         include "mkl_omp_offload.f90"
 
         program DGEMM_MAIN
@@ -82,8 +83,7 @@
         end do
         print *
 
- 101    format(7x,'M=',i5,'  N=',i5,'  K=',i5)
- 102    format(7x,'ALPHA=',f10.2,'  BETA=',f10.2)
  110    format(7x,10(f10.2,2x))
 
         end
+        ! Snippet end

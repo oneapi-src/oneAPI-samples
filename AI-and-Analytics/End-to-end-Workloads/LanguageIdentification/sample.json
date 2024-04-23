@@ -1,0 +1,21 @@
+{
+  "guid": "2201898A-037F-4E83-9BD7-790DDB60999D",
+  "name": "Language Identification",
+  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-End Workloads"],
+  "description": "This sample code trains a model to perform language identification using the Hugging Face SpeechBrain speech toolkit. Languages are selected from the CommonVoice dataset for training, validation, and testing.",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+      {
+        "id": "Language_Identification_E2E",
+        "env": [
+        ],
+        "steps": [
+        ]
+      }
+    ]
+}
+}

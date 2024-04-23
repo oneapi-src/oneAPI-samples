@@ -1,0 +1,1314 @@
+---
+MainSourceFile:  MainSrcFiles_placehold
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          1833
+    Length:          32
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          1885
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          1974
+    Length:          0
+    ReplacementText: "\n#include <time.h>\n\n#include <chrono>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2073
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2138
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1008:22: clock function is not defined in SYCL. This is a hardware-specific feature. Consult with your hardware vendor to find a replacement.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2259
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1008:23: clock function is not defined in SYCL. This is a hardware-specific feature. Consult with your hardware vendor to find a replacement.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2803
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2847
+    Length:          0
+    ReplacementText: ", const sycl::nd_item<3> &item_ct1,\n         clock_t *s_clocks"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2887
+    Length:          16
+    ReplacementText: auto
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2910
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          2937
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3009
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3034
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3091
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3114
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3116
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3176
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3210
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3235
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3260
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          3264
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4164
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4209
+    Length:          27
+    ReplacementText: 'cuda_device = dpct::dev_mgr::instance().current_device_id()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4240
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:25: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4258
+    Length:          23
+    ReplacementText: '(dpct::dev_mgr::instance().get_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4282
+    Length:          13
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4307
+    Length:          0
+    ReplacementText: '.get_device_info(deviceProp), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4311
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1051:26: SYCL does not support a device property functionally compatible with concurrentKernels. It was migrated to true. You may need to adjust the value of true for the specific device.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4318
+    Length:          28
+    ReplacementText: 'true'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4560
+    Length:          0
+    ReplacementText: "         /*\n         DPCT1005:27: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n         */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4580
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4598
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4616
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4728
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4746
+    Length:          35
+    ReplacementText: '(a = (clock_t *)sycl::malloc_host(nbytes, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4890
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          4908
+    Length:          33
+    ReplacementText: '(d_a = (clock_t *)sycl::malloc_device(nbytes, dpct::get_default_queue()), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5003
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5034
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5074
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5130
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5150
+    Length:          31
+    ReplacementText: '((streams[i]) = dpct::get_current_device().create_queue(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5222
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5258
+    Length:          0
+    ReplacementText: "\n  std::chrono::time_point<std::chrono::steady_clock> start_event_ct1;\n  std::chrono::time_point<std::chrono::steady_clock> stop_event_ct1;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5259
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5277
+    Length:          29
+    ReplacementText: '(start_event = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5309
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5327
+    Length:          28
+    ReplacementText: '(stop_event = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5564
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5589
+    Length:          0
+    ReplacementText: "\n  std::chrono::time_point<std::chrono::steady_clock> kernelEvent_ct1_i;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5607
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5646
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5701
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          5730
+    Length:          67
+    ReplacementText: '(kernelEvent[i] = new sycl::event(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6256
+    Length:          9
+    ReplacementText: 'get_max_clock_frequency()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6276
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1012:24: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6278
+    Length:          31
+    ReplacementText: "sycl::event stop_event_streams_nstreams_1;\n  start_event_ct1 = std::chrono::steady_clock::now();\n  *start_event = dpct::get_default_queue().ext_oneapi_submit_barrier()"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6425
+    Length:          58
+    ReplacementText: "streams[i]->submit(\n      [&](sycl::handler &cgh) {\n        auto d_a_i_ct0 = &d_a[i];\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, 1), sycl::range<3>(1, 1, 1)), \n          [=](sycl::nd_item<3> item_ct1) {\n            clock_block(d_a_i_ct0, time_clocks);\n          });\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6483
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6518
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1012:34: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n    */\n    /*\n    DPCT1024:35: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6522
+    Length:          0
+    ReplacementText: "kernelEvent_ct1_i = std::chrono::steady_clock::now(); \n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6538
+    Length:          43
+    ReplacementText: '(*kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6654
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6683
+    Length:          61
+    ReplacementText: '(streams[nstreams - 1]->ext_oneapi_submit_barrier({*kernelEvent[i]}), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6927
+    Length:          55
+    ReplacementText: "streams[nstreams - 1]->submit(\n    [&](sycl::handler &cgh) {\n      sycl::local_accessor<clock_t, 1> s_clocks_acc_ct1(sycl::range<1>(32), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, 32), sycl::range<3>(1, 1, 32)), \n        [=](sycl::nd_item<3> item_ct1) {\n          sum(d_a, nkernels, item_ct1, s_clocks_acc_ct1.get_pointer());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6982
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6984
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:37: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7002
+    Length:          15
+    ReplacementText: '(stop_event_streams_nstreams_1 = streams[nstreams - 1]->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7048
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7072
+    Length:          23
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7096
+    Length:          0
+    ReplacementText: ', 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7276
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1012:38: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n  */\n  /*\n  DPCT1024:39: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7278
+    Length:          0
+    ReplacementText: "dpct::get_current_device().queues_wait_and_throw();\n  stop_event_streams_nstreams_1.wait();\n  stop_event_ct1 = std::chrono::steady_clock::now(); \n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7294
+    Length:          30
+    ReplacementText: '(*stop_event = dpct::get_default_queue().ext_oneapi_submit_barrier(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7345
+    Length:          32
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7380
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7398
+    Length:          60
+    ReplacementText: '(elapsed_time = std::chrono::duration<float, std::milli>(stop_event_ct1 - start_event_ct1).count(), 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7889
+    Length:          29
+    ReplacementText: 'dpct::get_current_device().destroy_queue(streams[i])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          7924
+    Length:          32
+    ReplacementText: 'dpct::destroy_event(kernelEvent[i])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          8004
+    Length:          29
+    ReplacementText: 'dpct::destroy_event(start_event)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          8037
+    Length:          28
+    ReplacementText: 'dpct::destroy_event(stop_event)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          8069
+    Length:          15
+    ReplacementText: 'sycl::free(a, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          8088
+    Length:          13
+    ReplacementText: 'sycl::free(d_a, dpct::get_default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Digest:          e87a0e1f26318910cfc2c6a46c4a0c6c
+DpctVersion:     17.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    destroy_event:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dev_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:
+        dev_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_3:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_4:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_check_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_current_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        dev_mgr_select_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:
+        device_ext_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_create_inorder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_create_outoforder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_create_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_destroy_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_info:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_get_device_info_return_void:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_ext_get_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_inorder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_outoforder_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+    device_info:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:
+        device_info_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+          SubFeatureMap:   {}
+        device_info_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_global_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_host_unified_memory:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_local_mem_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_nd_range_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_register_size_per_work_group:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_sub_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_work_group_size:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_work_item_sizes:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_max_work_items_per_compute_unit:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_name:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        device_info_set_uuid:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+    device_info_set_memory_bus_width:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    device_info_set_memory_clock_rate:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    exception_handler:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    get_tid:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+    typedef_event_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    typedef_queue_ptr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+  dpct.hpp:
+    non_local_include_dependency:
+      IsCalled:        true
+      CallerSrcFiles:
+        - ''
+      SubFeatureMap:   {}
+  memory.hpp:
+    async_dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    async_dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    async_dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_get_copy_range_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_get_offset_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_3d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_memcpy_2d_pitch_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_memcpy_3d_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    dpct_memcpy_detail:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    get_memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    get_pointer_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    mem_mgr:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:
+        mem_mgr_1:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        mem_mgr_2:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        mem_mgr_get_map_iterator:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        mem_mgr_is_device_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        mem_mgr_translate_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    pitched_data:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:
+        pitched_data_get_data_ptr:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        pitched_data_get_pitch:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+        pitched_data_get_y:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+          SubFeatureMap:   {}
+    pitched_data_1:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    pointer_access_attribute:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    typedef_buffer_t:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+    typedef_byte_t:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '8'
+    Specified:       true
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

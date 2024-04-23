@@ -14,7 +14,7 @@
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
   if (N < 32) N = 32;
 
   // Initialize SYCL queue
-  sycl::queue Q(sycl::default_selector{});
+  sycl::queue Q(sycl::default_selector_v);
   std::cout << "Running on: "
             << Q.get_device().get_info<sycl::info::device::name>() << "\n";
 

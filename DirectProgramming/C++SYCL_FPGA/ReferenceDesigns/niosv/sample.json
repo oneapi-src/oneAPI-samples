@@ -1,0 +1,72 @@
+{
+    "guid": "22B9A56C-ACF6-45C1-923B-EA95A07083BC",
+    "name": "Nios V",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
+    "description": "Simulate a system with an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler, and a Nios® V softcore processor.",
+    "toolchain": ["icpx"],
+    "os": ["linux", "windows"],
+    "targetDevice": ["FPGA"],
+    "builder": ["cmake"],
+    "languages": [{"cpp":{}}],
+    "commonFolder": {
+      "base": "../../",
+      "include": [
+        "README.md",
+        "ReferenceDesigns/niosv",
+        "include"
+      ],
+      "exclude": []
+    },
+    "ciTests": {
+      "linux": [
+        {
+          "id": "fpga_emu",
+          "steps": [
+            "icpx --version",
+            "mkdir kernels/simple_dma/build",
+            "cd kernels/simple_dma/build",
+            "cmake ..",
+            "make fpga_emu",
+            "./simple_dma.fpga_emu"
+          ]
+        },
+        {
+          "id": "report",
+          "steps": [
+            "icpx --version",
+            "mkdir kernels/simple_dma/build",
+            "cd kernels/simple_dma/build",
+            "cmake ..",
+            "make report"
+          ]
+        }
+      ],
+      "windows": [
+        {
+          "id": "fpga_emu",
+          "steps": [
+            "icx-cl --version",
+            "cd ../../",
+            "mkdir build",
+            "cd build",
+            "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/niosv/kernels/simple_dma",
+            "nmake fpga_emu",
+            "simple_dma.fpga_emu.exe"
+          ]
+        },
+        {
+          "id": "report",
+          "steps": [
+            "icx-cl --version",
+            "cd ../../",
+            "mkdir build",
+            "cd build",
+            "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/niosv/kernels/simple_dma",
+            "nmake report"
+          ]
+        }
+      ]
+    },
+    "expertise": "Reference Designs and End to End"
+  }
+  

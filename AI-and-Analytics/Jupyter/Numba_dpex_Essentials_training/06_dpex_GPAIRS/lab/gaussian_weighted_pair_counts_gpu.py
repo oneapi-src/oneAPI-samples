@@ -1,39 +1,9 @@
+import math
+
+import numba_dpex
 import numpy as np
 
-# from numba import njit
-import numba_dppy
-
-# from numba.dppy.dppy_driver import driver as drv
-# import joblib
-# import multiprocessing
-import math
 from numba import cuda
-
-__all__ = (
-    "count_weighted_pairs_3d_cuda",
-    "count_weighted_pairs_3d_cuda_fix",
-    "count_weighted_pairs_3d_cuda_mesh",
-    # 'count_weighted_pairs_3d_cpu_corrfunc',
-    # 'count_weighted_pairs_3d_cpu_mp',
-    # 'count_weighted_pairs_3d_cpu',
-    # 'count_weighted_pairs_3d_cpu_noncuml_pairsonly',
-    # 'count_weighted_pairs_3d_cpu_test_for_max',
-    "count_weighted_pairs_3d_intel",
-)
-
-# def count_weighted_pairs_3d_cpu_corrfunc(
-#         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
-#     # requires Corrfunc
-#     from Corrfunc.theory.DD import DD
-#     import multiprocessing
-#     rbins = np.sqrt(rbins_squared)
-#     threads = multiprocessing.cpu_count()
-#     _result = DD(
-#         0, threads, rbins, x1, y1, z1,
-#         weights1=w1, weight_type='pair_product',
-#         X2=x2, Y2=y2, Z2=z2, weights2=w2,
-#         periodic=False)
-#     result[:] = result + np.cumsum(_result['weightavg'] * _result['npairs'])
 
 
 @cuda.jit
@@ -94,7 +64,9 @@ def count_weighted_pairs_3d_cuda_mesh(
                 for icell2_iy in range(leftmost_iy2, rightmost_iy2):
                     for icell2_iz in range(leftmost_iz2, rightmost_iz2):
 
-                        icell2 = icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        icell2 = (
+                            icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        )
                         ifirst2 = cell_id2_indices[icell2]
                         ilast2 = cell_id2_indices[icell2 + 1]
 
@@ -184,7 +156,9 @@ def count_weighted_pairs_3d_cuda_mesh_old(
                 for icell2_iy in range(leftmost_iy2, rightmost_iy2):
                     for icell2_iz in range(leftmost_iz2, rightmost_iz2):
 
-                        icell2 = icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        icell2 = (
+                            icell2_ix * (ny * nz) + icell2_iy * nz + icell2_iz
+                        )
                         ifirst2 = cell_id2_indices[icell2]
                         ilast2 = cell_id2_indices[icell2 + 1]
 
@@ -217,7 +191,9 @@ def count_weighted_pairs_3d_cuda_mesh_old(
 
 
 @cuda.jit
-def count_weighted_pairs_3d_cuda(x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
+def count_weighted_pairs_3d_cuda(
+    x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
+):
     """Naively count Npairs(<r), the total number of pairs that are separated
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
@@ -293,20 +269,162 @@ def count_weighted_pairs_3d_cuda_fix(
         i += stride
 
 
-@numba_dppy.kernel
-def count_weighted_pairs_3d_intel(
-    x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
+@numba_dpex.kernel
+def count_weighted_pairs_3d_intel_no_slm_ker(
+    n,
+    nbins,
+    slm_hist_size,
+    private_hist_size,
+    x0,
+    y0,
+    z0,
+    w0,
+    x1,
+    y1,
+    z1,
+    w1,
+    rbins_squared,
+    result,
+):
+
+    lid0 = numba_dpex.get_local_id(0)
+    gr0 = numba_dpex.get_group_id(0)
+
+    lid1 = numba_dpex.get_local_id(1)
+    gr1 = numba_dpex.get_group_id(1)
+
+    lws0 = numba_dpex.get_local_size(0)
+    lws1 = numba_dpex.get_local_size(1)
+
+    n_wi = 20
+
+    dsq_mat = numba_dpex.private.array(shape=(20 * 20), dtype=np.float32)
+    w0_vec = numba_dpex.private.array(shape=(20), dtype=np.float32)
+    w1_vec = numba_dpex.private.array(shape=(20), dtype=np.float32)
+
+    offset0 = gr0 * n_wi * lws0 + lid0
+    offset1 = gr1 * n_wi * lws1 + lid1
+
+    # work item works on pointer
+    # j0 = gr0 * n_wi * lws0 + i0 * lws0 + lid0, and
+    # j1 = gr1 * n_wi * lws1 + i1 * lws1 + lid1
+
+    j1 = offset1
+    i1 = 0
+    while (i1 < n_wi) and (j1 < n):
+        w1_vec[i1] = w1[j1]
+        i1 += 1
+        j1 += lws1
+
+    # compute (n_wi, n_wi) matrix of squared distances in work-item
+    j0 = offset0
+    i0 = 0
+    while (i0 < n_wi) and (j0 < n):
+        x0v = x0[j0]
+        y0v = y0[j0]
+        z0v = z0[j0]
+        w0_vec[i0] = w0[j0]
+
+        j1 = offset1
+        i1 = 0
+        while (i1 < n_wi) and (j1 < n):
+            dx = x0v - x1[j1]
+            dy = y0v - y1[j1]
+            dz = z0v - z1[j1]
+            dsq_mat[i0 * n_wi + i1] = dx * dx + dy * dy + dz * dz
+            i1 += 1
+            j1 += lws1
+
+        i0 += 1
+        j0 += lws0
+
+    # update slm_hist. Use work-item private buffer of 16 tfloat elements
+    for k in range(0, slm_hist_size, private_hist_size):
+        private_hist = numba_dpex.private.array(shape=(16), dtype=np.float32)
+        for p in range(private_hist_size):
+            private_hist[p] = 0.0
+
+        j0 = offset0
+        i0 = 0
+        while (i0 < n_wi) and (j0 < n):
+            j1 = offset1
+            i1 = 0
+            while (i1 < n_wi) and (j1 < n):
+                dsq = dsq_mat[i0 * n_wi + i1]
+                pw = w0_vec[i0] * w1_vec[i1]
+                # i1 += 1
+                # j1 += lws1
+                pk = k
+                for p in range(private_hist_size):
+                    private_hist[p] += (
+                        pw if (pk < nbins and dsq <= rbins_squared[pk]) else 0.0
+                    )
+                    pk += 1
+
+                i1 += 1
+                j1 += lws1
+
+            i0 += 1
+            j0 += lws0
+
+        pk = k
+        for p in range(private_hist_size):
+            numba_dpex.atomic.add(result, pk, private_hist[p])
+            pk += 1
+
+
+@numba_dpex.kernel
+def count_weighted_pairs_3d_intel_orig_ker(
+    n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result_tmp
 ):
     """Naively count Npairs(<r), the total number of pairs that are separated
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    start = numba_dppy.get_global_id(0)
-    stride = numba_dppy.get_global_size(0)
+    i = numba_dpex.get_global_id(0)
 
-    n1 = x1.shape[0]
-    n2 = x2.shape[0]
-    nbins = rbins_squared.shape[0]
+    px = x1[i]
+    py = y1[i]
+    pz = z1[i]
+    pw = w1[i]
+    for j in range(n):
+        qx = x2[j]
+        qy = y2[j]
+        qz = z2[j]
+        qw = w2[j]
+        dx = px - qx
+        dy = py - qy
+        dz = pz - qz
+        wprod = pw * qw
+        dsq = dx * dx + dy * dy + dz * dz
+
+        if dsq <= rbins_squared[nbins - 1]:
+            for k in range(nbins - 1, -1, -1):
+                if (k == 0) or (dsq > rbins_squared[k - 1]):
+                    numba_dpex.atomic.add(result_tmp, k, wprod)
+                    break
+
+
+@numba_dpex.kernel
+def count_weighted_pairs_3d_intel_agg_ker(result, result_tmp):
+    i = numba_dpex.get_global_id(0)
+    for j in range(i + 1):
+        result[i] += result_tmp[j]
+
+
+@numba_dpex.kernel
+def count_weighted_pairs_3d_intel_ver1(
+    n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
+):
+    """Naively count Npairs(<r), the total number of pairs that are separated
+    by a distance less than r, for each r**2 in the input rbins_squared.
+    """
+
+    start = numba_dpex.get_global_id(0)
+    stride = numba_dpex.get_global_size(0)
+
+    n1 = n
+    n2 = n
 
     for i in range(start, n1, stride):
         px = x1[i]
@@ -326,29 +444,27 @@ def count_weighted_pairs_3d_intel(
 
             k = nbins - 1
             while dsq <= rbins_squared[k]:
-                numba_dppy.atomic.add(result, k - 1, wprod)
+                numba_dpex.atomic.add(result, k - 1, wprod)
                 k = k - 1
                 if k <= 0:
                     break
 
 
-@numba_dppy.kernel
+@numba_dpex.kernel
 def count_weighted_pairs_3d_intel_ver2(
-    x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
+    n, nbins, x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
 ):
     """Naively count Npairs(<r), the total number of pairs that are separated
     by a distance less than r, for each r**2 in the input rbins_squared.
     """
 
-    i = numba_dppy.get_global_id(0)
-    nbins = rbins_squared.shape[0]
-    n2 = x2.shape[0]
+    i = numba_dpex.get_global_id(0)
 
     px = x1[i]
     py = y1[i]
     pz = z1[i]
     pw = w1[i]
-    for j in range(n2):
+    for j in range(n):
         qx = x2[j]
         qy = y2[j]
         qz = z2[j]
@@ -365,117 +481,7 @@ def count_weighted_pairs_3d_intel_ver2(
             # - could reenable later when it's supported (~April 2020)
             # - could work around this to avoid atomics, which would perform better anyway
             # cuda.atomic.add(result, k-1, wprod)
-            #numba_dppy.atomic.add(result, k - 1, wprod)
-            result[k - 1] += wprod            
+            numba_dpex.atomic.add(result, k - 1, wprod)
             k = k - 1
             if k <= 0:
                 break
-
-
-# def count_weighted_pairs_3d_cpu_mp(
-#         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
-
-#     n1 = x1.shape[0]
-#     n_per = n1 // multiprocessing.cpu_count()
-#     if n_per < 1:
-#         n_per = 1
-
-#     jobs = []
-#     for i in range(multiprocessing.cpu_count()):
-#         start = i * n_per
-#         end = start + n_per
-#         if i == multiprocessing.cpu_count()-1:
-#             end = n1
-#         _result = np.zeros_like(result)
-#         jobs.append(joblib.delayed(count_weighted_pairs_3d_cpu)(
-#             x1[start:end],
-#             y1[start:end],
-#             z1[start:end],
-#             w1[start:end], x2, y2, z2, w2, rbins_squared, _result
-#         ))
-
-#     with joblib.Parallel(
-#             n_jobs=multiprocessing.cpu_count(), backend='loky') as p:
-#         res = p(jobs)
-
-#     result[:] = result + np.sum(np.stack(res, axis=1), axis=1)
-
-
-# @njit()
-# def count_weighted_pairs_3d_cpu(
-#         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
-
-#     n1 = x1.shape[0]
-#     n2 = x2.shape[0]
-#     nbins = rbins_squared.shape[0]
-
-#     for i in range(n1):
-#         px = x1[i]
-#         py = y1[i]
-#         pz = z1[i]
-#         pw = w1[i]
-#         for j in range(n2):
-#             qx = x2[j]
-#             qy = y2[j]
-#             qz = z2[j]
-#             qw = w2[j]
-#             dx = px-qx
-#             dy = py-qy
-#             dz = pz-qz
-#             wprod = pw*qw
-#             dsq = dx*dx + dy*dy + dz*dz
-
-#             k = nbins-1
-#             while dsq <= rbins_squared[k]:
-#                 result[k-1] += wprod
-#                 k = k-1
-#                 if k <= 0:
-#                     break
-
-#     return result
-
-
-# @njit()
-# def count_weighted_pairs_3d_cpu_noncuml_pairsonly(
-#         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
-
-#     n1 = x1.shape[0]
-#     n2 = x2.shape[0]
-#     nbins = rbins_squared.shape[0]
-#     dlogr = math.log(rbins_squared[1] / rbins_squared[0]) / 2
-#     logminr = math.log(rbins_squared[0]) / 2
-
-#     g = 0
-#     for i in range(n1):
-#         for j in range(n2):
-#             dx = x1[i] - x2[j]
-#             dy = y1[i] - y2[j]
-#             dz = z1[i] - z2[j]
-#             dsq = dx*dx + dy*dy + dz*dz
-
-#             k = int((math.log(dsq)/2 - logminr) / dlogr)
-#             if k >= 0 and k < nbins:
-#                 g += (w1[i] * w2[j])
-
-#     result[0] += g
-
-#     return result
-
-
-# @njit()
-# def count_weighted_pairs_3d_cpu_test_for_max(
-#         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result):
-
-#     n1 = x1.shape[0]
-#     n2 = x2.shape[0]
-
-#     g = 0
-#     for i in range(n1):
-#         for j in range(n2):
-#             dx = x1[i] - x2[j]
-#             dy = y1[i] - y2[j]
-#             dz = z1[i] - z2[j]
-#             dsq = dx*dx + dy*dy + dz*dz
-#             g += (w1[i] * w2[j] * dsq)
-
-#     result[0] += g

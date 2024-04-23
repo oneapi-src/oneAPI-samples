@@ -1,0 +1,26 @@
+{
+  "guid": "03c50023-b16f-42b3-9e07-42111b6570bb",
+  "name": "MontecarloMultiGPU",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Map Reduce"],
+  "description": "Evaluates fair call price for a given set of European Options using the MonteCarlo approach",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+           		"make",
+			"make run_sm_cpu",
+			"make run_sm_gpu",
+			"make run_sm_gpu_opencl"
+		 ]
+	}]
+
+  },
+	 "expertise": "Code Optimization"
+}

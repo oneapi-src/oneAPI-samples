@@ -7,7 +7,7 @@
 #include <iostream>
 
 int main(void) {
-  sycl::queue q{sycl::gpu_selector()};
+  sycl::queue q{sycl::gpu_selector_v};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << std::endl;
   // Snippet begin

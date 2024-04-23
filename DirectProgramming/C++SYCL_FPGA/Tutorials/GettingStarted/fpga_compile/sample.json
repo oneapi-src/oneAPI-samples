@@ -1,0 +1,182 @@
+{
+  "guid": "A211FDE2-B037-4069-BD84-C45E354798B7",
+  "name": "FPGA Compile",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
+  "description": "Intel® FPGA tutorial introducing how to use SYCL to target FPGAs",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/GettingStarted/fpga_compile",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=1",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=2",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=2",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=3",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=3",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=4",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=4",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=1",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=2",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=2",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=3",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=3",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=4",
+          "nmake fpga_emu",
+          "vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_compile -DPART=4",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}

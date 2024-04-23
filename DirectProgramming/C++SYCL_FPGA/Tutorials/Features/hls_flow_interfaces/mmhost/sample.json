@@ -1,0 +1,203 @@
+{
+  "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
+  "name": "Avalon Memory-Mapped Host Interfaces",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS FLow: Interfaces"],
+  "description": "An Intel® FPGA tutorial demonstrating how to annotate pointer arguments to customize Avalon memory-mapped host interfaces",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/hls_flow_interfaces/mmhost",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART1",
+          "make fpga_emu",
+          "./mmhost_part1.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART2",
+          "make fpga_emu",
+          "./mmhost_part2.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART3",
+          "make fpga_emu",
+          "./mmhost_part3.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART4",
+          "make fpga_emu",
+          "./mmhost_part4.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART1",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART2",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART3",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=PART4",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART1",
+          "nmake fpga_emu",
+          "mmhost_part1.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART2",
+          "nmake fpga_emu",
+          "mmhost_part2.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART3",
+          "nmake fpga_emu",
+          "mmhost_part3.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART4",
+          "nmake fpga_emu",
+          "mmhost_part4.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_1",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART1",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_2",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART2",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_3",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART3",
+          "nmake report"
+        ]
+      }, 
+      {
+        "id": "report_4",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/mmhost -DTYPE=PART4",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

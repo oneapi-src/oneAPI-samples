@@ -1,5 +1,5 @@
 ## =============================================================
-## Copyright © 2020 Intel Corporation
+## Copyright © 2024 Intel Corporation
 ##
 ## SPDX-License-Identifier: MIT
 ## =============================================================
@@ -11,8 +11,8 @@
 ##  Build for vec_sample
 ##****************************************************************************** 
 #
-FC=ifort
-FFLAGS=-O2 -qopt-report-phase=vec -qopt-report=2
+FC=ifx
+FFLAGS=-O2 -qopt-report=2
 OBJ=src/driver.o src/matvec.o
 
 all : matvec
@@ -27,4 +27,4 @@ matvec: $(OBJ)
 	$(FC) -V $^ -o matvec
 
 clean:
-	-rm -f matvec $(OBJ) src/*.optrpt
+	-rm -f matvec $(OBJ) src/*.optrpt src/*.opt.yaml

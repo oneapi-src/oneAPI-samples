@@ -1,0 +1,71 @@
+{
+  "guid": "418AA4D8-0A61-4FDB-845A-CDA4DA0655E7",
+  "name": "FPGA Template",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
+  "description": "An Intel® FPGA tutorial that explains the CMake build system that is used in other code samples, and serves as a template that you can re-use in your own designs",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/GettingStarted/fpga_template",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./fpga_template.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_template",
+          "nmake fpga_emu",
+          "fpga_template.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/GettingStarted/fpga_template",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}

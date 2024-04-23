@@ -1,0 +1,23 @@
+{
+  "guid": "9605DCBF-6DDB-4FD2-812F-1ECF252AE334",
+  "name": "Use Library",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools"],
+  "description": "An Intel® FPGA Tutorial demonstrating how to create Intel® FPGA libraries and to incorporate them in a Intel® oneAPI SYCL project",
+  "toolchain": ["icpx"],
+  "os": [],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Tools/use_library",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+  },
+  "expertise": "Getting Started"
+}

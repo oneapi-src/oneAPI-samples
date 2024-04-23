@@ -11,7 +11,7 @@
 
       subroutine init(n, v1, v2)
       integer :: i, n
-      real :: v1(n), v2(n), vxv(n)
+      real :: v1(n), v2(n)
 
       do i = 1, n
          v1(i) = i * 0.25

@@ -4,6 +4,7 @@
 
 import numpy as np
 
+
 # Naieve pairwise distance impl - take an array representing M points in N dimensions, and return the M x M matrix of Euclidean distances
 def pairwise_distance_python(X1, X2, D):
     # Size of imputs

@@ -5,7 +5,7 @@
 // =============================================================
 
 #include <omp.h>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <iostream>
 

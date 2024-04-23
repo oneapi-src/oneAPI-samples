@@ -1,4 +1,4 @@
-CC = icpx
+CC = icx
 EXECS=intrin_dot_sample.exe intrin_double_sample.exe intrin_ftz_sample.exe
 DBG_EXECS=intrin_dot_sample_dbg.exe intrin_double_sample_dbg.exe intrin_ftz_sample_dbg.exe
 

@@ -20,12 +20,13 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration=\"debug\"",
-                       "cd x64/Debug",
+                        "MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "tbb-async-sycl.exe"
                 ]
         }]
-} 
+},
+"expertise": "Code Optimization"
  
   
 }

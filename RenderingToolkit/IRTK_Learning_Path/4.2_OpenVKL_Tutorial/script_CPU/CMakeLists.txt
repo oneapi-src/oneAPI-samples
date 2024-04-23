@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.16)
+project(OPENVKL_TUTORIAL_CPU LANGUAGES C CXX)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
+
+set(ONEAPI_ROOT "")
+if(DEFINED ENV{ONEAPI_ROOT})
+  set(ONEAPI_ROOT "$ENV{ONEAPI_ROOT}")
+  message(STATUS "ONEAPI_ROOT FROM ENVIRONMENT: ${ONEAPI_ROOT}")
+else()
+  message(FATAL_ERROR "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
+endif(DEFINED ENV{ONEAPI_ROOT})
+
+set(OPENVKL_BASE_DIR "")
+if(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
+  set(OPENVKL_BASE_DIR ${ONEAPI_ROOT})
+else()
+  set(OPENVKL_BASE_DIR ${ONEAPI_ROOT}/openvkl/latest)
+endif(EXISTS ${ONEAPI_ROOT}/oneapi-vars.sh OR EXISTS ${ONEAPI_ROOT}/oneapi-vars.bat)
+
+find_package(openvkl REQUIRED PATHS ${ONEAPI_ROOT})
+
+if(MSVC)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif(MSVC)
+
+add_executable(vklTutorialCPU ${CMAKE_CURRENT_SOURCE_DIR}/../src/vklTutorialCPU.c)
+target_link_libraries(vklTutorialCPU PRIVATE openvkl::openvkl openvkl::openvkl_module_cpu_device)
+install(TARGETS vklTutorialCPU RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

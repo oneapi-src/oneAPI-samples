@@ -28,21 +28,19 @@
 !
 ! Parallel compilation:
 !
-!   Windows*: /Qopenmp /fpp 
+!   Windows*: /Qopenmp
 !
-!   Linux* and macOS*: -qopenmp -fpp 
+!   Linux*: -qopenmp
 !
 ! Serial compilation:
 !
-!   Use the same command, but omit the -fopenmp (Linux* and macOS*)
+!   Use the same command, but omit the -qopenmp (Linux*)
 !   or /Qopenmp (Windows) option.
 !
 
 program ompPrime
 
-#ifdef _OPENMP 
-   include 'omp_lib.h'  !needed for OMP_GET_NUM_THREADS()
-#endif
+include 'omp_lib.h'  !needed for OMP_GET_NUM_THREADS()
 
 integer :: start = 1
 integer :: end = 40000000
@@ -50,31 +48,23 @@ integer :: number_of_primes = 0
 integer :: number_of_41primes = 0
 integer :: number_of_43primes = 0
 integer index, factor, limit, nthr
-real rindex, rlimit
+real rindex, rlimitq
 logical prime, print_primes
 
 print_primes = .false.
-nthr = 1 ! assume just one thread
-print *, ' Range to check for Primes:',start,end
 
-#ifdef _OPENMP
 !$omp parallel 
 
 !$omp single
    nthr = OMP_GET_NUM_THREADS()
    print *, ' We are using',nthr,' thread(s)'
 !$omp end single
-!
 
-!
 !$omp do private(factor, limit, prime) &
    schedule(dynamic,10) &
    reduction(+:number_of_primes,number_of_41primes,number_of_43primes)
-#else
-   print *, ' We are using',nthr,' thread(s)'
-#endif
 
-do index = start, end, 2   !workshared loop
+do index = start, end, 2   ! workshared loop
 
    limit = int(sqrt(real(index)))
    prime = .true.  ! assume number is prime

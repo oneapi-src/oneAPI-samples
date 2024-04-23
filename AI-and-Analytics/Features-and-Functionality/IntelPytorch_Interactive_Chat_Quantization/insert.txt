@@ -1,0 +1,5 @@
+Hello! How are you?
+I am good!
+Can you go to the cinema today?
+What movie would you like to see?
+Ok, see you at cinema! Bye!

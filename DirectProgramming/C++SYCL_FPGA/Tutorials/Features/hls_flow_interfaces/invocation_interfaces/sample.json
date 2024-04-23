@@ -1,0 +1,81 @@
+{
+  "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
+  "name": "Invocation Interfaces",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS Flow: Interfaces"],
+  "description": "An Intel® FPGA tutorial that demonstrates the differences between a streaming invocation interface and a register-mapped invocation interface on an IP component",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./reg_map_functor.fpga_emu",
+          "./stream_functor.fpga_emu",
+          "./reg_map_lambda.fpga_emu",
+          "./stream_lambda.fpga_emu",
+          "./stream_pipelined.fpga_emu",
+          "./stream_rm_stall.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
+          "nmake fpga_emu",
+          "reg_map_functor.fpga_emu.exe",
+          "stream_functor.fpga_emu.exe",
+          "reg_map_lambda.fpga_emu.exe",
+          "stream_lambda.fpga_emu.exe",
+          "stream_pipelined.fpga_emu.exe",
+          "stream_rm_stall.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

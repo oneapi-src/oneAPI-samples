@@ -1,98 +1,105 @@
 # `Intrinsics` Sample
 
-The intrinsic samples are designed to show how to utilize the intrinsics supported by the Intel&reg; C++ Compiler in various applications. The src folder contains three .cpp source files, each demonstrating different intrinsics' functionality, including vector operations, complex numbers computations, and FTZ/DAZ flags.
+This `Intrinsics` sample demonstrates how to use intrinsics supported by the Intel® C++ Compiler.
 
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | MacOS* Catalina* or newer
-| Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI C++ Compiler Classic
-| What you will learn               | How to utilize intrinsics supported by the Intel&reg; oneAPI C++ Compiler Classic
-| Time to complete                  | 15 minutes
+| Area                     | Description
+|:---                      |:---
+| What you will learn      | How to use intrinsics supported by the  Intel® C++ Compiler
+| Time to complete         | 15 minutes
 
 
 ## Purpose
 
-Intrinsics are assembly-coded functions that allow you to use C++ function calls and variables in place of assembly instructions. Intrinsics are expanded inline, eliminating function call overhead. While providing the same benefits as using inline assembly, intrinsics improve code readability, assist instruction scheduling, and help when debugging. They provide access to instructions that cannot be generated using the C and C++ languages' standard constructs and allow code to leverage performance-enhancing features unique to specific processors.
+Intrinsics are assembly-coded functions that allow you to use C++ function calls and variables in place of assembly instructions. Intrinsics expand inline, eliminating function call overhead. While providing the same benefits as using inline assembly, intrinsics improve code readability, assist instruction scheduling, and help when debugging. They provide access to instructions that cannot be generated using C and C++ language standard constructs and allow code to use performance-enhancing features unique to specific processors.
 
-Further information on intrinsics can be found [here](https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics.html#intrinsics_GUID-D70F9A9A-BAE1-4242-963E-C3A12DE296A1):
+The `src` folder contains three .cpp source files, each demonstrating different functionality, including vector operations, complex numbers computations, and FTZ/DAZ flags.
+
+You can find detailed information in the *Intrinsics* section of the [Intel® C++ Compiler Classic Developer Guide and Reference](https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/).
+
+## Prerequisites
+
+| Optimized for       | Description
+|:---                 |:---
+| OS                  | Ubuntu* 18.04
+| Hardware            | Skylake with GEN9 or newer
+| Software            | Intel® C++ Compiler
 
 ## Key Implementation Details
 
-This sample makes use of intrinsic functions to perform common mathematical operations, including:
+This sample uses intrinsic functions to perform common mathematical operations, including:
 - Computing a dot product of two vectors
 - Computing the product of two complex numbers
-The implementations include multiple functions to accomplish these tasks, each one leveraging a different set of intrinsics available to Intel&reg; processors.
 
+The implementations include multiple functions to accomplish these tasks, each one using a different set of intrinsics available to the Intel® processor family.
 
-## License
+## Set Environment Variables
 
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
-
-## Building the `Intrinsics` Program
+## Build the `Intrinsics` Program
 
 > **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
-Perform the following steps:
-1. Build the program using the following `make` commands.
-```
-$ make (or "make debug" to compile with the -g flag)
-```
+### Use Visual Studio Code* (VS Code) (Optional)
 
-2. Run the program:
+You can use Visual Studio Code* (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 3. Open a terminal in VS Code (**Terminal > New Terminal**).
+ 4. Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see the 
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+### On Linux*
+
+1. Build the program.
+   ```
+   make
+   ```
+   Alternatively, build the debug version, which compiles with the `-g` option.
+   ```
+   make debug
+   ```
+
+#### Troubleshooting
+
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
+
+## Run the `Intrinsics` Program
+
+### Configurable Parameters
+
+The sample source files contain some configurable parameters.
+
+- `intrin_dot_sample`: Modify line 35 to change the size of the vectors used in the dot product computation.
+- `intrin_double_sample`: Modify lines 244-247 to define the values of the two complex numbers used in the computation.
+- `intrin_ftz_sample`: This sample has no configurable parameters.
+
+1. Run the program:
     ```
-    make run (or "make debug_run" to run the debug version)
+    make run
     ```
-
-3. Clean the program using:
+    Alternatively, run the debug version.
+    ```
+    make debug_run
+    ```
+2. Clean the program. (Optional)
     ```
     make clean
     ```
 
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
-
-### Application Parameters
-
-These intrinsics samples have relatively few modifiable parameters. However, specific options are available to the user:
-
-1. intrin_dot_sample: Line 35 defines the size of the vectors used in the dot product computation.
-
-2. intrin_double_sample: Lines 244-247 define the values of the two complex numbers used in the computation.
-
-3. intrin_ftz_sample: This sample has no modifiable parameters.
-
-### Example of Output
+### Example Output
 ```
 Dot Product computed by C:  4324.000000
 Dot Product computed by C + SIMD:  4324.000000
@@ -108,3 +115,10 @@ Complex Product(Intel(R) SSE2): 23.00+ -2.00i
 FTZ is set.
 DAZ is set.
 ```
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

@@ -22,13 +22,13 @@
     !
     ! Allocate arrays in shared memory
 
-    !$omp allocate allocator(omp_target_shared_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_shared_mem_alloc): A)
     allocate(A(length))
 
-    !$omp allocate allocator(omp_target_shared_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_shared_mem_alloc): B)
     allocate(B(length))
 
-    !$omp allocate allocator(omp_target_shared_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_shared_mem_alloc): C)
     allocate(C(length))
 
     !

@@ -1,0 +1,33 @@
+<RTL_SPEC>
+  <FUNCTION name="RtlDSPm27x27u" module="dsp_27x27u">
+    <ATTRIBUTES>
+      <IS_STALL_FREE value="yes"/>
+      <IS_FIXED_LATENCY value="yes"/>
+      <EXPECTED_LATENCY value="2"/>
+      <CAPACITY value="2"/>
+      <HAS_SIDE_EFFECTS value="no"/>
+      <ALLOW_MERGING value="yes"/>
+    </ATTRIBUTES>
+    <INTERFACE>
+      <AVALON port="clock" type="clock"/>
+      <AVALON port="resetn" type="resetn"/>
+      <AVALON port="ivalid" type="ivalid"/>
+      <AVALON port="iready" type="iready"/>
+      <AVALON port="ovalid" type="ovalid"/>
+      <AVALON port="oready" type="oready"/>
+      <INPUT  port="ax" width="27"/>
+      <INPUT  port="ay" width="27"/>
+      <OUTPUT port="resulta" width="54"/>
+    </INTERFACE>
+    <REQUIREMENTS>
+      <FILE name="lib_rtl.v" />
+    </REQUIREMENTS>
+    <RESOURCES>
+      <DSPS value="1"/>
+      <ALUTS value="0"/>
+      <FFS  value="0"/>
+      <RAMS value="0"/>
+      <MLABS value="0"/>
+    </RESOURCES>
+  </FUNCTION>
+</RTL_SPEC>

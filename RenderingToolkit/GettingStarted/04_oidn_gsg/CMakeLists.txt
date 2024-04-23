@@ -18,7 +18,6 @@ set(OIDN_INCLUDE_DIR ${OIDN_ROOT}/include)
 set(OIDN_LIB_DIR ${OIDN_ROOT}/lib)
 
 find_package(OpenImageDenoise REQUIRED PATHS ${ONEAPI_ROOT})
-find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
 
 if(MSVC)
   set(CMAKE_CXX_STANDARD 11)

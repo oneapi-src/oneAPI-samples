@@ -2,18 +2,20 @@
 
 default: run
 
-all: run
+all: matrix_mul_mkl
 
 run: matrix_mul_mkl
-	./matrix_mul_mkl
+	./matrix_mul_mkl single
+	./matrix_mul_mkl double
 
-MKL_COPTS = -DMKL_ILP64  -I"${MKLROOT}/include"
-MKL_LIBS = -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl
+INCLUDE_COMMON=../../../common
+MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
+MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
+DPCPP_OPTS = -O2 $(MKL_COPTS) $(MKL_LIBS)
 
 matrix_mul_mkl: matrix_mul_mkl.cpp
-	dpcpp $< -o $@ $(DPCPP_OPTS)
+	icpx -fsycl -I$(INCLUDE_COMMON) $< -o $@ $(DPCPP_OPTS)
 
 clean:
 	-rm -f matrix_mul_mkl

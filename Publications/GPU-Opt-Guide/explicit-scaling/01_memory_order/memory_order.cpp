@@ -60,7 +60,7 @@ void flush_cache(sycl::queue &q, sycl::buffer<int> &flush_buf) {
 
 void atomicLatencyTest(sycl::queue &q, sycl::buffer<int> inbuf,
                        sycl::buffer<int> flush_buf, int &res, int iter) {
-  const size_t data_size = inbuf.get_size()/sizeof(int);
+  const size_t data_size = inbuf.byte_size()/sizeof(int);
 
   sycl::buffer<int> sum_buf(&res, 1);
 
@@ -74,7 +74,7 @@ void atomicLatencyTest(sycl::queue &q, sycl::buffer<int> inbuf,
     Timer timer;
 
     q.submit([&](auto &h) {
-      sycl::accessor buf_acc(inbuf, h, sycl::write_only, sycl::noinit);
+      sycl::accessor buf_acc(inbuf, h, sycl::write_only, sycl::no_init);
 
       h.parallel_for(sycl::nd_range<1>(sycl::range<>{N}, sycl::range<>{SG_SIZE}), [=](sycl::nd_item<1> item)
                                                     [[intel::reqd_sub_group_size(SG_SIZE)]] {
@@ -82,12 +82,12 @@ void atomicLatencyTest(sycl::queue &q, sycl::buffer<int> inbuf,
         for (int ii = 0; ii < 1024; ++ii) {
 	  auto v =
           #ifdef ATOMIC_RELAXED
-             sycl::ONEAPI::atomic_ref<int, sycl::ONEAPI::memory_order::relaxed,
-                               sycl::ONEAPI::memory_scope::device,
+             sycl::atomic_ref<int, sycl::memory_order::relaxed,
+                               sycl::memory_scope::device,
                                sycl::access::address_space::global_space>(buf_acc[i]);
           #else
-             sycl::ONEAPI::atomic_ref<int, sycl::ONEAPI::memory_order::acq_rel,
-                               sycl::ONEAPI::memory_scope::device,
+             sycl::atomic_ref<int, sycl::memory_order::acq_rel,
+                               sycl::memory_scope::device,
                                sycl::access::address_space::global_space>(buf_acc[i]);
           #endif
           v.fetch_add(1);
@@ -101,7 +101,7 @@ void atomicLatencyTest(sycl::queue &q, sycl::buffer<int> inbuf,
 }
 
 int main(int argc, char *argv[]) {
-  sycl::queue q{sycl::gpu_selector{}, exception_handler};
+  sycl::queue q{sycl::gpu_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
   std::vector<int> data(N);

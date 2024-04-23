@@ -20,12 +20,13 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild tbb-task-sycl.sln /t:Rebuild /p:Configuration=\"debug\"",
-                       "cd x64/Debug",
+                        "MSBuild tbb-task-sycl.sln /t:Rebuild /p:Configuration=Release",
+                        "cd x64\\Release",
                         "tbb-task-sycl.exe"
                 ]
         }]
-} 
+},
+"expertise": "Code Optimization"
 
 }
 

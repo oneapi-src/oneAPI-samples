@@ -1,0 +1,25 @@
+{
+  "guid": "030C6A71-39DA-436E-9644-4FC25C7C5907",
+  "name": "TensorFlow Fine-tuning and Inference for LLMs with Bfloat16",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Features and Functionality"],
+  "description": "This sample illustrates how to fine-tune and do inference of a TensorFlow LLM model using Bfloat16",
+  "builder": ["cli"],
+  "languages": [{ "python": {} }],
+  "os": ["linux"],
+  "targetDevice": ["CPU"],
+  "cpuInstructionSets": ["AVX512", "AMX"],
+  "ciTests": {
+    "linux": [{
+      "id": "intel llm bf16 infrence and fine-tuning",
+      "steps": [
+        "source activate tensorflow",
+        "pip install -r requirements.txt",
+        "python -m pip install py-cpuinfo",
+        "python GPTJ_finetuning.py",
+        "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+        "python ci_test.py"
+      ]
+    }]
+  },
+  "expertise": "Code Optimization"
+}

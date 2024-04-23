@@ -1,4 +1,3 @@
-
 include_directories(common)
 
 add_example_with_mkl(dgemm_target_variant_dispatch_c)

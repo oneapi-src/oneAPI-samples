@@ -1,84 +1,69 @@
-# How to Contribute
+# Contributing to oneAPI-samples
 
-We welcome community contributions to the oneAPI-samples project. You can:
+The `master` branch contains code samples that work with the latest released version of the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html). Do not commit change to the `master` branch.
 
-- Submit your changes directly as a [pull request](#pull-requests)
-- Log a bug or feature request with an [issue](#issues)
+All contributions must go into the `development` branch through a pull request (PR) where they will be reviewed before being merged. At specific dates, corresponding to the releases of the oneapi DPC++/C++ compiler, the `development` branch is merged into the `master` branch.
 
-## Pull requests
+## Fork the Repository
 
-We accept contributions as pull requests on GitHub. To contribute your changes
-directly to the repository, please do the following:
+1. To fork the repository from the GitHub user interface, click the **Fork** icon then select **Create a new fork**. The fork will be created in few seconds. If you previously forked the repo, skip to the Step 5.
 
-* Follow the [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Github-Steps-for-Contribution).
-* Make sure your PR has a clear purpose, and does one thing only, and nothing more. This will enable us review your PR more quickly.
-* Make sure each commit in your PR is a small, atomic change representing one step in development.
-* Squash intermediate steps within PR for bug fixes, style cleanups, reversions, etc., so they do not appear in merged PR history.
-* Explain anything non-obvious from the code in comments, commit messages, or the PR description, as appropriate.
+2. Select an **Owner** for the forked repository.
 
-## Issues
+3. Deselect the **Copy the master branch only** check box. (It should be unchecked before proceeding to the next step.)
 
-GitHub Issues tracks sample development issues, bugs, and feature requests.
-For usage, installation, or other requests for help, please use the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) instead.
+4. Click the **Create fork** button.
 
-When reporting a bug, please provide the following information, where applicable:
+5. If you have an existing fork but do not have a `development` branch, create a `development` branch by selecting the oneapi-src/oneAPI-samples `development` branch in the dropdown as the branch source.
 
-* What are the steps to reproduce the bug?
-* Can you reproduce the bug using the latest [master](https://github.com/samples-ci/oneAPI-samples) and the latest oneAPI toolkit related to the sample?
-* What CPU/GPU, platform, operating system/distribution are you running? The more specific, the better.
+6. Once your fork has been created, click the **Settings** icon and find the **Default Branch** section.
+
+7. Click the **Switch to another branch** graphic.
+
+8. From the dropdown, change the default branch to `development`. Click the **Update** button.
+
+9. To create a branch in your fork, make sure the `development` branch is selected from the dropdown, and enter the name of your branch in the text field.
+
+## Clone Your Fork
+
+Clone the repo and checkout the branch that you just created by entering a command similar to the following:
+
+```
+git clone -b <your branch name> https://github.com/<your GitHub username>/<your repo name>.git
+```
+
+Once you are ready to commit your changes to your repo, enter commands similar to the following:
+
+```
+git add .
+git commit -s -m "<insert commit reason here>"
+git push origin
+```
+
+## Submit Pull Requests
+
+When submitting a pull request, keep the following guidelines in mind:
+
+- Make sure that your pull request has a clear purpose; it should be as simple as possible. This approach enables quicker PR reviews.
+
+- Explain anything non-obvious from the code in comments, commit messages, or the PR description, as needed.
+
+- Check the number of files being updated. Ensure that your pull request includes only the files you expected to be changed. (If there are additional files you did not expect included in the commit, troubleshoot before submitting the PR.)
+
+- Never open a pull request to the `master` branch directly, all pull requests must be targeting the `development` branch.
+
+## Log a Bug or Request a Feature
+
+We use [GitHub Issues](https://github.com/oneapi-src/oneAPI-samples/issues) to track sample development issues, bugs, and feature requests.
+
+When reporting a bug, provide the following information when possible:
+
+- Steps to reproduce the bug.
+- Whether you found or reproduced the bug using the latest sample in the `master` branch and the latest Intel® oneAPI Toolkits.
+- Version numbers or other information about the CPU/GPU/FPGA/device, platform, operating system or distribution you used to find the bug.
+
+For usage, installation, or other requests for help, go to the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) for more information.
 
 ## License
 
-The code samples are licensed under the terms in [LICENSE](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt). By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
-
-## Sign your work
-
-Please use the sign-off line at the end of the patch. Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch. The rules are pretty simple: if you can certify
-the below (from [developercertificate.org](http://developercertificate.org/)):
-
-```
-Developer Certificate of Origin
-Version 1.1
-
-Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
-660 York Street, Suite 102,
-San Francisco, CA 94110 USA
-
-Everyone is permitted to copy and distribute verbatim copies of this
-license document, but changing it is not allowed.
-
-Developer's Certificate of Origin 1.1
-
-By making a contribution to this project, I certify that:
-
-(a) The contribution was created in whole or in part by me and I
-    have the right to submit it under the open source license
-    indicated in the file; or
-
-(b) The contribution is based upon previous work that, to the best
-    of my knowledge, is covered under an appropriate open source
-    license and I have the right under that license to submit that
-    work with modifications, whether created in whole or in part
-    by me, under the same open source license (unless I am
-    permitted to submit under a different license), as indicated
-    in the file; or
-
-(c) The contribution was provided directly to me by some other
-    person who certified (a), (b) or (c) and I have not modified
-    it.
-
-(d) I understand and agree that this project and the contribution
-    are public and that a record of the contribution (including all
-    personal information I submit with it, including my sign-off) is
-    maintained indefinitely and may be redistributed consistent with
-    this project or the open source license(s) involved.
-```
-
-Then you just add a line to every git commit message:
-
-    Signed-off-by: Joe Smith <joe.smith@email.com>
-
-Use your real name (sorry, no pseudonyms or anonymous contributions.)
-
-If you set your `user.name` and `user.email` git configs, you can sign your
-commit automatically with `git commit -s`.
+Code samples in this repository are licensed under the terms outlined in [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt). By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.

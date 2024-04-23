@@ -3,12 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <iostream>
-
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ext::oneapi_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
 #include "multiply.hpp"
+#include <iostream>
 
 typedef unsigned long long UINT64;
 #define xstr(s) x_str(s)
@@ -83,7 +79,7 @@ int main() {
   cout << "Using multiply kernel: " << xstr(MULTIPLY) << "\n";
 
   // start timing the matrix multiply code
-  dpc_common::TimeInterval matrix_time;
+  TimeInterval matrix_time;
   ParallelMultiply(NUM, a, b, c, t);
   double matrix_elapsed = matrix_time.Elapsed();
   cout << "Elapsed Time: " << matrix_elapsed << "s\n";

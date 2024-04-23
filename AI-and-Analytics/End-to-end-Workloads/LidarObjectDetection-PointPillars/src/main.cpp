@@ -62,8 +62,10 @@ int main(int argc, char *argv[]) {
   // clang-format off
   desc.add_options()
     ("help", "produce help message")
-    ("host", "Use single-threaded CPU as execution device (default)")
-    ("cpu", "Use CPU as execution device")
+    ("pfe_model", boost::program_options::value<std::string>()->default_value("pfe.onnx"), "PFE model file path (.onnx, .xml)")
+    ("rpn_model", boost::program_options::value<std::string>()->default_value("rpn.onnx"), "RPN model file path (.onnx, .xml)")
+    ("data", boost::program_options::value<std::string>()->default_value("./data"), "data path")
+    ("cpu", "Use CPU as execution device (default)")
     ("gpu", "Use GPU as execution device")
     ("list", "Get available execution devices");
   // clang-format on
@@ -85,16 +87,12 @@ int main(int argc, char *argv[]) {
 
   std::vector<sycl::info::device_type> execution_devices;
 
-  if (vm.count("cpu")) {
-    execution_devices.push_back(sycl::info::device_type::cpu);
-  }
-
   if (vm.count("gpu")) {
     execution_devices.push_back(sycl::info::device_type::gpu);
   }
 
-  if ((vm.count("host")) || execution_devices.empty()) {
-    execution_devices.push_back(sycl::info::device_type::host);
+  if (vm.count("cpu") || execution_devices.empty()) {
+    execution_devices.push_back(sycl::info::device_type::cpu);
   }
 
   // Point Pillars initialization
@@ -111,6 +109,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Unable to read point cloud file. Please put the point cloud file into the data/ folder." << std::endl;
     return -1;
   }
+  config.pfe_model_file = vm["pfe_model"].as<std::string>();
+  config.rpn_model_file = vm["rpn_model"].as<std::string>();
 
   // Run PointPillars for each execution device
   for (const auto &device_type : execution_devices) {
@@ -126,8 +126,9 @@ int main(int argc, char *argv[]) {
     // run PointPillars
     try {
       point_pillars.Detect(points.data(), number_of_points, object_detections);
-    } catch (...) {
+    } catch (const std::runtime_error &e) {
       std::cout << "Exception during PointPillars execution\n";
+      std::cout << e.what() << std::endl;
       return -1;
     }
     const auto end_time = std::chrono::high_resolution_clock::now();

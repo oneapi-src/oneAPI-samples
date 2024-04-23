@@ -1,0 +1,3 @@
+tensorflow_hub
+ipykernel
+matplotlib

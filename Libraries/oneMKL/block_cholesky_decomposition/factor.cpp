@@ -35,7 +35,7 @@
 #include <iostream>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 using namespace oneapi;
@@ -44,7 +44,7 @@ int64_t dpbltrf(sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd
 double test_res(int64_t, int64_t, double*, int64_t, double*, int64_t, double*, int64_t, double*, int64_t, double*, int64_t, double*, int64_t);
 
 template<typename T>
-using allocator_t = sycl::usm_allocator<T, cl::sycl::usm::alloc::shared>;
+using allocator_t = sycl::usm_allocator<T, sycl::usm::alloc::shared>;
 
 
 int main() {
@@ -73,7 +73,7 @@ int main() {
         }
     };
 
-    sycl::device device{cl::sycl::default_selector{}};
+    sycl::device device{sycl::default_selector{}};
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 

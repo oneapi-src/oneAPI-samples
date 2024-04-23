@@ -36,16 +36,16 @@
 #include <iostream>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 using namespace oneapi;
 
 template<typename T>
-using allocator_t = cl::sycl::usm_allocator<T, cl::sycl::usm::alloc::shared>;
+using allocator_t = sycl::usm_allocator<T, sycl::usm::alloc::shared>;
 
-int64_t dpbltrf(cl::sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb);
-int64_t dpbltrs(cl::sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf);
+int64_t dpbltrf(sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb);
+int64_t dpbltrs(sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf);
 
 double test_res1(int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf, double* x, int64_t ldx );
 
@@ -59,7 +59,7 @@ int main() {
     int64_t info = 0;
 
     // Asynchronous error handler
-    auto error_handler = [&] (cl::sycl::exception_list exceptions) {
+    auto error_handler = [&] (sycl::exception_list exceptions) {
         for (auto const& e : exceptions) {
             try {
                 std::rethrow_exception(e);
@@ -67,7 +67,7 @@ int main() {
                 // Handle LAPACK related exceptions happened during asynchronous call
                 info = e.info();
                 std::cout << "Unexpected exception caught during asynchronous LAPACK operation:\ninfo: " << e.info() << std::endl;
-            } catch(cl::sycl::exception const& e) {
+            } catch(sycl::exception const& e) {
                 // Handle not LAPACK related exceptions happened during asynchronous call
                 std::cout << "Unexpected exception caught during asynchronous operation:\n" << e.what() << std::endl;
                 info = -1;
@@ -75,9 +75,9 @@ int main() {
         }
     };
 
-    cl::sycl::device device{cl::sycl::default_selector{}};
-    cl::sycl::queue queue(device, error_handler);
-    cl::sycl::context context = queue.get_context();
+    sycl::device device{sycl::default_selector{}};
+    sycl::queue queue(device, error_handler);
+    sycl::context context = queue.get_context();
 
     if (device.get_info<sycl::info::device::double_fp_config>().empty()) {
         std::cerr << "The sample uses double precision, which is not supported" << std::endl;
@@ -138,7 +138,7 @@ int main() {
 
     try {
         info = dpbltrf(queue, n, nb, d.data(), nb, b.data(), nb);
-    } catch(cl::sycl::exception const& e) {
+    } catch(sycl::exception const& e) {
         // Handle not LAPACK related exceptions happened during synchronous call
         std::cout << "Unexpected exception caught during synchronous call to SYCL API:\n" << e.what() << std::endl;
         info = -1;

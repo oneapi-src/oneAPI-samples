@@ -4,16 +4,16 @@ import numpy as np
 from numba import njit
 
 try:
-    import numba_dppy
+    import numba_dpex
 except:
-    numba_dppy = None
-    # class numba_dppy:
+    numba_dpex = None
+    # class numba_dpex:
     #     @staticmethod
     #     def kernel(func):
     #         def decorator(func):
     #             return func
     #         return decorator
-# from numba.dppy.dppy_driver import driver as drv
+# from numba.dpex.dpex_driver import driver as drv
 # import joblib
 # import multiprocessing
 import math
@@ -303,9 +303,9 @@ def count_weighted_pairs_3d_cuda_fix(
         i += stride
 
 
-if numba_dppy is not None:
+if numba_dpex is not None:
 
-    @numba_dppy.kernel
+    @numba_dpex.kernel
     def count_weighted_pairs_3d_intel(
         x1, y1, z1, w1, x2, y2, z2, w2, rbins_squared, result
     ):
@@ -313,8 +313,8 @@ if numba_dppy is not None:
         by a distance less than r, for each r**2 in the input rbins_squared.
         """
 
-        start = numba_dppy.get_global_id(0)
-        stride = numba_dppy.get_global_size(0)
+        start = numba_dpex.get_global_id(0)
+        stride = numba_dpex.get_global_size(0)
 
         n1 = x1.shape[0]
         n2 = x2.shape[0]

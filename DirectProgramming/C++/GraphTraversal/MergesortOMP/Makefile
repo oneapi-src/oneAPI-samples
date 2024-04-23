@@ -1,7 +1,7 @@
-CXX := icpc
+CXX := icpx
 SRCDIR := src
 BUILDDIR := release
-CFLAGS := -O3 -ipo -qopenmp -std=c++11
+CFLAGS := -O3 -qopenmp -std=c++11
 EXTRA_CFLAGS :=
 LIBFLAGS := -qopenmp
 

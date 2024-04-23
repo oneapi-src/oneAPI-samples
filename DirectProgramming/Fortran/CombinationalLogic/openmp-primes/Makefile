@@ -10,28 +10,29 @@
 ##
 ##  Build for openmp_sample
 ##******************************************************************************
+SHELL := /bin/bash
 
-FC = ifort
+FC = ifx
 
-release: openmp_sample.exe
+release: openmp_sample
 
-debug: openmp_sample_dbg.exe
+debug: openmp_sample_dbg
 
-run: release ; @export  DYLD_LIBRARY_PATH="$(LIBRARY_PATH)" ; ./openmp_sample.exe
+run: release ; time ./openmp_sample
 
-debug_run: debug ; @export  DYLD_LIBRARY_PATH="$(LIBRARY_PATH)" ; ./openmp_sample_dbg.exe
+debug_run: debug ; time ./openmp_sample_dbg
 
-openmp_sample.exe: openmp_sample.o
-	$(FC) -O2 -fpp -qopenmp $^ -o $@
+openmp_sample: openmp_sample.o
+	$(FC) -O2 -qopenmp $^ -o $@
 
-openmp_sample_dbg.exe: openmp_sample_dbg.o
-	$(FC) -O0 -g -fpp -qopenmp $^ -o $@
+openmp_sample_dbg: openmp_sample_dbg.o
+	$(FC) -O0 -g -qopenmp $^ -o $@
 
 %.o: src/%.f90
-	$(FC) -O2 -c -fpp -qopenmp -o $@  $<
+	$(FC) -O2 -c -qopenmp -o $@  $<
 
 %_dbg.o: src/%.f90
-	$(FC) -O0 -g -c -fpp -qopenmp -o $@  $<
+	$(FC) -O0 -g -c -qopenmp -o $@  $<
 
 clean:
-	/bin/rm -f core.* *.o *.exe
+	/bin/rm -f core.* *.o openmp_sample openmp_sample_dbg

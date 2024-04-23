@@ -1,0 +1,4 @@
+matplotlib
+py-cpuinfo
+notebook
+ipykernel

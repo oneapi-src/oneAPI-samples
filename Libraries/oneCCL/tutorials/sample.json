@@ -11,11 +11,15 @@
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
-		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
 		"id": "ccl gsg",
 		"steps": [
-			"runipy oneCCL_Getting_Started.ipynb"
+			"wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/f649c85f-f6e1-4f13-b8c1-b75ec1a9ccb9/intelpython3-2024.0.0_251-Linux-x86_64.sh",
+			"sh ./intelpython3-2024.0.0_251-Linux-x86_64.sh -b",
+			"rm intelpython3-2024.0.0_251-Linux-x86_64.sh",
+			"$HOME/intelpython3/bin/pip install ipykernel jupyter",
+			"$HOME/intelpython3/bin/python -m ipykernel install --user --name=base",
+			"$HOME/intelpython3/bin/python -m jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook oneCCL_Getting_Started.ipynb"
 		 ]
 	}]
- }
+  }
 }

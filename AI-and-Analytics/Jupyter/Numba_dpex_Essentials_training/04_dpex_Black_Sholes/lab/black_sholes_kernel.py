@@ -2,20 +2,18 @@
 #
 # SPDX-License-Identifier: MIT
 
-import dpctl
-import base_bs_erf_gpu
-import numba_dppy
-from math import log, sqrt, exp, erf
 
-# blackscholes implemented using dppy.kernel
-@numba_dppy.kernel(
-    access_types={"read_only": ["price", "strike", "t"], "write_only": ["call", "put"]}
-)
+from math import erf, exp, log, sqrt
+
+import base_bs_erf_gpu
+import numba_dpex as nb
+
+@nb.kernel
 def black_scholes(nopt, price, strike, t, rate, vol, call, put):
     mr = -rate
     sig_sig_two = vol * vol * 2
 
-    i = numba_dppy.get_global_id(0)
+    i = nb.get_global_id(0)
 
     P = price[i]
     S = strike[i]
@@ -43,10 +41,9 @@ def black_scholes(nopt, price, strike, t, rate, vol, call, put):
 
 def black_scholes_driver(nopt, price, strike, t, rate, vol, call, put):
     # offload blackscholes computation to GPU (toggle level0 or opencl driver).
-    with dpctl.device_context(base_bs_erf_gpu.get_device_selector()):
-        black_scholes[nopt, numba_dppy.DEFAULT_LOCAL_SIZE](
-            nopt, price, strike, t, rate, vol, call, put
-        )
+    black_scholes[nopt,](
+        nopt, price, strike, t, rate, vol, call, put
+    )
 
 
 # call the run function to setup input data and performance data infrastructure

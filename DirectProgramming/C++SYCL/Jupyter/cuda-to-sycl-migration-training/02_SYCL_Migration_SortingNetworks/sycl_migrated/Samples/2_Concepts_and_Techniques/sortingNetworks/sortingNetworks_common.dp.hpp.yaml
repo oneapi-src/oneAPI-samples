@@ -1,0 +1,222 @@
+---
+MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/dpct_output/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.dp.hpp'
+Replacements:
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1634
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1802
+    Length:          18
+    ReplacementText: 'sycl::mul24((unsigned int)(a), (unsigned int)(b))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1867
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Digest:          95398843ac58eeeeb2dff34595645e1e
+DpctVersion:     16.0.0
+MainHelperFileName: dpct
+USMLevel:        ''
+FeatureMap:
+  device.hpp:
+    dev_mgr:
+      IsCalled:        false
+      FeatureName:     ''
+      SubFeatureMap:
+        dev_mgr_current_device_id:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::current_device_id'
+          SubFeatureMap:   {}
+        dev_mgr_device_count:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::device_count'
+          SubFeatureMap:   {}
+        dev_mgr_get_device:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'dev_mgr::get_device'
+          SubFeatureMap:   {}
+    device_ext:
+      IsCalled:        false
+      FeatureName:     ''
+      SubFeatureMap:
+        device_ext_default_queue:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+          FeatureName:     'device_ext::default_queue'
+          SubFeatureMap:   {}
+        device_ext_get_integrated:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_integrated'
+          SubFeatureMap:   {}
+        device_ext_get_major_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_major_version'
+          SubFeatureMap:   {}
+        device_ext_get_max_clock_frequency:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_clock_frequency'
+          SubFeatureMap:   {}
+        device_ext_get_max_compute_units:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_max_compute_units'
+          SubFeatureMap:   {}
+        device_ext_get_minor_version:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+          FeatureName:     'device_ext::get_minor_version'
+          SubFeatureMap:   {}
+        device_ext_queues_wait_and_throw:
+          IsCalled:        true
+          CallerSrcFiles:
+            - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+          FeatureName:     'device_ext::queues_wait_and_throw'
+          SubFeatureMap:   {}
+    get_current_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     get_current_device
+      SubFeatureMap:   {}
+    get_default_queue:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/bitonicSort.cu'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/oddEvenMergeSort.cu'
+      FeatureName:     get_default_queue
+      SubFeatureMap:   {}
+    select_device:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+      FeatureName:     select_device
+      SubFeatureMap:   {}
+  memory.hpp:
+    dpct_memcpy:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_2d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    dpct_memcpy_3d:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     dpct_memcpy
+      SubFeatureMap:   {}
+    memcpy_direction:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     memcpy_direction
+      SubFeatureMap:   {}
+  util.hpp:
+    err_types:
+      IsCalled:        true
+      CallerSrcFiles:
+        - '/home/rkris11/test/cuda-samples/Common/helper_cuda.h'
+        - '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/main.cpp'
+      FeatureName:     err_types
+      SubFeatureMap:   {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/rkris11/test/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/rkris11/test/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  CustomHelperFileName:
+    Value:           dpct
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitClNamespace:
+    Value:           'false'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

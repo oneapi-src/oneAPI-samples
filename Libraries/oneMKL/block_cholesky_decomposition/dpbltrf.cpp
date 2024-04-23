@@ -12,7 +12,7 @@
 ************************************************************************/
 #include <cstdint>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 using namespace oneapi;
@@ -20,7 +20,7 @@ using namespace oneapi;
 /************************************************************************
 * Definition:
 * ===========
-*   int64_t dpbltrf(cl::sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb) {
+*   int64_t dpbltrf(sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb) {
 *
 * Purpose:
 * ========
@@ -93,7 +93,7 @@ using namespace oneapi;
 *                 completed. This may indicate an error in forming the
 *                 matrix A.
 ***********************************************************************/
-int64_t dpbltrf(cl::sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb) {
+int64_t dpbltrf(sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb) {
 
     // Matrix accessors
     auto D = [=](int64_t i, int64_t j) -> double& { return d[(i) + (j)*ldd]; };
@@ -112,8 +112,8 @@ int64_t dpbltrf(cl::sycl::queue queue, int64_t n, int64_t nb, double* d, int64_t
     if (info)
         return info;
 
-    cl::sycl::context context = queue.get_context();
-    cl::sycl::device device = queue.get_device();
+    sycl::context context = queue.get_context();
+    sycl::device device = queue.get_device();
 
     // Compute Cholesky factorization of the first diagonal block
     try {

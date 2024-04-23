@@ -1,0 +1,17 @@
+absl-py
+astunparse
+h5py
+huggingface-hub
+keras
+Keras-Preprocessing
+matplotlib
+numpy
+pandas
+Pillow
+py-cpuinfo
+tensorboard
+tensorboard-data-server
+tensorboard-plugin-wit
+tf-estimator-nightly
+tokenizers
+transformers

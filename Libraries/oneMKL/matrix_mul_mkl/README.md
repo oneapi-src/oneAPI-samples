@@ -1,6 +1,6 @@
 # `Matrix Multiplication with oneMKL` Sample
 
-Matrix Multiplication with Intel® oneAPI Math Kernel Library (oneMKL) shows how to use the oneMKL optimized matrix multiplication routines.
+Matrix Multiplication with Intel® oneAPI Math Kernel Library (oneMKL) shows how to use the oneMKL optimized matrix multiplication routines, and provides a simple benchmark.
 
 | Optimized for       | Description
 |:---                 |:---
@@ -14,14 +14,17 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 ## Purpose
 
-Matrix Multiplication uses oneMKL to multiply two large matrices.
+Matrix Multiplication uses oneMKL to multiply two large matrices and measure device performance.
 
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
-
+This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
 
 ## Key Implementation Details
 
-The oneMKL `blas::gemm` routine performs a generalized matrix multiplication operation. OneMKL BLAS routines support both row-major and column-major matrix layouts; this sample uses row-major layouts, the traditional choice for C++.
+The oneMKL `blas::gemm` routine performs a matrix multiplication operation with optional scaling and updating behavior. oneMKL BLAS routines support both row-major and column-major matrix layouts; this sample uses the default column-major layout, the traditional choice for BLAS.
+
+This sample provides a simple benchmark to test `gemm` performance on a SYCL device, and illustrates several best practices:
+ - Perform a warmup run before timing, to allow oneMKL to initialize and prepare GEMM kernels for execution.
+ - Pad matrix dimensions if needed to ensure data is well-aligned.
 
 ## Using Visual Studio Code* (Optional)
 
@@ -47,7 +50,7 @@ To learn more about the extensions, see the
 >
 > Linux User: . ~/intel/oneapi/setvars.sh
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows: C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
@@ -63,20 +66,39 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
-> **Warning**: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
-
 ## Running the Matrix Multiplication with oneMKL Sample
 
 ### Example of Output
-If everything is working correctly, the program will generate two input matrices and call oneMKL to multiply them. It will also compute the product matrix itself to verify the results from oneMKL.
+Example output from this sample:
 
 ```
-./matrix_mul_mkl
-Device: Intel(R) Gen9 HD Graphics NEO
-Problem size:  A (600x1200) * B (1200x2400)  -->  C (600x2400)
-Launching oneMKL GEMM calculation...
-Performing reference calculation...
-Results are accurate.
+./matrix_mul_mkl single
+oneMKL DPC++ GEMM benchmark
+---------------------------
+Device:                  Intel(R) Iris(R) Pro Graphics 580
+Core/EU count:           72
+Maximum clock frequency: 950 MHz
+
+Benchmarking (4096 x 4096) x (4096 x 4096) matrix multiplication, single precision
+ -> Initializing data...
+ -> Warmup...
+ -> Timing...
+
+Average performance: ...
+
+./matrix_mul_mkl double
+oneMKL DPC++ GEMM benchmark
+---------------------------
+Device:                  Intel(R) Iris(R) Pro Graphics 580
+Core/EU count:           72
+Maximum clock frequency: 950 MHz
+
+Benchmarking (4096 x 4096) x (4096 x 4096) matrix multiplication, double precision
+ -> Initializing data...
+ -> Warmup...
+ -> Timing...
+
+Average performance: ...
 ```
 
 ### Troubleshooting

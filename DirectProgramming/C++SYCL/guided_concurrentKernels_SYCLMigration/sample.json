@@ -1,0 +1,25 @@
+{
+  "guid": "BB85F7E8-2686-4079-AFB0-A12BB459106E",	
+  "name": "Concurrent Kernels",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "description": "This sample shows the execution of Multiple Kernels on the device at the same time.",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+			"cmake -D INTEL_MAX_GPU=1 ..",
+           		"make",
+			"make run_sm"
+		 ]
+	}]
+   },
+  "expertise": "Concepts and Functionality"
+}

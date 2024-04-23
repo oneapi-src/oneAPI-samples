@@ -3,6 +3,8 @@
 | Code sample name                          | Supported Intel(r) Architecture(s) | Description
 |:---                                       |:---                                |:---
 | matrix_multiply                           | GPU, CPU                     | Simple matrix multiplication program
+| matrix                                    | CPU                          | Sample C matrix multiplication program included with VTune installer
+| tachyon                                   | CPU                          | Simple ray tracer demonstrating parallelism with OpenMP and Intel oneTBB
 
 
 ## License  

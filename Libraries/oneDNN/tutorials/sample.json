@@ -15,31 +15,29 @@
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "dnn gsg",
 		"steps": [
-			"runipy tutorial_getting_started.ipynb"
+			"pip install jupyter ipykernel",
+			"python3 -m ipykernel install --user --name=base",
+			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_getting_started.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "verbose_jit",
 		"steps": [
-			"runipy tutorial_verbose_jitdump.ipynb"
+			"pip install jupyter ipykernel",
+			"python3 -m ipykernel install --user --name=base",
+			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_verbose_jitdump.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
 		"id": "isa",
 		"steps": [
-			"runipy tutorial_analyze_isa_with_dispatcher_control.ipynb"
-		 ]
-	},
-	{
-		"env": ["source activate base",
-			"source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
-		"id": "vtune_itt",
-		"steps": [
-			"runipy tutorial_vtune_profiling.ipynb"
+			"pip install jupyter ipykernel",
+			"python3 -m ipykernel install --user --name=base",
+			"jupyter nbconvert --ExecutePreprocessor.kernel_name=base --to notebook --execute tutorial_analyze_isa_with_dispatcher_control.ipynb"
 		 ]
 	}
-     ]
- }
+ ]}
 }
+   

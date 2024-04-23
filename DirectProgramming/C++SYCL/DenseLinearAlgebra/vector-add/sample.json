@@ -1,0 +1,294 @@
+{
+  "guid":"b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
+  "name": "Base: Vector Add",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra", "Toolkit/oneAPI Tools/Advisor"],
+  "description": "This simple sample adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple C++ with SYCL",
+  "toolchain": ["icpx"],
+  "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
+  "targetDevice": ["CPU", "GPU", "FPGA"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "buffer_default",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make cpu-gpu",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "buffer_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make cpu-gpu",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "buffer_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make cpu-gpu",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "buffer_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make cpu-gpu",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_default",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make cpu-gpu",
+          "./vector-add-usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make cpu-gpu",
+          "./vector-add-usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make cpu-gpu",
+          "./vector-add-usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make cpu-gpu",
+          "./vector-add-usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_buffers",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./vector-add-buffers.fpga_emu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make fpga_emu",
+          "./vector-add-usm.fpga_emu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga_report_buffers",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga_report_usm",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake .. -DUSM=1",
+          "make report",
+          "make clean"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "buffer_default",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake cpu-gpu",
+          "vector-add-buffers.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "buffer_cpu",
+        "env": [
+          "set SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake cpu-gpu",
+          "vector-add-buffers.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "buffer_gpu",
+        "env": [
+          "set SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake cpu-gpu",
+          "vector-add-buffers.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "buffer_host",
+        "env": [
+          "set SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake cpu-gpu",
+          "vector-add-buffers.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "usm_default",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" .. -DUSM=1",
+          "nmake cpu-gpu",
+          "vector-add-usm.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "usm_cpu",
+        "env": [
+          "set SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" .. -DUSM=1",
+          "nmake cpu-gpu",
+          "vector-add-usm.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "usm_gpu",
+        "env": [
+          "set SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" .. -DUSM=1",
+          "nmake cpu-gpu",
+          "vector-add-usm.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "usm_host",
+        "env": [
+          "set SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" .. -DUSM=1",
+          "nmake cpu-gpu",
+          "vector-add-usm.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_buffers",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
+          "vector-add-buffers.fpga_emu.exe",
+          "nmake clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" -DUSM=1 ..",
+          "nmake fpga_emu",
+          "vector-add-usm.fpga_emu.exe",
+          "nmake clean"
+        ]
+      }
+    ]
+  },
+  "expertise": "Getting Started"
+}

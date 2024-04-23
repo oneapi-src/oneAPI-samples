@@ -14,10 +14,13 @@
         "env": [ "source /opt/intel/oneapi/setvars.sh" ],
         "steps": [
           "make all",
-          "make Run",
+          "intro/bin/prog1",
+          "datatransfer/bin/prog2",
+          "parallelism/bin/prog3",
           "make clean"
         ]
       }
     ]
-  }
+  },
+  "expertise": "Tutorial"
 }

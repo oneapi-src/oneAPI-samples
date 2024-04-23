@@ -1,0 +1,30 @@
+{
+  "guid": "7A85A71C-9D14-4950-8B10-FD7B16CEEB66",
+  "name": "Interactive chat based on DialoGPT model using Intel® Extension for PyTorch* Quantization",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
+  "description": "This sample demonstrates how to create interactive chat based on pre-trained DialoGPT model and add the Intel® Extension for PyTorch* quantization to it.",
+  "builder": ["cli"],
+"toolchain": ["jupyter"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+      "linux": [
+    {
+          "env": [
+            "source /intel/oneapi/intelpython/bin/activate", 
+            "conda activate pytorch", 
+            "pip install transformers jupyter ipykernel",
+            "python -m ipykernel install --name=pytorch"
+          ],
+          "id": "ipex_chat_quantization_py",
+          "steps": [
+            "python IntelPytorch_Interactive_Chat_Quantization.py < insert.txt"
+           ]
+      }
+    ]
+},
+"expertise": "Getting Started"
+}
+
+
