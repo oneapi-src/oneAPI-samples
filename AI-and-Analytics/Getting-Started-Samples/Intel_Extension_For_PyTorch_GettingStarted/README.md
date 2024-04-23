@@ -50,8 +50,10 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: <https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html>
+Required AI Tools:  Intel® Extension for PyTorch* - GPU
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+> **Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
 **2. (Offline Installer) Activate the AI Tools bundle base environment**
 
@@ -66,7 +68,7 @@ source <custom_path>/bin/activate
 **3. (Offline Installer) Activate relevant Conda environment**
 
 ```
-conda activate <offline-conda-env-name>
+conda activate pytorch-gpu
 ``` 
 
 **4. Clone the GitHub repository**
@@ -86,6 +88,7 @@ pip install notebook
 >**Note**: Before running the sample, make sure [Environment Setup](#environment-setup) is completed.
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip)
 * [Docker](#docker)
 
 ### AI Tools Offline Installer (Validated)
@@ -94,11 +97,11 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 If the default path is used during the installation of AI Tools:
 ```
-$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+$HOME/intel/oneapi/intelpython/envs/pytorch-gpu/bin/python -m ipykernel install --user --name=pytorch-gpu
 ```
 If a non-default path is used:
 ```
-<custom_path>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+<custom_path>/bin/python -m ipykernel install --user --name=pytorch-gpu
 ```
 **2. Launch Jupyter Notebook** 
 
@@ -112,7 +115,7 @@ jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
 ```
 ResNet50_Inference.ipynb
 ```
-**5. Change the kernel to `<offline-conda-env-name>`**
+**5. Change the kernel to `pytorch-gpu`**
  
 **6. Run every cell in the Notebook in sequence**
 
@@ -156,8 +159,9 @@ AI Tools Docker images already have Get Started samples pre-installed. Refer to 
 
 With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
 
-
 ## License
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
