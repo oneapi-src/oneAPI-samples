@@ -10,7 +10,7 @@ endif()
 
 cmake_minimum_required (VERSION 3.7.2)
 
-project(MaxInterleaving CXX)
+project(max_interleaving CXX)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -100,21 +100,6 @@ else()
     set(DEBUG_FLAGS "")
 endif()
 
-# Choose the random seed for the hardware compile
-# e.g. cmake .. -DSEED=7
-if(NOT DEFINED SEED)
-    # Seed 1 fails for A10 on Windows
-    set(SEED 2) 
-else()
-    message(STATUS "Seed explicitly set to ${SEED}")
-endif()
-
-if(IGNORE_DEFAULT_SEED)
-    set(SEED_FLAG "")
-else()
-    set(SEED_FLAG "-Xsseed=${SEED}")
-endif()
-
 set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
@@ -130,7 +115,7 @@ set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -f
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
 set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${SEED_FLAG} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
 
 ###############################################################################
 ### FPGA Emulator

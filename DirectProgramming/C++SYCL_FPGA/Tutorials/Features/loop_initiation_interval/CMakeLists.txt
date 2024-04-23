@@ -57,12 +57,28 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
+if (NOT DEFINED PART)
+    set (PART " ")
+    message(STATUS "here")
+endif()
+
+set(EXTRA_FLAG )
+if(${PART} STREQUAL II_ENABLED)
+    set(EXTRA_FLAG ${EXTRA_FLAG};-DENABLE_II)
+elseif(${PART} STREQUAL II_DISABLED)
+    # Nothing to do, regular compile
+else()
+    message(FATAL_ERROR "No matching compile parts found for part ${PART}\n
+Valid parts -DPART=[ II_ENABLED - II_DISABLED ]")
+endif()
+
+
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};-D${DEVICE_FLAG})
+set(USER_FLAGS ${USER_FLAGS};-D${DEVICE_FLAG};${EXTRA_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
