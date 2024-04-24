@@ -63,6 +63,12 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
+# Prevent ignoring NaN values
+if(WIN32)
+    set(EMULATOR_PLATFORM_FLAGS /fp:precise)
+else()
+    set(EXTRA_COMPILE_FLAG -fno-finite-math-only)
+endif()
 
 if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
@@ -114,7 +120,7 @@ message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DCOMPLEX=${COMPLEX};-DMATRIX_DIMENSION=${MATRIX_DIMENSION};-fbracket-depth=512)
+set(USER_FLAGS ${USER_FLAGS};${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DCOMPLEX=${COMPLEX};-DMATRIX_DIMENSION=${MATRIX_DIMENSION};-fbracket-depth=512;${EXTRA_COMPILE_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
@@ -181,7 +187,7 @@ set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 #    representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR)
+set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR ${EMULATOR_PLATFORM_FLAGS})
 set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)

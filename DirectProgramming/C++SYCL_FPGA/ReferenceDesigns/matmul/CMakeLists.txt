@@ -65,7 +65,7 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
-# This is a Windows-specific flag that enables error handling in host code
+# Prevent ignoring NaN values
 if(WIN32)
     set(EMULATOR_PLATFORM_FLAGS /fp:precise)
 else()
