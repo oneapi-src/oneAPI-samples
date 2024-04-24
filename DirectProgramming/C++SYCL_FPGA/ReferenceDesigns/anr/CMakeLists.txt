@@ -63,7 +63,6 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
-
 # Increase the allowable constexpr steps for the front end. This allows the
 #  front-end compiler to do more compile-time computation.
 if(WIN32)
