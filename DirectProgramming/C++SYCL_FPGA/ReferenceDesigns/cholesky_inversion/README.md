@@ -207,7 +207,7 @@ Additionaly, the cmake build system can be configured using the following parame
       ```
       make report
       ```
-      The report resides at `cholesky_inversion_report.prj/reports/report.html`.
+      The report resides at `cholesky_inversion.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

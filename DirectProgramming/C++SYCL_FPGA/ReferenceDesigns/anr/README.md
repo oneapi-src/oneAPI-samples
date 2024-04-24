@@ -194,7 +194,7 @@ The design uses the following generic header files.
       ```
       make report
       ```
-      The report resides at `anr_report.prj/reports/report.html`.
+      The report resides at `anr.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -246,7 +246,7 @@ The design uses the following generic header files.
       ```
       nmake report
       ```
-      The report resides at `anr_report.prj/reports/report.html`.
+      The report resides at `anr.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

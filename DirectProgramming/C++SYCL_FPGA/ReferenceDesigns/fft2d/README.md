@@ -142,7 +142,7 @@ Additionally, the `cmake` build system can be configured using the following par
       ```
       make report
       ```
-      The report resides at `fft2d_report.prj/reports/report.html`.
+      The report resides at `fft2d.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

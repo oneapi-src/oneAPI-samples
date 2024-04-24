@@ -353,7 +353,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
         ```
         make report
         ```
-        The report resides at `decompression type>_report.prj/reports/report/report.html`.
+        The report resides at `decompression type>.report.prj/reports/report/report.html`.
 
     4. Compile for FPGA hardware (longer compile time, targets FPGA device).
         ```

@@ -163,7 +163,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
       ```
       make report
       ```
-      The report resides at `mvdr_beamforming_report.prj/reports/report.html`.
+      The report resides at `mvdr_beamforming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
