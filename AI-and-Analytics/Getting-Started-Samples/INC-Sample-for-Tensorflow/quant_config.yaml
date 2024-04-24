@@ -1,0 +1,19 @@
+# refer https://intel.github.io/neural-compressor/latest/autoapi/neural_compressor/config/index.html#neural_compressor.config.PostTrainingQuantConfig
+
+quant_config:
+    device: "cpu"
+    backend: "itex"
+    inputs: "x"
+    outputs: "Identity"
+    approach: "auto"
+
+tuning_criterion:
+    timeout: 0  # optional. tuning timeout (seconds). When set to 0, early stopping is enabled.
+    max_trials: 100  # optional. max tuning times. combined with the `timeout` field to decide when to exit tuning.
+    strategy: "basic"  # optional. name of the tuning strategy.
+    strategy_kwargs: None  # optional. see concrete tuning strategy for available settings.
+
+accuracy_criterion:
+    higher_is_better: True  # optional.
+    criterion: "relative"  # optional. Available values are 'relative' and 'absolute'.
+    tolerable_loss: 0.01  # optional.

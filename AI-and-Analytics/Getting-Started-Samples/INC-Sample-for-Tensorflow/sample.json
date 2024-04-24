@@ -21,7 +21,7 @@
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"jupyter nbconvert --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
+			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
 		 ]
 	}
     ]
