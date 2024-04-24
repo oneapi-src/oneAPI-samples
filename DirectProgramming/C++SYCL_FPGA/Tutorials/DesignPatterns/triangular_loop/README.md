@@ -253,7 +253,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
        ```
        make report
        ```
-      The report resides at `triangular_loop_report.prj/reports/report.html`.
+      The report resides at `triangular_loop.report.prj/reports/report.html`.
 
       Consult the "Loop Analysis" report to compare the optimized and unoptimized versions of the loop.
 
@@ -307,7 +307,7 @@ Summing the number of real and dummy iterations gives the total iterations of th
       ```
       nmake report
       ```
-      The report resides at `triangular_loop_report.prj.a/reports/report.html`.
+      The report resides at `triangular_loop.report.prj.a/reports/report.html`.
 
       Consult the "Loop Analysis" report to compare the optimized and unoptimized versions of the loop.
 

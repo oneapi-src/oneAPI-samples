@@ -136,7 +136,7 @@ This sample demonstrates the following concepts:
       ```
       make report
       ```
-      The report resides at `buffered_host_streaming_report.prj/reports/report.html`.
+      The report resides at `buffered_host_streaming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -188,7 +188,7 @@ This sample demonstrates the following concepts:
       ```
       nmake report
       ```
-      The report resides at `buffered_host_streaming_report.prj.a/reports/report.html`.
+      The report resides at `buffered_host_streaming.report.prj.a/reports/report.html`.
 
    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

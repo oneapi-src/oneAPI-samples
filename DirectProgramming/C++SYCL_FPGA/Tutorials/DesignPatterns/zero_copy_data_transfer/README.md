@@ -133,7 +133,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
        ```
        make report
        ```
-       The report resides at `zero_copy_data_transfer_report.prj/reports/report.html`.
+       The report resides at `zero_copy_data_transfer.report.prj/reports/report.html`.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -184,7 +184,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
       ```
       nmake report
       ```
-      The report resides at `zero_copy_data_transfer_report.prj.a/reports/report.html`.
+      The report resides at `zero_copy_data_transfer.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```

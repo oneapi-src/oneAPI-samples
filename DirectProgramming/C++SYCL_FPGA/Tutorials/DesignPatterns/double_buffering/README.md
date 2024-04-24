@@ -127,7 +127,7 @@ The key concepts discussed in this sample are as followed:
       ```
       make report
       ```
-      The report resides at `double_buffering_report.prj/reports/report.html`. Note that because the optimization occurs at the *runtime* level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
+      The report resides at `double_buffering.report.prj/reports/report.html`. Note that because the optimization occurs at the *runtime* level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -179,7 +179,7 @@ The key concepts discussed in this sample are as followed:
       ```
       nmake report
       ```
-      The report resides at `double_buffering_report.prj.a/reports/report.html`. Note that because the optimization occurs at the *runtime* level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
+      The report resides at `double_buffering.report.prj.a/reports/report.html`. Note that because the optimization occurs at the *runtime* level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

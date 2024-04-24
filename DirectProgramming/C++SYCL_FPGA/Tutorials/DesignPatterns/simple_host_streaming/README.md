@@ -181,7 +181,7 @@ We are currently working on an API and tutorial to address both of these drawbac
        ```
        make report
        ```
-      The report resides at `simple_host_streaming_report.prj/reports/report.html`.
+      The report resides at `simple_host_streaming.report.prj/reports/report.html`.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -232,7 +232,7 @@ We are currently working on an API and tutorial to address both of these drawbac
       ```
       nmake report
       ```
-      The report resides at `simple_host_streaming_report.prj.a/reports/report.html`.
+      The report resides at `simple_host_streaming.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```
