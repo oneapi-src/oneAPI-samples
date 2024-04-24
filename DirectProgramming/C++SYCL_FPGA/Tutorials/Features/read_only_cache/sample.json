@@ -20,50 +20,96 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_cache_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/read_only_cache",
+          "cmake ../Tutorials/Features/read_only_cache -DPART=CACHE_ENABLED",
           "make fpga_emu",
           "./read_only_cache.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "report_cache_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/read_only_cache",
+          "cmake ../Tutorials/Features/read_only_cache -DPART=CACHE_ENABLED",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_cache_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake ../Tutorials/Features/read_only_cache -DPART=CACHE_DISABLED",
+          "make fpga_emu",
+          "./read_only_cache.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_cache_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake ../Tutorials/Features/read_only_cache -DPART=CACHE_DISABLED",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_cache_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache -DPART=CACHE_ENABLED",
           "nmake fpga_emu",
           "read_only_cache.fpga_emu.exe"
         ]
       },
       {
-        "id": "report",
+        "id": "report_cache_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache -DPART=CACHE_ENABLED",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_cache_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache -DPART=CACHE_DISABLED",
+          "nmake fpga_emu",
+          "read_only_cache.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_cache_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache -DPART=CACHE_DISABLED",
           "nmake report"
         ]
       }

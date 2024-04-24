@@ -20,48 +20,92 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_ii_enabled",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake .. -DPART=II_ENABLED",
           "make fpga_emu",
           "./loop_ii.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "report_ii_enabled",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake .. -DPART=II_ENABLED",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_ii_disabled",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=II_DISABLED",
+          "make fpga_emu",
+          "./loop_ii.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_ii_disabled",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=II_DISABLED",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_ii_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval -DPART=II_ENABLED",
           "nmake fpga_emu",
           "loop_ii.fpga_emu.exe"
         ]
       },
       {
-        "id": "report",
+        "id": "report_ii_enabled",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval -DPART=II_ENABLED",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_ii_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval -DPART=II_DISABLED",
+          "nmake fpga_emu",
+          "loop_ii.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_ii_disabled",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/loop_initiation_interval -DPART=II_DISABLED",
           "nmake report"
         ]
       }
