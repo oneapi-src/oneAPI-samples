@@ -24,20 +24,11 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | Software                | Intel® oneAPI Data Analytics Library (oneDAL)
 > **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Tools**
-
-  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Tools for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
-
-
 ## Key Implementation Details
 
-- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel® AI Analytics Toolkit.
+- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel(R) AI Tools.
 
-- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel(R) AI Tools installation and have run the post installation script.
 
 ## Environment Setup
 
@@ -73,7 +64,7 @@ source <custom_path>/bin/activate
 2. Activate the Conda environment:
 <!-- specify the name of conda environment for this sample, if there are several options - list all relevant names of environments -->
 ```
-conda activate xgboost
+conda activate base
 ``` 
 3. Clone the GitHub repository:
 ``` 
@@ -93,7 +84,7 @@ jupyter notebook --ip=0.0.0.0
 IntelPython_daal4py_GettingStarted.ipynb
 ```
 
-7. Change the kernel to xgboost
+7. Change the kernel to base
  
 8. Run every cell in the Notebook in sequence.
 
