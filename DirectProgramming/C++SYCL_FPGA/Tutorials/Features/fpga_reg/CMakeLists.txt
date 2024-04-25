@@ -22,6 +22,19 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(SOURCE_FILES src/fpga_reg.cpp)
 set(TARGET_NAME fpga_reg)
 
+if (NOT DEFINED PART)
+    set (PART " ")
+endif()
+
+if(${PART} STREQUAL REGISTERED)
+    set(EXTRA_FLAG -DUSE_FPGA_REG)
+elseif(${PART} STREQUAL NON_REGISTERED)
+    # Nothing to do
+else()
+    message(FATAL_ERROR "No matching compile parts found for part${PART}\n
+Valid parts -DPART=[ REGISTERED - NON_REGISTERED ]")
+endif()
+
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device.
 # Note that depending on your installation, you may need to specify the full 
@@ -39,7 +52,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS})
+set(USER_FLAGS ${USER_FLAGS};${EXTRA_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

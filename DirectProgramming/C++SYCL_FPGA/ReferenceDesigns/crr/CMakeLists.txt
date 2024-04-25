@@ -97,6 +97,10 @@ set(USER_FLAGS ${USER_FLAGS};-DOUTER_UNROLL_V=${OUTER_UNROLL_V};-DINNER_UNROLL_V
 # compilation.
 set(USER_INCLUDE_PATHS ../../include;${USER_INCLUDE_PATHS})
 
+# Copy input data
+configure_file("src/data/ordered_inputs.csv" "src/data/ordered_inputs.csv" COPYONLY)
+configure_file("src/data/small_ordered_inputs.csv" "src/data/small_ordered_inputs.csv" COPYONLY)
+
 ###############################################################################
 ### no changes after here
 ###############################################################################
@@ -324,7 +328,7 @@ getCompileCommands("${COMMON_COMPILE_FLAGS}" "${EMULATOR_COMPILE_FLAGS}" "${COMM
 
 add_custom_target(  displayEmulationCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
+                    COMMENT "\nTo compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${EMULATOR_TARGET} displayEmulationCompileCommands)
 
 # Display the compile instructions in the simulation flow
