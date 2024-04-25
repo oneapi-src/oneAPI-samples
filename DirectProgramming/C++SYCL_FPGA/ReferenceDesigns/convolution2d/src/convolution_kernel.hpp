@@ -58,17 +58,19 @@ using OutputImageStream =
 /////////////////////////////////////////////
 using CsrInProperties = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
-        // `ready` signal is required for input CSR pipe. Host may check it to
-        // ensure the kernel is ready for a new value.
+        // The `ready` signal is required for input CSR pipe. The host may check
+        // the `ready` register to ensure the kernel is ready for a new value.
         sycl::ext::intel::experimental::protocol_name::avalon_mm_uses_ready>,
-    // `valid` signal ensures that the first read after the host changes it will
-    // succeed.
+    // Enabling the `valid` signal ensures that the kernel only consumes new
+    // data after the host changes the CSR. The host must write a `1` to the
+    // associated `...CHANNEL_VALID_REG` register.
     sycl::ext::intel::experimental::uses_valid_on));
+
 using CsrOutProperties = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::protocol<
-        // Disable `ready` signal so the device can update this value without
-        // requiring the host to consent. Host doesn't care about possibly
-        // missing an update.
+        // Disable the `ready` signal so the device can update this value
+        // without requiring the host to consent. Host doesn't care about
+        // possibly missing an update.
         sycl::ext::intel::experimental::protocol_name::avalon_mm>,
     // `valid` signal is required for output CSR pipe. Host may check it to
     // ensure the data is 'real'.
@@ -79,12 +81,12 @@ using StopCSR =
     sycl::ext::intel::experimental::pipe<ID_StopCSR, bool, 0, CsrInProperties>;
 
 class ID_BypassCSR;
-using BypassCSR =
-    sycl::ext::intel::experimental::pipe<ID_BypassCSR, bool, 0, CsrInProperties>;
+using BypassCSR = sycl::ext::intel::experimental::pipe<ID_BypassCSR, bool, 0,
+                                                       CsrInProperties>;
 
 class ID_VersionCSR;
-using VersionCSR =
-    sycl::ext::intel::experimental::pipe<ID_VersionCSR, int, 0, CsrOutProperties>;
+using VersionCSR = sycl::ext::intel::experimental::pipe<ID_VersionCSR, int, 0,
+                                                        CsrOutProperties>;
 
 /// @brief Handle pixels at the edge of the input image by reflecting them.
 /// @param[in] w_row current row in window
