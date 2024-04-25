@@ -253,13 +253,13 @@ bool TestBypass(sycl::queue q, bool print_debug_info) {
       103, 203, 303, 403, 503, 603, 703, 803};
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_in, print_debug_messages);
+      q, rows_small, cols_small, grey_pixels_in);
 
   // add extra pixels to flush out the FIFO after all image frames
   // have been added
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummy_pixels, (uint16_t)15, print_debug_messages);
+      q, dummy_pixels, (uint16_t)15);
 
   // enable bypass
   BypassCSR::write(q, true);
