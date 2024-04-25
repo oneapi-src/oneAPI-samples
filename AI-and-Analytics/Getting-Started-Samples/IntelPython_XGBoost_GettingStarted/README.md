@@ -22,6 +22,8 @@ In this code sample, you will learn how to use Intel optimizations for XGBoost p
 | Hardware                | Intel Atom® Processors <br> Intel® Core™ Processor Family <br> Intel® Xeon® Processor Family <br> Intel® Xeon® Scalable processor family
 | Software                | XGBoost* 
 
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
+
 ## Key Implementation Details
 
 - This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
@@ -61,7 +63,7 @@ source <custom_path>/bin/activate
 ```
 2. Activate the Conda environment:
 ```
-conda activate xgboost
+conda activate base
 ``` 
 3. Clone the GitHub repository:
 ``` 
@@ -82,7 +84,7 @@ jupyter notebook --ip=0.0.0.0
 IntelPython_XGBoost_GettingStarted.ipynb
 ```
 
-7. Change the kernel to xgboost
+7. Change the kernel to base
   
 8. Run every cell in the Notebook in sequence.
 
