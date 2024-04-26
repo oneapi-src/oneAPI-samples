@@ -99,6 +99,8 @@ flowchart LR
 | [printf](Tutorials/Features/printf)                                                                                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns)                                     | How to declare and use `printf` in program
 | [invocation_interfaces](Tutorials/Features/hls_flow_interfaces/invocation_interfaces)                                     | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to specify the kernel invocation interface and kernel argument interfaces
 | [streaming_data_interfaces](Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces)                             | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to use pipes to implement streaming data interfaces on an IP component
+| [task_sequences_parallel_loops](Tutorials/Features/experimental/task_sequences_parallel_loops)                             | [Tutorials/Features](Tutorials/Features) | How to use task sequences to describe multiple parallel loops in a single kernel
+
 
 
 #### Tier 3: Explore the Advanced Techniques

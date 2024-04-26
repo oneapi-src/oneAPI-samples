@@ -10,7 +10,7 @@ endif()
 
 cmake_minimum_required (VERSION 3.7.2)
 
-project(qrd CXX)
+project(task_sequence CXX)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -19,8 +19,18 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-set(SOURCE_FILES src/qrd_demo.cpp)
-set(TARGET_NAME qrd)
+
+# This logic selects which version of the design to compile.
+if(${TYPE} MATCHES NAIVE)
+    set(SOURCE_FILES naive/src/main.cpp)
+    set(TARGET_NAME naive)
+elseif(${TYPE} MATCHES TASK_SEQUENCE)
+    set(SOURCE_FILES task_sequence/src/main.cpp)
+    set(TARGET_NAME task_sequences)
+else()
+    message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
+Valid types -DTYPE=[ NAIVE / TASK_SEQUENCE ]")
+endif()
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device.
@@ -35,113 +45,24 @@ if(NOT DEFINED FPGA_DEVICE)
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family target: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")
-    set(DEVICE_FLAG "Agilex7")
-    set(BSP_FLAG "")
-else()
-    message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
-
-    string(TOLOWER ${FPGA_DEVICE} FPGA_DEVICE_NAME)
-    if(FPGA_DEVICE_NAME MATCHES ".*a10.*" OR FPGA_DEVICE_NAME MATCHES ".*arria10.*")
-      set(DEVICE_FLAG "A10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
-      set(DEVICE_FLAG "S10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
-      set(DEVICE_FLAG "Agilex7")
-    endif()
-
-    # Check if the target is a BSP
-    if(IS_BSP MATCHES "1")
-        set(BSP_FLAG "-DIS_BSP")
-    else()
-        set(BSP_FLAG "")
-        message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so the IS_BSP macro will not be passed to your C++ code.")
-        message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1 to pass the IS_BSP macro to your C++ code.")
-    endif()
 endif()
-
-if(NOT DEFINED DEVICE_FLAG)
-    message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10 or \
-                         -DDEVICE_FLAG=Agilex7.")
-endif()
-
-# Platform specific flags
-if(WIN32)
-    set(EXTRA_EMULATOR_COMPILE_FLAGS "-fp:precise")
-    set(STACK_FLAG "-F 12582912")
-else()
-    # Prevent ignoring NaN values
-    set(EXTRA_COMPILE_FLAG "-fno-finite-math-only")
-endif()
-
-if(DEVICE_FLAG MATCHES "A10")
-    # A10 parameters
-    set(ROWS_COMPONENT 128)
-    set(COLS_COMPONENT 128)
-    set(COMPLEX 1)
-    set(FIXED_ITERATIONS 64)
-    set(CLOCK_TARGET "-Xsclock=360MHz")
-    set(SEED "-Xsseed=1")
-elseif(DEVICE_FLAG MATCHES "S10")
-    # S10 parameters
-    set(ROWS_COMPONENT 256)
-    set(COLS_COMPONENT 256)
-    set(COMPLEX 1)
-    set(FIXED_ITERATIONS 110)
-    set(CLOCK_TARGET "-Xsclock=480MHz")
-    set(SEED "-Xsseed=3")
-elseif(DEVICE_FLAG MATCHES "Agilex7")
-    # Agilex 7 parameters
-    set(ROWS_COMPONENT 256)
-    set(COLS_COMPONENT 256)
-    set(FIXED_ITERATIONS 110)
-    set(COMPLEX 1)
-    set(CLOCK_TARGET "-Xsclock=600MHz")
-    set(SEED "-Xsseed=5")
-else()
-    message(FATAL_ERROR "Unreachable")
-endif()
-
-if(IGNORE_DEFAULT_SEED)
-    set(SEED "")
-endif()
-
-if(DEFINED SET_ROWS_COMPONENT)
-    set(ROWS_COMPONENT ${SET_ROWS_COMPONENT})
-endif()
-
-if(DEFINED SET_COLS_COMPONENT)
-    set(COLS_COMPONENT ${SET_COLS_COMPONENT})
-endif()
-
-if(DEFINED SET_COMPLEX)
-    set(COMPLEX ${SET_COMPLEX})
-endif()
-
-if(DEFINED SET_FIXED_ITERATIONS)
-    set(FIXED_ITERATIONS ${SET_FIXED_ITERATIONS})
-endif()
-
-message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")
-message(STATUS "COLS_COMPONENT=${COLS_COMPONENT}")
-message(STATUS "COMPLEX=${COMPLEX}")
-message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
-message(STATUS "SEED=${SEED}")
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${CLOCK_TARGET})
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAG};-fbracket-depth=512;${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX};-DROWS_COMPONENT=${ROWS_COMPONENT};-DCOLS_COMPONENT=${COLS_COMPONENT})
+set(USER_FLAGS ${USER_FLAGS})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
-set(USER_INCLUDE_PATHS ../../include;${USER_INCLUDE_PATHS})
+set(USER_INCLUDE_PATHS ../../../../include;${USER_INCLUDE_PATHS})
 
 ###############################################################################
 ### no changes after here
 ###############################################################################
+
+# Print the sources being used for the compiles
 
 # Set the names of the makefile targets to be generated by cmake
 set(EMULATOR_TARGET fpga_emu)
@@ -201,14 +122,14 @@ set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 #    representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR ${DEBUG_FLAGS} ${EXTRA_EMULATOR_COMPILE_FLAGS})
-set(EMULATOR_LINK_FLAGS ${STACK_FLAG})
+set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR ${DEBUG_FLAGS})
+set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
-set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} ${STACK_FLAG} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
+set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl=0 -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} ${STACK_FLAG} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
 
 ###############################################################################
 ### FPGA Emulator
