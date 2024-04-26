@@ -112,6 +112,10 @@ else()
 endif()
 
 
+if(WIN32)
+    set(EXT ".exe")
+endif()
+
 set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 

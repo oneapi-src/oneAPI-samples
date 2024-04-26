@@ -101,6 +101,10 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
+if(WIN32)
+    set(EXT ".exe")
+endif()
+
 set(COMMON_COMPILE_FLAGS -fintelfpga -Wformat-security -Werror=format-security -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
