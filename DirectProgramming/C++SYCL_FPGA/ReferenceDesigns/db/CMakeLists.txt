@@ -374,7 +374,7 @@ getCompileCommands("${COMMON_COMPILE_FLAGS}" "${EMULATOR_COMPILE_FLAGS}" "${COMM
 
 add_custom_target(  displayEmulationCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
+                    COMMENT "\nTo compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${EMULATOR_TARGET} displayEmulationCompileCommands)
 
 # Display the compile instructions in the simulation flow
@@ -382,7 +382,7 @@ getCompileCommands("${COMMON_COMPILE_FLAGS}" "${SIMULATOR_COMPILE_FLAGS}" "${COM
 
 add_custom_target(  displaySimulationCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
+                    COMMENT "\nTo compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${SIMULATOR_TARGET} displaySimulationCompileCommands)
 
 # Display the compile instructions in the report flow
@@ -390,7 +390,7 @@ getCompileCommands("${COMMON_COMPILE_FLAGS}" "${REPORT_COMPILE_FLAGS}" "${MODIFI
 
 add_custom_target(  displayReportCompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
+                    COMMENT "\nTo compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${REPORT_TARGET} displayReportCompileCommands)
 
 # Display the compile instructions in the fpga flow
@@ -398,5 +398,5 @@ getCompileCommands("${COMMON_COMPILE_FLAGS}" "${FPGA_COMPILE_FLAGS}" "${COMMON_L
 
 add_custom_target(  displayFPGACompileCommands
                     ${CMAKE_COMMAND} -E cmake_echo_color --cyan ""
-                    COMMENT "To compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
+                    COMMENT "\nTo compile manually:\n${COMPILE_COMMAND}\nTo link manually:\n${LINK_COMMAND}")
 add_dependencies(${FPGA_TARGET} displayFPGACompileCommands)
