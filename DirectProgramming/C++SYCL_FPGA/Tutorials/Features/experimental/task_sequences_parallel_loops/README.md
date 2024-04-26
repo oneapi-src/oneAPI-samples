@@ -10,7 +10,7 @@ This sample is an FPGA tutorial that demonstrates how to use task sequences to d
 
 ## Purpose
 
-Task sequences enable operations that called 'task functions' to run asynchronously from the main flow of a kernel. Including multiple task sequences in the same kernel expresses coarse-grained thread-level parallelism, such as executing loops in parallel. This tutorial shows you how to use task sequences to execute a sequence of loops in parallel, and how it can improve your design's performance.
+Task sequences enable function calls to run asynchronously from the main flow of a kernel. Functions called asynchronously like this are referred to as 'task functions'. Including multiple task sequences in the same kernel expresses coarse-grained thread-level parallelism, such as executing loops in parallel. This tutorial shows you how to use task sequences to execute a sequence of loops in parallel, and how it can improve your design's performance.
 
 ## Prerequisites
 
