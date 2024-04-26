@@ -218,7 +218,7 @@ You can see an example of a kernel that naively uses four sequential loops in `n
 The 2 different example designs in this sample perform similar operations. You may compare the C++ source files to see the code changes that are necessary to convert a design to use task sequences instead of sequential loops.
 
 1. [Naive](naive/src/main.cpp) This implementation contains sequential loops. Arrays are used to pass data between the loops.
-2. [Task sequence](task_sequence/main.cpp) This implementation uses task sequences to schedule loops to run concurrently. Pipes are used to pass data between the loops.
+2. [Task sequence](task_sequence/src/main.cpp) This implementation uses task sequences to schedule loops to run concurrently. Pipes are used to pass data between the loops.
 
 ## Build a Design
 >**Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script in the root of your oneAPI installation every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
