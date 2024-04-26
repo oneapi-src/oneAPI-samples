@@ -68,7 +68,7 @@ endif()
 # Platform specific flags
 if(WIN32)
     set(EXTRA_EMULATOR_COMPILE_FLAGS "-fp:precise")
-    set(STACK_FLAG "/F 12582912")
+    set(STACK_FLAG "-F 12582912")
 else()
     # Prevent ignoring NaN values
     set(EXTRA_COMPILE_FLAG "-fno-finite-math-only")

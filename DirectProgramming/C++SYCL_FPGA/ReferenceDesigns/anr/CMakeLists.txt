@@ -66,7 +66,7 @@ endif()
 # Increase the allowable constexpr steps for the front end. This allows the
 #  front-end compiler to do more compile-time computation.
 if(WIN32)
-    set(CONSTEXPR_STEPS "/constexpr:steps5084968")
+    set(CONSTEXPR_STEPS "-constexpr:steps5084968")
 else()
     set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 endif()
