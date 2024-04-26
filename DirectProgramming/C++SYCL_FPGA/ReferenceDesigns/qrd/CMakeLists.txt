@@ -133,7 +133,7 @@ message(STATUS "SEED=${SEED}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAG};${STACK_FLAG};-fbracket-depth=512;${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX};-DROWS_COMPONENT=${ROWS_COMPONENT};-DCOLS_COMPONENT=${COLS_COMPONENT})
+set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAG};-fbracket-depth=512;${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX};-DROWS_COMPONENT=${ROWS_COMPONENT};-DCOLS_COMPONENT=${COLS_COMPONENT})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
@@ -202,13 +202,13 @@ set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 # 2. The "link" stage invokes the compiler's FPGA backend before linking. For
 #    this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS -DFPGA_EMULATOR ${DEBUG_FLAGS} ${EXTRA_EMULATOR_COMPILE_FLAGS})
-set(EMULATOR_LINK_FLAGS )
+set(EMULATOR_LINK_FLAGS ${STACK_FLAG})
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
-set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
+set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} ${STACK_FLAG} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} ${STACK_FLAG} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
 
 ###############################################################################
 ### FPGA Emulator
