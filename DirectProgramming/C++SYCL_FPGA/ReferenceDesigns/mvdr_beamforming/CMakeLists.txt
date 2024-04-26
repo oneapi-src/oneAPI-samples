@@ -233,7 +233,7 @@ target_link_libraries(${UDP_LOOPBACK_TARGET} ${FPGA_LINK_FLAGS})
 
 
 ###############################################################################
-### This part only manipulates cmake variables to print the commands to the user
+### This part only manipulates cmake variables to print the commands cmake is expected to run to the user
 ###############################################################################
 
 # set the correct object file extension depending on the target platform

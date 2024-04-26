@@ -267,7 +267,7 @@ target_link_libraries(${FPGA_TARGET} ${FPGA_LINK_FLAGS})
 set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
 
 ###############################################################################
-### This part only manipulates cmake variables to print the commands to the user
+### This part only manipulates cmake variables to print the commands cmake is expected to run to the user
 ###############################################################################
 
 # set the correct object file extension depending on the target platform
