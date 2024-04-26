@@ -251,7 +251,7 @@ The 2 different example designs in this sample perform similar operations. You m
    
    > **Note**: You can override the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<NAIVE/TASK_SEQUENCE>
+   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number> -DTYPE=<NAIVE|TASK_SEQUENCE>
    >  ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)
