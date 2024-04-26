@@ -96,7 +96,7 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR ${DEBUG_FLAGS}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM}")
 set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${WIN_FLAG} -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_SIMULATOR")
 set(SIMULATOR_LINK_FLAGS "-fintelfpga -Wall -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS} ${AC_TYPES_FLAG} -Xssimulation -Xsghdl")
@@ -109,9 +109,9 @@ set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fintelfpga -fbracket-depth=512 -qactypes -DFPGA_EMULATOR mvdr_beamforming.cpp -o mvdr_beamforming.fpga_emu
+#    icpx -fintelfpga -fbracket-depth=512 -qactypes -DFPGA_EMULATOR ${DEBUG_FLAGS} mvdr_beamforming.cpp -o mvdr_beamforming.fpga_emu
 # CMake executes:
-#    [compile] icpx -fintelfpga -DFPGA_EMULATOR -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp
+#    [compile] icpx -fintelfpga -DFPGA_EMULATOR ${DEBUG_FLAGS} -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp
 #    [link]    icpx -fintelfpga mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../include)
