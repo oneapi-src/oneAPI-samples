@@ -34,7 +34,7 @@ if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family target: ${FPGA_DEVICE}\
-                    \nPlease refer to the README for information on target selection.")n.")
+                    \nPlease refer to the README for information on target selection.")
 else()
     message(STATUS "Configuring the design with the following target: ${FPGA_DEVICE}")
 endif()
@@ -167,7 +167,7 @@ target_link_libraries(${FPGA_TARGET} ${FPGA_LINK_FLAGS})
 set_target_properties(${FPGA_TARGET} PROPERTIES OUTPUT_NAME ${FPGA_OUTPUT_NAME})
 
 ###############################################################################
-### This part only manipulates cmake variables to print the commands cmake is expected to run to the user
+### This part only manipulates cmake variables to print the commands to the user
 ###############################################################################
 
 # set the correct object file extension depending on the target platform
