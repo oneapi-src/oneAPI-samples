@@ -281,7 +281,7 @@ The 2 different example designs in this sample perform similar operations. You m
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" .. -DTYPE=<NAIVE/TASK_SEQUENCE>
+   cmake -G "NMake Makefiles" .. -DTYPE=<NAIVE|TASK_SEQUENCE>
    ```
    >Use the appropriate `TYPE` parameter when running CMake to choose which design to compile:
    >| Example                                      | Directory             | Type (-DTYPE=) |
