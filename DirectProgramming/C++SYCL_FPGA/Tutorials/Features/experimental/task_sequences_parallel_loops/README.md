@@ -318,7 +318,7 @@ The 2 different example designs in this sample perform similar operations. You m
 
 Locate `report.html` in the `naive.report.prj/reports/` and `task_sequences.report.prj/reports/` directory.
 
-Navigate to **Loop Analysis** (Throughput Analysis > Loop Analysis). In this view, you can see the kernel system on the Loop List Panel. Here, you can verify that there is only 1 kernel with seqeuntial loop in the `naive` version while there are 4 kernels containing the parallel loops in the `task_sequence` version. 
+Navigate to **Loop Analysis** (Throughput Analysis > Loop Analysis). In this view, you can see the kernel system on the Loop List panel. Here, you can verify that there is only 1 kernel with seqeuntial loops in the `naive` version while there are 4 kernels containing the parallel loops in the `task_sequence` version. 
 
 > **Note**: It is possible for loops to be fused by the compiler. For more information on loop fusion, see [loop_fusion](../../loop_fusion) tutorial
 
