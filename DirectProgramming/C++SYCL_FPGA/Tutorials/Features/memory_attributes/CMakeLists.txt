@@ -104,11 +104,23 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
+string(TOLOWER "${CMAKE_BUILD_TYPE}" LOWER_BUILD_TYPE)
+if(LOWER_BUILD_TYPE MATCHES debug)
+# Set debug flags
+    if(WIN32)
+        set(DEBUG_FLAGS /DEBUG /Od)
+    else()
+        set(DEBUG_FLAGS -g -O0)
+    endif()
+else()
+    set(DEBUG_FLAGS "")
+endif()
+
 if(WIN32)
     set(EXT ".exe")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS})
+set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS})
 set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.

@@ -105,7 +105,6 @@ else()
     set(QACTYPES "-qactypes")
 endif()
 
-
 # Check if the target is a BSP
 if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*pac_a10.*|.*pac_s10.*")
     set(BSP_FLAG "-DIS_BSP")
@@ -115,11 +114,23 @@ else()
     message(STATUS "If the target is actually a BSP, run cmake with -DIS_BSP=1 to pass the IS_BSP macro to your C++ code.")
 endif()
 
+string(TOLOWER "${CMAKE_BUILD_TYPE}" LOWER_BUILD_TYPE)
+if(LOWER_BUILD_TYPE MATCHES debug)
+# Set debug flags
+    if(WIN32)
+        set(DEBUG_FLAGS /DEBUG /Od)
+    else()
+        set(DEBUG_FLAGS -g -O0)
+    endif()
+else()
+    set(DEBUG_FLAGS "")
+endif()
+
 if(WIN32)
     set(EXT ".exe")
 endif()
 
-set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG})
+set(COMMON_COMPILE_FLAGS -fintelfpga -Wall ${WIN_FLAG} ${DEBUG_FLAGS} ${QACTYPES} ${USER_FLAGS} ${BSP_FLAG})
 set(COMMON_LINK_FLAGS -fintelfpga ${QACTYPES} ${USER_FLAGS})
 
 # A SYCL ahead-of-time (AoT) compile processes the device code in two stages.
