@@ -134,9 +134,9 @@ set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE -D${DEVICE_FLAG})
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -D${DEVICE_FLAG} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR -D${DEVICE_FLAG})
-set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME})
+set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE -D${DEVICE_FLAG})
-set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME})
+set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} -D${DEVICE_FLAG} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
 
 ###############################################################################
 ### FPGA Emulator
