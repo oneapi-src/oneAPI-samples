@@ -67,7 +67,7 @@ endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
-    set(PRECISE_FLAG "/fp:precise")
+    set(PRECISE_FLAG "-fp:precise")
 else()
     set(PRECISE_FLAG "-fp-model=precise")
     # Prevent ignoring NaN values

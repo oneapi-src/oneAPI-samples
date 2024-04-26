@@ -65,7 +65,7 @@ endif()
 
 # Prevent ignoring NaN values
 if(WIN32)
-    set(EMULATOR_PLATFORM_FLAGS /fp:precise)
+    set(EMULATOR_PLATFORM_FLAGS -fp:precise)
 else()
     set(EXTRA_COMPILE_FLAG -fno-finite-math-only)
 endif()
