@@ -1,4 +1,4 @@
-# `Task Sequences (Parallel Loops)` Sample
+# `Parallel Loops` Sample
 
 This sample is an FPGA tutorial that demonstrates how to use task sequences to describe multiple parallel loops in a single kernel.
 
@@ -60,10 +60,6 @@ This sample demonstrates some key concepts:
 
 The demonstration system in this tutorial is explained in the following diagram. The code contains a sequence of loops that communicate through arrays (for example Loop A communicates to loop B through `array_a_b`). The compiler will schedule these loops such that a producer loop must completely finish executing before its corresponding consumer loop can begin, as shown in the following simulation waveforms. You can improve performance by placing each loop in a `task_sequence` and joining the task sequences with pipes instead of arrays. This allows the compiler to schedule the loops to run in parallel.
 
-<table>
-<tr>
-<td>
-
 ```c++
 struct NaiveKernel {
   int len;
@@ -111,14 +107,7 @@ struct NaiveKernel {
 };
 ```
 
-</td>
-
-<td>
-   <img src="assets/LoopStructure.svg" />
-</td>
-
-</tr>
-</table>
+<img src="assets/LoopStructure.svg" />
 
 The behavior of the naive implementation using a sequence of loops is compared with an implementation using task sequences to schedule the loops to run in parallel below. 
 
