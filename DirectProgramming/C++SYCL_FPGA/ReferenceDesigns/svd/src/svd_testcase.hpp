@@ -17,14 +17,15 @@
 // SVDTestcase<typeT, rows, cols> new_testcase(
 //     std::vector<std::vector<float>>{ ... } 
 //     std::vector<float>{ ... });
-template <typename T, unsigned rows_A, unsigned cols_A>
+template <typename T, unsigned rows_A, unsigned cols_A, 
+        unsigned matrix_count>
 struct SVDTestcase {
-  std::vector<std::vector<T>> input_A;
-  std::vector<T> output_S;
-  T S_error;
-  T A_error;
-  T U_orthogonal_error;
-  T V_orthogonal_error;
+  std::vector<std::vector<std::vector<T>>> input_A;
+  std::vector<std::vector<T>> output_S;
+  T S_error = 0;
+  T A_error = 0;
+  T U_orthogonal_error = 0;
+  T V_orthogonal_error = 0;
   double delta_time;
   double throughput;
 
@@ -34,43 +35,54 @@ struct SVDTestcase {
   }
 
   // constructor takes the input matrix vector and 1D vector of all the singular values (sorted)
-  SVDTestcase(std::vector<std::vector<T>> A, std::vector<T> S)
-      : input_A(A), output_S(S) {}
+  SVDTestcase(std::vector<std::vector<T>> A, std::vector<T> S) {
+    input_A.push_back(A);
+    output_S.push_back(S);
+  }
 
-  std::vector<T> col_major_A() {
+  std::vector<T> ColMajorA() {
     std::vector<T> flat_A;
-
-    for (int col = 0; col < cols_A; col++) {
-      for (int row = 0; row < rows_A; row++) {
-        flat_A.push_back(input_A[row][col]);
+    for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+      for (int col = 0; col < cols_A; col++) {
+        for (int row = 0; row < rows_A; row++) {
+          flat_A.push_back(input_A[mat_idx][row][col]);
+        }
       }
     }
     return flat_A;
   }
 
   void GenerateInput(T min, T max) {
-    // generate a rank sufficient input matrix
-    while (true) {
-      svd_testbench_tool::GenMatrix<T>(
-          input_A, rows_A, cols_A, min, max);
-      if (!svd_testbench_tool::IsRankDeficient<float>(input_A)) break;
-    }
-    // get eigens of the input using Golden PCA
-    GoldenPCA<T> pca(rows_A, cols_A, 1, false, true, input_A);
-    pca.computeCovarianceMatrix();
-    pca.computeEigenValuesAndVectors();
+    input_A.resize(matrix_count);
+    output_S.resize(matrix_count);
+    for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+      // generate a rank sufficient input matrix
+      while (true) {
+        svd_testbench_tool::GenMatrix<T>(
+            input_A[mat_idx], rows_A, cols_A, min, max);
+        if (!svd_testbench_tool::IsRankDeficient<float>(input_A[mat_idx])) break;
+      }
+      // get eigens of the input using Golden PCA
+      GoldenPCA<T> pca(rows_A, cols_A, 1, false, true, input_A[mat_idx]);
+      pca.computeCovarianceMatrix();
+      pca.computeEigenValuesAndVectors();
 
-    // fill output S with sqrt(eigen values)
-    for (int i = 0; i < cols_A; i ++) {
-      output_S.push_back(std::sqrt(pca.eigen_values[i]));
+      // fill output S with sqrt(eigen values)
+      for (int i = 0; i < cols_A; i ++) {
+        output_S[mat_idx].push_back(std::sqrt(pca.eigen_values[i]));
+      }
     }
   }
 
   std::vector<T> ExtractSingularValue(std::vector<T> mat_S) {
     std::vector<T> singular_value;
     constexpr int kSingularValueSize = rows_A < cols_A ? rows_A : cols_A;
-    for (int i = 0; i < kSingularValueSize; i++) {
-      singular_value.push_back(mat_S[i * rows_A + i]);
+    for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+      for (int i = 0; i < kSingularValueSize; i++) {
+        // extract diagonals from each S matrix
+        singular_value.push_back(
+            mat_S[mat_idx * rows_A * cols_A + i * rows_A + i]);
+      }
     }
     return singular_value;
   }
@@ -78,43 +90,55 @@ struct SVDTestcase {
   T CompareS(std::vector<T> input_vec) {
     T max_diff = 0.0;
     // in case singular values are not sorted
-    std::sort(std::begin(input_vec), std::end(input_vec), std::greater<>());
-    for (int i = 0; i < output_S.size(); i++) {
-      T cur_diff = abs(input_vec[i] - output_S[i]);
-      if (cur_diff > max_diff) max_diff = cur_diff;
+    for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+      for (int i = 0; i < output_S[0].size(); i++) {
+        T cur_diff = abs(input_vec[mat_idx * output_S[0].size() + i] 
+            - output_S[mat_idx][i]);
+        if (cur_diff > max_diff) max_diff = cur_diff;
+      }
     }
     S_error = max_diff;
     return max_diff;
   }
 
   T CheckUSV(std::vector<T> flat_A, std::vector<T> flat_U,
-              std::vector<T> flat_S, std::vector<T> flat_V) {
+              std::vector<T> flat_S, std::vector<T> flat_V, int idx) {
+    // get the current matrices
+    std::vector<T> current_A = 
+      svd_testbench_tool::subMatrix(flat_A, idx, rows_A, cols_A);
+    std::vector<T> current_U = 
+      svd_testbench_tool::subMatrix(flat_U, idx, rows_A, rows_A);
+    std::vector<T> current_S = 
+      svd_testbench_tool::subMatrix(flat_S, idx, rows_A, cols_A);
+    std::vector<T> current_V = 
+      svd_testbench_tool::subMatrix(flat_V, idx, cols_A, cols_A);
     // U @ S
     std::vector<T> US(rows_A * cols_A, 0);
-    svd_testbench_tool::SoftMatmult<T>(flat_U, rows_A, rows_A, flat_S, rows_A,
+    svd_testbench_tool::SoftMatmult<T>(current_U, rows_A, rows_A, current_S, rows_A,
                                         cols_A, US);
     // transpose to get Vt
     std::vector<T> Vt(cols_A * cols_A, 0);
-    svd_testbench_tool::SoftTranspose<T>(flat_V, cols_A, cols_A, Vt);
+    svd_testbench_tool::SoftTranspose<T>(current_V, cols_A, cols_A, Vt);
     // US @ Vt
     std::vector<T> USV(rows_A * cols_A, 0);
     svd_testbench_tool::SoftMatmult<T>(US, rows_A, cols_A, Vt, cols_A, cols_A,
                                         USV);
     T max_diff = 0.0;
     for (int i = 0; i < (rows_A * cols_A); i++) {
-      T cur_diff = abs(USV[i] - flat_A[i]);
+      T cur_diff = abs(USV[i] - current_A[i]);
       if (cur_diff > max_diff) max_diff = cur_diff;
     }
-    A_error = max_diff;
+    A_error = std::max(max_diff, A_error);
     return max_diff;
   }
 
-  T CheckOrthogonal(std::vector<T> flat_mat, unsigned rows, unsigned cols) {
+  T CheckOrthogonal(std::vector<T> flat_mat, unsigned rows, unsigned cols, int idx) {
+    std::vector<T> current_mat = svd_testbench_tool::subMatrix(flat_mat, idx, rows, cols);
     // check mat @ mat transpose == identity
     std::vector<T> mat_t(cols * rows, 0);
     std::vector<T> mat_i(rows * rows, 0);
-    svd_testbench_tool::SoftTranspose<T>(flat_mat, rows, cols, mat_t);
-    svd_testbench_tool::SoftMatmult<T>(flat_mat, rows, cols, mat_t, cols, rows,
+    svd_testbench_tool::SoftTranspose<T>(current_mat, rows, cols, mat_t);
+    svd_testbench_tool::SoftMatmult<T>(current_mat, rows, cols, mat_t, cols, rows,
                                         mat_i);
     T max_diff = 0.0;
     for (int i = 0; i < (rows * rows); i++) {
@@ -136,10 +160,10 @@ struct SVDTestcase {
   template <unsigned k_fixed_iteration = FIXED_ITERATIONS,
             unsigned k_raw_latency = 110, int k_zero_threshold_1e = -8>
   T RunTest(sycl::queue q, int benchmark_rep = 1, bool print_matrices = false) {
-    std::vector<T> flat_A = col_major_A();
-    std::vector<T> flat_U(rows_A * rows_A);
-    std::vector<T> flat_S(rows_A * cols_A);
-    std::vector<T> flat_V(cols_A * cols_A);
+    std::vector<T> flat_A = ColMajorA();
+    std::vector<T> flat_U(matrix_count * rows_A * rows_A);
+    std::vector<T> flat_S(matrix_count * rows_A * cols_A);
+    std::vector<T> flat_V(matrix_count * cols_A * cols_A);
     std::vector<ac_int<1, false>> rank_deficient(1);
 
     std::cout << "Running SVD test with input size " << rows_A << " x "
@@ -149,15 +173,17 @@ struct SVDTestcase {
     delta_time =
         SingularValueDecomposition<rows_A, cols_A, k_fixed_iteration,
                                    k_raw_latency, k_zero_threshold_1e, T>(
-            flat_A, flat_U, flat_S, flat_V, rank_deficient, q, 1, benchmark_rep);
+            flat_A, flat_U, flat_S, flat_V, rank_deficient, 
+            q, matrix_count, benchmark_rep);
 
-    throughput = (benchmark_rep / delta_time);
+    throughput = (matrix_count * benchmark_rep / delta_time);
 
     CompareS(ExtractSingularValue(flat_S));
-
-    A_error = CheckUSV(flat_A, flat_U, flat_S, flat_V);
-    U_orthogonal_error = CheckOrthogonal(flat_U, rows_A, rows_A);
-    V_orthogonal_error = CheckOrthogonal(flat_V, cols_A, cols_A);
+    for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+      CheckUSV(flat_A, flat_U, flat_S, flat_V, mat_idx);
+      U_orthogonal_error = CheckOrthogonal(flat_U, rows_A, rows_A, mat_idx);
+      V_orthogonal_error = CheckOrthogonal(flat_V, cols_A, cols_A, mat_idx);
+    }
 
     if (print_matrices) {
       std::cout << "S:\n";

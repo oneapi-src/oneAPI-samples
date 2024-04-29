@@ -99,19 +99,19 @@ double SingularValueDecomposition(
   if (q.get_device().has(sycl::aspect::usm_device_allocations)) {
     std::cout << "Using device allocations" << std::endl;
     // Allocate FPGA DDR memory.
-    input_matrix_device = sycl::malloc_device<T>(kInputMatrixSize, q);
-    rank_deficient_flag_device = sycl::malloc_device<ac_int<1, false>>(1, q);
-    u_matrix_device = sycl::malloc_device<T>(kUMatrixSize, q);
-    s_matrix_device = sycl::malloc_device<T>(kInputMatrixSize, q);
-    v_matrix_device = sycl::malloc_device<T>(kEigenVectorsMatrixSize, q);
+    input_matrix_device = sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
+    rank_deficient_flag_device = sycl::malloc_device<ac_int<1, false>>(1 * matrix_count, q);
+    u_matrix_device = sycl::malloc_device<T>(kUMatrixSize * matrix_count, q);
+    s_matrix_device = sycl::malloc_device<T>(kInputMatrixSize * matrix_count, q);
+    v_matrix_device = sycl::malloc_device<T>(kEigenVectorsMatrixSize * matrix_count, q);
   } else if (q.get_device().has(sycl::aspect::usm_shared_allocations)) {
     std::cout << "Using shared allocations" << std::endl;
     // No device allocation support, using shared allocation instead 
-    input_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize, q);
-    rank_deficient_flag_device = sycl::malloc_shared<ac_int<1, false>>(1, q);
-    u_matrix_device = sycl::malloc_shared<T>(kUMatrixSize, q);
-    s_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize, q);
-    v_matrix_device = sycl::malloc_shared<T>(kEigenVectorsMatrixSize, q);
+    input_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize * matrix_count, q);
+    rank_deficient_flag_device = sycl::malloc_shared<ac_int<1, false>>(1 * matrix_count, q);
+    u_matrix_device = sycl::malloc_shared<T>(kUMatrixSize * matrix_count, q);
+    s_matrix_device = sycl::malloc_shared<T>(kInputMatrixSize * matrix_count, q);
+    v_matrix_device = sycl::malloc_shared<T>(kEigenVectorsMatrixSize * matrix_count, q);
   } else {
     std::cerr << "USM device allocations or USM shared allocations must be "
                  "supported to run this sample."
@@ -143,7 +143,7 @@ double SingularValueDecomposition(
 
   // copy input matrix to memory that the device can access
   q.memcpy(input_matrix_device, a_matrix.data(),
-           kInputMatrixSize * sizeof(float))
+           matrix_count * kInputMatrixSize * sizeof(float))
       .wait();
 
   // read input matrix from DDR
@@ -186,7 +186,7 @@ double SingularValueDecomposition(
       q.single_task<IDRankDeficientFlagFromLocalMemToDDR>(
           [=]() [[intel::kernel_args_restrict]] {
             VectorReadPipeToDDR<ac_int<1, false>, 1, RankDeficientFlagPipe>(
-                rank_deficient_flag_device, 1, repetitions);
+                rank_deficient_flag_device, matrix_count, repetitions);
           });
 
   // terminating R matrix pipe from the orthogonalizing kernel
@@ -195,11 +195,13 @@ double SingularValueDecomposition(
   q.single_task<IDRMatrixPipeTerminate>(
       [=]() [[intel::kernel_args_restrict]] {
         T r_sum = 0.0;
-        for (int rep = 0; rep < repetitions; rep++) {
-          for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
-            r_sum += RMatrixPipe::read();
-          }  // end of r_idx
-        }    // end of rep
+        for (int mat_idx = 0; mat_idx < matrix_count; mat_idx ++) {
+          for (int rep = 0; rep < repetitions; rep++) {
+            for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
+              r_sum += RMatrixPipe::read();
+            }  // end of r_idx
+          }    // end of rep
+        }
       });
 
   // collecting U matrix from pipe into DDR
@@ -238,15 +240,15 @@ double SingularValueDecomposition(
   // Copy outputs from the FPGA DDR
 
   q.memcpy(rank_deficient_flag.data(), rank_deficient_flag_device,
-           1 * sizeof(ac_int<1, false>))
+           matrix_count * sizeof(ac_int<1, false>))
       .wait();
-  q.memcpy(u_matrix.data(), u_matrix_device, kUMatrixSize * 1 * sizeof(float))
+  q.memcpy(u_matrix.data(), u_matrix_device, kUMatrixSize * matrix_count * sizeof(float))
       .wait();
   q.memcpy(s_matrix.data(), s_matrix_device,
-           kInputMatrixSize * 1 * sizeof(float))
+           kInputMatrixSize * matrix_count * sizeof(float))
       .wait();
   q.memcpy(v_matrix.data(), v_matrix_device,
-           kEigenVectorsMatrixSize * 1 * sizeof(float))
+           kEigenVectorsMatrixSize * matrix_count * sizeof(float))
       .wait();
 
   // free all the usm buffers

@@ -7,7 +7,7 @@
 #include "svd_testcase.hpp"
 
 // clang-format off
-SVDTestcase<float, 4, 4> small_4x4(
+SVDTestcase<float, 4, 4, 1> small_4x4(
     std::vector<std::vector<float>>{
         {0.47084338, 0.99594452, 0.47982739, 0.69202168},
         {0.45148837, 0.72836647, 0.64691844, 0.62442883},
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     auto test_error = small_4x4.RunTest(q, repetitions);
     small_4x4.PrintResult();
 #else
-    SVDTestcase<float, 32, 32> large_testcase;
+    SVDTestcase<float, 32, 32, 8> large_testcase;
     auto test_error = large_testcase.RunTest(q, repetitions);
     large_testcase.PrintResult();
 #endif

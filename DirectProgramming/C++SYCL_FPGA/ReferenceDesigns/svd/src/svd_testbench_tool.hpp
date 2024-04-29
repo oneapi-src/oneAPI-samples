@@ -170,6 +170,17 @@ void GenMatrix(std::vector<std::vector<T> > &output_mat,
     }
 }
 
+// return a sub matrix of a stream of matrices 
+template <typename T>
+std::vector<T> subMatrix(std::vector<T> &og_matrix, int mat_idx, int rows, int cols) {
+    int mat_size = rows * cols;
+    int start = mat_idx * mat_size;
+    int end = (mat_idx + 1) * mat_size;
+    std::vector<T> sub_matrix(og_matrix.begin() + start,
+                                og_matrix.begin() + end);
+    return sub_matrix;
+}
+
 } // end of name space 
 
 
