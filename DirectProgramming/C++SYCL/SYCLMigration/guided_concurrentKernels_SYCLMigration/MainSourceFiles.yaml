@@ -1,0 +1,406 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          1679
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          1907
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          1962
+    Length:          0
+    ReplacementText: ', const sycl::nd_item<3> &item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          1978
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          1991
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          2004
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          2501
+    Length:          29
+    ReplacementText: 'num_gpus = dpct::dev_mgr::instance().device_count()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          2899
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          2925
+    Length:          34
+    ReplacementText: 'dpct::get_device_info(dprop, dpct::dev_mgr::instance().get_device(i))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          2996
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          4477
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:15: The \"cpu_thread_id %\n        num_gpus\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          4497
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          4553
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          4634
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(gpu_id = dpct::dev_mgr::instance().current_device_id())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5066
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5083
+    Length:          3
+    ReplacementText: 1, 1, 128
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5119
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5135
+    Length:          37
+    ReplacementText: '1, 1, n / (gpu_threads[2] * num_cpu_threads)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5196
+    Length:          44
+    ReplacementText: 'DPCT_CHECK_ERROR(d_a = (int *)sycl::malloc_device(nbytes_per_kernel, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5263
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5300
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5332
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5372
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5397
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5400
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5404
+    Length:          54
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n      sycl::nd_range<3>(gpu_blocks * gpu_threads, gpu_threads), \n      [=](sycl::nd_item<3> item_ct1) {\n        kernelAddConstant(d_a, b, item_ct1);\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5458
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5490
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5530
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5555
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5578
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_a, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5591
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5642
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1010:16: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5648
+    Length:          11
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5663
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5683
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1009:17: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.\n    */\n    /*\n    DPCT1010:18: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Offset:          5702
+    Length:          38
+    ReplacementText: '"<Placeholder string>"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP/cudaOpenMP.cu'
+    Digest:          e442efcce8e8f2464dfb83467e86bff6
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/cudaOpenMP'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

@@ -1,0 +1,289 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          1701
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          1886
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          2135
+    Length:          44
+    ReplacementText: '#include "simpleAtomicIntrinsics_kernel.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          3224
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          3651
+    Length:          32
+    ReplacementText: 'DPCT_CHECK_ERROR(hOData = (int *)sycl::malloc_host(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          3879
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1025:15: The SYCL queue is created ignoring the flag and priority options.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          3897
+    Length:          57
+    ReplacementText: 'DPCT_CHECK_ERROR(stream = dpct::get_current_device().create_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4029
+    Length:          37
+    ReplacementText: 'DPCT_CHECK_ERROR(dOData = (int *)sycl::malloc_device(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4148
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4187
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4211
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4220
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4248
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4250
+    Length:          56
+    ReplacementText: "stream->parallel_for(\n    sycl::nd_range<3>(sycl::range<3>(1, 1, numBlocks) * sycl::range<3>(1, 1, numThreads), sycl::range<3>(1, 1, numThreads)), \n    [=](sycl::nd_item<3> item_ct1) {\n      testKernel(dOData, item_ct1);\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4306
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4371
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4410
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4434
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4443
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4464
+    Length:          29
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4745
+    Length:          20
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(hOData, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4765
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4786
+    Length:          16
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(dOData, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Offset:          4802
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics.cu'
+    Digest:          9bd38821241573c194ea379cba133b4b
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

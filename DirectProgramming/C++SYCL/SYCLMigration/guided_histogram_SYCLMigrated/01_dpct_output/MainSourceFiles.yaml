@@ -1,0 +1,1319 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          1642
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          1675
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2017
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2090
+    Length:          31
+    ReplacementText: 'dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(s_WarpHist + data, 1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2133
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2399
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2524
+    Length:          0
+    ReplacementText: ",\n                                   const sycl::nd_item<3> &item_ct1,\n                                   uint *s_Hist"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2564
+    Length:          16
+    ReplacementText: 'sycl::group<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2587
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2649
+    Length:          56
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          2743
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3012
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3165
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3211
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3213
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3252
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3264
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3276
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3326
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3338
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3495
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3497
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3531
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          3781
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4273
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4458
+    Length:          0
+    ReplacementText: ",\n                                        const sycl::nd_item<3> &item_ct1,\n                                        uint *data"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4498
+    Length:          16
+    ReplacementText: 'sycl::group<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4521
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4580
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4675
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4724
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4777
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4875
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4879
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4903
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4938
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4959
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          4999
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          5035
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          5490
+    Length:          122
+    ReplacementText: 'DPCT_CHECK_ERROR(d_PartialHistograms = sycl::malloc_device<uint>(PARTIAL_HISTOGRAM256_COUNT * HISTOGRAM256_BIN_COUNT, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          5710
+    Length:          29
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_PartialHistograms, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          5739
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          5868
+    Length:          174
+    ReplacementText: "dpct::get_in_order_queue().submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:26: 'HISTOGRAM256_THREADBLOCK_MEMORY' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<uint, 1> s_Hist_acc_ct1(sycl::range<1>(1536/*HISTOGRAM256_THREADBLOCK_MEMORY*/), cgh);\n\n      uint * d_PartialHistograms_ct0 = d_PartialHistograms;\n      uint byteCount_sizeof_uint_ct2 = byteCount / sizeof(uint);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, PARTIAL_HISTOGRAM256_COUNT) * sycl::range<3>(1, 1, HISTOGRAM256_THREADBLOCK_SIZE), sycl::range<3>(1, 1, HISTOGRAM256_THREADBLOCK_SIZE)), \n        [=](sycl::nd_item<3> item_ct1) {\n          histogram256Kernel(d_PartialHistograms_ct0, (uint *)d_Data, byteCount_sizeof_uint_ct2, item_ct1, s_Hist_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          6042
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          6110
+    Length:          144
+    ReplacementText: "dpct::get_in_order_queue().submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:27: 'MERGE_THREADBLOCK_SIZE' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<uint, 1> data_acc_ct1(sycl::range<1>(256/*MERGE_THREADBLOCK_SIZE*/), cgh);\n\n      uint * d_PartialHistograms_ct1 = d_PartialHistograms;\n      uint PARTIAL_HISTOGRAM256_COUNT_ct2 = PARTIAL_HISTOGRAM256_COUNT;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, HISTOGRAM256_BIN_COUNT) * sycl::range<3>(1, 1, MERGE_THREADBLOCK_SIZE), sycl::range<3>(1, 1, MERGE_THREADBLOCK_SIZE)), \n        [=](sycl::nd_item<3> item_ct1) {\n          mergeHistogram256Kernel(d_Histogram, d_PartialHistograms_ct1, PARTIAL_HISTOGRAM256_COUNT_ct2, item_ct1, data_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Offset:          6254
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          1642
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          1675
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          2012
+    Length:          5
+    ReplacementText: 'sycl::uint4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          2399
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          2557
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          2880
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3005
+    Length:          0
+    ReplacementText: ",\n                                  const sycl::nd_item<3> &item_ct1,\n                                  uchar *s_Hist"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3045
+    Length:          16
+    ReplacementText: 'sycl::group<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3068
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3436
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3517
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3593
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3678
+    Length:          78
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          3949
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4188
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:3: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4190
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4229
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4241
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4253
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4303
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4315
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4386
+    Length:          6
+    ReplacementText: 'data.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4421
+    Length:          6
+    ReplacementText: 'data.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4456
+    Length:          6
+    ReplacementText: 'data.z()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4491
+    Length:          6
+    ReplacementText: 'data.w()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4585
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4587
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4609
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4694
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          4777
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5108
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5145
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5604
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5786
+    Length:          0
+    ReplacementText: ",\n                                       const sycl::nd_item<3> &item_ct1,\n                                       uint *data"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5826
+    Length:          16
+    ReplacementText: 'sycl::group<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5849
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5876
+    Length:          45
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          5956
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6051
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6104
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6202
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:5: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6206
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6230
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6265
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6286
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6326
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          6362
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          7023
+    Length:          124
+    ReplacementText: 'DPCT_CHECK_ERROR(d_PartialHistograms = sycl::malloc_device<uint>(MAX_PARTIAL_HISTOGRAM64_COUNT * HISTOGRAM64_BIN_COUNT, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          7244
+    Length:          29
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_PartialHistograms, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          7273
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          7819
+    Length:          141
+    ReplacementText: "dpct::get_in_order_queue().submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:24: 'HISTOGRAM64_THREADBLOCK_SIZE * HISTOGRAM64_BIN_COUNT' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<uchar, 1> s_Hist_acc_ct1(sycl::range<1>(4096/*HISTOGRAM64_THREADBLOCK_SIZE * HISTOGRAM64_BIN_COUNT*/), cgh);\n\n      uint * d_PartialHistograms_ct0 = d_PartialHistograms;\n      uint byteCount_sizeof_data_t_ct2 = byteCount / sizeof(data_t);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, histogramCount) * sycl::range<3>(1, 1, HISTOGRAM64_THREADBLOCK_SIZE), sycl::range<3>(1, 1, HISTOGRAM64_THREADBLOCK_SIZE)), \n        [=](sycl::nd_item<3> item_ct1) {\n          histogram64Kernel(d_PartialHistograms_ct0, (data_t *)d_Data, byteCount_sizeof_data_t_ct2, item_ct1, s_Hist_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          7960
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          8027
+    Length:          130
+    ReplacementText: "dpct::get_in_order_queue().submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:25: 'MERGE_THREADBLOCK_SIZE' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<uint, 1> data_acc_ct1(sycl::range<1>(256/*MERGE_THREADBLOCK_SIZE*/), cgh);\n\n      uint * d_PartialHistograms_ct1 = d_PartialHistograms;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, HISTOGRAM64_BIN_COUNT) * sycl::range<3>(1, 1, MERGE_THREADBLOCK_SIZE), sycl::range<3>(1, 1, MERGE_THREADBLOCK_SIZE)), \n        [=](sycl::nd_item<3> item_ct1) {\n          mergeHistogram64Kernel(d_Histogram, d_PartialHistograms_ct1, histogramCount, item_ct1, data_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Offset:          8157
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          1678
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2220
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2247
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1005:20: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2260
+    Length:          5
+    ReplacementText: set_major_version
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2266
+    Length:          1
+    ReplacementText: '('
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2269
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2271
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1005:21: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2284
+    Length:          5
+    ReplacementText: set_minor_version
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2290
+    Length:          1
+    ReplacementText: '('
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2293
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2547
+    Length:          41
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(dev)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2662
+    Length:          0
+    ReplacementText: "         /*\n         DPCT1005:22: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n         */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2682
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2699
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2731
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2738
+    Length:          0
+    ReplacementText: "         /*\n         DPCT1005:23: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n         */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          2758
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          3576
+    Length:          39
+    ReplacementText: 'DPCT_CHECK_ERROR(d_Data = (uchar *)sycl::malloc_device(byteCount, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          3643
+    Length:          72
+    ReplacementText: 'DPCT_CHECK_ERROR(d_Histogram = sycl::malloc_device<uint>(HISTOGRAM256_BIN_COUNT, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          3743
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          3779
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          3804
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          4114
+    Length:          23
+    ReplacementText: 'dpct::get_current_device().queues_wait_and_throw()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          4274
+    Length:          23
+    ReplacementText: 'dpct::get_current_device().queues_wait_and_throw()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          4914
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          5021
+    Length:          55
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          5077
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          5906
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          6068
+    Length:          23
+    ReplacementText: 'dpct::get_current_device().queues_wait_and_throw()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          6711
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          6819
+    Length:          55
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          6875
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          7461
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_Histogram, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          7482
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          7503
+    Length:          16
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_Data, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Offset:          7519
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram256.cu'
+    Digest:          eac27da3c0fa4f21e75c8d4b45e47444
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/histogram64.cu'
+    Digest:          8aba6fdc8849746e6f58231bc8c7c434
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram/main.cpp'
+    Digest:          657c4a4192d1c77ea352be464cc6a1a8
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/histogram'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
