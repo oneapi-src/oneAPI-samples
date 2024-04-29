@@ -23,7 +23,7 @@ In normal operation, the oneAPI FPGA compiler automatically in-lines repeated fu
 | Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
-> **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
+> **Note**: Even though the Intel® oneAPI DPC++/C++ compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
 > To use the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH environment variable setting:
 > - Questa*-Intel® FPGA Edition
@@ -302,30 +302,30 @@ System Viewer: Kernel system > 3ull>) > 3ull>).B1 > Cluster 3*
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./naive.fpga_emu
-   ./naive_loop.fpga_emu
-   ./task_sequences.fpga_emu
+   ./hw_reuse_naive.fpga_emu
+   ./hw_reuse_loop.fpga_emu
+   ./hw_reuse_tseq.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./naive.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./naive_loop.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./task_sequences.fpga_sim 
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hw_reuse_naive.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hw_reuse_loop.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./hw_reuse_tseq.fpga_sim 
    ```
 
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   naive.fpga_emu.exe
-   naive_loop.fpga_emu.exe
-   task_sequences.fpga_emu.exe 
+   hw_reuse_naive.fpga_emu.exe
+   hw_reuse_loop.fpga_emu.exe
+   hw_reuse_tseq.fpga_emu.exe 
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   naive.fpga_sim.exe
-   naive_loop.fpga_sim.exe
-   task_sequences.fpga_sim.exe
+   hw_reuse_naive.fpga_sim.exe
+   hw_reuse_loop.fpga_sim.exe
+   hw_reuse_tseq.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 

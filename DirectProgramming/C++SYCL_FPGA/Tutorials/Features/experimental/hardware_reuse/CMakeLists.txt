@@ -27,7 +27,7 @@ elseif(${TYPE} MATCHES LOOP)
     set(TARGET_NAME hw_reuse_loop)
 elseif(${TYPE} MATCHES TASK_SEQUENCE)
     set(SOURCE_FILES 3_task_sequence/src/main.cpp)
-    set(TARGET_NAME hw_reuse_task_sequence)
+    set(TARGET_NAME hw_reuse_tseq)
 else()
     message(FATAL_ERROR "No matching compile type found for ${TYPE}\n
 Valid types -DTYPE=[ NAIVE / LOOP / TASK_SEQUENCE ]")

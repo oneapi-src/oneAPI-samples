@@ -69,7 +69,7 @@
           "cd build",
           "cmake .. -DTYPE=TASK_SEQUENCE",
           "make fpga_emu",
-          "./hw_reuse_task_sequence.fpga_emu"
+          "./hw_reuse_tseq.fpga_emu"
         ]
       },
       {
@@ -139,7 +139,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=TASK_SEQUENCE",
           "nmake fpga_emu",
-          "hw_reuse_task_sequence.fpga_emu.exe"
+          "hw_reuse_tseq.fpga_emu.exe"
         ]
       },
       {
