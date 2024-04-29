@@ -5,17 +5,19 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "svd.hpp"
 #include "svd_testbench_tool.hpp"
 #include "print_matrix.hpp"
+#include "golden_pca.hpp"
 
 // test case class to create test cases
 // Instantiate test case like this:
 // SVDTestcase<typeT, rows, cols> new_testcase(
 //     std::vector<std::vector<float>>{ ... } 
 //     std::vector<float>{ ... });
-template <typename T, unsigned rows_A, unsigned cols_A, bool is_complex = false>
+template <typename T, unsigned rows_A, unsigned cols_A>
 struct SVDTestcase {
   std::vector<std::vector<T>> input_A;
   std::vector<T> output_S;
@@ -25,6 +27,11 @@ struct SVDTestcase {
   T V_orthogonal_error;
   double delta_time;
   double throughput;
+
+  // constructor where input is generated
+  SVDTestcase() {
+    GenerateInput(0.0, 1.0);
+  }
 
   // constructor takes the input matrix vector and 1D vector of all the singular values (sorted)
   SVDTestcase(std::vector<std::vector<T>> A, std::vector<T> S)
@@ -39,6 +46,24 @@ struct SVDTestcase {
       }
     }
     return flat_A;
+  }
+
+  void GenerateInput(T min, T max) {
+    // generate a rank sufficient input matrix
+    while (true) {
+      svd_testbench_tool::GenMatrix<T>(
+          input_A, rows_A, cols_A, min, max);
+      if (!svd_testbench_tool::IsRankDeficient<float>(input_A)) break;
+    }
+    // get eigens of the input using Golden PCA
+    GoldenPCA<T> pca(rows_A, cols_A, 1, false, true, input_A);
+    pca.computeCovarianceMatrix();
+    pca.computeEigenValuesAndVectors();
+
+    // fill output S with sqrt(eigen values)
+    for (int i = 0; i < cols_A; i ++) {
+      output_S.push_back(std::sqrt(pca.eigen_values[i]));
+    }
   }
 
   std::vector<T> ExtractSingularValue(std::vector<T> mat_S) {

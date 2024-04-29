@@ -101,6 +101,75 @@ void SoftMatmult(std::vector<TT> &mat_A,
     }
 }
 
+
+template <typename T>
+bool IsRankDeficient(std::vector<std::vector<T> > &input_matrix) {
+    std::vector<std::vector<T>> tempMatrix = input_matrix;
+
+    int numRows = tempMatrix.size();
+    int numCols = tempMatrix[0].size();
+    int minDim = std::min(numRows, numCols);
+    // doing gaussian elimination on the local matrix
+    for (int pivot = 0; pivot < minDim; ++pivot) {
+        int maxRow = pivot;
+        for (int row = pivot + 1; row < numRows; ++row) {
+            if (std::abs(tempMatrix[row][pivot]) > std::abs(tempMatrix[maxRow][pivot])) {
+                maxRow = row;
+            }
+        }
+        
+        if (tempMatrix[maxRow][pivot] == 0.0) {
+            continue;
+        }
+        
+        if (maxRow != pivot) {
+            std::swap(tempMatrix[pivot], tempMatrix[maxRow]);
+        }
+
+        for (int row = pivot + 1; row < numRows; ++row) {
+            T factor = tempMatrix[row][pivot] / tempMatrix[pivot][pivot];
+            for (int col = pivot; col < numCols; ++col) {
+                tempMatrix[row][col] -= factor * tempMatrix[pivot][col];
+            }
+        }
+    }
+
+    // check for zero row after elimination 
+    for (int row = 0; row < numRows; ++row) {
+        bool allZeroes = true;
+        for (int col = 0; col < numCols; ++col) {
+            if (std::abs(tempMatrix[row][col]) > 1e-6) {
+                allZeroes = false;
+                break;
+            }
+        }
+        if (allZeroes) {
+            return true; // If a row of zeros is found, matrix is rank-deficient
+        }
+    }
+    return false; // No row of zeros found, matrix is full rank
+}
+
+
+template <typename T>
+T RandomValueInInterval(T min, T max) {
+  return min + static_cast<T>(rand()) /
+                   (static_cast<T>(RAND_MAX) / (max - min));
+}
+
+
+template <typename T>
+void GenMatrix(std::vector<std::vector<T> > &output_mat,
+                int rows, int cols, T min, T max) {
+    output_mat.resize(rows);
+    for (int r = 0; r < rows; ++r) {
+        output_mat[r].resize(cols);
+        for (int c = 0; c < cols; ++c) {
+            output_mat[r][c] = RandomValueInInterval<T>(min, max);
+        }
+    }
+}
+
 } // end of name space 
 
 
