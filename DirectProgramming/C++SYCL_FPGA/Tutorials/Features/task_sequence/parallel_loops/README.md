@@ -1,4 +1,4 @@
-# `Task Sequences (Parallel Loops)` Sample
+# `Parallel Loops` Sample
 
 This sample is an FPGA tutorial that demonstrates how to use task sequences to describe multiple parallel loops in a single kernel.
 
