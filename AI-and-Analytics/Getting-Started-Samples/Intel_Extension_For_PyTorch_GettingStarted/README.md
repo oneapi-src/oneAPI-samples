@@ -51,8 +51,13 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get Intel® AI Tools**
 
 Required AI Tools: <https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html>
-<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.   
 
+**2. Install dependencies**
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 
 ## Run the Sample
@@ -73,7 +78,7 @@ source <custom_path>/bin/activate
 2. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/
 ```
 3. Run the Python script.
 ```

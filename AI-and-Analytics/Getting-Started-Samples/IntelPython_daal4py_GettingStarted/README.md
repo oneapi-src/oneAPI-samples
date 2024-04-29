@@ -1,14 +1,13 @@
-# `Intel® Python Daal4py Getting Started` Sample
+# Intel® Python Daal4py Getting Started Sample
 
-The `Intel® Python Daal4py Getting Started` sample code shows how to do batch linear regression using the Python API package daal4py powered by the Intel® oneAPI Data Analytics Library (oneDAL).
+The `Intel® Python Daal4py Getting Started` sample code shows how to do batch linear regression using the Python API package daal4py powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html).
 
 | Area                   | Description
 | :---                   | :---
+| Category               | Getting Started
 | What you will learn    | Basic daal4py programming model for Intel CPUs
 | Time to complete       | 5 minutes
-| Category               | Getting Started
 
-The sample demonstrates how to use software products that are powered by the [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and some components found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Purpose
 
@@ -23,6 +22,7 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | OS                      | Ubuntu* 20.04 (or newer)
 | Hardware                | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
 | Software                | Intel® oneAPI Data Analytics Library (oneDAL)
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ### For Local Development Environments
 
@@ -35,89 +35,95 @@ You will need to download and install the following toolkits, tools, and compone
 
 ## Key Implementation Details
 
-This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel® AI Analytics Toolkit.
+- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel® AI Analytics Toolkit.
 
-The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
 
-## Configure Environment (Only applicable to AI Tools Offline Installer)
-If you have already set up the PIP or Conda environment and installed AI Tools go directly to Run the Notebook.
+## Environment Setup
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+You will need to download and install the following toolkits, tools, and components to use the sample.
+
+**1. Get Intel® AI Tools**
+
+Required AI Tools: Intel® Optimization for XGBoost*
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+**2. Install dependencies**
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+
+## Run the Sample
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted#environment-setup) is completed.
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
+
+### AI Tools Offline Installer (Validated)  
+1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If you used a separate location, open a terminal and type the following
+```
+source <custom_path>/bin/activate
+```
+2. Activate the Conda environment:
+<!-- specify the name of conda environment for this sample, if there are several options - list all relevant names of environments -->
+```
+conda activate xgboost
+``` 
+3. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted
+```
+4. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+5. Follow the instructions to open the URL with the token in your browser.
+6. Select the Notebook:
+```
+IntelPython_daal4py_GettingStarted.ipynb
+```
+
+7. Change the kernel to xgboost
+ 
+8. Run every cell in the Notebook in sequence.
+
+### Conda/PIP
+> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
+1. Clone the GitHub repository:
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted
+```
+
+2. Launch Jupyter Notebook: 
+> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
+feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+```
+jupyter notebook --ip=0.0.0.0
+```
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+4. Follow the instructions to open the URL with the token in your browser.
+5. Select the Notebook:
+```
+IntelPython_daal4py_GettingStarted.ipynb.ipynb
+```
+
+6. Run every cell in the Notebook in sequence.
+
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
 
-
-### Steps for Intel AI Tools Offline Installer
-
-1. Activate the conda environment.
-
-   1. If you have the root access to your oneAPI installation path, choose this option.
-   
-      Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command.
-      ```
-      source activate base
-      ```
-	 
-   2. If you do not have the root access to your oneAPI installation path, choose this option.
-
-      By default, the Intel® AI Tools are installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment and activate it using the following commands.
-
-      ```
-      conda create --name usr_intelpython --clone base
-      source activate usr_intelpython
-      ```
-
-2. Install Jupyter Notebook. (Skip this step for Intel® DevCloud.)
-   ```
-   conda install jupyter nb_conda_kernels
-   ```
-
-## Run the `Intel® Python Daal4py Getting Started` Sample
-
-You can run the sample code in a Jupyter Notebook or as a Python script locally.
-
-### Run the Jupyter Notebook
-
-1. Activate the conda environment.
-   ```
-   source activate base
-   # or
-   source activate usr_intelpython
-   ```
-
-2. Start the Jupyter notebook server.
-   ```
-   jupyter notebook
-   ```
-
-3. Locate and select the Notebook.
-   ```
-   IntelPython_daal4py_GettingStarted.ipynb
-   ```
-4. Click the **Run** button to execute all cells in the Notebook in sequence.
-
-### Run the Python Script Locally
-
-1. Activate the conda environment.
-   ```
-   source activate base
-   # or
-   source activate usr_intelpython
-   ```
-
-2. Run the Python script.
-   ```
-   python IntelPython_daal4py_GettingStarted.py
-   ```
-
-   The script saves the output files in the included ``models`` and ``results`` directories.
 
 ## Example Output
 
@@ -147,6 +153,10 @@ Here is one of our loaded model's features:
    1.58423529e-02 -4.57542900e-01]]
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
+## Related Samples
+
+* [Intel® Python XGBoost* Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted)
+* [Intel® Python Scikit-learn Extension Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted#intel-python-scikit-learn-extension-getting-started-sample)
 
 ## License
 
@@ -154,3 +164,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third-party program licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)

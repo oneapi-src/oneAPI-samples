@@ -46,7 +46,7 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get Intel® AI Tools**
 
 Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
-<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI samples samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+<br>If you have not already, select and install these Tools via via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 **2. Install dependencies**
 ```
@@ -80,7 +80,7 @@ conda activate pytorch
 3. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 4. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 

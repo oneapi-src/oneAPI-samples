@@ -19,7 +19,7 @@ From this sample code, you will learn how to perform distributed training with o
 | Hardware                          | Intel® Xeon® scalable processor family <br> Intel® Data Center GPU
 | Software                          | Intel® Extension for PyTorch (IPEX)
 
-> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Key Implementation Details
 
@@ -50,10 +50,11 @@ If you used a separate location, open a terminal and type the following
 ```
 source <custom_path>/bin/activate
 ```
-2. Clone the GitHub repository:
+2. Clone the GitHub repository and install required packages:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples/Intel_oneCCL_Bindings_For_PyTorch_GettingStarted/
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_oneCCL_Bindings_For_PyTorch_GettingStarted/
+pip install -r requirements.txt
 ```
 3. Launch Jupyter Notebook.
 ```
