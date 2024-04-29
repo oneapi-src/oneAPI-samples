@@ -209,7 +209,7 @@ In kernel `ForcedDefaultFmaxII`, the `scheduler_target_fmax_mhz` attribute tells
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` directory.
+Locate `report.html` in the `scheduler_target_fmax.report.prj/reports/` directory.
 
 Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `Default`, block `B1` is scheduled at less than the default fMAX but has II=1. In kernel `ForcedDefaultFmax` and `ForcedHighFmax`, all blocks are scheduled at the target fMAX, but they have II>1. In kernel `ForcedDefaultFmaxII`, similar to kernel `Default`, block `B1` is scheduled at less than the default fMAX but has II=1.
 

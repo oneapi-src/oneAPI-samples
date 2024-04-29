@@ -293,7 +293,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
 >  ```
 ## Read the Reports
 
-Locate `report.html` in the `memory_attributes_report.prj/reports/` directory.
+Locate `report.html` in the `memory_attributes.report.prj/reports/` directory.
 
 Navigate to the Kernel Memory Viewer (System Viewers > Kernel Memory Viewer). In the Kernel Memory List pane, click `dict_offset` under the function `Kernel<N>`, for each of the following:
 

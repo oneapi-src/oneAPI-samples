@@ -28,6 +28,10 @@ distribution and a Philox-type generator provided by the oneMKL RNG API.
 This sample performs its computations on the default SYCL* device. You can set
 the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL functions speed up Black-Scholes
+computation of European options pricing:
+https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/black-scholes-formula-european-options-pricing.html.
+
 ## Key Implementation Details
 
 This sample illustrates how to create an RNG engine object (the source of

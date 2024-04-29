@@ -346,7 +346,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 >  ```
 #### Read the Reports
 
-1. Locate `report.html` in the `hostpipes_report.prj/reports/` directory.
+1. Locate `report.html` in the `hostpipes.report.prj/reports/` directory.
 2. Open the **Views** menu and select **System Viewer**.
 3. In the left-hand pane, select **LoopBackKernelID** under the System hierarchy.
 

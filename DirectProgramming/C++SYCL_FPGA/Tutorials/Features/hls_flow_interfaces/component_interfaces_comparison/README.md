@@ -203,7 +203,7 @@ Use the appropriate TYPE parameter when running CMake to config which design to 
       ```
       nmake report
       ```
-      The report resides at `vector_add_report.a.prj/reports/report.html`.
+      The report resides at `vector_add.report.prj/reports/report.html`.
 
    4. Compile with Quartus place and route (To get accurate area estimate, longer compile time).
       ```

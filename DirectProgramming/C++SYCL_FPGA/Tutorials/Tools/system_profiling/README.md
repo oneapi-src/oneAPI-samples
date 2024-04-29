@@ -182,7 +182,7 @@ After the executable runs, the data collected will be placed in the `CLIntercept
 
 For this tutorial, this visualization appears as shown in the following example:
 
-![](full_example_trace.PNG)
+![](assets/full_example_trace.PNG)
 
 This visualization shows different calls executed through time. The X-axis is time, with the scale shown near the top of the page. The Y-axis shows different calls that are split up in several ways.
 
@@ -208,7 +208,7 @@ For a more detailed explanation of the optimization, refer to the FPGA tutorial 
 
 In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Arria® 10 FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
 
-![](with_and_without_double_buffering.PNG)
+![](assets/with_and_without_double_buffering.PNG)
 
 Here, the kernel runs named `_ZTS10SimpleVpow` can be recognized as the bars with the largest execution time (the large orange bars). Double buffering removes the gaps between the kernel executions that can be seen in the top trace image. This optimization improves the throughput of the design, as explained in the `double_buffering` tutorial.
 

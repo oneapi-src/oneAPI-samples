@@ -124,7 +124,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
       ```
       make report
       ```
-      The report resides at `autorun_report.prj/reports/report.html`.
+      The report resides at `autorun.report.prj/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device).
       ```
@@ -176,7 +176,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
       ```
       nmake report
       ```
-      The report resides at `autorun_report.prj.a/reports/report.html`.
+      The report resides at `autorun.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device).
       ```

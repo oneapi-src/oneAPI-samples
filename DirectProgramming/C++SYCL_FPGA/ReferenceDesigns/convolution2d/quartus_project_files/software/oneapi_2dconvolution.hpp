@@ -70,8 +70,6 @@ namespace oneapiconvolution {
   }
 
 void start() {
-  IOWR_32DIRECT(KERNEL_STOP, 0, 0x0);
-  IOWR_32DIRECT(KERNEL_STOP_VALID, 0, 0x1);
   IOWR_32DIRECT(KERNEL_START, 0, 0x1);
 }
 

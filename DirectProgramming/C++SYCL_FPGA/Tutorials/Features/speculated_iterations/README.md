@@ -223,7 +223,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 >  ```
 ## Read the Reports
 
-Locate `report.html` in the `speculated_iterations_report.prj/reports/` directory.
+Locate `report.html` in the `speculated_iterations.report.prj/reports/` directory.
 
 In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on Agilex7.
 

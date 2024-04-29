@@ -211,7 +211,7 @@ To achieve an II of 1 for the main `while` loop in the FPGA code shown above, th
        ```
        make report
        ```
-      The report resides at `shannonization_report.prj/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
+      The report resides at `shannonization.report.prj/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -262,7 +262,7 @@ To achieve an II of 1 for the main `while` loop in the FPGA code shown above, th
       ```
       nmake report
       ```
-      The report resides at `shannonization_report.prj.a/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
+      The report resides at `shannonization.report.prj.a/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```

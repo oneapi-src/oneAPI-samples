@@ -163,7 +163,7 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
       ```
       make report
       ```
-      The report resides at `loop_carried_dependency_report.prj/reports/report.html`.
+      The report resides at `loop_carried_dependency.report.prj/reports/report.html`.
 
       (Optional) Navigate to the _Loops Analysis_ view of the report (under _Throughput Analysis_) and observe that the loop in block `UnOptKernel.B1` is showing _Serial exe: Data dependency_.  Click the *source location* field in the table to see the details for the loop. It should show 1 as the maximum interleaving iteration of the loop, as the loop is serialized. Now, observe that the loop in block `OptKernel.B1` is not marked as *Serialized*. It shows 12 as the maximum Interleaving iterations of the loop.
 

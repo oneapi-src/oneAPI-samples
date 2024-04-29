@@ -96,7 +96,6 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`          | StreamingQRD kernel, performs Q-R Decomposition on a matrix
 |`Transpose.hpp`             | Transpose kernel, reorders data for the StreamingQRD kernel
-|`Tuple.hpp`                 | A templated tuple that defines the NTuple class which is used for pipe interfaces
 |`udp_loopback_test.cpp`     | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
 |`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes (for example not in Intel® DevCloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
 |`UnrolledLoop.hpp`          | A templated-based loop unroller that unrolls loops in the compiler front end
@@ -164,7 +163,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
       ```
       make report
       ```
-      The report resides at `mvdr_beamforming_report.prj/reports/report.html`.
+      The report resides at `mvdr_beamforming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

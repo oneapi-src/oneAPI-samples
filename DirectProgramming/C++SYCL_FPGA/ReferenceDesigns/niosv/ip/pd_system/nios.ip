@@ -16,14 +16,14 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendor>Intel Corporation</ipxact:vendor>
   <ipxact:library>nios</ipxact:library>
   <ipxact:name>nios</ipxact:name>
-  <ipxact:version>2.0.0</ipxact:version>
+  <ipxact:version>2.1.0</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -57,10 +57,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -89,10 +89,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>platform_irq_rx</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -136,10 +136,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>instruction_manager</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -343,18 +343,18 @@ https://fpgasoftware.intel.com/eula.-->
             </ipxact:portMap>
             <ipxact:portMap>
               <ipxact:logicalPort>
-                <ipxact:name>rlast</ipxact:name>
-              </ipxact:logicalPort>
-              <ipxact:physicalPort>
-                <ipxact:name>instruction_manager_rlast</ipxact:name>
-              </ipxact:physicalPort>
-            </ipxact:portMap>
-            <ipxact:portMap>
-              <ipxact:logicalPort>
                 <ipxact:name>rready</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
                 <ipxact:name>instruction_manager_rready</ipxact:name>
+              </ipxact:physicalPort>
+            </ipxact:portMap>
+            <ipxact:portMap>
+              <ipxact:logicalPort>
+                <ipxact:name>rlast</ipxact:name>
+              </ipxact:logicalPort>
+              <ipxact:physicalPort>
+                <ipxact:name>instruction_manager_rlast</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -446,10 +446,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>data_manager</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="axi4" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -740,10 +740,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>timer_sw_agent</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -1073,6 +1073,10 @@ https://fpgasoftware.intel.com/eula.-->
       <ipxact:vendorExtensions>
         <altera:altera_assignments>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="embeddedsw.configuration.hideDevice" type="string">
+              <ipxact:name>embeddedsw.configuration.hideDevice</ipxact:name>
+              <ipxact:value>1</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="embeddedsw.configuration.isFlash" type="string">
               <ipxact:name>embeddedsw.configuration.isFlash</ipxact:name>
               <ipxact:value>0</ipxact:value>
@@ -1099,10 +1103,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>dm_agent</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="23.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -1424,6 +1428,10 @@ https://fpgasoftware.intel.com/eula.-->
       <ipxact:vendorExtensions>
         <altera:altera_assignments>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="embeddedsw.configuration.hideDevice" type="string">
+              <ipxact:name>embeddedsw.configuration.hideDevice</ipxact:name>
+              <ipxact:value>1</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="embeddedsw.configuration.isFlash" type="string">
               <ipxact:name>embeddedsw.configuration.isFlash</ipxact:name>
               <ipxact:value>0</ipxact:value>
@@ -1913,9 +1921,9 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>instruction_manager_rlast</ipxact:name>
+        <ipxact:name>instruction_manager_rready</ipxact:name>
         <ipxact:wire>
-          <ipxact:direction>in</ipxact:direction>
+          <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
@@ -1926,9 +1934,9 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>instruction_manager_rready</ipxact:name>
+        <ipxact:name>instruction_manager_rlast</ipxact:name>
         <ipxact:wire>
-          <ipxact:direction>out</ipxact:direction>
+          <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
@@ -2565,7 +2573,7 @@ https://fpgasoftware.intel.com/eula.-->
       <ipxact:vendor>Intel Corporation</ipxact:vendor>
       <ipxact:library>nios</ipxact:library>
       <ipxact:name>intel_niosv_g</ipxact:name>
-      <ipxact:version>2.0.0</ipxact:version>
+      <ipxact:version>2.1.0</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
       <ipxact:parameters>
@@ -2764,6 +2772,11 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>Auto DEVICE_SPEEDGRADE</ipxact:displayName>
           <ipxact:value>2</ipxact:value>
         </ipxact:parameter>
+        <ipxact:parameter parameterId="AUTO_BOARD" type="string">
+          <ipxact:name>AUTO_BOARD</ipxact:name>
+          <ipxact:displayName>Auto BOARD</ipxact:displayName>
+          <ipxact:value>default</ipxact:value>
+        </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_CLK_CLOCK_DOMAIN" type="longint">
           <ipxact:name>AUTO_CLK_CLOCK_DOMAIN</ipxact:name>
           <ipxact:displayName>Auto CLOCK_DOMAIN</ipxact:displayName>
@@ -2899,7 +2912,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:parameter>
         <ipxact:parameter parameterId="embeddedsw.configuration.NiosVTCMVersion" type="string">
           <ipxact:name>embeddedsw.configuration.NiosVTCMVersion</ipxact:name>
-          <ipxact:value>2.0.0</ipxact:value>
+          <ipxact:value>2.1.0</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="embeddedsw.configuration.cpuArchitecture" type="string">
           <ipxact:name>embeddedsw.configuration.cpuArchitecture</ipxact:name>
@@ -2908,10 +2921,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="embeddedsw.configuration.fpuEnabled" type="string">
           <ipxact:name>embeddedsw.configuration.fpuEnabled</ipxact:name>
           <ipxact:value>0</ipxact:value>
-        </ipxact:parameter>
-        <ipxact:parameter parameterId="embeddedsw.configuration.hideDevice" type="string">
-          <ipxact:name>embeddedsw.configuration.hideDevice</ipxact:name>
-          <ipxact:value>1</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="embeddedsw.configuration.isTimerDevice" type="string">
           <ipxact:name>embeddedsw.configuration.isTimerDevice</ipxact:name>
@@ -2999,7 +3008,7 @@ https://fpgasoftware.intel.com/eula.-->
    {
       datum _originalVersion
       {
-         value = "1.0.0";
+         value = "2.0.0";
          type = "String";
       }
    }
@@ -3353,18 +3362,18 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;instruction_manager_rlast&lt;/name&gt;
-                    &lt;role&gt;rlast&lt;/role&gt;
-                    &lt;direction&gt;Input&lt;/direction&gt;
+                    &lt;name&gt;instruction_manager_rready&lt;/name&gt;
+                    &lt;role&gt;rready&lt;/role&gt;
+                    &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;instruction_manager_rready&lt;/name&gt;
-                    &lt;role&gt;rready&lt;/role&gt;
-                    &lt;direction&gt;Output&lt;/direction&gt;
+                    &lt;name&gt;instruction_manager_rlast&lt;/name&gt;
+                    &lt;role&gt;rlast&lt;/role&gt;
+                    &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC&lt;/vhdlType&gt;
@@ -3827,6 +3836,10 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;assignments&gt;
                 &lt;assignmentValueMap&gt;
                     &lt;entry&gt;
+                        &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                        &lt;value&gt;1&lt;/value&gt;
+                    &lt;/entry&gt;
+                    &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;
                     &lt;/entry&gt;
@@ -4122,6 +4135,10 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/ports&gt;
             &lt;assignments&gt;
                 &lt;assignmentValueMap&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;embeddedsw.configuration.hideDevice&lt;/key&gt;
+                        &lt;value&gt;1&lt;/value&gt;
+                    &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;embeddedsw.configuration.isFlash&lt;/key&gt;
                         &lt;value&gt;0&lt;/value&gt;

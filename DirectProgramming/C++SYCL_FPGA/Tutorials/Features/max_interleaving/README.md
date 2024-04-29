@@ -241,7 +241,7 @@ To disable interleaving on a loop, place `[[intel::max_interleaving(1)]]` above 
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `max_interleaving_report.prj/reports/` directory.
+Locate `report.html` in the `max_interleaving.report.prj/reports/` directory.
 
 #### Verify That Interleaving Is Enabled/Disabled
 1. Go to `Throughput Analysis` (dropdown) -> `Loop Analysis`.

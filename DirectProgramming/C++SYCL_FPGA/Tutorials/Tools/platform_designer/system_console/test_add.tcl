@@ -10,7 +10,7 @@ proc pause {{message "Hit Enter to continue ==> "}} {
 proc load_inputs { VAL_A VAL_B } {
     global master_service_path
 
-    # addresses from add-oneapi/build/add.report.prj/<mangling>AdderID_register_map.hpp
+    # addresses from add_oneapi/build/add.report.prj/include/kenrel_headers/IDAdder_register_map.hpp
     set ADDR_A 0x80
     set ADDR_B 0x84
     set ADDR_START 0x08
@@ -29,7 +29,7 @@ proc load_inputs { VAL_A VAL_B } {
 proc read_outputs {} {
     global master_service_path
 
-    # addresses from add-oneapi/build/add.report.prj/<mangling>AdderID_register_map.hpp
+    # addresses from add_oneapi/build/add.report.prj/include/kenrel_headers/IDAdder_register_map.hpp
     set ADDR_STATUS 0x00
     set ADDR_C 0x88
     set ADDR_FINISH_COUNT 0x30

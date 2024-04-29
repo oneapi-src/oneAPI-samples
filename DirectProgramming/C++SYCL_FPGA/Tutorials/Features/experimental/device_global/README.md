@@ -131,7 +131,7 @@ int main () {
       ```
       make fpga_emu
       ```
-   2. Generate the HTML optimization reports. The report resides at `device_global_report.prj\reports\report.html`.
+   2. Generate the HTML optimization reports. The report resides at `device_global.report.prj\reports\report.html`.
       ```
       make report
       ```
@@ -165,7 +165,7 @@ int main () {
       ```
       nmake fpga_emu
       ```
-   2. Generate the optimization report. The report resides at `device_global_report.a.prj\reports\report.html`.
+   2. Generate the optimization report. The report resides at `device_global.report.prj\reports\report.html`.
       ```
       nmake report
       ```

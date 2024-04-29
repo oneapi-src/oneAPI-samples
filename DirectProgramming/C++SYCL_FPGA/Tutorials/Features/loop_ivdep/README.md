@@ -307,7 +307,7 @@ Observe that the indexing expression on `temp_buffer` evaluates to the same inde
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `loop_ivdep_report.prj/reports/` directory.
+Locate `report.html` in the `loop_ivdep.report.prj/reports/` directory.
 
 Navigate to the Loops Analysis section of the optimization report and look at the initiation interval (II) achieved by the two kernel versions.
 

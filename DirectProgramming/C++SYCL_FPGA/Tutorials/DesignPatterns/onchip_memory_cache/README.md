@@ -144,7 +144,7 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
         ```
         make report
         ```
-       The report resides at `onchip_memory_cache_report.prj/reports/report.html`.
+       The report resides at `onchip_memory_cache.report.prj/reports/report.html`.
 
        Compare the Loop Analysis reports for kernels with various cache depths, as described in the "When is the on-chip memory cache technique applicable?" section.  This will illustrate that any cache depth > 0 allows a loop II of 1.
 
@@ -199,7 +199,7 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
       ```
       nmake report
       ```
-       The report resides at `onchip_memory_cache_report.prj.a/reports/report.html`.
+       The report resides at `onchip_memory_cache.report.prj.a/reports/report.html`.
 
        Compare the Loop Analysis reports for kernels with various cache depths, as described in the "When is the on-chip memory cache technique applicable?" section.  This will illustrate that any cache depth > 0 allows a loop II of 1.
 
