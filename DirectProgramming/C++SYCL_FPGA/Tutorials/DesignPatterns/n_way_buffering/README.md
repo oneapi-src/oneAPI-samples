@@ -203,7 +203,7 @@ After each kernel is launched, the host-side operations (that occur *after* the 
       ```
       make report
       ```
-      The report resides at `n_way_buffering_report.prj/reports/report.html`.
+      The report resides at `n_way_buffering.report.prj/reports/report.html`.
 
       >**Note**: Since the optimization described in this tutorial occurs at the **runtime** level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
 
@@ -257,7 +257,7 @@ After each kernel is launched, the host-side operations (that occur *after* the 
       ```
       nmake report
       ```
-      The report resides at `n_way_buffering_report.prj.a/reports/report.html`.
+      The report resides at `n_way_buffering.report.prj.a/reports/report.html`.
 
       >**Note**: Since the optimization described in this tutorial occurs at the **runtime** level, the FPGA compiler report will not show a difference between the optimized and unoptimized cases.
 

@@ -185,7 +185,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
       ```
       make report
       ```
-      The report resides at `cholesky_report.prj/reports/report.html`.
+      The report resides at `cholesky.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```

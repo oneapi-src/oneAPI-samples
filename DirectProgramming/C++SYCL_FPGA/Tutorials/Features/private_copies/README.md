@@ -214,7 +214,7 @@ A typical design flow may be to:
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `private_copies_report.prj/reports/` directory.
+Locate `report.html` in the `private_copies.report.prj/reports/` directory.
 
 On the main report page, scroll down to the section titled "Estimated Resource Usage". Each kernel name ends in the `private_copies` attribute argument used for that kernel, e.g., `kernelCompute1` uses a `private_copies` attribute value of 1. You can verify that the number of RAMs used for each kernel increases with the `private_copies` value used, except for `private_copies` 0. Using `private_copies` 0 instructs the compiler to choose a default value, which is often near the value that would give you maximum throughput.
 

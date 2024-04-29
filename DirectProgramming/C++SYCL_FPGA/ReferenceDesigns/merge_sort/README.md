@@ -161,7 +161,7 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
       ```
       make report
       ```
-      The report resides at `merge_sort_report.prj/reports/report.html`.
+      The report resides at `merge_sort.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

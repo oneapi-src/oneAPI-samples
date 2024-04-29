@@ -174,8 +174,11 @@ board.
   ```
   To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
-  cmake ..
+  cmake .. -DPART=<X>
   ```
+   where `-DPART=<X>` is:
+   - `-DPART=INTERLEAVING`
+   - `-DPART=NO_INTERLEAVING`
 
   > **Note**: You can change the default target by using the command:
   >  ```
@@ -227,8 +230,12 @@ board.
   ```
   To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
-  cmake -G "NMake Makefiles" ..
+  cmake -G "NMake Makefiles" .. -DPART=<X>
   ```
+   where `-DPART=<X>` is:
+   - `-DPART=INTERLEAVING`
+   - `-DPART=NO_INTERLEAVING`
+
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -279,8 +286,7 @@ provide cmake with the full path to your sample directory, for example:
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ## Examining the Reports
-Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
-and `mem_channel_no_interleaving.prj` directories. Open the reports in 
+After generating the reports of both parts of the sample, locate the `report.html` files in the `mem_channel.report.prj` directories. Open the reports in 
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see
 the table showing the FPGA resources that were allocated for the design. Notice
@@ -314,15 +320,13 @@ significantly lower than the case where burst-interleaving is enabled.
     this flow.
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
-     ./mem_channel_interleaving.fpga         (Linux)
-     ./mem_channel_no_interleaving.fpga      (Linux)
-     mem_channel_interleaving.fpga.exe       (Windows)
-     mem_channel_no_interleaving.fpga.exe    (Windows)
+     ./mem_channel.fpga         (Linux)
+     mem_channel.fpga.exe       (Windows)
      ```
 
 ### Example of Output
 
-Running `./mem_channel_interleaving.fpga`:
+Running `./mem_channel.fpga` when compiled with `-DPART=INTERLEAVING`:
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 
@@ -333,7 +337,7 @@ Kernel execution time: 0.001760 seconds
 Kernel throughput: 1704.945536 MB/s
 ```
 
-Running `./mem_channel_no_interleaving.fpga`:
+Running `./mem_channel.fpga` when compiled with `-DPART=NO_INTERLEAVING`:
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
 

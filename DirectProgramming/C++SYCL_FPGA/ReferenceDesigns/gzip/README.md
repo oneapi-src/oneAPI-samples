@@ -187,7 +187,7 @@ Performance results are based on testing as of August 30, 2023.
        ```
        make report
        ```
-       The report resides at `gzip_report.prj/reports/report/report.html`.
+       The report resides at `gzip.report.prj/reports/report/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```

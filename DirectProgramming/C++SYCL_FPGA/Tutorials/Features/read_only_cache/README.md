@@ -125,8 +125,11 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DPART=<X>
    ```
+   where `X` is:
+   - `CACHE_ENABLED`
+   - `CACHE_DISABLED`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -174,8 +177,11 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
+   where `X` is:
+   - `CACHE_ENABLED`
+   - `CACHE_DISABLED`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -222,9 +228,7 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
 >  ```
 ## Read the Reports
 
-Locate the pair of `report.html` files in the
-`read_only_cache_disabled_report.prj` and `read_only_cache_enabled_report.prj`
-directories.
+Locate the `report.html` files of each build (with and without the cache enabled).
 
 Navigate to the "Area Analysis of System" section of each report
 (Area Analysis > Area Analysis of System) and expand the "Kernel System" entry
@@ -250,8 +254,7 @@ cache has been created.
 
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
-   ./read_only_cache_disabled.fpga
-   ./read_only_cache_enabled.fpga
+   ./read_only_cache.fpga
    ```
 
 ### On Windows
@@ -272,13 +275,12 @@ cache has been created.
 
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
-   read_only_cache_disabled.fpga.exe
-   read_only_cache_enabled.fpga.exe
+   read_only_cache.fpga.exe
    ```
 
 ## Example Output
 
-### Example Output for `./read_only_cache_disabled.fpga`
+### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_DISABLED`
 
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
@@ -291,7 +293,7 @@ Kernel execution time: 0.001677 seconds
 Kernel throughput: 298.184355 MB/s
 ```
 
-### Example Output for `./read_only_cache_disabled.fpga`
+### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_ENABLED`
 
 ```
 Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)

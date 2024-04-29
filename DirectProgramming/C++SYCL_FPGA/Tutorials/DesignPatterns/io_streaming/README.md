@@ -179,7 +179,7 @@ Notice that the main kernel in the `SubmitSideChannelKernels` function in *src/S
       ```
       make report
       ```
-      The report resides at `io_streaming_report.prj/reports/report.html`.
+      The report resides at `io_streaming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -231,7 +231,7 @@ Notice that the main kernel in the `SubmitSideChannelKernels` function in *src/S
       ```
       nmake report
       ```
-      The report resides at `io_streaming_report.prj.a/reports/report.html`.
+      The report resides at `io_streaming.report.prj.a/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
