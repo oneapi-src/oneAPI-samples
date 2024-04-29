@@ -20,6 +20,8 @@ In computed tomography, the raw imaging data is a set of line integrals over the
 
 This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL fast Fourier transform (FFT) functions can be used to reconstruct the original image from the Computer Tomography (CT) data: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/ffts-for-computer-tomography-image-reconstruction.html.
+
 ## Key Implementation Details
 
 To use oneMKL DFT routines, the sample creates a descriptor object for the given precision and domain (real-to-complex or complex-to-complex), calls the `commit` method, and provides a `sycl::queue` object to define the device and context. The `compute_*` routines are then called to perform the actual computation with the appropriate descriptor object and input/output buffers.

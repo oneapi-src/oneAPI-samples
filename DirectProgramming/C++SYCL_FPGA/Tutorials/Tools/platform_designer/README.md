@@ -20,8 +20,6 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 >
 > To use the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
-> **Note**: In oneAPI full systems, kernels that use SYCL Unified Shared Memory (USM) host allocations or USM shared allocations (and therefore the code in this tutorial) are supported only by Board Support Packages (BSPs) with USM support. Kernels that use these types of allocations can always be used to generate standalone IPs.
-
 ## Prerequisites
 
 This sample is part of the FPGA code samples.
@@ -47,11 +45,29 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Purpose
 
-This sample demonstrates how to compile a SYCL kernel into an IP component and add that component to an Intel® Platform Designer system, and how to run the resulting system on a hardware board. The sample uses the JTAG to Avalon® Master Bridge Intel FPGA IP to expose your IP component to the JTAG control interface. You can use the System Console application to control and observe the behavior of your IP component.
+This sample demonstrates how to:
+
+* Compile a SYCL kernel into an IP component
+* Add the IP component to an Intel® Platform Designer system
+* Add the Platform Designer system to a top-level entity in a Intel® Quartus® Prime project
+* Compile and run the resulting system on a hardware board. 
+
+The sample uses the JTAG to Avalon® Master Bridge Intel FPGA IP to connect your IP component to the JTAG control interface. You can use the System Console application to control and observe the behavior of your IP component.
 
 ![](assets/csr-output-example-simple.svg)
 
 This example is intended for users interested in creating standalone modules that can be included in Intel® Quartus® Prime projects. It serves as a minimal example, and while it targets a specific board, a user familiar with the Intel® Quartus® Prime Software Suite should be able to easily port this design to other hardware.
+
+## Key Implementation Details
+
+This tutorial is structured with four source code directories.
+
+| Source Directory  | Description
+|:--                |:--
+| `add_oneapi`      | The source and build scripts needed to compile a simple IP using oneAPI
+| `add_quartus_sln` | An example of the project files that are created using the Intel® Quartus® Prime GUI
+| `starting_files`  | The minimal source files you need to create a Intel® Quartus® Prime project. Additional project files are created using the Intel® Quartus® Prime GUI.
+| `system_console`  | Scripts for controlling the System Console application while you test the design in hardware
 
 ### Board-specific Considerations
 
@@ -85,50 +101,46 @@ Follow these steps to compile and test the design:
    Linux:
 
    ```bash
-   $> cd add-oneapi
    $> mkdir build
    $> cd build
-   $> cmake ..
+   $> cmake ../add_oneapi
    $> make report
+   $> cd ..
    ```
 
    Windows:
 
    ```bash
-   > cd add-oneapi
    > mkdir build
    > cd build
-   > cmake -G "NMake Makefiles" ..
+   > cmake -G "NMake Makefiles" ../add_oneapi
    > nmake report
+   > cd ..
    ```
 
-2. **From the same terminal**, prepare a project directory for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `add-quartus-sln` into it. Then launch the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
+2. **From the same terminal**, prepare a project directory called `add_quartus` for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `starting_files` directory into it. Then launch the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
-   > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add-quartus-sln` directory.
+   > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add_quartus_sln` directory.
 
    Linux:
    
-   ```
-   $> cd ../../
-   $> mkdir add-quartus
-   $> cp add-quartus-sln/add.sv add-quartus
-   $> cp add-quartus-sln/jtag.sdc add-quartus
-   $> cd add-quartus
+   ```bash
+   $> mkdir add_quartus
+   $> cp -r starting_files/* add_quartus/
+   $> cd add_quartus
    $> quartus
    ```
 
    Windows:
    
-   ```
-   > cd ..\..\
-   > mkdir add-quartus
-   > xcopy add-quartus-sln\add.sv add-quartus
-   > xcopy add-quartus-sln\jtag.sdc add-quartus
-   > cd add-quartus
+   ```bash
+   > mkdir add_quartus
+   > ROBOCOPY starting_files/ add_quartus/ /S /NFL /NDL
+   > cd add_quartus
    > quartus.exe
    ```
 
-   1. Set the project directory to be the `add-quartus` directory.
+   1. Set the project directory to be the `add_quartus` directory.
 
    2. Set the top-level entity to be `add` to make project management easier.
 
@@ -138,24 +150,28 @@ Follow these steps to compile and test the design:
 
    4. Choose **Empty Project** when prompted to select a project type.
 
-   5. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `add-quartus-sln`.
+   5. Add the source file `add.sv` and `jtag.sdc` to the design when the wizard prompts you. These may be copied from `starting_files`.
 
       ![](assets/add-files.png)
+
+      `add.sv` is the top-level entity of this design. It instantiates an instance of the Platform Designer system that contains your simple SYCL HLS IP.
+      
+      `jtag.sdc` contains timing constraints for the JTAG IP.
 
 3. Copy the IP you generated in Step 1 to the Intel Quartus® Prime project. 
 
    Linux:
 
-   ```
-   $> cd .. # navigate to project root if not there already
-   $> cp -r add-oneapi/build/add.report.prj/ add-quartus/
+   ```bash
+   $> cd .. # navigate to build root if not there already
+   $> cp -r build/add.report.prj/ add_quartus/
    ```
 
    Windows:
 
-   ```
-   > cd .. # navigate to project root if not there already
-   > ROBOCOPY add-oneapi\build\add.report.prj\ add-quartus\add.report.prj\ /S
+   ```bash
+   > cd .. # navigate to build root if not there already
+   > ROBOCOPY build\add.report.prj\ add_quartus\add.report.prj\ /S /NFL /NDL
    ```
 
 4. Create the Platform Designer system.
@@ -253,14 +269,32 @@ Follow these steps to compile and test the design:
 
    Linux:
 
-   ```
-   $> cp add-quartus/output_files/add.sof system_console
+   ```bash
+   $> cp add_quartus/output_files/add.sof system_console
    ```
 
    Windows:
 
+   ```bash
+   > xcopy add_quartus\output_files\add.sof system_console /Y
    ```
-   > xcopy add-quartus\output_files\add.sof system_console
+
+You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script.
+
+   Linux:
+
+   ```bash
+   mkdir build_pd_system
+   cd build_pd_system
+   quartus_sh -t ../build_system.tcl
+   ```
+
+   Windows:
+
+   ```bash
+   mkdir build_pd_system
+   cd build_pd_system
+   quartus_sh -t ..\build_system.tcl
    ```
 
 ### Additional Documentation
@@ -273,9 +307,9 @@ Follow these steps to compile and test the design:
 
 ## Running the Sample
 
-Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA.
+Use the `test.bat` script in the `system_console` directory to flash the design to your development board, and launch the system console. The included `.tcl` script in the `system_console` directory demonstrates how to use the System Console to interact with your IP through the JTAG to Avalon® Master Bridge Intel FPGA IP on the FPGA. 
 
-To move the design to a different computer, copy the `system_console` and directories from the `add-quartus` directory.
+To move the design to a different computer for testing, copy the entire `system_console` directory, along with `add.sof`.
 
 See output:
 
@@ -297,6 +331,12 @@ Press any key to continue . . .
 
 <etc.>
 ---------------------------------------
+% 
+```
+
+At the `%` prompt, enter `source test_add.tcl` to exercise the hardware design.
+
+```
 % source test_add.tcl
 Resetting IP...
 TEST 1: READ OUTPUT AFTER RESET

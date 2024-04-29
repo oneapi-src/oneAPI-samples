@@ -50,10 +50,11 @@ If you used a separate location, open a terminal and type the following
 ```
 source <custom_path>/bin/activate
 ```
-2. Clone the GitHub repository:
+2. Clone the GitHub repository and install required packages:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_oneCCL_Bindings_For_PyTorch_GettingStarted/
+pip install -r requirements.txt
 ```
 3. Launch Jupyter Notebook.
 ```
