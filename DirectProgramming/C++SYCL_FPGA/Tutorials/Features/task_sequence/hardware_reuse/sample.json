@@ -1,7 +1,7 @@
 {
   "guid": "D84B84D9-E7B6-4B1B-90D7-BAA030C9737B",
   "name": "Hardware Reuse",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/experimental"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/task_sequence"],
   "description": "An Intel® FPGA tutorial that demonstrates how to reuse hardware in your FPGA designs by using loops and task sequences.",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
@@ -12,7 +12,7 @@
     "base": "../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/experimental/hardware_reuse",
+      "Tutorials/Features/task_sequence/hardware_reuse",
       "include"
     ],
     "exclude": []
@@ -91,7 +91,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=NAIVE",
           "nmake fpga_emu",
           "hw_reuse_naive.fpga_emu.exe"
         ]
@@ -103,7 +103,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=NAIVE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=NAIVE",
           "nmake report"
         ]
       },
@@ -114,7 +114,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=LOOP",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=LOOP",
           "nmake fpga_emu",
           "hw_reuse_loop.fpga_emu.exe"
         ]
@@ -126,7 +126,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=LOOP",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=LOOP",
           "nmake report"
         ]
       },
@@ -137,7 +137,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=TASK_SEQUENCE",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=TASK_SEQUENCE",
           "nmake fpga_emu",
           "hw_reuse_tseq.fpga_emu.exe"
         ]

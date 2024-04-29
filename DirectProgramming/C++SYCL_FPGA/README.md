@@ -100,7 +100,7 @@ flowchart LR
 | [invocation_interfaces](Tutorials/Features/hls_flow_interfaces/invocation_interfaces)                                         | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to specify the kernel invocation interface and kernel argument interfaces
 | [streaming_data_interfaces](Tutorials/Features/hls_flow_interfaces/streaming_data_interfaces)                                 | [Tutorials/Features/hls_flow_interfaces](Tutorials/Features/hls_flow_interfaces) | How to use pipes to implement streaming data interfaces on an IP component
 | [parallel_loops](Tutorials/Features/task_sequence/parallel_loops)                                                             | [Tutorials/Features](Tutorials/Features) | How to use task sequences to describe multiple parallel loops in a single kernel
-| [hardware_reuse (experimental)](Tutorials/Features/experimental/hardware_reuse)                                               | [Tutorials/Features](Tutorials/Features)                                                 | How to reuse hardware in your FPGA designs by using loops and task sequences
+| [hardware_reuse](Tutorials/Features/task_sequence/hardware_reuse)                                                             | [Tutorials/Features](Tutorials/Features)                                                 | How to reuse hardware in your FPGA designs by using loops and task sequences
 
 #### Tier 3: Explore the Advanced Techniques
 
