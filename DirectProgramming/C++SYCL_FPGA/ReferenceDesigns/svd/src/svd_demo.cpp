@@ -6,15 +6,6 @@
 #include "svd.hpp"
 #include "svd_testcase.hpp"
 
-// clang-format off
-SVDTestcase<float, 4, 4, 1> small_4x4(
-    std::vector<std::vector<float>>{
-        {0.47084338, 0.99594452, 0.47982739, 0.69202168},
-        {0.45148837, 0.72836647, 0.64691844, 0.62442883},
-        {0.80974833, 0.82555856, 0.30709051, 0.58230306},
-        {0.97898197, 0.98520343, 0.40133633, 0.85319924}},
-    std::vector<float>({2.79495619, 0.44521050, 0.19458290, 0.07948970}));
-// clang-format on
 
 int main(int argc, char *argv[]) {
 #if FPGA_HARDWARE
@@ -44,8 +35,9 @@ int main(int argc, char *argv[]) {
               << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
 #if FPGA_SIMULATOR
-    auto test_error = small_4x4.RunTest(q, repetitions);
-    small_4x4.PrintResult();
+    SVDTestcase<float, 4, 4, 1> small_testcase;
+    auto test_error = small_testcase.RunTest(q, repetitions);
+    small_testcase.PrintResult();
 #else
     SVDTestcase<float, 32, 32, 8> large_testcase;
     auto test_error = large_testcase.RunTest(q, repetitions);

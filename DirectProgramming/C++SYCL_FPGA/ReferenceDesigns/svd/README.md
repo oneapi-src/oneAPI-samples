@@ -140,9 +140,9 @@ As mentioned above, when extra filler vectors are needed to complete the $U$ mat
 An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md), so here we will insert an instance of the `fpga_linalg::streamingQRD` design. The $Q$ output of this kernel is orthogonalized $U$ matrix. Since we only care about the orthogonalized $U$ matrix, $R$ output of the Streaming QRD kernel is discarded.
 
 ### Demo testbench
-In this sample, a testbench is used to demonstrate the SVD design. The test bench uses an input matrix of size 16 x 8.
+In this sample, a testbench is used to demonstrate the SVD design.
 
-The resulting singular values in $S$ are compared against results obtained ahead of time using the NumPy package in Python 3.8.10.
+The resulting singular values are checked against eigen values calculated by a reference PCA algorithm that is also used in the PCA sample.
 
 Since the singular vectors in $U$ and $V$ are non-unique, their correctness are checked by (1) checking for orthogonality, and (2) that they satisfy the relationship $A = USV^T$.
 
