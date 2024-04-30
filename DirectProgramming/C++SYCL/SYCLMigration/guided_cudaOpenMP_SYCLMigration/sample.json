@@ -1,0 +1,25 @@
+{
+    "guid": "7EBAB336-3149-49E1-8B53-C9DFBD5366FE",	
+    "name": "guided_cudaOpenMP_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample demonstrates to use OpenMP API to write an application for multiple GPUs.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm_gpu"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }
