@@ -1,8 +1,8 @@
 {
-    "guid": "47581E79-AF43-4B3B-9F20-0BE0A4D77A25",	
-    "name": "guided_histogram_SYCLMigration",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/ParallelPatterns"],
-    "description": "This sample implements 64-bin histogram calculation of arbitrary-sized 8-bit data array.",
+    "guid": "CC4B8248-DB2E-4D34-AFC2-C3595266A211",	
+    "name": "guided_inlinePtx_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample shows the demonstrates the use of SYCL queues for PTX assembly on GPU devices.",
     "toolchain": [ "dpcpp" ],
     "languages": [ { "cpp": {} } ],
     "targetDevice": [ "CPU", "GPU" ],

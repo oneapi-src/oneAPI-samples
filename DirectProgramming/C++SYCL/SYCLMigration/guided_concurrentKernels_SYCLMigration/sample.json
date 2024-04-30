@@ -1,7 +1,7 @@
 {
-  "guid": "BB85F7E8-2686-4079-AFB0-A12BB459106E",	
-  "name": "Concurrent Kernels",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "guid": "1B0F1520-AFA6-42AC-AB6E-686FC3D87CF7",	
+  "name": "guided_concurrentKernels_SYCLMigration",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample shows the execution of Multiple Kernels on the device at the same time.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
