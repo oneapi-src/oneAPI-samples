@@ -60,8 +60,10 @@ else()
       set(DEVICE_FLAG "A10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
       set(DEVICE_FLAG "S10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex7.*")
       set(DEVICE_FLAG "Agilex7")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex5.*")
+      set(DEVICE_FLAG "Agilex5")
     elseif(FPGA_DEVICE_NAME MATCHES ".*cyclonev.*")
       set(DEVICE_FLAG "CycloneV")
     endif()
@@ -70,8 +72,8 @@ endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10, -DDEVICE_FLAG=CycloneV or \
-                         -DDEVICE_FLAG=Agilex7.")
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10, -DDEVICE_FLAG=CycloneV, \
+                         -DDEVICE_FLAG=Agilex5, or -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
@@ -170,8 +172,10 @@ elseif(DEVICE_FLAG MATCHES S10)
     set(FAMILY "Stratix 10")
 elseif(DEVICE_FLAG MATCHES CycloneV)
     set(FAMILY "Cyclone V")
+elseif(DEVICE_FLAG MATCHES Agilex5)
+    set(FAMILY "Agilex 5")
 else()
-    set(FAMILY "Agilex")
+    set(FAMILY "Agilex7")
 endif()
 
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
