@@ -1,0 +1,352 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1663
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1719
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1854
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1905
+    Length:          0
+    ReplacementText: ', const sycl::nd_item<3> &item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1926
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1939
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          1952
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2098
+    Length:          43
+    ReplacementText: 'laneid = item_ct1.get_sub_group().get_local_linear_id();'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2141
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2595
+    Length:          35
+    ReplacementText: 'DPCT_CHECK_ERROR(d_ptr = sycl::malloc_device<int>(N, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2670
+    Length:          39
+    ReplacementText: 'DPCT_CHECK_ERROR(h_ptr = sycl::malloc_host<int>(N, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2717
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2736
+    Length:          7
+    ReplacementText: 1, 1, 256
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2750
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2768
+    Length:          49
+    ReplacementText: '1, 1, (N + cudaBlockSize[2] - 1) / cudaBlockSize[2]'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2820
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2824
+    Length:          55
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n      sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize), \n      [=](sycl::nd_item<3> item_ct1) {\n        sequence_gpu(d_ptr, N, item_ct1);\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2879
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2881
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1010:15: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2901
+    Length:          18
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          2942
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3036
+    Length:          40
+    ReplacementText: 'DPCT_CHECK_ERROR(h_d_ptr = sycl::malloc_host<int>(N, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3099
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3140
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3165
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3410
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_ptr, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3425
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3448
+    Length:          19
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_ptr, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3467
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3490
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_d_ptr, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Offset:          3511
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu'
+    Digest:          69ad7668ec7609acf968de69dbf5747a
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/inlinePTX'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
