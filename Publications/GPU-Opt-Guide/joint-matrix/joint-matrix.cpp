@@ -11,44 +11,30 @@ using use = sycl::ext::oneapi::experimental::matrix::use;
 using layout = sycl::ext::oneapi::experimental::matrix::layout;
 using bfloat16 = sycl::ext::oneapi::bfloat16;
 
-constexpr size_t SG_SZ = 16;
-
-constexpr size_t TM = 8;
-constexpr size_t TN = SG_SZ;
-constexpr size_t TK = 16;
-
 constexpr float ALPHA = 2.0;
-
+constexpr float C_INIT = 1.0;
 constexpr float BF16_EPSILON = 0.00781250;
 
-template <typename T, size_t NUM_ROWS, size_t NUM_COLS> struct big_matrix {
-private:
-  T *mat;
+template <typename KernelName> size_t get_sg_size(sycl::queue q) {
+  auto KernelID = sycl::get_kernel_id<KernelName>();
+  auto KB = sycl::get_kernel_bundle<sycl::bundle_state::executable>(
+      q.get_context(), {KernelID});
+  auto kernel = KB.get_kernel(KernelID);
 
-public:
-  T *get_data() { return mat; }
-  void set_data(T *data) { mat = data; }
-  big_matrix(T *data) : mat(data) {}
-};
-
-template <typename T1, typename T2, size_t M, size_t N, size_t K>
-void matrix_multiply(big_matrix<T1, M, N> &C, big_matrix<T2, M, K> &A,
-                     big_matrix<T2, K / 2, N * 2> &B) {
+  return kernel.template get_info<
+      sycl::info::kernel_device_specific::max_sub_group_size>(q.get_device());
+}
+template <typename Tc, typename Ta, typename Tb, size_t TM, size_t TN,
+          size_t TK, size_t M, size_t N, size_t K, class kernel_name>
+void matrix_multiply(Tc *C, Ta *A, Tb *B, sycl::queue q) {
   // kernel begin
   size_t NDRangeM = M / TM;
   size_t NDRangeN = N / TN;
-  sycl::buffer<bfloat16, 2> bufA(A.get_data(), sycl::range<2>(M, K));
-  sycl::buffer<bfloat16, 2> bufB(B.get_data(), sycl::range<2>(K, N));
-  sycl::buffer<float, 2> bufC((float *)C.get_data(), sycl::range<2>(M, N));
-
-  sycl::queue q;
+  size_t sg_size = get_sg_size<kernel_name>(q);
   q.submit([&](sycl::handler &cgh) {
-     sycl::accessor accC(bufC, cgh, sycl::read_write);
-     sycl::accessor accA(bufA, cgh, sycl::read_only);
-     sycl::accessor accB(bufB, cgh, sycl::read_only);
-     cgh.parallel_for(
-         sycl::nd_range<2>({NDRangeM, NDRangeN * SG_SZ}, {1, 1 * SG_SZ}),
-         [=](sycl::nd_item<2> spmd_item) [[intel::reqd_sub_group_size(SG_SZ)]]
+     cgh.parallel_for<kernel_name>(
+         sycl::nd_range<2>({NDRangeM, NDRangeN * sg_size}, {1, 1 * sg_size}),
+         [=](sycl::nd_item<2> spmd_item)
 
          {
            // The joint matrix API has to be accessed by all the workitems in a
@@ -60,50 +46,41 @@ void matrix_multiply(big_matrix<T1, M, N> &C, big_matrix<T2, M, K> &A,
            const auto sg_starty = global_idy - spmd_item.get_local_id(1);
 
            sycl::sub_group sg = spmd_item.get_sub_group();
+           auto pA = sycl::address_space_cast<
+               sycl::access::address_space::global_space,
+               sycl::access::decorated::no>(A);
+           auto pB = sycl::address_space_cast<
+               sycl::access::address_space::global_space,
+               sycl::access::decorated::no>(B);
+           auto pC = sycl::address_space_cast<
+               sycl::access::address_space::global_space,
+               sycl::access::decorated::no>(C);
            sycl::ext::oneapi::experimental::matrix::joint_matrix<
-               sycl::sub_group, bfloat16, use::a, TM, TK, layout::row_major>
+               sycl::sub_group, Ta, use::a, TM, TK, layout::row_major>
                sub_a;
-           // For B, we assume B has been already VNNIed.
            sycl::ext::oneapi::experimental::matrix::joint_matrix<
-               sycl::sub_group, bfloat16, use::b, TK, TN,
-               layout::ext_intel_packed>
+               sycl::sub_group, Tb, use::b, TK, TN, layout::row_major>
                sub_b;
            sycl::ext::oneapi::experimental::matrix::joint_matrix<
-               sycl::sub_group, float, use::accumulator, TM, TN>
+               sycl::sub_group, Tc, use::accumulator, TM, TN>
                sub_c;
 
-           joint_matrix_fill(sg, sub_c, 1.0);
+           joint_matrix_fill(sg, sub_c, C_INIT);
            for (int k = 0; k < K / TK; k += 1) {
-             joint_matrix_load(
-                 sg, sub_a,
-                 accA.template get_multi_ptr<sycl::access::decorated::no>() +
-                     (sg_startx * TM) * K + k * TK,
-                 K);
-             joint_matrix_load(
-                 sg, sub_b,
-                 accB.template get_multi_ptr<sycl::access::decorated::no>() +
-                     (k * TK / 2) * (N * 2) + sg_starty / SG_SZ * TN * 2,
-                 N * 2);
+             joint_matrix_load(sg, sub_a, pA + (sg_startx * TM) * K + k * TK,
+                               K);
+             joint_matrix_load(sg, sub_b,
+                               pB + (k * TK) * N + sg_starty / sg_size * TN, N);
              joint_matrix_mad(sg, sub_c, sub_a, sub_b, sub_c);
            }
-           joint_matrix_apply(sg, sub_c, [=](float &x) { x *= ALPHA; });
+           joint_matrix_apply(sg, sub_c, [=](Tc &x) { x *= ALPHA; });
            joint_matrix_store(
-               sg, sub_c,
-               accC.template get_multi_ptr<sycl::access::decorated::no>() +
-                   (sg_startx * TM) * N + sg_starty / SG_SZ * TN,
+               sg, sub_c, pC + (sg_startx * TM) * N + sg_starty / sg_size * TN,
                N, layout::row_major);
          }); // parallel for
    }).wait();
   // kernel end
 }
-
-static constexpr size_t MATRIX_M = TM * 2;
-static constexpr size_t MATRIX_N = TN * 2;
-static constexpr size_t MATRIX_K = TK * 2;
-bfloat16 A[MATRIX_M][MATRIX_K];
-bfloat16 B[MATRIX_K / 2][MATRIX_N * 2];
-float C[MATRIX_M][MATRIX_N];
-float D[MATRIX_M][MATRIX_N];
 
 float make_fp32(bfloat16 x) {
   unsigned int y = *((int *)&x);
@@ -112,57 +89,101 @@ float make_fp32(bfloat16 x) {
   return *res;
 }
 
-void matrix_multiply_ref(int *A_mem, int *B_mem, int *C_mem, int M, int N,
-                         int K) {
+template <typename Tc, typename Ta, typename Tb, size_t M, size_t N, size_t K>
+void matrix_multiply_ref(Ta *A, Tb *B, Tc *C) {
   for (int m = 0; m < M; m++)
     for (int n = 0; n < N; n++) {
       for (int k = 0; k < K; k++) {
-        // Because B was assumed VNNIed
-        bfloat16 *va = (bfloat16 *)(A_mem + m * K + k);
-        bfloat16 *vb = (bfloat16 *)(B_mem + k * N + n);
-        float acc = *((float *)(C_mem + m * N + n));
-        for (int i = 0; i < 2; i++) {
-          acc += (make_fp32(va[i]) * make_fp32(vb[i]));
-        }
-        *((float *)(C_mem + m * N + n)) = acc;
+        C[m * N + n] += make_fp32(A[m * K + k]) * make_fp32(B[k * N + n]);
       }
-      *((float *)(C_mem + m * N + n)) *= ALPHA;
+      C[m * N + n] *= ALPHA;
     }
 }
 
-int main() {
-  for (int i = 0; i < MATRIX_M; i++) {
-    for (int j = 0; j < MATRIX_K; j++) {
-      A[i][j] = bfloat16(1.0f * (i + j));
+template <typename Ta, typename Tb, typename Tc, size_t TM, size_t TN,
+          size_t TK, class kernel_name>
+int test() {
+
+  static constexpr size_t M = TM * 2;
+  static constexpr size_t N = TN * 2;
+  static constexpr size_t K = TK * 2;
+  sycl::queue q;
+  Ta *A = sycl::malloc_shared<Ta>(M * K, q);
+  Tb *B = sycl::malloc_shared<Tb>(K * N, q);
+  Tc *C = sycl::malloc_shared<Tc>(M * N, q);
+  Tc *D = sycl::malloc_shared<Tc>(M * N, q);
+
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < K; j++) {
+      A[i * K + j] = Ta(1.0f * (i + j));
     }
   }
-  for (int i = 0; i < MATRIX_K / 2; i++) {
-    for (int j = 0; j < MATRIX_N * 2; j++) {
-      B[i][j] = bfloat16(2.0f * i + 3.0f * j);
+  for (int i = 0; i < K; i++) {
+    for (int j = 0; j < N; j++) {
+      B[i * N + j] = Tb(2.0f * i + 3.0f * j);
     }
   }
-  for (int i = 0; i < MATRIX_M; i++) {
-    for (int j = 0; j < MATRIX_N; j++) {
-      C[i][j] = 1.0;
-      D[i][j] = 1.0;
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < N; j++) {
+      C[i * N + j] = C_INIT;
+      D[i * N + j] = C_INIT;
     }
   }
 
-  big_matrix<float, MATRIX_M, MATRIX_N> MC((float *)&C);
-  big_matrix<float, MATRIX_M, MATRIX_N> MD((float *)&D);
-  big_matrix<bfloat16, MATRIX_M, MATRIX_K> MA((bfloat16 *)&A);
-  big_matrix<bfloat16, MATRIX_K / 2, MATRIX_N * 2> MB((bfloat16 *)&B);
-  matrix_multiply(MC, MA, MB);
-  matrix_multiply_ref((int32_t *)A, (int32_t *)B, (int32_t *)D, MATRIX_M,
-                      MATRIX_N, MATRIX_K / 2);
-
+  matrix_multiply_ref<Tc, Ta, Tb, M, N, K>(A, B, D);
+  matrix_multiply<Tc, Ta, Tb, TM, TN, TK, M, N, K, kernel_name>(C, A, B, q);
   bool res = true;
-  for (int i = 0; i < MATRIX_M; i++) {
-    for (int j = 0; j < MATRIX_N; j++) {
-      if ((fabs(C[i][j] - D[i][j])) > BF16_EPSILON)
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < N; j++) {
+      if constexpr (std::is_same_v<Tc, float>) {
+        if (fabs(C[i * N + j] - D[i * N + j]) > BF16_EPSILON) {
+          res = false;
+          std::cout << "Incorrect result in matrix. "
+                    << "i: " << i << ", j: " << j << ", Ref: " << D[i * N + j]
+                    << ", Val: " << C[i * N + j] << "\n";
+        }
+      } else if (C[i * N + j] != D[i * N + j])
         res = false;
     }
   }
   std::cout << (res ? "passed" : "failed") << std::endl;
   return !res;
+}
+
+int main() {
+  sycl::queue q;
+  // Snippet begin
+  std::vector<sycl::ext::oneapi::experimental::matrix::combination>
+      combinations = q.get_device()
+                         .get_info<sycl::ext::oneapi::experimental::info::
+                                       device::matrix_combinations>();
+
+  bool passed = true;
+  for (unsigned int i = 0; i < combinations.size(); i++) {
+    if (combinations[i].nsize == 0) { // Intel AMX
+      passed &=
+          test<int8_t, int8_t, int32_t, 16, 16, 64, class amx_int_16x16x64>();
+      passed &= test<bfloat16, bfloat16, float, 16, 16, 32,
+                     class amx_bf16_16x16x32>();
+      break;
+    }
+
+    if (combinations[i].nsize == 16) { // architecture::intel_gpu_pvc
+      passed &=
+          test<int8_t, int8_t, int32_t, 8, 16, 32, class pvc_int_8x16x32>();
+      passed &=
+          test<bfloat16, bfloat16, float, 8, 16, 16, class pvc_bf16_8x16x16>();
+      break;
+    }
+
+    if (combinations[i].nsize == 8) { // architecture::intel_gpu_dg2*
+      passed &= test<int8_t, int8_t, int32_t, 8, 8, 32, class dg2_int_8x8x32>();
+      passed &=
+          test<bfloat16, bfloat16, float, 8, 8, 16, class dg2_bf16_8x16x16>();
+      break;
+    }
+  }
+  // Snippet end
+
+  return !passed;
 }
