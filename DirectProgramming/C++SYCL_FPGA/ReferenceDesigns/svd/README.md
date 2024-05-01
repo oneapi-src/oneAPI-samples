@@ -9,7 +9,7 @@ The `SVD` reference design demonstrates a singular value decomposition implement
 | Category              | Reference Designs and End to End
 
 ## Purpose
-This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for applications such as matrix pseudo-inverse and solving homogeneous linear equations. The SVD of a real, 2D input matrix $A$ is defined as
+This FPGA reference design demonstrates the Singular Value Decomposition (SVD) of real matrices. SVD is a common linear algebra factorization used for applications such as matrix pseudo-inverse and solving homogeneous linear equations. The SVD of a real, 2D input matrix $A$ is defined as follows:
 
 ```math
 A = USV^T
@@ -19,7 +19,7 @@ where $U$ and $V$ are orthonormal bases of $A$, called (left and right) singular
 
 $S$ is a diagonal matrix (matrix where all elements but the diagonals are zeros). The diagonals are called singular values corresponding to each singular vectors.
 
-SVD can also be applied to complex matrices, however this design currently doesn't support complex matrices for simplicity.
+While you can apply SVD to complex matrices, this design does not support complex matrices to keep the design simple.
 
 ## Prerequisites
 
@@ -89,17 +89,17 @@ Therefore this kernel performs a matrix multiplication by blocks, as described i
 ### Eigenvalues and Eigenvectors computation
 We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigenvalues and eigenvectors of the input covariance matrix. These eigenvalues and eigenvectors are going to be used to construct the final outputs of SVD.
 
-This kernel only works with input of rank sufficient matrix (all columns are linearly independent). It produces an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag is set to 1, the result of the SVD is known to be incorrect.
+This kernel works only with input of rank sufficient matrix (all columns are linearly independent). It produces an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag is set to 1, the result of the SVD is known to be incorrect.
 
-The source code for the the Eigenvalues and Eigenvectors Computation kernel can be found in `streaming_eigen.hpp` in the shared [include](../../include) directory. An detailed explanation of the algorithm of computing Eigenvalues can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
+The source code for the the eigenvalues and eigenvectors computation kernel can be found in `streaming_eigen.hpp` in the shared [include](../../include) directory. An detailed explanation of the algorithm of computing eigenvalues can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
 
-### Construct output from Eigenvalues and Eigenvectors
+### Construct Output from Eigenvalues and Eigenvectors
 The final outputs of SVD can be constructed from the eigenvalues and eigenvectors of the input covariance. 
 
 Consider an input matrix $A$ of size $m \times n$.
 
 #### $V$ Matrix
-The right singular vectors (the $V$ matrix) can be produced by simply copying the eigenvectors , and should be of size $n \times n$:
+The right singular vectors (the $V$ matrix) can be produced by copying the eigenvectors , and should be of size $n \times n$:
 ```math
 V = [v_0, v_1, v_2, ...,v_n] 
 ```
@@ -129,24 +129,24 @@ AV = US
 ```
 And since $S$ is a diagonal matrix, $S^{-1}$ is the same as multiplying by the reciprocals of each element on the main diagonal of $S$.
 
-So to sum up, the $m \times n$ portion of Matrix $U$ ($U_{[0:m][0:n]}$) can be obtained through:
+In summary, the $m \times n$ portion of matrix $U$ ($U_{[0:m][0:n]}$) can be obtained through:
 ![](assets/U_matrix.png)
 
 When the input matrix $A$ is not square, the number of eigenvectors calculated is less than the number of columns in the $U$ matrix. An orthogonalization kernel is needed to generate extra orthogonal vectors.
 
-### $U$ Matrix orthogonalization
+### $U$ Matrix Orthogonalization
 As mentioned above, when extra filler vectors are needed to complete the $U$ matrix, we need to orthogonalize the matrix.
 
 An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md), so here we will insert an instance of the `fpga_linalg::streamingQRD` design. The $Q$ output of this kernel is orthogonalized $U$ matrix. Since we only care about the orthogonalized $U$ matrix, $R$ output of the Streaming QRD kernel is discarded.
 
-### Demo testbench
+### Demo Testbench
 In this sample, a testbench is used to demonstrate the SVD design.
 
 The resulting singular values are checked against eigen values calculated by a reference PCA algorithm that is also used in the PCA sample.
 
 Since the singular vectors in $U$ and $V$ are non-unique, their correctness are checked by (1) checking for orthogonality, and (2) that they satisfy the relationship $A = USV^T$.
 
-## Build the `SVD` design
+## Build the `SVD` Design
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
 > This practice ensures that your compiler, libraries, and tools are ready for development.

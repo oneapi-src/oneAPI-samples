@@ -53,7 +53,7 @@ message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} ${BSP_FLAG})
+set(USER_FLAGS ${USER_FLAGS};-DFIXED_ITERATIONS=${FIXED_ITERATIONS};${BSP_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
