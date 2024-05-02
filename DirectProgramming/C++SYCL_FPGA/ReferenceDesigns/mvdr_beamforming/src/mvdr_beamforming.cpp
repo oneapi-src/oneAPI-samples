@@ -382,12 +382,13 @@ int main(int argc, char *argv[]) {
         DataOutConsumer::Start(q, kDataOutSize * num_matrix_copies);
     std::tie(produce_dma_event, produce_kernel_event) =
         DataProducer::Start(q, kInputDataSize * num_matrix_copies);
-#endif
+
     ////////////////////////////////////////////////////////////////////////////
 
     // Wait for the DMA event to finish for the producer before starting the
     // timer. If USM host allocations are used, this is a noop.
     produce_dma_event.wait();
+#endif
 
     auto start_time = high_resolution_clock::now();
 
