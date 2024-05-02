@@ -1,4 +1,4 @@
-# `Quantizing Transformer Model using Intel® Extention for Transformers (ITREX)` Sample
+# `Quantizing Transformer Model using Intel® Extension for Transformers (ITREX)` Sample
 
 The `Quantizing Transformer Model using Intel® Extension for Transformers (ITREX)` sample illustrates the process of quantizing the `Intel/neural-chat-7b-v3-3` language model. This model, a fine-tuned iteration of *Mistral-7B*, undergoes quantization utilizing Weight Only Quantization (WOQ) techniques provided by Intel® Extension for Transformers (ITREX). 
 
@@ -6,8 +6,8 @@ By leveraging WOQ techniques, developers can optimize the model's memory footpri
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to quantize transformer models using Intel® Extention for Transformers (ITREX)
-| Time to complete      | 10 minutes
+| What you will learn   | How to quantize transformer models using Intel® Extension for Transformers (ITREX)
+| Time to complete      | 20 minutes
 | Category              | Concepts and Functionality
 
 Intel® Extension for Transformers (ITREX) serves as a comprehensive toolkit tailored to enhance the performance of GenAI/LLM (General Artificial Intelligence/Large Language Models) workloads across diverse Intel platforms. Among its key features is the capability to seamlessly quantize transformer models to 4-bit or 8-bit integer precision.
@@ -28,7 +28,7 @@ Quantization thus offers a compelling approach to deploying language models in r
 |:---                     |:---
 | OS                      | Ubuntu* 22.04.3 LTS (or newer)
 | Hardware                | Intel® Xeon® Scalable Processor family
-| Software                | Intel® Extention for Transformers (ITREX)
+| Software                | Intel® Extension for Transformers (ITREX)
 
 ### For Local Development Environments
 
@@ -78,7 +78,7 @@ These components offer flexibility for both learning and practical application, 
 
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `intelpython` environment's *activate* script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-## Run the `Quantizing Transformer Model using Intel® Extention for Transformers (ITREX)` Sample
+## Run the `Quantizing Transformer Model using Intel® Extension for Transformers (ITREX)` Sample
 
 ### On Linux*
 
