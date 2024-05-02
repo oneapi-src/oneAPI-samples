@@ -1,11 +1,11 @@
-# Modin Vs. Pandas Performance Sample
+# Modin* Vs. Pandas Performance Sample
 
-The `Modin Vs. Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Modin and the performance of Pandas for specific dataframe operations.
+The `Modin* Vs. Pandas Performance` code illustrates how to use Modin* to replace the Pandas API. The sample compares the performance of Modin* and the performance of Pandas for specific dataframe operations.
 
 | Area                       | Description
 |:---                        |:---
 | Category                   | Concepts and Functionality
-| What you will learn        | How to accelerate the Pandas API using Modin.
+| What you will learn        | How to accelerate the Pandas API using Modin*.
 | Time to complete           | Less than 10 minutes
 
 ## Purpose
@@ -19,17 +19,17 @@ You can run the sample locally or in Google Colaboratory (Colab).
 |:---                       |:---
 | OS                        | Ubuntu* 20.04 (or newer)
 | Hardware                  | Intel® Core™ Gen10 Processor <br> Intel® Xeon® Scalable Performance processors
-| Software                  | Intel® Distribution of Modin*
+| Software                  | Modin*
 
 ## Key Implementation Details
 
-This code sample is implemented for CPU using Python programming language. The sample requires NumPy, Pandas, Modin libraries, and the time module in Python.
+This code sample is implemented for CPU using Python programming language. The sample requires NumPy, Pandas, Modin* libraries, and the time module in Python.
 
 ## Environment Setup
 
 If you want to run the sample on a local system using a command-line interface (CLI), you must install the Modin in a new Conda* environment first.
 
-### Install Modin
+### Install Modin*
 
 1. Create a Conda environment.
    ```
@@ -65,7 +65,7 @@ If you want to run the sample on a local system using a command-line interface (
    ipython Modin_Vs_Pandas.ipynb
    ```
 
-## Run the `Modin Vs Pandas Performance` Sample in Google Colaboratory
+## Run the `Modin* Vs Pandas Performance` Sample in Google Colaboratory
 
 1. Change to the directory containing the `Modin_Vs_Pandas.ipynb` notebook file on your local system.
 
