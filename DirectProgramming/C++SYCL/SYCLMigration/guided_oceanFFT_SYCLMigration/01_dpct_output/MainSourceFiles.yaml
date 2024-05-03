@@ -1,0 +1,1533 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          2154
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          2230
+    Length:          0
+    ReplacementText: "\n#include <dpct/fft_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          2257
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          2314
+    Length:          19
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          2389
+    Length:          28
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3673
+    Length:          11
+    ReplacementText: 'dpct::fft::fft_engine_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3694
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3738
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3756
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3800
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          3873
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          4115
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          4652
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          4666
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          5021
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          5228
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          6209
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7425
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7470
+    Length:          41
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(dev)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7514
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1005:18: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7564
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7582
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7630
+    Length:          52
+    ReplacementText: 'DPCT_CHECK_ERROR(fftPlan = dpct::fft::fft_engine::create(&dpct::get_in_order_queue(), meshSize, meshSize, dpct::fft::fft_type::complex_float_to_complex_float))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7759
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7786
+    Length:          40
+    ReplacementText: 'DPCT_CHECK_ERROR(d_h0 = (sycl::float2 *)sycl::malloc_device(spectrumSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7839
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7909
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7944
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          7969
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8021
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8048
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(d_ht = (sycl::float2 *)sycl::malloc_device(outputSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8107
+    Length:          41
+    ReplacementText: 'DPCT_CHECK_ERROR(d_slope = (sycl::float2 *)sycl::malloc_device(outputSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8350
+    Length:          14
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_ht, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8364
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8385
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_slope, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8402
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8423
+    Length:          14
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_h0, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8437
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          8458
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::fft::fft_engine::destroy(fftPlan))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          11386
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          12369
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          12538
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          12619
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          13056
+    Length:          7
+    ReplacementText: 'h0[i].x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          13079
+    Length:          7
+    ReplacementText: 'h0[i].y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          14456
+    Length:          65
+    ReplacementText: 'DPCT_CHECK_ERROR(g_hptr = sycl::malloc_device<float>(meshSize * meshSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          14549
+    Length:          66
+    ReplacementText: 'DPCT_CHECK_ERROR(g_sptr = sycl::malloc_device<sycl::float2>(meshSize * meshSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          14863
+    Length:          48
+    ReplacementText: 'DPCT_CHECK_ERROR((fftPlan->compute<sycl::float2, sycl::float2>(d_ht, d_ht, dpct::fft::fft_direction::backward)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15094
+    Length:          10
+    ReplacementText: 'dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15185
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15210
+    Length:          0
+    ReplacementText: '.wait()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15674
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15690
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15735
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15749
+    Length:          10
+    ReplacementText: 'dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15834
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15841
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15866
+    Length:          0
+    ReplacementText: '.wait()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          15918
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          16221
+    Length:          16
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(g_hptr, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          16237
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          16258
+    Length:          16
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(g_sptr, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Offset:          16274
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1643
+    Length:          19
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n#include <dpct/fft_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1662
+    Length:          28
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1825
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1836
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1853
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1874
+    Length:          26
+    ReplacementText: 'sycl::float2(arg.x(), -arg.y())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1905
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1916
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1957
+    Length:          33
+    ReplacementText: 'sycl::float2(sycl::cos(arg), sycl::sin(arg))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          1995
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2006
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2025
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2035
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2056
+    Length:          33
+    ReplacementText: 'sycl::float2(a.x() + b.x(), a.y() + b.y())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2094
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2105
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2125
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2136
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2158
+    Length:          65
+    ReplacementText: 'sycl::float2(ab.x() * cd.x() - ab.y() * cd.y(), ab.x() * cd.y() + ab.y() * cd.x())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2327
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2366
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2378
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2642
+    Length:          0
+    ReplacementText: ",\n                                       const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2665
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2678
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2691
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2723
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2736
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2749
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2975
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          2987
+    Length:          3
+    ReplacementText: 'k.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3032
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3060
+    Length:          3
+    ReplacementText: 'k.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3105
+    Length:          11
+    ReplacementText: 3.141592654F
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3179
+    Length:          28
+    ReplacementText: 'sycl::sqrt(k.x() * k.x() + k.y() * k.y())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3221
+    Length:          20
+    ReplacementText: 'sycl::sqrt(9.81f * k_len)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3293
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3325
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3642
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3698
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3766
+    Length:          0
+    ReplacementText: ",\n                                      const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3789
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3802
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3815
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3847
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3860
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          3873
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4023
+    Length:          7
+    ReplacementText: 'ht[i].x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4104
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4162
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4232
+    Length:          0
+    ReplacementText: ",\n                                        const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4255
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4268
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4281
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4313
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4326
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4339
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4489
+    Length:          7
+    ReplacementText: 'ht[i].y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4578
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4625
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4719
+    Length:          0
+    ReplacementText: ",\n                                     const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4742
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4755
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4768
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4800
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4813
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4826
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(1)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4876
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4891
+    Length:          23
+    ReplacementText: 'sycl::float2(0.0f, 0.0f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          4988
+    Length:          7
+    ReplacementText: 'slope.x()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5023
+    Length:          7
+    ReplacementText: 'slope.y()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5157
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5171
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5466
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5477
+    Length:          7
+    ReplacementText: 1, 8, 8
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5489
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5499
+    Length:          80
+    ReplacementText: '1, cuda_iDivUp(out_height, block[1]), cuda_iDivUp(out_width, block[2])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5582
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5584
+    Length:          147
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n    sycl::nd_range<3>(grid * block, block), \n    [=](sycl::nd_item<3> item_ct1) {\n      generateSpectrumKernel(d_h0, d_ht, in_width, out_width, out_height, animTime, patchSize, item_ct1);\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5731
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5798
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5956
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5967
+    Length:          7
+    ReplacementText: 1, 8, 8
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5979
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          5989
+    Length:          60
+    ReplacementText: '1, cuda_iDivUp(height, block[1]), cuda_iDivUp(width, block[2])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6070
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:1: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6074
+    Length:          66
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n      sycl::nd_range<3>(grid * block, block), \n      [=](sycl::nd_item<3> item_ct1) {\n        updateHeightmapKernel_y(d_heightMap, d_ht, width, item_ct1);\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6140
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6153
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1049:2: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6157
+    Length:          64
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n      sycl::nd_range<3>(grid * block, block), \n      [=](sycl::nd_item<3> item_ct1) {\n        updateHeightmapKernel(d_heightMap, d_ht, width, item_ct1);\n      });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6221
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6284
+    Length:          6
+    ReplacementText: 'sycl::float2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6429
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6440
+    Length:          7
+    ReplacementText: 1, 8, 8
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6452
+    Length:          4
+    ReplacementText: 'sycl::range<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6463
+    Length:          60
+    ReplacementText: '1, cuda_iDivUp(height, block[1]), cuda_iDivUp(width, block[2])'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6526
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6528
+    Length:          69
+    ReplacementText: "dpct::get_in_order_queue().parallel_for(\n    sycl::nd_range<3>(grid2 * block, block), \n    [=](sycl::nd_item<3> item_ct1) {\n      calculateSlopeKernel(hptr, slopeOut, width, height, item_ct1);\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Offset:          6597
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT.cpp'
+    Digest:          1632d0352b1cbb832b37f0f61ce2642f
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/oceanFFT_kernel.cu'
+    Digest:          1f1e4bad6d73badb12be00d738ca66a5
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
