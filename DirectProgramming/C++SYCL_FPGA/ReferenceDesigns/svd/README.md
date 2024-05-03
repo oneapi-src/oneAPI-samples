@@ -77,6 +77,18 @@ This SVD design consists of 4 computation kernels, as well as several memory acc
 
 ![](assets/SVD.svg)
 
+### Source file structure
+| File name              | Type                            | Content                                                                                                                                                                                              |
+| ---------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| svd_demo.cpp           | Host code                       | Launch a demonstration using the SVD design. Contains the `main()` function.                                                                                                                         |
+| svd_testcase.hpp       | Host code                       | A `struct` that lunches the design with a set of input and check result for correctness. The input can either be specified or generated.                                                             |
+| svd_testbench_tool.hpp  | Host code                       | Helper functions that is used in the test bench of the SVD demonstration to check for correctness.                                                                                                   |
+| print_matrix.hpp       | Host code                       | Helper functions to print matrices.                                                                                                                                                                  |
+| golden_pca.hpp         | Host code                       | A CPU reference PCA design that is used to calculate reference eigen values for the test bench.                                                                                                      |
+| svd.hpp                | Host code with some device code | Contains wrapper function `SingularValueDecomposition` that launches individual kernels of the SVD design.                                                                                           |
+| memory_transfers.hpp   | Device code                     | Contains kernel implementations of `MatrixReadFromDDRTo2PipesByBlocks` , `MatrixReadPipeToDDR` and `VectorReadPipeToDDR`. These kernels transfers data between DDR and streaming interfaces (pipes).|
+| non_std_covariance.hpp | Device code                     | Contains kernel implementation of `StreamingNStdCovarianceMatrix` that computes covariance matrices.                                                                                                 |
+| post_process.hpp       | Device code                     | Contains kernel implementation of `USVFromEigens`.                                                                                                                                                   |
 ### Input covariance matrix computation
 The covariance computation in this design is the same as used in the [PCA](../pca/README.md) reference design except without standardization.
 
@@ -139,7 +151,7 @@ As mentioned above, when extra filler vectors are needed to complete the $U$ mat
 
 An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md), so here we will insert an instance of the `fpga_linalg::streamingQRD` design. The $Q$ output of this kernel is orthogonalized $U$ matrix. Since we only care about the orthogonalized $U$ matrix, $R$ output of the Streaming QRD kernel is discarded.
 
-### Demo Testbench
+### Demonstration Testbench
 In this sample, a testbench is used to demonstrate the SVD design.
 
 The resulting singular values are checked against eigen values calculated by a reference PCA algorithm that is also used in the PCA sample.

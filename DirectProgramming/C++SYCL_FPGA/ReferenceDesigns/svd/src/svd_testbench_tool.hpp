@@ -4,6 +4,11 @@
 #include <iostream>
 #include <vector>
 
+/*
+* This file contains helper functions that is used in the host test bench
+* of the SVD demonstration to check for correctness.
+*/
+
 #define EPSILON 2E-6
 
 namespace svd_testbench_tool {  // not for kernel code

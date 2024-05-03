@@ -15,7 +15,7 @@
 
 // Headers specific to SVD
 #include "memory_transfers.hpp"
-#include "non_std_convariance.hpp"
+#include "non_std_covariance.hpp"
 #include "post_process.hpp"
 
 
@@ -147,7 +147,7 @@ double SingularValueDecomposition(
       .wait();
 
   // read input matrix from DDR
-  auto ddr_write_event = q.submit([&](sycl::handler &h) {
+  sycl::event ddr_write_event = q.submit([&](sycl::handler &h) {
     h.single_task<IDInputMatrixFromDDRToLocalMem>(
         [=]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRTo2PipesByBlocks<
@@ -182,7 +182,7 @@ double SingularValueDecomposition(
                                 UMatrixPipe, RMatrixPipe>());
 
   // Write the rank deficient flag from local memory to FPGA DDR
-  auto rank_deficient_flag_event =
+  sycl::event rank_deficient_flag_event =
       q.single_task<IDRankDeficientFlagFromLocalMemToDDR>(
           [=]() [[intel::kernel_args_restrict]] {
             VectorReadPipeToDDR<ac_int<1, false>, 1, RankDeficientFlagPipe>(
@@ -205,21 +205,21 @@ double SingularValueDecomposition(
       });
 
   // collecting U matrix from pipe into DDR
-  auto u_matrix_event = q.single_task<IDUMatrixFromLocalMemToDDR>(
+  sycl::event u_matrix_event = q.single_task<IDUMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, rows, kNumElementsPerDDRBurst,
                             UMatrixPipe>(u_matrix_device, matrix_count, repetitions);
       });
 
   // collecting s matrix from pipe into DDR
-  auto s_matrix_event = q.single_task<IDSMatrixFromLocalMemToDDR>(
+  sycl::event s_matrix_event = q.single_task<IDSMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, cols, kNumElementsPerDDRBurst,
                             SMatrixPipe>(s_matrix_device, matrix_count, repetitions);
       });
 
   // collecting V matrix from pipe into DDR
-  auto v_matrix_event = q.single_task<IDVMatrixFromLocalMemToDDR>(
+  sycl::event v_matrix_event = q.single_task<IDVMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, cols, cols, kNumElementsPerDDRBurst,
                             VMatrixPipe>(v_matrix_device, matrix_count, repetitions);

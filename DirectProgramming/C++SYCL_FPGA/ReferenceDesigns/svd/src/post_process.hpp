@@ -121,7 +121,7 @@ struct USVFromEigens {
         s_result[k][k] = sycl::sqrt(EValIn::read());
       }  // end of k
 
-      // process S (sqrt and zero pading)
+      // process S (sqrt and zero padding)
       #pragma unroll
       for (int r = 0; r < A_rows; r ++){
           #pragma unroll

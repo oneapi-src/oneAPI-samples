@@ -16,10 +16,8 @@ The matrix A will contain n samples with p features
 making it an n row, p columns matrix
 
 Here are the steps performed by this file:
-1. Generate random matrices
-2. Standardize the matrices
-3. Compute the covariance matrices of these matrices
-4. Compute Eigen vectors and Eigen values of the covariance matrices using the
+1. Compute the covariance matrices of these matrices
+2. Compute Eigen vectors and Eigen values of the covariance matrices using the
 QR iteration method
 
 */
@@ -66,7 +64,7 @@ class GoldenPCA {
   }
 
   // Compute the covariance matrix of the matrix with index matrix_index
-  void computeCovarianceIthMatrix(int matrix_index) {
+  void ComputeCovarianceIthMatrix(int matrix_index) {
     // The covariance matrix is defined as the product of the
     // transposition of A by A. This matrix product then needs to be divided
     // by the number of samples-1.
@@ -111,14 +109,14 @@ class GoldenPCA {
   }
 
   // Compute the covariance matrix of all the standardized A matrices
-  void computeCovarianceMatrix() {
+  void ComputeCovarianceMatrix() {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
-      computeCovarianceIthMatrix(matrix_index);
+      ComputeCovarianceIthMatrix(matrix_index);
     }
   }
 
   // Compute the covariance matrix of the standardized A matrix
-  void computeEigenValuesAndVectors() {
+  void ComputeEigenValuesAndVectors() {
     // Compute the Eigen values and Eigen vectors using the QR iteration method
     // This implementation uses the Wilkinson shift to speedup the convergence
 

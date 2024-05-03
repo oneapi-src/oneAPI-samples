@@ -12,11 +12,14 @@
 #include "svd.hpp"
 #include "svd_testbench_tool.hpp"
 
-// test case class to create test cases
-// Instantiate test case like this:
-// SVDTestcase<typeT, rows, cols> new_testcase(
-//     std::vector<std::vector<float>>{ ... }
-//     std::vector<float>{ ... });
+/*  test case struct to create test cases
+*   Instantiate test case like this:
+*   SVDTestcase<typeT, rows, cols, matrix_count> new_testcase(
+*     std::vector<std::vector<float>>{ ... }
+*     std::vector<float>{ ... });
+*   Or using generated input:
+*   SVDTestcase<typeT, rows, cols, matrix_count> new_testcase;
+*/
 template <typename T, unsigned rows_A, unsigned cols_A, unsigned matrix_count>
 struct SVDTestcase {
   std::vector<std::vector<std::vector<T>>> input_A;
@@ -38,6 +41,7 @@ struct SVDTestcase {
     output_S.push_back(S);
   }
 
+  // return input matrix A in column major (1D vector)
   std::vector<T> ColMajorA() {
     std::vector<T> flat_A;
     for (int mat_idx = 0; mat_idx < matrix_count; mat_idx++) {
@@ -50,6 +54,7 @@ struct SVDTestcase {
     return flat_A;
   }
 
+  // Generate input matrix A
   void GenerateInput(T min, T max, int seed = 13) {
     input_A.resize(matrix_count);
     output_S.resize(matrix_count);
@@ -64,8 +69,8 @@ struct SVDTestcase {
       }
       // get eigens of the input using Golden PCA
       GoldenPCA<T> pca(rows_A, cols_A, 1, false, true, input_A[mat_idx]);
-      pca.computeCovarianceMatrix();
-      pca.computeEigenValuesAndVectors();
+      pca.ComputeCovarianceMatrix();
+      pca.ComputeEigenValuesAndVectors();
       std::sort(std::begin(pca.eigen_values), std::end(pca.eigen_values),
                 std::greater<>());
 
@@ -76,6 +81,7 @@ struct SVDTestcase {
     }
   }
 
+  // Extracting the singular values (the diagonals) from the resulting S matrix
   std::vector<T> ExtractSingularValue(std::vector<T> mat_S) {
     std::vector<T> singular_value;
     constexpr int kSingularValueSize = rows_A < cols_A ? rows_A : cols_A;
@@ -89,6 +95,7 @@ struct SVDTestcase {
     return singular_value;
   }
 
+  // Compare singular values and get the max differences
   T CompareS(std::vector<T> input_vec) {
     T max_diff = 0.0;
     // in case singular values are not sorted
@@ -103,6 +110,7 @@ struct SVDTestcase {
     return max_diff;
   }
 
+  // Checking results using SVD property A = USV^-1
   T CheckUSV(std::vector<T> flat_A, std::vector<T> flat_U,
              std::vector<T> flat_S, std::vector<T> flat_V, int idx) {
     // get the current matrices
@@ -134,11 +142,12 @@ struct SVDTestcase {
     return max_diff;
   }
 
+  // checking if a matrix is orthogonal
   T CheckOrthogonal(std::vector<T> flat_mat, unsigned rows, unsigned cols,
                     int idx) {
     std::vector<T> current_mat =
         svd_testbench_tool::subMatrix(flat_mat, idx, rows, cols);
-    // check mat @ mat transpose == identity
+    // checking mat @ transpose(mat) == identity
     std::vector<T> mat_t(cols * rows, 0);
     std::vector<T> mat_i(rows * rows, 0);
     svd_testbench_tool::SoftTranspose<T>(current_mat, rows, cols, mat_t);
