@@ -1,0 +1,26 @@
+{
+    "guid": "0048A391-E39E-4394-9BC5-374098D510E1",	
+    "name": "dwtHaar1D Sample",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample computes Discrete Haar wavelet decomposition for 1D signals with a length which is a power of 2.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+	      "make run",
+              "make run_sm"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }
