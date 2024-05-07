@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright © Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <iostream>
@@ -20,7 +15,12 @@ void VectorAddKernel(float* A, float* B, float* C,
 int main()
 {
         dpct::device_ext &dev_ct1 = dpct::get_current_device();
-        sycl::queue &q_ct1 = dev_ct1.default_queue();
+        sycl::queue &q_ct1 = dev_ct1.in_order_queue();
+        //# Print device name
+        dpct::device_info dev;
+        dpct::get_device_info(dev, dpct::dev_mgr::instance().get_device(0));
+        std::cout << "Device: " << dev.get_name() << "\n";
+
         //# Initialize vectors on host
         float A[N] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         float B[N] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
@@ -34,7 +34,7 @@ int main()
 
         //# copy vector data from host to device
         q_ct1.memcpy(d_A, A, N * sizeof(float));
-        q_ct1.memcpy(d_B, B, N * sizeof(float)).wait();
+        q_ct1.memcpy(d_B, B, N * sizeof(float));
 
         //# sumbit task to compute VectorAdd on device
         q_ct1.parallel_for(
@@ -51,8 +51,8 @@ int main()
         std::cout << "\n";
 
         //# free allocation on device
-        sycl::free(d_A, q_ct1);
-        sycl::free(d_B, q_ct1);
-        sycl::free(d_C, q_ct1);
+        dpct::dpct_free(d_A, q_ct1);
+        dpct::dpct_free(d_B, q_ct1);
+        dpct::dpct_free(d_C, q_ct1);
         return 0;
 }

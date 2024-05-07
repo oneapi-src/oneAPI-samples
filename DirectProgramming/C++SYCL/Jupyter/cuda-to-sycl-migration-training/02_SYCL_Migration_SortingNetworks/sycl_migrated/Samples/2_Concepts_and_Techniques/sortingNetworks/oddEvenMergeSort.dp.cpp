@@ -44,7 +44,7 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal,
                                        const sycl::nd_item<3> &item_ct1,
                                        uint *s_key, uint *s_val) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   // Shared memory storage for one or more small vectors
 
   // Offset to the beginning of subbatch and load data
@@ -69,7 +69,7 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal,
 
     {
       /*
-      DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:12: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -83,7 +83,7 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal,
 
     for (; stride > 0; stride >>= 1) {
       /*
-      DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:13: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -98,7 +98,7 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal,
   }
 
   /*
-  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:11: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -166,17 +166,12 @@ extern "C" uint factorRadix2(uint *log2L, uint L);
 extern "C" void oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                                  uint *d_SrcVal, uint batchSize,
                                  uint arrayLength, uint dir) {
-  dpct::device_ext &dev_ct1 = dpct::get_current_device();
-  sycl::queue &q_ct1 = dev_ct1.default_queue();
   // Nothing to sort
   if (arrayLength < 2) return;
 
   // Only power-of-two array lengths are supported by this implementation
   uint log2L;
   uint factorizationRemainder = factorRadix2(&log2L, arrayLength);
-  /*
-  DPCT1007:36: Migration of __assert_fail is not supported.
-  */
   assert(factorizationRemainder == 1);
 
   dir = (dir != 0);
@@ -185,74 +180,77 @@ extern "C" void oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
   uint threadCount = SHARED_SIZE_LIMIT / 2;
 
   if (arrayLength <= SHARED_SIZE_LIMIT) {
-    /*
-    DPCT1007:37: Migration of __assert_fail is not supported.
-    */
     assert(SHARED_SIZE_LIMIT % arrayLength == 0);
     /*
-    DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
+    DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:56: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:30: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:57: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:31: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_val_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
-                         oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey,
-                                                d_SrcVal, arrayLength, dir,
-                                                item_ct1,
-                                                s_key_acc_ct1.get_pointer(),
-                                                s_val_acc_ct1.get_pointer());
-                       });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
+                                sycl::range<3>(1, 1, threadCount),
+                            sycl::range<3>(1, 1, threadCount)),
+          [=](sycl::nd_item<3> item_ct1) {
+            oddEvenMergeSortShared(
+                d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, arrayLength, dir,
+                item_ct1,
+                s_key_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get(),
+                s_val_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get());
+          });
     });
   } else {
     /*
-    DPCT1049:4: The work-group size passed to the SYCL kernel may exceed the
+    DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:58: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:32: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:59: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:33: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_val_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
-                         oddEvenMergeSortShared(d_DstKey, d_DstVal, d_SrcKey,
-                                                d_SrcVal, SHARED_SIZE_LIMIT,
-                                                dir, item_ct1,
-                                                s_key_acc_ct1.get_pointer(),
-                                                s_val_acc_ct1.get_pointer());
-                       });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
+                                sycl::range<3>(1, 1, threadCount),
+                            sycl::range<3>(1, 1, threadCount)),
+          [=](sycl::nd_item<3> item_ct1) {
+            oddEvenMergeSortShared(
+                d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, SHARED_SIZE_LIMIT, dir,
+                item_ct1,
+                s_key_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get(),
+                s_val_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get());
+          });
     });
 
     for (uint size = 2 * SHARED_SIZE_LIMIT; size <= arrayLength; size <<= 1)
@@ -261,7 +259,7 @@ extern "C" void oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
         // stride = [SHARED_SIZE_LIMIT / 2 .. 1] seems to be impossible as there
         // are dependencies between data elements crossing the SHARED_SIZE_LIMIT
         // borders
-        dpct::get_default_queue().parallel_for(
+        dpct::get_in_order_queue().parallel_for(
             sycl::nd_range<3>(
                 sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) *
                     sycl::range<3>(1, 1, 256),

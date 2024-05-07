@@ -64,11 +64,12 @@
 */
 
 // Utilities and system includes
+#define DPCT_PROFILING_ENABLED
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <assert.h>
 #include <helper_string.h>
-#include <oneapi/mkl.hpp>
+#include <dpct/blas_utils.hpp>
   // helper for shared functions common to CUDA Samples
 
 // CUDA runtime
@@ -77,8 +78,6 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 #include <cmath>
-
-#include <chrono>
 
 #ifndef min
 #define min(a, b) ((a < b) ? a : b)
@@ -170,17 +169,12 @@ void initializeCUDA(int argc, char **argv, int &devID, int &iSizeMultiple,
 
   dpct::device_info deviceProp;
 
-  /*
-  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (dpct::dev_mgr::instance().get_device(devID).get_device_info(deviceProp),
-       0);
+  error = DPCT_CHECK_ERROR(dpct::get_device_info(
+      deviceProp, dpct::dev_mgr::instance().get_device(devID)));
 
   printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n", devID,
          /*
-         DPCT1005:27: The SYCL device version is different from CUDA Compute
+         DPCT1005:14: The SYCL device version is different from CUDA Compute
          Compatibility. You may need to rewrite this code.
          */
          deviceProp.get_name(), deviceProp.get_major_version(),
@@ -218,13 +212,8 @@ catch (sycl::exception const &exc) {
 int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
   dpct::device_info deviceProp;
 
-  /*
-  DPCT1003:28: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (dpct::dev_mgr::instance().get_device(devID).get_device_info(deviceProp),
-       0));
+  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
+      deviceProp, dpct::dev_mgr::instance().get_device(devID))));
 
   int block_size = 32;
 
@@ -255,39 +244,19 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
   float *h_C = (float *)malloc(mem_size_C);
   float *h_CUBLAS = (float *)malloc(mem_size_C);
 
-  /*
-  DPCT1003:29: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_A = (float *)sycl::malloc_device(mem_size_A, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:30: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_B = (float *)sycl::malloc_device(mem_size_B, dpct::get_default_queue()),
-      0));
-  /*
-  DPCT1003:31: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   checkCudaErrors(
-      (dpct::get_default_queue().memcpy(d_A, h_A, mem_size_A).wait(), 0));
-  /*
-  DPCT1003:32: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
+      DPCT_CHECK_ERROR(d_A = (float *)sycl::malloc_device(
+                           mem_size_A, dpct::get_in_order_queue())));
   checkCudaErrors(
-      (dpct::get_default_queue().memcpy(d_B, h_B, mem_size_B).wait(), 0));
-  /*
-  DPCT1003:33: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_C = (float *)sycl::malloc_device(mem_size_C, dpct::get_default_queue()),
-      0));
+      DPCT_CHECK_ERROR(d_B = (float *)sycl::malloc_device(
+                           mem_size_B, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memcpy(d_A, h_A, mem_size_A).wait()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memcpy(d_B, h_B, mem_size_B).wait()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(d_C = (float *)sycl::malloc_device(
+                           mem_size_C, dpct::get_in_order_queue())));
 
   // setup execution parameters
   sycl::range<3> threads(1, block_size, block_size);
@@ -304,100 +273,62 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
   {
     const float alpha = 1.0f;
     const float beta = 0.0f;
-    dpct::queue_ptr handle;
+    dpct::blas::descriptor_ptr handle;
     dpct::event_ptr start, stop;
-    std::chrono::time_point<std::chrono::steady_clock> start_ct1;
-    std::chrono::time_point<std::chrono::steady_clock> stop_ct1;
 
-    /*
-    DPCT1003:34: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((handle = &dpct::get_default_queue(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(handle = new dpct::blas::descriptor()));
 
     // Perform warmup operation with cublas
-    /*
-    DPCT1003:35: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors(
-        (oneapi::mkl::blas::column_major::gemm(
-             *handle, oneapi::mkl::transpose::nontrans,
-             oneapi::mkl::transpose::nontrans, matrix_size.uiWB,
-             matrix_size.uiHA, matrix_size.uiWA, alpha, d_B, matrix_size.uiWB,
-             d_A, matrix_size.uiWA, beta, d_C, matrix_size.uiWB),
-         0));
+    checkCudaErrors(DPCT_CHECK_ERROR(oneapi::mkl::blas::column_major::gemm(
+        handle->get_queue(), oneapi::mkl::transpose::nontrans,
+        oneapi::mkl::transpose::nontrans, matrix_size.uiWB, matrix_size.uiHA,
+        matrix_size.uiWA, alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA,
+        beta, d_C, matrix_size.uiWB)));
 
     // Allocate CUDA events that we'll use for timing
-    /*
-    DPCT1003:36: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((start = new sycl::event(), 0));
-    /*
-    DPCT1003:37: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stop = new sycl::event(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(start = new sycl::event()));
+    checkCudaErrors(DPCT_CHECK_ERROR(stop = new sycl::event()));
 
     // Record the start event
     /*
-    DPCT1012:38: Detected kernel execution time measurement pattern and
-    generated an initial code for time measurements in SYCL. You can change the
-    way time is measured depending on your goals.
-    */
-    /*
-    DPCT1024:39: The original code returned the error code that was further
+    DPCT1024:15: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
-    start_ct1 = std::chrono::steady_clock::now();
-    checkCudaErrors(0);
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        dpct::sync_barrier(start, &dpct::get_in_order_queue())));
 
     for (int j = 0; j < nIter; j++) {
       // note cublas is column primary!
       // need to transpose the order
-      /*
-      DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors(
-          (oneapi::mkl::blas::column_major::gemm(
-               *handle, oneapi::mkl::transpose::nontrans,
-               oneapi::mkl::transpose::nontrans, matrix_size.uiWB,
-               matrix_size.uiHA, matrix_size.uiWA, alpha, d_B, matrix_size.uiWB,
-               d_A, matrix_size.uiWA, beta, d_C, matrix_size.uiWB),
-           0));
+      checkCudaErrors(DPCT_CHECK_ERROR(oneapi::mkl::blas::column_major::gemm(
+          handle->get_queue(), oneapi::mkl::transpose::nontrans,
+          oneapi::mkl::transpose::nontrans, matrix_size.uiWB, matrix_size.uiHA,
+          matrix_size.uiWA, alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA,
+          beta, d_C, matrix_size.uiWB)));
     }
 
     printf("done.\n");
 
     // Record the stop event
     /*
-    DPCT1012:41: Detected kernel execution time measurement pattern and
-    generated an initial code for time measurements in SYCL. You can change the
-    way time is measured depending on your goals.
-    */
-    /*
-    DPCT1024:42: The original code returned the error code that was further
+    DPCT1024:16: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
-    stop_ct1 = std::chrono::steady_clock::now();
-    checkCudaErrors(0);
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        dpct::sync_barrier(stop, &dpct::get_in_order_queue())));
 
     // Wait for the stop event to complete
-    checkCudaErrors(0);
+    checkCudaErrors(DPCT_CHECK_ERROR(stop->wait_and_throw()));
 
     float msecTotal = 0.0f;
-    /*
-    DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((msecTotal = std::chrono::duration<float, std::milli>(
-                                     stop_ct1 - start_ct1)
-                                     .count(),
-                     0));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        msecTotal = (stop->get_profiling_info<
+                         sycl::info::event_profiling::command_end>() -
+                     start->get_profiling_info<
+                         sycl::info::event_profiling::command_start>()) /
+                    1000000.0f));
 
     // Compute and print the performance
     float msecPerMatrixMul = msecTotal / nIter;
@@ -410,19 +341,11 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
            gigaFlops, msecPerMatrixMul, flopsPerMatrixMul);
 
     // copy result from device to host
-    /*
-    DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((
-        dpct::get_default_queue().memcpy(h_CUBLAS, d_C, mem_size_C).wait(), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        dpct::get_in_order_queue().memcpy(h_CUBLAS, d_C, mem_size_C).wait()));
 
     // Destroy the handle
-    /*
-    DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((handle = nullptr, 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(delete (handle)));
   }
 
   // compute reference solution
@@ -452,21 +375,12 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
   free(h_B);
   free(h_C);
   free(reference);
-  /*
-  DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_A, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_B, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_C, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_A, dpct::get_in_order_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_B, dpct::get_in_order_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_C, dpct::get_in_order_queue())));
 
   if (resCUBLAS == true) {
     return EXIT_SUCCESS;  // return value = 1
