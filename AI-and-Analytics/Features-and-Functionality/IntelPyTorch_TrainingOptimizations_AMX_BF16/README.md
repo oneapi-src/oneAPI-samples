@@ -22,6 +22,8 @@ The Intel® Extension for PyTorch* (IPEX) gives users the ability to speed up tr
 | Hardware                | 4th Gen Intel® Xeon® Scalable Processors or newer
 | Software                | Intel® Extension for PyTorch* (IPEX)
 
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
+
 ## Key Implementation Details
 
 - This code sample will train a ResNet50 model using the CIFAR10 dataset while using Intel® Extension for PyTorch (IPEX). The model is trained using FP32 and BF16 precision, including the use of Intel® AMX on BF16. Intel® AMX is supported on BF16 and INT8 data types starting with the 4th Generation of Xeon Scalable Processors. The training time will be compared, showcasing the speedup of BF16 and Intel® AMX.
