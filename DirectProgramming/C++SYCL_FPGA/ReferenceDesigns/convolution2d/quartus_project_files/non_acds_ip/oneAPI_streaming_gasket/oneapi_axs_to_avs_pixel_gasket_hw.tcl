@@ -4,9 +4,9 @@
 
 
 # 
-# oneapi_axi_to_avalon_gasket "oneAPI AXI4 Streaming to Avalon Streaming Gasket" v0.2
+# oneapi_axs_to_avs_pixel_gasket "oneAPI AXI4 Streaming to Avalon Streaming Pixel Gasket" v0.2
 # Intel 2023.12.12.06:40:33
-# Allow an AXI4 Streaming pipeline to connect to a oneAPI IP 
+# Allow an Intel Streaming Video AXI4 Streaming interface to connect to a oneAPI IP
 # 
 
 # 
@@ -72,16 +72,16 @@ set_parameter_property MASK_OUT             VISIBLE $showDerivedParameters
 
 
 # 
-# module oneapi_axi_to_avalon_gasket
+# module oneapi_axs_to_avs_pixel_gasket
 # 
-set_module_property DESCRIPTION "Allow an AXI4 Streaming pipeline to connect to a oneAPI IP"
-set_module_property NAME oneapi_axi_to_avalon_gasket
+set_module_property DESCRIPTION "Allow an Intel Streaming Video AXI4 Streaming interface to connect to a oneAPI IP"
+set_module_property NAME oneapi_axs_to_avs_pixel_gasket
 set_module_property VERSION 0.3
 set_module_property INTERNAL false
 set_module_property OPAQUE_ADDRESS_MAP true
 set_module_property GROUP oneAPI
 set_module_property AUTHOR Intel
-set_module_property DISPLAY_NAME "oneAPI AXI4 Streaming to Avalon Streaming Gasket"
+set_module_property DISPLAY_NAME "oneAPI AXI4 Streaming to Avalon Streaming Pixel Gasket"
 set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
 set_module_property EDITABLE true
 set_module_property REPORT_TO_TALKBACK false
@@ -96,10 +96,10 @@ set_module_property ELABORATION_CALLBACK elaboration_cb
 # file sets
 # 
 add_fileset QUARTUS_SYNTH QUARTUS_SYNTH "" ""
-set_fileset_property QUARTUS_SYNTH TOP_LEVEL oneapi_axi_to_avalon_gasket
+set_fileset_property QUARTUS_SYNTH TOP_LEVEL oneapi_axs_to_avs_pixel_gasket
 set_fileset_property QUARTUS_SYNTH ENABLE_RELATIVE_INCLUDE_PATHS false
 set_fileset_property QUARTUS_SYNTH ENABLE_FILE_OVERWRITE_MODE false
-add_fileset_file oneapi_axi_to_avalon_gasket.sv SYSTEM_VERILOG PATH oneapi_axi_to_avalon_gasket.sv TOP_LEVEL_FILE
+add_fileset_file oneapi_axs_to_avs_pixel_gasket.sv SYSTEM_VERILOG PATH oneapi_axs_to_avs_pixel_gasket.sv TOP_LEVEL_FILE
 
 
 # 

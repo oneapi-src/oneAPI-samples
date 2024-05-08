@@ -1,8 +1,8 @@
 module test_avalon_to_axi;
 
-  `define PARALLEL_PIXELS 2
+  `define PARALLEL_PIXELS 4
   `define BITS_PER_CHANNEL 10
-  `define CHANNELS 3
+  `define CHANNELS 4
 
   `define BITS_PER_CHANNEL_AV (1 << $clog2(`BITS_PER_CHANNEL))
   `define BITS_PER_PIXEL_AV (`BITS_PER_CHANNEL_AV * `CHANNELS)
@@ -37,7 +37,7 @@ module test_avalon_to_axi;
   logic [`TUSER_BITS-1:0] axm_tuser;
 
   // Instantiate the Device Under Test (DUT)
-  oneapi_avalon_to_axi_gasket #(
+  oneapi_avs_to_axs_pixel_gasket #(
         `PARALLEL_PIXELS     ,
         `BITS_PER_CHANNEL    ,
         `CHANNELS            ,
@@ -94,29 +94,42 @@ module test_avalon_to_axi;
     $display("TUSER_BITS           = %d", `TUSER_BITS);
     $display("TUSER_FILL           = %d", `TUSER_FILL);
     $display("MASK_OUT             = %x", `MASK_OUT);
-
-    $monitor(
-        "cin 0b%b | reset_n 0b%b | axm_tready 0b%b | axm_tvalid 0b%b | axm_tdata 0x%h | axm_tlast 0x%h | axm_tuser 0x%h | asi_ready 0b%b | asi_valid 0b%b | asi_data 0x%h | asi_sop 0b%b | asi_endofpacket 0b%b | asi_empty 0b%b",
-        cin, reset_n, axm_tready, axm_tvalid, axm_tdata, axm_tlast, axm_tuser, asi_ready,
-        asi_valid, asi_data, asi_startofpacket, asi_endofpacket, asi_empty);
   end
 
-  logic [`BITS_PER_PIXEL_AV-1:0] pixel1_asi;
-  logic [`BITS_PER_PIXEL_AV-1:0] pixel2_asi;
+  // generate data for asi test vector
+  generate
+    for (genvar px_id = 0; px_id < `PARALLEL_PIXELS; px_id++) begin : parallel_pixel_assignment
+      for (genvar channel_id = 0; channel_id < `CHANNELS; channel_id++) begin : parallel_channel_assignment
+        localparam LOWER_BIT_AV = px_id * `BITS_PER_PIXEL_AV + channel_id * `BITS_PER_CHANNEL_AV;
+        localparam UPPER_BIT_AV = LOWER_BIT_AV + `BITS_PER_CHANNEL_AV - 1;
+        
+        logic [`BITS_PER_CHANNEL_AV-1:0] pixel_chan;
+        assign pixel_chan = (16 * (px_id + 1) + (channel_id + 1)) & `MASK_OUT;
+
+        assign asi_data[UPPER_BIT_AV:LOWER_BIT_AV] = pixel_chan;
+      end
+    end
+  endgenerate
 
   initial begin
     @(negedge cin);
     reset_n = 1'b1;
     @(negedge cin);
     asi_valid <= 1;
-    assign pixel1_asi = {16'h13, 16'h12, 16'h11};
-    assign pixel2_asi = {16'h23, 16'h22, 16'h21};
-    asi_data  <= {pixel2_asi, pixel1_asi};
     asi_endofpacket  <= 0;
     asi_startofpacket  <= 0;
 
     axm_tready  <= 1;
+
     @(negedge cin);
+
+    $display("---------------------------------------------------------------------------------");
+    $display(
+        "cin 0b%b | reset_n 0b%b | axm_tready 0b%b | axm_tvalid 0b%b | axm_tdata 0x%h | axm_tlast 0x%h | axm_tuser       0x%h ",
+        cin, reset_n, axm_tready, axm_tvalid, axm_tdata, axm_tlast, axm_tuser);
+    $display(
+        "cin 0b%b | reset_n 0b%b | asi_ready  0b%b | asi_valid  0b%b | asi_data  0x%h | asi_sop   0b%b | asi_endofpacket 0b%b | asi_empty 0b%b",
+        cin, reset_n, asi_ready, asi_valid, asi_data, asi_startofpacket, asi_endofpacket, asi_empty);
     $stop;
   end
 

@@ -1,7 +1,7 @@
 module test_axi_to_avalon;
 
-  `define PARALLEL_PIXELS 2
-  `define BITS_PER_CHANNEL 10
+  `define PARALLEL_PIXELS 4
+  `define BITS_PER_CHANNEL 12
   `define CHANNELS 3
 
   `define BITS_PER_CHANNEL_AV (1 << $clog2(`BITS_PER_CHANNEL))
@@ -37,7 +37,7 @@ module test_axi_to_avalon;
   logic [`EMPTY_BITS-1:0] aso_empty;
 
   // Instantiate the Device Under Test (DUT)
-  oneapi_axi_to_avalon_gasket #(
+  oneapi_axs_to_avs_pixel_gasket #(
         `PARALLEL_PIXELS     ,
         `BITS_PER_CHANNEL    ,
         `CHANNELS            ,
@@ -80,6 +80,29 @@ module test_axi_to_avalon;
     end
   end
 
+  // generate data for axs test vector
+  for (genvar px_id = 0; px_id < `PARALLEL_PIXELS; px_id++) begin : parallel_pixel_assignment
+    for (genvar channel_id = 0; channel_id < `CHANNELS; channel_id++) begin : parallel_channel_assignment
+      logic [`BITS_PER_CHANNEL_AXI-1:0] pixel_chan;
+
+      assign pixel_chan = (16 * (px_id + 1) + (channel_id + 1)) & `MASK_OUT;
+
+      localparam LOWER_BIT_AXI = px_id * `BITS_PER_PIXEL_AXI + channel_id * `BITS_PER_CHANNEL_AXI;
+      localparam UPPER_BIT_AXI = LOWER_BIT_AXI + `BITS_PER_CHANNEL_AXI - 1;
+      assign axs_tdata[UPPER_BIT_AXI:LOWER_BIT_AXI] = pixel_chan;
+    end
+  end
+
+  // padding bits for axs  
+  for (genvar px_id2 = 0; px_id2 < `PARALLEL_PIXELS; px_id2++) begin : padding_assignment
+    localparam PADDING_BITS_AXI  = `BITS_PER_PIXEL_AXI - (`BITS_PER_CHANNEL_AXI * `CHANNELS);
+    localparam LOWER_PADDING_AXI = px_id2 * `BITS_PER_PIXEL_AXI + `CHANNELS * `BITS_PER_CHANNEL_AXI;
+    localparam UPPER_PADDING_AXI = LOWER_PADDING_AXI + PADDING_BITS_AXI - 1;
+    if (PADDING_BITS_AXI !== 0) begin
+      assign axs_tdata[UPPER_PADDING_AXI:LOWER_PADDING_AXI] = 0;
+    end
+  end
+
   initial begin
     $display("PARALLEL_PIXELS      = %d", `PARALLEL_PIXELS);
     $display("BITS_PER_CHANNEL     = %d", `BITS_PER_CHANNEL);
@@ -94,11 +117,6 @@ module test_axi_to_avalon;
     $display("TUSER_BITS           = %d", `TUSER_BITS);
     $display("TUSER_FILL           = %d", `TUSER_FILL);
     $display("MASK_OUT             = %x", `MASK_OUT);
-
-    $monitor(
-        "cin 0b%b | reset_n 0b%b | axs_tready 0b%b | axs_tvalid 0b%b | axs_tdata 0x%h | axs_tlast 0x%h | axs_tuser 0x%h | aso_ready 0b%b | aso_valid 0b%b | aso_data 0x%h | aso_sop 0b%b | aso_endofpacket 0b%b | aso_empty 0b%b",
-        cin, reset_n, axs_tready, axs_tvalid, axs_tdata, axs_tlast, axs_tuser, aso_ready,
-        aso_valid, aso_data, aso_startofpacket, aso_endofpacket, aso_empty);
   end
 
   logic [`BITS_PER_PIXEL_AXI-1:0] pixel1_axs;
@@ -109,14 +127,19 @@ module test_axi_to_avalon;
     reset_n = 1'b1;
     @(negedge cin);
     axs_tvalid <= 1;
-    assign pixel1_axs = {2'b11, 10'h13, 10'h12, 10'h11};
-    assign pixel2_axs = {2'b11, 10'h23, 10'h22, 10'h21};
-    axs_tdata  <= {pixel2_axs, pixel1_axs};
     axs_tlast  <= 0;
     axs_tuser  <= 0;
 
     aso_ready  <= 1;
     @(negedge cin);
+
+    $display("---------------------------------------------------------------------------------");
+    $display(
+        "cin 0b%b | reset_n 0b%b | axs_tready 0b%b | axs_tvalid 0b%b | axs_tdata 0x%h | axs_tlast 0x%h | axs_tuser 0x%h ",
+        cin, reset_n, axs_tready, axs_tvalid, axs_tdata, axs_tlast, axs_tuser);
+    $display(
+        "cin 0b%b | reset_n 0b%b | aso_ready  0b%b | aso_valid  0b%b | aso_data  0x%h | aso_sop   0b%b | aso_endofpacket 0b%b | aso_empty 0b%b",
+        cin, reset_n, aso_ready, aso_valid, aso_data, aso_startofpacket, aso_endofpacket, aso_empty);
     $stop;
   end
 
