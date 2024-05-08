@@ -101,20 +101,12 @@ int main(int argc, char **argv) {
 
   double *b = NULL;
   float *A = NULL;
-  /*
-  DPCT1003:73: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (b = sycl::malloc_host<double>(N_ROWS, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      b = sycl::malloc_host<double>(N_ROWS, dpct::get_in_order_queue())));
   memset(b, 0, N_ROWS * sizeof(double));
-  /*
-  DPCT1003:74: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
   checkCudaErrors(
-      (A = sycl::malloc_host<float>(N_ROWS * N_ROWS, dpct::get_default_queue()),
-       0));
+      DPCT_CHECK_ERROR(A = sycl::malloc_host<float>(
+                           N_ROWS * N_ROWS, dpct::get_in_order_queue())));
   memset(A, 0, N_ROWS * N_ROWS * sizeof(float));
 
   createLinearSystem(A, b);
@@ -148,62 +140,40 @@ int main(int argc, char **argv) {
   double *d_b, *d_x, *d_x_new;
   dpct::queue_ptr stream1;
   /*
-  DPCT1003:75: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  /*
-  DPCT1025:76: The SYCL queue is created ignoring the flag and priority options.
-  */
-  checkCudaErrors((stream1 = dpct::get_current_device().create_queue(), 0));
-  /*
-  DPCT1003:77: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_b = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:78: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
+  DPCT1025:50: The SYCL queue is created ignoring the flag and priority options.
   */
   checkCudaErrors(
-      (d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS,
-                                          dpct::get_default_queue()),
-       0));
-  /*
-  DPCT1003:79: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((
-      d_x = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:80: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_x_new = sycl::malloc_device<double>(N_ROWS, dpct::get_default_queue()),
-       0));
+      DPCT_CHECK_ERROR(stream1 = dpct::get_current_device().create_queue()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_b = sycl::malloc_device<double>(N_ROWS, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_A = (float *)sycl::malloc_device(sizeof(float) * N_ROWS * N_ROWS,
+                                         dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_x = sycl::malloc_device<double>(N_ROWS, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(d_x_new = sycl::malloc_device<double>(
+                                       N_ROWS, dpct::get_in_order_queue())));
 
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream1->memset(d_x, 0, sizeof(double) * N_ROWS)));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(stream1->memset(d_x_new, 0, sizeof(double) * N_ROWS)));
   /*
-  DPCT1003:81: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
+  DPCT1124:51: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, depends on the type of operand memory, so you
+  may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
   */
-  checkCudaErrors((stream1->memset(d_x, 0, sizeof(double) * N_ROWS), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      stream1->memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS)));
   /*
-  DPCT1003:82: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1->memset(d_x_new, 0, sizeof(double) * N_ROWS), 0));
-  /*
-  DPCT1003:83: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
+  DPCT1124:52: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, depends on the type of operand memory, so you
+  may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
   */
   checkCudaErrors(
-      (stream1->memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS), 0));
-  /*
-  DPCT1003:84: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((stream1->memcpy(d_b, b, sizeof(double) * N_ROWS), 0));
+      DPCT_CHECK_ERROR(stream1->memcpy(d_b, b, sizeof(double) * N_ROWS)));
 
   sdkCreateTimer(&timerGpu);
   sdkStartTimer(&timerGpu);
@@ -223,37 +193,17 @@ int main(int argc, char **argv) {
   sdkStopTimer(&timerGpu);
   printf("GPU Processing time: %f (ms)\n", sdkGetTimerValue(&timerGpu));
 
-  /*
-  DPCT1003:85: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_b, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:86: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_A, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:87: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_x, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:88: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_x_new, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_b, dpct::get_in_order_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_A, dpct::get_in_order_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_x, dpct::get_in_order_queue())));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_x_new, dpct::get_in_order_queue())));
 
-  /*
-  DPCT1003:89: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(A, dpct::get_default_queue()), 0));
-  /*
-  DPCT1003:90: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(b, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(A, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(sycl::free(b, dpct::get_in_order_queue())));
 
   printf("&&&& jacobiCudaGraphs %s\n",
          (fabs(sum - sumGPU) < conv_threshold) ? "PASSED" : "FAILED");

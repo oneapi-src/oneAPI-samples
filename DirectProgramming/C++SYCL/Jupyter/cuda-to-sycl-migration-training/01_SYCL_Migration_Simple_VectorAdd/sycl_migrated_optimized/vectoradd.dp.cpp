@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <iostream>
 #include <vector>
 #define N 16
@@ -19,8 +20,12 @@ void VectorAddKernel(float* A, float* B, float* C,
 int main()
 {
         // sycl queue with out of order execution allowed
-        sycl::queue q_ct1;
-        std::cout << "Device: " << q_ct1.get_device().get_info<sycl::info::device::name>() << "\n";
+        dpct::device_ext &dev_ct1 = dpct::get_current_device();
+        sycl::queue &q_ct1 = dev_ct1.out_of_order_queue();
+        //# Print device name
+        dpct::device_info dev;
+        dpct::get_device_info(dev, dpct::dev_mgr::instance().get_device(0));
+        std::cout << "Device: " << dev.get_name() << "\n";
 
         //# Initialize vectors on host
         float A[N] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};

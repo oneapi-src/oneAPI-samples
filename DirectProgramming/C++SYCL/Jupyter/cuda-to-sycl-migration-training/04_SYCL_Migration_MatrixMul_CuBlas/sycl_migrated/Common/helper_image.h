@@ -267,17 +267,8 @@ inline bool sdkLoadPPM4(const char *file, T **data, unsigned int *w,
 
 inline bool __savePPM(const char *file, unsigned char *data, unsigned int w,
                       unsigned int h, unsigned int channels) {
-  /*
-  DPCT1007:0: Migration of __assert_fail is not supported.
-  */
   assert(NULL != data);
-  /*
-  DPCT1007:1: Migration of __assert_fail is not supported.
-  */
   assert(w > 0);
-  /*
-  DPCT1007:2: Migration of __assert_fail is not supported.
-  */
   assert(h > 0);
 
   std::fstream fh(file, std::fstream::out | std::fstream::binary);
@@ -527,9 +518,6 @@ template <class T, class S>
 inline bool compareData(const T *reference, const T *data,
                         const unsigned int len, const S epsilon,
                         const float threshold) {
-  /*
-  DPCT1007:3: Migration of __assert_fail is not supported.
-  */
   assert(epsilon >= 0);
 
   bool result = true;
@@ -584,9 +572,6 @@ template <class T, class S>
 inline bool compareDataAsFloatThreshold(const T *reference, const T *data,
                                         const unsigned int len, const S epsilon,
                                         const float threshold) {
-  /*
-  DPCT1007:4: Migration of __assert_fail is not supported.
-  */
   assert(epsilon >= 0);
 
   // If we set epsilon to be 0, let's set a minimum threshold
@@ -805,9 +790,6 @@ inline bool sdkCompareBin2BinFloat(const char *src_file, const char *ref_file,
 
 inline bool sdkCompareL2fe(const float *reference, const float *data,
                            const unsigned int len, const float epsilon) {
-  /*
-  DPCT1007:5: Migration of __assert_fail is not supported.
-  */
   assert(epsilon >= 0);
 
   float error = 0;

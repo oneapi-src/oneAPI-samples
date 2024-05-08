@@ -44,7 +44,7 @@ void bitonicSortShared(uint *d_DstKey, uint *d_DstVal,
                                   const sycl::nd_item<3> &item_ct1, uint *s_key,
                                   uint *s_val) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   // Shared memory storage for one or more short vectors
 
   // Offset to the beginning of subbatch and load data
@@ -69,7 +69,7 @@ void bitonicSortShared(uint *d_DstKey, uint *d_DstVal,
 
     for (uint stride = size / 2; stride > 0; stride >>= 1) {
       /*
-      DPCT1065:6: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -85,7 +85,7 @@ void bitonicSortShared(uint *d_DstKey, uint *d_DstVal,
   {
     for (uint stride = arrayLength / 2; stride > 0; stride >>= 1) {
       /*
-      DPCT1065:7: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -98,7 +98,7 @@ void bitonicSortShared(uint *d_DstKey, uint *d_DstVal,
   }
 
   /*
-  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -124,7 +124,7 @@ void bitonicSortShared1(uint *d_DstKey, uint *d_DstVal,
                                    const sycl::nd_item<3> &item_ct1, uint *s_key,
                                    uint *s_val) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   // Shared memory storage for current subarray
 
   // Offset to the beginning of subarray and load data
@@ -149,7 +149,7 @@ void bitonicSortShared1(uint *d_DstKey, uint *d_DstVal,
 
     for (uint stride = size / 2; stride > 0; stride >>= 1) {
       /*
-      DPCT1065:9: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -167,7 +167,7 @@ void bitonicSortShared1(uint *d_DstKey, uint *d_DstVal,
   {
     for (uint stride = SHARED_SIZE_LIMIT / 2; stride > 0; stride >>= 1) {
       /*
-      DPCT1065:10: Consider replacing sycl::nd_item::barrier() with
+      DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
       sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
       performance if there is no access to global memory.
       */
@@ -180,7 +180,7 @@ void bitonicSortShared1(uint *d_DstKey, uint *d_DstVal,
   }
 
   /*
-  DPCT1065:8: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:3: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -228,7 +228,7 @@ void bitonicMergeShared(uint *d_DstKey, uint *d_DstVal,
                                    const sycl::nd_item<3> &item_ct1, uint *s_key,
                                    uint *s_val) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   // Shared memory storage for current subarray
 
   d_SrcKey +=
@@ -254,7 +254,7 @@ void bitonicMergeShared(uint *d_DstKey, uint *d_DstVal,
 
   for (uint stride = SHARED_SIZE_LIMIT / 2; stride > 0; stride >>= 1) {
     /*
-    DPCT1065:12: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:7: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -266,7 +266,7 @@ void bitonicMergeShared(uint *d_DstKey, uint *d_DstVal,
   }
 
   /*
-  DPCT1065:11: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:6: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -298,17 +298,12 @@ extern "C" uint factorRadix2(uint *log2L, uint L) {
 extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                             uint *d_SrcVal, uint batchSize, uint arrayLength,
                             uint dir) {
-  dpct::device_ext &dev_ct1 = dpct::get_current_device();
-  sycl::queue &q_ct1 = dev_ct1.default_queue();
   // Nothing to sort
   if (arrayLength < 2) return 0;
 
   // Only power-of-two array lengths are supported by this implementation
   uint log2L;
   uint factorizationRemainder = factorRadix2(&log2L, arrayLength);
-  /*
-  DPCT1007:38: Migration of __assert_fail is not supported.
-  */
   assert(factorizationRemainder == 1);
 
   dir = (dir != 0);
@@ -317,78 +312,82 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
   uint threadCount = SHARED_SIZE_LIMIT / 2;
 
   if (arrayLength <= SHARED_SIZE_LIMIT) {
-    /*
-    DPCT1007:39: Migration of __assert_fail is not supported.
-    */
     assert((batchSize * arrayLength) % SHARED_SIZE_LIMIT == 0);
     /*
-    DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the
+    DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:50: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:34: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:51: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:35: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_val_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
-                         bitonicSortShared(d_DstKey, d_DstVal, d_SrcKey,
-                                           d_SrcVal, arrayLength, dir, item_ct1,
-                                           s_key_acc_ct1.get_pointer(),
-                                           s_val_acc_ct1.get_pointer());
-                       });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
+                                sycl::range<3>(1, 1, threadCount),
+                            sycl::range<3>(1, 1, threadCount)),
+          [=](sycl::nd_item<3> item_ct1) {
+            bitonicSortShared(
+                d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, arrayLength, dir,
+                item_ct1,
+                s_key_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get(),
+                s_val_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get());
+          });
     });
   } else {
     /*
-    DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the
+    DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:52: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:36: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:53: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:37: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_val_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
 
-      cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
-                                             sycl::range<3>(1, 1, threadCount),
-                                         sycl::range<3>(1, 1, threadCount)),
-                       [=](sycl::nd_item<3> item_ct1) {
-                         bitonicSortShared1(d_DstKey, d_DstVal, d_SrcKey,
-                                            d_SrcVal, item_ct1,
-                                            s_key_acc_ct1.get_pointer(),
-                                            s_val_acc_ct1.get_pointer());
-                       });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, blockCount) *
+                                sycl::range<3>(1, 1, threadCount),
+                            sycl::range<3>(1, 1, threadCount)),
+          [=](sycl::nd_item<3> item_ct1) {
+            bitonicSortShared1(
+                d_DstKey, d_DstVal, d_SrcKey, d_SrcVal, item_ct1,
+                s_key_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get(),
+                s_val_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                    .get());
+          });
     });
 
     for (uint size = 2 * SHARED_SIZE_LIMIT; size <= arrayLength; size <<= 1)
       for (unsigned stride = size / 2; stride > 0; stride >>= 1)
         if (stride >= SHARED_SIZE_LIMIT) {
-          dpct::get_default_queue().parallel_for(
+          dpct::get_in_order_queue().parallel_for(
               sycl::nd_range<3>(
                   sycl::range<3>(1, 1, (batchSize * arrayLength) / 512) *
                       sycl::range<3>(1, 1, 256),
@@ -399,21 +398,21 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
               });
         } else {
           /*
-          DPCT1049:15: The work-group size passed to the SYCL kernel may exceed
+          DPCT1049:10: The work-group size passed to the SYCL kernel may exceed
           the limit. To get the device limit, query
           info::device::max_work_group_size. Adjust the work-group size if
           needed.
           */
-          dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+          dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
             /*
-            DPCT1101:54: 'SHARED_SIZE_LIMIT' expression was replaced with a
+            DPCT1101:38: 'SHARED_SIZE_LIMIT' expression was replaced with a
             value. Modify the code to use the original expression, provided in
             comments, if it is correct.
             */
             sycl::local_accessor<uint, 1> s_key_acc_ct1(
                 sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
             /*
-            DPCT1101:55: 'SHARED_SIZE_LIMIT' expression was replaced with a
+            DPCT1101:39: 'SHARED_SIZE_LIMIT' expression was replaced with a
             value. Modify the code to use the original expression, provided in
             comments, if it is correct.
             */
@@ -425,10 +424,13 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                                       sycl::range<3>(1, 1, threadCount),
                                   sycl::range<3>(1, 1, threadCount)),
                 [=](sycl::nd_item<3> item_ct1) {
-                  bitonicMergeShared(d_DstKey, d_DstVal, d_DstKey, d_DstVal,
-                                     arrayLength, size, dir, item_ct1,
-                                     s_key_acc_ct1.get_pointer(),
-                                     s_val_acc_ct1.get_pointer());
+                  bitonicMergeShared(
+                      d_DstKey, d_DstVal, d_DstKey, d_DstVal, arrayLength, size,
+                      dir, item_ct1,
+                      s_key_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                          .get(),
+                      s_val_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                          .get());
                 });
           });
           break;

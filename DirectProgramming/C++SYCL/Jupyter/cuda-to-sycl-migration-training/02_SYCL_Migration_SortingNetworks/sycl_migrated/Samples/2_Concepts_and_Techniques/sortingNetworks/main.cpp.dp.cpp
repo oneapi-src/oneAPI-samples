@@ -81,53 +81,25 @@ int main(int argc, char **argv) try {
   }
 
   printf("Allocating and initializing CUDA arrays...\n\n");
-  /*
-  DPCT1003:40: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (d_InputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0);
+  error = DPCT_CHECK_ERROR(
+      d_InputKey = sycl::malloc_device<uint>(N, dpct::get_in_order_queue()));
   checkCudaErrors(error);
-  /*
-  DPCT1003:41: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (d_InputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()), 0);
+  error = DPCT_CHECK_ERROR(
+      d_InputVal = sycl::malloc_device<uint>(N, dpct::get_in_order_queue()));
   checkCudaErrors(error);
-  /*
-  DPCT1003:42: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (d_OutputKey = sycl::malloc_device<uint>(N, dpct::get_default_queue()),
-       0);
+  error = DPCT_CHECK_ERROR(
+      d_OutputKey = sycl::malloc_device<uint>(N, dpct::get_in_order_queue()));
   checkCudaErrors(error);
-  /*
-  DPCT1003:43: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (d_OutputVal = sycl::malloc_device<uint>(N, dpct::get_default_queue()),
-       0);
+  error = DPCT_CHECK_ERROR(
+      d_OutputVal = sycl::malloc_device<uint>(N, dpct::get_in_order_queue()));
   checkCudaErrors(error);
-  /*
-  DPCT1003:44: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error = (dpct::get_default_queue()
-               .memcpy(d_InputKey, h_InputKey, N * sizeof(uint))
-               .wait(),
-           0);
+  error = DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+                               .memcpy(d_InputKey, h_InputKey, N * sizeof(uint))
+                               .wait());
   checkCudaErrors(error);
-  /*
-  DPCT1003:45: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error = (dpct::get_default_queue()
-               .memcpy(d_InputVal, h_InputVal, N * sizeof(uint))
-               .wait(),
-           0);
+  error = DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+                               .memcpy(d_InputVal, h_InputVal, N * sizeof(uint))
+                               .wait());
   checkCudaErrors(error);
 
   int flag = 1;
@@ -137,11 +109,8 @@ int main(int argc, char **argv) try {
   for (uint arrayLength = 64; arrayLength <= N; arrayLength *= 2) {
     printf("Testing array length %u (%u arrays per batch)...\n", arrayLength,
            N / arrayLength);
-    /*
-    DPCT1003:46: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    error = (dpct::get_current_device().queues_wait_and_throw(), 0);
+    error =
+        DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
     checkCudaErrors(error);
 
     sdkResetTimer(&hTimer);
@@ -152,11 +121,8 @@ int main(int argc, char **argv) try {
       threadCount = bitonicSort(d_OutputKey, d_OutputVal, d_InputKey,
                                 d_InputVal, N / arrayLength, arrayLength, DIR);
 
-    /*
-    DPCT1003:47: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    error = (dpct::get_current_device().queues_wait_and_throw(), 0);
+    error =
+        DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
     checkCudaErrors(error);
 
     sdkStopTimer(&hTimer);
@@ -174,23 +140,15 @@ int main(int argc, char **argv) try {
 
     printf("\nValidating the results...\n");
     printf("...reading back GPU results\n");
-    /*
-    DPCT1003:48: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    error = (dpct::get_default_queue()
-                 .memcpy(h_OutputKeyGPU, d_OutputKey, N * sizeof(uint))
-                 .wait(),
-             0);
+    error = DPCT_CHECK_ERROR(
+        dpct::get_in_order_queue()
+            .memcpy(h_OutputKeyGPU, d_OutputKey, N * sizeof(uint))
+            .wait());
     checkCudaErrors(error);
-    /*
-    DPCT1003:49: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    error = (dpct::get_default_queue()
-                 .memcpy(h_OutputValGPU, d_OutputVal, N * sizeof(uint))
-                 .wait(),
-             0);
+    error = DPCT_CHECK_ERROR(
+        dpct::get_in_order_queue()
+            .memcpy(h_OutputValGPU, d_OutputVal, N * sizeof(uint))
+            .wait());
     checkCudaErrors(error);
 
     int keysFlag =
@@ -205,10 +163,10 @@ int main(int argc, char **argv) try {
 
   printf("Shutting down...\n");
   sdkDeleteTimer(&hTimer);
-  sycl::free(d_OutputVal, dpct::get_default_queue());
-  sycl::free(d_OutputKey, dpct::get_default_queue());
-  sycl::free(d_InputVal, dpct::get_default_queue());
-  sycl::free(d_InputKey, dpct::get_default_queue());
+  dpct::dpct_free(d_OutputVal, dpct::get_in_order_queue());
+  dpct::dpct_free(d_OutputKey, dpct::get_in_order_queue());
+  dpct::dpct_free(d_InputVal, dpct::get_in_order_queue());
+  dpct::dpct_free(d_InputKey, dpct::get_in_order_queue());
   free(h_OutputValGPU);
   free(h_OutputKeyGPU);
   free(h_InputVal);
