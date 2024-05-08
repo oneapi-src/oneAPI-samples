@@ -75,14 +75,17 @@ void MatrixMulOpenMpCpu(float (*a)[N], float (*b)[P], float (*c)[P]) {
   for (i = 0; i < M; i++)
     for (j = 0; j < P; j++) c[i][j] = 0.0f;
 
-// Parallelize by row. The threads don't need to synchronize at
-// loop end, so "nowait" can be used.
-#pragma omp for nowait private(i, j, k)
-  for (i = 0; i < M; i++) {
-    for (k = 0; k < N; k++) {
-      // Each element of the product is just the sum 1+2+...+n
-      for (j = 0; j < P; j++) {
-        c[i][j] += a[i][k] * b[k][j];
+  // Parallelize by row. The threads don't need to synchronize at 
+  // loop end, so "nowait" can be used.
+  #pragma omp parallel
+  {
+    #pragma omp for nowait private(i, j, k)
+    for (i = 0; i < M; i++) {
+      for (k = 0; k < N; k++) {
+        // Each element of the product is just the sum 1+2+...+n
+        for (j = 0; j < P; j++) {
+          c[i][j] += a[i][k] * b[k][j];
+        }
       }
     }
   }
