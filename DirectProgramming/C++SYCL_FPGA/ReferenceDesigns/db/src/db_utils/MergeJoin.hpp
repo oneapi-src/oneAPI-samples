@@ -139,8 +139,8 @@ void MergeJoin() {
     //// state variables
     // only update if both t1 and t2 windows come from valid pipe reads
     if (t1_win_valid && t2_win_valid) {
-      move_t1_win = 
-        (t1_win.data.last().PrimaryKey() < t2_win.data.last().PrimaryKey());
+      move_t1_win =
+          (t1_win.data.last().PrimaryKey() < t2_win.data.last().PrimaryKey());
     }
 
     keep_going = !t1_done || !t2_done;
@@ -277,8 +277,8 @@ void DuplicateMergeJoin() {
     //// state variables
     // only update if both t1 and t2 windows come from valid pipe reads
     if (t1_win_valid && t2_win_valid) {
-      move_t1_win = 
-        (t1_win.data.last().PrimaryKey() < t2_win.data.last().PrimaryKey());
+      move_t1_win =
+          (t1_win.data.last().PrimaryKey() < t2_win.data.last().PrimaryKey());
     }
 
     keep_going = !t1_done || !t2_done;
