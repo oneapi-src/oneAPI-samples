@@ -172,10 +172,8 @@ elseif(DEVICE_FLAG MATCHES S10)
     set(FAMILY "Stratix 10")
 elseif(DEVICE_FLAG MATCHES CycloneV)
     set(FAMILY "Cyclone V")
-elseif(DEVICE_FLAG MATCHES Agilex5)
-    set(FAMILY "Agilex 5")
 else()
-    set(FAMILY "Agilex7")
+    set(FAMILY "Agilex")
 endif()
 
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
