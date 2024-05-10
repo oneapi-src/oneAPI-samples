@@ -57,6 +57,8 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
+message("\tDEVICE_FLAG set to ${DEVICE_FLAG}")
+
 if (NOT DEFINED PART)
     set (PART " ")
 endif()
