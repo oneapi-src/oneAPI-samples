@@ -363,30 +363,30 @@ Summing the number of real and dummy iterations gives the total iterations of th
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Length of input array: 8192
 
 Beginning run without triangular loop optimization.
 
 Verification PASSED
 
-Execution time: 0.217014 seconds
-Throughput without optimization: 589.823554 MB/s
+Execution time: 0.217675 seconds
+Throughput without optimization: 588.033603 MB/s
 
 Beginning run with triangular loop optimization.
 
 Verification PASSED
 
-Execution time: 0.108002 seconds
-Throughput with optimization: 1185.163666 MB/s
+Execution time: 0.108317 seconds
+Throughput with optimization: 1181.717294 MB/s
 ```
 
-A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 311 MHz on Terasic's DE10-Agilex Development Board. The results with and without the optimization are shown in the following table:
+A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 310 MHz on Intel® FPGA SmartNIC N6001-PL. The results with and without the optimization are shown in the following table:
 
 Configuration         | Overall Execution Time (s)  | Throughput (MB/s)
 |:---                 |:---                         |:---
-|Without optimization | 0.217                       | 589.8
-|With optimization    | 0.108                       | 1185.1
+|Without optimization | 0.217                       | 588
+|With optimization    | 0.108                       | 1181
 
 Without optimization, the compiler achieved an II of 30 on the inner-loop. With the optimization, the compiler achieves an II of 1, and the throughput increased by approximately 30x.
 

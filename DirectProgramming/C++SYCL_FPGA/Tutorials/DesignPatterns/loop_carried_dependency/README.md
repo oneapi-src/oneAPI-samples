@@ -270,11 +270,11 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 
 ```
 Number of elements: 150
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Run: Unoptimized:
-kernel time : 0.441344 ms
+kernel time : 0.637952 ms
 Run: Optimized:
-kernel time : 0.368128 ms
+kernel time : 0.5056 ms
 PASSED
 ```
 

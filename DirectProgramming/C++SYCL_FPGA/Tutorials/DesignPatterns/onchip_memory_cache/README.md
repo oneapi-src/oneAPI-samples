@@ -257,55 +257,55 @@ This tutorial creates multiple kernels sweeping across different cache depths wi
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 
 Number of inputs: 16777216
 Number of outputs: 64
 
 Beginning run with cache depth 0 (no cache)
 Data check succeeded for cache depth 0
-Kernel execution time: 0.091634 seconds
-Kernel throughput for cache depth 0: 698.429967 MB/s
+Kernel execution time: 0.094196 seconds
+Kernel throughput for cache depth 0: 679.434782 MB/s
 
 Beginning run with cache depth 1
 Data check succeeded for cache depth 1
-Kernel execution time: 0.045878 seconds
-Kernel throughput for cache depth 1: 1394.991736 MB/s
+Kernel execution time: 0.047102 seconds
+Kernel throughput for cache depth 1: 1358.746969 MB/s
 
 Beginning run with cache depth 2
 Data check succeeded for cache depth 2
-Kernel execution time: 0.045879 seconds
-Kernel throughput for cache depth 2: 1394.963914 MB/s
+Kernel execution time: 0.047099 seconds
+Kernel throughput for cache depth 2: 1358.830543 MB/s
 
 Beginning run with cache depth 3
 Data check succeeded for cache depth 3
-Kernel execution time: 0.045877 seconds
-Kernel throughput for cache depth 3: 1395.036069 MB/s
+Kernel execution time: 0.047101 seconds
+Kernel throughput for cache depth 3: 1358.772354 MB/s
 
 Beginning run with cache depth 4
 Data check succeeded for cache depth 4
-Kernel execution time: 0.045875 seconds
-Kernel throughput for cache depth 4: 1395.100751 MB/s
+Kernel execution time: 0.047099 seconds
+Kernel throughput for cache depth 4: 1358.828466 MB/s
 
 Beginning run with cache depth 5
 Data check succeeded for cache depth 5
-Kernel execution time: 0.045881 seconds
-Kernel throughput for cache depth 5: 1394.918977 MB/s
+Kernel execution time: 0.047101 seconds
+Kernel throughput for cache depth 5: 1358.768344 MB/s
 
 Beginning run with cache depth 6
 Data check succeeded for cache depth 6
-Kernel execution time: 0.045877 seconds
-Kernel throughput for cache depth 6: 1395.038928 MB/s
+Kernel execution time: 0.047101 seconds
+Kernel throughput for cache depth 6: 1358.772758 MB/s
 
 Beginning run with cache depth 7
 Data check succeeded for cache depth 7
-Kernel execution time: 0.045881 seconds
-Kernel throughput for cache depth 7: 1394.920680 MB/s
+Kernel execution time: 0.047102 seconds
+Kernel throughput for cache depth 7: 1358.766383 MB/s
 
 Beginning run with cache depth 8
 Data check succeeded for cache depth 8
-Kernel execution time: 0.045876 seconds
-Kernel throughput for cache depth 8: 1395.054588 MB/s
+Kernel execution time: 0.047102 seconds
+Kernel throughput for cache depth 8: 1358.767191 MB/s
 
 Verification PASSED
 ```

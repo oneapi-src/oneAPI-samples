@@ -66,7 +66,7 @@ Performance results are based on testing as of August 30, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 378k matrices/s for real matrices of size 32x32
+| Intel® FPGA SmartNIC N6001-PL                     | 338k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
@@ -294,11 +294,11 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Generating 8 random real matrices of size 32x32 
 Computing the Cholesky decomposition of 8 matrices 819200 times
-   Total duration:   17.3307 s
-Throughput: 378.15k matrices/s
+   Total duration:   19.366 s
+Throughput: 338.407k matrices/s
 Verifying results...
 
 PASSED

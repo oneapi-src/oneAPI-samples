@@ -346,7 +346,7 @@ Matrices:         1024
 Input Directory:  '../data'
 Output Directory: '.'
 
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
 Launched MVDR kernels
@@ -357,7 +357,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Streaming pipe width          : 4
-Throughput: 357351 matrices/second
+Throughput: 324173 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED
