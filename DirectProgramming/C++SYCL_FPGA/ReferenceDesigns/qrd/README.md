@@ -66,7 +66,7 @@ Performance results are based on testing as of August 30, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 15k matrices/s for complex matrices of size 256 * 256
+| Intel® FPGA SmartNIC N6001-PL                     | 50k matrices/s for complex matrices of size 128 * 128
 
 
 ## Key Implementation Details
@@ -305,14 +305,14 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
 
 ## Example Output
 
-Example output when running on **Terasic’s DE10-Agilex Development Board** for the decomposition of 8 matrices 819200 times (each matrix consisting of 256x256 complex numbers).
+Example output when running on **Intel® FPGA SmartNIC N6001-PL** for the decomposition of 8 matrices 819200 times (each matrix consisting of 256x256 complex numbers).
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Generating 8 random complex matrices of size 256x256 
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Generating 8 random complex matrices of size 128x128 
 Running QR decomposition of 8 matrices 819200 times
-   Total duration:   427.655 s
-Throughput: 15.3245k matrices/s
+   Total duration:   130.636 s
+Throughput: 50.1669k matrices/s
 Verifying results...
 PASSED
 ```
