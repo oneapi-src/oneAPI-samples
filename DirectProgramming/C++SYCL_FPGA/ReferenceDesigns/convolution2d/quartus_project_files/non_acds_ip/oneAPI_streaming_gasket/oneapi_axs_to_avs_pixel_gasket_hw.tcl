@@ -111,7 +111,7 @@ set_parameter_property PARALLEL_PIXELS DISPLAY_NAME "Parallel Pixels"
 set_parameter_property PARALLEL_PIXELS WIDTH ""
 set_parameter_property PARALLEL_PIXELS UNITS None
 set_parameter_property PARALLEL_PIXELS ALLOWED_RANGES 1:8
-set_parameter_property PARALLEL_PIXELS DESCRIPTION "The value of this parameter is the number of pixels that are processed in a single streaming transaction. "
+set_parameter_property PARALLEL_PIXELS DESCRIPTION "The number of pixels that are processed in a single streaming transaction. "
 set_parameter_property PARALLEL_PIXELS AFFECTS_GENERATION false
 set_parameter_property PARALLEL_PIXELS HDL_PARAMETER true
 set_parameter_property PARALLEL_PIXELS EXPORT true
@@ -121,7 +121,7 @@ set_parameter_property CHANNELS DISPLAY_NAME "Color Channels"
 set_parameter_property CHANNELS WIDTH ""
 set_parameter_property CHANNELS UNITS None
 set_parameter_property CHANNELS ALLOWED_RANGES 1:8
-set_parameter_property CHANNELS DESCRIPTION "The value of this parameter is the number of color channels in each pixel. For example, RGB pixels would have 3 channels. "
+set_parameter_property CHANNELS DESCRIPTION "The number of color channels in each pixel. For example, an RGB pixel would have 3 channels. "
 set_parameter_property CHANNELS AFFECTS_GENERATION false
 set_parameter_property CHANNELS HDL_PARAMETER true
 set_parameter_property CHANNELS EXPORT true
@@ -131,7 +131,7 @@ set_parameter_property BITS_PER_CHANNEL DISPLAY_NAME "Bits per Channel"
 set_parameter_property BITS_PER_CHANNEL WIDTH ""
 set_parameter_property BITS_PER_CHANNEL UNITS Bits
 set_parameter_property BITS_PER_CHANNEL ALLOWED_RANGES 1:64
-set_parameter_property BITS_PER_CHANNEL DESCRIPTION "The value of this parameter is the number of bits in each color channel on the AXI4-S interface. The number of bits in each channel of the Avalon Streaming interface will be resized to adapt to limitations in the oneAPI compiler. "
+set_parameter_property BITS_PER_CHANNEL DESCRIPTION "The number of bits in each color channel on the AXI4-S interface. Padding bits will be added to each channel of the Avalon Streaming interface to adapt to limitations in the oneAPI compiler. "
 set_parameter_property BITS_PER_CHANNEL AFFECTS_GENERATION false
 set_parameter_property BITS_PER_CHANNEL HDL_PARAMETER true
 set_parameter_property BITS_PER_CHANNEL EXPORT true

@@ -2,18 +2,17 @@
 //  oneAPI IP
 
 module oneapi_axs_to_avs_pixel_gasket #(
-    //  The value of this parameter is the number of pixels that are processed
-    //  in a single streaming transaction.
+    // The number of pixels that are processed in a single streaming
+    // transaction.
     parameter int PARALLEL_PIXELS  = 1,
 
-    // The value of this parameter is the number of color channels in each
-    // pixel. For example, RGB pixels would have 3 channels.
+    // The number of bits in each color channel on the AXI4-S interface. Padding
+    // bits will be added to each channel of the Avalon Streaming interface to
+    // adapt to limitations in the oneAPI compiler.
     parameter int BITS_PER_CHANNEL = 8,
 
-    // The value of this parameter is the number of bits in each color channel
-    // on the AXI4-S interface. The number of bits in each channel of the Avalon
-    // Streaming interface will be resized to adapt to limitations in the oneAPI
-    // compiler.
+    // The number of color channels in each pixel. For example, RGB pixels would
+    // have 3 channels.
     parameter int CHANNELS         = 3,
 
     // The following derived parameters are calculated in the associated _hw.tcl
@@ -48,6 +47,7 @@ module oneapi_axs_to_avs_pixel_gasket #(
     // AXI4-Streaming Receiver Port
     output logic                  axs_tready,
     input  logic                  axs_tvalid,
+    // see Readme.md for how pixels map to the tdata signal
     input  logic [  BITS_AXI-1:0] axs_tdata,
     input  logic                  axs_tlast,
 
@@ -58,6 +58,7 @@ module oneapi_axs_to_avs_pixel_gasket #(
     // Avalon Streaming Source Port
     input  logic                  aso_ready,
     output logic                  aso_valid,
+    // see Readme.md for how pixels map to the data signal
     output logic [   BITS_AV-1:0] aso_data,
     output logic                  aso_startofpacket,
     output logic                  aso_endofpacket,
