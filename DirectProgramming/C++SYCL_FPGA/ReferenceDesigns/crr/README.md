@@ -128,11 +128,11 @@ This design measures the FPGA performance to determine how many assets can be pr
 
 | Flag                    | Description
 |:---                     |:---
-|`-DOUTER_UNROLL=1`       | Uses the value 1 for the constant OUTER_UNROLL, controls the number of CRRs that can be processed in parallel
-|`-DINNER_UNROLL=64`      | Uses the value 64 for the constant INNER_UNROLL, controls the degree of parallelization within the calculation of 1 CRR
-|`-DOUTER_UNROLL_POW2=1`  | Uses the value 1 for the constant OUTER_UNROLL_POW2, controls the number of memory banks
+|`-DSET_OUTER_UNROLL=<N>`       | Sets the value for the constant OUTER_UNROLL to N, controls the number of CRRs that can be processed in parallel. The default value is 1 for all target platforms.
+|`-DSET_INNER_UNROLL=<N>`      | Sets the value for the constant INNER_UNROLL to N, controls the degree of parallelization within the calculation of 1 CRR. The default value is 64 for all target platforms.
+|`-DSET_OUTER_UNROLL_POW2=<N>`  | ets the value for the constant OUTER_UNROLL_POW2 to N, controls the number of memory banks. The default value is 1 for all target platforms.
 
-> **Note**: The `Xsseed`, `DOUTER_UNROLL`, `DINNER_UNROLL`, and `DOUTER_UNROLL_POW2` values differ depending on the board being targeted. You can find more information about the unroll factors in `/src/CRR_common.hpp`.
+> **Note**: The `Xsseed` values differ depending on the board being targeted. You can find more information about the unroll factors in `/src/CRR_common.hpp`.
 
 ## Build the `CRR Binomial Tree` Sample
 

@@ -56,23 +56,32 @@ if(NOT DEFINED DEVICE_FLAG)
 endif()
 
 # Set design parameters according to the selected board
+if (DEFINED SET_OUTER_UNROLL)
+    set(OUTER_UNROLL_V ${SET_OUTER_UNROLL})
+else
+    set(OUTER_UNROLL_V 1)
+endif()
+
+if (DEFINED SET_INNER_UNROLL)
+    set(INNER_UNROLL_V ${SET_INNER_UNROLL})
+else
+    set(INNER_UNROLL_V 64)
+endif()
+
+if (DEFINED SET_OUTER_UNROLL_POW2)
+    set(OUTER_UNROLL_POW2_V ${SET_OUTER_UNROLL_POW2})
+else
+    set(OUTER_UNROLL_POW2_V 1)
+endif()
+
 if(DEVICE_FLAG MATCHES "A10")
     # A10 parameters
-    set(OUTER_UNROLL_V 1)
-    set(INNER_UNROLL_V 64)
-    set(OUTER_UNROLL_POW2_V 1)
     set(SEED "-Xsseed=1")
 elseif(DEVICE_FLAG MATCHES "S10")
     # S10 parameters
-    set(OUTER_UNROLL_V 2)
-    set(INNER_UNROLL_V 64)
-    set(OUTER_UNROLL_POW2_V 2)
     set(SEED "-Xsseed=3")
 elseif(DEVICE_FLAG MATCHES "Agilex7")
     # Agilex 7
-    set(OUTER_UNROLL_V 2)
-    set(INNER_UNROLL_V 64)
-    set(OUTER_UNROLL_POW2_V 2)
     set(SEED "-Xsseed=4")
 else()
     message(FATAL_ERROR "Unknown board!")
