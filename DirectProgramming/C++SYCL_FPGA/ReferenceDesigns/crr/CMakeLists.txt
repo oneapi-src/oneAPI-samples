@@ -58,19 +58,19 @@ endif()
 # Set design parameters according to the selected board
 if (DEFINED SET_OUTER_UNROLL)
     set(OUTER_UNROLL_V ${SET_OUTER_UNROLL})
-else
+else()
     set(OUTER_UNROLL_V 1)
 endif()
 
 if (DEFINED SET_INNER_UNROLL)
     set(INNER_UNROLL_V ${SET_INNER_UNROLL})
-else
+else()
     set(INNER_UNROLL_V 64)
 endif()
 
 if (DEFINED SET_OUTER_UNROLL_POW2)
     set(OUTER_UNROLL_POW2_V ${SET_OUTER_UNROLL_POW2})
-else
+else()
     set(OUTER_UNROLL_POW2_V 1)
 endif()
 
