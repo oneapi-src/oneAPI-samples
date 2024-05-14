@@ -79,11 +79,10 @@ Performance results are based on testing as of April 26, 2022.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 415k matrices/s for real matrices of size 32x32
+| Intel® FPGA SmartNIC N6001-PL                     | 389k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
-In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
 
 With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product. The input matrix is also replicated two times in order to be able to read two full rows per cycle. The matrix size is constrained by the total FPGA DSP and RAM resources available.
 
@@ -320,11 +319,11 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Generating 8 random real matrices of size 32x32 
 Computing the Cholesky-based inversion of 8 matrices 819200 times
-   Total duration:   15.7619 s
-Throughput: 415.789k matrices/s
+   Total duration:   16.8337 s
+Throughput: 389.315k matrices/s
 Verifying results...
 
 PASSED

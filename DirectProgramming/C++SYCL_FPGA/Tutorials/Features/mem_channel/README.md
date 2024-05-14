@@ -328,36 +328,35 @@ significantly lower than the case where burst-interleaving is enabled.
 
 Running `./mem_channel.fpga` when compiled with `-DPART=INTERLEAVING`:
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ec00000)
 
 Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.001760 seconds
-Kernel throughput: 1704.945536 MB/s
+Kernel execution time: 0.001674 seconds
+Kernel throughput: 1791.987308 MB/s
 ```
 
 Running `./mem_channel.fpga` when compiled with `-DPART=NO_INTERLEAVING`:
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ec00000)
 
 Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.001692 seconds
-Kernel throughput without burst-interleaving: 1772.869425 MB/s
+Kernel execution time: 0.001673 seconds
+Kernel throughput without burst-interleaving: 1793.003700 MB/s
 ```
 
 ### Discussion of Results
 
-A test compile of this tutorial design achieved the following results on Terasic's 
-DE10-Agilex Development Board. The table
-below shows the performance of the design as well as the resources consumed by
+A test compile of this tutorial design achieved the following results on the Intel® FPGA SmartNIC N6001-PL. 
+The table below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
-|Without `-Xsno-interleaving` | 1.760 | 1704 | 9795 | 50875  | 10 | 245 | 0
-|With `-Xsno-interleaving` | 1.692 | 1772 | 6745  | 29592  | 10 | 186  | 0
+|Without `-Xsno-interleaving` | 1.674 | 1791 | 3192 | 14198 | 6  | 345 | 0 
+|With `-Xsno-interleaving` | 1.673 | 1793 | 1997  | 12458  | 6 | 186  | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource

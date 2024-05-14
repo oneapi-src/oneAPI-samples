@@ -61,9 +61,9 @@ Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
-| Device                                              | Throughput
-|:---                                                 |:---
-| Terasic’s DE10-Agilex Development Board             | 653 assets/s
+| Device                                          | Congifuration                         | Throughput
+|:---                                             |:---                                   |:---
+| Intel® FPGA SmartNIC N6001-PL                   | Outer unroll: 1; Inner unroll: 64     | 329 assets/s
 
 
 ## Key Implementation Details
@@ -296,14 +296,14 @@ This design measures the FPGA performance to determine how many assets can be pr
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ec00000)
 
 ============= Correctness Test ============= 
 Running analytical correctness checks... 
 CPU-FPGA Equivalence: PASS
 
 ============= Throughput Test =============
-   Avg throughput:   653.9 assets/s
+   Avg throughput:   329.5 assets/s
 ```
 
 ## License

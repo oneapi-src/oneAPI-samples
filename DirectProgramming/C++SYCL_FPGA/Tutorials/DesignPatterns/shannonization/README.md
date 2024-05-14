@@ -422,13 +422,13 @@ PASSED
 ```
 Generating input data
 Computing golden result
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Running 5 iterations of kernel 0 with |A|=16384 and |B|=32768
-Kernel 0 average throughput: 338.588 MB/s
+Kernel 0 average throughput: 182.521 MB/s
 Running 5 iterations of kernel 1 with |A|=16384 and |B|=32768
-Kernel 1 average throughput: 445.205 MB/s
+Kernel 1 average throughput: 221.232 MB/s
 Running 5 iterations of kernel 2 with |A|=16384 and |B|=32768
-Kernel 2 average throughput: 388.668 MB/s
+Kernel 2 average throughput: 226.728 MB/s
 PASSED
 ```
 

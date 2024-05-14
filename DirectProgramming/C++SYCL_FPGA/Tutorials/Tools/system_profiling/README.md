@@ -316,23 +316,23 @@ __Command line `stdout`:__
 When run without `cliloader`, the tutorial output should resemble the result below.
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Executing kernel 3 times in each round.
 
 *** Beginning execution, without double buffering
 Launching kernel #0
 
-Overall execution time without double buffering = 4085 ms
-Total kernel-only execution time without double buffering = 25 ms
-Throughput = 0.7699827 MB/s
+Overall execution time without double buffering = 48 ms
+Total kernel-only execution time without double buffering = 38 ms
+Throughput = 64.228554 MB/s
 
 
 *** Beginning execution, with double buffering.
 Launching kernel #0
 
-Overall execution time with double buffering = 25 ms
-Total kernel-only execution time with double buffering = 25 ms
-Throughput = 121.66745 MB/s
+Overall execution time with double buffering = 40 ms
+Total kernel-only execution time with double buffering = 38 ms
+Throughput = 77.011658 MB/s
 
 
 Verification PASSED

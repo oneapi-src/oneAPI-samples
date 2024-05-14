@@ -67,7 +67,7 @@ Performance results are based on testing as of June 1st, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic DE10-Agilex Development Board             | 16k matrices/s for matrices of size 8 features * 4176 samples
+| Intel® FPGA SmartNIC N6001-PL                     | 14k matrices/s for matrices of size 8 features * 4176 samples
 
 ## Key Implementation Details
 
@@ -475,17 +475,17 @@ Additionally, the `cmake` build system can be configured using the following par
 
 ## Example Output
 
-Example Output when running on the **Terasic DE10-Agilex Development Board**.
+Example Output when running on the **Intel® FPGA SmartNIC N6001-PL**.
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Reading the input data from file.
 Features count: 8
 Samples count: 4176
 Running Principal Component analysis of 1 matrix 4096 times
 Using device allocations
-   Total duration:   0.250902 s
-Throughput: 16.3251k matrices/s
+   Total duration:   0.290521 s
+Throughput: 14.0988k matrices/s
 Verifying results...
 All the tests passed.
 ```

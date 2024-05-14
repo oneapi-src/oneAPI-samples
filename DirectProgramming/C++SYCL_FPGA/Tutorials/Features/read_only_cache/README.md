@@ -283,35 +283,35 @@ cache has been created.
 ### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_DISABLED`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.001677 seconds
-Kernel throughput: 298.184355 MB/s
+Kernel execution time: 0.006714 seconds
+Kernel throughput: 74.469202 MB/s
 ```
 
 ### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_ENABLED`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.000849 seconds
-Kernel throughput with the read-only cache: 589.155069 MB/s
+Kernel execution time: 0.000860 seconds
+Kernel throughput with the read-only cache: 581.580643 MB/s
 ```
 
-A test compile of this tutorial design achieved the following results on Terasic's DE10-Agilex Development Board:
+A test compile of this tutorial design achieved the following results on the Intel® FPGA SmartNIC N6001-PL:
 
 |Configuration    | Execution Time (ms) | Throughput (MB/s)
 |:---             |:---                 |:---
-|Without caching  | 1.677               | 298.18
-|With caching     | 0.849               | 589.15
+|Without caching  | 6.714               | 74.46
+|With caching     | 0.860               | 581.58
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (for example, non-contiguous), enabling the read-only cache and sizing it correctly may allow

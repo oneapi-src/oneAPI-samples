@@ -270,13 +270,13 @@ These results make sense when you recall that the loop exit computation has a la
 ## Example of Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Speculated Iterations: 0 -- kernel time: 6333.5 ms
-Performance for kernel with 0 speculated iterations: 15789 MFLOPs
-Speculated Iterations: 10 -- kernel time: 667 ms
-Performance for kernel with 10 speculated iterations: 149973 MFLOPs
-Speculated Iterations: 50 -- kernel time: 167 ms
-Performance for kernel with 50 speculated iterations: 599893 MFLOPs
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Speculated Iterations: 0 -- kernel time: 6050.43 ms
+Performance for kernel with 0 speculated iterations: 16528 MFLOPs
+Speculated Iterations: 10 -- kernel time: 504 ms
+Performance for kernel with 10 speculated iterations: 198331 MFLOPs
+Speculated Iterations: 50 -- kernel time: 168 ms
+Performance for kernel with 50 speculated iterations: 594977 MFLOPs
 PASSED: The results are correct
 ```
 

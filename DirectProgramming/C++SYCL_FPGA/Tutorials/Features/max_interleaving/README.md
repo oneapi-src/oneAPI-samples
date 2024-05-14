@@ -256,12 +256,12 @@ Locate `report.html` in the `max_interleaving.report.prj/reports/` directory.
 #### View the Hardware Area Savings
 **NOTE**: For the most accurate numbers, you must compile to hardware so that `Quartus®` can decide where to place each hardware unit on the board.
 1. Go to `Summary` (top navigation bar). In the `Summary` pane, go to `Quartus® Fitter Resource Utilization Summary`. For less accurate estimates (but you can obtain these numbers after compiling to report instead of the full hardware flow), go to `Compile Estimated Kernel Resource Utilization Summary`.
-2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). For example, at the time of writing this tutorial, this is the final resource usage when compiling for the Terasic DE10-Agilex Development Board:
+2. Verify that `KernelCompute<1>` (interleaving disabled) uses slightly fewer resources (ALMs, ALUTs, REGs, etc.) than `KernelCompute<0>` (interleaving enabled). For example, at the time of writing this tutorial, this is the final resource usage when compiling for the Intel® FPGA SmartNIC N6001-PL:
 
 |                 | ALM  | ALUT | REG   | MLAB | RAM | DSP |
 | ---             | ---  | ---  | ---   | ---  | --- | --- |
-| KernelCompute_0 | 3506 | 3940 | 11393 | 37   | 66  | 6   |
-| KernelCompute_1 | 3318 | 3743 | 11028 | 34   | 66  | 6   | 
+| KernelCompute_0 | 1703 | 3406 | 7769  | 34   | 100 | 6   |
+| KernelCompute_1 | 1653 | 3307 | 6741  | 33   | 100 | 6   | 
 
 ## Run the `max_interleaving` Sample
 
@@ -300,18 +300,18 @@ Locate `report.html` in the `max_interleaving.report.prj/reports/` directory.
 ## Example Output On FPGA Hardware
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 0 kernel time : 0.10368 ms
-Throughput for kernel with max_interleaving 0: 0.632 GFlops
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Max interleaving 1 kernel time : 0.922 ms
-Throughput for kernel with max_interleaving 1: 0.071 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Max interleaving 0 kernel time : 0.062976 ms
+Throughput for kernel with max_interleaving 0: 1.041 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Max interleaving 1 kernel time : 0.909 ms
+Throughput for kernel with max_interleaving 1: 0.072 GFlops
 PASSED: The results are correct
 ```
 
 The stdout output shows the giga-floating point operations per second (GFlops) for each kernel.
 
-When run on Terasic's DE10-Agilex Development Board, we see that the throughput is significantly higher for `max_interleaving(0)` (interleaving enabled) than `max_interleaving(1)`, showing the effectiveness of interleaving. However, the kernel using `max_interleaving(1)` uses slightly fewer hardware resources, as shown in the reports. 
+When run on the Intel® FPGA SmartNIC N6001-PL, we see that the throughput is significantly higher for `max_interleaving(0)` (interleaving enabled) than `max_interleaving(1)`, showing the effectiveness of interleaving. However, the kernel using `max_interleaving(1)` uses slightly fewer hardware resources, as shown in the reports. 
 
 While the throughput differences are substantial, if the interleaving loops were a small part of a kernel whose total runtime was an order of magnitude greater than these loops, it may be worth it to disable interleaving for hardware savings.
 

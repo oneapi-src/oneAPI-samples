@@ -248,18 +248,18 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 ### Example Output for `stall_enable.fpga_emu` compiled with `-DPART=STALL_FREE`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Stall free Kernel -- kernel time : 23.552 microseconds
-Throughput for kernel: 8491848KB/s
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Stall free Kernel -- kernel time : 12.8 microseconds
+Throughput for kernel: 15625001KB/s
 PASSED: The results are correct
 ```
 
 ### Example Output for `stall_enable.fpga_emu` compiled with `-DPART=STALL_ENABLE`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Stall enable Kernel -- kernel time : 23.04 microseconds
-Throughput for kernel: 8680556KB/s
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Stall enable Kernel -- kernel time : 7.936 microseconds
+Throughput for kernel: 25201614KB/s
 PASSED: The results are correct
 ```
 

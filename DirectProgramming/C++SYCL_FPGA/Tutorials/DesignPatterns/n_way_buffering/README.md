@@ -308,20 +308,20 @@ After each kernel is launched, the host-side operations (that occur *after* the 
 
 ### Example Output on FPGA Device
 
-> **Note**: A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 602 MHz on Terasic’s DE10-Agilex Development Board. The table shows the results.
+> **Note**: A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 602 MHz on the Intel® FPGA SmartNIC N6001-PL. The table shows the results.
 >
 >Configuration                     | Overall Execution Time (ms) | Total Kernel Execution time (ms)
 >|:--                              |:--                          |:--
->|1-way buffering, single-threaded | 14157                       | 8312
->|1-way buffering, multi-threaded  | 9698                        | 8308
->|2-way buffering, multi-threaded  | 8608                        | 8312
->|5-way buffering, multi-threaded  | 8530                        | 8309
+>|1-way buffering, single-threaded | 14257                       | 13008
+>|1-way buffering, multi-threaded  | 14001                       | 13008
+>|2-way buffering, multi-threaded  | 13401                       | 13008
+>|5-way buffering, multi-threaded  | 13182                       | 13039
 >
 >In all runs, the total kernel execution time is similar as expected. In the first three configurations, the overall execution time exceeds the total kernel execution time, implying there is downtime between kernel executions. However, as we switch from single-threaded to multi-threaded host operations and increase the number of buffer sets used, the overall execution time approaches the kernel execution time.
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Executing kernel 100 times in each round.
 
 *** Beginning execution, 1-way buffering, single-threaded host operations
@@ -336,9 +336,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 14157 ms
-Total kernel-only execution time = 8312 ms
-Throughput = 74.063652 MB/s
+Overall execution time = 14257 ms
+Total kernel-only execution time = 13008 ms
+Throughput = 73.54554 MB/s
 
 
 *** Beginning execution, 1-way buffering, multi-threaded host operations.
@@ -353,9 +353,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 9698 ms
-Total kernel-only execution time = 8308 ms
-Throughput = 108.11652 MB/s
+Overall execution time = 14001 ms
+Total kernel-only execution time = 13008 ms
+Throughput = 74.89061 MB/s
 
 
 *** Beginning execution, 2-way buffering, multi-threaded host operationss
@@ -370,9 +370,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time = 8608 ms
-Total kernel-only execution time = 8312 ms
-Throughput = 121.80763 MB/s
+Overall execution time = 13401 ms
+Total kernel-only execution time = 13008 ms
+Throughput = 78.243797 MB/s
 
 
 *** Beginning execution, N=5-way buffering, multi-threaded host operations
@@ -387,9 +387,9 @@ Launching kernel #70
 Launching kernel #80
 Launching kernel #90
 
-Overall execution time with N-way buffering = 8530 ms
-Total kernel-only execution time with N-way buffering = 8309 ms
-Throughput = 122.91462 MB/s
+Overall execution time with N-way buffering = 13182 ms
+Total kernel-only execution time with N-way buffering = 13039 ms
+Throughput = 79.542877 MB/s
 
 
 Verification PASSED
