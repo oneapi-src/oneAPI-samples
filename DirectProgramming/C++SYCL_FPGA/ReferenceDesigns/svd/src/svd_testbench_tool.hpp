@@ -5,9 +5,9 @@
 #include <vector>
 
 /*
-* This file contains helper functions that is used in the host test bench
-* of the SVD demonstration to check for correctness.
-*/
+ * This file contains helper functions that is used in the host test bench
+ * of the SVD demonstration to check for correctness.
+ */
 
 #define EPSILON 2E-6
 
@@ -86,52 +86,51 @@ void SoftMatmult(std::vector<TT> &mat_A, unsigned rows_A, unsigned cols_A,
 }
 
 template <typename T>
-bool IsRankDeficient(std::vector<std::vector<T>> &input_matrix) {
-  std::vector<std::vector<T>> tempMatrix = input_matrix;
+bool is_rank_deficient(std::vector<std::vector<T>> &input_matrix) {
+  std::vector<std::vector<T>> temp_matrix = input_matrix;
 
-  int numRows = tempMatrix.size();
-  int numCols = tempMatrix[0].size();
-  int minDim = std::min(numRows, numCols);
-  // doing gaussian elimination on the local matrix
-  for (int pivot = 0; pivot < minDim; ++pivot) {
-    int maxRow = pivot;
-    for (int row = pivot + 1; row < numRows; ++row) {
-      if (std::abs(tempMatrix[row][pivot]) >
-          std::abs(tempMatrix[maxRow][pivot])) {
-        maxRow = row;
+  int num_rows = temp_matrix.size();
+  int num_cols = temp_matrix[0].size();
+  int min_dim = std::min(num_rows, num_cols);
+
+  for (int pivot = 0; pivot < min_dim; ++pivot) {
+    int max_row = pivot;
+    for (int row = pivot + 1; row < num_rows; ++row) {
+      if (std::abs(temp_matrix[row][pivot]) >
+          std::abs(temp_matrix[max_row][pivot])) {
+        max_row = row;
       }
     }
 
-    if (tempMatrix[maxRow][pivot] == 0.0) {
+    if (temp_matrix[max_row][pivot] == 0.0) {
       continue;
     }
 
-    if (maxRow != pivot) {
-      std::swap(tempMatrix[pivot], tempMatrix[maxRow]);
+    if (max_row != pivot) {
+      std::swap(temp_matrix[pivot], temp_matrix[max_row]);
     }
 
-    for (int row = pivot + 1; row < numRows; ++row) {
-      T factor = tempMatrix[row][pivot] / tempMatrix[pivot][pivot];
-      for (int col = pivot; col < numCols; ++col) {
-        tempMatrix[row][col] -= factor * tempMatrix[pivot][col];
+    for (int row = pivot + 1; row < num_rows; ++row) {
+      T factor = temp_matrix[row][pivot] / temp_matrix[pivot][pivot];
+      for (int col = pivot; col < num_cols; ++col) {
+        temp_matrix[row][col] -= factor * temp_matrix[pivot][col];
       }
     }
   }
 
-  // check for zero row after elimination
-  for (int row = 0; row < numRows; ++row) {
-    bool allZeroes = true;
-    for (int col = 0; col < numCols; ++col) {
-      if (std::abs(tempMatrix[row][col]) > 1e-6) {
-        allZeroes = false;
+  for (int row = 0; row < num_rows; ++row) {
+    bool all_zeroes = true;
+    for (int col = 0; col < num_cols; ++col) {
+      if (std::abs(temp_matrix[row][col]) > 1e-6) {
+        all_zeroes = false;
         break;
       }
     }
-    if (allZeroes) {
-      return true;  // If a row of zeros is found, matrix is rank-deficient
+    if (all_zeroes) {
+      return true;
     }
   }
-  return false;  // No row of zeros found, matrix is full rank
+  return false;
 }
 
 template <typename T>

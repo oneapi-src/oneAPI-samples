@@ -1,8 +1,8 @@
 #include <math.h>
 
+#include <fstream>
 #include <iomanip>
 #include <random>
-#include <fstream>
 
 /*
 This file implements the steps to
@@ -24,16 +24,16 @@ QR iteration method
 template <typename T>
 class GoldenPCA {
  public:
-  int samples;                // number of samples
-  int features;               // number of features
-  int matrix_count;           // number of matrices
-  bool debug;                 // print debug information if true
-  bool benchmark_mode;        // pull data from actual dataset
-  std::vector<T> a_matrix;    // storage for input matrices
-  std::vector<T> covariance_matrix;      // storage for covariance matrices
-  std::vector<T> eigen_values;           // storage for the Eigen values
-  std::vector<T> eigen_vectors;          // storage for the Eigen vectors
-  std::vector<T> iterations;          // the number of QR iterations per matrix
+  int samples;                       // number of samples
+  int features;                      // number of features
+  int matrix_count;                  // number of matrices
+  bool debug;                        // print debug information if true
+  bool benchmark_mode;               // pull data from actual dataset
+  std::vector<T> a_matrix;           // storage for input matrices
+  std::vector<T> covariance_matrix;  // storage for covariance matrices
+  std::vector<T> eigen_values;       // storage for the Eigen values
+  std::vector<T> eigen_vectors;      // storage for the Eigen vectors
+  std::vector<T> iterations;         // the number of QR iterations per matrix
 
  private:
   std::default_random_engine gen;
@@ -49,10 +49,10 @@ class GoldenPCA {
     debug = d;
 
     a_matrix.resize(n * p * matrix_count);
-    for (int r = 0; r < n; r ++) {
-        for (int c = 0; c < p; c ++) {
-            a_matrix[r * p + c] = input_mat[r][c];
-        }
+    for (int r = 0; r < n; r++) {
+      for (int c = 0; c < p; c++) {
+        a_matrix[r * p + c] = input_mat[r][c];
+      }
     }
 
     covariance_matrix.resize(p * p * matrix_count);
@@ -78,9 +78,8 @@ class GoldenPCA {
       for (int column = 0; column < features; column++) {
         double dot_product = 0;
         for (int k = 0; k < samples; k++) {
-          dot_product +=
-              a_matrix[a_matrix_offset + k * features + row] *
-              a_matrix[a_matrix_offset + k * features + column];
+          dot_product += a_matrix[a_matrix_offset + k * features + row] *
+                         a_matrix[a_matrix_offset + k * features + column];
         }
         covariance_matrix[matrix_c_offset + row * features + column] =
             dot_product;
@@ -205,36 +204,33 @@ class GoldenPCA {
         }
 
         // Compute the actual QR decomposition
-        {
-          for (int row = 0; row < features; row++) {
-            for (int column = 0; column < features; column++) {
-              r[row * features + column] = 0;
-              q[row * features + column] = 0;
-            }
+        for (int row = 0; row < features; row++) {
+          for (int column = 0; column < features; column++) {
+            r[row * features + column] = 0;
+            q[row * features + column] = 0;
           }
-          for (int i = 0; i < features; i++) {
-            double norm = 0;
+        }
+        for (int i = 0; i < features; i++) {
+          double norm = 0;
+          for (int k = 0; k < features; k++) {
+            norm += double(rq[k * features + i]) * double(rq[k * features + i]);
+          }
+          double rii = std::sqrt(norm);
+          r[i * features + i] = rii;  // r_ii = ||a_i||
+
+          for (int k = 0; k < features; k++) {
+            q[k * features + i] = rq[k * features + i] / rii;
+          }
+
+          for (int j = i + 1; j < features; j++) {
+            double dp = 0;
             for (int k = 0; k < features; k++) {
-              norm +=
-                  double(rq[k * features + i]) * double(rq[k * features + i]);
+              dp += q[k * features + i] * rq[k * features + j];
             }
-            double rii = std::sqrt(norm);
-            r[i * features + i] = rii;  // r_ii = ||a_i||
+            r[i * features + j] = dp;
 
             for (int k = 0; k < features; k++) {
-              q[k * features + i] = rq[k * features + i] / rii;
-            }
-
-            for (int j = i + 1; j < features; j++) {
-              double dp = 0;
-              for (int k = 0; k < features; k++) {
-                dp += q[k * features + i] * rq[k * features + j];
-              }
-              r[i * features + j] = dp;
-
-              for (int k = 0; k < features; k++) {
-                rq[k * features + j] -= (dp * q[k * features + i]);
-              }
+              rq[k * features + j] -= (dp * q[k * features + i]);
             }
           }
         }
@@ -292,29 +288,27 @@ class GoldenPCA {
         }
       }
 
-
       if (debug)
-          std::cout << "QR iteration stopped after " << iterations
+        std::cout << "QR iteration stopped after " << iterations
                   << " iterations" << std::endl;
       this->iterations[matrix_index] = iterations;
       if (debug)
-          std::cout << "Eigen values for matrix #" << matrix_index << std::endl;
+        std::cout << "Eigen values for matrix #" << matrix_index << std::endl;
       for (int k = 0; k < features; k++) {
-          eigen_values[k + matrix_index * features] = rq[k + features * k];
-          if (debug) std::cout << rq[k + features * k] << " ";
+        eigen_values[k + matrix_index * features] = rq[k + features * k];
+        if (debug) std::cout << rq[k + features * k] << " ";
       }
       if (debug) std::cout << std::endl;
 
       if (debug) {
-          std::cout << "Eigen vectors for matrix #" << matrix_index
-                  << std::endl;
-          for (int row = 0; row < features; row++) {
+        std::cout << "Eigen vectors for matrix #" << matrix_index << std::endl;
+        for (int row = 0; row < features; row++) {
           for (int col = 0; col < features; col++) {
-              std::cout << eigen_vectors[offset + row * features + col] << " ";
+            std::cout << eigen_vectors[offset + row * features + col] << " ";
           }
           std::cout << std::endl;
-          }
-          std::cout << std::endl;
+        }
+        std::cout << std::endl;
       }
     }  // end for:matrix_index
   }

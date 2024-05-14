@@ -171,7 +171,7 @@ struct SVDTestcase {
 
   // Run the test case through the design, and check for correctness
   template <unsigned k_fixed_iteration = FIXED_ITERATIONS,
-            unsigned k_raw_latency = 110, int k_zero_threshold_1e = -8>
+            unsigned k_raw_latency = 110, int k_zero_threshold_1e = -6>
   T RunTest(sycl::queue q, int benchmark_rep = 1, bool print_matrices = false) {
     std::vector<T> flat_A = ColMajorA();
     std::vector<T> flat_U(matrix_count * rows_A * rows_A);

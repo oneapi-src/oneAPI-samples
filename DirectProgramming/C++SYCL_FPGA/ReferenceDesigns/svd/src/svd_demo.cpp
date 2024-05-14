@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
     small_testcase.PrintResult();
 #else
     SVDTestcase<float, 32, 32, 8> large_testcase;
+    // SVDTestcase<float, 96, 96, 8> large_testcase;
     auto test_error = large_testcase.RunTest(q, repetitions);
     large_testcase.PrintResult();
 #endif

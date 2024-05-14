@@ -5,12 +5,11 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
-/*
-  Read matrix_count matrices of type TT from DDR by bursts of num_elem_per_bank
-  elements, and write the matrices to the "MatrixPipe" pipe num_elem_per_bank by
-  num_elem_per_bank elements.
-  Repeat this operations "repetitions" times.
-*/
+
+// Read matrix_count matrices of type TT from DDR by bursts of num_elem_per_bank
+// elements, and write the matrices to the "MatrixPipe" pipe num_elem_per_bank by
+// num_elem_per_bank elements.
+// Repeat this operations "repetitions" times.
 template <typename TT,            // Datatype of the elements of the matrix
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
@@ -55,12 +54,10 @@ void MatrixReadFromDDRTo2PipesByBlocks(
   }          // end of repetition
 }
 
-/*
-  Write matrix_count matrices of type TT from a pipe, num_elem_per_bank by
-  num_elem_per_bank and write them to DDR by bursts of num_elem_per_bank
-  elements.
-  Repeat this operations "repetitions" times.
-*/
+// Write matrix_count matrices of type TT from a pipe, num_elem_per_bank by
+// num_elem_per_bank and write them to DDR by bursts of num_elem_per_bank
+// elements.
+// Repeat this operations "repetitions" times.
 template <typename TT,            // Datatype of the elements of the matrix
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
@@ -134,10 +131,8 @@ void MatrixReadPipeToDDR(
   }      // end of repetition
 }
 
-/*
-  Write vector_count vectors of type TT from a pipe, one element at the time and
-  write them to DDR. Repeat this operations "repetitions" times.
-*/
+// Write vector_count vectors of type TT from a pipe, one element at the time and
+// write them to DDR. Repeat this operations "repetitions" times.
 template <typename TT,         // Datatype of the elements of the matrix
           int size,            // Number of rows of the matrix
           typename VectorPipe  // Input matrix
