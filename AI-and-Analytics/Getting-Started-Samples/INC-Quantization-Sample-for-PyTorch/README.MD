@@ -91,7 +91,7 @@ jupyter notebook --ip=0.0.0.0
 5. Follow the instructions to open the URL with the token in your browser.
 6. Select the Notebook:
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
 7. Change the kernel to `pytorch`
 8. Run every cell in the Notebook in sequence.
@@ -112,7 +112,7 @@ jupyter notebook --ip=0.0.0.0
 4. Follow the instructions to open the URL with the token in your browser.
 5. Select the Notebook:
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
 6. Run every cell in the Notebook in sequence.
 
