@@ -125,6 +125,12 @@ else()
     set(SF_SMALL_ARG )
 endif()
 
+if (PRECISE_TIMING)
+    set(PRECISE_TIMING_ARG -DPRECISE_TIMING)
+else()
+    set(PRECISE_TIMING_ARG )
+endif()
+
 # setting source file based on query version
 if(${QUERY} EQUAL 1)
     set(SOURCE_FILES ${SOURCE_FILES};src/query1/query1_kernel.cpp)
@@ -144,7 +150,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};-DQUERY=${QUERY};${SF_SMALL_ARG})
+set(USER_FLAGS ${USER_FLAGS};-DQUERY=${QUERY};${SF_SMALL_ARG};${PRECISE_TIMING_ARG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
