@@ -39,7 +39,7 @@ The sample contains one Jupyter Notebook and one Python script. It can be run us
 |:---                      |:---
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
-### Setup your environment for the offline installer
+### Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
