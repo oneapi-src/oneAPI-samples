@@ -56,7 +56,7 @@ pip install -r requirements.txt
 
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
 
->**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch###environment-setup) is completed.
 
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
