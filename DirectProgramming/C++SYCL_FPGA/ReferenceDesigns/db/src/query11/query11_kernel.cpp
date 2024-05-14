@@ -77,46 +77,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
 
   ///////////////////////////////////////////////////////////////////////////
-  //// ProducePartSupplier Kernel
-  auto produce_ps_event = q.submit([&](handler& h) {
-    // PARTSUPPLIER table accessors
-    accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
-    accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
-    accessor ps_availqty_accessor(ps_availqty_buf, h, read_only);
-    accessor ps_supplycost_accessor(ps_supplycost_buf, h, read_only);
-
-    // kernel to produce the PARTSUPPLIER table
-    h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
-      [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < ps_iters; i++) {
-        // bulk read of data from global memory
-        NTuple<kJoinWinSize, PartSupplierRow> data;
-
-        UnrolledLoop<0, kJoinWinSize>([&](auto j) {
-          size_t idx = i * kJoinWinSize + j;
-          bool in_range = idx < ps_rows;
-
-          DBIdentifier partkey = ps_partkey_accessor[idx];
-          DBIdentifier suppkey = ps_suppkey_accessor[idx];
-          int availqty = ps_availqty_accessor[idx];
-          DBDecimal supplycost = ps_supplycost_accessor[idx];
-
-          data.get<j>() =
-              PartSupplierRow(in_range, partkey, suppkey, availqty, supplycost);
-        });
-
-        // write to pipe
-        ProducePartSupplierPipe::write(
-            PartSupplierRowPipeData(false, true, data));
-      }
-
-      // tell the downstream kernel we are done producing data
-      ProducePartSupplierPipe::write(PartSupplierRowPipeData(true, false));
-    });
-  });
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
   //// JoinPartSupplierParts Kernel
   auto join_event = q.submit([&](handler& h) {
     // SUPPLIER table accessors
@@ -250,6 +210,47 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   });
   ///////////////////////////////////////////////////////////////////////////
 
+  // Must be last to ensure reliable timings
+  ///////////////////////////////////////////////////////////////////////////
+  //// ProducePartSupplier Kernel
+  auto produce_ps_event = q.submit([&](handler& h) {
+    // PARTSUPPLIER table accessors
+    accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
+    accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
+    accessor ps_availqty_accessor(ps_availqty_buf, h, read_only);
+    accessor ps_supplycost_accessor(ps_supplycost_buf, h, read_only);
+
+    // kernel to produce the PARTSUPPLIER table
+    h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < ps_iters; i++) {
+        // bulk read of data from global memory
+        NTuple<kJoinWinSize, PartSupplierRow> data;
+
+        UnrolledLoop<0, kJoinWinSize>([&](auto j) {
+          size_t idx = i * kJoinWinSize + j;
+          bool in_range = idx < ps_rows;
+
+          DBIdentifier partkey = ps_partkey_accessor[idx];
+          DBIdentifier suppkey = ps_suppkey_accessor[idx];
+          int availqty = ps_availqty_accessor[idx];
+          DBDecimal supplycost = ps_supplycost_accessor[idx];
+
+          data.get<j>() =
+              PartSupplierRow(in_range, partkey, suppkey, availqty, supplycost);
+        });
+
+        // write to pipe
+        ProducePartSupplierPipe::write(
+            PartSupplierRowPipeData(false, true, data));
+      }
+
+      // tell the downstream kernel we are done producing data
+      ProducePartSupplierPipe::write(PartSupplierRowPipeData(true, false));
+    });
+  });
+  ///////////////////////////////////////////////////////////////////////////
+
   // wait for kernels to finish
   produce_ps_event.wait();
   join_event.wait();
@@ -260,9 +261,9 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;
 
-  // gather profiling info
+  // gather profiling info from start of pipeline to end
   auto start_time =
-      consume_sort_event
+      produce_ps_event
           .get_profiling_info<info::event_profiling::command_start>();
   auto end_time = consume_sort_event
           .get_profiling_info<info::event_profiling::command_end>();
