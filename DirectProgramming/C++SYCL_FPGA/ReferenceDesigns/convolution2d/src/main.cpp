@@ -197,9 +197,6 @@ bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
       q, dummy_pixels, (uint16_t)15);
 
-  // disable bypass, since it's on by default
-  BypassCSR::write(q, false);
-
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
           (int)rows_small, (int)cols_small, identity_coeffs});
@@ -259,7 +256,7 @@ bool TestBypass(sycl::queue q, bool print_debug_info) {
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
       q, dummy_pixels, (uint16_t)15);
 
-  // enable bypass
+  // Enable 'bypass' mode by writing to CSR.
   BypassCSR::write(q, true);
 
   sycl::event e = q.single_task<ID_Convolution2d>(
@@ -323,9 +320,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
   bool all_passed = true;
 
   size_t rows = 0, cols = 0;
-
-  // disable bypass since it's on by default
-  BypassCSR::write(q, false);
 
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
@@ -500,9 +494,6 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
               << std::endl;
     return false;
   }
-
-  // Disable bypass since it's on by default
-  BypassCSR::write(q, false);
 
   size_t rows = 0;
   size_t cols = 0;

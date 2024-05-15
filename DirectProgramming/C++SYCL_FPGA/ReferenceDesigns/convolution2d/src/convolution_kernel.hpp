@@ -251,7 +251,7 @@ struct Convolution2d {
         myLineBuffer(rows, cols);
 
     bool keep_going = true;
-    bool bypass = true;
+    bool bypass = false;
 
     [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (keep_going) {

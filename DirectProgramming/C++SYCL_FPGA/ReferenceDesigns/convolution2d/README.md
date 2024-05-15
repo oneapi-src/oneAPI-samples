@@ -118,7 +118,7 @@ struct Convolution2d {
         myLineBuffer(rows, cols);
 
     bool keep_going = true;
-    bool bypass = true;
+    bool bypass = false;
 
     [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (keep_going) {
@@ -196,9 +196,9 @@ conv2d::PixelType ConvolutionFunction(
       // handle the case where the center of the window is at the image edge.
       // In this design, simply 'reflect' pixels that are already in the
       // window.
-      SaturateWindowCoordinates(w_row, w_col,  //
-                                row, col,      //
-                                rows, cols,    //
+      SaturateWindowCoordinates(w_row, w_col,  // NO-FORMAT: Alignment
+                                row, col,      // NO-FORMAT: Alignment
+                                rows, cols,    // NO-FORMAT: Alignment
                                 r_select, c_select);
       conv2d::PixelType pixel =
           buffer[c_select + r_select * conv2d::kWindowSize];
@@ -260,7 +260,11 @@ The following diagram illustrates how these functions adapt image data to pipes,
 The following code snippet demonstrates how you can use these functions to populate a pipe with image data before invoking a kernel, and how you can parse the output.
 
 ```c++
-bool TestTinyFrameOnStencil(sycl::queue q) {
+bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
+  std::cout << "\n**********************************\n"
+            << "Check Tiny frame... "
+            << "\n**********************************\n"
+            << std::endl;
   constexpr int rows_small = 3;
   constexpr int cols_small = 8;
 
@@ -274,17 +278,11 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
   vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
       q, rows_small, cols_small, grey_pixels_in);
 
-  // extra pixels to flush out the FIFO
+  // add extra pixels to flush out the FIFO after all image frames
+  // have been added
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
       q, dummy_pixels, (uint16_t)15);
-
-  // disable bypass, since it's on by default
-  BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
@@ -292,10 +290,10 @@ bool TestTinyFrameOnStencil(sycl::queue q) {
 
   conv2d::PixelType grey_pixels_out[pixels_count];
   bool sidebands_ok;
-  int defective_frames;
+  int parsed_frames;
   vvp_stream_adapters::ReadFrameFromPipe<OutputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_out, sidebands_ok,
-      defective_frames);
+      q, rows_small, cols_small, grey_pixels_out, sidebands_ok, parsed_frames,
+      print_debug_info);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
