@@ -59,7 +59,7 @@ or simple pip install in your current ready python environment
 ```
 pip install tensorflow==2.14
 ```
-please see the[supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
+please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 
 ## Run the Sample
 
@@ -115,25 +115,28 @@ python TensorFlow_HelloWorld.py
 
 3. Run the sample again. You should see verbose results similar to the following:
    ```
-2024-03-12 16:01:59.784340: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:117] Plugin optimizer for device_type CPU is enabled.
-onednn_verbose,info,oneDNN v3.2.0 (commit 8f2a00d86546e44501c61c38817138619febbb10)
-onednn_verbose,info,cpu,runtime:OpenMP,nthr:24
-onednn_verbose,info,cpu,isa:Intel AVX2 with Intel DL Boost
-onednn_verbose,info,gpu,runtime:none
-onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
-onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba::f0 dst_f32:p:blocked:Acdb16a::f0,,,10x4x3x3,0.00195312
-onednn_verbose,exec,cpu,convolution,brgconv:avx2,forward_training,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:Acdb16a::f0 bia_f32::blocked:a::f0 dst_f32::blocked:acdb::f0,attr-scratchpad:user attr-post-ops:eltwise_relu ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.19702
-onednn_verbose,exec,cpu,eltwise,jit:avx2,backward_data,data_f32::blocked:abcd::f0 diff_f32::blocked:abcd::f0,attr-scratchpad:user ,alg:eltwise_relu alpha:0 beta:0,4x128x128x10,0.112061
-onednn_verbose,exec,cpu,convolution,jit:avx2,backward_weights,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:ABcd8b8a::f0 bia_undef::undef::: dst_f32::blocked:acdb::f0,attr-scratchpad:user ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.358887
+   2024-03-12 16:01:59.784340: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:117] Plugin optimizer for device_type CPU is enabled.
+   onednn_verbose,info,oneDNN v3.2.0 (commit 8f2a00d86546e44501c61c38817138619febbb10)
+   onednn_verbose,info,cpu,runtime:OpenMP,nthr:24
+   onednn_verbose,info,cpu,isa:Intel AVX2 with Intel DL Boost
+   onednn_verbose,info,gpu,runtime:none
+   onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
+   onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba::f0 dst_f32:p:blocked:Acdb16a::f0,,,10x4x3x3,0.00195312
+   onednn_verbose,exec,cpu,convolution,brgconv:avx2,forward_training,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:Acdb16a::f0 bia_f32::blocked:a::f0
+   dst_f32::blocked:acdb::f0,attr-scratchpad:user attr-post-ops:eltwise_relu ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.19702
+   onednn_verbose,exec,cpu,eltwise,jit:avx2,backward_data,data_f32::blocked:abcd::f0 diff_f32::blocked:abcd::f0,attr-scratchpad:user ,alg:eltwise_relu alpha:0
+   beta:0,4x128x128x10,0.112061
+    onednn_verbose,exec,cpu,convolution,jit:avx2,backward_weights,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:ABcd8b8a::f0 bia_undef::undef:::
+   dst_f32::blocked:acdb::f0,attr-scratchpad:user ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.358887
    ...
-   ```
->**Note**: See the *[oneAPI Deep Neural Network Library Developer Guide and Reference](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html)* for more details on the verbose log.
+ 
+  >**Note**: See the *[oneAPI Deep Neural Network Library Developer Guide and Reference](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html)* for more details on the verbose log.
 
 4. Troubleshooting
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
+   If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 or ask support from https://github.com/intel/intel-extension-for-tensorflow
- 
+
 ## Related Samples
 
 * [Intel Extension Fot TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
