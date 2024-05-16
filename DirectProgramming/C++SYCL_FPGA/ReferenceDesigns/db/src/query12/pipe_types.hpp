@@ -117,4 +117,13 @@ using LineItemProducerPipe =
 using JoinedProducerPipe =
   pipe<class JoinedProducerPipeClass, JoinedRowPipeData>;
 
+#ifdef PRECISE_TIMING
+using OrdersProducerStartPipe =
+  pipe<class OrdersProducerPipeStartClass, bool>;
+
+using LineItemProducerStartPipe =
+  pipe<class LineItemProducerPipeStartClass, bool>;
+
+#endif
+
 #endif /* __PIPE_TYPES_H__ */
