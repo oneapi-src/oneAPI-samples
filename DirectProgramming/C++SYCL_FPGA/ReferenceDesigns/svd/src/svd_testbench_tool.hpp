@@ -28,9 +28,9 @@ void SoftTranspose(std::vector<std::vector<TT>> &origin, unsigned rows,
 template <typename TT>
 void SoftTranspose(std::vector<TT> &mat_A, unsigned rows, unsigned cols,
                    std::vector<TT> &mat_At) {
-  for (int i = 0; i < (rows * cols); i++) {
-    int cur_col = int(i / rows);
-    int cur_row = i % rows;
+  for (unsigned i = 0; i < (rows * cols); i++) {
+    unsigned cur_col = unsigned(i / rows);
+    unsigned cur_row = i % rows;
     mat_At[cur_row * cols + cur_col] = mat_A[i];
   }
 }
@@ -67,19 +67,19 @@ void SoftMatmult(std::vector<TT> &mat_A, unsigned rows_A, unsigned cols_A,
   std::vector<std::vector<TT>> ab_2d(rows_A, std::vector<TT>(cols_B, 0));
 
   // turn A vertical
-  for (int i = 0; i < (rows_A * cols_A); i++) {
-    a_2d[i % rows_A][int(i / rows_A)] = mat_A[i];
+  for (unsigned i = 0; i < (rows_A * cols_A); i++) {
+    a_2d[i % rows_A][unsigned(i / rows_A)] = mat_A[i];
   }
 
   // turn B vertical
-  for (int i = 0; i < (rows_B * cols_B); i++) {
-    b_2d[i % rows_B][int(i / rows_B)] = mat_B[i];
+  for (unsigned i = 0; i < (rows_B * cols_B); i++) {
+    b_2d[i % rows_B][unsigned(i / rows_B)] = mat_B[i];
   }
 
   SoftMatmult<TT>(a_2d, rows_A, cols_A, b_2d, rows_B, cols_B, ab_2d);
 
-  for (int c = 0; c < cols_B; c++) {
-    for (int r = 0; r < rows_A; r++) {
+  for (unsigned c = 0; c < cols_B; c++) {
+    for (unsigned r = 0; r < rows_A; r++) {
       mat_AB[c * rows_A + r] = ab_2d[r][c];
     }
   }
