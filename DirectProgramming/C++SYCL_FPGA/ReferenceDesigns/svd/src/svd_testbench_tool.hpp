@@ -86,7 +86,7 @@ void SoftMatmult(std::vector<TT> &mat_A, unsigned rows_A, unsigned cols_A,
 }
 
 template <typename T>
-bool is_rank_deficient(std::vector<std::vector<T>> &input_matrix) {
+bool IsRankDeficient(std::vector<std::vector<T>> &input_matrix) {
   std::vector<std::vector<T>> temp_matrix = input_matrix;
 
   int num_rows = temp_matrix.size();
