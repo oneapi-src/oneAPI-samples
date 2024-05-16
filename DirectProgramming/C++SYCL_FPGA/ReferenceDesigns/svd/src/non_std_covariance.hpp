@@ -10,12 +10,12 @@ namespace fpga_linalg {
 template <typename T,          // The datatype for the computation
           unsigned rows,       // Number of Rows in the A matrices
           unsigned columns,    // Number of columns in the A matrices
-          unsigned pipeSize,  // Number of elements read/write per pipe
+          unsigned pipe_size,  // Number of elements read/write per pipe
                                // operation, the matrix is received through the
                                // pipe by blocks of size columns*columns.
-          typename InputPipe,  // A matrix input pipe, receive pipeSize
+          typename InputPipe,  // A matrix input pipe, receive pipe_size
                                // elements from the pipe with each read
-          typename OutputPipe  // T matrix output pipe, send pipeSize
+          typename OutputPipe  // T matrix output pipe, send pipe_size
                                // elements to the pipe with each write
           >
 struct StreamingNStdCovarianceMatrix {
@@ -32,8 +32,8 @@ struct StreamingNStdCovarianceMatrix {
     constexpr int block_count = rows / columns;
 
     // Break memories up to store 8 float numbers (32 bytes) per bank
-    constexpr short kBankwidth = pipeSize * sizeof(T);
-    constexpr unsigned short kNumBanks = columns / pipeSize;
+    constexpr short kBankwidth = pipe_size * sizeof(T);
+    constexpr unsigned short kNumBanks = columns / pipe_size;
 
     // When specifying numbanks for a memory, it must be a power of 2.
     // Unused banks will be automatically optimized away.
@@ -41,10 +41,10 @@ struct StreamingNStdCovarianceMatrix {
         fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanks));
 
     // Copy a matrix from the pipe to a local memory
-    // Number of pipe reads of pipeSize required to read a full column
-    constexpr int kExtraIteration = (columns % pipeSize) != 0 ? 1 : 0;
-    constexpr int kLoopIterationPerRow = columns / pipeSize + kExtraIteration;
-    // Number of pipe reads of pipeSize to read all the matrices
+    // Number of pipe reads of pipe_size required to read a full column
+    constexpr int kExtraIteration = (columns % pipe_size) != 0 ? 1 : 0;
+    constexpr int kLoopIterationPerRow = columns / pipe_size + kExtraIteration;
+    // Number of pipe reads of pipe_size to read all the matrices
     constexpr int kLoopIterations = kLoopIterationPerRow * columns;
 
     // Array to keep the T matrix
@@ -66,16 +66,16 @@ struct StreamingNStdCovarianceMatrix {
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (int li = 0; li < kLoopIterations; li++) {
-        fpga_tools::NTuple<T, pipeSize> pipe_read = InputPipe::read();
+        fpga_tools::NTuple<T, pipe_size> pipe_read = InputPipe::read();
 
         int write_idx = li % kLoopIterationPerRow;
         int a_col_index = li / kLoopIterationPerRow;
 
         fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto k) {
-          fpga_tools::UnrolledLoop<pipeSize>([&](auto t) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
-              if constexpr (k * pipeSize + t < columns) {
-                a_load[a_col_index].template get<k * pipeSize + t>() =
+              if constexpr (k * pipe_size + t < columns) {
+                a_load[a_col_index].template get<k * pipe_size + t>() =
                     pipe_read.template get<t>();
               }
             }
@@ -166,13 +166,13 @@ struct StreamingNStdCovarianceMatrix {
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
-        fpga_tools::NTuple<T, pipeSize> pipe_write;
+        fpga_tools::NTuple<T, pipe_size> pipe_write;
         fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipeSize>([&](auto k) {
-            if constexpr (t * pipeSize + k < columns) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+            if constexpr (t * pipe_size + k < columns) {
               pipe_write.template get<k>() =
                   get[t]
-                      ? t_matrix_consume[li / kLoopIterationPerRow][t * pipeSize + k]
+                      ? t_matrix_consume[li / kLoopIterationPerRow][t * pipe_size + k]
                       : sycl::ext::intel::fpga_reg(
                             pipe_write.template get<k>());
             }

@@ -9,21 +9,21 @@ namespace svd_testbench_tool {  // not for kernel code
 // Convert to string, if input is a float convert with a fixed digits
 template <typename T>
 std::string ToFixedString(T value, int digits) {
-  std::string stringValue = std::to_string(value);
+  std::string string_value = std::to_string(value);
 
   if (typeid(T) == typeid(float) || typeid(T) == typeid(double)) {
     // Find the position of the decimal point
-    size_t decimalPos = stringValue.find('.');
-    if (decimalPos != std::string::npos) {
+    size_t decimal_pos = string_value.find('.');
+    if (decimal_pos != std::string::npos) {
       // Extract the substring up to the specified significant digits
-      size_t endIndex = decimalPos + digits + 1;  // +1 for the decimal point
-      if (endIndex < stringValue.length()) {
-        stringValue = stringValue.substr(0, endIndex);
+      size_t end_index = decimal_pos + digits + 1;  // +1 for the decimal point
+      if (end_index < string_value.length()) {
+        string_value = string_value.substr(0, end_index);
       }
     }
   }
 
-  return stringValue;
+  return string_value;
 }
 
 template <typename T>
