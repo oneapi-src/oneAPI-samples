@@ -54,8 +54,10 @@ else()
     # Check if the target is a BSP
     if(IS_BSP MATCHES "1")
         set(IS_BSP "1")
+        set(BSP_FLAG "-DIS_BSP")
     else()
         set(IS_BSP "0")
+        set(BSP_FLAG "")
         message(STATUS "The selected target ${FPGA_DEVICE} is assumed to be an FPGA part number, so USM will be enabled by default.")
         message(STATUS "If the target is actually a BSP that does not support USM, run cmake with -DIS_BSP=1.")
     endif()
@@ -88,7 +90,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};-D${DEVICE_FLAG};${HYPER_FLAG})
+set(USER_FLAGS ${USER_FLAGS};-D${DEVICE_FLAG};${HYPER_FLAG};${BSP_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
