@@ -19,87 +19,87 @@ struct USVFromEigens {
 
     constexpr int kDiagonalSize =
         (A_rows > A_cols) ? A_cols : A_rows;  // min(rows, cols)
-    constexpr int a_block_count = A_rows / A_cols;
+    constexpr int kABlockCount = A_rows / A_cols;
     // Copy a matrix from the pipe to a local memory
     // Number of pipe reads of pipe_size required to read a full column
-    constexpr int rExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
-    constexpr int sExtraIteration = ((A_rows % pipe_size) != 0) ? 1 : 0;
-    constexpr int aExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
-    constexpr int vExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
-    constexpr int uExtraIteration = ((A_rows % pipe_size) != 0) ? 1 : 0;
-    constexpr int rLoopIterPerColumn = (A_cols / pipe_size) + rExtraIteration;
-    constexpr int sLoopIterPerColumn = (A_rows / pipe_size) + sExtraIteration;
-    constexpr int aLoopIterPerColumn = (A_cols / pipe_size) + aExtraIteration;
-    constexpr int vLoopIterPerColumn = (A_cols / pipe_size) + vExtraIteration;
-    constexpr int uLoopIterPerColumn = (A_rows / pipe_size) + uExtraIteration;
+    constexpr int kRExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
+    constexpr int kSExtraIteration = ((A_rows % pipe_size) != 0) ? 1 : 0;
+    constexpr int kAExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
+    constexpr int kVExtraIteration = ((A_cols % pipe_size) != 0) ? 1 : 0;
+    constexpr int kUExtraIteration = ((A_rows % pipe_size) != 0) ? 1 : 0;
+    constexpr int kRLoopIterPerColumn = (A_cols / pipe_size) + kRExtraIteration;
+    constexpr int kSLoopIterPerColumn = (A_rows / pipe_size) + kSExtraIteration;
+    constexpr int kALoopIterPerColumn = (A_cols / pipe_size) + kAExtraIteration;
+    constexpr int kVLoopIterPerColumn = (A_cols / pipe_size) + kVExtraIteration;
+    constexpr int kULoopIterPerColumn = (A_rows / pipe_size) + kUExtraIteration;
     // Number of pipe reads of pipe_size to read all the matrices
-    constexpr int rLoopIter = rLoopIterPerColumn * A_cols;
-    constexpr int sLoopIter = sLoopIterPerColumn * A_cols;
-    constexpr int aLoopIter = aLoopIterPerColumn * A_cols;
-    constexpr int vLoopIter = vLoopIterPerColumn * A_cols;
-    constexpr int uLoopIter = uLoopIterPerColumn * A_rows;
+    constexpr int kRLoopIter = kRLoopIterPerColumn * A_cols;
+    constexpr int kSLoopIter = kSLoopIterPerColumn * A_cols;
+    constexpr int kALoopIter = kALoopIterPerColumn * A_cols;
+    constexpr int kVLoopIter = kVLoopIterPerColumn * A_cols;
+    constexpr int kULoopIter = kULoopIterPerColumn * A_rows;
     // Size in bits of the loop iterator over kLoopIter iterations
-    constexpr int sLoopIterBitSize =
-        fpga_tools::BitsForMaxValue<sLoopIter + 1>();
-    constexpr int aLoopIterBitSize =
-        fpga_tools::BitsForMaxValue<aLoopIter + 1>();
-    constexpr int vLoopIterBitSize =
-        fpga_tools::BitsForMaxValue<rLoopIter + 1>();
-    constexpr int uLoopIterBitSize =
-        fpga_tools::BitsForMaxValue<uLoopIter + 1>();
+    constexpr int kSLoopIterBitSize =
+        fpga_tools::BitsForMaxValue<kSLoopIter + 1>();
+    constexpr int kALoopIterBitSize =
+        fpga_tools::BitsForMaxValue<kALoopIter + 1>();
+    constexpr int kVLoopIterBitSize =
+        fpga_tools::BitsForMaxValue<kRLoopIter + 1>();
+    constexpr int kULoopIterBitSize =
+        fpga_tools::BitsForMaxValue<kULoopIter + 1>();
 
     constexpr unsigned short kBankwidth = pipe_size * sizeof(TT);
-    constexpr unsigned short sNumBanks = A_rows / pipe_size;
-    constexpr unsigned short aNumBanks = A_rows / pipe_size;
-    constexpr unsigned short vNumBanks = A_cols / pipe_size;
-    constexpr unsigned short uNumBanks = A_rows / pipe_size;
+    constexpr unsigned short kSNumBanks = A_rows / pipe_size;
+    constexpr unsigned short kANumBanks = A_rows / pipe_size;
+    constexpr unsigned short kVNumBanks = A_cols / pipe_size;
+    constexpr unsigned short kUNumBanks = A_rows / pipe_size;
 
-    constexpr short sNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(sNumBanks));
-    constexpr short aNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(aNumBanks));
-    constexpr short vNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(vNumBanks));
-    constexpr short uNumBanksNextPow2 =
-        fpga_tools::Pow2(fpga_tools::CeilLog2(uNumBanks));
+    constexpr short kSNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(kSNumBanks));
+    constexpr short kANumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(kANumBanks));
+    constexpr short kVNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(kVNumBanks));
+    constexpr short kUNumBanksNextPow2 =
+        fpga_tools::Pow2(fpga_tools::CeilLog2(kUNumBanks));
 
     while (1) {
-      [[intel::numbanks(sNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(kSNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT s_result[A_rows][A_cols];
 
-      [[intel::numbanks(aNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(kANumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT a_load[A_cols][A_rows];
 
-      [[intel::numbanks(vNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(kVNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT v_load[A_cols][A_cols];
 
-      [[intel::numbanks(uNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      [[intel::numbanks(kUNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT u_result[A_rows][A_rows];
 
       // load A 
-      for (int block = 0; block < a_block_count; block++) {
+      for (int block = 0; block < kABlockCount; block++) {
         [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-        for (ac_int<aLoopIterBitSize, false> li = 0; li < aLoopIter; li++) {
+        for (ac_int<kALoopIterBitSize, false> li = 0; li < kALoopIter; li++) {
           fpga_tools::NTuple<TT, pipe_size> pipe_read_a = AIn::read();
 
-          int write_idx_a = li % aLoopIterPerColumn;
-          fpga_tools::UnrolledLoop<aLoopIterPerColumn>([&](auto k) {
+          int write_idx_a = li % kALoopIterPerColumn;
+          fpga_tools::UnrolledLoop<kALoopIterPerColumn>([&](auto k) {
             fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
               if constexpr (k * pipe_size + t < A_cols) {
                 if (write_idx_a == k) {
-                  a_load[li / aLoopIterPerColumn]
+                  a_load[li / kALoopIterPerColumn]
                         [k * pipe_size + t + block * A_cols]
                          = pipe_read_a.template get<t>();
                 }
@@ -133,17 +133,17 @@ struct USVFromEigens {
 
       // load V
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<vLoopIterBitSize, false> li = 0; li < vLoopIter; li++) {
+      for (ac_int<kVLoopIterBitSize, false> li = 0; li < kVLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read_v = EVecIn::read();
         // pass down V as is
         VOut::write(pipe_read_v);
 
-        int write_idx_v = li % vLoopIterPerColumn;
-        fpga_tools::UnrolledLoop<vLoopIterPerColumn>([&](auto k) {
+        int write_idx_v = li % kVLoopIterPerColumn;
+        fpga_tools::UnrolledLoop<kVLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if constexpr (k * pipe_size + t < A_cols) {
               if (write_idx_v == k) {
-                v_load[k * pipe_size + t][li / vLoopIterPerColumn] =
+                v_load[k * pipe_size + t][li / kVLoopIterPerColumn] =
                     pipe_read_v.template get<t>();
               }
             }
@@ -177,20 +177,20 @@ struct USVFromEigens {
 
       // output s_result
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<sLoopIterBitSize, false> li = 0; li < sLoopIter; li++) {
-        int column_iter = li % sLoopIterPerColumn;
-        bool get[sLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<sLoopIterPerColumn>([&](auto k) {
+      for (ac_int<kSLoopIterBitSize, false> li = 0; li < kSLoopIter; li++) {
+        int column_iter = li % kSLoopIterPerColumn;
+        bool get[kSLoopIterPerColumn];
+        fpga_tools::UnrolledLoop<kSLoopIterPerColumn>([&](auto k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
         fpga_tools::NTuple<TT, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<sLoopIterPerColumn>([&](auto t) {
+        fpga_tools::UnrolledLoop<kSLoopIterPerColumn>([&](auto t) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < A_rows) {
               pipe_write.template get<k>() =
-                  get[t] ? s_result[t * pipe_size + k][li / sLoopIterPerColumn]
+                  get[t] ? s_result[t * pipe_size + k][li / kSLoopIterPerColumn]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }
@@ -201,20 +201,20 @@ struct USVFromEigens {
 
       // output u_result
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<uLoopIterBitSize, false> li = 0; li < uLoopIter; li++) {
-        int column_iter = li % uLoopIterPerColumn;
-        bool get[uLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<uLoopIterPerColumn>([&](auto k) {
+      for (ac_int<kULoopIterBitSize, false> li = 0; li < kULoopIter; li++) {
+        int column_iter = li % kULoopIterPerColumn;
+        bool get[kULoopIterPerColumn];
+        fpga_tools::UnrolledLoop<kULoopIterPerColumn>([&](auto k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
         fpga_tools::NTuple<TT, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<uLoopIterPerColumn>([&](auto t) {
+        fpga_tools::UnrolledLoop<kULoopIterPerColumn>([&](auto t) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < A_rows) {
               pipe_write.template get<k>() =
-                  get[t] ? u_result[t * pipe_size + k][li / uLoopIterPerColumn]
+                  get[t] ? u_result[t * pipe_size + k][li / kULoopIterPerColumn]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }

@@ -32,6 +32,9 @@ set(TARGET_NAME svd)
 # specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_DEVICE "Agilex7")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to the default FPGA family target: ${FPGA_DEVICE}\
+                    \nPlease refer to the README for information on target selection.")
 else()
     # Check if the target is a BSP
     if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*de10_agilex.*")
