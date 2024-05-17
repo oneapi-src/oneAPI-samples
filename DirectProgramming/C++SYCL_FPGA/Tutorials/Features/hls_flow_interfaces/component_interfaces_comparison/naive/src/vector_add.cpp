@@ -1,9 +1,11 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
+
 #include "exception_handler.hpp"
+
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
 class IDSimpleVAdd;
@@ -27,8 +29,7 @@ struct SimpleVAddKernel {
 constexpr int kVectorSize = 256;
 
 int main() {
-
-  try{
+  try {
     // Use compile-time macros to select either:
     //  - the FPGA emulator device (CPU emulation of the FPGA)
     //  - the FPGA device (a real FPGA)
@@ -44,9 +45,16 @@ int main() {
     // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler);
 
-    int count = kVectorSize;  // pass array size by value
+    auto device = q.get_device();
 
-    // Create USM shared allocations in the specified buffer_location. 
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
+    // Vector size is a constant here, but it could be a run-time variable too.
+    int count = kVectorSize;
+
+    // Create USM shared allocations in the specified buffer_location.
     // You can also use host allocations with malloc_host(...) API
     int *a = sycl::malloc_shared<int>(count, q);
     int *b = sycl::malloc_shared<int>(count, q);
@@ -58,9 +66,10 @@ int main() {
 
     std::cout << "Add two vectors of size " << count << std::endl;
 
-    q.single_task<IDSimpleVAdd>(SimpleVAddKernel{a, b, c, count}).wait();
+    sycl::event e = q.single_task<IDSimpleVAdd>(SimpleVAddKernel{a, b, c, count});
 
-    // verify that VC is correct
+    // Verify that outputs are correct, after the kernel has finished running.
+    e.wait();
     bool passed = true;
     for (int i = 0; i < count; i++) {
       int expected = a[i] + b[i];
