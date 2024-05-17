@@ -1,9 +1,8 @@
 #pragma once
 #include <stdint.h>
 
+#include <array>
 #include <sycl/ext/intel/prototype/pipes_ext.hpp>
-
-#include "data_bundle.hpp"
 
 namespace conv2d {
 
@@ -56,11 +55,11 @@ using PixelType = uint16_t;
 
 // Bundle of `PixelType`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
-using GreyPixelBundle = fpga_tools::DataBundle<PixelType, kParallelPixels>;
+using GreyPixelBundle = std::array<PixelType, kParallelPixels>;
 
 // Bundle of `PixelRGB`, containing a number of parallel pixels equal to
 // `kParallelPixels`.
-using RGBPixelBundle = fpga_tools::DataBundle<PixelRGB, kParallelPixels>;
+using RGBPixelBundle = std::array<PixelRGB, kParallelPixels>;
 
 // A beat that may be transferred on a streaming interface, including sideband
 // signals and a payload of `GreyPixelBundle`.

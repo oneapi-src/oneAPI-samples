@@ -13,9 +13,6 @@
 
 #include "bmp_tools.hpp"  // BmpTools::PixelRGB definition
 
-// allows multiple parallel pixels
-#include "data_bundle.hpp"
-
 // C++ magic that lets us extract template parameters from SYCL pipes,
 // `StreamingBeat` structs
 #include "extract_typename.hpp"
@@ -30,7 +27,7 @@ namespace vvp_stream_adapters {
 /// processing (VVP) FPGA IP would, so you can test that your IP complies with
 /// the VVP standard.
 /// @tparam PixelPipe The pipe to which pixels will be written. This pipe's
-/// payload should be a `StreamingBeat` templated on a `DataBundle`, which is
+/// payload should be a `StreamingBeat` templated on a `std::array`, which is
 /// itself templated on a payload of type `PixelType`.
 /// @tparam PixelType The type that represents each pixel. This may be a scalar
 /// (such as an `int`) or a `struct` of 'plain old data'.
@@ -55,12 +52,10 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
   using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
-  // DataBundle
+  // std::array
   using DataBundleType = BeatPayload<PixelPipe>;
-  constexpr int kPixelsInParallel =
-      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
-      DataBundleType>::BundlePayloadT;
+  constexpr int kPixelsInParallel = std::size(DataBundleType{});
+  using PixelTypeCalc = typename DataBundleType::value_type;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value,
@@ -129,7 +124,7 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 /// does not completely output a frame, the `ReadFrameFromPipe()` function will
 /// hang.
 /// @tparam PixelPipe The pipe from which pixels will be read. This pipe's
-/// payload should be a `StreamingBeat` templated on a `DataBundle`, which is
+/// payload should be a `StreamingBeat` templated on a `std::array`, which is
 /// itself templated on a payload of type `PixelType`.
 /// @tparam PixelType The type that represents each pixel. This may be a scalar
 /// (such as an `int`) or a `struct` of 'plain old data'.
@@ -155,12 +150,10 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
   using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
-  // DataBundle
+  // std::array
   using DataBundleType = BeatPayload<PixelPipe>;
-  constexpr int kPixelsInParallel =
-      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
-      DataBundleType>::BundlePayloadT;
+  constexpr int kPixelsInParallel = std::size(DataBundleType{});
+  using PixelTypeCalc = typename DataBundleType::value_type;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value,
@@ -303,7 +296,7 @@ bool ReadFrameFromPipe(sycl::queue q, int rows, int cols, PixelType *out_img,
 /// @paragraph This function writes dummy values into a
 /// SYCL* pipe that can be consumed by a oneAPI kernel.
 /// @tparam PixelPipe The pipe to which pixels will be written. This pipe's
-/// payload should be a `StreamingBeat` templated on a `DataBundle`, which is
+/// payload should be a `StreamingBeat` templated on a `std::array`, which is
 /// itself templated on a payload of type `PixelType`.
 /// @tparam PixelType The type that represents each pixel. This may be a scalar
 /// (such as an `int`) or a `struct` of 'plain old data'.
@@ -321,12 +314,10 @@ bool WriteDummyPixelsToPipe(sycl::queue q, int len, PixelType val) {
   using StreamingBeatType = typename ExtractPipeType<PixelPipe>::value_type;
 
   // the payload of PixelPipe should be a StreamingBeat, whose payload is a
-  // DataBundle
+  // std::array
   using DataBundleType = BeatPayload<PixelPipe>;
-  constexpr int kPixelsInParallel =
-      fpga_tools::ExtractDataBundleType<DataBundleType>::kBundlePayloadCount;
-  using PixelTypeCalc = typename fpga_tools::ExtractDataBundleType<
-      DataBundleType>::BundlePayloadT;
+  constexpr int kPixelsInParallel = std::size(DataBundleType{});
+  using PixelTypeCalc = typename DataBundleType::value_type;
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value,

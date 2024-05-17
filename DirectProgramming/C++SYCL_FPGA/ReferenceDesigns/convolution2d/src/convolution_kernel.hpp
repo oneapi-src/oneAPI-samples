@@ -10,7 +10,6 @@
 #include <sycl/sycl.hpp>
 
 #include "convolution_types.hpp"
-#include "data_bundle.hpp"
 #include "linebuffer2d.hpp"
 #include "unrolled_loop.hpp"
 
@@ -252,7 +251,7 @@ struct Convolution2d {
         myLineBuffer(rows, cols);
 
     bool keep_going = true;
-    bool bypass = true;
+    bool bypass = false;
 
     [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (keep_going) {
