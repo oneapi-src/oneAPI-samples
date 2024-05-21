@@ -4,7 +4,7 @@ The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow*
 | Property            | Description 
 |:---                 |:---
 | Category            | Get Start Sample 
-| What you will learn | How to start using TensorFlow* on Intel® hardware.
+| What you will learn | How to start using TensorFlow* on Intel® CPU hardware.
 | Time to complete    | 10 minutes
 
 ## Purpose
@@ -17,7 +17,7 @@ This sample code shows how to get started with TensorFlow*. It implements an exa
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | Ubuntu* 22.0.4 (and newer) <br> Windows* 10 and newer 
+| OS                     | Ubuntu* 22.0.4 and newer 
 | Hardware               | Intel® Xeon® Scalable processor family
 | Software               | TensorFlow
 
@@ -37,7 +37,7 @@ The sample includes one python file: TensorFlow_HelloWorld.py. it implements a s
             y_batch = y_data[step*N:(step+1)*N, :, :, :]
             s.run(train, feed_dict={x: x_batch, y: y_batch})
     ```
-In order to show the harware information, you must export the environment variable `ONEDNN_VERBOSE=1` to display the deep learning primitives trace during execution.
+In order to show the harware information, you must export the environment variable `export ONEDNN_VERBOSE=1` to display the deep learning primitives trace during execution.
 >**Note**: For convenience, code line os.environ["ONEDNN_VERBOSE"] = "1" has been added in the body of the script as an alternative method to setting this variable.
 
 Runtime settings for `ONEDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: *[Maximize TensorFlow* Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)*.
@@ -53,14 +53,34 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: <Tensorflow* ><!-- List specific AI Tools that needs to be installed before running this sample --> 
+Required AI Tools: <Intel® Extension for TensorFlow* (CPU)）><!-- List specific AI Tools that needs to be installed before running this sample --> 
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
-or simple pip install in your current ready python environment 
-```
-pip install tensorflow==2.14
-```
 please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 
+>**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+
+**2. (Offline Installer) Activate the AI Tools bundle base environment**
+
+If the default path is used during the installation of AI Tools:
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If a non-default path is used:
+```
+source <custom_path>/bin/activate
+```
+ 
+**3. (Offline Installer) Activate relevant Conda environment**
+
+```
+conda activate tensorflow ## For the system with Intel CPU   
+``` 
+
+**4. Clone the GitHub repository**
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
+```
 ## Run the Sample
 
 >**Note**: Before running the sample, make sure Environment Setup is completed.
@@ -88,13 +108,11 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
 ```
 ### Run the Script
-
 Run the Python script.
 ```
 python TensorFlow_HelloWorld.py
 ```
 ## Example Output
-
 1. With the initial run, you should see results similar to the following:
 
    ```
@@ -105,7 +123,6 @@ python TensorFlow_HelloWorld.py
    4 0.32920069
    [CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
    ```
-
 2. Export `ONEDNN_VERBOSE` as 1 in the command line. The oneDNN run-time verbose trace should look similar to the following:
    ```
    export ONEDNN_VERBOSE=1
@@ -139,7 +156,7 @@ or ask support from https://github.com/intel/intel-extension-for-tensorflow
 
 ## Related Samples
 
-* [Intel Extension Fot TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
+* [Intel Extension For TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
 
 ## License
 
