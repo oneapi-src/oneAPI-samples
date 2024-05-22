@@ -1,40 +1,38 @@
 #include <iostream>
 
 // oneAPI headers
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
+
 #include "exception_handler.hpp"
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
-class SimpleVAddPipes;
+class IDSimpleVAdd;
 
 // Forward declare pipe names to reduce name mangling
 class IDPipeA;
 class IDPipeB;
 class IDPipeC;
 
-constexpr int kVectorSize = 256;
-
 using PipeProps = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::ready_latency<0>));
 
 using InputPipeA =
-    sycl::ext::intel::experimental::pipe<IDPipeA, int, 0,
-                                         PipeProps>;
+    sycl::ext::intel::experimental::pipe<IDPipeA, int, 0, PipeProps>;
 using InputPipeB =
-    sycl::ext::intel::experimental::pipe<IDPipeB, int, 0,
-                                         PipeProps>;
+    sycl::ext::intel::experimental::pipe<IDPipeB, int, 0, PipeProps>;
 
-using CSRPipeProps = decltype(sycl::ext::oneapi::experimental::properties(
-    sycl::ext::intel::experimental::protocol_avalon_mm_uses_ready));
+using CsrOutProperties = decltype(sycl::ext::oneapi::experimental::properties(
+    sycl::ext::intel::experimental::protocol<
+        // Host doesn't care about possibly missing an update, so no need for
+        // protocol_name::avalon_mm_uses_ready
+        sycl::ext::intel::experimental::protocol_name::avalon_mm>));
 
-// this csr pipe will only be read from and written to once
 using OutputPipeC =
-    sycl::ext::intel::experimental::pipe<IDPipeC, int, 0,
-                                         CSRPipeProps>;
+    sycl::ext::intel::experimental::pipe<IDPipeC, int, 0, CsrOutProperties>;
 
-struct SimpleVAddKernelPipes {
+struct SimpleVAddKernel {
   int len;
 
   void operator()() const {
@@ -47,10 +45,14 @@ struct SimpleVAddKernelPipes {
       sum_total += sum;
     }
 
-    // Write to OutputPipeC only once per kernel invocation
+    // Write to OutputPipeC only once per kernel invocation. Since we requested
+    // protcol_avalon_mm instead of protocol_avalon_mm_uses_ready, this write is
+    // effectively non-blocking.
     OutputPipeC::write(sum_total);
   }
 };
+
+constexpr int kVectorSize = 256;
 
 int main() {
   try {
@@ -69,11 +71,18 @@ int main() {
     // create the device queue
     sycl::queue q(selector, fpga_tools::exception_handler);
 
-    int count = kVectorSize;  // pass array size by value
+    auto device = q.get_device();
+
+    std::cout << "Running on device: "
+              << device.get_info<sycl::info::device::name>().c_str()
+              << std::endl;
+
+    // Vector size is a constant here, but it could be a run-time variable too.
+    int count = kVectorSize;
 
     int expected_sum = 0;
 
-    // push data into pipes
+    // push data into pipes before invoking kernel
     int *a = new int[count];
     int *b = new int[count];
     for (int i = 0; i < count; i++) {
@@ -81,7 +90,7 @@ int main() {
       b[i] = (count - i);
 
       expected_sum += (a[i] + b[i]);
-      // When writing to a host pipe in non kernel code, 
+      // When writing to a host pipe in non kernel code,
       // you must pass the sycl::queue as the first argument
       InputPipeA::write(q, a[i]);
       InputPipeB::write(q, b[i]);
@@ -89,12 +98,15 @@ int main() {
 
     std::cout << "Add two vectors of size " << count << std::endl;
 
-    q.single_task<SimpleVAddPipes>(SimpleVAddKernelPipes{count});
+    sycl::event e = q.single_task<IDSimpleVAdd>(SimpleVAddKernel{count});
 
-    // verify that outputs are correct
+    // Verify that outputs are correct, after the kernel has finished running.
+    // Since the write to OutputPipeC is non-blocking, no need to worry about
+    // deadlock.
+    e.wait();
     bool passed = true;
 
-    // only need to read from OutputPipeC once, since the kernel only wrote to it once
+    // Only read from OutputPipeC once, since the kernel only wrote to it once
     int calc = OutputPipeC::read(q);
     if (calc != expected_sum) {
       std::cout << "result " << calc << ", expected (" << expected_sum << ")"
