@@ -30,7 +30,7 @@ class ProducerConsumerBaseImpl {
   // use some fancy C++ metaprogramming to get the correct pointer type
   // based on the template variable
   typedef
-      typename std::conditional_t<use_host_alloc, host_ptr<T>, device_ptr<T>>
+      typename std::conditional_t<use_host_alloc, sycl::ext::intel::host_ptr<T>, sycl::ext::intel::device_ptr<T>>
           kernel_ptr_type;
 
   // private constructor so users cannot make an object
