@@ -58,6 +58,11 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+>
+> :warning: This code sample may fail to compile using Intel® oneAPI DPC++/C++
+> Compiler 2024.2 due to a known bug which will be fixed in the 2024.2.1 patch.
+> Users who wish to compile this code sample must make sure to have the 2024.2.1
+> patch of the oneAPI compiler installed.
 
 ### Performance
 
