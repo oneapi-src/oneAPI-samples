@@ -4,7 +4,7 @@ The `TensorFlow* Getting Started` sample demonstrates how to train a TensorFlow*
 | Property            | Description 
 |:---                 |:---
 | Category            | Get Start Sample 
-| What you will learn | How to start using TensorFlow* on Intel® CPU hardware.
+| What you will learn | How to start using TensorFlow* on Intel® hardware.
 | Time to complete    | 10 minutes
 
 ## Purpose
@@ -53,7 +53,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: <Intel® Extension for TensorFlow* (CPU)）><!-- List specific AI Tools that needs to be installed before running this sample --> 
+Required AI Tools: 'Intel® Extension for TensorFlow* (CPU)' 
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
 please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 
@@ -73,7 +73,8 @@ source <custom_path>/bin/activate
 **3. (Offline Installer) Activate relevant Conda environment**
 
 ```
-conda activate tensorflow ## For the system with Intel CPU   
+conda activate tensorflow ## For the system with Intel CPU
+conda activate tensorflow-gpu ## For the system with Intel GPU  
 ``` 
 
 **4. Clone the GitHub repository**
@@ -88,27 +89,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Conda/PIP](#condapip) 
 * [Docker](#docker)
-
-### AI Tools Offline Installer (Validated)  
-1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
-```
-source $HOME/intel/oneapi/intelpython/bin/activate
-```
-If you used a separate location, open a terminal and type the following
-```
-source <custom_path>/bin/activate
-```
-2. Activate the Conda environment:
-```
-conda activate tensorflow  
-``` 
-3. Clone the GitHub repository:
-``` 
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
-```
 ### Run the Script
-Run the Python script.
 ```
 python TensorFlow_HelloWorld.py
 ```
