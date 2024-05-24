@@ -65,7 +65,6 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 Performance results are based on testing as of April 12, 2024 with fixed 55 iterations.
 
-Using BSP: Agilex_ref 23.3
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput

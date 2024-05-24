@@ -37,7 +37,7 @@ if(NOT DEFINED FPGA_DEVICE)
                     \nPlease refer to the README for information on target selection.")
 else()
     # Check if the target is a BSP
-    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*de10_agilex.*")
+    if(IS_BSP MATCHES "1" OR FPGA_DEVICE MATCHES ".*(de10|ofs|ref).*")
         set(BSP_FLAG "-DIS_BSP")
     else()
         set(BSP_FLAG "")
