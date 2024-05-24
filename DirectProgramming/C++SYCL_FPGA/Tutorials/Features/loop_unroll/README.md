@@ -17,7 +17,7 @@ The loop unrolling mechanism is used to increase program parallelism by duplicat
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -109,10 +109,10 @@ In an FPGA design, unrolling loops is a common strategy to directly trade-off on
 
 This tutorial demonstrates this trade off with a simple vector add kernel. The tutorial shows how increasing the unroll factor on a loop increases throughput until another bottleneck is encountered. This example is constructed to run up against global memory bandwidth constraints.
 
-For this example, let us consider the Terasic's DE10-Agilex Development Board. 
+For this example, let us consider the Intel® FPGA SmartNIC N6001-PL. 
 The tutorial design will likely run at around 600 MHz when targeting this BSP. 
-The memory bandwidth of this FPGA board is about 21 GB/second per DDR bank.
-It is reasonable to assume that one can reach about 90% of the peak theoretical throughput value (21 * 90% = 18.9 GB/s) 
+The memory bandwidth of this FPGA board is about 19 GB/second per DDR bank.
+It is reasonable to assume that one can reach about 90% of the peak theoretical throughput value (19 * 90% = 17 GB/s) 
 In this design, the FPGA design processes a new iteration every cycle in a pipeline-parallel fashion. 
 The theoretical computation limit for one adder is:
 
@@ -123,13 +123,13 @@ You repeat this back-of-the-envelope calculation for different unroll factors:
 
 |Unroll Factor  | GFlops (GB/s) | Computation Bandwidth (GB/s)
 |:---           |:---           |:---
-|1              | 0.6           | 2.4
-|2              | 1.2           | 4.8
-|4              | 2.4           | 9.6
-|8              | 4.8           | 19.2
-|16             | 9.6           | 38.4
+|1              | 0.5           | 2.4
+|2              | 1.0           | 4.8
+|4              | 1.7           | 9.6
+|8              | 2.2           | 19.2
+|16             | 2.3           | 38.4
 
-On a Terasic's DE10-Agilex Development Board, one can reasonably predict that the program will become memory-bandwidth limited when the unroll factor grows between 4 and 8. If you have access to such an FPGA board, check this prediction by running the design following the instructions below (providing the appropriate BSP when running `cmake`).
+On the Intel® FPGA SmartNIC N6001-PL, one can reasonably predict that the program will become memory-bandwidth limited when the unroll factor grows between 4 and 8. If you have access to such an FPGA board, check this prediction by running the design following the instructions below (providing the appropriate BSP when running `cmake`).
 
 ## Build the `Loop Unroll` Tutorial
 
@@ -249,7 +249,7 @@ On a Terasic's DE10-Agilex Development Board, one can reasonably predict that th
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ### Read the Reports
-Locate `report.html` in the `loop_unroll_report.prj/reports/` directory.
+Locate `report.html` in the `loop_unroll.report.prj/reports/` directory.
 
 Navigate to the Area Report and compare the kernels' FPGA resource utilization with unroll factors of 1, 2, 4, 8, and 16. In particular, check the number of DSP resources consumed. You should see that the area grows roughly linearly with the unroll factor.
 
@@ -293,21 +293,21 @@ You can also check the achieved system f<sub>MAX</sub> to verify the earlier cal
 
 ```
 Input Array Size:  67108864
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-unroll_factor 1 kernel time : 111.944 ms
-Throughput for kernel with unroll_factor 1: 0.599 GFlops
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-unroll_factor 2 kernel time : 56.939 ms
-Throughput for kernel with unroll_factor 2: 1.179 GFlops
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-unroll_factor 4 kernel time : 30.151 ms
-Throughput for kernel with unroll_factor 4: 2.226 GFlops
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-unroll_factor 8 kernel time : 16.637 ms
-Throughput for kernel with unroll_factor 8: 4.034 GFlops
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-unroll_factor 16 kernel time : 14.954 ms
-Throughput for kernel with unroll_factor 16: 4.488 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+unroll_factor 1 kernel time : 127.557 ms
+Throughput for kernel with unroll_factor 1: 0.526 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+unroll_factor 2 kernel time : 63.962 ms
+Throughput for kernel with unroll_factor 2: 1.049 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+unroll_factor 4 kernel time : 39.041 ms
+Throughput for kernel with unroll_factor 4: 1.719 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+unroll_factor 8 kernel time : 30.084 ms
+Throughput for kernel with unroll_factor 8: 2.231 GFlops
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+unroll_factor 16 kernel time : 28.105 ms
+Throughput for kernel with unroll_factor 16: 2.388 GFlops
 PASSED: The results are correct
 Checking realtive throughput
 UNROLL_FACTOR2 PASSED
@@ -316,15 +316,15 @@ UNROLL_FACTOR8 PASSED
 UNROLL_FACTOR16 PASSED
 ```
 
-The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on Terasic's DE10-Agilex Development Board:
+The following table summarizes the execution time (in ms), throughput (in GFlops), and number of DSPs used for unroll factors of 1, 2, 4, 8, and 16 for a default input array size of 64M floats (2 ^ 26 floats) on the Intel® FPGA SmartNIC N6001-PL:
 
 Unroll Factor  | Kernel Time (ms) | Throughput (GFlops) | Num of DSPs
 |:---          |:---              |:---                 |:---
-|1             | 111              | 0.599               | 1
-|2             | 56               | 1.179               | 2
-|4             | 30               | 2.226               | 4
-|8             | 16               | 4.034               | 8
-|16            | 14               | 4.488               | 16
+|1             | 127              | 0.526               | 1
+|2             | 63               | 1.049               | 2
+|4             | 39               | 1.719               | 4
+|8             | 30               | 2.231               | 8
+|16            | 28               | 2.388               | 16
 
 Notice that when the unroll factor increases from 1 to 2 and from 2 to 4, the kernel execution time decreases by a factor of two. Correspondingly, the kernel throughput doubles. However, when the unroll factor is increased from 4 to 8 or from 8 to 16, the throughput no longer scales by a factor of two at each step. The design is now bound by memory bandwidth limitations instead of compute unit limitations, even though the hardware is replicated.
 

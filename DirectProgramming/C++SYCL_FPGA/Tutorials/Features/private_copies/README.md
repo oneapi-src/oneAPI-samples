@@ -18,7 +18,7 @@ This tutorial demonstrates a simple example of applying the `private_copies` att
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -214,7 +214,7 @@ A typical design flow may be to:
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `private_copies_report.prj/reports/` directory.
+Locate `report.html` in the `private_copies.report.prj/reports/` directory.
 
 On the main report page, scroll down to the section titled "Estimated Resource Usage". Each kernel name ends in the `private_copies` attribute argument used for that kernel, e.g., `kernelCompute1` uses a `private_copies` attribute value of 1. You can verify that the number of RAMs used for each kernel increases with the `private_copies` value used, except for `private_copies` 0. Using `private_copies` 0 instructs the compiler to choose a default value, which is often near the value that would give you maximum throughput.
 
@@ -255,23 +255,23 @@ On the main report page, scroll down to the section titled "Estimated Resource U
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Kernel time when private_copies is set to 0: 682.802 ms
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Kernel time when private_copies is set to 0: 682.683 ms
 Kernel throughput when private_copies is set to 0: 1.200 GFlops
-Kernel time when private_copies is set to 1: 1069.627 ms
-Kernel throughput when private_copies is set to 1: 0.766 GFlops
-Kernel time when private_copies is set to 2: 682.735 ms
+Kernel time when private_copies is set to 1: 1080.958 ms
+Kernel throughput when private_copies is set to 1: 0.758 GFlops
+Kernel time when private_copies is set to 2: 682.684 ms
 Kernel throughput when private_copies is set to 2: 1.200 GFlops
-Kernel time when private_copies is set to 3: 682.800 ms
+Kernel time when private_copies is set to 3: 682.684 ms
 Kernel throughput when private_copies is set to 3: 1.200 GFlops
-Kernel time when private_copies is set to 4: 682.751 ms
+Kernel time when private_copies is set to 4: 682.684 ms
 Kernel throughput when private_copies is set to 4: 1.200 GFlops
 PASSED: The results are correct
 ```
 
 The stdout output shows the throughput (GFlops) for each kernel.
 
-When run on Terasic's DE10-Agilex Development Board, we see that the throughput of the kernel approximately doubles when going from 1 to 2 private copies for array `a`. Increasing to 3 private copies has a very small effect, and further increasing the number of private copies does not increase the throughput achieved. This means that increasing private copies beyond 2 will incur an area penalty for little or no throughput gain. As such, for this tutorial design, optimal throughput/area tradeoff is achieved when using 2 private copies. This is as expected based on an analysis of the code, as there are two inner loops which are able to run in parallel if they each have their own private copy of the array. The small jump in throughput observed from using 3 private copies instead of 2 can be attributed to the third private copy allowing subsequent outer loop iterations to launch slightly sooner than they would with 2 private copies due to internal delays in tracking the use of each private copy.
+When run on the Intel® FPGA SmartNIC N6001-PL, we see that the throughput of the kernel approximately doubles when going from 1 to 2 private copies for array `a`. Increasing to 3 private copies has a very small effect, and further increasing the number of private copies does not increase the throughput achieved. This means that increasing private copies beyond 2 will incur an area penalty for little or no throughput gain. As such, for this tutorial design, optimal throughput/area tradeoff is achieved when using 2 private copies. This is as expected based on an analysis of the code, as there are two inner loops which are able to run in parallel if they each have their own private copy of the array. The small jump in throughput observed from using 3 private copies instead of 2 can be attributed to the third private copy allowing subsequent outer loop iterations to launch slightly sooner than they would with 2 private copies due to internal delays in tracking the use of each private copy.
 
 Setting the `private_copies` attribute to 0 (or equivalently omitting the attribute entirely) produced good throughput, and the reports show us that the compiler selected 3 private copies. This does produce the optimal throughput, but in this case it probably makes sense to save some area in exchange for a very small throughput loss by specifying 2 private copies instead.
 

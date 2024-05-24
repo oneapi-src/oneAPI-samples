@@ -191,7 +191,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       make report
       ```
-      The report resides at `db_report.prj/reports/report.html`.
+      The report resides at `db.report.prj/reports/report.html`.
 
        >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 
@@ -249,7 +249,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
       ```
       nmake report
       ```
-      The report resides at `db_report.prj/reports/report.html` directory.
+      The report resides at `db.report.prj/reports/report.html` directory.
 
       >**Note**: If you are compiling Query 9 (`-DQUERY=9`), expect a long report generation time.
 

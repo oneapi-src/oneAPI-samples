@@ -19,7 +19,7 @@ Pipes connecting a host and a device are called host pipes. Use host pipes to mo
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -346,7 +346,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
 >  ```
 #### Read the Reports
 
-1. Locate `report.html` in the `hostpipes_report.prj/reports/` directory.
+1. Locate `report.html` in the `hostpipes.report.prj/reports/` directory.
 2. Open the **Views** menu and select **System Viewer**.
 3. In the left-hand pane, select **LoopBackKernelID** under the System hierarchy.
 

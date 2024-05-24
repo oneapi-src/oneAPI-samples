@@ -22,7 +22,7 @@ This sample demonstrates how to take advantage of zero-copy host memory for the 
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -133,7 +133,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
        ```
        make report
        ```
-       The report resides at `zero_copy_data_transfer_report.prj/reports/report.html`.
+       The report resides at `zero_copy_data_transfer.report.prj/reports/report.html`.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -184,7 +184,7 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
       ```
       nmake report
       ```
-      The report resides at `zero_copy_data_transfer_report.prj.a/reports/report.html`.
+      The report resides at `zero_copy_data_transfer.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```

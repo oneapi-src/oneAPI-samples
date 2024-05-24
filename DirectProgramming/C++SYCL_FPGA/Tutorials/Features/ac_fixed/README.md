@@ -21,7 +21,7 @@ This tutorial shows the recommended method for constructing an `ac_fixed` number
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -267,7 +267,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 Locate the pair of `report.html` files in either of the following folders.
 
-- **Report-only compile**:  `ac_fixed_report.prj`
+- **Report-only compile**:  `ac_fixed.report.prj`
 - **FPGA hardware compile**: `ac_fixed.prj`
 
 Scroll down on the Summary page of the report and expand the section titled **Compile Estimated Kernel Resource Utilization Summary**. Notice how the kernel `ConstructFromACFixed` consumes fewer resources than the kernel named `ConstructFromFloat`. Similarly, notice how the kernel named `CalculateWithACFixed` consumes fewer FPGA resources than `CalculateWithFloat`.

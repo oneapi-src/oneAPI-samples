@@ -129,6 +129,7 @@ https://fpgasoftware.intel.com/eula.-->
    }
 }
 ]]></parameter>
+ <parameter name="cpuInfo" value="" />
  <parameter name="designId" value="" />
  <parameter name="device" value="10AS016C3U19E2LG" />
  <parameter name="deviceFamily" value="Arria 10" />
@@ -185,6 +186,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -313,6 +315,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -442,6 +445,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="false" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -759,6 +763,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>dfhFeatureId</key>
                             <value>35</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureType</key>
+                            <value>3</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -806,7 +814,7 @@ https://fpgasoftware.intel.com/eula.-->
     </boundary>
     <originalModuleInfo>
         <className>intel_onchip_memory</className>
-        <version>1.4.7</version>
+        <version>1.4.8</version>
         <displayName>On-Chip Memory II (RAM or ROM) Intel FPGA IP</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
@@ -857,6 +865,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -1173,6 +1182,10 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>dfhFeatureId</key>
                         <value>35</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureType</key>
+                        <value>3</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -1255,7 +1268,7 @@ https://fpgasoftware.intel.com/eula.-->
 </generationInfoDefinition>]]></parameter>
   <parameter name="hdlParameters"><![CDATA[<hdlParameterDescriptorDefinitionList/>]]></parameter>
   <parameter name="hlsFile" value="" />
-  <parameter name="liveModuleName" value="" />
+  <parameter name="liveModuleName" value="code_data_ram" />
   <parameter name="logicalView">ip/pd_system/code_data_ram.ip</parameter>
   <parameter name="moduleAssignmentDefinition"><![CDATA[<assignmentDefinition>
     <assignmentValueMap>
@@ -1356,6 +1369,7 @@ https://fpgasoftware.intel.com/eula.-->
   <parameter name="svInterfaceDefinition" value="" />
  </module>
  <module name="nios" kind="altera_generic_component" version="1.0" enabled="1">
+  <parameter name="bspCpu" value="true" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -2395,6 +2409,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>dfhFeatureId</key>
                             <value>35</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureType</key>
+                            <value>3</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -2695,6 +2713,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>dfhFeatureId</key>
                             <value>35</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureType</key>
+                            <value>3</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -2702,7 +2724,7 @@ https://fpgasoftware.intel.com/eula.-->
     </boundary>
     <originalModuleInfo>
         <className>intel_niosv_g</className>
-        <version>2.1.0</version>
+        <version>2.2.0</version>
         <displayName>Nios V/g General Purpose Processor Intel FPGA IP</displayName>
     </originalModuleInfo>
     <systemInfoParameterDescriptors>
@@ -2797,7 +2819,7 @@ https://fpgasoftware.intel.com/eula.-->
                     <consumedSystemInfos>
                         <entry>
                             <key>CLOCK_DOMAIN</key>
-                            <value>2</value>
+                            <value>1</value>
                         </entry>
                         <entry>
                             <key>CLOCK_RATE</key>
@@ -2805,7 +2827,7 @@ https://fpgasoftware.intel.com/eula.-->
                         </entry>
                         <entry>
                             <key>RESET_DOMAIN</key>
-                            <value>2</value>
+                            <value>1</value>
                         </entry>
                     </consumedSystemInfos>
                 </value>
@@ -2902,6 +2924,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -3940,6 +3963,10 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>dfhFeatureId</key>
                         <value>35</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureType</key>
+                        <value>3</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -4240,6 +4267,10 @@ https://fpgasoftware.intel.com/eula.-->
                         <key>dfhFeatureId</key>
                         <value>35</value>
                     </entry>
+                    <entry>
+                        <key>dfhFeatureType</key>
+                        <value>3</value>
+                    </entry>
                 </parameterValueMap>
             </parameters>
         </interface>
@@ -4392,7 +4423,7 @@ https://fpgasoftware.intel.com/eula.-->
         </entry>
         <entry>
             <key>embeddedsw.configuration.NiosVTCMVersion</key>
-            <value>2.1.0</value>
+            <value>2.2.0</value>
         </entry>
         <entry>
             <key>embeddedsw.configuration.cpuArchitecture</key>
@@ -4451,6 +4482,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -4594,6 +4626,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -4751,6 +4784,7 @@ https://fpgasoftware.intel.com/eula.-->
    kind="altera_generic_component"
    version="1.0"
    enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -5616,6 +5650,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>dfhFeatureId</key>
                             <value>35</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureType</key>
+                            <value>3</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
             </interface>
@@ -5655,6 +5693,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -6569,6 +6608,7 @@ https://fpgasoftware.intel.com/eula.-->
   <parameter name="svInterfaceDefinition" value="" />
  </module>
  <module name="uart" kind="altera_generic_component" version="1.0" enabled="1">
+  <parameter name="bspCpu" value="" />
   <parameter name="componentDefinition"><![CDATA[<componentDefinition>
     <boundary>
         <interfaces>
@@ -6926,6 +6966,10 @@ https://fpgasoftware.intel.com/eula.-->
                             <key>dfhFeatureId</key>
                             <value>35</value>
                         </entry>
+                        <entry>
+                            <key>dfhFeatureType</key>
+                            <value>3</value>
+                        </entry>
                     </parameterValueMap>
                 </parameters>
                 <cmsisInfo>
@@ -7135,6 +7179,7 @@ https://fpgasoftware.intel.com/eula.-->
         </connPtSystemInfos>
     </systemInfos>
 </componentDefinition>]]></parameter>
+  <parameter name="cpuInfo" value="" />
   <parameter name="defaultBoundary"><![CDATA[<boundaryDefinition>
     <interfaces>
         <interface>
@@ -7718,7 +7763,7 @@ https://fpgasoftware.intel.com/eula.-->
  </module>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7743,7 +7788,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7768,7 +7813,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.data_manager"
    end="uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -7793,7 +7838,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.data_manager"
    end="simple_dma_accelerator.csr_ring_root_avs">
   <parameter name="arbitrationPriority" value="1" />
@@ -7818,7 +7863,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.data_manager"
    end="nios.dm_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7843,7 +7888,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.data_manager"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7868,7 +7913,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.data_manager"
    end="nios.timer_sw_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7893,7 +7938,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.instruction_manager"
    end="nios.dm_agent">
   <parameter name="arbitrationPriority" value="1" />
@@ -7918,7 +7963,7 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="avalon"
-   version="23.4"
+   version="24.1"
    start="nios.instruction_manager"
    end="code_data_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -7943,53 +7988,53 @@ https://fpgasoftware.intel.com/eula.-->
  </connection>
  <connection
    kind="clock"
-   version="23.4"
+   version="24.1"
    start="clock_in.out_clk"
    end="reset_in.clk" />
- <connection kind="clock" version="23.4" start="clock_in.out_clk" end="nios.clk" />
- <connection kind="clock" version="23.4" start="clock_in.out_clk" end="uart.clk" />
+ <connection kind="clock" version="24.1" start="clock_in.out_clk" end="nios.clk" />
+ <connection kind="clock" version="24.1" start="clock_in.out_clk" end="uart.clk" />
  <connection
    kind="clock"
-   version="23.4"
+   version="24.1"
    start="clock_in.out_clk"
    end="code_data_ram.clk1" />
  <connection
    kind="clock"
-   version="23.4"
+   version="24.1"
    start="clock_in.out_clk"
    end="simple_dma_accelerator.clock" />
  <connection
    kind="interrupt"
-   version="23.4"
+   version="24.1"
    start="nios.platform_irq_rx"
    end="uart.irq">
   <parameter name="irqNumber" value="0" />
  </connection>
  <connection
    kind="interrupt"
-   version="23.4"
+   version="24.1"
    start="nios.platform_irq_rx"
    end="simple_dma_accelerator.kernel_irqs">
   <parameter name="irqNumber" value="1" />
  </connection>
  <connection
    kind="reset"
-   version="23.4"
+   version="24.1"
    start="reset_in.out_reset"
    end="nios.reset" />
  <connection
    kind="reset"
-   version="23.4"
+   version="24.1"
    start="reset_in.out_reset"
    end="uart.reset" />
  <connection
    kind="reset"
-   version="23.4"
+   version="24.1"
    start="reset_in.out_reset"
    end="code_data_ram.reset1" />
  <connection
    kind="reset"
-   version="23.4"
+   version="24.1"
    start="reset_in.out_reset"
    end="simple_dma_accelerator.resetn" />
 </system>

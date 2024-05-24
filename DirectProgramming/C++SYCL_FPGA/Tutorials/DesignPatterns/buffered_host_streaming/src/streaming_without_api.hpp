@@ -328,8 +328,8 @@ event SubmitKernel(queue &q, T *in_ptr, size_t count, T *out_ptr) {
   return q.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
     // using a host_ptr class tells the compiler that this pointer lives in
     // the host's address space
-    ext::intel::host_ptr<T> in(in_ptr);
-    ext::intel::host_ptr<T> out(out_ptr);
+    sycl::ext::intel::host_ptr<T> in(in_ptr);
+    sycl::ext::intel::host_ptr<T> out(out_ptr);
 
     for (size_t i = 0; i < count; i++) {
       T data = *(in + i);

@@ -17,7 +17,7 @@ Demonstrate a loop optimization to improve the f<sub>MAX</sub>/II of an FPGA des
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -211,7 +211,7 @@ To achieve an II of 1 for the main `while` loop in the FPGA code shown above, th
        ```
        make report
        ```
-      The report resides at `shannonization_report.prj/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
+      The report resides at `shannonization.report.prj/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -262,7 +262,7 @@ To achieve an II of 1 for the main `while` loop in the FPGA code shown above, th
       ```
       nmake report
       ```
-      The report resides at `shannonization_report.prj.a/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
+      The report resides at `shannonization.report.prj.a/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```
@@ -422,13 +422,13 @@ PASSED
 ```
 Generating input data
 Computing golden result
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Running 5 iterations of kernel 0 with |A|=16384 and |B|=32768
-Kernel 0 average throughput: 338.588 MB/s
+Kernel 0 average throughput: 182.521 MB/s
 Running 5 iterations of kernel 1 with |A|=16384 and |B|=32768
-Kernel 1 average throughput: 445.205 MB/s
+Kernel 1 average throughput: 221.232 MB/s
 Running 5 iterations of kernel 2 with |A|=16384 and |B|=32768
-Kernel 2 average throughput: 388.668 MB/s
+Kernel 2 average throughput: 226.728 MB/s
 PASSED
 ```
 

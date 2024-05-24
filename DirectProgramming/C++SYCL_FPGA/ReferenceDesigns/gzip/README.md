@@ -118,7 +118,7 @@ Performance results are based on testing as of August 30, 2023.
 
 | Device                                                                              | Throughput
 |:---                                                                                 |:---
-| Terasic’s DE10-Agilex Development Board                                             | 2 engines @ 4.6 GB/s
+| Intel® FPGA SmartNIC N6001-PL                                                       | 2 engines @ 7 GB/s
 
 ## Build the `GZIP` Design
 
@@ -187,7 +187,7 @@ Performance results are based on testing as of August 30, 2023.
        ```
        make report
        ```
-       The report resides at `gzip_report.prj/reports/report/report.html`.
+       The report resides at `gzip.report.prj/reports/report/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
@@ -307,7 +307,7 @@ Performance results are based on testing as of August 30, 2023.
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Launching High-Bandwidth DMA GZIP application with 2 engines
 outputSize: 145706366 Prepin: 0
 kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
@@ -325,21 +325,21 @@ outputSize: 145706366 Prepin: 0
 kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
 outputSize: 145706366 Prepin: 0
 kMinBufferSize: 16384 isz: 145706110 kInOutPadding: 256
-Throughput: 4.62197 GB/s
+Throughput: 6.99 GB/s
 
 TP breakdown for engine #0 (GB/s)
-CRC = 9.58499
-LZ77 = 9.22334
-Huffman Encoding = 4.51518
-DMA host-to-device = 8.92087
-DMA device-to-host = 9.85465
+CRC = 5.75029
+LZ77 = 3.51912
+Huffman Encoding = 3.5107
+DMA host-to-device = 9.26423
+DMA device-to-host = 7.4516
 
 TP breakdown for engine #1 (GB/s)
-CRC = 9.58543
-LZ77 = 9.23241
-Huffman Encoding = 4.50995
-DMA host-to-device = 8.93201
-DMA device-to-host = 9.86107
+CRC = 5.75794
+LZ77 = 3.52021
+Huffman Encoding = 3.50743
+DMA host-to-device = 9.36199
+DMA device-to-host = 8.74803
 
 Compression Ratio 43.9262%
 PASSED

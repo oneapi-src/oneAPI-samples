@@ -1,0 +1,25 @@
+{
+    "guid": "CC4B8248-DB2E-4D34-AFC2-C3595266A211",	
+    "name": "guided_inlinePtx_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample shows the demonstrates the use of SYCL queues for PTX assembly on GPU devices.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }

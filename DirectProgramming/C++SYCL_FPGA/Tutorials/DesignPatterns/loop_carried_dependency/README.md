@@ -41,7 +41,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware           | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -163,7 +163,7 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
       ```
       make report
       ```
-      The report resides at `loop_carried_dependency_report.prj/reports/report.html`.
+      The report resides at `loop_carried_dependency.report.prj/reports/report.html`.
 
       (Optional) Navigate to the _Loops Analysis_ view of the report (under _Throughput Analysis_) and observe that the loop in block `UnOptKernel.B1` is showing _Serial exe: Data dependency_.  Click the *source location* field in the table to see the details for the loop. It should show 1 as the maximum interleaving iteration of the loop, as the loop is serialized. Now, observe that the loop in block `OptKernel.B1` is not marked as *Serialized*. It shows 12 as the maximum Interleaving iterations of the loop.
 
@@ -270,11 +270,11 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 
 ```
 Number of elements: 150
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Run: Unoptimized:
-kernel time : 0.441344 ms
+kernel time : 0.637952 ms
 Run: Optimized:
-kernel time : 0.368128 ms
+kernel time : 0.5056 ms
 PASSED
 ```
 

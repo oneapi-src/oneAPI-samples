@@ -16,7 +16,6 @@
 
 #include "bmp_tools.hpp"
 #include "convolution_kernel.hpp"
-#include "data_bundle.hpp"
 #include "exception_handler.hpp"
 #include "vvp_stream_adapters.hpp"
 
@@ -198,13 +197,6 @@ bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
       q, dummy_pixels, (uint16_t)15);
 
-  // disable bypass, since it's on by default
-  BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
-
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
           (int)rows_small, (int)cols_small, identity_coeffs});
@@ -240,7 +232,6 @@ bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
 /// from pipe
 /// @return `true` if input image matches output image
 bool TestBypass(sycl::queue q, bool print_debug_info) {
-
   std::cout << "\n**********************************\n"
             << "Check bypass... "
             << "\n**********************************\n"
@@ -257,20 +248,16 @@ bool TestBypass(sycl::queue q, bool print_debug_info) {
       103, 203, 303, 403, 503, 603, 703, 803};
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStreamGrey>(
-      q, rows_small, cols_small, grey_pixels_in, print_debug_messages);
+      q, rows_small, cols_small, grey_pixels_in);
 
   // add extra pixels to flush out the FIFO after all image frames
   // have been added
   int dummy_pixels = cols_small * conv2d::kWindowSize;
   vvp_stream_adapters::WriteDummyPixelsToPipe<InputImageStreamGrey>(
-      q, dummy_pixels, (uint16_t)15, print_debug_messages);
+      q, dummy_pixels, (uint16_t)15);
 
-  // enable bypass
+  // Enable 'bypass' mode by writing to CSR.
   BypassCSR::write(q, true);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   sycl::event e = q.single_task<ID_Convolution2d>(
       Convolution2d<InputImageStreamGrey, OutputImageStreamGrey>{
@@ -333,13 +320,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
   bool all_passed = true;
 
   size_t rows = 0, cols = 0;
-
-  // disable bypass since it's on by default
-  BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
@@ -514,13 +494,6 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
               << std::endl;
     return false;
   }
-
-  // Disable bypass since it's on by default
-  BypassCSR::write(q, false);
-
-  // Make sure that there is no 'true' still sitting in the 'stop' register from
-  // the last time the kernel was stopped
-  StopCSR::write(q, false);
 
   size_t rows = 0;
   size_t cols = 0;

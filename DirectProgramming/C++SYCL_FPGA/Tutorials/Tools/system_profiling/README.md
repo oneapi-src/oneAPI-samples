@@ -8,7 +8,7 @@ The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15
-| Hardware                          | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware                          | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
@@ -182,7 +182,7 @@ After the executable runs, the data collected will be placed in the `CLIntercept
 
 For this tutorial, this visualization appears as shown in the following example:
 
-![](full_example_trace.PNG)
+![](assets/full_example_trace.PNG)
 
 This visualization shows different calls executed through time. The X-axis is time, with the scale shown near the top of the page. The Y-axis shows different calls that are split up in several ways.
 
@@ -208,7 +208,7 @@ For a more detailed explanation of the optimization, refer to the FPGA tutorial 
 
 In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Arria® 10 FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
 
-![](with_and_without_double_buffering.PNG)
+![](assets/with_and_without_double_buffering.PNG)
 
 Here, the kernel runs named `_ZTS10SimpleVpow` can be recognized as the bars with the largest execution time (the large orange bars). Double buffering removes the gaps between the kernel executions that can be seen in the top trace image. This optimization improves the throughput of the design, as explained in the `double_buffering` tutorial.
 
@@ -316,23 +316,23 @@ __Command line `stdout`:__
 When run without `cliloader`, the tutorial output should resemble the result below.
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Executing kernel 3 times in each round.
 
 *** Beginning execution, without double buffering
 Launching kernel #0
 
-Overall execution time without double buffering = 4085 ms
-Total kernel-only execution time without double buffering = 25 ms
-Throughput = 0.7699827 MB/s
+Overall execution time without double buffering = 48 ms
+Total kernel-only execution time without double buffering = 38 ms
+Throughput = 64.228554 MB/s
 
 
 *** Beginning execution, with double buffering.
 Launching kernel #0
 
-Overall execution time with double buffering = 25 ms
-Total kernel-only execution time with double buffering = 25 ms
-Throughput = 121.66745 MB/s
+Overall execution time with double buffering = 40 ms
+Total kernel-only execution time with double buffering = 38 ms
+Throughput = 77.011658 MB/s
 
 
 Verification PASSED

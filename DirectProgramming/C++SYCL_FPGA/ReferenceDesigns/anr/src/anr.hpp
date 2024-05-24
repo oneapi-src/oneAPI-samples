@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+#include <math.h>
 
 #include "anr_params.hpp"
 #include "column_stencil.hpp"

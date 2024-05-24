@@ -12,7 +12,7 @@ constexpr int kBL3 = 3;
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
-class SimpleVAdd;
+class IDSimpleVAdd;
 
 struct SimpleVAddKernel {
   sycl::ext::oneapi::experimental::annotated_arg<
@@ -108,7 +108,7 @@ int main() {
 
     std::cout << "Add two vectors of size " << count << std::endl;
 
-    q.single_task<SimpleVAdd>(SimpleVAddKernel{a, b, c, count}).wait();
+    q.single_task<IDSimpleVAdd>(SimpleVAddKernel{a, b, c, count}).wait();
 
     // verify that VC is correct
     bool passed = true;

@@ -1,0 +1,25 @@
+{
+    "guid": "E46C0CD2-E539-4ACC-8B47-492A6264BD3B",	
+    "name": "guided_shfl_scan_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample demonstrates the migration of CUDA shuffle intrinsic APIs to SYCL group algorithm to perform a scan operation.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }

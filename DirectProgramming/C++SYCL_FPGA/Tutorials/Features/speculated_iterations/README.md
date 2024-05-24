@@ -20,7 +20,7 @@ The `speculated_iterations` attribute is a loop attribute that enables you to di
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -223,7 +223,7 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 >  ```
 ## Read the Reports
 
-Locate `report.html` in the `speculated_iterations_report.prj/reports/` directory.
+Locate `report.html` in the `speculated_iterations.report.prj/reports/` directory.
 
 In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on Agilex7.
 
@@ -270,13 +270,13 @@ These results make sense when you recall that the loop exit computation has a la
 ## Example of Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Speculated Iterations: 0 -- kernel time: 6333.5 ms
-Performance for kernel with 0 speculated iterations: 15789 MFLOPs
-Speculated Iterations: 10 -- kernel time: 667 ms
-Performance for kernel with 10 speculated iterations: 149973 MFLOPs
-Speculated Iterations: 50 -- kernel time: 167 ms
-Performance for kernel with 50 speculated iterations: 599893 MFLOPs
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Speculated Iterations: 0 -- kernel time: 6050.43 ms
+Performance for kernel with 0 speculated iterations: 16528 MFLOPs
+Speculated Iterations: 10 -- kernel time: 504 ms
+Performance for kernel with 10 speculated iterations: 198331 MFLOPs
+Speculated Iterations: 50 -- kernel time: 168 ms
+Performance for kernel with 50 speculated iterations: 594977 MFLOPs
 PASSED: The results are correct
 ```
 

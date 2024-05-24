@@ -1,0 +1,25 @@
+{
+    "guid": "E38A3DC6-67AC-4254-9295-1A5A34CB5F0C",	
+    "name": "guided_histogram_SYCLMigration",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+    "description": "This sample implements 64-bin histogram calculation of arbitrary-sized 8-bit data array.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }

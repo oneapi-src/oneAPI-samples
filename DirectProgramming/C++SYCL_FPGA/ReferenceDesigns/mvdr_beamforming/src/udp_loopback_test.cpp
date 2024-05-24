@@ -12,7 +12,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-#include "Tuple.hpp"
+#include "tuple.hpp"
 #include "UDP.hpp"
 
 using WordType = unsigned long long;

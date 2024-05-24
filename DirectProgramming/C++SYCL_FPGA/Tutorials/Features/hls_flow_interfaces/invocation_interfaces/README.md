@@ -19,7 +19,7 @@ Use the `get` kernel properties method to specify how the IP is started, and `an
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -308,16 +308,23 @@ This code sample contains 6 source files that together demonstrate a full spectr
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DPART=<X>
    ```
+   where `X` is:
+   - `REG_MAP_FUNCTOR`
+   - `STREAM_FUNCTOR`
+   - `STREAM_RM_STALL`
+   - `REG_MAP_LAMBDA`
+   - `STREAM_LAMBDA`
+   - `STREAM_PIPELINED`
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake .. -DPART=<X> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake .. -DPART=<X> -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
@@ -358,16 +365,23 @@ This code sample contains 6 source files that together demonstrate a full spectr
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
+   where `X` is:
+   - `REG_MAP_FUNCTOR`
+   - `STREAM_FUNCTOR`
+   - `STREAM_RM_STALL`
+   - `REG_MAP_LAMBDA`
+   - `STREAM_LAMBDA`
+   - `STREAM_PIPELINED`
    > **Note**: You can change the default target by using the command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  cmake -G "NMake Makefiles" .. -DPART=<X> -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
    > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
    >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  cmake -G "NMake Makefiles" .. -DPART=<X> -DFPGA_DEVICE=<board-support-package>:<board-variant>
    >  ```
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
@@ -405,7 +419,7 @@ This code sample contains 6 source files that together demonstrate a full spectr
 >  ```
 ### Read the Reports
 
-1. Locate `report.html` in the corresponding `<source_file>_report.prj/reports/` directory.
+1. Locate `report.html` in the corresponding `<source_file>.report.prj/reports/` directory.
 
 2. Open the **Views** menu and select **System Viewer**.
 
@@ -427,43 +441,23 @@ In the main **System Viewer** pane, the kernel invocation interfaces and kernel 
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./reg_map_functor.fpga_emu
-   ./stream_functor.fpga_emu
-   ./stream_rm_stall.fpga_emu
-   ./stream_pipelined.fpga_emu
-   ./reg_map_lambda.fpga_emu
-   ./stream_lambda.fpga_emu
+   ./vector_add.fpga_emu
    ```
 2. Run the sample on the FPGA simulator.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./reg_map_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_functor.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_rm_stall.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_pipelined.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./reg_map_lambda.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stream_lambda.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector_add.fpga_sim
    ```
 
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   reg_map_functor.fpga_emu.exe
-   stream_functor.fpga_emu.exe
-   stream_rm_stall.fpga_emu.exe
-   stream_pipelined.fpga_emu.exe
-   reg_map_lambda.fpga_emu.exe
-   stream_lambda.fpga_emu.exe
+   vector_add.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   reg_map_functor.fpga_sim.exe
-   stream_functor.fpga_sim.exe
-   stream_rm_stall.fpga_sim.exe
-   stream_pipelined.fpga_sim
-   reg_map_lambda.fpga_sim.exe
-   stream_lambda.fpga_sim.exe
+   vector_add.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 

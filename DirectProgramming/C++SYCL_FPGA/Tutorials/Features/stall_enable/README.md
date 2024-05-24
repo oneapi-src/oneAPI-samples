@@ -22,7 +22,7 @@ Computations in an FPGA kernel are normally grouped into *Stall Free Clusters*. 
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -98,8 +98,11 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DPART=<X>
    ```
+   where `X` is:
+   - `STALL_ENABLE`
+   - `STALL_FREE`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -149,8 +152,11 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
+   where `X` is:
+   - `STALL_ENABLE`
+   - `STALL_FREE`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -199,7 +205,7 @@ The FPGA compiler will use *Stall Enable Clusters* for the kernel when possible.
 >  ```
 ## Read the Reports
 
-Locate `report.html` in the `stall_enable_report.prj/reports/` and `stall_free_report.prj/reports/` directories.
+Locate `report.html` files in both versions of the build (`-DPART=STALL_ENABLE` and `-DPART=STALL_FREE`).
 
 On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Note that the estimated number of **MLAB**s for KernelComputeStallEnable is smaller than that of KernelComputeStallFree. The reduction in MLABs is due to the elimination of the FIFO queue at the end of the cluster.
 
@@ -214,12 +220,10 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 2. Run the sample on the FPGA simulator device.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stall_enable.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./stall_free.fpga_sim
    ```
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./stall_enable.fpga
-   ./stall_free.fpga
    ```
 
 ### On Windows
@@ -232,32 +236,30 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    stall_enable.fpga_sim.exe
-   stall_free.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    stall_enable.fpga.exe
-   stall_free.fpga.exe
    ```
 
 ## Example Output
 
-### Example Output for `stall_free.fpga_emu`
+### Example Output for `stall_enable.fpga_emu` compiled with `-DPART=STALL_FREE`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Stall free Kernel -- kernel time : 23.552 microseconds
-Throughput for kernel: 8491848KB/s
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Stall free Kernel -- kernel time : 12.8 microseconds
+Throughput for kernel: 15625001KB/s
 PASSED: The results are correct
 ```
 
-### Example Output for `stall_enable.fpga_emu`
+### Example Output for `stall_enable.fpga_emu` compiled with `-DPART=STALL_ENABLE`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Stall enable Kernel -- kernel time : 23.04 microseconds
-Throughput for kernel: 8680556KB/s
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Stall enable Kernel -- kernel time : 7.936 microseconds
+Throughput for kernel: 25201614KB/s
 PASSED: The results are correct
 ```
 

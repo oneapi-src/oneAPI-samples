@@ -19,8 +19,8 @@ event SubmitSingleWorker(queue &q, T *in_ptr, T *out_ptr, size_t count) {
   return q.single_task<K>([=]() [[intel::kernel_args_restrict]] {
     // using a host_ptr class tells the compiler that this pointer lives in
     // the hosts address space
-    ext::intel::host_ptr<T> in(in_ptr);
-    ext::intel::host_ptr<T> out(out_ptr);
+    sycl::ext::intel::host_ptr<T> in(in_ptr);
+    sycl::ext::intel::host_ptr<T> out(out_ptr);
 
     for (size_t i = 0; i < count; i++) {
       // do a simple copy - more complex computation can go here

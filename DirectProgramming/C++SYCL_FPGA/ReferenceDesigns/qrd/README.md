@@ -66,7 +66,7 @@ Performance results are based on testing as of August 30, 2023.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 15k matrices/s for complex matrices of size 256 * 256
+| Intel® FPGA SmartNIC N6001-PL                     | 50k matrices/s for complex matrices of size 128 * 128
 
 
 ## Key Implementation Details
@@ -75,7 +75,7 @@ The QR decomposition algorithm factors a complex _m_ × _n_ matrix, where _m_ �
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. The matrix size is constrained by the total FPGA DSP resources available.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting an Intel® Arria® 10 FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting a Intel® Stratix® 10 or Intel® Agilex® 7 FPGA; however, the design can process matrices from 4 x 4 to 512 x 512.
+By default, the design is parameterized to process 128 × 128 matrices on complex floating-point datatype; however, the design can process matrices from 4 x 4 to 512 x 512.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 
@@ -305,14 +305,14 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
 
 ## Example Output
 
-Example output when running on **Terasic’s DE10-Agilex Development Board** for the decomposition of 8 matrices 819200 times (each matrix consisting of 256x256 complex numbers).
+Example output when running on **Intel® FPGA SmartNIC N6001-PL** for the decomposition of 8 matrices 819200 times (each matrix consisting of 128x128 complex numbers).
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Generating 8 random complex matrices of size 256x256 
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Generating 8 random complex matrices of size 128x128 
 Running QR decomposition of 8 matrices 819200 times
-   Total duration:   427.655 s
-Throughput: 15.3245k matrices/s
+   Total duration:   130.636 s
+Throughput: 50.1669k matrices/s
 Verifying results...
 PASSED
 ```

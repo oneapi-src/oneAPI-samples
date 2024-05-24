@@ -17,7 +17,7 @@ Due to pointer aliasing, the compiler must be conservative about optimizations t
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -260,7 +260,7 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
 >  ```
 ### Read the Reports
 
-Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory.
+Locate `report.html` in the `kernel_args_restrict.report.prj/reports/` directory.
 
 Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see four kernels as described in the [Tutorial Code Description](#tutorial-code-description) section of this README. Each kernel has a single for-loop, which appears in the *Loop List* pane. Click the loop under each kernel to see how the compiler optimized it.
 
@@ -319,23 +319,23 @@ Next, look at the loop details of the *IDKernelArgsRestrict_Lambda* kernel (simi
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Size of vector: 5000000 elements
-Lambda kernel throughput without attribute: 12.6131 MB/s
-Lambda kernel throughput with attribute: 2272.19 MB/s
-Functor kernel throughput without attribute: 12.6173 MB/s
-Functor kernel throughput with attribute: 2274.7 MB/s
+Lambda kernel throughput without attribute: 5.35162 MB/s
+Lambda kernel throughput with attribute: 2088.2 MB/s
+Functor kernel throughput without attribute: 5.35199 MB/s
+Functor kernel throughput with attribute: 2087.85 MB/s
 PASSED
 ```
 
 ### Results Explained
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on Terasic's DE10-Agilex Development Board) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel® FPGA SmartNIC N6001-PL) is shown.
 
 |Attribute used?  | II    | Kernel Throughput (MB/s)
 |:---             |:---   |:---
-|No               | ~64   | 12.6
-|Yes              | ~1    | 2272.2
+|No               | ~854  | 5.35
+|Yes              | ~1    | 2088
 
 > **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance of the memory system.
 

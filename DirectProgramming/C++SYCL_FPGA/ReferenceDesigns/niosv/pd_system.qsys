@@ -146,6 +146,11 @@ https://fpgasoftware.intel.com/eula.-->
 }
 </ipxact:value>
         </ipxact:parameter>
+        <ipxact:parameter parameterId="cpuInfo" type="string">
+          <ipxact:name>cpuInfo</ipxact:name>
+          <ipxact:displayName>cpuInfo</ipxact:displayName>
+          <ipxact:value></ipxact:value>
+        </ipxact:parameter>
         <ipxact:parameter parameterId="designId" type="string">
           <ipxact:name>designId</ipxact:name>
           <ipxact:displayName>designId</ipxact:displayName>
@@ -279,6 +284,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -410,6 +420,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -578,6 +593,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value>false</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -898,6 +918,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;dfhFeatureId&lt;/key&gt;
                             &lt;value&gt;35&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                            &lt;value&gt;3&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -945,7 +969,7 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
         &lt;className&gt;intel_onchip_memory&lt;/className&gt;
-        &lt;version&gt;1.4.7&lt;/version&gt;
+        &lt;version&gt;1.4.8&lt;/version&gt;
         &lt;displayName&gt;On-Chip Memory II (RAM or ROM) Intel FPGA IP&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
@@ -996,6 +1020,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -1316,6 +1345,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;dfhFeatureId&lt;/key&gt;
                         &lt;value&gt;35&lt;/value&gt;
                     &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                        &lt;value&gt;3&lt;/value&gt;
+                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
@@ -1414,7 +1447,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:parameter parameterId="liveModuleName" type="string">
               <ipxact:name>liveModuleName</ipxact:name>
               <ipxact:displayName>Live Module Name</ipxact:displayName>
-              <ipxact:value></ipxact:value>
+              <ipxact:value>code_data_ram</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
@@ -1538,6 +1571,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value>true</ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -2580,6 +2618,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;dfhFeatureId&lt;/key&gt;
                             &lt;value&gt;35&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                            &lt;value&gt;3&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -2880,6 +2922,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;dfhFeatureId&lt;/key&gt;
                             &lt;value&gt;35&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                            &lt;value&gt;3&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -2887,7 +2933,7 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
         &lt;className&gt;intel_niosv_g&lt;/className&gt;
-        &lt;version&gt;2.1.0&lt;/version&gt;
+        &lt;version&gt;2.2.0&lt;/version&gt;
         &lt;displayName&gt;Nios V/g General Purpose Processor Intel FPGA IP&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
@@ -2982,7 +3028,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;consumedSystemInfos&gt;
                         &lt;entry&gt;
                             &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                            &lt;value&gt;2&lt;/value&gt;
+                            &lt;value&gt;1&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -2990,7 +3036,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                            &lt;value&gt;2&lt;/value&gt;
+                            &lt;value&gt;1&lt;/value&gt;
                         &lt;/entry&gt;
                     &lt;/consumedSystemInfos&gt;
                 &lt;/value&gt;
@@ -3087,6 +3133,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -4129,6 +4180,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;dfhFeatureId&lt;/key&gt;
                         &lt;value&gt;35&lt;/value&gt;
                     &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                        &lt;value&gt;3&lt;/value&gt;
+                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
@@ -4429,6 +4484,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;key&gt;dfhFeatureId&lt;/key&gt;
                         &lt;value&gt;35&lt;/value&gt;
                     &lt;/entry&gt;
+                    &lt;entry&gt;
+                        &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                        &lt;value&gt;3&lt;/value&gt;
+                    &lt;/entry&gt;
                 &lt;/parameterValueMap&gt;
             &lt;/parameters&gt;
         &lt;/interface&gt;
@@ -4605,7 +4664,7 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/entry&gt;
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.NiosVTCMVersion&lt;/key&gt;
-            &lt;value&gt;2.1.0&lt;/value&gt;
+            &lt;value&gt;2.2.0&lt;/value&gt;
         &lt;/entry&gt;
         &lt;entry&gt;
             &lt;key&gt;embeddedsw.configuration.cpuArchitecture&lt;/key&gt;
@@ -4675,6 +4734,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -4821,6 +4885,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -5017,6 +5086,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -5885,6 +5959,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;dfhFeatureId&lt;/key&gt;
                             &lt;value&gt;35&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                            &lt;value&gt;3&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -5924,6 +6002,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -6881,6 +6964,11 @@ https://fpgasoftware.intel.com/eula.-->
         </altera:entity_info>
         <altera:altera_module_parameters>
           <ipxact:parameters>
+            <ipxact:parameter parameterId="bspCpu" type="bit">
+              <ipxact:name>bspCpu</ipxact:name>
+              <ipxact:displayName>BSP CPU</ipxact:displayName>
+              <ipxact:value></ipxact:value>
+            </ipxact:parameter>
             <ipxact:parameter parameterId="componentDefinition" type="string">
               <ipxact:name>componentDefinition</ipxact:name>
               <ipxact:displayName>Component definition</ipxact:displayName>
@@ -7241,6 +7329,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;dfhFeatureId&lt;/key&gt;
                             &lt;value&gt;35&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;dfhFeatureType&lt;/key&gt;
+                            &lt;value&gt;3&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
                 &lt;cmsisInfo&gt;
@@ -7450,6 +7542,11 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/connPtSystemInfos&gt;
     &lt;/systemInfos&gt;
 &lt;/componentDefinition&gt;</ipxact:value>
+            </ipxact:parameter>
+            <ipxact:parameter parameterId="cpuInfo" type="string">
+              <ipxact:name>cpuInfo</ipxact:name>
+              <ipxact:displayName>Cpu Info</ipxact:displayName>
+              <ipxact:value></ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="defaultBoundary" type="string">
               <ipxact:name>defaultBoundary</ipxact:name>
@@ -8068,7 +8165,7 @@ https://fpgasoftware.intel.com/eula.-->
       </altera:module>
     </altera:modules>
     <altera:connections>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8089,7 +8186,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8110,7 +8207,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="uart.avalon_jtag_slave">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.data_manager" altera:end="uart.avalon_jtag_slave">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110040"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8131,7 +8228,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="simple_dma_accelerator.csr_ring_root_avs">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.data_manager" altera:end="simple_dma_accelerator.csr_ring_root_avs">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110100"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8152,7 +8249,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="nios.dm_agent">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.data_manager" altera:end="nios.dm_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00100000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8173,7 +8270,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.data_manager" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8194,7 +8291,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.data_manager" altera:end="nios.timer_sw_agent">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.data_manager" altera:end="nios.timer_sw_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00110000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8215,7 +8312,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.instruction_manager" altera:end="nios.dm_agent">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.instruction_manager" altera:end="nios.dm_agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x00100000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8236,7 +8333,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.4" altera:start="nios.instruction_manager" altera:end="code_data_ram.s1">
+      <altera:connection altera:kind="avalon" altera:version="24.1" altera:start="nios.instruction_manager" altera:end="code_data_ram.s1">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -8257,21 +8354,21 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="nios.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="uart.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="code_data_ram.clk1"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.4" altera:start="clock_in.out_clk" altera:end="simple_dma_accelerator.clock"></altera:connection>
-      <altera:connection altera:kind="interrupt" altera:version="23.4" altera:start="nios.platform_irq_rx" altera:end="uart.irq">
+      <altera:connection altera:kind="clock" altera:version="24.1" altera:start="clock_in.out_clk" altera:end="reset_in.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="24.1" altera:start="clock_in.out_clk" altera:end="nios.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="24.1" altera:start="clock_in.out_clk" altera:end="uart.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="24.1" altera:start="clock_in.out_clk" altera:end="code_data_ram.clk1"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="24.1" altera:start="clock_in.out_clk" altera:end="simple_dma_accelerator.clock"></altera:connection>
+      <altera:connection altera:kind="interrupt" altera:version="24.1" altera:start="nios.platform_irq_rx" altera:end="uart.irq">
         <altera:connection_parameter altera:parameter_name="irqNumber" altera:parameter_value="0"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="interrupt" altera:version="23.4" altera:start="nios.platform_irq_rx" altera:end="simple_dma_accelerator.kernel_irqs">
+      <altera:connection altera:kind="interrupt" altera:version="24.1" altera:start="nios.platform_irq_rx" altera:end="simple_dma_accelerator.kernel_irqs">
         <altera:connection_parameter altera:parameter_name="irqNumber" altera:parameter_value="1"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="nios.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="uart.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="code_data_ram.reset1"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.4" altera:start="reset_in.out_reset" altera:end="simple_dma_accelerator.resetn"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="24.1" altera:start="reset_in.out_reset" altera:end="nios.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="24.1" altera:start="reset_in.out_reset" altera:end="uart.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="24.1" altera:start="reset_in.out_reset" altera:end="code_data_ram.reset1"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="24.1" altera:start="reset_in.out_reset" altera:end="simple_dma_accelerator.resetn"></altera:connection>
     </altera:connections>
     <altera:interconnect_requirements></altera:interconnect_requirements>
     <altera:wire_level_connections></altera:wire_level_connections>
@@ -8292,15 +8389,15 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:busInterfaces>
           <ipxact:busInterface>
             <ipxact:name>nios.dm_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.instruction_manager</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="axi4" version="24.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="nios.instruction_manager">
                 <ipxact:baseAddress>0x0010_0000</ipxact:baseAddress>
@@ -8309,27 +8406,27 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>uart.avalon_jtag_slave</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>simple_dma_accelerator.csr_ring_root_avs</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.dm_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.timer_sw_agent</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>nios.data_manager</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="axi4" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="axi4" version="24.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="nios.data_manager">
                 <ipxact:baseAddress>0x0011_0040</ipxact:baseAddress>
@@ -8338,11 +8435,11 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem0_1_port_0_0_r">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -8351,11 +8448,11 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>code_data_ram.s1</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.4"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="24.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="simple_dma_accelerator.avm_mem_gmem1_2_port_0_0_w">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>

@@ -12,7 +12,7 @@ This sample introduces different invocation/data interfaces that can be used whe
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -203,7 +203,7 @@ Use the appropriate TYPE parameter when running CMake to config which design to 
       ```
       nmake report
       ```
-      The report resides at `vector_add_report.a.prj/reports/report.html`.
+      The report resides at `vector_add.report.prj/reports/report.html`.
 
    4. Compile with Quartus place and route (To get accurate area estimate, longer compile time).
       ```

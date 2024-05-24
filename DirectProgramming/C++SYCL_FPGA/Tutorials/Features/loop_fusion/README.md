@@ -18,7 +18,7 @@ This sample demonstrates how to apply loop fusion to loops in your design. It is
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 
@@ -229,7 +229,7 @@ The compiler may conservatively not fuse a pair of loops due to a suspected memo
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ### Read the Reports
-Locate `report.html` in the `loop_fusion_report.prj/reports/` directory.
+Locate `report.html` in the `loop_fusion.report.prj/reports/` directory.
 
 Navigate to the Loops Analysis section of the optimization report under Throughput Analysis and notice that two loops were fused to one in both `DefaultFusionKernel` and in `FusionFunctionKernel`, but not in `NoFusionKernel` or in `DefaultNoFusionKernel`.
 

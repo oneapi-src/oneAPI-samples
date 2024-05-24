@@ -17,7 +17,7 @@ This tutorial demonstrates a simple example of initializing a `device_global` cl
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware           | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -131,7 +131,7 @@ int main () {
       ```
       make fpga_emu
       ```
-   2. Generate the HTML optimization reports. The report resides at `device_global_report.prj\reports\report.html`.
+   2. Generate the HTML optimization reports. The report resides at `device_global.report.prj\reports\report.html`.
       ```
       make report
       ```
@@ -165,7 +165,7 @@ int main () {
       ```
       nmake fpga_emu
       ```
-   2. Generate the optimization report. The report resides at `device_global_report.a.prj\reports\report.html`.
+   2. Generate the optimization report. The report resides at `device_global.report.prj\reports\report.html`.
       ```
       nmake report
       ```
