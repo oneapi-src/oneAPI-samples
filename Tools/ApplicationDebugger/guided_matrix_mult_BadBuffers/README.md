@@ -178,7 +178,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
 
 2. Start the debugger to watch the application failure and find out where it failed.
    ```
-   $ gdb-oneapi ./a1_matrix_mul_zero_buff
+   gdb-oneapi ./a1_matrix_mul_zero_buff
    ```
 
 3. You should get the prompt `(gdb)`.

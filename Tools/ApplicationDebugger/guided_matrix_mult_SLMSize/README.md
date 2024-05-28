@@ -68,15 +68,15 @@ When working with the command-line interface (CLI), you should configure the one
 1. Change to the sample directory.
 2. Build the programs.
    ```
-   $ mkdir build
-   $ cd build
-   $ cmake ..
-   $ make
+   mkdir build
+   cd build
+   cmake ..
+   make
    ```
 
 3. Run the program.
    ```
-   $ make run_all
+   make run_all
    ```
    > **Note**: The application by default uses the Level Zero runtime and will run without errors.  We will do a deeper investigation of the application, in particular with the openCL runtime, to expose problems that could also manifest in Level Zero.
 
@@ -145,6 +145,10 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 #### Observe the Failure
 
 1. Run the program outside the debugger.  
+   ```
+   ./1_matrix_mul_SLM_size
+   ```
+
 2. It should almost immediately crash in an exception:
    ```
    $ ./1_matrix_mul_SLM_size
@@ -161,7 +165,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 1. Start the debugger to learn more about the error.
    ```
-   $ gdb-oneapi ./1_matrix_mul_SLM_size
+   gdb-oneapi ./1_matrix_mul_SLM_size
    ```
 
 2. Run the application within the debugger.
