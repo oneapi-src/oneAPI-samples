@@ -13,21 +13,21 @@
 
 # # Genetic Algorithms on GPU using Intel Distribution of Python numba-dpex
 # 
-# This code sample shows how to implements basic genetic algorithm with Data Parallel Python using numba-dpex.
+# This code sample shows how to implement a basic genetic algorithm with Data Parallel Python using numba-dpex.
 # 
 # ## Genetic algorithms
 # 
-# Let start with the question **What is genetic algorithm?**. It is an algorithm, search heuristic inspired by process of natural selection. It is usually applied to various optimization problems, NP-hard problems for which finding a solution by standard methods is very time and resource consuming. This algorithm makes it possible to obtain a stadsatisfying high quality result based on biology-inspired operations, such as:
-#  
-# * selection - is the process of selecting parents which mate and recombine to create off-springs for the next generation. Parent selection is very crucial to the convergence rate of the GA as good parents drive individuals to a better and fitter solutions.
-# * crossover - is a process similar to biological crossover. In this more than one parent is selected and one or more off-springs are produced using the genetic material of the parents.
+# Let's start with the question **What is a genetic algorithm?**. It is an algorithm, search heuristic inspired by the process of natural selection. It is usually applied to various optimization problems, NP-hard problems for which finding a solution by standard methods is very time and resource consuming. This algorithm makes it possible to obtain a satisfying high quality result based on biology-inspired operations, such as:
+#  
+# * selection - is the process of selecting parents who mate and recombine to create offspring for the next generation. Parent selection is very crucial to the convergence rate of the GA as good parents drive individuals to better and fitter solutions.
+# * crossover - is a process similar to biological crossover. In this, more than one parent is selected and one or more offspring are produced using the genetic material of the parents.
 # * mutation - small random tweak in the chromosome, to get a new solution. It is used to maintain and introduce diversity in the genetic population and is usually applied with a low probability. 
 # 
 # To apply the genetic algorithm to a specific problem, it is important to define the representation of the chromosome, as well as how the three operations should look like. 
 # 
 # In this example, we will show, first, the general implementation of the genetic algorithm, and then the adaptation of this function to the Traveling Salesman Problem.
 
-# Let us start with import of the libraries used in this code sample..
+# Let us start with import of the libraries used in this code sample.
 
 # In[ ]:
 
@@ -40,10 +40,10 @@ import math
 
 # ## Initialize population
 # 
-# Than, we can initialize population. In this code sample we have the population of size 5000, chromosome size is 10, and there will be 5 generations. 
+# Then, we can initialize the population. In this code sample, we have a population of size 5000, a chromosome size is 10, and there will be 5 generations. 
 # Each chromosome will contain 10 random floats between 0 and 1.
 # 
-# We also are setting seed, to be able to reproduce the results later.
+# We also are setting a seed to be able to reproduce the results later.
 
 # In[ ]:
 
@@ -63,12 +63,12 @@ for i in range(pop_size):
 
 # ## Genetic Algorithm implementation
 # 
-# The next step is to create general purpose genetic algorithm, it means calculating fitness vale for all the chromosomes, selection of chromosomes, crossover and mutation functions.
+# The next step is to create a general purpose genetic algorithm, which means calculating the fitness value for all the chromosomes, selection of chromosomes, crossover and mutation functions.
 # 
 # ### Simple evaluation method
 # 
-# We are starting with simple genomes evaluation function. This will be our base line and comparison for numba-dpex.
-# In this example the fitness of an individual is computed by an arbitrary set of algebraic operations on the chromosome.
+# We are starting with a simple genome evaluation function. This will be our baseline and comparison for numba-dpex.
+# In this example, the fitness of an individual is computed by an arbitrary set of algebraic operations on the chromosome.
 
 # In[ ]:
 
@@ -89,9 +89,9 @@ def eval_genomes_plain(chromosomes, fitnesses):
 
 # ### Crossover
 # 
-# The crossover operation creates children genomes from of selected parent chromosomes. Like shown in the figure below, in this sample the one-point crossover is made and one children genome is created.
+# The crossover operation creates children's genomes from selected parent chromosomes. As shown in the figure below, in this sample, the one-point crossover is made and one children's genome is created.
 # 
-# First part of the child genome comes from first parent, and the second haf, from second parent.
+# The first part of the child's genome comes from the first parent, and the second half, from the second parent.
 # 
 # <img src="./assets/crossover.png" alt="image" width="auto" height="400">
 # 
@@ -116,7 +116,7 @@ def crossover(first, second):
 
 # ### Mutation
 # 
-# The mutation operation can change the chromosome, like shown in the figure. In this code sample there is 1% chance of a random mutation.
+# The mutation operation can change the chromosome, as shown in the figure. In this code sample, there is a 1% chance of a random mutation.
 # 
 # <img src="./assets/mutation.png" alt="image" width="auto" height="300">
 # 
@@ -139,17 +139,17 @@ def mutation(child_sequence, chance=0.01):
 
 # ## Create the next generation
 # 
-# Now, let's create function to compute next generation in Genetic Algorithm (next_generation function). It performs selection, than already implemented crossover and mutation. As a result of this function there is a new population created.
+# Now, let's create a function to compute the next generation in the Genetic Algorithm (next_generation function). It performs selection, then already implemented crossover and mutation. As a result of this function, there is a new population created.
 # 
 # ### Selection
 # Selection is a process when based on the calculated fitness function value, chromosomes to crossover are chosen. 
 # 
 # <img src="./assets/selection.png" alt="image" width="auto" height="400">
 # 
-# In this example there is a roulette week created relative to fitness value. 
+# In this example, there is a roulette week created relative to fitness value. 
 # It allows fitness proportional selection - the bigger the fitness value, the bigger the chance that a given chromosome will be selected.
 # 
-# Result of all the operations is returned as chromosomes.
+# The result of all the operations is returned as chromosomes.
 # 
 
 # In[ ]:
@@ -212,13 +212,13 @@ def next_generation(chromosomes, fitnesses):
 # 
 # Now, we can run the implemented algorithm and measure the time of the selected number of generations (set before as a 5). 
 # 
-# As, a first population is already initialized, each generation contains the following steps:
+# As a first population is already initialized, each generation contains the following steps:
 # 
 # * evaluation of the current population using eval_genomes_plain function
 # * generating next generation using eval_genomes_plain function
-# * wipe fitnesses values, as there is already new generation created
+# * wipe fitnesses values, as there is already a new generation created
 # 
-# Time for those operations is measured and printed after the computations.There is also first chromosome printed to show computations were the same between both tests.
+# The time for those operations is measured and printed after the computations. There is also the first chromosome printed to show computations were the same between both tests.
 
 # In[ ]:
 
@@ -258,9 +258,9 @@ for i in range(pop_size):
 
 # ### Evaluation function using numba-dpex
 # 
-# The only par that differ form the standard implementation is the evaluation function.
+# The only par that differs form the standard implementation is the evaluation function.
 # 
-# The most important part is to specify the global index of the computation. This is the current index of the computed chromosomes. Pełni to funckję pętli po wszystkich chromosomach.
+# The most important part is to specify the global index of the computation. This is the current index of the computed chromosomes. This serves as a loop function across all chromosomes.
 
 # In[ ]:
 
@@ -281,9 +281,9 @@ def eval_genomes_sycl_kernel(chromosomes, fitnesses, chrom_length):
   if (fitnesses[pos] < 0):
     fitnesses[pos] = 0
 
-# Now, we can measure time to perform some generations of the Genetic Algorithm with Data Parallel Python Numba dpex. 
+# Now, we can measure the time to perform some generations of the Genetic Algorithm with Data Parallel Python Numba dpex. 
 # 
-# Similarly like before, the time of the evaluation, creation of new generation and fitnesses wipe is measure for GPU execution. But first we need to send all the chromosomes and fitnesses container to the chosen device. 
+# Similarly like before, the time of the evaluation, creation of new generation and fitness wipe are measured for GPU execution. But first, we need to send all the chromosomes and fitnesses container to the chosen device. 
 
 # In[ ]:
 
@@ -336,16 +336,16 @@ plt.show()
 
 # # Traveling Salesman Problem
 # 
-# Now, let's use the knowledge about genetic algorithms to a specific problem in this code sample to the Traveling Salesman Problem. There are given the cities and the distances between them. The salesman needs to visit all the cities, using possibly the shortest path. 
+# Now, let's use the knowledge about genetic algorithms to a specific problem in this code sample the Traveling Salesman Problem. There are given the cities and the distances between them. The salesman needs to visit all the cities, using possibly the shortest path. 
 # 
-# This problem is NP hard and in our case the number of possible combinations equals len(cities)! e.g. if there is 6 cities we have 720 combinations but when we have 10 cities we have over 3.000.000 combinations.
+# This problem is NP-hard and in our case, the number of possible combinations equals len(cities)! e.g. if there are 6 cities we have 720 combinations but when we have 10 cities we have over 3.000.000 combinations.
 # 
 # In our example we have defined:
 # 
 # * starting city as a 0
 # * 10 cities to visit from 1 to 10
 # 
-# And we generate distances between cities randomly in the range of defined min (100km) and max value (400km). The matrix of the distances between cities is printed after generation.
+# We generate distances between cities randomly in the range of defined min (100km) and max value (400km). The matrix of the distances between cities is printed after generation.
 
 # In[ ]:
 
@@ -371,9 +371,9 @@ for i in range(len(cities)+1):
 
 # ## Initialize population
 # 
-# Now, we need to initialize population. As a chromosome, we define possible path from city 0 to city 0 visiting all other cities.
+# Now, we need to initialize the population. As a chromosome, we define possible paths from city 0 to city 0 visiting all other cities.
 # 
-# The population size is set to 1000, but you can easily change those parameters and experiment yourself - see if the size of the population will impact the best find result. Remember, as the genetic algorithm is a heuristic it can generate different result every run.
+# The population size is set to 1000, but you can easily change those parameters and experiment yourself - see if the size of the population will impact the best find result. Remember, as the genetic algorithm is a heuristic it can generate different results every run.
 
 # In[ ]:
 
@@ -396,9 +396,9 @@ for i in range(pop_size):
 
 # ### Evaluation function
 # 
-# The evaluate created generation we are calculating the full distance of the given path (chromosome). In this example, the lower the fitness value is, the better chromosome. That's different from the general GA that we implemented.
+# The evaluate created generation we are calculating the full distance of the given path (chromosome). In this example, the lower the fitness value is, the better the chromosome. That's different from the general GA that we implemented.
 # 
-# As in this example we are also using numba-dpex, we are using global index like before.
+# As in this example we are also using numba-dpex, we are using a global index like before.
 
 # In[ ]:
 
@@ -412,7 +412,7 @@ def eval_genomes_plain_TSP_SYCL(chromosomes, fitnesses, distances, pop_length):
 
 # ### Crossover
 # 
-# For TSP crossover is defined in a very specific way. The first half of the child chromosome is taken form the first parent, but the second part is in the order of the second parent. This way we are able to avoid broken chromosomes that don't generate any solution.
+# For TSP crossover is defined in a very specific way. The first half of the child's chromosome is taken from the first parent, but the second part is in the order of the second parent. This way we can avoid broken chromosomes that don't generate any solution.
 
 # In[ ]:
 
@@ -438,7 +438,7 @@ def crossover(parentFirst, parentSecond):
 
 # ### Mutation
 # 
-# Fo TSP the mutation we defined as a random switch of the order between 2 cities. The same as in the case of general use GA the chance of the mutation is set to 0.01. 
+# For TSP the mutation we defined as a random switch of the order between 2 cities. The same as in the case of general use GA the chance of the mutation is set to 0.01. 
 
 # In[ ]:
 
@@ -456,7 +456,7 @@ def mutation(chromosome, chance=0.01):
 
 # ### Next generation
 # 
-# The algorithm for generating new population for this problem is the same - we are using roulette wheel, but this time we need to order chromosomes in incrementing order accordingly to fitnesses. 
+# The algorithm for generating a new population for this problem is the same - we are using a roulette wheel, but this time we need to order chromosomes in incrementing order accordingly to fitnesses. 
 
 # In[ ]:
 
@@ -510,9 +510,9 @@ def next_generation_TSP(chromosomes, fitnesses):
 
 # ## Algorithm execution
 # 
-# The execution of the algorithm looks the same, but now, we are just using the methods prepared for Traveling Salesman Problem. 
+# The execution of the algorithm looks the same, but now, we are just using the methods prepared for the Traveling Salesman Problem. 
 # 
-# At the end there ia the best and the worst chromosome from the last population shown together with the path distance. 
+# In the end, there is the best and the worst chromosome from the last population shown together with the path distance. 
 
 # In[ ]:
 
@@ -547,7 +547,7 @@ print("Best path: ", sorted_pairs[0][0], " distance: ", sorted_pairs[0][1])
 print("Worst path: ", sorted_pairs[-1][0], " distance: ", sorted_pairs[-1][1])
 
 
-# In this code sample there was a general purpose Genetic Algorithm created, and optimized using numba-dpex to run on GPU. Then the same approach was applied to Traveling Salesman Problem.
+# In this code sample, there was a general purpose Genetic Algorithm created and optimized using numba-dpex to run on GPU. Then the same approach was applied to the Traveling Salesman Problem.
 
 # In[ ]:
 

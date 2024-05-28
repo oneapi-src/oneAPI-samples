@@ -1,10 +1,10 @@
 # `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` Sample
 
-The `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` sample shows how to implement general generic algorithm (GA) and offload computation to GPU using numba-dpex.
+The `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` sample shows how to implement a general generic algorithm (GA) and offload computation to GPU using numba-dpex.
 
 | Area                    | Description
 | :---                    | :---
-| What you will learn     | How to implement genetic algorithm using the Data-parallel Extension for Numba* (numba-dpex)?
+| What you will learn     | How to implement the genetic algorithm using the Data-parallel Extension for Numba* (numba-dpex)?
 | Time to complete        | 8 minutes
 | Category                | Code Optimization
 
@@ -12,7 +12,7 @@ The `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` 
 
 ## Purpose
 
-In this sample, you will create and run the general genetic algorithm and optimize it to run on GPU using Intel® Distribution for Python* numba-dpex. You will learn what are selection, crossover and mutation, and how to adjust those methods from general genetic algorithm to specific optimization problem which is Traveling Salesman Problem.
+In this sample, you will create and run the general genetic algorithm and optimize it to run on GPU using Intel® Distribution for Python* numba-dpex. You will learn what are selection, crossover and mutation, and how to adjust those methods from general genetic algorithm to a specific optimization problem which is the Traveling Salesman Problem.
 
 ## Prerequisites
 
@@ -114,7 +114,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## Example Output
 
-If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with numba-dpex and without any optimizations as the baseline. Additionally sample will print best and worst path found in Traveling Salesman problem.
+If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with numba-dpex and without any optimizations as the baseline. Additionally, sample will print the best and worst path found in the Traveling Salesman problem.
 
 ## License
 
