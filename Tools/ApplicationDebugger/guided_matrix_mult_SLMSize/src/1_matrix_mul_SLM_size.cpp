@@ -102,12 +102,12 @@ int main() {
     q.wait();
 
     q.submit([&](handler &h){
-        local_accessor<float,1> acc(163850, h);
-      h.parallel_for(163850, [=](auto i){
-        int index = i.get_id();
-        acc[index] = index;
-      });
-   }).wait();
+      local_accessor<float,1> acc(163850, h);
+      h.parallel_for(nd_range<1>{{163850}, {10}}, [=](nd_item<1> i){
+          int index = i.get_global_id();
+          acc[index] = index;
+        });
+    }).wait();
 
     // Submit command group to queue to multiply matrices: c = a * b
     q.submit([&](auto &h) {
