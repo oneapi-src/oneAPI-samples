@@ -290,14 +290,14 @@ But what if the developer didn't delete `c_back`, and let program termination cl
 Is the behavior different if you run it on OpenCL or Level 0?  The default is to use the Level Zero run time, but we can explicitly force the use of either Level Zero or OpenCL, which can be helpful when troubleshooting.
 
 ```
-SYCL_DEVICE_FILTER=level_zero:gpu ./1_matrix_mul_race_condition
-SYCL_DEVICE_FILTER=opencl:gpu ./1_matrix_mul_race_condition
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./1_matrix_mul_race_condition
+ONEAPI_DEVICE_SELECTOR=opencl:gpu ./1_matrix_mul_race_condition
 ```
 Unfortunately not; pretty much the same thing happens.
 
 Similarly, we specify targeting the CPU, which sometimes can avoid problems in your code that are specific to offloading to the GPU.
 ```
-SYCL_DEVICE_FILTER=CPU ./1_matrix_mul_race_condition
+ONEAPI_DEVICE_SELECTOR=*:cpu ./1_matrix_mul_race_condition
 ```
 This also has problems, but if you run this in the debugger you will see lots of threads all running in the third `q.submit` kernel, but no thread running `main`.   This is because these threads have been abandoned when `main` deleted `c_back` and exited!
 

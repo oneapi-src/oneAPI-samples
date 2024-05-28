@@ -159,7 +159,7 @@ You must download the [Tracing and Profiling Tool](https://github.com/intel/pti-
 
 2. Check the results on a **GPU** with OpenCL.
    ```
-   SYCL_DEVICE_FILTER=opencl:gpu ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu ./1_matrix_mul_invalid_contexts
    ```
    The output might look similar to the following:
    ```
@@ -176,7 +176,7 @@ You must download the [Tracing and Profiling Tool](https://github.com/intel/pti-
    ```
 3. Check the results on the **CPU** using OpenCL. You should see similar problems.
    ```
-   SYCL_DEVICE_FILTER=opencl:cpu ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:cpu ./1_matrix_mul_invalid_contexts
    ```
    The output might look like the following:
    ```
@@ -199,7 +199,7 @@ In this section, you will use the Intel® Distribution for GDB* to determine wha
 
 1. Start the debugger using OpenCL™ on the **GPU**.
    ```
-   SYCL_DEVICE_FILTER=opencl:gpu  gdb-oneapi ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu  gdb-oneapi ./1_matrix_mul_invalid_contexts
    ```
 2. You should get the prompt `(gdb)`.
 
@@ -319,7 +319,7 @@ One of the things that the Tracing and Profiling utility can help us identify is
    >**Note**: You must modify the command shown below to include the path to where you installed the `onetrace` utility.
 
    ```
-   SYCL_DEVICE_FILTER=opencl:gpu [path]/onetrace -c ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu [path]/onetrace -c ./1_matrix_mul_invalid_contexts
    ```
 
    The `onetrace` utility outputs extensive results. A few key excerpts with areas of interest are shown below.
@@ -343,7 +343,7 @@ One of the things that the Tracing and Profiling utility can help us identify is
 
 2. Look at the output from Level Zero, and see if we could have detected the issue.
    ```
-   SYCL_DEVICE_FILTER=level_zero:gpu [path]onetrace -c ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=level_zero:gpu [path]onetrace -c ./1_matrix_mul_invalid_contexts
    ```
    Your output might be similar to the following:
    ```
