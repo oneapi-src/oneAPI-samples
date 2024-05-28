@@ -56,9 +56,10 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing conducted with a pre-release version of oneAPI 2024.1, with released Intel® Quartus® Prime Pro Edition 23.3 software. Testing was conducted January 22, 2024. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. 
+Performance results are based on testing conducted with a pre-release version of oneAPI 2024.2, with released Intel® Quartus® Prime Pro Edition 24.1 software. Testing was conducted May 25, 2024. Area and f<sub>MAX</sub> estimates are averaged across 8 seeds. 
 * These area estimates are ONLY for the `Convolution2d` kernel, and do not include the `RGB2Grey` or `Grey2RGB` kernels. You can compile the design with only the `Convolution2d` kernel by compiling with the `-DTEST_CONV2D_ISOLATED=1` compiler flag, or by adding `#define TEST_CONV2D_ISOLATED 1` in `src/main.cpp`.
 * These estimates were achieved by setting a 600 MHz clock target for the `Agilex7` device. You can set the clock target by adding the `-Xsclock=600MHz` flag to CMakeLists.txt, or by passing it to the `cmake` command as shown in [Building the `convolution2d` Tutorial](#building-the-convolution2d-tutorial).
+* The reported fMAX is the 'restricted fMAX' as reported by Intel® Quartus® Prime.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
@@ -66,10 +67,10 @@ Performance results are based on testing conducted with a pre-release version of
 
 | Parallel Pixels | Window Dimensions | Coefficient Type | Input Type     | f<sub>MAX</sub> (MHz) | ALMs  | DSP blocks | M20K Block RAM
 |---              |---                |---               |---             |---                    |---    |---         |---
-| 1               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 2742  |   9        | 19
-| 2               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 4326  |  18        | 19
-| 4               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 7341  |  36        | 18
-| 8               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 13791 |  72        | 19
+| 1               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 3026  |   9        | 19
+| 2               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 4618  |  18        | 19
+| 4               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 7677  |  36        | 18
+| 8               | 3x3               | `float`          | 10-bit Integer | 639.8                 | 14410 |  72        | 19
 
 > **Note**: This design uses a relatively large number of ALM resources because of the floating-point conversions in `ConvolutionFunction()` in `src/convolution_kernel.hpp`. The coefficients for this design were specified as floating-point for maximal flexibility in coefficient values, but the enthusiastic user is encouraged to convert this function to fixed-point using the `ac_fixed` types, as described in [this sample](/DirectProgramming/C%2B%2BSYCL_FPGA/Tutorials/Features/ac_fixed).
 
