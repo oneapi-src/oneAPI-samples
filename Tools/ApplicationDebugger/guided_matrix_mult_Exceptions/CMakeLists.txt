@@ -12,7 +12,7 @@ if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
   message (STATUS "Build Type is changed to 'Debug'.")
 endif ()
 
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl -O0")
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl -g -O0")
 message (STATUS "Optimization level is set to -O0.")
 
 # Check that debugger executables exist in PATH
