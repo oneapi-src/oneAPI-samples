@@ -15,14 +15,19 @@
     	.line{float:left; }
     	.section_chart {float:left}
     	.section {display:none;float:left;font-size: 10px;margin:20px;border-bottom:2px solid rgba(0,0,0,0.2); background-color: #fff}
-    	#occ_cal{display:block;}
-    	.title, .title2{text-align:center;color:#555;padding:15px; font-size:12px; font-weight:bold;letter-spacing: 1px}
+    	#occ_cal, #help{display:block;}
+        #help{float_:left;}
+    	.text{margin:auto;background-color:#fff;padding:10px 20px;color:#777; font-size:13px;letter-spacing: 1px;line-height: 22px;}
+        .title, .title2{text-align:center;color:#555;padding:15px; font-size:12px; font-weight:bold;letter-spacing: 1px}
     	.title{text-transform: uppercase;border-bottom:2px solid rgba(0,0,0,0.2)}
     	.info{color:#777; font-size:11px;letter-spacing: 1px}
     	.targets{padding:0 10px 10px;background-color: #eee; border-radius: 5px}
+        .kernel{padding:10px;background-color: #def; border-radius: 5px}
+        .inputs {margin:20px 0 0}
     	.pci_id {display:none;}
     	.box {margin:auto;max-width:320px;padding:15px;}
-    	.row {margin-top:20px}
+    	.row {margin:5px 0 15px}
+        .row {border-top:1px solid #ccc}
     	.input {border-color: #777; padding:5px; border-radius: 5px; border-width: 1px;margin:10px 0; width:100%;font-size:18px;}
     	.input_small {font-size: 11px}
     	.radio {padding:10px 0;}
@@ -30,8 +35,22 @@
     	.button, .button_light {text-align:center;line-height:34px;border-color: #0071c4;color:#fff;background-color:#0071c4; border-radius: 5px; border-width: 1px;margin:10px 0; width:100%;font-size:18px;cursor:pointer;}
     	.left {float:left; width:170px;}
     	.help {color: #0071c4; border:2px solid #0071c4;border-radius: 100%;float:left; width:20px;height:20px;line-height: 20px;font-size: 11px;font-weight:bold;margin:15px 10px 0 0; text-align:center;text-decoration:none;}
+        .def {font-family:Courier; font-size:14px}
+        #help {padding-bottom:20px}
+        #help h3 {color:#555; font-weight:bold;font-size:16px;}
+        #help b {color:#555;}
+        code {color:#555;background-color:#eee;padding:3px 0; border-radius:4px}
+        .tooltip code {color:#eee;background-color:#444;}
+        .more_details{cursor:pointer;text-decoration:underline;color:#0071c4;font-weight:bold;font-size:16px}
+        ol>li{margin-bottom:12px}
+        ul>li{margin-top:6px}
+        .help_small {cursor:pointer;color: #0071c4; border:2px solid #0071c4;border-radius: 100%;display:inline-block;width:12px;height:12px;line-height: 12px;font-size: 8px;font-weight:bold; text-align:center;text-decoration:none;margin:4px 10px}
+        .tooltip {visibility: hidden;width: 200px;background-color: #000000dd;color: #fff;border-radius: 6px;padding: 5px 10px;position: absolute;z-index: 1;}
+        .tta{color:#fff}
+        .tooltiphover{cursor:pointer;}
+        .tooltiphover:hover .tooltip {visibility: visible;cursor:pointer}
     	.notes {padding:20px 5px 5px;color:#777;}
-	.button_light {border-color: #444;color:#fff;background-color:#777; width:80px; float: right;}
+    	.button_light {border-color: #444;color:#fff;background-color:#777; width:80px; float: right;}
     	.result{margin-top:20px; background-color:#cec;font-size: 12px; line-height: 24px; padding:10px;border-radius:5px}
     	.result td {background-color: transparent;font-size: 12px}
     	.result td b {font-size: 20px}
@@ -39,12 +58,12 @@
     	td{padding:3px 8px;background-color:#fff;}
     	thead{font-weight:bold;padding: 10px;}
     	thead td{background-color:#f8f8f8;padding:8px;}
-    	#chart_box_wg, #chart_box_slm {background-color: #cec;float:none;padding:10px;}
-    	#chartjs_wg, #chartjs_slm{max-width:700px;max-height:400px;margin:auto;background-color:#fff;letter-spacing: 0}
+    	#chart_box_wg, #chart_box_slm, #chart_box_gpu {background-color: #cec;float:none;padding:10px;}
+    	#chartjs_wg, #chartjs_slm, #chartjs_gpu{max-width:700px;max-height:340px;margin:auto;background-color:#fff;letter-spacing: 0}
     	#output_wg, #output_opt_config, #chart_box_wg, #chart_box_slm {display:none;background-color: #cec}
     	#output_wg .output, #output_opt_config .output{width:320px;max-height:300px;overflow:auto;}
     	.output td{font-size:11px;}
-    	input.slider  {float:left;width:240px;}
+    	input.slider  {float:left;width:220px;}
     	div.slider  {float:right;padding:5px;margin:10px 0;;font-size:18px;}
 
     	@media screen and (max-width:660px){
@@ -59,6 +78,14 @@
     		.section {margin:20px 0;width:345;}
     	}
     </style>
+    <script>
+// Links used from GPU Optimization Guide
+var href_gpu_list = "https://dgpu-docs.intel.com/devices/hardware-table.html";
+var href_grf_modes = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/grf-mode-selection.html";
+var href_gpu_architecture = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/xe-arch.html";
+var href_gpu_occupancy = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/thread-mapping.html";
+var href_sub_groups = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/sub-group.html";
+    </script>
 	<script>
 // Script from: https://www.chartjs.org/dist/master/chart.min.js
 /*!
@@ -83,9 +110,11 @@
 	<div class="widgets">
 		<div class="section" id="occ_cal">
 			<div class="title">Occupancy Calculator</div>
+            
 			<div class="box">
-				<div class="info">This tool will compute the theoretical GPU Occupancy based on input Global Size, Work-Group Size, Sub-Group Size and Local Memory Size, this will also generate graphs for impact of varying Work-Group and Local Memory sizes.</div>
-				<br><br><div>Select GPU:</div>
+                <div>Select your GPU and input your GPU kernel parameters</div>
+                <br>
+				<div>Select <a target="_blank" href="https://dgpu-docs.intel.com/devices/hardware-table.html">GPU</a>:</div>
 				<div class="targets"></div>
 				<div class="inputs"></div>
 				<div class="output"></div>
@@ -97,6 +126,9 @@
 			</div>
 			<div class="section" id="chart_box_slm">
 				<canvas id="chartjs_slm" width="700" height="400"></canvas>
+			</div>
+			<div class="section" id="chart_box_gpu">
+				<canvas id="chartjs_gpu" width="700" height="400"></canvas>
 			</div>
 		</div>
 		<div class="section" id="output_wg">
@@ -110,31 +142,204 @@
 		<div class="section" id="output_opt_config">
 			<div class="title"><select id="occupancy_threshold" onchange="update_occupancy()"><option value="100">100%</option><option value="90">&gt; 90%</option><option value="80">&gt; 80%</option></select> Occupancy Configuration</div>
 			<div class="box">
-				<div class="info">This table shows ideal combination of Work-Group(WG) size, Sub-Group size and Shared Local Memory(SLM) usage limit that will get you <span id="occupancy_threshold_value">100</span>% occupancy in the selected GPU Xe-Core/Sub-Slice(SS).</div><br>
+				<div class="info">This table shows ideal combination of Work-Group(WG) size, Sub-Group size and Shared Local Memory(SLM) usage limit that will get you <span id="occupancy_threshold_value">100</span>% occupancy in the selected GPU Xe-Core.</div><br>
 				<div class="output">
 					<div id="table"></div>
 				</div>
 			</div>
 		</div>
+        <div class="section" id="help">
+            <div class="title">HELP</div>
+            <div class="text">
+                <h3>What is this?</h3>
+                The <b>Intel GPU Occupancy tool</b> will compute the theoretical GPU Occupancy for <b>Intel GPU devices</b> based on <b>GPU Kernel code parameters</b>. The Occupancy value will determine whether the GPU is efficiently utilizing all the GPU hardware resources. The tool will also generate graphs that will help optimize GPU Occupancy.</div>
+            <div class="text">
+                <h3>How to use?</h3>
+                <ol>
+                    <li>Input GPU Device type</li>
+                    <li>Input GPU Kernel code parameters</li>
+                    <li>Analyze GPU Occupancy output values and graphs</li>
+                </ol>
+                <div class="more_details" onclick="document.getElementById('help_details').style.display='block'">Detailed Instructions</div>
+                <div id="help_details" style="display:none">
+                    <ol>    
+                        <li><b>Input GPU Device type</b>
+                            <ul>
+                                <li>From the dropdown, select the <a name="href_gpu_list" href="https://dgpu-docs.intel.com/devices/hardware-table.html" target="_blank">GPU family</a> and change "XVE Count" for your GPU. <i>(XVE: Number of Xe Vector Engines in the GPU)</i>.To find out XVE Count for your GPU, check the GPU hardware specification or run <code>clinfo</code> in terminal and look for "Max compute units" value.</li>
+                                <li> Alternatively, you can select the option to use enter "PCI ID of GPU Device" to find the your GPU
+                                    <ul>
+                                        <li>Run <code>lspci | grep Display</code> in terminal to find your GPU devices and PCI IDs.</li>
+                                        <li>Find your GPU name and find the corresponding PCI ID from this <a name="href_gpu_list" href="https://dgpu-docs.intel.com/devices/hardware-table.html" target="_blank">Intel GPU Harware List</a></li>
+                                        <li><i>Note: If your GPU is not found using PCI ID, please report a bug and use the other method by selecting your GPU family.</i></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>Input GPU Kernel code parameters</b>
+                            <br>Once the GPU is selected, the tool will load some default values for GPU Kernel code's Global size, Work-Group size, Sub-Group size and Local Memory size. It will then compute GPU Occupancy values and will generate graphs.
+                            <br>Change the values of input parameters based on your GPU Kernel code to recalculate the Occupancy:
+                            <ul>
+                                <li><b>Global size:</b> Workload size of GPU Kernel or Total number of work-items that is executed by the GPU Kernel code. Change this to your Kernel Workload size. The value can be 1,2 or 3 dimensional value.
+                                    <br>Examples: <code>4096</code> | <code>1024,1024</code> | <code>256,256,256</code>
+                                </li>
+                                <li><b>Work-Group size:</b> Group of work-items that execute within an Xe-Core and is set in GPU kernel code using <code>sycl::nd_range</code>. Setting this value too low will result in dispatching too many Work-Groups to GPU. This will result in dispatch and synchronization overhead which may affect performance negatively.</li>
+                                <li><b>Sub-Group size:</b> Compiler automatically sets the SIMD/sub-group size, unless explicitly set in GPU Kernel code using <code>[[intel::reqd_sub_group_size(SIMD_SIZE)]]</code> <a name="href_gpu_occupancy" target="_blank" href="https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/sub-group.html">[More Details]</a></li>
+                                <li><b>Local Memory size:</b> Total local memory allocated by GPU Kernel code using <code>sycl::local_accessor</code>. Local Memory is shared by all Work-Groups that are dispatched to an Xe-Core. Allocating too much local memory may limit the number of Work-Groups that can be executed concurrently on Xe-Core. This may reduce Xe-Core Occupancy, however performance may or may not be negatively affected.</li>
+                                <li style="display:none"><b>Barrier Usage:</b> Select "YES" if kernel code uses <code>sycl::group_barrier</code> either explicitly or implicitly within a group algorithm or library function. The GPU has a set number of barrier registers per Xe-Core. The number of Work-Groups that can be execute concurrently on an Xe-Core may be limited if GPU Kernel code has barriers.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>Analyze GPU Occupancy output values and graphs</b>
+                            <br>Focus on optimizing the Xe-Core Occupancy value by changing the input parameters of GPU kernel code. The Peak and Average GPU Occupancy values just scales based on the number of Xe-Cores in the GPU and global size of workload.
+                            <ul>
+                                <li><b>Xe-Core Occupancy: </b>Theoretical Occupancy of GPU's Xe-Core is determined by usage of available thread contexts in an Xe-Core. A Work-Group is dispatched to Xe-Core on GPU, multiple Work-Groups can be dispatched to the same Xe-Core if there are sufficient resources. Parameters affecting Xe-Core occupancy are work-group size, SIMD sub-group size and local memory usage. <a name="href_sub_groups" target="_blank" href="https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/thread-mapping.html">[More Details]</a></li>
+                                <li><b>GPU Occupancy: </b>Theoretical Occupancy of GPU hardware to execute the entire GPU Kernel workload on all Xe-Cores of the GPU. This depends on the Xe-Core Occupancy, number of Xe-Cores in the GPU and the workload size. Depending on the GPU Kernel workload size, the GPU may require multiple waves of execution. The Peak GPU Occupancy value and Average GPU Occupancy value are calculated.</li>
+                                <li><b>Graph - Impact of varying Work-Group: </b>This Graph shows how the Xe-Core Occupancy varies for different Work-Group sizes with all other parameters constant. This information can be used to set appropriate Work-Group size in GPU Kernel code to maximize Occupancy.</li>
+                                <li><b>Graph - Impact of varying Local Memory: </b>This Graph shows how the Xe-Core Occupancy varies for different Local Memory sizes with all other parameters constant. This information can be used to allocate appropriate amount Local Memory in GPU Kernel code to maximize Occupancy.</li>
+                                <li><b>Graph - GPU Occupancy: </b>This Graph shows how the GPU Kernel executes the entire workload. The execution may happen in multiple waves depending on number of Work-Groups and available GPU resources. The graph will show Peak GPU Occupancy value and Average GPU Occupancy value.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <div class="text">
+                        <h3>Accronyms/Definitions</h3>
+                            <table class="def">
+                                <tr><td>GPU</td><td>Graphics Processing Unit</td></tr>
+                                <tr><td>HW</td><td>Hardware</td></tr>
+                                <tr><td>Xe</td><td>Intel GPU Architecture name</td></tr>
+                                <tr><td>XVE</td><td> Xe Vector Engine (formaly known as EU or Execution Unit)<br>Smallest thread level building block of GPU consisting of Arithmetic Logic Units</td></tr>
+                                <tr><td>SLM</td><td>Shared Local Memory</td></tr>
+                                <tr><td>Xe-Core</td><td>Compute building block of GPU consisting of XVEs, SLM and other HW resources</td></tr>
+                                <tr><td>SYCL</td><td>Open Source Cross-Platform Programming Model</td></tr>
+                                <tr><td>WG</td><td>Work-Group</td></tr>
+                                <tr><td>SG</td><td>SIMD/Sub-Group</td></tr>
+                            </table>
+                    </div>
+                </div>
+            </div>
+            <div class="text">
+                <h3>Disclaimer</h3>
+                <i>
+                    <ul>
+                        <li>The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be slightly different due to many factors like kernel scheduling variations, cache hit/miss and other hardware conditions.</li>
+                        <li>Note that higher occupancy does not always translate to higher performance  (for example in some GPU kernels, higher local memory usage may reduce occupancy but may give better performance).</li>
+                        <li>Occupancy reported by tools like Intel VTune Profiler and Intel Advisor Roofline are actual Occupancy and may be different than the theoretical GPU Occupancy Calculator value.</li>
+                    </ul>
+                </i>
+            </div>
+            <div class="text">
+                 <a class="more_details" target="_blank" href="https://github.com/oneapi-src/oneAPI-samples/issues/new/choose">Report Bug or Feature Request</a>
+            </div>
+        </div>
 	</div>
-	<script>
+	<script>    
 var targets = [
 {
-	"name": "Integrated GPU (Gen9)",
-	"code": "gen9",
+	"name": "Integrated GPU (Xe LPG / Arc™ Graphics)",
+	"code": "xe_lpg",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": [48, 64, 112, 128],
+		"Max_Threads_Per_Sub_Slice": 64,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 64,
+		"Max_Num_Of_Barrier_Registers": 64
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPC / Data Center Max)",
+	"code": "xe_hpc_pvc",
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
+		"Threads_Per_EU": 8,
+		"EU_Count": [448, 512, 896, 1024],
+		"Max_Threads_Per_Sub_Slice": 64,
+		"Large_GRF_Mode": true,
+		"Subgroup_Sizes": [32, 16],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 128,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 64,
+		"Max_Num_Of_Barrier_Registers": 64
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPG / Data Center Flex)",
+	"code": "xe_hpg_dg2_flex",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": [128, 512],
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 128
+	}
+},
+{
+	"name": "Discrete GPU (Xe HPG / Arc™ Graphics)",
+	"code": "xe_hpg_dg2_arc",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": [96, 128, 256, 384, 448, 512],
+		"Max_Threads_Per_Sub_Slice": 128,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 128,
+		"Max_Num_Of_Barrier_Registers": 128
+	}
+},
+{
+	"name": "Discrete GPU (Xe LP / Iris® Xe MAX)",
+	"code": "xe_dg1",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
 		"Threads_Per_EU": 7,
-		"EU_Count": [24, 48, 72],
-		"Max_Threads_Per_Sub_Slice": 56,
+		"EU_Count": [96, 80],
+		"Max_Threads_Per_Sub_Slice": 112,
 		"Large_GRF_Mode": false,
 		"Subgroup_Sizes": [32, 16, 8],
 		"SLM_Size_Per_Sub_Slice": 64,
 		"SLM_Size_Per_Work_Group": 64,
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
-		"Max_Work_Group_Size": 256,
-		"Max_Num_Of_Workgroups": 56,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 64
+	}
+},
+{
+	"name": "Integrated GPU (Xe LP)",
+	"code": "gen12",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": [16, 24, 32, 48, 96],
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -156,92 +361,20 @@ var targets = [
 	}
 },
 {
-	"name": "Integrated GPU (Xe LP)",
-	"code": "gen12",
-	"device_info": {
-		"EU_Per_Sub_Slice": 16,
-		"Threads_Per_EU": 7,
-		"EU_Count": [32, 48, 96],
-		"Max_Threads_Per_Sub_Slice": 112,
-		"Large_GRF_Mode": false,
-		"Subgroup_Sizes": [32, 16, 8],
-		"SLM_Size_Per_Sub_Slice": 64,
-		"SLM_Size_Per_Work_Group": 64,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
-		"Max_Work_Group_Size": 512,
-		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
-	}
-},
-{
-	"name": "Discrete GPU (Xe LP / Iris® Xe MAX)",
-	"code": "xe_dg1",
-	"device_info": {
-		"EU_Per_Sub_Slice": 16,
-		"Threads_Per_EU": 7,
-		"EU_Count": [96],
-		"Max_Threads_Per_Sub_Slice": 112,
-		"Large_GRF_Mode": false,
-		"Subgroup_Sizes": [32, 16, 8],
-		"SLM_Size_Per_Sub_Slice": 64,
-		"SLM_Size_Per_Work_Group": 64,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
-		"Max_Work_Group_Size": 512,
-		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
-	}
-},
-{
-	"name": "Discrete GPU (Xe HPG / Arc™ Graphics)",
-	"code": "xe_hpg_dg2_arc",
-	"device_info": {
-		"EU_Per_Sub_Slice": 16,
-		"Threads_Per_EU": 8,
-		"EU_Count": [96, 128, 256, 384, 448, 512],
-		"Max_Threads_Per_Sub_Slice": 128,
-		"Large_GRF_Mode": false,
-		"Subgroup_Sizes": [32, 16, 8],
-		"SLM_Size_Per_Sub_Slice": 128,
-		"SLM_Size_Per_Work_Group": 64,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
-		"Max_Work_Group_Size": 1024,
-		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
-	}
-},
-{
-	"name": "Discrete GPU (Xe HPG / Data Center Flex)",
-	"code": "xe_hpg_dg2_flex",
-	"device_info": {
-		"EU_Per_Sub_Slice": 16,
-		"Threads_Per_EU": 8,
-		"EU_Count": [128, 512],
-		"Max_Threads_Per_Sub_Slice": 128,
-		"Large_GRF_Mode": false,
-		"Subgroup_Sizes": [32, 16, 8],
-		"SLM_Size_Per_Sub_Slice": 128,
-		"SLM_Size_Per_Work_Group": 64,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
-		"Max_Work_Group_Size": 1024,
-		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
-	}
-},
-{
-	"name": "Discrete GPU (Xe HPC / Data Center Max)",
-	"code": "xe_hpc_pvc",
+	"name": "Integrated GPU (Gen9)",
+	"code": "gen9",
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
-		"Threads_Per_EU": 8,
-		"EU_Count": [448, 512, 896, 1024],
-		"Max_Threads_Per_Sub_Slice": 64,
-		"Large_GRF_Mode": true,
-		"Subgroup_Sizes": [32, 16],
-		"SLM_Size_Per_Sub_Slice": 128,
-		"SLM_Size_Per_Work_Group": 128,
-		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
-		"Max_Work_Group_Size": 1024,
-		"Max_Num_Of_Workgroups": 64,
+		"Threads_Per_EU": 7,
+		"EU_Count": [24, 48, 72],
+		"Max_Threads_Per_Sub_Slice": 56,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 256,
+		"Max_Num_Of_Workgroups": 56,
 		"Max_Num_Of_Barrier_Registers": 32
 	}
 },
@@ -428,7 +561,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -448,7 +581,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -468,7 +601,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //RKL
@@ -489,7 +622,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -509,7 +642,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -529,7 +662,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //ADL
@@ -550,7 +683,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -570,7 +703,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -590,7 +723,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -610,7 +743,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -630,7 +763,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -650,7 +783,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -670,12 +803,12 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //DG1
 {
-	"pci_id": ["4905"],
+	"pci_id": ["4905","4907"],
 	"name": "Discrete GPU (Xe LP)",
 	"product_name": "Intel® Iris® Xe Max Graphics",
 	"code": "xe_dg1",
@@ -691,7 +824,27 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
+	}
+},
+{
+	"pci_id": ["4908", "4909"],
+	"name": "Discrete GPU (Xe LP)",
+	"product_name": "Intel® Iris® Xe Max Graphics",
+	"code": "xe_dg1",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 7,
+		"EU_Count": 80,
+		"Max_Threads_Per_Sub_Slice": 112,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 64,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 512,
+		"Max_Num_Of_Workgroups": 112,
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //RPL-P
@@ -712,7 +865,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -732,7 +885,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //RPL-S
@@ -753,7 +906,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -773,7 +926,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -793,7 +946,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 512,
 		"Max_Num_Of_Workgroups": 112,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 //ARC
@@ -814,7 +967,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -834,7 +987,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -854,7 +1007,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -874,7 +1027,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -894,7 +1047,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -914,7 +1067,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 //FLEX
@@ -935,7 +1088,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 {
@@ -955,7 +1108,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 128,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 128
 	}
 },
 //PVC
@@ -976,7 +1129,7 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 64,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 {
@@ -996,13 +1149,34 @@ var pci_targets=[
 		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128],
 		"Max_Work_Group_Size": 1024,
 		"Max_Num_Of_Workgroups": 64,
-		"Max_Num_Of_Barrier_Registers": 32
+		"Max_Num_Of_Barrier_Registers": 64
+	}
+},
+// MTL
+{
+	"pci_id": ["7D55"],
+	"name": "Integrated GPU (Xe LPG / Arc™ Graphics)",
+	"product_name": "Intel® Arc™ Graphics",
+	"code": "xe_lpg",
+	"device_info": {
+		"EU_Per_Sub_Slice": 16,
+		"Threads_Per_EU": 8,
+		"EU_Count": 128,
+		"Max_Threads_Per_Sub_Slice": 64,
+		"Large_GRF_Mode": false,
+		"Subgroup_Sizes": [32, 16, 8],
+		"SLM_Size_Per_Sub_Slice": 128,
+		"SLM_Size_Per_Work_Group": 64,
+		"TG_SLM_Sizes": [0, 1, 2, 4, 8, 16, 32, 64],
+		"Max_Work_Group_Size": 1024,
+		"Max_Num_Of_Workgroups": 64,
+		"Max_Num_Of_Barrier_Registers": 64
 	}
 },
 ];
 
 var gpu = {};
-
+        
 function load_ui(){
 	// Load UI for target selection
 	var dropdown_targets = '<option value="0">------------</option>';
@@ -1011,6 +1185,8 @@ function load_ui(){
 	}
 	dropdown_targets += '<option value="0">------------</option><option value="pci_id">Enter PCI ID for GPU Device</option></select></div>';
 	document.querySelector('#occ_cal .targets').innerHTML = '<select class="input" name="gpu" id="gpu" onchange="select_target(this)">' + dropdown_targets + '</select><div class="pci_id"></div><div class="target_info"></div>';
+
+    //document.getElementsByName("href_gpu_list").href = href_gpu_list;
 }
 
 function reset_ui(){
@@ -1020,6 +1196,7 @@ function reset_ui(){
 	document.querySelector("#occ_cal .pci_id").style.display = "none";
 	document.getElementById("chart_box_wg").style.display = "none";
 	document.getElementById("chart_box_slm").style.display = "none";
+    document.getElementById("chart_box_gpu").style.display = "none";
 	document.getElementById("output_wg").style.display = "none";
 	document.getElementById("output_opt_config").style.display = "none";
 }
@@ -1027,17 +1204,21 @@ function reset_ui(){
 function load_ui_defaults(){
 	// Load UI with default values and compute occupancy
 	var inputs = "";
-	inputs += '<div class="row">Global Size of Application (1, 2 or 3 dimension value):</br><input class="input" id="global_size" value="262144" /></div>';
-	inputs += '<div class="row">Work-Group Size (Max: '+gpu.Max_Work_Group_Size+'):</br><input  class="input" id="wg" value="'+gpu.Max_Work_Group_Size+'" /></div>';
-	inputs += '<div class="row">Sub-Group Size:</br><select class="input" name="gpus" id="sg" onchange="update_occupancy()">';
+	inputs += '<div class="row"><span class="tooltiphover">Global Size (1, 2 or 3 dimension value):<a class="help_small">?</a><span class="tooltip">Workload size of GPU Kernel or Total number of work-items that is executed by the GPU Kernel code.<br>Change this to you workload size.</span></span></br><input class="input" id="global_size" value="262144"  onchange="update_occupancy()"/></div>';
+	inputs += '<div class="row"><span class="tooltiphover">Work-Group Size (Max: '+gpu.Max_Work_Group_Size+'):<a class="help_small">?</a><span class="tooltip">Group of work-items that execute within an Xe-Core and is set in GPU kernel code using <code>sycl::nd_range</code>.</span></span></br><input  class="input" id="wg" value="'+gpu.Max_Work_Group_Size+'" onchange="update_occupancy()"/></div>';
+	inputs += '<div class="row"><span class="tooltiphover">SIMD/Sub-Group Size:<a class="help_small">?</a><span class="tooltip">Compiler automatically sets the SIMD/sub-group size, unless explicitly set in GPU Kernel code using <code>[[intel::reqd_sub_group_size()]]</code></span></span></br><select class="input" name="gpus" id="sg" onchange="update_occupancy()">';
 	for(let j=0;j<gpu.Subgroup_Sizes.length;j++){
 	  inputs += '<option value="'+gpu.Subgroup_Sizes[j]+'">'+gpu.Subgroup_Sizes[j]+'</option>';
 	}
 	inputs += '</select></div>';
-	inputs += '<div class="row">Local Memory Size (Max Size: '+gpu.SLM_Size_Per_Work_Group+'KB):</br><input type="range" class="input slider" min="0" max="'+gpu.SLM_Size_Per_Work_Group+'" id="slm" value="0" onchange="update_occupancy()" oninput="this.nextElementSibling.innerHTML=this.value+&quot; KB&quot;"/><div class="slider">0</div><div style="clear:both"></div></div>';
-	inputs += '<div class="row">Does the Kernel use barriers?<div class="radio"><input type="radio" name="barrier" id="barrier_no" value="0" checked onclick="update_occupancy()"><label for="barrier_no">NO</label><input type="radio" name="barrier" id="barrier_yes" value="1" onclick="update_occupancy()"><label for="barrier_yes">YES</label></div></div>';
+	inputs += '<div class="row"><span class="tooltiphover">Local Memory Size (Max Size: '+gpu.SLM_Size_Per_Work_Group+'KB):<a class="help_small">?</a><span class="tooltip">Total local memory allocated by GPU Kernel using <code>sycl::local_accessor</code>. Allocating too much local memory may limit the number of Work-Groups that can be executed concurrently on Xe-Core.</span></span></br><input type="range" class="input slider" min="0" max="'+gpu.SLM_Size_Per_Work_Group+'" id="slm" value="0" onchange="update_occupancy()" oninput="this.nextElementSibling.innerHTML=this.value+&quot; KB&quot;"/><div class="slider">0 KB</div><div style="clear:both"></div></div>';
+	inputs += '<div class="row" id="barrier_q"><span class="tooltiphover">Does the Kernel use barriers?<a class="help_small">?</a><span class="tooltip">Select "YES" if kernel code uses <code>sycl::group_barrier</code> either explicitly or implicitly within a group algorithm or library function.</span></span><div class="radio"><input type="radio" name="barrier" id="barrier_no" value="0" checked onclick="update_occupancy()"><label for="barrier_no">NO</label><input type="radio" name="barrier" id="barrier_yes" value="1" onclick="update_occupancy()"><label for="barrier_yes">YES</label></div></div>';
 	inputs += '<div class="button" onclick="update_occupancy()">Calculate Occupancy</div>';
+    inputs = 'Input GPU Kernel parameters: <div class="kernel">' + inputs + '</div>';
 	document.querySelector('#occ_cal .inputs').innerHTML = inputs;
+    if(gpu.Max_Num_Of_Workgroups <= gpu.Max_Num_Of_Barrier_Registers){
+        document.querySelector('#barrier_q').style.display = "none";
+    }
 	update_occupancy();
 }
 
@@ -1045,22 +1226,36 @@ function load_ui_defaults(){
 function print_gpu_info(){
 	var eu_count = '';
 	if(Number.isInteger(gpu.EU_Count)){
-		eu_count = gpu.EU_Count;
+		eu_count = '<input id="eu_count" type="hidden" value="'+gpu.EU_Count+'">' + gpu.EU_Count;
 	} else {
 		eu_count += '<select class="input_small" name="eu_count" id="eu_count" onchange="update_occupancy()">';
 		for(let j=0;j<gpu.EU_Count.length;j++){
 			eu_count += '<option value="'+gpu.EU_Count[j]+'">'+gpu.EU_Count[j]+'</option>';
 		}
 		eu_count += '</select>';
+        eu_count += '<span class="tooltiphover"><a class="help_small">?</a><span class="tooltip">Set the correct XVE Count for the GPU. Check the GPU hardware specification or run <i>clinfo</i> in terminal and look for "Max compute units"</span></span>';
 	}
 	var grf_mode = "";
 	if(gpu.Large_GRF_Mode){
-		grf_mode = '<br>+ Large GRF: <select class="input_small" name="large_grf" id="large_grf" onchange="update_occupancy()"><option value="0">Disabled</option><option value="1">Enabled</option></select>';
+		grf_mode = '<br>+ Large GRF Mode: <select class="input_small" name="large_grf" id="large_grf" onchange="update_occupancy()"><option value="0">Disabled</option><option value="1">Enabled</option></select>';
+        grf_mode += '<span class="tooltiphover"><a class="help_small">?</a><span class="tooltip">Doubles the register size available per XVE Thread by reducing the HW Threads per XVE by a factor of 2 <br><a class="tta" target="_blank" href="'+href_grf_modes+'">[More Details]</a></span></span>';
 	} else {
 		grf_mode = '<input type="hidden" id="large_grf" value="0" />';
 	}
 
-	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per Xe-Core/SS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>+ EU Count: ' + eu_count + grf_mode;
+    var gpu_details = "";
+    gpu_details += '<b>' + gpu.product_name + '</b><br>';
+    gpu_details += '<b>' + gpu.name + '</b><br>';
+    gpu_details += '<a target="_blank" href="'+href_gpu_architecture+'">GPU Architecture</a>:<br>';
+    gpu_details += '+ Xe-Core Count: <span id="xcs"></span></b><br>';
+    gpu_details += '+ XVEs per Xe-Core: ' + gpu.EU_Per_Sub_Slice + '<br>';
+    gpu_details += '+ HW Threads per XVE: <span id="teu">' + gpu.Threads_Per_EU + '</span><br>';
+    gpu_details += '+ XVE Count: ' + eu_count 
+    gpu_details += grf_mode;
+	document.querySelector('#occ_cal .target_info').innerHTML = gpu_details; 
+
+    //var max_threads = document.querySelector('#eu_count').value * gpu.Threads_Per_EU * gpu.Max_Work_Group_Size/gpu.Subgroup_Sizes[0];
+    //document.querySelector('#global_size').value = max_threads;
 }
 
 // If url param exists load gpu info
@@ -1100,7 +1295,7 @@ function select_target(target){
 	if(target.value === "pci_id"){
 		// load ui for pci_id entry
 		document.querySelector("#occ_cal .pci_id").style.display = "block";
-		document.querySelector("#occ_cal .pci_id").innerHTML = '<div><a class="help" target="_blank" href="https://dgpu-docs.intel.com/devices/hardware-table.html">?</a><input class="input left" id="pci_id" value="" placeholder="PCI ID (Ex: 4905)" /><div class="button_light" onclick="check_pci_id()">Find</div><div style="clear:both"></div></div>';
+		document.querySelector("#occ_cal .pci_id").innerHTML = '<div><a class="help" target="_blank" href="'+href_gpu_list+'">?</a><input class="input left" id="pci_id" value="" placeholder="PCI ID (Ex: 4905)" /><div class="button_light" onclick="check_pci_id()">Find</div><div style="clear:both"></div></div>';
 		document.querySelector('#occ_cal .target_info').innerHTML = "";
 		document.getElementById("pci_id").addEventListener("keyup", function(event) {
 			if (event.keyCode === 13) {
@@ -1169,13 +1364,17 @@ function check_pci_id(){
 		if(document.getElementById("pci_id").value.length !== 4){
 			alert("Invalid PCI ID: GPU Device PCI ID should be 4 characters long, please check and try again");
 		} else {
-			alert("GPU Device not found for the PCI ID entered, please check and try again");
+			alert("GPU Device not found for the PCI ID entered, try other method to select your GPU");
 		}
 	}
 }
 
 function update_occupancy(){
+	document.getElementById("chart_box_wg").style.display = "none";
+	document.getElementById("chart_box_slm").style.display = "none";
+    document.getElementById("chart_box_gpu").style.display = "none";
 	document.querySelector('#occ_cal .output').innerHTML = '';
+    document.querySelector('#xcs').innerHTML = parseInt(document.getElementById("eu_count").value) / gpu.EU_Per_Sub_Slice;
 	setTimeout(cal_occupancy, 300);
 }
 
@@ -1204,8 +1403,12 @@ function cal_occupancy(){
 		document.querySelector("#teu").innerHTML = gpu.Threads_Per_EU;
 	}
 	// Check if Global Size is valid and calculate size
-	var global_size = document.getElementById("global_size").value.split(",");
-	if (global_size.length === 1){
+    var global_size = document.getElementById("global_size").value.split(",");
+    if(document.getElementById("global_size").value.includes("*")) global_size = document.getElementById("global_size").value.split("*");
+	if (document.getElementById("global_size").value === ''){
+        // to skip gpu occupancy calculation
+        global_size = 0;
+    } else if (global_size.length === 1){
 		var x = parseInt(global_size[0]);
 		if(isNaN(x)) {
 			document.getElementById("global_size").style.backgroundColor = "#eaa";
@@ -1309,17 +1512,31 @@ function cal_occupancy(){
 		document.getElementById("wg").style.backgroundColor = "#fff";
 		document.getElementById("global_size").style.backgroundColor = "#fff";
 	}
+    // if no global size, get wg_count to max to enable XeCore Occupancy calculation
+    if(global_size === 0) wg_count = gpu.Max_Num_Of_Workgroups;
 
 	// If no errors in input, calculate occupancy and draw graphs
 	if(error == 0){
-		let ss_output = compute_ss_occupancy(input_wg, input_sg, input_slm, large_grf, num_barrier_reg, wg_count);
+		var ss_output = compute_ss_occupancy(input_wg, input_sg, input_slm, large_grf, num_barrier_reg, wg_count);
+        var gpu_output = 0;
+        if(global_size){
+            gpu_output = compute_gpu_occupancy(input_wg, ss_output.num_wg, ss_output.occupancy, num_ss, global_size);
+        } else {
+            document.getElementById("chart_box_gpu").style.display = "none";
+        }
 
-		let gpu_output = compute_gpu_occupancy(input_wg, ss_output.num_wg, ss_output.occupancy, num_ss, global_size);
-
-		document.querySelector('#occ_cal .output').innerHTML = '<div class="result"><table><tr><td>Xe-Core/SS Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr><tr><td>GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td><tr><tr><td>Number of Work-Groups per Xe-Core/SS </td><td>' + ss_output.num_wg + '</td></tr><tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr></table></div><div class="notes">The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be different. Note that higher occupancy does not always translate to higher performance.</div>';
-
-		opt_occupancy(target_value, input_wg, input_sg, input_slm, large_grf, ss_output.occupancy, wg_count);
-		update_valid_wg_sizes();
+		var output_html = '<div class="result"><table>';
+        output_html += '<tr><td>Xe-Core Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr>';
+        if(global_size)output_html += '<tr><td>Peak GPU Occupancy </td><td>' + gpu_output.peak_gpu_occ.toFixed(2) + '%</td></tr>';
+        if(global_size)output_html += '<tr><td>*Average GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td></tr>';
+        output_html += '<tr><td>Work-Groups per Xe-Core </td><td>' + ss_output.num_wg + '</td></tr>';
+        if(global_size)output_html += '<tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr>';
+        if(global_size)output_html += '<tr><td>Number of GPU Waves</td><td>' + Math.round(gpu_output.gpu_waves * 100) / 100 + '</td></tr>';
+        output_html += '</table></div>';
+        output_html += '<div class="notes"><i>* The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be different. Note that higher occupancy does not always translate to higher performance.</i></div>';
+        document.querySelector('#occ_cal .output').innerHTML = output_html;
+        
+		create_impact_graph(target_value, input_wg, input_sg, input_slm, large_grf, ss_output.occupancy, wg_count);
 	}	
 }
 
@@ -1330,7 +1547,7 @@ function compute_ss_occupancy(wg, sg, slm, large_grf, num_barrier_reg, wg_count)
 	// num_threads if GRF mode enabled
 	if(large_grf) num_threads_ss /= 2;
 	// Calculate the number of threads per workgroup
-	var num_threads = wg/sg;
+	var num_threads = Math.ceil(wg/sg);
 	// Calculate the max number of workgroups that can be scheduled in a Subslice just factoring in threads
 	var num_wg_threads = Math.floor(num_threads_ss/num_threads);
 	// If barriers are present, set to max_num_wg to num_barrier_reg
@@ -1358,25 +1575,47 @@ function compute_ss_occupancy(wg, sg, slm, large_grf, num_barrier_reg, wg_count)
 }
 
 // Calculate GPU Occupancy
-
-function compute_gpu_occupancy(wg, num_wg, ss_occ, num_ss, global_range){
-	var gpu_occ;
+function compute_gpu_occupancy(wg, num_wg_ss, ss_occ, num_ss, global_range){
+	var gpu_occ, peak_gpu_occ;
 	// Calculate max num of work-items in all ss of gpu
-	var num_wi = num_ss * num_wg * wg;
-	// Calculate occupancy for all ss in gpu
-    var num_pass = parseInt(global_range / num_wi);
-    var gpu_pass = ss_occ * num_pass;
-    var num_wi_left = global_range % num_wi;
-    if (num_wi_left !== 0) {
-        gpu_pass += (num_wi_left / num_wi) * ss_occ;
-        num_pass += 1;
+	var max_wi = num_ss * num_wg_ss * wg;
+    // Number of work-items remaining 
+    var num_wi_left = global_range % max_wi;
+    gpu_occ = ss_occ;
+    peak_gpu_occ = ss_occ;
+    //num of full waves of execution on GPU
+    var num_wave = parseInt(global_range / max_wi);
+    var gpu_waves = num_wave;
+    // data for chart
+    var occ_arr = [], wave_arr = [], wgs_arr = [], avg_occ_arr = [];
+    wave_arr.push(" ");
+    for(var i=0;i<num_wave;i++){
+        occ_arr.push(gpu_occ);
+        wave_arr.push(i+1);
+        wgs_arr.push("+ " + (num_ss * num_wg_ss) + " WGs");
     }
-    gpu_occ = gpu_pass / num_pass;
-    return {gpu_occ, ss_occ}
+    // if work-items does not fit threads perfectly
+    if(num_wi_left) {
+        gpu_waves = num_wave + (num_wi_left / max_wi);
+        gpu_waves = gpu_waves.toFixed(2)
+        gpu_occ = (gpu_waves * ss_occ) / (num_wave+1);
+        if(!num_wave) peak_gpu_occ = (num_wi_left / max_wi) * ss_occ;
+        occ_arr.push((num_wi_left / max_wi) * ss_occ);
+        wave_arr.push(num_wave+1);
+        wgs_arr.push("+ " + (num_wi_left/wg) + " WGs");
+        avg_occ_arr.push(gpu_occ);
+    }
+    occ_arr.push(0);
+    for(var i=0;i<num_wave+1;i++){
+        avg_occ_arr.push(gpu_occ);
+    }
+    // Create GPU Occupancy Chart
+    create_chart_gpu(wave_arr, wgs_arr, occ_arr, avg_occ_arr, peak_gpu_occ, gpu_waves);
+    return {gpu_occ, ss_occ, peak_gpu_occ, gpu_waves}
 }
 
-// Generate Graphs and Optimal Occupancy Config table
-function opt_occupancy(target_value,input_wg, input_sg, input_slm, large_grf, output_occupancy, wg_count){
+// Generate Graphs for Occupancy Impact
+function create_impact_graph(target_value,input_wg, input_sg, input_slm, large_grf, output_occupancy, wg_count){
 	if (document.getElementById("barrier_yes").checked) {
 		num_barrier_reg = gpu.Max_Num_Of_Barrier_Registers;
 	} else {
@@ -1408,42 +1647,13 @@ function opt_occupancy(target_value,input_wg, input_sg, input_slm, large_grf, ou
 		slm_arr.push(i);
 	}
 	create_chart_slm(slm_arr, occ_arr_slm, input_wg, input_sg, input_slm, output_occupancy);
-
-	// Create a table for optimal occupancy configuration
-	var occupancy_threshold = document.getElementById("occupancy_threshold").value;
-	document.getElementById("occupancy_threshold_value").innerHTML = occupancy_threshold;
-	var table = '<table><thead><tr><td>Work-Group Size</td><td>Sub-Group Size</td><td>SLM Limit (Bytes)</td></tr></thead>';
-	var has_opt_data = 0;
-	for(let i=0;i<gpu.Subgroup_Sizes.length;i++){
-		var sg = gpu.Subgroup_Sizes[i];
-		var wg = gpu.Max_Work_Group_Size;
-		var occ_arr = [];
-		while(wg >= sg){
-			// Compute 100% Occupancy Configuration assuming slm = 0
-			let ss_output = compute_ss_occupancy(wg, sg, 0, large_grf, num_barrier_reg, gpu.Max_Num_Of_Workgroups);
-			occ_arr.push(ss_output.occupancy);
-			var slm_limit = Math.floor(gpu.SLM_Size_Per_Sub_Slice * 1024 / ss_output.num_wg);
-			if(ss_output.occupancy >= occupancy_threshold){
-				table += '<tr><td>'+wg+'</td><td>'+sg+'</td><td>'+slm_limit+'</td></tr>';
-				has_opt_data = 1;
-			}
-			wg -= 8;
-		}
-	}
-	table += '</table>';
-	document.getElementById("table").innerHTML = table;
-	if(has_opt_data) {
-		document.getElementById("output_opt_config").style.display = "block";
-	} else {
-		document.getElementById("output_opt_config").style.display = "none";
-	}
 }
 
 // Create chart for occupancy over varying WG size
-var chartjs_wg;
+var chartjs_wg;   
 function create_chart_wg(x,y,wg,sg,slm,occ){
 	document.getElementById("chart_box_wg").style.display = "block";
-	var dot_label = '(WG='+wg+', SG='+sg+', SLM='+slm+')';
+	var dot_label = occ +'% (WG='+wg+', SG='+sg+', SLM='+slm+')';
 	wg = wg - wg % 8; // work-around to make the chart plot red dot by making value multple of 8
 	var ctx = document.getElementById('chartjs_wg');
 	if(chartjs_wg) chartjs_wg.destroy();
@@ -1452,7 +1662,7 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 		data: {
 			labels: x,
 			datasets: [{
-				label: 'Occupancy',
+				label: 'Xe-Core Occupancy',
 				data: y,
 				backgroundColor: [
 					'rgba(54, 162, 235, 0.2)'
@@ -1460,7 +1670,7 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 				borderColor: [
 					'rgba(54, 162, 235, 1)'
 				],
-				borderWidth: 1,
+				borderWidth: 2,
 				stepped: true
 			},
 			{
@@ -1477,7 +1687,7 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 			plugins:{
 				title: {
 					display: true,
-					text: ['Impact of varying Work-Group Size']
+					text: ['Impact of varying Work-Group size']
 				}
 			},
 			elements:{
@@ -1489,7 +1699,7 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 				x: {
 					title: {
 						display: true,
-						text: "Work-Group Size"
+						text: "Work-Group size"
 					},
 					ticks: {
 						stepSize: 8,
@@ -1499,11 +1709,15 @@ function create_chart_wg(x,y,wg,sg,slm,occ){
 				y: {
 					title: {
 						display: true,
-						text: "XeCore/SS Occupancy (%)"
+						text: "Xe-Core Occupancy (%)"
 					},
 					min: 0,
-					max: 100,
+					max: 110,
 					ticks: {
+                        callback: function(val, index) {
+                            return val <= 100 ? this.getLabelForValue(val) : '';
+                        },
+                        color: (c) => {if(c['tick']['value'] == 100) return 'green'; else return 'black';},
 						stepSize: 10
 					}
 				}
@@ -1527,7 +1741,7 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 		data: {
 			labels: x,
 			datasets: [{
-				label: 'Occupancy',
+				label: 'Xe-Core Occupancy',
 				data: y,
 				backgroundColor: [
 					'rgba(54, 162, 235, 0.2)'
@@ -1535,11 +1749,11 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 				borderColor: [
 					'rgba(54, 162, 235, 1)'
 				],
-				borderWidth: 1,
+				borderWidth: 2,
 				stepped: true
 			},
 			{
-				label: '(WG='+wg+', SG='+sg+', SLM='+slm+')',
+				label: occ + '% (WG='+wg+', SG='+sg+', SLM='+slm+')',
 				data: [{x: slm, y: occ}],
 				borderColor: 'rgba(235, 45, 45, 1)',
 				backgroundColor: 'rgba(235, 45, 45, 1)',
@@ -1552,7 +1766,7 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 			plugins:{
 				title: {
 					display: true,
-					text: ['Impact of varying Shared Local Memory Size']
+					text: ['Impact of varying Shared Local Memory size']
 				}
 			},
 			elements:{
@@ -1564,22 +1778,26 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 				x: {
 					title: {
 						display: true,
-						text: "Shared Local Memory Size"
+						text: "Shared Local Memory size (KB)"
 					},
 					ticks: {
 						stepSize: 4,
-						maxTicksLimit: 17
+						maxTicksLimit: 17,
 					}
 				},
 				y: {
 					title: {
 						display: true,
-						text: "Xe-Core/SS Occupancy (%)"
+						text: "Xe-Core Occupancy (%)"
 					},
 					min: 0,
-					max: 100,
+					max: 110,
 					ticks: {
-						stepSize: 10
+                        callback: function(val, index) {
+                            return val <= 100 ? this.getLabelForValue(val) : '';
+                        },
+                        color: (c) => {if(c['tick']['value'] == 100) return 'green'; else return 'black';},
+						stepSize: 10,
 					}
 				}
 			},
@@ -1590,143 +1808,109 @@ function create_chart_slm(x,y,wg,sg,slm,occ){
 	chartjs_slm.update();
 	resizeChart();
 }
+        
+// Create chart for GPU occupancy over time
+var chartjs_gpu;
+function create_chart_gpu(x,xt,y,avg,peak,gpu_waves){
+	document.getElementById("chart_box_gpu").style.display = "block";
+	var ctx = document.getElementById('chartjs_gpu');
+	if(chartjs_gpu) chartjs_gpu.destroy();
+	chartjs_gpu = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: x,
+			datasets: [{
+				label: 'GPU Occupancy',
+				data: y,
+				backgroundColor: [
+					'rgba(54, 162, 235, 0.2)'
+				],
+				borderColor: [
+					'rgba(54, 162, 235, 1)'
+				],
+				borderWidth: 2,
+                fill: true,
+				stepped: true
+			},{
+				label: 'Peak = ' + Math.floor(peak * 100) / 100 + "%",
+				backgroundColor: [
+					'rgba(54, 162, 235, 1)'
+				],
+				borderColor: [
+					'rgba(54, 162, 235, 1)'
+				],
+				borderWidth: 1,
+                fill: false,
+				stepped: true
+			},{
+				label: 'Average = ' + Math.floor(avg[0] * 100) / 100 + "%",
+				data: avg,
+				backgroundColor: [
+					'rgba(235, 45, 45, 1)'
+				],
+				borderColor: [
+					'rgba(235, 45, 45, 1)'
+				],
+				borderWidth: 4,
+                fill: false,
+				stepped: true
+			}]
+		},
+		options: {
+
+			plugins:{
+				title: {
+					display: true,
+					text: ['GPU Occupancy']
+				}
+			},
+			elements:{
+				point:{
+					radius:0
+				}
+			},
+			scales: {
+				x: {
+					title: {
+						display: true,
+						text: "GPU Waves (" + gpu_waves + ")"
+					},
+					ticks: {
+						stepSize: 4,
+						//maxTicksLimit: 17,
+                        //minRotation: 0.01,
+                        //labelOffset:0,
+                        //align: 'center',
+                        //mirror: true,
+					}
+				},
+				y: {
+					title: {
+						display: true,
+						text: "GPU Occupancy (%)"
+					},
+					min: 0,
+					max: 110,
+					ticks: {
+                        callback: function(val, index) {
+                            return val <= 100 ? this.getLabelForValue(val) : '';
+                        },
+                        color: (c) => {if(c['tick']['value'] == 100) return 'green'; else return 'black';},
+						stepSize: 10
+					}
+				}
+			},
+			responsive: true,
+			maintainAspectRatio: true
+        }
+    });
+	chartjs_gpu.update();
+	resizeChart();
+}
 
 function update_valid_wg_sizes(){
 	document.querySelector('#output_wg .output').innerHTML = '';
 	setTimeout(valid_wg_sizes, 300);
-}
-
-// Compute all valid WG size for the given global size
-function valid_wg_sizes(){
-	var target_value, num_eu;
-	if(gpu.code) {
-		target_value = gpu.code;
-	}
-	if(document.getElementById("eu_count")){
-		num_eu = parseInt(document.getElementById("eu_count").value);
-	} else {
-		num_eu = gpu.EU_Count;
-	}
-	var input_sg = parseInt(document.getElementById("sg").value);
-	var input_slm = parseInt(document.getElementById("slm").value);
-	var large_grf = parseInt(document.getElementById("large_grf").value);
-
-	if (document.getElementById("barrier_yes").checked) {
-		num_barrier_reg = gpu.Max_Num_Of_Barrier_Registers;
-	} else {
-		num_barrier_reg = 0;
-	}
-
-	var num_ss = num_eu / gpu.EU_Per_Sub_Slice;
-
-	// Round of SLM value to Allowed values for TG SLM Size
-	for (let i=0;i<gpu.TG_SLM_Sizes.length; i++){
-		if (input_slm <= gpu.TG_SLM_Sizes[i]){
-			input_slm = gpu.TG_SLM_Sizes[i];
-			break;
-		}
-	}
-
-	document.getElementById("global_size").style.backgroundColor = "";
-	var input_global_range = document.getElementById("global_size").value.split(",");
-	var result = '<table id="wg_occ_table" width="100%"><thead><tr><td>Valid WG Sizes</td><td>Xe-Core/SS Occupancy</td><td>WG per Xe-Core/SS</td><td>GPU Occupancy</td></tr></thead>';
-	var error = 0;
-	if (input_global_range.length === 1){
-		var x = parseInt(input_global_range[0]);
-		if(isNaN(x)) {
-			error = 1;
-		} else {
-		 	var x = parseInt(input_global_range);
-				for(let lx=gpu.Max_Work_Group_Size; lx>0; lx--){
-					if(x%lx === 0){
-						var wg = lx;
-						var wg_value = wg;
-						var wg_count = x/wg;
-						let ss_output = compute_ss_occupancy(wg, input_sg, input_slm, large_grf, num_barrier_reg, wg_count);
-						let gpu_output = compute_gpu_occupancy(wg, ss_output.num_wg, ss_output.occupancy, num_ss, x);
-						result += '<tr><td>'+wg_value+'</td><td>'+ss_output.occupancy.toFixed(2)+'%</td><td>'+ss_output.num_wg+'</td><td>'+gpu_output.gpu_occ.toFixed(2)+'%</td></tr>';
-					}
-				}
-		}
-	} else if (input_global_range.length === 2){
-		var x = parseInt(input_global_range[0]);
-		var y = parseInt(input_global_range[1]);
-		if(isNaN(x) || isNaN(y)){
-			error = 1;
-		} else {
-			var wg_occ_values = [];
-			for(let lx=gpu.Max_Work_Group_Size; lx>0; lx--){
-				for(let ly=gpu.Max_Work_Group_Size; ly>0; ly--){
-					if(x%lx === 0 && y%ly === 0 && lx*ly <= gpu.Max_Work_Group_Size){
-						var wg = lx*ly;
-						var wg_value = '(' + lx + ',' + ly + ') ' + wg;
-						var wg_count = (x*y)/wg;
-						let ss_output = compute_ss_occupancy(wg, input_sg, input_slm, large_grf, num_barrier_reg, wg_count);
-						let gpu_output = compute_gpu_occupancy(wg, ss_output.num_wg, ss_output.occupancy, num_ss, x*y);
-						var wg_occ_value = {};
-						wg_occ_value.wg = wg;
-						wg_occ_value.wg_value = wg_value;
-						wg_occ_value.num_wg = ss_output.num_wg;
-						wg_occ_value.ss_occ = ss_output.occupancy.toFixed(2);
-						wg_occ_value.gpu_occ = gpu_output.gpu_occ.toFixed(2);
-						wg_occ_values.push(wg_occ_value);
-					}
-				}
-			}
-			wg_occ_values.sort(function(a,b){
-				return b.wg - a.wg;
-			});
-			for(wg_occ_value of wg_occ_values){
-				result += '<tr><td>'+wg_occ_value.wg_value+'</td><td>'+wg_occ_value.ss_occ+'%</td><td>'+wg_occ_value.num_wg+'</td><td>'+wg_occ_value.gpu_occ+'%</td></tr>';
-			}
-		}
-	} else if (input_global_range.length === 3){
-		var x = parseInt(input_global_range[0]);
-		var y = parseInt(input_global_range[1]);
-		var z = parseInt(input_global_range[2]);
-		if(isNaN(x) || isNaN(y) || isNaN(z)){
-			error = 1;
-		} else {
-			var wg_occ_values = [];
-			for(let lx=gpu.Max_Work_Group_Size; lx>0; lx--){
-				for(let ly=gpu.Max_Work_Group_Size; ly>0; ly--){
-					for(let lz=gpu.Max_Work_Group_Size; lz>0; lz--){
-						if(x%lx === 0 && y%ly === 0 && z%lz === 0 && lx*ly*lz <= gpu.Max_Work_Group_Size){
-							var wg = lx*ly*lz;
-							var wg_value = '(' + lx + ',' + ly + ',' + lz + ') ' + wg;
-							var wg_count = (x*y*z)/wg;
-							let ss_output = compute_ss_occupancy(wg, input_sg, input_slm, large_grf, num_barrier_reg, wg_count);
-							let gpu_output = compute_gpu_occupancy(wg, ss_output.num_wg, ss_output.occupancy, num_ss, x*y*z);
-							var wg_occ_value = {};
-							wg_occ_value.wg = wg;
-							wg_occ_value.wg_value = wg_value;
-							wg_occ_value.num_wg = ss_output.num_wg;
-							wg_occ_value.ss_occ = ss_output.occupancy.toFixed(2);
-							wg_occ_value.gpu_occ = gpu_output.gpu_occ.toFixed(2);
-							wg_occ_values.push(wg_occ_value);
-						}
-					}
-				}
-			}
-			wg_occ_values.sort(function(a,b){
-				return b.wg - a.wg;
-			});
-			for(wg_occ_value of wg_occ_values){
-				result += '<tr><td>'+wg_occ_value.wg_value+'</td><td>'+wg_occ_value.ss_occ+'%</td><td>'+wg_occ_value.num_wg+'</td><td>'+wg_occ_value.gpu_occ+'%</td></tr>';
-			}
-		}
-	} else {
-		error = 1;
-	}
-	if(error === 1) {
-		document.getElementById("global_size").style.backgroundColor = "#eaa";
-		alert("Please enter a valid value for global size");
-	} else {
-		result += '</table>';
-		document.querySelector('#output_wg .info').innerHTML = 'The list below show all the valid Work-Group(WG) sizes and GPU Xe-Core/Sub-Slice(SS) Occupancy for Global Size of (' + document.getElementById("global_size").value + ') on ' + gpu.name;
-		document.querySelector('#output_wg .output').innerHTML = result;
-		document.getElementById("output_wg").style.display = "block";
-	}
 }
 
 function resizeChart(){
