@@ -4,8 +4,8 @@
 ## Requirements
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu 18.04, 20 Windows* 10
-| Hardware                          | Skylake with GEN9 or newer
+| OS                                | Linux* Ubuntu 20.04/22.04 Windows* 10
+| Hardware                          | Intel&reg; Gen9 or newer GPU
 | Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel DevCloud
   
 ## Purpose
@@ -49,8 +49,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |[Intel® Advisor](05_Intel_Advisor/offload_advisor.ipynb)| + __Offload Advisor__ Tool usage and command-line options<br>+ ___Lab Exercise___: Generate Offload Advisor Report<br>+ __Roofline Analysis__ and command-line options<br>+ ___Lab Exercise___: Generate Roofline Report
 |[Intel® VTune Profiler](06_Intel_VTune_Profiler/Intel_VTune_Profiler.ipynb)| + Intel VTune™ Profiler usage __in Intel DevCloud__ environment using command-line options<br>+ ___Lab Exercise___: VTune Profiling by collecting __gpu_hotspots__ for sample application.
 |[Intel® Distribution for GDB on DevCloud](11_Intel_Distribution_for_GDB/gdb_oneapi.ipynb)| + Use the Intel® Distribution for GDB to debug kernels running on GPUs.
+|[SYCL Common Parallel Patterns](13_common_HPC_parallel_patterns/Common_Parallel_patterns_SYCL.ipynb)| + What some of the common patterns are, how the patterns relate to the capabilities of different devices<br>+ What patterns are already provided as SYCL functions and libraries, and how we can implement them using SYCL |
+|[SYCL Multi-GPU Programming](14_SYCL_Multi_GPU_Programming/SYCL_Multi_GPU_Programming.ipynb)| + __Multi-GPU SYCL Programming__, Multi-GPU Memory Copy and Optimization<br>+ Use __ONEAPI_DEVICE_SELECTOR__ environment variable to filter devices available for SYCL kernel offloading |
 
-##### Learn SYCL Programming
+#### Learn SYCL Programming
 The modules listed above include Introduction to oneAPI, oneAPI Tools, SYCL Programming and Libraries. A sub-set of these modules that only focus on SYCL programming are listed below. Use these modules to just learn SYCL Programming Basics:
 
 | Modules | Skill Level| Description
@@ -62,6 +64,9 @@ The modules listed above include Introduction to oneAPI, oneAPI Tools, SYCL Prog
 |[SYCL Buffers and Accessors in depth](09_SYCL_Buffers_And_Accessors_Indepth/SYCL_Buffers_accessors.ipynb)| intermediate|You will learn more advanced properties of buffer memory model.
 |[SYCL Task Scheduling and Data Dependences](10_SYCL_Graphs_Scheduling_Data_management/SYCL_Task_Scheduling_Data_dependency.ipynb)|intermediate|You will learn how data movement can be controlled in SYCL programs when using Buffers and USM.<br>You will also lean about graph scheduling with buffers memory model
 |[SYCL Local Memory and Atomics](12_SYCL_Local_Memory_And_Atomics/LocalMemory_Atomics.ipynb)|intermediate|You will learn how to utilize device's Shared Local Memory to reduce latency in accessing data for kernel computation and Atomic operations to avoid data race conditions.
+|[SYCL Common Parallel Patterns](13_common_HPC_parallel_patterns/Common_Parallel_patterns_SYCL.ipynb)|advanced| You will learn some of the common patterns are, how the patterns relate to the capabilities of different devices.
+|[SYCL Multi-GPU Programming](14_SYCL_Multi_GPU_Programming/SYCL_Multi_GPU_Programming.ipynb)|advanced| You will learn about Multi-GPU SYCL Programming, Multi-GPU Memory Copy and Optimization
+
 
 #### Content Structure
 
@@ -71,12 +76,12 @@ Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened i
 
 The training content can be accessed locally on the computer after installing necessary tools, or you can directly access using Intel DevCloud without any installation.
 
-#### Access using Intel DevCloud
+#### Access using Intel Developer Cloud
 
-The Jupyter notebooks are tested and can be run on Intel DevCloud without any installation necessary, below are the steps to access these Jupyter notebooks on Intel DevCloud:
-1. Register on [Intel DevCloud](https://devcloud.intel.com/oneapi)
-2. Login, Get Started and Launch Jupyter Lab
-3. Open Terminal in Jupyter Lab and git clone the repo and access the Notebooks
+The Jupyter notebooks are tested and can be run on Intel Developer Cloud without any installation necessary, below are the steps to access these Jupyter notebooks on Intel Developer Cloud:
+1. Register on [Intel Developer Cloud](https://cloud.intel.com)
+2. Login, select Training and Launch Jupyter Lab
+3. Access Training folder
 
 #### Local Installation of oneAPI Tools and JupyterLab
 
