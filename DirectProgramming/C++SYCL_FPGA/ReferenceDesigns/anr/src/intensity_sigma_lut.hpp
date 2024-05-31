@@ -18,7 +18,7 @@ class IntensitySigmaLUT {
 
 #if defined (IS_BSP)
   // construct from a device_ptr (for constructing from device memory)
-  IntensitySigmaLUT(device_ptr<float> ptr) {
+  IntensitySigmaLUT(sycl::ext::intel::device_ptr<float> ptr) {
     // use a pipelined LSU to load from device memory since we don't
     // care about the performance of the copy.
     using PipelinedLSU = ext::intel::lsu<>;

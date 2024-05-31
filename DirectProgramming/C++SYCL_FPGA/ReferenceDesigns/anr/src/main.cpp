@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   std::cout << "Running on device: "
-            << device.get_info<info::device::name>().c_str() 
+            << device.get_info<sycl::info::device::name>().c_str() 
             << std::endl;
 
 
@@ -444,7 +444,7 @@ bool Validate(PixelT* val, PixelT* ref, int rows, int cols,
   mse /= count;
 
   // compute the PSNR
-  double psnr = (20 * std::log10(max_i)) - (10 * std::log10(mse));
+  double psnr = (20 * log10(max_i)) - (10 * log10(mse));
 
   // check PSNR and maximum pixel difference
   bool passed = true;
