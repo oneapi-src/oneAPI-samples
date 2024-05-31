@@ -27,7 +27,7 @@ event Produce(queue& q, ValueT *in_ptr, IndexT count, IndexT in_block_count,
       // This is only done in the case where we target a BSP as device 
       // pointers are not supported when targeting an FPGA family/part
 #if defined(IS_BSP)
-      device_ptr<ValueT> in(in_ptr);
+      sycl::ext::intel::device_ptr<ValueT> in(in_ptr);
 #else
       ValueT* in(in_ptr);
 #endif
