@@ -149,12 +149,12 @@ quantize_with_inc.ipynb
 
 ### Docker
 AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+
+## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
-
-## Example Output
  
 ## Related Samples
 
