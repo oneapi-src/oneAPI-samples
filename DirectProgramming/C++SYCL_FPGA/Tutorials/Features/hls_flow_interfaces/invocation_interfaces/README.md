@@ -190,6 +190,10 @@ for (int i = 0; i < count; i++) {
 q.wait();
 ```
 
+> **Note**: As per the SYCL language semantics, separate invocations of a kernel are **independent**. This means that you can't make assumptions about memory ordering or memory dependences between kernel invocations. Make sure you use synchronization mechanisms such as the `.wait()` function or *atomic operations* to avoid race conditions. \
+If you want to guarantee sequential equivalence, you can also write your kernel with a `while(1)` loop in the kernel body instead of using a pipelined kernel. \
+In particular, a repeatedly-invoked kernel with memory dependence will result in undefined behavior in SYCL and may not function as you expect. 
+
 For an example of a pipelined streaming kernel, see `src/stream_pipelined.cpp`.
 
 ### Customizing the Kernel Argument Interface
