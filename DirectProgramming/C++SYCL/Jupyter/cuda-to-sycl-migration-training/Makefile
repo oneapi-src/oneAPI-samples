@@ -19,6 +19,8 @@ all:
 
 	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/Common -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/include 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/Samples/3_CUDA_Features/simpleCudaGraphs/*.cpp -pthread -o bin/app9 -w
 
+	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/Common -I 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/include 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/Samples/5_Domain_Specific/MonteCarloMultiGPU/*.cpp -pthread -qmkl -o bin/app10 -w
+	
 run:
 	bin/app1
 	bin/app2
@@ -29,6 +31,7 @@ run:
 	bin/app7 qatest
 	bin/app8
 	bin/app9
+	bin/app10
 
 clean:
 	rm -rf bin

@@ -44,7 +44,7 @@ Third-party program Licenses can be found here: [third-party-programs.txt](https
 |[SYCLMigration - Matrix Multiplication with CuBlas library](04_SYCL_Migration_MatrixMul_CuBlas/04_SYCL_Migration_MatrixMul_CuBlas.ipynb)|+ Learn how to migrate a CUDA project that uses CUDA library like cuBLAS.
 |[SYCLMigration - OceanFFT with oneMKL FFT library](05_SYCL_Migration_OceanFFT/05_SYCL_Migration_OceanFFT.ipynb)|+ Learn how to migrate a CUDA project that uses FFT from oneMKL library.
 |[SYCLMigration - SimpleCUDAGraphs](06_SYCL_Migration_SimpleCUDAGraphs/06_SYCL_Migration_SimpleCUDAGraphs.ipynb)|+ Learn how to migrate a CUDA Graph feature project manually using SYCL Taskflow and SYCL Graphs.
-
+|[SYCLMigration - MonteCarloMultiGPU](07_SYCL_Migration_MonteCarloMultiGPU/07_SYCL_Migration_MonteCarloMultiGPU.ipynb)|+ Learn how to migrate a CUDA project that uses RNG from oneMKL library.
 #### Content Structure
 
 Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened in Jupyter Lab to view the training content and compile/run. Along with the Notebook file, the module folders have sub-folders with various versions of migrated SYCL source code, the module folder also has `run_*.sh` files that can be used in the shell terminal to compile and run migrated SYCL code. The module folder structure is as shown below:
