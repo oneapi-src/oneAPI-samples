@@ -95,7 +95,8 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 ### Run the Script
 ```
 python TensorFlow_HelloWorld.py
-```
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 ## Example Output
 1. With the initial run, you should see results similar to the following:
 
