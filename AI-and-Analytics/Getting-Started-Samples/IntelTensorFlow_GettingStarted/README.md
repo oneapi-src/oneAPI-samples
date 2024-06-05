@@ -72,11 +72,14 @@ source <custom_path>/bin/activate
  
 **3. (Offline Installer) Activate relevant Conda environment**
 
+For the system with Intel CPU:
 ```
-conda activate tensorflow ## For the system with Intel CPU
-conda activate tensorflow-gpu ## For the system with Intel GPU  
-``` 
-
+conda activate tensorflow
+```
+For the system with Intel GPU:
+```
+conda activate tensorflow-gpu  
+```
 **4. Clone the GitHub repository**
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
