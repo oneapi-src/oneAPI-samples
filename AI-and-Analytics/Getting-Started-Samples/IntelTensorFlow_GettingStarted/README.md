@@ -90,7 +90,6 @@ cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_Getti
 >**Note**: Before running the sample, make sure Environment Setup is completed.
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)/Conda/PIP](#ai-tools-offline-installer-validatedcondapip)
-* [Conda/PIP](#condapip) 
 * [Docker](#docker)
 ### Run the Script
 ```
