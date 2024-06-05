@@ -2,7 +2,7 @@
 
 The sample is a getting started tutorial for the Intel® Neural Compressor (INC), and demonstrates how to perform INT8 quantization on a Hugging Face BERT model. This sample shows how to achieve performance boosts using Intel hardware.
 
-| Area                  | Description
+| Property                  | Description
 |:---                   |:---
 | What you will learn   | How to quantize a BERT model using Intel® Neural Compressor
 | Time to complete      | 20 minutes
@@ -39,7 +39,7 @@ The sample contains one Jupyter Notebook and one Python script. It can be run us
 |:---                      |:---
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
-### Setup your environment for the offline installer
+### Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
@@ -48,14 +48,41 @@ You will need to download and install the following toolkits, tools, and compone
 Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
 <br>If you have not already, select and install these Tools via via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
-**2. Install dependencies**
+>**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+
+**2. (Offline Installer) Activate the AI Tools bundle base environment**
+
+If the default path is used during the installation of AI Tools:
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If a non-default path is used:
+```
+source <custom_path>/bin/activate
+```
+ 
+**3. (Offline Installer) Activate relevant Conda environment**
+```
+conda activate pytorch  
+``` 
+
+**4. Clone the GitHub repository**
+
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch
+```
+
+**5. Install dependencies**
+
+>**Note**: Before running the following commands, make sure your Conda/Python environment with AI Tools installed is activated
 ```
 pip install -r requirements.txt
-```
-**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+pip install notebook
+``` 
+For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
-## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
-
+## Run the Sample
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
@@ -64,74 +91,91 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 * [Docker](#docker)
 
 ### AI Tools Offline Installer (Validated)  
-1. If you have not already done so, activate the AI Tools bundle base environment. 
-If you used the default location to install AI Tools, open a terminal and type the following
+
+**1. Register Conda kernel to Jupyter Notebook kernel**
+
+If the default path is used during the installation of AI Tools:
 ```
-source $HOME/intel/oneapi/intelpython/bin/activate
+$HOME/intel/oneapi/intelpython/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch
 ```
-If you used a separate location, open a terminal and type the following
+If a non-default path is used:
 ```
-source <custom_path>/bin/activate
+<custom_path>/bin/python -m ipykernel install --user --name=pytorch
 ```
-2. Activate the Conda environment:
-```
-conda activate pytorch
-``` 
-3. Clone the GitHub repository:
-``` 
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
-```
-4. Launch Jupyter Notebook: 
-> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
-feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+**2. Launch Jupyter Notebook** 
 ```
 jupyter notebook --ip=0.0.0.0
 ```
-5. Follow the instructions to open the URL with the token in your browser.
-6. Select the Notebook:
+**3. Follow the instructions to open the URL with the token in your browser**
+
+**4. Select the Notebook**
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
-7. Change the kernel to `pytorch`
-8. Run every cell in the Notebook in sequence.
+**5. Change the kernel to `pytorch`**
+
+**6. Run every cell in the Notebook in sequence**
 
 ### Conda/PIP
-> **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
-1. Clone the GitHub repository:
-``` 
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+> **Note**: Before running the instructions below, make sure your Conda/Python environment with AI Tools installed is activated
+
+**1. Register Conda/Python kernel to Jupyter Notebook kernel** 
+
+For Conda:
 ```
-2. Launch Jupyter Notebook: 
-> **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
-feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+<CONDA_PATH_TO_ENV>/bin/python -m ipykernel install --user --name=<your-env-name>
+```
+To know <CONDA_PATH_TO_ENV>, run `conda env list` and find your Conda environment path.
+
+For PIP:
+```
+python -m ipykernel install --user --name=<your-env-name>
+```
+**2. Launch Jupyter Notebook**
+
 ```
 jupyter notebook --ip=0.0.0.0
 ```
-4. Follow the instructions to open the URL with the token in your browser.
-5. Select the Notebook:
+**3. Follow the instructions to open the URL with the token in your browser**
+
+**4. Select the Notebook**
+
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
-6. Run every cell in the Notebook in sequence.
+**5. Change the kernel to `<your-env-name>`**
+
+**6. Run every cell in the Notebook in sequence**
 
 ### Docker
 AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
- 
+
 ## Example Output
 You should see an image showing the performance comparison and analysis between FP32 and INT8.
 >**Note**: The image shown below is an example of a general performance comparison for inference speedup obtained by quantization. (Your results might be different.)
 
 ![Performance Numbers](images/inc_speedup.png)
+ 
 ## Related Samples
+
 * [Fine-tuning Text Classification Model with Intel® Neural Compressor (INC)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/INC_QuantizationAwareTraining_TextClassification)
 * [Optimize PyTorch* Models using Intel® Extension for PyTorch* (IPEX)](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/INC_QuantizationAwareTraining_TextClassification)
+
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 *Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
+
+
+
+
+
+
+
+
