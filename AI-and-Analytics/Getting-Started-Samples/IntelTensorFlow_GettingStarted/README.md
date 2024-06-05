@@ -91,7 +91,7 @@ cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_Getti
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)/Conda/PIP](#ai-tools-offline-installer-validatedcondapip)
 * [Docker](#docker)
-### Run the Script
+AI Tools Offline Installer (Validated)/Conda/PIP
 ```
 python TensorFlow_HelloWorld.py
 ### Docker
