@@ -145,6 +145,15 @@ Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz \
 - Windows support for the FPGA code samples is limited to the **FPGA emulator** and **optimization reports**. Only Linux supports **FPGA hardware** compilation. See any FPGA code sample README.md for more details.
 - If you encounter `Error MSB6003 The specified task executable ... could not be run...` when building a sample program, it might be due to the length of the directory path. Move the `build` directory to a location with a shorter path. Build the sample in the new location.
 
+## Additional Resources for Code Samples
+A curated list of samples from oneAPI based projects, libraries, and tools. In addition, the most exciting samples from other AI projects that are not necessarily based on oneAPI are also listed here to provide you with the latest and valuable resources for augmenting your productivity.
+-	[OpenVINO™ notebooks](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks): A collection of ready-to-run Jupyter notebooks for learning and experimenting with the OpenVINO™ Toolkit, an open-source AI toolkit that makes it easier to write once, deploy anywhere. The notebooks introduce OpenVINO basics and teach developers how to leverage the API for optimized deep learning inference.
+-	[Intel® Gaudi®  Tutorials](https://github.com/HabanaAI/Gaudi-tutorials): Tutorials with step-by-step instructions for running PyTorch and PyTorch Lightning models on the Intel Gaudi AI Processor for training and inferencing, from beginner level to advanced users.
+-	[Powered-by-Intel Leaderboard](https://huggingface.co/spaces/Intel/powered_by_intel_llm_leaderboard): This leaderboard celebrates and increases the discoverability of models developed on Intel hardware by the AI developer community. We provide developers with sample code and resources (developer programs) to deploy (inference) AI PC, Intel® Xeon® Scalable processors, Intel® Gaudi® processors, Intel® Arc™ GPUs, and Intel® Data Center GPUs.
+-	[Intel® AI Reference Models](https://github.com/intel/models): This repository contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors and Intel® Data Center GPUs.
+-	[awesome-oneapi](https://github.com/oneapi-community/awesome-oneapi): A community sourced list of awesome oneAPI and SYCL projects for solutions across a wide range of industry segments.
+- [Generative AI Examples](https://github.com/opea-project/GenAIExamples): A collection of GenAI examples such as ChatQnA, Copilot, which illustrate the pipeline capabilities of the Open Platform for Enterprise AI (OPEA) project. OPEA is an ecosystem orchestration framework to integrate performant GenAI technologies & workflows leading to quicker GenAI adoption and business value.
+
 ## Licenses
 
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.

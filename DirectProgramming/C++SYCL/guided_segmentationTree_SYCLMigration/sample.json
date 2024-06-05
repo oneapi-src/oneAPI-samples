@@ -1,0 +1,25 @@
+{
+  "guid": "56E0F503-2576-459F-A47C-D153DEC40BB9",
+  "name": "segmentationTreeThrust",
+  "categories": ["Toolkit/oneAPI-samples/DirectProgramming/C++SYCL"],
+  "description": "Demonstrates an approach to the image segmentation trees construction.",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 
+                 ]
+        }]
+
+  },
+  "expertise": "Concepts and Functionality"
+}

@@ -68,15 +68,15 @@ When working with the command-line interface (CLI), you should configure the one
 1. Change to the sample directory.
 2. Build the programs.
    ```
-   $ mkdir build
-   $ cd build
-   $ cmake ..
-   $ make
+   mkdir build
+   cd build
+   cmake ..
+   make
    ```
 
 3. Run the program.
    ```
-   $ make run_all
+   make run_all
    ```
    > **Note**: The application by default uses the Level Zero runtime and will run without errors.  We will do a deeper investigation of the application, in particular with the openCL runtime, to expose problems that could also manifest in Level Zero.
 
@@ -144,13 +144,17 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 #### Observe the Failure
 
-1. Run the program outside the debugger.  
+1. Run the program outside the debugger.
+   ```
+   ./1_matrix_mul_SLM_size
+   ```
+
 2. It should almost immediately crash in an exception:
    ```
    $ ./1_matrix_mul_SLM_size
    Initializing
    Computing
-   
+
    Problem size: c(150,600) = a(150,300) * b(300,600)
    terminate called after throwing an instance of 'sycl::_V1::runtime_error'
      what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
@@ -161,14 +165,14 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 1. Start the debugger to learn more about the error.
    ```
-   $ gdb-oneapi ./1_matrix_mul_SLM_size
+   gdb-oneapi ./1_matrix_mul_SLM_size
    ```
 
 2. Run the application within the debugger.
    ```
    (gdb) run
    ```
-   The application will fail and display the same message when we ran it outside of the debugger. 
+   The application will fail and display the same message when we ran it outside of the debugger.
 
    ```
    Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -182,32 +186,28 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 3. Run `backtrace` to get a summary showing the rough location that triggered the error.
    ```
-   (gdb) backtrace 
+   (gdb) backtrace
    ```
 
    Looking at the backtrace output, we can see that the error happened around line 104 (frame 15):
    ```
-   (gdb) bt
-   #0  0x0000155554d1d03b in raise () from /lib/x86_64-linux-gnu/libc.so.6
-   #1  0x0000155554cfc859 in abort () from /lib/x86_64-linux-gnu/libc.so.6
-   #2  0x00001555553c1911 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #3  0x00001555553cd38c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #4  0x00001555553cd3f7 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #5  0x00001555553cd6a9 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #6  0x00001555550a3586 in sycl::_V1::detail::enqueue_kernel_launch::handleErrorOrWarning(_pi_result, sycl::_V1::detail::device_impl const&, _pi_kernel*, sycl::_V1::detail::NDRDescT const&) () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #7  0x000015555512e6b5 in sycl::_V1::detail::enqueueImpKernel(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::NDRDescT&, std::vector<sycl::_V1::detail::ArgDesc, std::allocator<sycl::_V1::detail::ArgDesc> >&, std::shared_ptr<sycl::_V1::detail::kernel_bundle_impl> const&, std::shared_ptr<sycl::_V1::detail::kernel_impl> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, long const&, std::vector<_pi_event*, std::allocator<_pi_event*> >&, _pi_event**, std::function<void* (sycl::_V1::detail::AccessorImplHost*)> const&) () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #8  0x000015555517a6d1 in sycl::_V1::handler::finalize()::$_0::operator()() const () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #9  0x0000155555176ef9 in sycl::_V1::handler::finalize() () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #10 0x00001555551a287a in void sycl::_V1::detail::queue_impl::finalizeHandler<sycl::_V1::handler>(sycl::_V1::handler&, sycl::_V1::detail::CG::CGTYPE const&, sycl::_V1::event&) ()
-   from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #11 0x00001555551a24f1 in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #12 0x00001555551a1945 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #13 0x00001555551a1905 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) ()
-   from /opt/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #14 0x000000000040458f in sycl::_V1::queue::submit<main::{lambda(sycl::_V1::handler&)#1}>(main::{lambda(sycl::_V1::handler&)#1}, sycl::_V1::detail::code_location const&) (
-    this=0x7fffffffaba0, CGF=..., CodeLoc=...) at /opt/intel/oneapi/compiler/2023.0.0/linux/bin-llvm/../include/sycl/queue.hpp:318
-   #15 0x00000000004040c2 in main () at 1_matrix_mul_SLM_size.cpp:104
-   (gdb)
+   (gdb) backtrace
+   #0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+   #1  0x00007ffff76ea859 in __GI_abort () at abort.c:79
+   #2  0x00007ffff7aca8d1 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #3  0x00007ffff7ad637c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #4  0x00007ffff7ad63e7 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #5  0x00007ffff7ad6699 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #6  0x00007ffff7db9d77 in sycl::_V1::detail::enqueue_kernel_launch::handleErrorOrWarning(_pi_result, sycl::_V1::detail::device_impl const&, _pi_kernel*, sycl::_V1::detail::NDRDescT const&) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #7  0x00007ffff7e9ac74 in sycl::_V1::detail::enqueueImpKernel(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::NDRDescT&, std::vector<sycl::_V1::detail::ArgDesc, std::allocator<sycl::_V1::detail::ArgDesc> >&, std::shared_ptr<sycl::_V1::detail::kernel_bundle_impl> const&, std::shared_ptr<sycl::_V1::detail::kernel_impl> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<_pi_event*, std::allocator<_pi_event*> >&, std::shared_ptr<sycl::_V1::detail::event_impl> const&, std::function<void* (sycl::_V1::detail::AccessorImplHost*)> const&, _pi_kernel_cache_config) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #8  0x00007ffff7eed66d in sycl::_V1::handler::finalize()::$_0::operator()() const () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #9  0x00007ffff7eeaa22 in sycl::_V1::handler::finalize() () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #10 0x00007ffff7e6a51b in void sycl::_V1::detail::queue_impl::finalizeHandler<sycl::_V1::handler>(sycl::_V1::handler&, sycl::_V1::event&) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #11 0x00007ffff7e6a0d9 in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #12 0x00007ffff7e69ac0 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #13 0x00007ffff7f1c7f5 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
+   #14 0x00000000004046ba in sycl::_V1::queue::submit<main::{lambda(sycl::_V1::handler&)#1}>(main::{lambda(sycl::_V1::handler&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffd1f0, CGF=..., CodeLoc=...) at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/queue.hpp:366
+   #15 0x00000000004041b8 in main () at 1_matrix_mul_SLM_size.cpp:104
    ```
 
 4. Look at the final frame. (Your frame number might differ).
@@ -228,74 +228,44 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    102         q.wait();
    103
    104         q.submit([&](handler &h){
-   105             local_accessor<float,1> acc(163850, h);
-   106           h.parallel_for(163850, [=](auto i){
-   107             int index = i.get_id();
-   108             acc[index] = index;
+   105           local_accessor<float,1> acc(163850, h);
+   106           h.parallel_for(nd_range<1>{{163850}, {10}}, [=](nd_item<1> i){
+   107               int index = i.get_global_id();
+   108               acc[index] = index;
    (gdb)
    ```
 
 #### Root-Cause the Issue
 
-You can see that there is something wrong in the submit at line `104`. You need some more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool. 
+You can see that there is something wrong in the submit at line `104`. You need some more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool.
 
 >**Note**: You must have already built the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GBD).
 
 One of the things that the Tracing and Profiling utility can help us identify is printing every low-level API call made to OpenCL™ or Level Zero. This is the features that we will use to attempt to match the source to the events.
 
-1. Run the program with `onetrace`.
+2. Run the program with `onetrace` and enable the RT debug messages:
    ```
-   $ onetrace -c ./1_matrix_mul_SLM_size
+   onetrace -c ./1_matrix_mul_SLM_size
    ```
 
-2. Continue listing the output until the error occurs and the program stops.
+3. Continue listing the output until the error occurs and the program stops.
    ```
-   >>>> [182489164] zeKernelCreate: hModule = 0x17b88e0 desc = 0x7ffffba79410 {ZE_STRUCTURE_TYPE_KERNEL_DESC(0x1d) 0 0 "_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlT_E_"} phKernel = 0x7ffffba79408 (hKernel = 0)
-   <<<< [183430216] zeKernelCreate [938524 ns] hKernel = 0x1fa33f0 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183437931] zeKernelSetIndirectAccess: hKernel = 0x1fa33f0 flags = 7
-   <<<< [183439457] zeKernelSetIndirectAccess [299 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183446312] zeKernelSetArgumentValue: hKernel = 0x1fa33f0 argIndex = 0 argSize = 655400 pArgValue = 0
-   <<<< [183449773] zeKernelSetArgumentValue [626 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183452395] zeKernelSetArgumentValue: hKernel = 0x1fa33f0 argIndex = 1 argSize = 8 pArgValue = 0x17bfc50
-   <<<< [183453645] zeKernelSetArgumentValue [145 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183456010] zeKernelSetArgumentValue: hKernel = 0x1fa33f0 argIndex = 2 argSize = 8 pArgValue = 0x17bfc50
-   <<<< [183457108] zeKernelSetArgumentValue [31 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183460423] zeKernelSetArgumentValue: hKernel = 0x1fa33f0 argIndex = 3 argSize = 8 pArgValue = 0x17bfc50
-   <<<< [183461422] zeKernelSetArgumentValue [39 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183465860] zeKernelGetProperties: hKernel = 0x1fa33f0 pKernelProperties = 0x1af3fb0
-   <<<< [183469232] zeKernelGetProperties [365 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [183477413] zeKernelSuggestGroupSize: hKernel = 0x1fa33f0 globalSizeX = 163850 globalSizeY = 1 globalSizeZ = 1 groupSizeX = 0x7ffffba794c0 groupSizeY = 0x7ffffba794c4 groupSizeZ = 0x7ffffba794c8
-   <<<< [183480741] zeKernelSuggestGroupSize [264 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+   <<<< [504780292] zeEventHostReset [3564 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [504789109] zeCommandListAppendLaunchKernel: hCommandList = 0x4cf64b0 hKernel = 0x53b0350 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7ffcc0831cec {16385, 1, 1} hSignalEvent = 0x48332d0 numWaitEvents = 0 phWaitEvents = 0
+   <<<< [504818879] zeCommandListAppendLaunchKernel [17599 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
    terminate called after throwing an instance of 'sycl::_V1::runtime_error'
-   what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
+     what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
-There are two very important clues in the output.
 
-- **Clue 1**: The most important clue is the following new message that we did not see when running outside of `onetrace`:  `zeKernelSuggestGroupSize [XXX ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY`
-
-  This message indicates that the suggested group size exceeds device memory. This error is not related to the RAM on the GPU; instead, it is related to shared local memory.
-
-- **Clue 2**: The requested group size. You'll find that in the previous line:   `zeKernelSuggestGroupSize: hKernel = 0x1fa33f0 globalSizeX = 163850 globalSizeY = 1 globalSizeZ = 1 groupSizeX = 0x7ffffba794c0 groupSizeY = 0x7ffffba794c4 groupSizeZ = 0x7ffffba794c8`
-
-  A number here should be familiar:
+  **Clue**: Due to the running the program under onetrace we can see that the error happens during launching of the kernel:
   ```
-  104         q.submit([&](handler &h){
-  105             local_accessor<float,1> acc(163850, h);
-  106           h.parallel_for(163850, [=](auto i){
-  107             int index = i.get_id();
-  108             acc[index] = index;
-  109           });
-  110         }).wait();
-  (gdb)
+   <<<< [504818879] zeCommandListAppendLaunchKernel [17599 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
   ```
-  So the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes), doesn't fit in the SLM on this device.
-
-  If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In this case, the calculation is easy: 163850 (`globalSizeX`) times 1 (`glocalSizeY`) times 1 (`globalSizeZ`).
 
 #### Determine Device Limits
 
-If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables and values: `PrintDebugMessages=1` and `NEOReadDebugKeys=1`. 
+If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables and values: `PrintDebugMessages=1` and `NEOReadDebugKeys=1` ().
 
 ```
 $ export NEOReadDebugKeys=1
@@ -317,8 +287,9 @@ terminate called after throwing an instance of 'sycl::_V1::runtime_error'
   what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
 Aborted (core dumped)
 ```
-The new message is `Size of SLM (656384) larger than available (131072)`. This tells you the size of the SLM memory on the device, 131072 bytes (128Kb), is smaller than the requested size of 163850 floats or about 656384 bytes.
+The new message is `Size of SLM (656384) larger than available (131072)`. This tells you the size of the Shared Local Memory (SLM) memory on the device, 131072 bytes (128Kb), is smaller than the requested size of 656384 bytes.
 
+If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In our case, the calculation is easy: 163850 (`globalSizeX`) times 1 (`glocalSizeY`) times 1 (`globalSizeZ`). So the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes), doesn't fit in the SLM on this device.
 You should notice that the different devices will have different amounts of memory set aside as SLM. In SYCL, you can query this number by passing `info::device::local_mem_size` to the `get_info` member of the `device` class.
 
 #### Resolving the Problem
@@ -327,19 +298,19 @@ The synthetic code in this example has nothing to do with matrix multiply and ca
 
 1. Delete the code from line `104` to `110`.
    ```
-   104         q.submit([&](handler &h){
-   105             local_accessor<float,1> acc(163850, h);
-   106           h.parallel_for(163850, [=](auto i){
-   107             int index = i.get_id();
-   108             acc[index] = index;
-   109           });
-   110         }).wait();
+   104    q.submit([&](handler &h){
+   105     local_accessor<float,1> acc(163850, h);
+   106     h.parallel_for(nd_range<1>{{163850}, {10}}, [=](nd_item<1> i){
+   107         int index = i.get_global_id();
+   108         acc[index] = index;
+   109       });
+   110   }).wait();
    ```
 
 In real code, now that we have deduced the variable that is the source of the problem (the `acc` array in our synthetic code, which is defined as a `local_accessor`, meaning it will be stored in device shared-local memory), the "fix" is to rethink your algorithm. For example, can you break up `acc` into smaller sections that will fit on SLM and operate on them separately, one after the other?  You should determine whether `acc` really needs to be in work-group local memory.
 
 As noted in *Shared Local Memory* topic of the *[oneAPI GPU Optimization Guide
-Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/slm.html)*, this really only makes sense when work-items need to share data and communicate with each other within a work-group. 
+Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/slm.html)*, this really only makes sense when work-items need to share data and communicate with each other within a work-group.
 
 In the synthetic code shown above, none of this is happening (each iteration is independent of every other since `i` is a SYCL `id` class, meaning that `i.get_id()` returns a unique index for each of the 163850 iterations). There is no reason why `acc` needs to be in work-group local memory. Instead, `acc` could be a normal `accessor` with a `device` target and a `read_write` access mode that would live in device global memory.
 

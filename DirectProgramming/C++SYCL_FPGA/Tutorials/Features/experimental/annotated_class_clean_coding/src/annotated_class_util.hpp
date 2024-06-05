@@ -128,8 +128,8 @@ struct remove_align_from {};
 
 template <>
 struct remove_align_from<
-    sycl::ext::oneapi::experimental::detail::empty_properties_t> {
-  using type = sycl::ext::oneapi::experimental::detail::empty_properties_t;
+    sycl::ext::oneapi::experimental::empty_properties_t> {
+  using type = sycl::ext::oneapi::experimental::empty_properties_t;
 };
 
 template <typename Prop, typename... Props>
