@@ -53,7 +53,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: 'Intel® Extension for TensorFlow* (CPU)' 
+Required AI Tools: 'Intel® Extension for TensorFlow* - CPU' 
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
 please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 
@@ -91,9 +91,10 @@ cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_Getti
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)/Conda/PIP](#ai-tools-offline-installer-validatedcondapip)
 * [Docker](#docker)
-AI Tools Offline Installer (Validated)/Conda/PIP
+### AI Tools Offline Installer (Validated)/Conda/PIP
 ```
 python TensorFlow_HelloWorld.py
+```
 ### Docker
 AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 ## Example Output
