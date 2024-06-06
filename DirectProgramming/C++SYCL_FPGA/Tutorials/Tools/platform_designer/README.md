@@ -279,7 +279,7 @@ Follow these steps to compile and test the design:
    > xcopy add_quartus\output_files\add.sof system_console /Y
    ```
 
-You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script.
+You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script. This script has been verified against the latest version of Quartus® Prime Pro Edition software available at the time of writing (24.1). The script and pre-generated project may not work with other versions of Quartus® Prime.
 
    Linux:
 
