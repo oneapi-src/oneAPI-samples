@@ -176,7 +176,7 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
       exit(0);
   }
   if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl::ext::oneapi::experimental::info::graph_support_level::unsupported){
+      == sycl::ext::oneapi::experimental::graph_support_level::unsupported){
       printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
@@ -254,7 +254,7 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
       exit(0);
   }
   if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl::ext::oneapi::experimental::info::graph_support_level::unsupported){
+      == sycl::ext::oneapi::experimental::graph_support_level::unsupported){
       printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
