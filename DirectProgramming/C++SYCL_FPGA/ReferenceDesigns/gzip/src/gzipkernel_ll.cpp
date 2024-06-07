@@ -783,9 +783,13 @@ template <int engineID, int BatchSize>
 event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
                 std::vector<event> &depend_on) {
   event e = q.submit([&](handler &h) {
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kCRCIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kCRCIndex]);
+    //}
 
     h.single_task<CRC<engineID>>([=]() [[intel::kernel_args_restrict]] {
       auto accessor_isz = block_size;
@@ -2073,9 +2077,13 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
   event e = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
 
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kLZReductionIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kLZReductionIndex]);
+    //}
 
     h.single_task<LZReduction<engineID>>([=]() [[intel::kernel_args_restrict]] {
       // Unpack the ptrs parameter pack and grab all of the pointers, annotating
@@ -2445,9 +2453,13 @@ event SubmitStaticHuffman(queue &q, size_t block_size,
                           std::vector<event> &depend_on,
                           PtrTypes... ptrs) {
   event e = q.submit([&](handler &h) {
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kStaticHuffmanIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kStaticHuffmanIndex]);
+    //}
 
     h.single_task<StaticHuffman<engineID>>([=]() [[intel::kernel_args_restrict]] {
 
