@@ -9,6 +9,7 @@ if (BUILD_FORTRAN_EXAMPLES)
   set(CMAKE_Fortran_COMPILER ifx)
 endif()
 
+enable_testing()
 
 project(GPUOptGuide
   LANGUAGES ${_languages}
