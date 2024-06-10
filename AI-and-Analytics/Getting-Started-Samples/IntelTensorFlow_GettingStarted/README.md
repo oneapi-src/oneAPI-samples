@@ -17,7 +17,7 @@ This sample code shows how to get started with TensorFlow*. It implements an exa
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | Ubuntu* 22.0.4 (and newer) <br> Windows* 10 and newer 
+| OS                     | Ubuntu* 22.0.4 and newer 
 | Hardware               | Intel® Xeon® Scalable processor family
 | Software               | TensorFlow
 
@@ -37,7 +37,7 @@ The sample includes one python file: TensorFlow_HelloWorld.py. it implements a s
             y_batch = y_data[step*N:(step+1)*N, :, :, :]
             s.run(train, feed_dict={x: x_batch, y: y_batch})
     ```
-In order to show the harware information, you must export the environment variable `ONEDNN_VERBOSE=1` to display the deep learning primitives trace during execution.
+In order to show the harware information, you must export the environment variable `export ONEDNN_VERBOSE=1` to display the deep learning primitives trace during execution.
 >**Note**: For convenience, code line os.environ["ONEDNN_VERBOSE"] = "1" has been added in the body of the script as an alternative method to setting this variable.
 
 Runtime settings for `ONEDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: *[Maximize TensorFlow* Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)*.
@@ -53,48 +53,51 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get Intel® AI Tools**
 
-Required AI Tools: <Tensorflow* ><!-- List specific AI Tools that needs to be installed before running this sample --> 
+Required AI Tools: 'Intel® Extension for TensorFlow* - CPU' 
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
-or simple pip install in your current ready python environment 
-```
-pip install tensorflow==2.14
-```
-please see the[supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
+please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
 
-## Run the Sample
+>**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
->**Note**: Before running the sample, make sure Environment Setup is completed.
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
-* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
-* [Conda/PIP](#condapip) 
-* [Docker](#docker)
+**2. (Offline Installer) Activate the AI Tools bundle base environment**
 
-### AI Tools Offline Installer (Validated)  
-1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
+If the default path is used during the installation of AI Tools:
 ```
 source $HOME/intel/oneapi/intelpython/bin/activate
 ```
-If you used a separate location, open a terminal and type the following
+If a non-default path is used:
 ```
 source <custom_path>/bin/activate
 ```
-2. Activate the Conda environment:
+ 
+**3. (Offline Installer) Activate relevant Conda environment**
+
+For the system with Intel CPU:
 ```
-conda activate tensorflow  
-``` 
-3. Clone the GitHub repository:
+conda activate tensorflow
+```
+For the system with Intel GPU:
+```
+conda activate tensorflow-gpu  
+```
+**4. Clone the GitHub repository**
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
 ```
-### Run the Script
+## Run the Sample
 
-Run the Python script.
+>**Note**: Before running the sample, make sure Environment Setup is completed.
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)/Conda/PIP](#ai-tools-offline-installer-validatedcondapip)
+* [Docker](#docker)
+### AI Tools Offline Installer (Validated)/Conda/PIP
 ```
 python TensorFlow_HelloWorld.py
 ```
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 ## Example Output
-
 1. With the initial run, you should see results similar to the following:
 
    ```
@@ -105,7 +108,6 @@ python TensorFlow_HelloWorld.py
    4 0.32920069
    [CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
    ```
-
 2. Export `ONEDNN_VERBOSE` as 1 in the command line. The oneDNN run-time verbose trace should look similar to the following:
    ```
    export ONEDNN_VERBOSE=1
@@ -115,28 +117,31 @@ python TensorFlow_HelloWorld.py
 
 3. Run the sample again. You should see verbose results similar to the following:
    ```
-2024-03-12 16:01:59.784340: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:117] Plugin optimizer for device_type CPU is enabled.
-onednn_verbose,info,oneDNN v3.2.0 (commit 8f2a00d86546e44501c61c38817138619febbb10)
-onednn_verbose,info,cpu,runtime:OpenMP,nthr:24
-onednn_verbose,info,cpu,isa:Intel AVX2 with Intel DL Boost
-onednn_verbose,info,gpu,runtime:none
-onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
-onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba::f0 dst_f32:p:blocked:Acdb16a::f0,,,10x4x3x3,0.00195312
-onednn_verbose,exec,cpu,convolution,brgconv:avx2,forward_training,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:Acdb16a::f0 bia_f32::blocked:a::f0 dst_f32::blocked:acdb::f0,attr-scratchpad:user attr-post-ops:eltwise_relu ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.19702
-onednn_verbose,exec,cpu,eltwise,jit:avx2,backward_data,data_f32::blocked:abcd::f0 diff_f32::blocked:abcd::f0,attr-scratchpad:user ,alg:eltwise_relu alpha:0 beta:0,4x128x128x10,0.112061
-onednn_verbose,exec,cpu,convolution,jit:avx2,backward_weights,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:ABcd8b8a::f0 bia_undef::undef::: dst_f32::blocked:acdb::f0,attr-scratchpad:user ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.358887
+   2024-03-12 16:01:59.784340: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:117] Plugin optimizer for device_type CPU is enabled.
+   onednn_verbose,info,oneDNN v3.2.0 (commit 8f2a00d86546e44501c61c38817138619febbb10)
+   onednn_verbose,info,cpu,runtime:OpenMP,nthr:24
+   onednn_verbose,info,cpu,isa:Intel AVX2 with Intel DL Boost
+   onednn_verbose,info,gpu,runtime:none
+   onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
+   onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba::f0 dst_f32:p:blocked:Acdb16a::f0,,,10x4x3x3,0.00195312
+   onednn_verbose,exec,cpu,convolution,brgconv:avx2,forward_training,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:Acdb16a::f0 bia_f32::blocked:a::f0
+   dst_f32::blocked:acdb::f0,attr-scratchpad:user attr-post-ops:eltwise_relu ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.19702
+   onednn_verbose,exec,cpu,eltwise,jit:avx2,backward_data,data_f32::blocked:abcd::f0 diff_f32::blocked:abcd::f0,attr-scratchpad:user ,alg:eltwise_relu alpha:0
+   beta:0,4x128x128x10,0.112061
+    onednn_verbose,exec,cpu,convolution,jit:avx2,backward_weights,src_f32::blocked:acdb::f0 wei_f32:ap:blocked:ABcd8b8a::f0 bia_undef::undef:::
+   dst_f32::blocked:acdb::f0,attr-scratchpad:user ,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.358887
    ...
-   ```
->**Note**: See the *[oneAPI Deep Neural Network Library Developer Guide and Reference](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html)* for more details on the verbose log.
+ 
+  >**Note**: See the *[oneAPI Deep Neural Network Library Developer Guide and Reference](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html)* for more details on the verbose log.
 
 4. Troubleshooting
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
+   If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
 or ask support from https://github.com/intel/intel-extension-for-tensorflow
- 
+
 ## Related Samples
 
-* [Intel Extension Fot TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
+* [Intel Extension For TensorFlow Getting Started Sample](https://github.com/oneapi-src/oneAPI-samples/blob/development/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_TensorFlow_GettingStarted/README.md)
 
 ## License
 
