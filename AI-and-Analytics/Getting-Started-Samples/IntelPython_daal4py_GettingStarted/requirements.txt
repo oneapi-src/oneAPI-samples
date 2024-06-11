@@ -2,3 +2,4 @@
 notebook
 pandas
 joblib
+ipykernel
