@@ -131,7 +131,7 @@ jupyter notebook --ip=0.0.0.0
 **4. Select the Notebook**
 <!-- add sample file name -->
 ```
-<sample-file-name>.ipynb
+IntelPython_XGBoost_GettingStarted.ipynb
 ```
 **5. Change the kernel to `<your-env-name>`**
 <!-- leave <your-env-name> as a placeholder as user could choose any name for the env -->
