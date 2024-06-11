@@ -38,7 +38,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 Required AI Tools: Intel® Optimization for XGBoost*
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
-
+>**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 **2. (Offline Installer) Activate the AI Tools bundle base environment**
 <!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
 If the default path is used during the installation of AI Tools:
