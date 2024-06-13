@@ -1,18 +1,18 @@
-# `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` Sample
+# `Genetic Algorithms on GPU using Intel® Distribution for Python numba-dpex` Sample
 
-The `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` sample shows how to implement a general generic algorithm (GA) and offload computation to GPU using numba-dpex.
+The `Genetic Algorithms on GPU using Intel® Distribution for Python numba-dpex` sample shows how to implement a general genetic algorithm (GA) and offload computation to a GPU using numba-dpex.
 
-| Area                    | Description
+| Property                    | Description
 | :---                    | :---
+| Category                | Code Optimization
 | What you will learn     | How to implement the genetic algorithm using the Data-parallel Extension for Numba* (numba-dpex)?
 | Time to complete        | 8 minutes
-| Category                | Code Optimization
 
->**Note**: The libraries used in this sample are available in Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/en-us/oneapi/ai-kit).
+>**Note**: The libraries used in this sample are available in Intel® Distribution for Python* [Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-for-python.html).
 
 ## Purpose
 
-In this sample, you will create and run the general genetic algorithm and optimize it to run on GPU using Intel® Distribution for Python* numba-dpex. You will learn what are selection, crossover and mutation, and how to adjust those methods from general genetic algorithm to a specific optimization problem which is the Traveling Salesman Problem.
+In this sample, you will create and run the general genetic algorithm and optimize it to run on GPU using the Intel® Distribution for Python* numba-dpex. You will learn what are selection, crossover, and mutation, and how to adjust those methods from general genetic algorithm to a specific optimization problem which is the Traveling Salesman Problem.
 
 ## Prerequisites
 
@@ -22,95 +22,121 @@ In this sample, you will create and run the general genetic algorithm and optimi
 | Hardware                | GPU
 | Software                | Intel® AI Analytics Toolkit (AI Kit)
 
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Analytics Toolkit (AI Kit)**
-
-  You can get the AI Kit from [Intel® AI Analytics Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit-download.html).
-
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See *[Intel® DevCloud for oneAPI](https://DevCloud.intel.com/oneapi/get_started/)* for information.
-
 ## Key Implementation Details
 
-This sample code is implemented for the GPU using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
+This sample code is implemented for GPUs using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
 
->**Note**: Read *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
+>**Note**: Read *[Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)* to find out how you can achieve performance gains through Intel optimizations.
 
-The sample tutorial contains one Jupyter Notebook and a Python script. You can use either.
+The sample tutorial contains one Jupyter Notebook and one Python script. You can use either.
 
-### Jupyter Notebook
+## Environment Setup
+You will need to download and install the following toolkits to use the sample.
+<!-- Use numbered steps instead of subheadings -->
 
-| Notebook                                                 | Description
-|:---                                                      |:---
-|`IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb`      | Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex
+**1. Get Intel® Distribution for Python***
 
-### Python Scripts
+If you have not already, install Intel® Distribution for Python* via [Installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html?operatingsystem=linux&linux-install-type=offline). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
-| Script                                                | Description
-|:---                                                   |:---
-|`IntelPython_GPU_numba-dpex_Genetic_Algorithm.py`      | The script performs Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex code sample in the command-line interface (CLI)
+**2. (Offline Installer) Activate the AI Tools bundle base environment**
+<!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
+If the default path is used during the installation of AI Tools:
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If a non-default path is used:
+```
+source <custom_path>/bin/activate
+```
+ 
+**3. (Offline Installer) Activate relevant Conda environment**
+<!-- specify relevant conda environment name in Offline Installer for this sample -->
+```
+conda activate base  
+``` 
 
-## Set Environment Variables
+**4. Clone the GitHub repository**
+<!-- for oneapi-samples: git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/<samples-folder>/<individual-sample-folder> -->
+<!-- for migrated samples - provide git clone command for individual repo and cd to sample dir --> 
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_numba-dpex_Genetic_Algorithm
+```
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+**5. Install dependencies**
+<!-- It is required to have requirement.txt file in sample dir. It should list additional libraries, such as matplotlib, ipykernel etc. -->
+>**Note**: Before running the following commands, make sure your Conda/Python environment is activated
 
-## Run the `Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex` Sample
+```
+pip install -r requirements.txt
+pip install notebook
+``` 
+For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
-### On Linux*
+## Run the Sample
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
-<!-- > **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*. -->
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [IDP Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
 
-#### Activate Conda
+### AI Tools Offline Installer (Validated)
 
-1. Activate the Conda environment.
-   ```
-   conda activate base
-   ```
-   By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+**1. Register Conda kernel to Jupyter Notebook kernel**
 
-   You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
+If the default path is used during the installation of AI Tools:
+```
+$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+```
+If a non-default path is used:
+```
+<custom_path>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+```
+**2. Launch Jupyter Notebook** 
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+```
+jupyter notebook --ip=0.0.0.0
+```
+**3. Follow the instructions to open the URL with the token in your browser**
 
-   ```
-   conda create --name usr_base --clone base
-   conda activate usr_base
-   ```
+**4. Select the Notebook**
+<!-- add sample file name -->
+```
+IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
+```
+**5. Change the kernel to `base`**
+  <!-- specify relevant kernel name(s), for example `pytorch` -->
+**6. Run every cell in the Notebook in sequence**
 
-#### Run the Python Script
+### Conda/PIP
+> **Note**: Before running the instructions below, make sure your Conda/Python environment with AI Tools installed is activated
 
-1. Change to the sample directory.
-2. Run the script.
-   ```
-   python IntelPython_GPU_numba-dpex_Genetic_Algorithm.py
-   ```
+**1. Register Conda/Python kernel to Jupyter Notebook kernel** 
+<!-- keep placeholders in this step, user could use any name for Conda/PIP env -->
+For Conda:
+```
+<CONDA_PATH_TO_ENV>/bin/python -m ipykernel install --user --name=<your-env-name>
+```
+To know <CONDA_PATH_TO_ENV>, run `conda env list` and find your Conda environment path.
 
-#### Run the Jupyter Notebook (Optional)
+For PIP:
+```
+python -m ipykernel install --user --name=<your-env-name>
+```
+**2. Launch Jupyter Notebook**
+```
+jupyter notebook --ip=0.0.0.0
+```
+**3. Follow the instructions to open the URL with the token in your browser**
 
-1. Launch Jupyter Notebook.
-   ```
-   jupyter notebook --ip=0.0.0.0
-   ```
-2. Follow the instructions to open the URL with the token in your browser.
-3. Locate and select the Notebook.
-   ```
-   IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
-   ```
-4. Run every cell in the Notebook in sequence.
+**4. Select the Notebook**
+```
+IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
+```
+**5. Change the kernel to `<your-env-name>`**
 
-#### Troubleshooting
-
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
+**6. Run every cell in the Notebook in sequence**
 
 ## Example Output
 
@@ -118,7 +144,11 @@ If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
 for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
