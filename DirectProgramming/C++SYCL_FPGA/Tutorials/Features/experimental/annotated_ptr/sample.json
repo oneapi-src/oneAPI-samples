@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "DirectProgramming/C++SYCL_FPGA/Tutorials/Features/experimental/annotated_ptr",
+      "Tutorials/Features/experimental/annotated_ptr",
       "include"
     ],
     "exclude": []
