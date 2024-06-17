@@ -1,7 +1,7 @@
 {
   "guid": "03029020-5FD4-46ED-8A55-EB73541F3E76",
   "name": "simpleCUBLAS_LU",
-  "categories": ["Toolkit/oneAPI /Libraries/oneMKL/"],
+  "categories": ["Toolkit/oneAPI /Libraries/oneMKL"],
   "description": "This sample implements LU decomposition factors a matrix as the product of an upper triangular matrix and lower triangular matrix.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
