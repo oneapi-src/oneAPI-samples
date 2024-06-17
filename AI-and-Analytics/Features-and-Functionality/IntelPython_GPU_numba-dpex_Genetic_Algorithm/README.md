@@ -1,6 +1,6 @@
-# `Genetic Algorithms on GPU using Intel® Distribution for Python numba-dpex` Sample
+# `Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex` Sample
 
-The `Genetic Algorithms on GPU using Intel® Distribution for Python numba-dpex` sample shows how to implement a general genetic algorithm (GA) and offload computation to a GPU using numba-dpex.
+The `Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex` sample shows how to implement a general genetic algorithm (GA) and offload computation to a GPU using numba-dpex.
 
 | Property                    | Description
 | :---                    | :---
@@ -20,7 +20,7 @@ In this sample, you will create and run the general genetic algorithm and optimi
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
 | Hardware                | GPU
-| Software                | Intel® AI Analytics Toolkit (AI Kit)
+| Software                | Intel® Distribution for Python*
 
 ## Key Implementation Details
 
@@ -36,9 +36,9 @@ You will need to download and install the following toolkits to use the sample.
 
 **1. Get Intel® Distribution for Python***
 
-If you have not already, install Intel® Distribution for Python* via [Installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html?operatingsystem=linux&linux-install-type=offline). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+If you have not already, install Intel® Distribution for Python* via [Installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html?operatingsystem=linux&linux-install-type=offline).
 
-**2. (Offline Installer) Activate the AI Tools bundle base environment**
+**2. Activate the AI Tools bundle base environment**
 <!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
 If the default path is used during the installation of AI Tools:
 ```
@@ -49,7 +49,7 @@ If a non-default path is used:
 source <custom_path>/bin/activate
 ```
  
-**3. (Offline Installer) Activate relevant Conda environment**
+**3. Activate relevant Conda environment**
 <!-- specify relevant conda environment name in Offline Installer for this sample -->
 ```
 conda activate base  
@@ -66,7 +66,7 @@ cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_nu
 
 **5. Install dependencies**
 <!-- It is required to have requirement.txt file in sample dir. It should list additional libraries, such as matplotlib, ipykernel etc. -->
->**Note**: Before running the following commands, make sure your Conda/Python environment is activated
+>**Note**: Before running the following commands, make sure your Conda environment is activated
 
 ```
 pip install -r requirements.txt
@@ -75,23 +75,22 @@ pip install notebook
 For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 ## Run the Sample
->**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_numba-dpex_Genetic_Algorithm#environment-setup) is completed.
 
 Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
-* [IDP Offline Installer (Validated)](#ai-tools-offline-installer-validated)
-* [Conda/PIP](#condapip) 
+* [Intel® Distribution for Python* Offline Installer (Validated)](#intel-distribution-for-python-offline-installer-validated)
 
-### AI Tools Offline Installer (Validated)
+### Intel® Distribution for Python* Offline Installer (Validated)
 
 **1. Register Conda kernel to Jupyter Notebook kernel**
 
-If the default path is used during the installation of AI Tools:
+If the default path is used during the installation of Intel® Distribution for Python*:
 ```
-$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=base
 ```
 If a non-default path is used:
 ```
-<custom_path>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+<custom_path>/bin/python -m ipykernel install --user --name=base
 ```
 **2. Launch Jupyter Notebook** 
 <!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
@@ -140,7 +139,7 @@ IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
 
 ## Example Output
 
-If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with numba-dpex and without any optimizations as the baseline. Additionally, sample will print the best and worst path found in the Traveling Salesman problem.
+If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with numba-dpex and without any optimizations as the baseline. Additionally, sample will print the best and worst path found in the Traveling Salesman Problem.
 
 ## License
 

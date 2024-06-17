@@ -2,7 +2,7 @@
   "guid": "DB33884A-2DDE-4657-9F95-E6E573403F61",
   "name": "Genetic Algorithms on GPU using Intel® Distribution of Python numba-dpex",
   "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
-  "description": "This sample shows how to implement general generic algorithm (GA) and offload computation to GPU using numba-dpex.",
+  "description": "This sample shows how to implement general genetic algorithm (GA) and offload computation to GPU using numba-dpex.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"],
