@@ -48,7 +48,7 @@
           "cd build",
           "cmake .. -DPART=STALL_FREE",
           "make fpga_emu",
-          "./stall_enable.fpga_emu",
+          "./stall_enable.fpga_emu"
         ]
       },
       {
@@ -72,7 +72,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_ENABLE",
           "nmake fpga_emu",
-          "stall_enable.fpga_emu.exe",
+          "stall_enable.fpga_emu.exe"
         ]
       },
       {
@@ -95,7 +95,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_FREE",
           "nmake fpga_emu",
-          "stall_enable.fpga_emu.exe",
+          "stall_enable.fpga_emu.exe"
         ]
       },
       {
