@@ -27,7 +27,7 @@
           "cd build",
           "cmake .. -DPART=STALL_ENABLE",
           "make fpga_emu",
-          "./stall_enable.fpga_emu",
+          "./stall_enable.fpga_emu"
         ]
       },
       {
