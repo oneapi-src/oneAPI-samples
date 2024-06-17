@@ -8,7 +8,7 @@ The `Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex
 | What you will learn     | How to implement the genetic algorithm using the Data-parallel Extension for Numba* (numba-dpex)?
 | Time to complete        | 8 minutes
 
->**Note**: The libraries used in this sample are available in Intel® Distribution for Python* [Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-for-python.html).
+>**Note**: This sample is validated on Intel® Distribution for Python* Offline Installer and AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Purpose
 
@@ -25,8 +25,6 @@ In this sample, you will create and run the general genetic algorithm and optimi
 ## Key Implementation Details
 
 This sample code is implemented for GPUs using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
-
->**Note**: Read *[Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)* to find out how you can achieve performance gains through Intel optimizations.
 
 The sample tutorial contains one Jupyter Notebook and one Python script. You can use either.
 
@@ -86,7 +84,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 If the default path is used during the installation of Intel® Distribution for Python*:
 ```
-$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=base
+$HOME/intelpython3/bin/python -m ipykernel install --user --name=base
 ```
 If a non-default path is used:
 ```
@@ -108,38 +106,13 @@ IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
   <!-- specify relevant kernel name(s), for example `pytorch` -->
 **6. Run every cell in the Notebook in sequence**
 
-### Conda/PIP
-> **Note**: Before running the instructions below, make sure your Conda/Python environment with AI Tools installed is activated
-
-**1. Register Conda/Python kernel to Jupyter Notebook kernel** 
-<!-- keep placeholders in this step, user could use any name for Conda/PIP env -->
-For Conda:
-```
-<CONDA_PATH_TO_ENV>/bin/python -m ipykernel install --user --name=<your-env-name>
-```
-To know <CONDA_PATH_TO_ENV>, run `conda env list` and find your Conda environment path.
-
-For PIP:
-```
-python -m ipykernel install --user --name=<your-env-name>
-```
-**2. Launch Jupyter Notebook**
-```
-jupyter notebook --ip=0.0.0.0
-```
-**3. Follow the instructions to open the URL with the token in your browser**
-
-**4. Select the Notebook**
-```
-IntelPython_GPU_numba-dpex_Genetic_Algorithm.ipynb
-```
-**5. Change the kernel to `<your-env-name>`**
-
-**6. Run every cell in the Notebook in sequence**
-
 ## Example Output
 
 If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with numba-dpex and without any optimizations as the baseline. Additionally, sample will print the best and worst path found in the Traveling Salesman Problem.
+
+## Related Samples
+
+* [Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
 
 ## License
 

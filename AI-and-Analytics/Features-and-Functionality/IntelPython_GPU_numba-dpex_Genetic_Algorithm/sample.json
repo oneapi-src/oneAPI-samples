@@ -13,7 +13,8 @@
     {
   		"env": [
         "source /intel/oneapi/intelpython/bin/activate",
-        "conda activate base" 
+        "conda activate base",
+        "pip install -r requirements.txt"
       ],
   		"id": "idp_ga_numba_dpex_py",
   		"steps": [
