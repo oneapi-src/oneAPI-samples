@@ -74,9 +74,9 @@ event SubmitProducer(queue& q, T* in_data, size_t size) {
 
   return q.single_task<Producer>([=]() [[intel::kernel_args_restrict]] {
 #if defined(IS_BSP)
-    // using a host_ptr tells the compiler that this pointer lives in the
+    // using a sycl::ext::intel::host_ptr tells the compiler that this pointer lives in the
     // hosts address space
-    host_ptr<T> h_in_data(in_data);
+    sycl::ext::intel::host_ptr<T> h_in_data(in_data);
 #endif
 
     for (size_t i = 0; i < size; i++) {
@@ -123,9 +123,9 @@ event SubmitConsumer(queue& q, T* out_data, size_t size) {
 
   return q.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
 #if defined(IS_BSP)
-    // using a host_ptr tells the compiler that this pointer lives in the
+    // using a sycl::ext::intel::host_ptr tells the compiler that this pointer lives in the
     // hosts address space
-    host_ptr<T> h_out_data(out_data);
+    sycl::ext::intel::host_ptr<T> h_out_data(out_data);
 #endif
 
     for (size_t i = 0; i < size; i++) {

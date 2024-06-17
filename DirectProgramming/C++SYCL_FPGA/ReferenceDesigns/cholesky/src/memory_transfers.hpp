@@ -50,7 +50,7 @@ void MatrixReadFromDDRToPipe(
           // lives on the device.
           // Knowing this, the compiler won't generate hardware to
           // potentially get data from the host.
-          sycl::device_ptr<TT> matrix_ptr_located(matrix_ptr);
+          sycl::ext::intel::device_ptr<TT> matrix_ptr_located(matrix_ptr);
 #else
           // Device pointers are not supported when targeting an FPGA 
           // family/part
