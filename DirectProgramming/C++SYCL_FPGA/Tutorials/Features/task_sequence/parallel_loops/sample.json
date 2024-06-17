@@ -9,7 +9,7 @@
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
   "commonFolder": {
-    "base": "../../..",
+    "base": "../../../..",
     "include": [
       "README.md",
       "Tutorials/Features/task_sequence/parallel_loops",
