@@ -81,8 +81,7 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
       beta += temp;
       tmp[item_ct1.get_local_linear_id()] = beta;
     }
-    tile32.barrier();
-  }
+   }
   
   item_ct1.barrier();
 
@@ -262,7 +261,7 @@ tmp.get_multi_ptr<sycl::access::decorated::no>()
       "%zu\n",
       sf_Task + tf_Task);
 
-  printf("Cloned Graph Output.. \n");
+ printf("Cloned Graph Output.. \n");
   tf::Taskflow tflow_clone(std::move(tflow));
   exe.run_n(tflow_clone, GRAPH_LAUNCH_ITERATIONS).wait();
 }

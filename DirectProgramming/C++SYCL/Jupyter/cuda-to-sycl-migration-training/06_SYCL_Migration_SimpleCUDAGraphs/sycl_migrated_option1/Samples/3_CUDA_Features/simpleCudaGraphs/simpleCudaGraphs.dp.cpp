@@ -36,6 +36,7 @@
 #include <helper_cuda.h>
 #include <vector>
 #include <chrono>
+#include <chrono>
 #include <taskflow/sycl/syclflow.hpp>
 
 using Time = std::chrono::steady_clock;
@@ -55,7 +56,7 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
                        size_t outputSize, const sycl::nd_item<3> &item_ct1,
                        double *tmp) {
 
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
 
@@ -68,29 +69,27 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
 
   item_ct1.barrier();
 
-  sycl::sub_group tile_sg = item_ct1.get_sub_group();
+  sycl::sub_group tile32 = item_ct1.get_sub_group();
 
   double beta = temp_sum;
   double temp;
 
-  for (int i = tile_sg.get_local_linear_range() / 2; i > 0;
+  for (int i = tile32.get_local_linear_range() / 2; i > 0;
        i >>= 1) {
-    if (tile_sg.get_local_linear_id() < i) {
+    if (tile32.get_local_linear_id() < i) {
       temp = tmp[item_ct1.get_local_linear_id() + i];
       beta += temp;
       tmp[item_ct1.get_local_linear_id()] = beta;
     }
-    tile_sg.barrier();
-  }
+   }
+  
   item_ct1.barrier();
 
   if (item_ct1.get_local_linear_id() == 0 &&
       item_ct1.get_group(2) < outputSize) {
     beta = 0.0;
-    int cta_size = cta.get_local_linear_range();
-
-    for (int i = 0; i < cta_size;
-         i += tile_sg.get_local_linear_range()) {
+    for (int i = 0; i < item_ct1.get_group().get_local_linear_range();
+         i += tile32.get_local_linear_range()) {
       beta += tmp[i];
     }
     outputVec[item_ct1.get_group(2)] = beta;
@@ -101,6 +100,7 @@ void reduceFinal(double *inputVec, double *result,
                             size_t inputSize, const sycl::nd_item<3> &item_ct1,
                             double *tmp) {
 
+  sycl::group<3> cta = item_ct1.get_group();
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
 
@@ -113,7 +113,7 @@ void reduceFinal(double *inputVec, double *result,
 
   item_ct1.barrier();
 
-  sycl::sub_group tile_sg = item_ct1.get_sub_group();
+  sycl::sub_group tile32 = item_ct1.get_sub_group();
 
   // do reduction in shared mem
   if ((item_ct1.get_local_range(2) >= 512) &&
@@ -145,11 +145,11 @@ void reduceFinal(double *inputVec, double *result,
     if (item_ct1.get_local_range(2) >= 64) temp_sum +=
         tmp[item_ct1.get_local_linear_id() + 32];
     // Reduce final warp using shuffle
-    for (int offset = tile_sg.get_local_linear_range() / 2;
+    for (int offset =tile32.get_local_linear_range() / 2;
          offset > 0; offset /= 2) {
       temp_sum +=
-       sycl::shift_group_left(tile_sg, temp_sum, offset);   
-}
+          sycl::shift_group_left(tile32, temp_sum, offset);
+    }
   }
   // write result for this block to global mem
   if (item_ct1.get_local_linear_id() == 0) result[0] = temp_sum;
@@ -169,9 +169,8 @@ void myHostNodeCallback(void *data) {
   *result = 0.0;  // reset the result
 }
 
-void syclTaskFlowManual(float *inputVec_h, float *inputVec_d,
-                        double *outputVec_d, double *result_d, size_t inputSize,
-                        size_t numOfBlocks, sycl::queue q_ct1) {
+void syclTaskFlowManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
+                      double *result_d, size_t inputSize, size_t numOfBlocks, sycl::queue q_ct1) {
   tf::Taskflow tflow;
   tf::Executor exe;
 
@@ -202,7 +201,9 @@ void syclTaskFlowManual(float *inputVec_h, float *inputVec_d,
                                 [[intel::reqd_sub_group_size(SUB_GRP_SIZE)]] {
                                   reduce(inputVec_d, outputVec_d, inputSize,
                                          numOfBlocks, item_ct1,
-                                         tmp.get_pointer());
+                                    
+tmp.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
                                 });
                       }).name("reduce_kernel");
 
@@ -222,7 +223,8 @@ void syclTaskFlowManual(float *inputVec_h, float *inputVec_d,
                                 [[intel::reqd_sub_group_size(SUB_GRP_SIZE)]] {
                                   reduceFinal(outputVec_d, result_d,
                                               numOfBlocks, item_ct1,
-                                              tmp.get_pointer());
+                                              tmp.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
                                 });
                       }).name("reduceFinal_kernel");
 
@@ -259,7 +261,7 @@ void syclTaskFlowManual(float *inputVec_h, float *inputVec_d,
       "%zu\n",
       sf_Task + tf_Task);
 
-  printf("Cloned Graph Output.. \n");
+ printf("Cloned Graph Output.. \n");
   tf::Taskflow tflow_clone(std::move(tflow));
   exe.run_n(tflow_clone, GRAPH_LAUNCH_ITERATIONS).wait();
 }
@@ -293,11 +295,11 @@ int main(int argc, char **argv) {
 
   auto startTimer1 = Time::now();
   syclTaskFlowManual(inputVec_h, inputVec_d, outputVec_d, result_d, size,
-                     maxBlocks, q_ct1);
+                   maxBlocks, q_ct1);
   auto stopTimer1 = Time::now();
   auto Timer_duration1 =
       std::chrono::duration_cast<float_ms>(stopTimer1 - startTimer1).count();
-  printf("Elapsed Time of SYCL TaskFlow Manual : %f (ms)\n", Timer_duration1);
+  printf("Elapsed Time of SYCL Taskflow Manual : %f (ms)\n", Timer_duration1);
 
   DPCT_CHECK_ERROR(sycl::free(inputVec_d, q_ct1));
   DPCT_CHECK_ERROR(sycl::free(outputVec_d, q_ct1));

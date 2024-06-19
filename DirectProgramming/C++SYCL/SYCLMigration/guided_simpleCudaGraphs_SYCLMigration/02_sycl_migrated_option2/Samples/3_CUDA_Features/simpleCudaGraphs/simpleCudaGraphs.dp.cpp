@@ -79,7 +79,6 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
       beta += temp;
       tmp[item_ct1.get_local_linear_id()] = beta;
     }
-    tile32.barrier();
   }
 
   item_ct1.barrier();
@@ -169,18 +168,13 @@ void myHostNodeCallback(void *data) {
 }
 
 void syclGraphManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
-                      double *result_d, size_t inputSize, size_t numOfBlocks) {
+                      double *result_d, size_t inputSize, size_t numOfBlocks) try {
    namespace sycl_ext = sycl::ext::oneapi::experimental;
   double result_h = 0.0;
-  sycl::queue q = sycl::queue{sycl::gpu_selector_v}; //use default sycl queue, which is out of order
+  //use default sycl queue, which is out of order
+  sycl::queue q = sycl::queue{sycl::default_selector_v}; 
   if(!q.get_device().has(sycl::aspect::fp64)){
       printf("Double precision isn't supported : %s \nExit\n",
-        q.get_device().get_info<sycl::info::device::name>().c_str());
-      exit(0);
-  }
-  if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl_ext::graph_support_level::unsupported){
-      printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
   }
@@ -191,12 +185,10 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   }); 
   
   auto nodememset1 = graph.add([&](sycl::handler& h){
-      //h.memset(outputVec_d, 0, sizeof(double) * numOfBlocks);
       h.fill(outputVec_d, 0, numOfBlocks);
   });
 
   auto nodememset2 = graph.add([&](sycl::handler& h){
-      //h.memset(result_d, 0, sizeof(double));
       h.fill(result_d, 0, 1);
   });
 
@@ -234,8 +226,8 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   }, sycl_ext::property::node::depends_on(nodek2));
   auto exec_graph = graph.finalize();
   
-  sycl::queue qexec = sycl::queue{sycl::gpu_selector_v, 
-      {sycl::ext::intel::property::queue::no_immediate_command_list()}};
+  sycl::queue qexec = sycl::queue{sycl::default_selector_v, 
+       {sycl::ext::intel::property::queue::no_immediate_command_list()}};
       
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     qexec.submit([&](sycl::handler& cgh) {
@@ -243,24 +235,24 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
     }).wait(); 
     printf("Final reduced sum = %lf\n", result_h);
   }
-  
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << " Exception caught at :" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::cerr << "Exiting..." << std::endl;
+  exit(0);
 }
 
 void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
                                   double *outputVec_d, double *result_d,
-                                  size_t inputSize, size_t numOfBlocks) {
+                                  size_t inputSize, size_t numOfBlocks) try {
                                       
   namespace sycl_ext = sycl::ext::oneapi::experimental;
   double result_h = 0.0;
-  sycl::queue q = sycl::queue{sycl::gpu_selector_v}; //use default sycl queue, which is out of order
+  //use default sycl queue, which is out of order
+  sycl::queue q = sycl::queue{sycl::default_selector_v}; 
   if(!q.get_device().has(sycl::aspect::fp64)){
       printf("Double precision isn't supported : %s \nExit\n",
-        q.get_device().get_info<sycl::info::device::name>().c_str());
-      exit(0);
-  }
-  if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl_ext::graph_support_level::unsupported){
-      printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
   }
@@ -310,8 +302,7 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
   graph.end_recording();
   auto exec_graph = graph.finalize();
   
-  
-  sycl::queue qexec = sycl::queue{sycl::gpu_selector_v, 
+  sycl::queue qexec = sycl::queue{sycl::default_selector_v, 
       {sycl::ext::intel::property::queue::no_immediate_command_list()}};
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
@@ -320,7 +311,12 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
     }).wait(); 
     printf("Final reduced sum = %lf\n", result_h);
   }
-  
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << "Exception caught at :" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::cerr << "Exiting..." << std::endl;
+  exit(0);
 }
 
 int main(int argc, char **argv) {
@@ -329,15 +325,6 @@ int main(int argc, char **argv) {
 
   sycl::device dev = dpct::get_default_queue().get_device();
 
-  auto graph_support_level = dev.get_info<sycl::ext::oneapi::experimental::info::device::graph_support>();
-
-  printf("sycl graph support level: %d \n", graph_support_level);
-
-  if (int(graph_support_level) < 1) {
-    printf("Device require sycl graph support level > 0 \n");
-    printf("Exiting program..\n");
-    exit(0);
-  }
   printf("%zu elements\n", size);
   printf("threads per block  = %d\n", THREADS_PER_BLOCK);
   printf("Graph Launch iterations = %d\n", GRAPH_LAUNCH_ITERATIONS);

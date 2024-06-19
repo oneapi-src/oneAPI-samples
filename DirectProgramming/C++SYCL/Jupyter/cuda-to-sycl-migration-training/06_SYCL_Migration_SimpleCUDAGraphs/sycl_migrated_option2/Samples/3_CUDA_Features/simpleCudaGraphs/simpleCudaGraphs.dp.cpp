@@ -36,6 +36,11 @@
 #include <helper_cuda.h>
 #include <vector>
 #include <chrono>
+#include <chrono>
+
+using Time = std::chrono::steady_clock;
+using ms = std::chrono::milliseconds;
+using float_ms = std::chrono::duration<float, ms::period>;
 
 #define THREADS_PER_BLOCK 512
 #define GRAPH_LAUNCH_ITERATIONS 3
@@ -45,11 +50,11 @@ typedef struct callBackData {
   double *data;
 } callBackData_t;
 
-
 void reduce(float *inputVec, double *outputVec, size_t inputSize,
-            size_t outputSize, const sycl::nd_item<3> &item_ct1, double *tmp) {
+                       size_t outputSize, const sycl::nd_item<3> &item_ct1,
+                       double *tmp) {
 
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
 
@@ -67,15 +72,13 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
   double beta = temp_sum;
   double temp;
 
-  for (int i = item_ct1.get_sub_group().get_local_linear_range() / 2; i > 0;
+  for (int i = tile32.get_local_linear_range() / 2; i > 0;
        i >>= 1) {
-    if (item_ct1.get_sub_group().get_local_linear_id() < i) {
+    if (tile32.get_local_linear_id() < i) {
       temp = tmp[item_ct1.get_local_linear_id() + i];
       beta += temp;
       tmp[item_ct1.get_local_linear_id()] = beta;
     }
-
-    item_ct1.get_sub_group().barrier();
   }
 
   item_ct1.barrier();
@@ -84,16 +87,18 @@ void reduce(float *inputVec, double *outputVec, size_t inputSize,
       item_ct1.get_group(2) < outputSize) {
     beta = 0.0;
     for (int i = 0; i < item_ct1.get_group().get_local_linear_range();
-         i += item_ct1.get_sub_group().get_local_linear_range()) {
+         i += tile32.get_local_linear_range()) {
       beta += tmp[i];
     }
     outputVec[item_ct1.get_group(2)] = beta;
   }
 }
 
-void reduceFinal(double *inputVec, double *result, size_t inputSize,
-                 const sycl::nd_item<3> &item_ct1, double *tmp) {
-  auto cta = item_ct1.get_group();
+void reduceFinal(double *inputVec, double *result,
+                            size_t inputSize, const sycl::nd_item<3> &item_ct1,
+                            double *tmp) {
+
+  sycl::group<3> cta = item_ct1.get_group();
   size_t globaltid = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
                      item_ct1.get_local_id(2);
 
@@ -138,10 +143,10 @@ void reduceFinal(double *inputVec, double *result, size_t inputSize,
     if (item_ct1.get_local_range(2) >= 64) temp_sum +=
         tmp[item_ct1.get_local_linear_id() + 32];
     // Reduce final warp using shuffle
-    for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
+    for (int offset = tile32.get_local_linear_range() / 2;
          offset > 0; offset /= 2) {
       temp_sum +=
-          sycl::shift_group_left(item_ct1.get_sub_group(), temp_sum, offset);
+          sycl::shift_group_left(tile32, temp_sum, offset);
     }
   }
   // write result for this block to global mem
@@ -155,7 +160,6 @@ void init_input(float *a, size_t size) {
 void myHostNodeCallback(void *data) {
   // Check status of GPU after stream operations are done
   callBackData_t *tmp = (callBackData_t *)(data);
-  // checkCudaErrors(tmp->status);
 
   double *result = (double *)(tmp->data);
   char *function = (char *)(tmp->fn_name);
@@ -163,21 +167,14 @@ void myHostNodeCallback(void *data) {
   *result = 0.0;  // reset the result
 }
 
-void syclGraphManual(float *inputVec_h, float *inputVec_d,
-                                  double *outputVec_d, double *result_d,
-                                  size_t inputSize, size_t numOfBlocks) {
-                                      
-  namespace sycl_ext = sycl::ext::oneapi::experimental;
+void syclGraphManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
+                      double *result_d, size_t inputSize, size_t numOfBlocks) try {
+   namespace sycl_ext = sycl::ext::oneapi::experimental;
   double result_h = 0.0;
-  sycl::queue q = sycl::queue{sycl::gpu_selector_v}; //use default sycl queue, which is out of order
+  //use default sycl queue, which is out of order
+  sycl::queue q = sycl::queue{sycl::default_selector_v}; 
   if(!q.get_device().has(sycl::aspect::fp64)){
       printf("Double precision isn't supported : %s \nExit\n",
-        q.get_device().get_info<sycl::info::device::name>().c_str());
-      exit(0);
-  }
-  if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl::ext::oneapi::experimental::graph_support_level::unsupported){
-      printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
   }
@@ -188,12 +185,10 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
   }); 
   
   auto nodememset1 = graph.add([&](sycl::handler& h){
-      //h.memset(outputVec_d, 0, sizeof(double) * numOfBlocks);
       h.fill(outputVec_d, 0, numOfBlocks);
   });
 
   auto nodememset2 = graph.add([&](sycl::handler& h){
-      //h.memset(result_d, 0, sizeof(double));
       h.fill(result_d, 0, 1);
   });
 
@@ -207,7 +202,8 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
                         sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
       [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
         reduce(inputVec_d, outputVec_d, inputSize, numOfBlocks, item_ct1,
-               tmp_acc_ct1.get_pointer());
+               tmp_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
       });
   },  sycl_ext::property::node::depends_on(nodecpy, nodememset1));
    
@@ -221,7 +217,8 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
                         sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
       [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
         reduceFinal(outputVec_d, result_d, numOfBlocks, item_ct1,
-                    tmp_acc_ct1.get_pointer());
+                    tmp_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
       });
   }, sycl_ext::property::node::depends_on(nodek1, nodememset2));
   auto nodecpy1 = graph.add([&](sycl::handler &cgh) {
@@ -229,8 +226,8 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
   }, sycl_ext::property::node::depends_on(nodek2));
   auto exec_graph = graph.finalize();
   
-  sycl::queue qexec = sycl::queue{sycl::gpu_selector_v, 
-      {sycl::ext::intel::property::queue::no_immediate_command_list()}};
+  sycl::queue qexec = sycl::queue{sycl::default_selector_v, 
+       {sycl::ext::intel::property::queue::no_immediate_command_list()}};
       
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
     qexec.submit([&](sycl::handler& cgh) {
@@ -238,24 +235,24 @@ void syclGraphManual(float *inputVec_h, float *inputVec_d,
     }).wait(); 
     printf("Final reduced sum = %lf\n", result_h);
   }
-  
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << " Exception caught at :" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::cerr << "Exiting..." << std::endl;
+  exit(0);
 }
 
 void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
                                   double *outputVec_d, double *result_d,
-                                  size_t inputSize, size_t numOfBlocks) {
+                                  size_t inputSize, size_t numOfBlocks) try {
                                       
   namespace sycl_ext = sycl::ext::oneapi::experimental;
   double result_h = 0.0;
-  sycl::queue q = sycl::queue{sycl::gpu_selector_v}; //use default sycl queue, which is out of order
+  //use default sycl queue, which is out of order
+  sycl::queue q = sycl::queue{sycl::default_selector_v}; 
   if(!q.get_device().has(sycl::aspect::fp64)){
       printf("Double precision isn't supported : %s \nExit\n",
-        q.get_device().get_info<sycl::info::device::name>().c_str());
-      exit(0);
-  }
-  if(q.get_device().get_info<sycl_ext::info::device::graph_support>()
-      == sycl::ext::oneapi::experimental::graph_support_level::unsupported){
-      printf("sycl graph not supported : %s\nExit\n", 
         q.get_device().get_info<sycl::info::device::name>().c_str());
       exit(0);
   }
@@ -278,7 +275,8 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
                         sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
       [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
         reduce(inputVec_d, outputVec_d, inputSize, numOfBlocks, item_ct1,
-               tmp_acc_ct1.get_pointer());
+               tmp_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
       });
   });
   
@@ -292,7 +290,8 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
                         sycl::range<3>(1, 1, THREADS_PER_BLOCK)),
       [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
         reduceFinal(outputVec_d, result_d, numOfBlocks, item_ct1,
-                    tmp_acc_ct1.get_pointer());
+                    tmp_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
       });
   });
   
@@ -303,8 +302,7 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
   graph.end_recording();
   auto exec_graph = graph.finalize();
   
-  
-  sycl::queue qexec = sycl::queue{sycl::gpu_selector_v, 
+  sycl::queue qexec = sycl::queue{sycl::default_selector_v, 
       {sycl::ext::intel::property::queue::no_immediate_command_list()}};
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
@@ -313,7 +311,12 @@ void syclGraphCaptureQueue(float *inputVec_h, float *inputVec_d,
     }).wait(); 
     printf("Final reduced sum = %lf\n", result_h);
   }
-  
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << "Exception caught at :" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::cerr << "Exiting..." << std::endl;
+  exit(0);
 }
 
 int main(int argc, char **argv) {
@@ -322,22 +325,12 @@ int main(int argc, char **argv) {
 
   sycl::device dev = dpct::get_default_queue().get_device();
 
-  auto graph_support_level = dev.get_info<sycl::ext::oneapi::experimental::info::device::graph_support>();
-
-  printf("sycl graph support level: %d \n", graph_support_level);
-
-  if (int(graph_support_level) < 1) {
-    printf("Device require sycl graph support level > 0 \n");
-    printf("Exiting program..\n");
-    exit(0);
-  }
-
   printf("%zu elements\n", size);
   printf("threads per block  = %d\n", THREADS_PER_BLOCK);
   printf("Graph Launch iterations = %d\n", GRAPH_LAUNCH_ITERATIONS);
 
   float *inputVec_d = NULL, *inputVec_h = NULL;
-  double *outputVec_d = NULL, *result_d;  
+  double *outputVec_d = NULL, *result_d;
 
   inputVec_h = sycl::malloc_host<float>(size, dpct::get_default_queue());
   inputVec_d = sycl::malloc_device<float>(size, dpct::get_default_queue());
@@ -346,16 +339,22 @@ int main(int argc, char **argv) {
 
   init_input(inputVec_h, size);
 
-  double tmp;
-  for(size_t i=1;i<size;i++)
-      tmp += inputVec_h[i];
-  printf("CPU sum = %lf\n", tmp);
-  
-  printf("Using manually constructed SYCL graph ... \n");
-  syclGraphManual(inputVec_h, inputVec_d, outputVec_d, result_d, size, maxBlocks);
-  printf("Using SYCL queue capture on single queue ... \n");
-  syclGraphCaptureQueue(inputVec_h, inputVec_d, outputVec_d, result_d, size, maxBlocks);
-  
+  auto startTimer1 = Time::now();
+  syclGraphManual(inputVec_h, inputVec_d, outputVec_d, result_d, size,
+                   maxBlocks);
+  auto stopTimer1 = Time::now();
+  auto Timer_duration1 =
+      std::chrono::duration_cast<float_ms>(stopTimer1 - startTimer1).count();
+  printf("Elapsed Time of SYCL Graphs Manual : %f (ms)\n", Timer_duration1);
+
+  auto startTimer2 = Time::now();
+  syclGraphCaptureQueue(inputVec_h, inputVec_d, outputVec_d, result_d,
+                               size, maxBlocks);
+  auto stopTimer2 = Time::now();
+  auto Timer_duration2 =
+      std::chrono::duration_cast<float_ms>(stopTimer2 - startTimer2).count();
+  printf("Elapsed Time SYCL Streamcapture : %f (ms)\n", Timer_duration2);
+
   sycl::free(inputVec_d, dpct::get_default_queue());
   sycl::free(outputVec_d, dpct::get_default_queue());
   sycl::free(result_d, dpct::get_default_queue());
