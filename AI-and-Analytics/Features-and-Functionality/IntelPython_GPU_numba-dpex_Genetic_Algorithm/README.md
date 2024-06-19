@@ -36,7 +36,7 @@ You will need to download and install the following toolkits to use the sample.
 
 If you have not already, install Intel® Distribution for Python* via [Installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html?operatingsystem=linux&linux-install-type=offline).
 
-**2. Activate the Intel® Distribution for Python* base environment**
+**2. Activate the Intel® Distribution for Python\* base environment**
 <!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
 If the default path is used during the installation of Intel® Distribution for Python*:
 ```
