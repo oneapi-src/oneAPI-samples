@@ -237,45 +237,58 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 #### Root-Cause the Issue
 
-You can see that there is something wrong in the submit at line `104`. You need some more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool.
+You can see that there is something wrong in the submit at line `104`, but we need more information to understand what is happening. For that we need to capture the lower-level API calls using the `onetrace` tool.
 
 >**Note**: You must have already built the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GBD).
 
-One of the things that the Tracing and Profiling utility can help us identify is printing every low-level API call made to OpenCL™ or Level Zero. This is the features that we will use to attempt to match the source to the events.
+Among other things, the Tracing and Profiling utility can print every low-level API call made to OpenCL™ or Level Zero. This is the feature that we will use to get more information about the crash.
 
-2. Run the program with `onetrace` and enable the RT debug messages:
+2. Run the program with `onetrace` and enable the runtime debug messages:
    ```
    onetrace -c ./1_matrix_mul_SLM_size
    ```
 
-3. Continue listing the output until the error occurs and the program stops.
+3. Let the output continue until the error occurs and the program stops.
    ```
-   <<<< [504780292] zeEventHostReset [3564 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [504789109] zeCommandListAppendLaunchKernel: hCommandList = 0x4cf64b0 hKernel = 0x53b0350 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7ffcc0831cec {16385, 1, 1} hSignalEvent = 0x48332d0 numWaitEvents = 0 phWaitEvents = 0
-   <<<< [504818879] zeCommandListAppendLaunchKernel [17599 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+   :
+   >>>> [1066578697845396] zeKernelSetGroupSize: hKernel = 55242736 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
+   <<<< [1066578697849285] zeKernelSetGroupSize [1449 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1066578697854047] zeCommandListCreateImmediate: hContext = 41540224 hDevice = 37134192 altdesc = 140733241819552 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 140733241819544 (hCommandList = 0)
+   <<<< [1066578698107437] zeCommandListCreateImmediate [248694 ns] hCommandList = 61984688 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1066578698115446] zeEventHostReset: hEvent = 39536208
+   <<<< [1066578698119590] zeEventHostReset [1854 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1066578698126085] zeCommandListAppendLaunchKernel: hCommandList = 61984688 hKernel = 55242736 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140733241820008 {16385, 1, 1} hSignalEvent = 39536208 numWaitEvents = 0 phWaitEvents = 0
+   <<<< [1066578698169233] zeCommandListAppendLaunchKernel [34637 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
    terminate called after throwing an instance of 'sycl::_V1::runtime_error'
      what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
 
-  **Clue**: Due to the running the program under onetrace we can see that the error happens during launching of the kernel:
-  ```
-   <<<< [504818879] zeCommandListAppendLaunchKernel [17599 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
-  ```
+  **Clue**: By running the program under onetrace we can see that the error happens when launching a kernel called `(_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_`), and that this fails with an `ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY` error.
+
+   A note about the output above. You will see that is has two lines that read:
+
+   ```
+   >>>> [1066578697845396] zeKernelSetGroupSize: hKernel = 55242736 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
+   :
+   >>>> [1066578698126085] zeCommandListAppendLaunchKernel: hCommandList = 61984688 hKernel = 55242736 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140733241820008 {16385, 1, 1} hSignalEvent = 39536208 numWaitEvents = 0 phWaitEvents = 0
+   ```
+
+   We used the form of `parallel_for` that takes the `nd_range`, which specifies the global iteration range (163850) and the local work-group size (10) like so:  `nd_range<1>{{163850}, {10}}`. The first line above shows the workgroup size (`groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1`), and the second shows how many total workgroups will be needed to process the global iteration range (`{16385, 1, 1}`).
 
 #### Determine Device Limits
 
-If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables and values: `PrintDebugMessages=1` and `NEOReadDebugKeys=1` ().
+If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables to the following values:
 
 ```
-$ export NEOReadDebugKeys=1
-$ export PrintDebugMessages=1
+export NEOReadDebugKeys=1
+export PrintDebugMessages=1
 ```
 
-When you set these environment variables and and re-run the program, you should see results similar to the following:
+When you set these environment variables and re-run the program, you should see results similar to the following:
 
 ```
-$ ./1_matrix_mul_SLM_size
+./1_matrix_mul_SLM_size
 Initializing
 :Problem size: c(150,600) = a(150,300) * b(300,600)
 Ignored kernel-scope Patch Token: 21
@@ -287,10 +300,32 @@ terminate called after throwing an instance of 'sycl::_V1::runtime_error'
   what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
 Aborted (core dumped)
 ```
-The new message is `Size of SLM (656384) larger than available (131072)`. This tells you the size of the Shared Local Memory (SLM) memory on the device, 131072 bytes (128Kb), is smaller than the requested size of 656384 bytes.
 
-If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In our case, the calculation is easy: 163850 (`globalSizeX`) times 1 (`glocalSizeY`) times 1 (`globalSizeZ`). So the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes), doesn't fit in the SLM on this device.
-You should notice that the different devices will have different amounts of memory set aside as SLM. In SYCL, you can query this number by passing `info::device::local_mem_size` to the `get_info` member of the `device` class.
+The new message of interest is `Size of SLM (656384) larger than available (131072)`. This tells you that the size of the Shared Local Memory (SLM) memory on the device, 131072 bytes (128Kb), is smaller than the requested size of 656384 bytes.
+
+If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In our case, the calculation is easy:  the first argument to the `nd_range` in the `parallel_for` is single-dimensional, so it's just 163850. Thus the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes rounded up to the nearest 64-byte cache line), doesn't fit in the SLM on this device.
+
+You should know that different devices will have different amounts of memory set aside as SLM. In SYCL, you can query this number by passing `info::device::local_mem_size` to the `get_info` member of the `device` class.
+
+Finally, running under `onetrace -c` you see:
+
+```
+>>>> [1066578697845396] zeKernelSetGroupSize: hKernel = 55242736 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
+<<<< [1066578697849285] zeKernelSetGroupSize [1449 ns] -> ZE_RESULT_SUCCESS(0x0)
+>>>> [1066578697854047] zeCommandListCreateImmediate: hContext = 41540224 hDevice = 37134192 altdesc = 140733241819552 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 140733241819544 (hCommandList = 0)
+<<<< [1066578698107437] zeCommandListCreateImmediate [248694 ns] hCommandList = 61984688 -> ZE_RESULT_SUCCESS(0x0)
+>>>> [1066578698115446] zeEventHostReset: hEvent = 39536208
+<<<< [1066578698119590] zeEventHostReset [1854 ns] -> ZE_RESULT_SUCCESS(0x0)
+>>>> [1066578698126085] zeCommandListAppendLaunchKernel: hCommandList = 61984688 hKernel = 55242736 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140733241820008 {16385, 1, 1} hSignalEvent = 39536208 numWaitEvents = 0 phWaitEvents = 0
+Size of SLM (656384) larger than available (131072)
+<<<< [1066578698169233] zeCommandListAppendLaunchKernel [34637 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+terminate called after throwing an instance of 'sycl::_V1::runtime_error'
+  what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
+```
+
+This is useful because it shows you the kernel being called that caused the error (`_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_` which `c++filt` resolves to `typeinfo name for main::{lambda(sycl::_V1::handler&)#1}::operator()(sycl::_V1::handler&) const::{lambda(sycl::_V1::nd_item<1>)#1} `) in addition to the amount of memory requested vs. the available size of SLM.
+
+
 
 #### Resolving the Problem
 
