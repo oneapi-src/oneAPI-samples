@@ -85,57 +85,21 @@ The oneAPI-sample repository is organized by high-level categories.
 Samples in this release are validated on the following platforms.
 
 ### Ubuntu 22.04
-Intel(R) Xeon(R) Platinum 8352Y CPU @ 2.20GHz \
-Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 (pvc) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.28202] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
-
 12th Gen Intel(R) Core(TM) i9-12900 \
 Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
 Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28202] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
-
-11th Gen Intel(R) Core(TM) i7-11700 \
-Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.28202] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
+&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.634 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.635 \
 
 ### Windows 11
 12th Gen Intel(R) Core(TM) i9-12900 Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
 Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28597] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.595 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.561 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.745
-
-11th Gen Intel(R) Core(TM) i7-11700
-Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.28597] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.595 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.561 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.745
-
-### macOS
-Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.744
+&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.635 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.633 \
 
 ## Known Issues and Limitations
 
