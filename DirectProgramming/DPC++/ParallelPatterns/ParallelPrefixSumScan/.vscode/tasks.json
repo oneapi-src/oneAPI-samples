@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "scan Debug C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
+			"args": [
+				"-fsycl",
+				"-fdiagnostics-color=always",
+				"-fno-limit-debug-info",
+				"-fsycl-device-code-split=per_kernel",
+				"-g",
+				"-O0",
+				"${workspaceFolder}/src/${config:programName}.cpp",
+				"-o",
+				"${workspaceFolder}/bin/${config:programName}_d"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/dpcpp"
+		},
+		{
+			"type": "cppbuild",
+			"label": "scan Release C/C++: Intel icpx build active file",
+			"command": "/opt/intel/oneapi/compiler/latest/linux/bin/icpx",
+			"args": [
+				"-fsycl",
+				"-DNDEBUG",
+                "${workspaceFolder}/src/${config:programName}.cpp",
+				"-o",
+				"${workspaceFolder}/bin/${config:programName}"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /opt/intel/oneapi/compiler/latest/linux/bin/icpx"
+		}
+	]
+}
