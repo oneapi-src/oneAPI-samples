@@ -272,9 +272,9 @@ class Preloader {
   // preloaded_data_: registers for storing the preloaded data
   // data_in_flight_: data in flight
   // valids_in_flight_: load decisions in flight
-  T preloaded_data_[sz_preload];
-  T data_in_flight_[ld_dist];
-  bool valids_in_flight_[ld_dist];
+  [[intel::fpga_register]] T preloaded_data_[sz_preload];
+  [[intel::fpga_register]] T data_in_flight_[ld_dist];
+  [[intel::fpga_register]] bool valids_in_flight_[ld_dist];
 
   // preload_count_ stores the address where to insert the next item in
   // preloaded_data_.
@@ -312,12 +312,12 @@ class Preloader {
 
   // Computation of each index of preloaded_data_ == preload_count_, precomputed
   // in advance of EnqueueFront to remove compare from the critical path
-  bool preload_count_equal_indices_[sz_preload];
+  [[intel::fpga_register]] bool preload_count_equal_indices_[sz_preload];
 
   // Computation of each index of preloaded_data_ == preload_count_dec_,
   // precomputed in advance of EnqueueFront to remove compare from the critical
   // path
-  bool preload_count_dec_equal_indices_[sz_preload];
+  [[intel::fpga_register]] bool preload_count_dec_equal_indices_[sz_preload];
 
   bool CheckEmpty() { return empty_counter_ < 0; }
 
