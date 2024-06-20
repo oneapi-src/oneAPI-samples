@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 if("${CMAKE_CXX_COMPILER}" STREQUAL "")
        set(CMAKE_C_COMPILER "icx")
-       set(CMAKE_CXX_COMPILER "dpcpp")
+       set(CMAKE_CXX_COMPILER "icpx")
 endif()
 project (oneDNN)
 if("$ENV{EXAMPLE_ROOT}" STREQUAL "")
