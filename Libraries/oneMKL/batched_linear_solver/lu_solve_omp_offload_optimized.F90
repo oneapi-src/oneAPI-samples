@@ -97,9 +97,7 @@ program solve_batched_linear_systems
 
     ! Allocate memory for linear algebra computations
     allocate (a(stride_a, batch_size), b(n, batch_size*nrhs), &
-#if !defined(_OPENMP)
               ipiv(stride_ipiv, batch_size),                  &
-#endif
               info_rf(batch_size), info_rs(batch_size),       &
               stat = allocstat, errmsg = allocmsg)
     if (allocstat > 0) stop trim(allocmsg)
@@ -188,9 +186,5 @@ program solve_batched_linear_systems
     print *, 'Total time:', total_time, 'seconds'
 
     ! Clean up
-#if defined(_OPENMP)
-    deallocate (a, b, a_orig, b_orig, x, info_rf, info_rs)
-#else
     deallocate (a, b, a_orig, b_orig, x, ipiv, info_rf, info_rs)
-#endif
 end program solve_batched_linear_systems
