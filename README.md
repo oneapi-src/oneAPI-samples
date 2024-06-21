@@ -34,7 +34,7 @@ Clone an earlier version of the repository using Git by entering a command simil
 
 `git clone -b <tag> https://github.com/oneapi-src/oneAPI-samples.git`
 
-where `<tag>` is the GitHub tag corresponding to the toolkit version number, like **2024.1.0**.
+where `<tag>` is the GitHub tag corresponding to the toolkit version number, like **2024.2.0**.
 
 Alternatively, you can download a zip file containing a specific tagged version of the repository.
 
