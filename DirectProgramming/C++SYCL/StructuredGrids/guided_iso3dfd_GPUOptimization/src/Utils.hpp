@@ -8,6 +8,8 @@
 
 #include <sycl/sycl.hpp>
 #include <iostream>
+#include <cmath>
+#include <complex>
 
 #include "Iso3dfd.hpp"
 
